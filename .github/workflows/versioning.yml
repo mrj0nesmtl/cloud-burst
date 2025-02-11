@@ -1,0 +1,132 @@
+name: Versioning and Release Management
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type (major, minor, patch)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Verify changelog
+        run: |
+          if ! grep -q "## \[Unreleased\]" CHANGELOG.md; then
+            echo "Error: CHANGELOG.md must contain an [Unreleased] section"
+            exit 1
+          fi
+
+  version-bump:
+    needs: version-check
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      new_version: ${{ steps.bump_version.outputs.new_version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update version
+        id: bump_version
+        run: |
+          VERSION_TYPE=${{ github.event.inputs.version_type }}
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          
+          # Bump version
+          npm version $VERSION_TYPE -m "chore(release): bump version to %s"
+          
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+          
+          # Update CHANGELOG.md
+          DATE=$(date +%Y-%m-%d)
+          sed -i "s/## \[Unreleased\]/## [Unreleased]\n\n## [$NEW_VERSION] - $DATE/" CHANGELOG.md
+          
+          # Update version links in CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "[Unreleased]: https://github.com/${{ github.repository }}/compare/v$NEW_VERSION...HEAD" >> CHANGELOG.md
+          echo "[$NEW_VERSION]: https://github.com/${{ github.repository }}/releases/tag/v$NEW_VERSION" >> CHANGELOG.md
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: 'chore(release): prepare release ${{ steps.bump_version.outputs.new_version }}'
+          body: |
+            🚀 Release Preparation
+            
+            This PR includes:
+            - Version bump in package.json
+            - Updated CHANGELOG.md
+            - Updated version links
+            
+            Please review the changes and merge if everything looks correct.
+          branch: release/v${{ steps.bump_version.outputs.new_version }}
+          base: main
+          labels: release
+          commit-message: 'chore(release): prepare release ${{ steps.bump_version.outputs.new_version }}'
+
+  create-release:
+    needs: version-bump
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: get_version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: false 

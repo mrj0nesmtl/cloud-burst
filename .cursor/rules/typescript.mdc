@@ -1,0 +1,51 @@
+---
+description: TypeScript Standards for Cloud Capture
+globs: **/*.ts", "**/*.tsx
+---
+# TypeScript Rules
+
+## Type Standards
+```typescript
+{
+  "typeScriptRules": {
+    "strictness": {
+      "strict": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true,
+      "strictBindCallApply": true,
+      "strictPropertyInitialization": true,
+      "noImplicitThis": true,
+      "useUnknownInCatchVariables": true,
+      "alwaysStrict": true
+    },
+    "naming": {
+      "interfaces": "I{Name}",
+      "types": "T{Name}",
+      "enums": "E{Name}",
+      "generics": "{T}Props"
+    },
+    "organization": {
+      "types": {
+        "shared": "src/types",
+        "components": "alongside-component",
+        "api": "src/types/api",
+        "store": "src/types/store"
+      },
+      "imports": {
+        "typeOnly": true,
+        "grouped": true
+      }
+    },
+    "supabase": {
+      "location": "src/types/supabase.ts",
+      "generation": "automatic",
+      "strict": true
+    },
+    "zod": {
+      "location": "src/lib/validations",
+      "naming": "{name}.schema.ts"
+    }
+  }
+}
+```

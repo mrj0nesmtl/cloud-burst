@@ -1,0 +1,112 @@
+---
+description: AI Collaboration Guidelines for Cloud Capture
+globs: **/*
+---
+ # AI Collaboration Guidelines
+
+## AI Integration Standards
+```typescript
+{
+  "aiCollaboration": {
+    "context": {
+      "project": {
+        "name": "Cloud Capture",
+        "type": "Event Photography Platform",
+        "stack": {
+          "frontend": "Next.js 14 + TypeScript",
+          "backend": "Supabase",
+          "ai": ["OpenAI", "TensorFlow.js", "OpenCV", "DeepSeek"]
+        }
+      },
+      "priorities": [
+        "Type safety",
+        "Performance",
+        "Accessibility",
+        "Security"
+      ]
+    },
+    "codeGeneration": {
+      "standards": {
+        "typescript": "strict",
+        "components": "functional",
+        "styling": "tailwind",
+        "testing": "included"
+      },
+      "patterns": {
+        "preferred": {
+          "state": "zustand",
+          "forms": "react-hook-form + zod",
+          "api": "typed-fetch-hooks"
+        },
+        "avoid": [
+          "class components",
+          "inline styles",
+          "any type"
+        ]
+      }
+    },
+    "responses": {
+      "format": {
+        "codeBlocks": {
+          "language": "required",
+          "path": "required",
+          "context": "optional"
+        },
+        "explanations": {
+          "concise": true,
+          "actionable": true
+        }
+      },
+      "priority": [
+        "Type safety",
+        "Error handling",
+        "Performance",
+        "Documentation"
+      ]
+    },
+    "documentation": {
+      "inline": {
+        "required": [
+          "component props",
+          "hooks",
+          "utilities",
+          "types"
+        ],
+        "format": "TSDoc"
+      },
+      "generated": {
+        "api": "OpenAPI",
+        "components": "Storybook"
+      }
+    },
+    "security": {
+      "review": {
+        "authentication": true,
+        "authorization": true,
+        "data": true,
+        "dependencies": true
+      },
+      "avoid": [
+        "hardcoded credentials",
+        "unsafe-eval",
+        "direct-db-queries"
+      ]
+    },
+    "assistance": {
+      "capabilities": [
+        "Code generation",
+        "Code review",
+        "Refactoring",
+        "Documentation",
+        "Testing",
+        "Debugging"
+      ],
+      "limitations": [
+        "No direct DB access",
+        "No credential management",
+        "No deployment execution"
+      ]
+    }
+  }
+}
+```

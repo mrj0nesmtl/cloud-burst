@@ -1,0 +1,74 @@
+---
+description: Documentation Standards for Cloud Capture
+globs: **/*.md", "src/**/*.{ts,tsx}
+---
+# Documentation Standards Rules
+
+## Documentation Requirements
+```typescript
+{
+  "documentationRules": {
+    "components": {
+      "required": [
+        "description",
+        "props",
+        "examples",
+        "accessibility",
+        "dependencies"
+      ],
+      "format": "TSDoc"
+    },
+    "api": {
+      "required": [
+        "endpoint",
+        "method",
+        "parameters",
+        "responses",
+        "examples"
+      ],
+      "format": "OpenAPI"
+    },
+    "commits": {
+      "format": "conventional",
+      "types": [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "test",
+        "chore"
+      ],
+      "scope": {
+        "optional": true,
+        "values": [
+          "core",
+          "ui",
+          "auth",
+          "api",
+          "docs",
+          "config"
+        ]
+      }
+    },
+    "changelog": {
+      "automatic": true,
+      "categories": [
+        "Features",
+        "Bug Fixes",
+        "Breaking Changes",
+        "Documentation"
+      ]
+    },
+    "projectDocs": {
+      "structure": {
+        "architecture": "Technical design and system overview",
+        "design": "UI/UX specifications",
+        "planning": "Project planning and roadmap",
+        "user-flows": "User interaction flows",
+        "assets": "Project assets and resources"
+      }
+    }
+  }
+}
+``` 

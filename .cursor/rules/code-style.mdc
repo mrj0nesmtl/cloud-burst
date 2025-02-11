@@ -1,0 +1,66 @@
+---
+description: Code Style Rules for Cloud Capture
+globs: src/**/*.{ts,tsx}
+---
+# Code Style Rules
+
+## Style Standards
+```typescript
+{
+  "styleRules": {
+    "formatting": {
+      "indentation": "spaces",
+      "indentSize": 2,
+      "maxLineLength": 80,
+      "trailingComma": "es5",
+      "quoteStyle": "single",
+      "semicolons": true
+    },
+    "naming": {
+      "components": "PascalCase",
+      "hooks": "usePrefix",
+      "utils": "camelCase",
+      "constants": "UPPER_SNAKE_CASE",
+      "files": {
+        "components": "{ComponentName}.tsx",
+        "hooks": "use{hookName}.ts",
+        "utils": "{utilName}.ts",
+        "types": "{typeName}.types.ts",
+        "stores": "{storeName}.store.ts"
+      }
+    },
+    "organization": {
+      "imports": [
+        "react",
+        "next",
+        "external",
+        "components",
+        "hooks",
+        "utils",
+        "types",
+        "styles"
+      ],
+      "componentStructure": [
+        "imports",
+        "types",
+        "constants",
+        "helpers",
+        "component",
+        "exports"
+      ],
+      "directories": {
+        "src": {
+          "app": "Next.js pages",
+          "components": "React components",
+          "lib": "Utility functions",
+          "hooks": "Custom hooks",
+          "types": "TypeScript types",
+          "styles": "CSS/Tailwind styles",
+          "services": "API services",
+          "store": "Zustand stores"
+        }
+      }
+    }
+  }
+}
+``` 

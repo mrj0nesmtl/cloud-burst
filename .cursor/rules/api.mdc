@@ -1,0 +1,56 @@
+---
+description: API Standards for Cloud Capture
+globs: src/services/**/*.ts", "src/lib/api/**/*.ts
+---
+# API Standards
+
+## API Architecture
+```typescript
+{
+  "apiStandards": {
+    "structure": {
+      "baseLocation": "src/services",
+      "endpoints": {
+        "auth": "/api/auth",
+        "events": "/api/events",
+        "photos": "/api/photos",
+        "users": "/api/users"
+      },
+      "middleware": "src/middleware.ts"
+    },
+    "supabase": {
+      "client": {
+        "location": "src/lib/supabase.ts",
+        "types": "src/types/supabase.ts"
+      },
+      "services": {
+        "auth": "src/services/auth.ts",
+        "storage": "src/services/storage.ts",
+        "realtime": "src/services/realtime.ts"
+      }
+    },
+    "error": {
+      "handling": {
+        "types": "src/types/api.ts",
+        "middleware": "src/middleware/error.ts",
+        "responses": {
+          "400": "(╯°□°）╯︵ ┻━┻ Bad Request",
+          "401": "(ಠ_ಠ) Unauthorized – Who goes there?",
+          "403": "(ノಠ益ಠ)ノ彡 Forbidden – You shall not pass!",
+          "404": "¯\_(ツ)_/¯ Not Found – Lost in the void...",
+          "500": "(╥﹏╥) Internal Server Error – Everything is on fire..."
+      }
+    },
+    "rateLimit": {
+      "public": {
+        "window": "1m",
+        "max": 60
+      },
+      "authenticated": {
+        "window": "1m",
+        "max": 120
+      }
+    }
+  }
+}
+```

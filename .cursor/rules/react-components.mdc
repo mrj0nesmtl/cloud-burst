@@ -1,0 +1,64 @@
+---
+description: React Component Standards for Cloud Capture
+globs: src/**/*.tsx", "src/**/*.ts
+---
+# React Component Rules
+
+## Component Architecture
+```typescript
+{
+  "componentRules": {
+    "structure": {
+      "atomic": {
+        "atoms": "src/components/ui", // Basic UI elements
+        "molecules": "src/components/common", // Combinations of atoms
+        "organisms": "src/components/features", // Complex UI sections
+        "templates": "src/components/layouts", // Page layouts
+        "pages": "src/app" // Next.js App Router pages
+      },
+      "naming": {
+        "prefix": {
+          "atoms": "Ui",
+          "molecules": "",
+          "organisms": "",
+          "templates": "Layout"
+        }
+      }
+    },
+    "composition": {
+      "props": {
+        "required": ["children?", "className?"],
+        "naming": "camelCase",
+        "typing": "strict"
+      },
+      "hooks": {
+        "location": "top",
+        "ordering": [
+          "useState",
+          "useEffect",
+          "useCallback",
+          "useMemo",
+          "custom"
+        ]
+      }
+    },
+    "patterns": {
+      "preferred": {
+        "stateManagement": "zustand",
+        "styling": "tailwind",
+        "forms": "react-hook-form",
+        "validation": "zod"
+      },
+      "hoc": {
+        "naming": "with{Name}",
+        "location": "src/components/hoc"
+      }
+    },
+    "shadcn": {
+      "location": "src/components/ui",
+      "customization": "src/styles/shadcn",
+      "registry": "src/components/ui/registry.tsx"
+    }
+  }
+}
+```

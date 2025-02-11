@@ -1,0 +1,59 @@
+---
+description: State Management Standards for Cloud Capture
+globs: src/store/**/*.ts", "src/hooks/**/*.ts
+---
+# State Management Rules
+
+## Zustand Store Standards
+```typescript
+{
+  "stateManagement": {
+    "zustand": {
+      "structure": {
+        "baseLocation": "src/store",
+        "slicePattern": "{feature}.slice.ts",
+        "hookPattern": "use{Feature}Store"
+      },
+      "patterns": {
+        "persistence": {
+          "required": ["auth", "settings", "theme"],
+          "storage": "localStorage"
+        },
+        "devtools": {
+          "enabled": true,
+          "name": "CloudCapture"
+        }
+      }
+    },
+    "storeSlices": {
+      "auth": {
+        "required": [
+          "user",
+          "session",
+          "loading"
+        ]
+      },
+      "events": {
+        "required": [
+          "currentEvent",
+          "photos",
+          "settings"
+        ]
+      },
+      "ui": {
+        "required": [
+          "theme",
+          "modal",
+          "toast"
+        ]
+      }
+    },
+    "reactQuery": {
+      "location": "src/lib/query",
+      "keys": "src/lib/query/keys.ts",
+      "staleTime": 5 * 60 * 1000,
+      "cacheTime": 30 * 60 * 1000
+    }
+  }
+}
+```

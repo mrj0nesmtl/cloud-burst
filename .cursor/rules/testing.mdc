@@ -1,0 +1,77 @@
+---
+description: Testing Standards for Cloud Capture
+globs: **/*.test.ts, **/*.test.tsx, cypress/**/*.cy.ts
+---
+# Testing Standards
+
+## Testing Configuration
+```typescript
+{
+  "testingStandards": {
+    "unit": {
+      "framework": "vitest",
+      "location": {
+        "tests": "__tests__",
+        "utils": "src/utils/test"
+      },
+      "naming": "{feature}.test.ts",
+      "coverage": {
+        "threshold": 80,
+        "excludes": [
+          "**/*.d.ts",
+          "**/*.config.*"
+        ]
+      }
+    },
+    "integration": {
+      "framework": "vitest",
+      "location": "src/tests/integration",
+      "naming": "{feature}.integration.test.ts",
+      "mocks": {
+        "location": "src/mocks",
+        "naming": "{service}.mock.ts"
+      }
+    },
+    "e2e": {
+      "framework": "cypress",
+      "location": "cypress/e2e",
+      "naming": "{feature}.cy.ts",
+      "viewports": {
+        "mobile": [375, 667],
+        "tablet": [768, 1024],
+        "desktop": [1280, 800]
+      }
+    },
+    "components": {
+      "framework": "vitest",
+      "location": "src/components/__tests__",
+      "utilities": {
+        "render": "src/utils/test-utils.tsx",
+        "mocks": "src/mocks/handlers.ts"
+      }
+    },
+    "conventions": {
+      "assertions": {
+        "components": [
+          "accessibility",
+          "rendering",
+          "interactions",
+          "props",
+          "state"
+        ],
+        "api": [
+          "success",
+          "validation",
+          "error",
+          "edge-cases"
+        ]
+      },
+      "mocking": {
+        "api": "msw",
+        "date": "vitest",
+        "storage": "jest-localstorage-mock"
+      }
+    }
+  }
+}
+```
