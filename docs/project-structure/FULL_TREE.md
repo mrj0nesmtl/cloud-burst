@@ -1,5 +1,5 @@
 # Project Structure
-Generated on: 2025-02-11T20:09:41.387Z
+Generated on: 2025-02-11T23:20:23.647Z
 
 ```
 {
@@ -19,8 +19,22 @@ Generated on: 2025-02-11T20:09:41.387Z
       {
         "type": "file",
         "level": 1,
+        "name": "LICENSE",
+        "path": "/Users/mrjones/Local/Github/cloud-capture/LICENSE",
+        "lasts": []
+      },
+      {
+        "type": "file",
+        "level": 1,
         "name": "README.md",
         "path": "/Users/mrjones/Local/Github/cloud-capture/README.md",
+        "lasts": []
+      },
+      {
+        "type": "file",
+        "level": 1,
+        "name": "components.json",
+        "path": "/Users/mrjones/Local/Github/cloud-capture/components.json",
         "lasts": []
       },
       {

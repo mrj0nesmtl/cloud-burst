@@ -69,6 +69,18 @@ feat(photo): add AI-powered image enhancement
 Closes #123
 ```
 
+### Recent Commit Examples
+```
+feat(ui): integrate Shadcn UI component library
+
+- Initialized Shadcn UI with project defaults
+- Added essential UI components
+- Set up component directory structure
+- Configured Tailwind for Shadcn
+
+Closes #<issue-number>
+```
+
 ## Release Process
 
 1. **Version Bump**

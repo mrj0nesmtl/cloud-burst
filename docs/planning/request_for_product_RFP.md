@@ -55,7 +55,7 @@ Cloud Capture is a **event photography platform** designed to **enhance guest en
 
 ## 🚀 **Deployment & Hosting**  
 
-✔️ **Serverless architecture** for scalability.  
+✔️ **Replit Serverless architecture** for scalability.  
 ✔️ **CI/CD pipeline** with **GitHub Actions**.  
 ✔️ **Monitoring & Logging** with AWS CloudWatch.  
 ✔️ **Load balancing & auto-scaling**.  

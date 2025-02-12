@@ -1,5 +1,23 @@
 # 📜 **Statement of Work (SOW) - CaptureCloud**  
 
+## 📊 Project Status Dashboard
+
+| Phase | Status | Progress | Due Date |
+|-------|--------|----------|-----------|
+| 🏗️ Foundation | 🟢 In Progress | ![Progress](https://progress-bar.dev/30/) | Mar 2025 |
+| ⚙️ Features | 🟡 Pending | ![Progress](https://progress-bar.dev/0/) | May 2025 |
+| 🚀 Launch | ⚪ Not Started | ![Progress](https://progress-bar.dev/0/) | Jul 2025 |
+
+### 📈 Key Deliverables Status
+
+| Component | Status | Details |
+|-----------|--------|----------|
+| 🛠️ Development Environment | ✅ Complete | Next.js 14, TypeScript, Tailwind |
+| 📦 Repository Setup | ✅ Complete | GitHub, Actions, Versioning |
+| 🔐 Authentication | 🏗️ In Progress | Supabase Auth Integration |
+| 🤖 AI Integration | 📅 Planned | TensorFlow.js, OpenCV |
+| 📱 UI/UX | 🏗️ In Progress | Shadcn/ui Components |
+
 ## 📡 Cloud ☁️ Capture  
 📅 *Feb 9, 2025*  
 

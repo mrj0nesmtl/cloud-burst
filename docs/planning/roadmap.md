@@ -1,5 +1,23 @@
 # 🛠️ **Cloud Capture - Development Roadmap**
 
+## 📊 Project Timeline Overview
+
+| Phase | Timeline | Status | Completion |
+|-------|----------|--------|------------|
+| 🏗️ Act I: Foundation | Feb-Mar 2025 | 🟢 Active | ![Progress](https://progress-bar.dev/30/) |
+| ⚙️ Act II: Features | Apr-May 2025 | ⚪ Planned | ![Progress](https://progress-bar.dev/0/) |
+| 🚀 Act III: Launch | Jun-Jul 2025 | ⚪ Planned | ![Progress](https://progress-bar.dev/0/) |
+
+### 📈 Current Sprint Status
+
+| Component | Status | Owner | Due Date |
+|-----------|--------|-------|----------|
+| 🔧 Dev Environment | ✅ Done | @mrj0nesmtl | Feb 10, 2025 |
+| 📦 Repository | ✅ Done | @mrj0nesmtl | Feb 10, 2025 |
+| 🔐 Auth System | 🏗️ In Progress | @mrj0nesmtl | Feb 20, 2025 |
+| 📱 UI Framework | ✅ Done | @mrj0nesmtl | Feb 11, 2025 |
+| 🎨 Shadcn Setup | ✅ Done | @mrj0nesmtl | Feb 11, 2025 |
+
 ## 📡 Cloud ☁️ Capture
 📅 *Feb 2025*
 
