@@ -5,7 +5,7 @@
 - [Website Overview](../design/website_overview.md)
 - [Business Proposition](../planning/business_proposition.md)
 - [Statement of Work](../planning/statement_or_work.md)
-- [UI Components](../development/UI_COMPONENTS.md)
+- [UI Components](../development/UI_components.md)
 - [Version Control](../development/VERSION_CONTROL.md)
 
 ## Current Status
