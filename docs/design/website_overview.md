@@ -10,8 +10,8 @@
 ✨ **Tagline**: *Elevating Event Photography*  
 
 ### 🎥 **Hero Section**  
-- **Headline**: *“Elevate Your Event Photography with Cloud Capture”*  
-- **Subheadline**: *“Engage guests, curate stunning photo galleries, and boost your event’s brand—all with a single, easy-to-use platform.”*  
+- **Headline**: *“Cloud Capture - All the Photos You Want”*  
+- **Subheadline**: *“Engage guests, curate stunning photo galleries, and boost your event’s brand — all with a single, easy-to-use platform.”*  
 - **CTA (Call-to-Action)**: *“🚀 Get Started Today”* (Sign-Up/Demo)  
 
 🖼️ **Visuals**  
@@ -100,7 +100,7 @@
 
 📢 **Success Stories**  
 💍 *“Cloud Capture transformed our wedding! Every guest felt engaged, and the gallery was stunning!”* – Wedding Planner  
-🏢 *“A game-changer for our corporate events. The real-time gallery keeps everyone talking.”* – Event Producer  
+🏢 *“A game-changer for our wedding events. The real-time gallery keeps everyone clicking!”* – Event Producer  
 
 📖 **Case Studies**  
 ✔️ Featured **before-and-after** event photography samples.  

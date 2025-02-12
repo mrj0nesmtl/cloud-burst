@@ -40,7 +40,7 @@ The **Cloud Capture** is a web-based solution designed to provide event organize
 - **Backend**: 🖥️ Node.js, Express.js, GraphQL API  
 - **Database**: 🗄️ PostgreSQL; Supabase (real-time updates)  
 - **AI/ML**: 🤖 TensorFlow.js, OpenCV, DeepSeek (advanced image filtering)  
-- **Storage & Hosting**: ☁️ AWS S3, Cloudflare CDN  
+- **Storage & Hosting**: ☁️ AWS S3, Cloudflare CDN  (To be determined)
 - **Authentication**: 🔑 Supabase Auth, OAuth 2.0, JWT  
 - **Deployment**: 🚀 Replit (for now, future migration to Vercel/AWS recommended)  
 
@@ -66,9 +66,9 @@ The **Cloud Capture** is a web-based solution designed to provide event organize
 ## 🎨 UI & Page Layouts  
 ### 🏠 **Landing/Home Page**  
 📍 *Purpose*: Introduce Cloud Capture & attract event planners.  
-✔️ Hero section with high-impact visuals  
+✔️ Hero section with high-impact geometric abstract visuals  
 ✔️ Service overview & key benefits  
-✔️ Call-to-action: "�� Get Started Today"  
+✔️ Call-to-action: "Elevate Your Event Photography Today"  
 
 ### 🔐 **Login/Register Page**  
 ✔️ Social login (Google, Apple)  
