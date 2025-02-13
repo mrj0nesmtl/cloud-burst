@@ -1,26 +1,28 @@
 # 🎨 **Application Design Document**  
 
 ## 📸 Cloud ☁️ Capture  
-�� *Feb 10, 2025*  
+📅 *Feb 2024*  
 
 ## 📊 Implementation Status
 
 | Component | Status | Priority | Dependencies |
 |-----------|---------|-----------|--------------|
-| 🏗️ Core Architecture | 🟢 Active | P0 | None |
-| 🔐 Authentication | 🟡 Pending | P0 | Supabase |
-| 📸 Photo Upload | ⚪ Planned | P1 | Storage |
+| 🏗️ Core Architecture | ✅ Done | P0 | None |
+| 🎨 Project Structure | ✅ Done | P0 | None |
+| 📚 Documentation | 🟢 Active | P0 | None |
+| 🔐 Authentication | 🟡 In Progress | P0 | Supabase |
+| 📱 Public Pages | 🟡 In Progress | P0 | Shadcn UI |
+| 🖼️ Photo Upload | ⚪ Planned | P1 | Storage |
 | 🤖 AI Processing | ⚪ Planned | P1 | TensorFlow |
-| 📱 UI Components | ✅ Done | P0 | Shadcn |
 
 ### 🎯 Sprint Progress
 
 | Sprint | Focus | Status | Timeline |
 |--------|-------|--------|----------|
-| 1 | 🛠️ Setup | ✅ Done | Feb 2025 |
-| 2 | 🏗️ Infrastructure | ✅ Done | Feb 2025 |
-| 3 | 📱 Core UI | 🟢 Active | Mar 2025 |
-| 4 | 🤖 AI Features | ⚪ Planned | Mar 2025 |
+| 1 | 🛠️ Setup & Structure | ✅ Done | Feb 2024 |
+| 2 | 🎨 UI & Auth | 🟢 Active | Feb 2024 |
+| 3 | 📱 Core Features | ⚪ Planned | Mar 2024 |
+| 4 | 🤖 AI Features | ⚪ Planned | Mar 2024 |
 
 ---
 
@@ -36,13 +38,13 @@ The **Cloud Capture** is a web-based solution designed to provide event organize
 ## 🏗️ Application Architecture & Tech Stack  
 
 ### 🚀 Tech Stack  
-- **Frontend**: ⚛️ React.js, Next.js, TypeScript, Tailwind CSS, Shadcn UI  
-- **Backend**: 🖥️ Node.js, Express.js, GraphQL API  
-- **Database**: 🗄️ PostgreSQL; Supabase (real-time updates)  
-- **AI/ML**: 🤖 TensorFlow.js, OpenCV, DeepSeek (advanced image filtering)  
-- **Storage & Hosting**: ☁️ AWS S3, Cloudflare CDN  (To be determined)
+- **Frontend**: ⚛️ Next.js 14, TypeScript, Tailwind CSS, Shadcn UI  
+- **Backend**: 🖥️ Supabase (Auth, Storage, Database)  
+- **Database**: 🗄️ PostgreSQL with Supabase (real-time updates)  
+- **AI/ML**: 🤖 TensorFlow.js, OpenCV, DeepSeek (planned)  
+- **Storage**: ☁️ Supabase Storage  
 - **Authentication**: 🔑 Supabase Auth, OAuth 2.0, JWT  
-- **Deployment**: 🚀 Replit (for now, future migration to Vercel/AWS recommended)  
+- **Deployment**: 🚀 Replit (development)  
 
 ---
 
@@ -57,87 +59,87 @@ The **Cloud Capture** is a web-based solution designed to provide event organize
 - 🔹 Browse the event gallery  
 - 🔹 Download images  
 
-### 🛠️ **Administrator** (Optional/Future Scaling)  
+### 🛠️ **Administrator**  
 - 🔹 Manage all users  
 - 🔹 Oversee platform operations  
 
 ---
 
 ## 🎨 UI & Page Layouts  
-### 🏠 **Landing/Home Page**  
-📍 *Purpose*: Introduce Cloud Capture & attract event planners.  
-✔️ Hero section with high-impact geometric abstract visuals  
-✔️ Service overview & key benefits  
-✔️ Call-to-action: "Elevate Your Event Photography Today"  
 
-### 🔐 **Login/Register Page**  
-✔️ Social login (Google, Apple)  
-✔️ Forgot password recovery  
+### 🏠 **Public Pages**  
+📍 *Status: In Progress*
+- ⚪ Landing Page
+- ⚪ About Page
+- ⚪ Pricing Page
+- ⚪ Contact Page
 
-### 🎛️ **Dashboard (Event Organizer Portal)**  
-✔️ Sidebar navigation  
-✔️ Event list & recent activity  
-✔️ Quick stats & analytics  
+### 🔐 **Authentication Pages**  
+📍 *Status: In Progress*
+- ⚪ Login
+- ⚪ Register
+- ⚪ Password Recovery
 
-### 📸 **Event Page (Guest View)**  
-✔️ Photo upload widget  
-✔️ Real-time event gallery  
-✔️ QR Scanner for easy access  
+### 🎛️ **Dashboard (Event Organizer)**  
+📍 *Status: Planned*
+- ⚪ Event Management
+- ⚪ Photo Moderation
+- ⚪ Analytics
 
-### 📊 **Analytics & Moderation Panel**  
-✔️ Guest engagement trends  
-✔️ AI-powered content moderation  
-✔️ Custom branding & event customization  
+### 📸 **Event Pages**  
+📍 *Status: Planned*
+- ⚪ Photo Upload
+- ⚪ Gallery View
+- ⚪ QR Access
 
 ---
 
 ## 📂 Project Structure  
 
 ```
-Cloud Capture-app/
-├── public/
-│   ├── index.html
-│   ├── favicon.ico
-│   ├── assets/
-│       ├── images/
-│       └── qr/
-├── src/
-│   ├── components/
-│   │   ├── Header.jsx
-│   │   ├── Footer.jsx
-│   │   ├── Sidebar.jsx
-│   │   ├── PhotoUpload.jsx
-│   │   ├── Gallery.jsx
-│   │   ├── QRScanner.jsx
-│   │   ├── AuthForm.jsx
-│   ├── pages/
-│   │   ├── Home.jsx
-│   │   ├── Login.jsx
-│   │   ├── Dashboard.jsx
-│   │   ├── EventPage.jsx
-│   │   ├── Analytics.jsx
-│   ├── services/
-│   │   ├── api.js
-│   │   ├── auth.js
-│   │   ├── aiProcessing.js
-│   ├── utils/
-│   │   ├── helpers.js
-│   │   ├── constants.js
-├── .env
-├── package.json
-├── README.md
+src/
+├── app/
+│   ├── (marketing)/
+│   │   ├── page.tsx
+│   │   ├── about/
+│   │   ├── pricing/
+│   │   └── contact/
+│   ├── (auth)/
+│   │   ├── login/
+│   │   └── register/
+│   └── layout.tsx
+├── components/
+│   ├── ui/
+│   ├── auth/
+│   └── marketing/
+├── lib/
+│   ├── supabase.ts
+│   └── utils/
+└── types/
 ```
 
 ---
 
 ## 🔒 Security Considerations  
-✔️ **Encryption**: Secure all API communications (HTTPS, JWT)  
+✔️ **Authentication**: Supabase Auth, JWT  
+✔️ **Authorization**: Row Level Security (RLS)  
 ✔️ **Data Privacy**: GDPR & CCPA compliance  
-✔️ **Authentication Security**: Supabase Auth, OAuth 2.0  
 
 ---
 
-## 🎯 Conclusion  
-This **Application Design Document** provides a blueprint for Cloud Capture. It ensures **scalability, security, and seamless user experience**, delivering a next-gen event photography solution with AI-powered enhancements. 🚀  
+## 🎯 Next Steps  
+1. 🎨 Complete public pages implementation
+2. 🔐 Integrate authentication flow
+3. 📱 Develop core UI components
+4. 🎨 Implement theming system
+
+---
+
+## 📝 Notes  
+- Following TypeScript strict mode
+- Implementing proper error boundaries
+- Maintaining accessibility standards
+- Using Shadcn UI components
+- Following Git commit conventions
 
 ---

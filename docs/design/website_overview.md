@@ -1,7 +1,7 @@
 # 🌐 **Website Overview**  
 
 ## 📡 Cloud ☁️ Capture  
-📅 *Feb 9, 2025*  
+📅 *Updated: Feb 2024*  
 
 ---
 
@@ -10,13 +10,28 @@
 ✨ **Tagline**: *Elevating Event Photography*  
 
 ### 🎥 **Hero Section**  
-- **Headline**: *“Cloud Capture - All the Photos You Want”*  
-- **Subheadline**: *“Engage guests, curate stunning photo galleries, and boost your event’s brand — all with a single, easy-to-use platform.”*  
-- **CTA (Call-to-Action)**: *“🚀 Get Started Today”* (Sign-Up/Demo)  
+- **Headline**: *"Cloud Capture - All the Photos You Want"*  
+- **Subheadline**: *"Engage guests, curate stunning photo galleries, and boost your event's brand — all with a single, easy-to-use platform."*  
+- **CTA (Call-to-Action)**: *"🚀 Get Started Today"* (Sign-Up/Demo)  
 
 🖼️ **Visuals**  
 ✔️ High-quality event imagery (weddings, corporate events, festivals).  
 ✔️ Subtle animations or **video backgrounds** for a modern, tech-forward feel.  
+
+### 🎥 Hero Section Components
+- **Main Container**: `<AspectRatio>` for video/image ratio control
+- **Navigation**: 
+  - `<NavigationMenu>` for main nav
+  - `<Menubar>` for mobile
+  - `<Sheet>` for mobile menu
+- **CTA Button**: `<Button variant="default" size="lg">`
+- **Theme Toggle**: `<Button variant="ghost">` with icons
+
+### 🖼️ Visual Elements
+- **Image Gallery**: `<Carousel>` for showcasing event photos
+- **Loading States**: `<Skeleton>` for image loading
+- **Feature Cards**: `<Card>` with hover effects
+- **Stats Display**: `<HoverCard>` for detailed metrics
 
 ---
 
@@ -33,6 +48,13 @@
 ✔️ **AI-Curated & Branded Galleries** – Ensures consistent event aesthetics.  
 ✔️ **Operational Efficiency** – No need for disposable cameras or dedicated teams.  
 ✔️ **Real-Time Analytics** – Tracks guest engagement & image popularity.  
+
+### 💡 Problem/Solution Section
+- **Feature List**: 
+  - `<Accordion>` for expandable features
+  - `<Alert>` for highlighting key benefits
+- **Comparison Table**: `<Table>` with feature comparison
+- **Info Cards**: `<Card>` with `<Badge>` for highlights
 
 ---
 
@@ -60,6 +82,21 @@
 ✔️ Guests can download **high-resolution images**.  
 ✔️ **Photo merchandise** options (prints, photobooks).  
 
+### 🎯 Homepage Components
+- **Main Container**: `<AspectRatio>` for video/image ratio control
+- **Navigation**: 
+  - `<NavigationMenu>` for main nav
+  - `<Menubar>` for mobile
+  - `<Sheet>` for mobile menu
+- **CTA Button**: `<Button variant="default" size="lg">`
+- **Theme Toggle**: `<Button variant="ghost">` with icons
+
+### 🖼️ Visual Elements
+- **Image Gallery**: `<Carousel>` for showcasing event photos
+- **Loading States**: `<Skeleton>` for image loading
+- **Feature Cards**: `<Card>` with hover effects
+- **Stats Display**: `<HoverCard>` for detailed metrics
+
 ---
 
 ## 🔄 **How It Works – The Simple Process**  
@@ -81,6 +118,21 @@
 ✔️ **Social media sharing & print ordering** options.  
 ✔️ **Event organizers can send a thank-you note with top highlights.**  
 
+### 🎯 Homepage Components
+- **Main Container**: `<AspectRatio>` for video/image ratio control
+- **Navigation**: 
+  - `<NavigationMenu>` for main nav
+  - `<Menubar>` for mobile
+  - `<Sheet>` for mobile menu
+- **CTA Button**: `<Button variant="default" size="lg">`
+- **Theme Toggle**: `<Button variant="ghost">` with icons
+
+### 🖼️ Visual Elements
+- **Image Gallery**: `<Carousel>` for showcasing event photos
+- **Loading States**: `<Skeleton>` for image loading
+- **Feature Cards**: `<Card>` with hover effects
+- **Stats Display**: `<HoverCard>` for detailed metrics
+
 ---
 
 ## 💰 **Pricing & Packages**  
@@ -92,19 +144,32 @@
 
 💡 **Transparent Pricing** – No hidden fees.  
 ✔️ Add-ons available for **custom analytics, premium support, extra storage**.  
-✔️ **CTA**: *“View Pricing & Get a Custom Quote”*  
+✔️ **CTA**: *"View Pricing & Get a Custom Quote"*  
+
+### 💰 Pricing Section
+- **Pricing Cards**: 
+  - `<Card>` with hover effects
+  - `<Badge>` for popular plans
+- **Feature List**: `<Checkbox>` for included items
+- **Custom Quote**: `<Dialog>` for quote form
 
 ---
 
 ## 🎤 **Testimonials & Case Studies**  
 
 📢 **Success Stories**  
-💍 *“Cloud Capture transformed our wedding! Every guest felt engaged, and the gallery was stunning!”* – Wedding Planner  
-🏢 *“A game-changer for our wedding events. The real-time gallery keeps everyone clicking!”* – Event Producer  
+💍 *"Cloud Capture transformed our wedding! Every guest felt engaged, and the gallery was stunning!"* – Wedding Planner  
+🏢 *"A game-changer for our wedding events. The real-time gallery keeps everyone clicking!"* – Event Producer  
 
 📖 **Case Studies**  
 ✔️ Featured **before-and-after** event photography samples.  
 ✔️ Showcasing **how Cloud Capture enhances guest engagement**.  
+
+### 🎤 Testimonials
+- **Display**: 
+  - `<Carousel>` for testimonial rotation
+  - `<Card>` for individual testimonials
+  - `<Avatar>` for user photos
 
 ---
 
@@ -116,19 +181,47 @@
 ✔️ **Gallery Moderation** – **Real-time content curation & permissions**.  
 ✔️ **User-Friendly Interface** – Intuitive, responsive & scalable.  
 
+### 🎯 Global Elements
+- **Notifications**: `<Toast>` for system messages
+- **Loading States**: `<Skeleton>` for content loading
+- **Modals**: `<Dialog>` for popups
+- **Navigation**: 
+  - `<NavigationMenu>` desktop
+  - `<Sheet>` mobile
+- **Feedback**: `<Alert>` and `<Toast>` for user feedback
+
 ---
 
 ## 📞 **Contact & Call to Action**  
 
-💡 *“Ready to Elevate Your Event?”*  
+💡 *"Ready to Elevate Your Event?"*  
 
-✔️ **Final CTA**: *“🚀 Get Started with Cloud Capture Today”*  
+✔️ **Final CTA**: *"🚀 Get Started with Cloud Capture Today"*  
 ✔️ **Direct Contact** – Email, phone, & **custom request form**.  
 ✔️ **Social Proof** – **Links to social media, blog updates, and press mentions**.  
+
+### 📞 Contact Section
+- **Contact Form**: 
+  - `<Form>` with validation
+  - `<Textarea>` for messages
+  - `<Select>` for inquiry type
+- **Support**: `<Collapsible>` for FAQs
 
 ---
 
 ## 🎯 **Conclusion**  
 The **Cloud Capture website** is designed for **event planners & organizers**, offering **seamless event photography management**. With a focus on **ease-of-use, AI-driven enhancements, and deep customization**, Cloud Capture is the **ultimate event photo-sharing solution**. 🚀  
+
+## 📱 Responsive Considerations
+- Mobile-first design
+- Breakpoint-specific components
+- Touch-friendly interactions
+- Accessible navigation patterns
+
+## 🎨 Theme Integration
+- Dark/Light mode support
+- Consistent color schemes
+- Branded component variants
+- Accessible contrast ratios
 
 ---
