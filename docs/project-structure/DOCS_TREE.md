@@ -1,73 +1,34 @@
-# Project Structure
-Generated on: 2025-02-11T23:20:23.659Z
+# docs Directory Structure
 
 ```
-{
-  "root": {
-    "type": "directory",
-    "level": 0,
-    "name": "docs",
-    "path": "/Users/mrjones/Local/Github/cloud-capture/docs",
-    "children": [
-      {
-        "type": "file",
-        "level": 1,
-        "name": "README.md",
-        "path": "/Users/mrjones/Local/Github/cloud-capture/docs/README.md",
-        "lasts": []
-      },
-      {
-        "type": "directory",
-        "level": 1,
-        "name": "architecture",
-        "path": "/Users/mrjones/Local/Github/cloud-capture/docs/architecture",
-        "lasts": []
-      },
-      {
-        "type": "directory",
-        "level": 1,
-        "name": "assets",
-        "path": "/Users/mrjones/Local/Github/cloud-capture/docs/assets",
-        "lasts": []
-      },
-      {
-        "type": "directory",
-        "level": 1,
-        "name": "design",
-        "path": "/Users/mrjones/Local/Github/cloud-capture/docs/design",
-        "lasts": []
-      },
-      {
-        "type": "directory",
-        "level": 1,
-        "name": "development",
-        "path": "/Users/mrjones/Local/Github/cloud-capture/docs/development",
-        "lasts": []
-      },
-      {
-        "type": "directory",
-        "level": 1,
-        "name": "planning",
-        "path": "/Users/mrjones/Local/Github/cloud-capture/docs/planning",
-        "lasts": []
-      },
-      {
-        "type": "directory",
-        "level": 1,
-        "name": "project-structure",
-        "path": "/Users/mrjones/Local/Github/cloud-capture/docs/project-structure",
-        "lasts": []
-      },
-      {
-        "type": "directory",
-        "level": 1,
-        "name": "user-flows",
-        "path": "/Users/mrjones/Local/Github/cloud-capture/docs/user-flows",
-        "lasts": [
-          true
-        ]
-      }
-    ]
-  }
-}
+./docs
+├── README.md
+├── architecture
+│   ├── application_design_document.md
+│   └── system_architecture_flowchart.md
+├── design
+│   └── website_overview.md
+├── development
+│   ├── NEXT_SESSION_PROMPT.md
+│   ├── UI_components.md
+│   └── VERSION_CONTROL.md
+├── planning
+│   ├── business_proposition.md
+│   ├── payment_subscription_design_document.md
+│   ├── pitch_deck_draft.md
+│   ├── project_budget_overview.md
+│   ├── request_for_product_RFP.md
+│   ├── roadmap.md
+│   └── statement_or_work.md
+├── project-structure
+│   ├── full_tree.md
+│   └── src_tree.md
+└── user-flows
+    ├── invited_user_flow_design_document.md
+    ├── photo_upload_sequence_diagram.md
+    ├── user_flow_chart.md
+    └── user_flow_overview.md
+
+7 directories, 20 files
+
 ```

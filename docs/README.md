@@ -8,7 +8,11 @@
 
 ### 🎨 Design
 - [Website Overview](design/website_overview.md)
-- [Visual Assets](design/visual.webp)
+
+### 💻 Development
+- [Next Session Prompt](development/NEXT_SESSION_PROMPT.md)
+- [UI Components](development/UI_components.md)
+- [Version Control](development/VERSION_CONTROL.md)
 
 ### 📋 Planning
 - [Business Proposition](planning/business_proposition.md)
@@ -18,6 +22,11 @@
 - [Budget Overview](planning/project_budget_overview.md)
 - [Payment & Subscription Design](planning/payment_subscription_design_document.md)
 - [Pitch Deck](planning/pitch_deck_draft.md)
+
+### 🔧 Project Structure
+- [Full Project Tree](project-structure/full_tree.md)
+- [Source Directory Tree](project-structure/src_tree.md)
+- [Documentation Tree](project-structure/docs_tree.md)
 
 ### 👥 User Flows
 - [User Flow Overview](user-flows/user_flow_overview.md)
