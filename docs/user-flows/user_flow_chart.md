@@ -13,47 +13,83 @@ This **User Flow Chart** visualizes the step-by-step journey a user takes when i
 
 ```mermaid
 flowchart TD
+    subgraph Pre-Event
+        A[📧 Ticket Confirmation Email with QR Code] 
+        --> |Email Template with AspectRatio| B[📱 User Scans QR Code]
+    end
 
-    A[📧 Ticket Confirmation Email with QR Code] --> B[📱 User Scans QR Code]
+    subgraph Authentication
+        B --> |Dialog, Toast| C[🔗 Redirect to Cloud Capture Web App]
+        C --> |Tabs, Form| D{🔑 Authentication Choice?}
+        D -- "🔓 Login/Register" --> |Form, Button| E[👤 User Logs In]
+        D -- "🚶 Continue as Guest" --> |Button| F[Proceed as Guest]
+    end
 
-    B --> C[🔗 Redirect to Cloud Capture Web App]
+    subgraph Photo Management
+        E --> |NavigationMenu| G[📸 Access Photo Capture Interface]
+        F --> G
+        G --> |DropZone, Progress| H[📤 Take/Upload Photo]
+        H --> |Toast| I[🚀 Photo Sent to Server]
+        I --> |Progress| J[🤖 AI Image Processing]
+        J --> |Toast| K[💾 Store in Event Gallery]
+    end
 
-    C --> D{🔑 Authentication Choice?}
-
-    D -- "🔓 Login/Register" --> E[👤 User Logs In]
-
-    D -- "🚶 Continue as Guest" --> F[Proceed as Guest]
-
-    E --> G[📸 Access Photo Capture Interface]
-
-    F --> G
-
-    G --> H[📤 Take/Upload Photo]
-
-    H --> I[🚀 Photo Sent to Server]
-
-    I --> J[🤖 AI Image Processing]
-
-    J --> K[💾 Store in Event Gallery]
-
-    K --> L[🖼️ Real-Time Photo Gallery Display]
-
-    L --> M[📥 User Views, Shares & Downloads Photos]
+    subgraph Gallery Experience
+        K --> |ScrollArea, AspectRatio| L[🖼️ Real-Time Photo Gallery Display]
+        L --> |Dialog, HoverCard| M[📥 User Views, Shares & Downloads Photos]
+    end
 ```
 
 ---
 
-## 🎯 **Key Features of the Flow**  
+## 🎯 **Key Features & Components**  
 
-✔️ **Seamless QR Code Access** – No app download required.  
-✔️ **AI-Powered Image Processing** – Filters, enhances, and organizes photos.  
-✔️ **Real-Time Event Gallery** – Users see uploads instantly.  
-✔️ **Guest & Registered User Modes** – Flexibility for attendees.  
-✔️ **Social Sharing & Downloads** – Users can relive & share event memories.  
+### 📱 **Access & Authentication**
+- `<AspectRatio>` for QR display
+- `<Dialog>` for permissions
+- `<Toast>` for notifications
+- `<Tabs>` for auth options
+- `<Form>` for user input
+
+### 📸 **Photo Management**
+- `<DropZone>` for uploads
+- `<Progress>` for status
+- `<Toast>` for notifications
+- `<Button>` for actions
+- `<Sheet>` for mobile options
+
+### 🖼️ **Gallery Experience**
+- `<ScrollArea>` for gallery view
+- `<AspectRatio>` for images
+- `<Dialog>` for previews
+- `<HoverCard>` for details
+- `<Carousel>` for slideshows
 
 ---
 
-## 🚀 **Conclusion**  
+## ⚡ **Technical Considerations**
+
+### 🔒 Security
+- JWT authentication
+- Rate limiting
+- CSRF protection
+- Secure file handling
+
+### 📱 Responsive Design
+- Mobile-first approach
+- Touch-optimized
+- Offline capabilities
+- Progressive loading
+
+### 🚀 Performance
+- Image optimization
+- Lazy loading
+- Client caching
+- Real-time updates
+
+---
+
+## 🎯 **Conclusion**  
 This **User Flow Chart** ensures a **frictionless, AI-enhanced event photography experience** for both guests and event hosts. Cloud Capture **streamlines access, organization, and sharing**, making event memories more accessible than ever. 🎉  
 
 ---
