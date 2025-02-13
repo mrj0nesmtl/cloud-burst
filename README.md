@@ -34,14 +34,17 @@ Cloud Capture is an AI-powered event photography platform designed to enhance gu
 - **Tailwind CSS**
 - **Shadcn UI**
 - **Zustand** (State Management)
+- **TanStack Query** (Data Fetching)
+- **React Hook Form + Zod** (Form Management)
 
 ### Backend & Infrastructure
 - **Supabase**
   - Real-time Database
   - Authentication
   - Storage
-- **Node.js & Express.js** (API Services)
+  - Row Level Security
 - **PostgreSQL** (Primary Database)
+- **Redis** (Caching) [Planned]
 
 ### AI/ML Integration
 - **TensorFlow.js** (Real-time AI image enhancement)
@@ -52,6 +55,7 @@ Cloud Capture is an AI-powered event photography platform designed to enhance gu
 ### Deployment & Security
 - **Replit** (Development & Staging)
 - **GitHub Actions** (CI/CD)
+- **Sentry** (Error Monitoring)
 - **Cloudflare** (CDN & Security) [Planned]
 
 ---
@@ -62,6 +66,7 @@ Cloud Capture is an AI-powered event photography platform designed to enhance gu
 - Node.js v20+
 - Git
 - npm or yarn
+- Supabase CLI
 
 ### Getting Started
 
@@ -77,7 +82,7 @@ npm install
 ```
 
 3. **Environment Setup**
-Create a `.env` file:
+Create a `.env.local` file:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
@@ -98,6 +103,8 @@ cloud-capture/
 ├── src/
 │   ├── app/           # Next.js App Router pages
 │   ├── components/    # Reusable UI components
+│   │   ├── ui/       # Shadcn UI components
+│   │   └── custom/   # Custom components
 │   ├── lib/          # Utility functions & configurations
 │   ├── hooks/        # Custom React hooks
 │   ├── services/     # API & external service integrations

@@ -15,7 +15,7 @@
 | 🔧 Dev Environment | ✅ Done | @mrj0nesmtl | Feb 10, 2025 |
 | 📦 Repository | ✅ Done | @mrj0nesmtl | Feb 10, 2025 |
 | 🔐 Auth System | 🏗️ In Progress | @mrj0nesmtl | Feb 20, 2025 |
-| 📱 UI Framework | ✅ Done | @mrj0nesmtl | Feb 11, 2025 |
+| 📱 UI Framework | 🏗️ In Progress | @mrj0nesmtl | Feb 11, 2025 |
 | 🎨 Shadcn Setup | ✅ Done | @mrj0nesmtl | Feb 11, 2025 |
 
 ## 📡 Cloud ☁️ Capture

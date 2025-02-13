@@ -9,11 +9,14 @@
 ├── design
 │   └── website_overview.md
 ├── development
-│   ├── NEXT_SESSION_PROMPT.md
+│   ├── STATUS_NOTES.md
 │   ├── UI_components.md
-│   └── VERSION_CONTROL.md
+│   ├── VERSION_CONTROL.md
+│   ├── session 3.md
+│   └── session_1_prompt.md
 ├── planning
 │   ├── business_proposition.md
+│   ├── ca-en-merchant-fees-15-oct-2024.pdf
 │   ├── payment_subscription_design_document.md
 │   ├── pitch_deck_draft.md
 │   ├── project_budget_overview.md
@@ -21,7 +24,12 @@
 │   ├── roadmap.md
 │   └── statement_or_work.md
 ├── project-structure
+│   ├── cursor_tree.md
+│   ├── docs_tree.md
 │   ├── full_tree.md
+│   ├── github_tree.md
+│   ├── public_tree.md
+│   ├── readme.md
 │   └── src_tree.md
 └── user-flows
     ├── invited_user_flow_design_document.md
@@ -29,6 +37,6 @@
     ├── user_flow_chart.md
     └── user_flow_overview.md
 
-7 directories, 20 files
+7 directories, 28 files
 
 ```

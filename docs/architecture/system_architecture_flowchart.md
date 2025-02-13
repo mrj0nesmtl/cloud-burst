@@ -19,9 +19,9 @@ flowchart TD
     WebApp -->|🔌 API Calls| APIGateway[🖥️ API Gateway (Node.js/Express/GraphQL)]
 
     APIGateway --> Auth[🔑 Authentication Service (Supabase/OAuth)]
-    APIGateway --> AIService[🤖 AI Processing (OpenAI)]
     APIGateway --> Database[🗄️ Supabase PostgreSQL Database]
-    APIGateway --> CloudStorage[☁️ AWS S3] (To Be Determined)
+    APIGateway --> CloudStorage[☁️ To be Determined]
+    APIGateway --> AIService[🤖 AI Processing (OpenAI)]
 
     AIService --> CloudStorage
     CloudStorage --> CDN[🚀 Cloudflare CDN] (To Be Determined)
