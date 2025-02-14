@@ -1,49 +1,71 @@
-import { CloudLightning } from "lucide-react"
 import Link from "next/link"
+import { CloudLightning, Github, Instagram, Facebook } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import { NewsletterForm } from "@/components/ui/newsletter-form"
 
 export function SiteFooter() {
   return (
-    <footer className="border-t bg-background/95">
-      <div className="container flex flex-col gap-6 py-8 px-4 sm:px-8 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-2">
-            <CloudLightning className="h-10 w-10 text-blue-500" />
-            <div className="flex flex-col">
-              <span className="text-xl font-semibold">Cloud Capture</span>
-              <span className="text-sm text-muted-foreground">AI-Powered Event Photography</span>
+    <footer className="border-t mt-auto bg-muted/50">
+      <div className="container flex flex-col py-8 md:py-12 px-4 sm:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Company Info */}
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <CloudLightning className="h-6 w-6 text-blue-500" />
+              <span className="font-semibold">Cloud Capture</span>
             </div>
+            <p className="text-sm text-muted-foreground">
+              AI-Powered Event Photography Platform
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Cloud Capture. All rights reserved.
-          </p>
+
+          {/* Quick Links */}
+          <div className="space-y-3">
+            <h4 className="font-semibold">Product</h4>
+            <nav className="flex flex-col space-y-2">
+              <Link href="/marketing/about" className="text-sm text-muted-foreground hover:text-blue-500 transition-colors">About</Link>
+              <Link href="/marketing/pricing" className="text-sm text-muted-foreground hover:text-blue-500 transition-colors">Pricing</Link>
+              <Link href="/marketing/contact" className="text-sm text-muted-foreground hover:text-blue-500 transition-colors">Contact</Link>
+            </nav>
+          </div>
+
+          {/* Legal */}
+          <div className="space-y-3">
+            <h4 className="font-semibold">Legal</h4>
+            <nav className="flex flex-col space-y-2">
+              <Link href="/legal/privacy" className="text-sm text-muted-foreground hover:text-blue-500 transition-colors">Privacy Policy</Link>
+              <Link href="/legal/terms" className="text-sm text-muted-foreground hover:text-blue-500 transition-colors">Terms of Service</Link>
+              <Link href="/legal/cookies" className="text-sm text-muted-foreground hover:text-blue-500 transition-colors">Cookie Policy</Link>
+            </nav>
+          </div>
+
+          {/* Newsletter */}
+          <div className="space-y-3">
+            <h4 className="font-semibold">Stay Updated</h4>
+            <p className="text-sm text-muted-foreground">Subscribe to our newsletter for updates and tips.</p>
+            <NewsletterForm />
+          </div>
         </div>
-        <nav className="grid grid-cols-2 gap-x-12 gap-y-4 sm:flex sm:gap-6 text-sm text-muted-foreground">
-          <Link href="/marketing/about" className="hover:text-foreground transition-colors">
-            About
-          </Link>
-          <Link href="/marketing/pricing" className="hover:text-foreground transition-colors">
-            Pricing
-          </Link>
-          <Link href="/marketing/contact" className="hover:text-foreground transition-colors">
-            Contact
-          </Link>
-          <a 
-            href="https://twitter.com" 
-            target="_blank" 
-            rel="noreferrer" 
-            className="hover:text-foreground transition-colors"
-          >
-            Twitter
-          </a>
-          <a 
-            href="https://github.com" 
-            target="_blank" 
-            rel="noreferrer" 
-            className="hover:text-foreground transition-colors"
-          >
-            GitHub
-          </a>
-        </nav>
+
+        <Separator className="my-8" />
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+          <span className="text-sm text-muted-foreground">
+            © 2025 Cloud Capture. All rights reserved.
+          </span>
+          <div className="flex items-center space-x-4">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-blue-500 transition-colors">
+              <Instagram className="h-5 w-5" />
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-blue-500 transition-colors">
+              <Facebook className="h-5 w-5" />
+            </a>
+            <a href="https://github.com/mrj0nesmtl/cloud-capture/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-blue-500 transition-colors">
+              <Github className="h-5 w-5" />
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   )

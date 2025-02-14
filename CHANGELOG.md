@@ -7,34 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Project initialization with Next.js 14
-- GitHub Actions workflow for versioning
-- Project structure documentation generator
-- Comprehensive README with badges
-- Development roadmap
-- Initial documentation structure
-- Shadcn UI integration and component setup
-- UI component library initialization
-- Basic component structure
+- Legal pages (Privacy, Terms, Cookie Policy)
+- Newsletter subscription component
+- Favicons and app icons generation script
+- Brand identity implementation with cloud-lightning icon
+- SEO optimization with meta tags and OpenGraph
+- Robots.txt and sitemap.xml
+- Site manifest for PWA support
 
 ### Infrastructure
-- Set up GitHub Actions for versioning
-- Implemented automated CHANGELOG updates
-- Created project structure documentation
-- Established development guidelines
-- Shadcn UI configuration
-- Tailwind CSS setup with Shadcn defaults
-- Component library organization
+- Automated favicon generation pipeline
+- SEO and sharing optimization
+- Legal compliance framework
+- Newsletter integration preparation
+- Brand identity system
 
 ### Documentation
-- Created detailed README
-- Implemented CHANGELOG
-- Added development roadmap
-- Set up project structure documentation
-- Added GitHub workflow documentation
-- Updated Application Design Document with UI status
-- Updated Project Status Dashboard
-- Enhanced documentation with progress indicators
+- Updated project status with UI/branding progress
+- Enhanced development roadmap timelines
+- Added legal documentation structure
+- Updated technical implementation notes
+- Documented brand identity guidelines
+
+## [0.1.1] - 2024-02-12
+### Added
+- Marketing pages structure
+- Legal framework
+- Brand identity system
+- Newsletter component
+- Footer navigation
+- Social media integration
+
+### Infrastructure
+- Favicon generation system
+- SEO optimization
+- Site manifest
+- Robots.txt configuration
+- Sitemap generation
+
+### Documentation
+- Legal documentation
+- Brand guidelines
+- Marketing structure
+- Newsletter implementation guide
 
 ## [0.1.0] - 2024-02-10
 ### Initial Setup

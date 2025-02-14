@@ -11,6 +11,14 @@
 │   ├── favicon.ico
 │   ├── globals.css
 │   ├── layout.tsx
+│   ├── legal
+│   │   ├── cookies
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── privacy
+│   │   │   └── page.tsx
+│   │   └── terms
+│   │       └── page.tsx
 │   ├── marketing
 │   │   ├── about
 │   │   │   └── page.tsx
@@ -35,8 +43,10 @@
 │       ├── label.tsx
 │       ├── mode-toggle.tsx
 │       ├── navigation-menu.tsx
+│       ├── newsletter-form.tsx
 │       ├── radio-group.tsx
 │       ├── select.tsx
+│       ├── separator.tsx
 │       ├── sheet.tsx
 │       ├── site-footer.tsx
 │       ├── site-header.tsx
@@ -49,6 +59,6 @@
 └── lib
     └── utils.ts
 
-13 directories, 34 files
+17 directories, 40 files
 
 ```

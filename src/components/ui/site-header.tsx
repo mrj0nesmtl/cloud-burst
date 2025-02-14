@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Button } from "./button"
+import { Button } from "@/components/ui/button"
 import { CloudLightning, Menu } from "lucide-react"
 import {
   NavigationMenu,
@@ -13,7 +13,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { ModeToggle } from "./mode-toggle"
+import { ModeToggle } from "@/components/ui/mode-toggle"
 
 export function SiteHeader() {
   const pathname = usePathname()

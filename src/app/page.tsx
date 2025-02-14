@@ -1,6 +1,16 @@
 import { Button } from "@/components/ui/button"
 import { CloudLightning, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Cloud Capture - Transform Your Event Photography',
+  description: 'Capture, enhance, and share event photos with AI-powered technology. Perfect for weddings, corporate events, and celebrations.',
+  openGraph: {
+    title: 'Cloud Capture - Transform Your Event Photography',
+    description: 'AI-powered event photography platform for seamless photo sharing and management.'
+  }
+}
 
 export default function Home() {
   return (
