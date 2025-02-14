@@ -1,6 +1,6 @@
 # Cloud ☁️ Capture
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/mrj0nesmtl/cloud-capture/releases)
+[![Version](https://img.shields.io/badge/version-0.1.2-blue.svg)](https://github.com/mrj0nesmtl/cloud-capture/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -102,6 +102,9 @@ Open [http://localhost:3000](http://localhost:3000) to view the app.
 cloud-capture/
 ├── src/
 │   ├── app/           # Next.js App Router pages
+│   │   ├── (marketing)/
+│   │   ├── (auth)/
+│   │   └── (dashboard)/
 │   ├── components/    # Reusable UI components
 │   │   ├── ui/       # Shadcn UI components
 │   │   └── custom/   # Custom components
