@@ -1,0 +1,42 @@
+run = "npm run dev"
+entrypoint = "src/app/page.tsx"
+
+hidden = [".build", ".config", ".next", "node_modules"]
+
+[nix]
+channel = "stable-22_11"
+
+[env]
+PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin"
+npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
+NEXT_TELEMETRY_DISABLED = "1"
+NODE_ENV = "development"
+
+[packager]
+language = "nodejs"
+
+[packager.features]
+packageSearch = true
+guessImports = true
+enabledForHosting = true
+
+[languages.javascript]
+pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
+syntax = "javascript"
+
+[languages.javascript.languageServer]
+start = [ "typescript-language-server", "--stdio" ]
+
+[deployment]
+build = ["sh", "-c", "npm run build"]
+run = ["sh", "-c", "npm run start"]
+deploymentTarget = "cloudrun"
+
+[server]
+run = "npm run dev"
+start = "npm run start"
+build = "npm run build"
+
+[[ports]]
+localPort = 3000
+externalPort = 80
