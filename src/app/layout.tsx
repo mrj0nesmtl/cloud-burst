@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: 'Cloud Capture',
-    template: '%s | Cloud Capture'
-  },
-  description: 'AI-Powered Event Photography Platform',
+  title: 'Cloud Capture',
+  description: 'AI-powered event photography platform',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  ),
   icons: {
     icon: [
       { url: '/favicon.ico' },
