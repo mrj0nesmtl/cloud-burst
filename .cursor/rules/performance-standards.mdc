@@ -124,6 +124,17 @@ globs: ["src/**/*.{ts,tsx}", "next.config.js"]
         "sentry": true,
         "console": "development"
       }
+    },
+    "assets": {
+      "favicon": {
+        "formats": ["ico", "png", "svg"],
+        "sizes": [16, 32, 180, 192, 512],
+        "location": "public/",
+        "optimization": {
+          "compression": true,
+          "caching": "1 year"
+        }
+      }
     }
   }
 }

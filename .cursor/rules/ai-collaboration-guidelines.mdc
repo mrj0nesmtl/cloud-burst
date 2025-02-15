@@ -106,6 +106,21 @@ globs: **/*
         "No credential management",
         "No deployment execution"
       ]
+    },
+    "deployment": {
+      "platform": "Replit",
+      "configuration": {
+        "files": [".replit", "replit.nix"],
+        "environment": {
+          "secrets": [
+            "NEXT_PUBLIC_SUPABASE_URL",
+            "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+            "NEXT_PUBLIC_SITE_URL",
+            "NEXTAUTH_SECRET",
+            "NEXTAUTH_URL"
+          ]
+        }
+      }
     }
   }
 }

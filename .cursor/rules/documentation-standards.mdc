@@ -62,11 +62,21 @@ globs: **/*.md", "src/**/*.{ts,tsx}
     },
     "projectDocs": {
       "structure": {
-        "architecture": "Technical design and system overview",
-        "design": "UI/UX specifications",
-        "planning": "Project planning and roadmap",
+        "development": "Session planning and progress",
+        "deployment": "Deployment configurations and guides",
         "user-flows": "User interaction flows",
+        "architecture": "Technical design and system overview",
         "assets": "Project assets and resources"
+      },
+      "sessions": {
+        "format": "markdown",
+        "required": [
+          "Project Status Overview",
+          "Current State",
+          "Session Objectives",
+          "Implementation Plan",
+          "Success Criteria"
+        ]
       }
     }
   }
