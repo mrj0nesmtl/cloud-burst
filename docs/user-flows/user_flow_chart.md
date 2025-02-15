@@ -12,31 +12,31 @@ This **User Flow Chart** visualizes the step-by-step journey a user takes when i
 ---
 
 ```mermaid
-flowchart TD
+graph TD
     subgraph Pre-Event
-        A[📧 Ticket Confirmation Email with QR Code] 
-        --> |Email Template with AspectRatio| B[📱 User Scans QR Code]
+        A["📧 Ticket Confirmation Email with QR Code"] 
+        --> |"Email Template with AspectRatio"| B["📱 User Scans QR Code"]
     end
 
     subgraph Authentication
-        B --> |Dialog, Toast| C[🔗 Redirect to Cloud Capture Web App]
-        C --> |Tabs, Form| D{🔑 Authentication Choice?}
-        D -- "🔓 Login/Register" --> |Form, Button| E[👤 User Logs In]
-        D -- "🚶 Continue as Guest" --> |Button| F[Proceed as Guest]
+        B --> |"Dialog, Toast"| C["🔗 Redirect to Cloud Capture Web App"]
+        C --> |"Tabs, Form"| D{"🔑 Authentication Choice?"}
+        D -- "🔓 Login/Register" --> |"Form, Button"| E["👤 User Logs In"]
+        D -- "🚶 Continue as Guest" --> |"Button"| F["Proceed as Guest"]
     end
 
-    subgraph Photo Management
-        E --> |NavigationMenu| G[📸 Access Photo Capture Interface]
+    subgraph Photo_Management
+        E --> |"NavigationMenu"| G["📸 Access Photo Capture Interface"]
         F --> G
-        G --> |DropZone, Progress| H[📤 Take/Upload Photo]
-        H --> |Toast| I[🚀 Photo Sent to Server]
-        I --> |Progress| J[🤖 AI Image Processing]
-        J --> |Toast| K[💾 Store in Event Gallery]
+        G --> |"DropZone, Progress"| H["📤 Take/Upload Photo"]
+        H --> |"Toast"| I["🚀 Photo Sent to Server"]
+        I --> |"Progress"| J["🤖 AI Image Processing"]
+        J --> |"Toast"| K["💾 Store in Event Gallery"]
     end
 
-    subgraph Gallery Experience
-        K --> |ScrollArea, AspectRatio| L[🖼️ Real-Time Photo Gallery Display]
-        L --> |Dialog, HoverCard| M[📥 User Views, Shares & Downloads Photos]
+    subgraph Gallery_Experience
+        K --> |"ScrollArea, AspectRatio"| L["🖼️ Real-Time Photo Gallery Display"]
+        L --> |"Dialog, HoverCard"| M["📥 User Views, Shares & Downloads Photos"]
     end
 ```
 

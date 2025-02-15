@@ -99,3 +99,21 @@ npm run start
 - Review collaborator access
 - Monitor auth logs
 - Regular permission audits 
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=https://cloud-capture.replit.app
+
+# Security and Features
+NEXTAUTH_SECRET=generate_a_secure_random_string
+NEXTAUTH_URL=https://cloud-capture.replit.app
+
+# AI Service Keys (if implementing immediately)
+OPENAI_API_KEY=your_openai_api_key
+DEEPSEEK_API_KEY=your_deepseek_api_key
+
+# Optional Analytics (if implementing)
+NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id

@@ -123,6 +123,8 @@ import { Button } from "@/components/ui/button"
 - secondary: Alternative actions
 - ghost: Subtle actions
 - destructive: Delete/remove
+- outline: Bordered style (New)
+- link: Text-like button (New)
 ```
 
 #### Carousel
@@ -330,3 +332,31 @@ const meta: Meta<typeof Button> = {
 - Integration tests
 - Visual regression
 - Accessibility tests
+
+### 💳 Payment Components
+
+#### PayPalQRCode
+```typescript
+// Usage: Payment processing
+import { PayPalQRCode } from "@/components/payment/paypal-qr"
+
+// Features:
+- Dynamic QR generation
+- Amount configuration
+- Status tracking
+- Success/failure handling
+```
+
+### 🔐 Authentication Components
+
+#### AuthForm
+```typescript
+// Usage: User authentication
+import { AuthForm } from "@/components/auth/auth-form"
+
+// Implementations:
+- Login
+- Registration
+- Password recovery
+- Social auth
+```
