@@ -1,5 +1,11 @@
 name: Versioning and Release Management
 
+# Add workflow-level permissions
+permissions:
+  contents: read # Base read permission for all jobs
+  pull-requests: write # Needed for creating PRs
+  issues: write # Needed for commenting on PRs
+
 on:
   push:
     branches: [main, develop]
@@ -20,6 +26,9 @@ on:
 jobs:
   version-check:
     runs-on: ubuntu-latest
+    # Job-specific permissions
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -43,8 +52,10 @@ jobs:
     needs: version-check
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    # Job-specific permissions
     permissions:
       contents: write
+      pull-requests: write
     outputs:
       new_version: ${{ steps.bump_version.outputs.new_version }}
     steps:
@@ -89,7 +100,7 @@ jobs:
           echo "[$NEW_VERSION]: https://github.com/${{ github.repository }}/releases/tag/v$NEW_VERSION" >> CHANGELOG.md
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38
         with:
           title: 'chore(release): prepare release ${{ steps.bump_version.outputs.new_version }}'
           body: |
@@ -110,6 +121,7 @@ jobs:
     needs: version-bump
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    # Job-specific permissions
     permissions:
       contents: write
     steps:
@@ -123,7 +135,7 @@ jobs:
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           name: Release v${{ steps.get_version.outputs.version }}
