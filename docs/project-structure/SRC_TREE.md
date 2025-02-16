@@ -31,12 +31,16 @@
 │   │       └── page.tsx
 │   └── page.tsx
 ├── components
+│   ├── cookie-consent.tsx
 │   ├── theme-provider.tsx
 │   └── ui
+│       ├── alert.tsx
 │       ├── aspect-ratio.tsx
 │       ├── avatar.tsx
 │       ├── button.tsx
 │       ├── card.tsx
+│       ├── contact
+│       │   └── page.tsx
 │       ├── dialog.tsx
 │       ├── dropdown-menu.tsx
 │       ├── form.tsx
@@ -47,12 +51,14 @@
 │       ├── navigation-menu.tsx
 │       ├── newsletter-form.tsx
 │       ├── radio-group.tsx
+│       ├── scroll-area.tsx
 │       ├── select.tsx
 │       ├── separator.tsx
 │       ├── sheet.tsx
 │       ├── site-footer.tsx
 │       ├── site-header.tsx
 │       ├── skeleton.tsx
+│       ├── switch.tsx
 │       ├── textarea.tsx
 │       ├── toast.tsx
 │       └── toaster.tsx
@@ -61,6 +67,6 @@
 └── lib
     └── utils.ts
 
-18 directories, 41 files
+19 directories, 46 files
 
 ```

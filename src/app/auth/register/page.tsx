@@ -6,8 +6,8 @@ import { Card } from "@/components/ui/card"
 import { CloudLightning } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Create Account | Cloud Capture",
-  description: "Join Cloud Capture and start capturing moments",
+  title: "Create Account | Cloud Burst",
+  description: "Join Cloud Burst and start capturing moments",
 }
 
 export default function RegisterPage() {

@@ -71,7 +71,7 @@ export function MobileNav() {
           <div className="px-6 py-4 border-b">
             <div className="flex items-center gap-2">
               <CloudLightning className="h-6 w-6 text-blue-500" />
-              <h2 className="text-lg font-semibold">Cloud Capture</h2>
+              <h2 className="text-lg font-semibold">Cloud Burst</h2>
             </div>
           </div>
 
@@ -99,7 +99,7 @@ export function MobileNav() {
           <div className="px-6 py-4 border-t">
             <div className="flex justify-center space-x-6">
               <Link 
-                href="https://github.com/cloudcapture" 
+                href="https://github.com/cloudburst" 
                 target="_blank"
                 className="hover:text-blue-500 transition-colors"
               >
@@ -107,7 +107,7 @@ export function MobileNav() {
                 <span className="sr-only">GitHub</span>
               </Link>
               <Link 
-                href="https://twitter.com/cloudcapture" 
+                href="https://twitter.com/cloudburst" 
                 target="_blank"
                 className="hover:text-blue-500 transition-colors"
               >

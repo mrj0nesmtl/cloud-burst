@@ -15,9 +15,9 @@
 │   ├── UI_components.md
 │   ├── VERSION_CONTROL.md
 │   ├── prompt_archive
-│   ├── session 3.md
-│   ├── session_1_prompt.md
-│   ├── session_4.md
+│   │   ├── session 3.md
+│   │   ├── session_1_prompt.md
+│   │   └── session_4.md
 │   └── session_5.md
 ├── planning
 │   ├── business_proposition.md

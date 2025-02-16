@@ -1,7 +1,7 @@
 # 🌐 **Website Overview**  
 
-## 📡 Cloud ☁️ Capture  
-📅 *Updated: Feb 2024*  
+## 📡 Cloud Burst  
+📅 *Updated: Feb 15, 2024*  
 
 ---
 
@@ -10,7 +10,7 @@
 ✨ **Tagline**: *Elevating Event Photography*  
 
 ### 🎥 **Hero Section**  
-- **Headline**: *"Cloud Capture - All the Photos You Want"*  
+- **Headline**: *"Cloud Burst - All the Photos You Want"*  
 - **Subheadline**: *"Engage guests, curate stunning photo galleries, and boost your event's brand — all with a single, easy-to-use platform."*  
 - **CTA (Call-to-Action)**: *"🚀 Get Started Today"* (Sign-Up/Demo)  
 
@@ -42,7 +42,7 @@
 *Traditional event photography is fragmented, expensive, and lacks a personal touch.*  
 
 🚀 **Solution Overview**:  
-*Cloud Capture harnesses AI to enhance, categorize, and organize event photos in real time—ensuring every moment is preserved beautifully.*  
+*Cloud Burst harnesses AI to enhance, categorize, and organize event photos in real time—ensuring every moment is preserved beautifully.*  
 
 ✔️ **Seamless Guest Engagement** – Encourages organic participation.  
 ✔️ **AI-Curated & Branded Galleries** – Ensures consistent event aesthetics.  
@@ -138,13 +138,27 @@
 ## 💰 **Pricing & Packages**  
 
 ### **📦 Flexible Pricing for Every Event**  
-✔️ **Starter Package** – Perfect for **small events & intimate gatherings**.  
-✔️ **Professional Package** – Best for **weddings, corporate events**.  
-✔️ **Enterprise Package** – **Custom solutions** for large-scale activations.  
+✔️ **Starter Package (Free)** – Perfect for **small events & intimate gatherings**  
+- Up to 100 photos
+- Basic AI organization
+- 24-hour access
+- Standard support
+- Social sharing
+- Event gallery
 
-💡 **Transparent Pricing** – No hidden fees.  
-✔️ Add-ons available for **custom analytics, premium support, extra storage**.  
-✔️ **CTA**: *"View Pricing & Get a Custom Quote"*  
+✔️ **Professional Package ($199)** – Best for **weddings, corporate events**  
+- All Starter features
+- Unlimited photos
+- Priority support
+- Custom branding
+- Advanced analytics
+- AI photo enhancement
+
+✔️ **Enterprise Package** – **Custom solutions** for large-scale activations  
+
+💡 **Transparent Pricing** – No hidden fees  
+✔️ Integrated contact form for custom quotes  
+✔️ Monochromatic design system for clarity  
 
 ### 💰 Pricing Section
 - **Pricing Cards**: 
@@ -196,7 +210,7 @@
 
 💡 *"Ready to Elevate Your Event?"*  
 
-✔️ **Final CTA**: *"🚀 Get Started with Cloud Capture Today"*  
+✔️ **Final CTA**: *"🚀 Get Started with Cloud Burst Today"*  
 ✔️ **Direct Contact** – Email, phone, & **custom request form**.  
 ✔️ **Social Proof** – **Links to social media, blog updates, and press mentions**.  
 
@@ -210,7 +224,7 @@
 ---
 
 ## 🎯 **Conclusion**  
-The **Cloud Capture website** is designed for **event planners & organizers**, offering **seamless event photography management**. With a focus on **ease-of-use, AI-driven enhancements, and deep customization**, Cloud Capture is the **ultimate event photo-sharing solution**. 🚀  
+The **Cloud Burst website** is designed for **event planners & organizers**, offering **seamless event photography management**. With a focus on **ease-of-use, AI-driven enhancements, and deep customization**, Cloud Capture is the **ultimate event photo-sharing solution**. 🚀  
 
 ## 📱 Responsive Considerations
 - Mobile-first design
