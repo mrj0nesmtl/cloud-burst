@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { 
   Mail, 
-  User, 
   MessageSquare, 
   Send,
   Phone,
-  MapPin 
+  MapPin,
+  ArrowRight 
 } from "lucide-react"
 
 export const metadata = {
@@ -18,52 +18,89 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="container mx-auto max-w-3xl py-16 px-4">
-      <div className="bg-background/80 rounded-lg p-8 shadow-lg">
-        <h1 className="text-3xl font-bold tracking-tighter mb-2">Contact Us</h1>
-        <h2 className="text-2xl font-semibold text-blue-500 mb-4">Get in Touch</h2>
-        <p className="text-muted-foreground mb-8">
-          Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-        </p>
-
-        <form className="space-y-6">
-          <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium">Name</label>
-            <input
-              id="name"
-              type="text"
-              placeholder="Your name"
-              className="w-full p-2 border rounded-md bg-background"
-            />
+    <div className="flex flex-col min-h-screen">
+      {/* Hero Section */}
+      <div className="relative bg-muted/50 py-24">
+        <div className="container mx-auto max-w-4xl px-4">
+          <div className="text-center space-y-4">
+            <div className="flex items-center justify-center mb-6">
+              <MessageSquare className="h-12 w-12 text-blue-500" />
+            </div>
+            <h1 className="text-5xl font-bold tracking-tighter sm:text-6xl">
+              Get in Touch
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            </p>
           </div>
-          
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="your@email.com"
-              className="w-full p-2 border rounded-md bg-background"
-            />
+        </div>
+      </div>
+
+      <div className="container mx-auto max-w-5xl py-16 px-4">
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Contact Information */}
+          <div className="md:col-span-1 space-y-8">
+            <Card className="p-6">
+              <div className="space-y-6">
+                <div className="flex items-center space-x-3">
+                  <Mail className="h-5 w-5 text-blue-500" />
+                  <div>
+                    <h3 className="font-medium">Email Us</h3>
+                    <p className="text-sm text-muted-foreground">support@cloudcapture.com</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Phone className="h-5 w-5 text-blue-500" />
+                  <div>
+                    <h3 className="font-medium">Call Us</h3>
+                    <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <MapPin className="h-5 w-5 text-blue-500" />
+                  <div>
+                    <h3 className="font-medium">Location</h3>
+                    <p className="text-sm text-muted-foreground">San Francisco, CA</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="message" className="text-sm font-medium">Message</label>
-            <textarea
-              id="message"
-              placeholder="How can we help?"
-              rows={6}
-              className="w-full p-2 border rounded-md bg-background"
-            />
-          </div>
+          {/* Contact Form */}
+          <Card className="p-8 md:col-span-2">
+            <form className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">First Name</label>
+                  <Input placeholder="John" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Last Name</label>
+                  <Input placeholder="Doe" />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Email</label>
+                <Input type="email" placeholder="you@example.com" />
+              </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
-          >
-            Send Message
-          </button>
-        </form>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Message</label>
+                <Textarea 
+                  placeholder="How can we help you?"
+                  className="min-h-[150px]"
+                />
+              </div>
+
+              <Button className="w-full" size="lg">
+                Send Message
+                <Send className="ml-2 h-4 w-4" />
+              </Button>
+            </form>
+          </Card>
+        </div>
       </div>
     </div>
   )

@@ -1,17 +1,15 @@
-import { Metadata } from "next"
-import Link from "next/link"
+import { CloudLightning } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
-import { Github, CloudLightning } from "lucide-react"
+import Link from "next/link"
 
-export const metadata: Metadata = {
-  title: "Sign In | Cloud Capture",
-  description: "Sign in to your Cloud Capture account",
+export const metadata = {
+  title: 'Sign In | Cloud Capture',
+  description: 'Sign in to your Cloud Capture account',
 }
 
-export default function LoginPage() {
+export default function SignInPage() {
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] items-center justify-center py-10">
       <Card className="w-full max-w-[400px] p-8">
@@ -19,7 +17,7 @@ export default function LoginPage() {
           <CloudLightning className="h-12 w-12 text-blue-500" />
           <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email to sign in to your account
+            Sign in to your account to continue
           </p>
         </div>
 
