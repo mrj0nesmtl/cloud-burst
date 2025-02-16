@@ -6,9 +6,10 @@ import {
   Mail, 
   MessageSquare, 
   Send,
-  Phone,
-  MapPin,
-  ArrowRight 
+  Facebook,
+  Instagram,
+  Linkedin,
+  ExternalLink,
 } from "lucide-react"
 
 export const metadata = {
@@ -49,18 +50,64 @@ export default function ContactPage() {
                     <p className="text-sm text-muted-foreground">support@cloudcapture.com</p>
                   </div>
                 </div>
+
                 <div className="flex items-center space-x-3">
-                  <Phone className="h-5 w-5 text-blue-500" />
+                  <Facebook className="h-5 w-5 text-blue-500" />
                   <div>
-                    <h3 className="font-medium">Call Us</h3>
-                    <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                    <h3 className="font-medium">Facebook</h3>
+                    <a 
+                      href="https://facebook.com/cloudcapture" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-blue-500 transition-colors"
+                    >
+                      @cloudcapture
+                    </a>
                   </div>
                 </div>
+
                 <div className="flex items-center space-x-3">
-                  <MapPin className="h-5 w-5 text-blue-500" />
+                  <Instagram className="h-5 w-5 text-blue-500" />
                   <div>
-                    <h3 className="font-medium">Location</h3>
-                    <p className="text-sm text-muted-foreground">San Francisco, CA</p>
+                    <h3 className="font-medium">Instagram</h3>
+                    <a 
+                      href="https://instagram.com/cloudcapture" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-blue-500 transition-colors"
+                    >
+                      @cloudcapture
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <ExternalLink className="h-5 w-5 text-blue-500" />
+                  <div>
+                    <h3 className="font-medium">BlueSky</h3>
+                    <a 
+                      href="https://bsky.app/profile/cloudcapture.bsky.social" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-blue-500 transition-colors"
+                    >
+                      @cloudcapture
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <Linkedin className="h-5 w-5 text-blue-500" />
+                  <div>
+                    <h3 className="font-medium">LinkedIn</h3>
+                    <a 
+                      href="https://linkedin.com/company/cloudcapture" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-blue-500 transition-colors"
+                    >
+                      Cloud Capture
+                    </a>
                   </div>
                 </div>
               </div>
