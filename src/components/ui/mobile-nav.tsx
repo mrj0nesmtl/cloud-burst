@@ -99,7 +99,7 @@ export function MobileNav() {
           <div className="px-6 py-4 border-t">
             <div className="flex justify-center space-x-6">
               <Link 
-                href="https://github.com/cloudcapture" 
+                href="https://github.com/cloudburst" 
                 target="_blank"
                 className="hover:text-blue-500 transition-colors"
               >
@@ -107,7 +107,7 @@ export function MobileNav() {
                 <span className="sr-only">GitHub</span>
               </Link>
               <Link 
-                href="https://twitter.com/cloudcapture" 
+                href="https://twitter.com/cloudburst" 
                 target="_blank"
                 className="hover:text-blue-500 transition-colors"
               >

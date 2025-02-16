@@ -88,7 +88,7 @@ export function SiteFooter() {
           </span>
           <div className="flex items-center space-x-4">
             <a 
-              href="https://instagram.com" 
+              href="https://instagram.com/cloudburst" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-muted-foreground hover:text-blue-500 transition-colors"
@@ -96,7 +96,7 @@ export function SiteFooter() {
               <Instagram className="h-5 w-5" />
             </a>
             <a 
-              href="https://facebook.com" 
+              href="https://facebook.com/cloudburst" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-muted-foreground hover:text-blue-500 transition-colors"
@@ -104,7 +104,7 @@ export function SiteFooter() {
               <Facebook className="h-5 w-5" />
             </a>
             <a 
-              href="https://github.com/mrj0nesmtl/cloud-capture/blob/main/README.md" 
+              href="https://github.com/cloudburst" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-muted-foreground hover:text-blue-500 transition-colors"
