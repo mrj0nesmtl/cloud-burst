@@ -1,95 +1,60 @@
 # 🔄 **User Flow Chart**  
 
-## 📡 Cloud ☁️ Capture  
-📅 *Feb 9, 2025*  
-
----
-
-## 📍 **User Flow Process**  
-
-This **User Flow Chart** visualizes the step-by-step journey a user takes when interacting with **Cloud Capture**, from receiving a ticket to engaging with the event photo gallery.  
+## 📡 Cloud Capture
+📅 *Feb 16, 2024*  
 
 ---
 
 ```mermaid
 graph TD
-    subgraph Pre-Event
-        A["📧 Ticket Confirmation Email with QR Code"] 
-        --> |"Email Template with AspectRatio"| B["📱 User Scans QR Code"]
-    end
-
     subgraph Authentication
-        B --> |"Dialog, Toast"| C["🔗 Redirect to Cloud Capture Web App"]
-        C --> |"Tabs, Form"| D{"🔑 Authentication Choice?"}
-        D -- "🔓 Login/Register" --> |"Form, Button"| E["👤 User Logs In"]
-        D -- "🚶 Continue as Guest" --> |"Button"| F["Proceed as Guest"]
+        A[📧 User Arrives] -->|Next.js Route| B[🔐 Auth Page]
+        B -->|Form Component| C{Authentication Choice}
+        
+        C -->|Email Form| D[📝 Email Sign In]
+        C -->|Email Form| E[📝 Email Sign Up]
+        
+        D -->|Supabase Auth| F[🔑 Session Created]
+        E -->|Supabase Auth| F
+        
+        F -->|Route Guard| G[🛡️ Protected Route]
     end
 
-    subgraph Photo_Management
-        E --> |"NavigationMenu"| G["📸 Access Photo Capture Interface"]
-        F --> G
-        G --> |"DropZone, Progress"| H["📤 Take/Upload Photo"]
-        H --> |"Toast"| I["🚀 Photo Sent to Server"]
-        I --> |"Progress"| J["🤖 AI Image Processing"]
-        J --> |"Toast"| K["💾 Store in Event Gallery"]
+    subgraph Authorization
+        G -->|Role Check| H{👥 Role Verification}
+        H -->|Event Planner| I[📊 Planner Dashboard]
+        H -->|Attendee| J[📱 Attendee Dashboard]
     end
 
-    subgraph Gallery_Experience
-        K --> |"ScrollArea, AspectRatio"| L["🖼️ Real-Time Photo Gallery Display"]
-        L --> |"Dialog, HoverCard"| M["📥 User Views, Shares & Downloads Photos"]
+    subgraph Features
+        I -->|Auth Required| K[Event Management]
+        J -->|Auth Required| L[Photo Gallery]
+        
+        K -->|Protected| M[📸 Photo Operations]
+        L -->|Protected| M
     end
 ```
 
 ---
 
-## 🎯 **Key Features & Components**  
+## 🎯 **Key Components**  
 
-### 📱 **Access & Authentication**
-- `<AspectRatio>` for QR display
-- `<Dialog>` for permissions
-- `<Toast>` for notifications
-- `<Tabs>` for auth options
-- `<Form>` for user input
+### 🔐 **Authentication**
+- Email Sign In/Up Forms
+- Session Management
+- Protected Routes
+- Loading States
 
-### 📸 **Photo Management**
-- `<DropZone>` for uploads
-- `<Progress>` for status
-- `<Toast>` for notifications
-- `<Button>` for actions
-- `<Sheet>` for mobile options
+### 👥 **Authorization**
+- Role Assignment
+- Permission Checks
+- Access Control
+- Security Rules
 
-### 🖼️ **Gallery Experience**
-- `<ScrollArea>` for gallery view
-- `<AspectRatio>` for images
-- `<Dialog>` for previews
-- `<HoverCard>` for details
-- `<Carousel>` for slideshows
-
----
-
-## ⚡ **Technical Considerations**
-
-### 🔒 Security
-- JWT authentication
-- Rate limiting
-- CSRF protection
-- Secure file handling
-
-### 📱 Responsive Design
-- Mobile-first approach
-- Touch-optimized
-- Offline capabilities
-- Progressive loading
-
-### 🚀 Performance
-- Image optimization
-- Lazy loading
-- Client caching
-- Real-time updates
-
----
-
-## 🎯 **Conclusion**  
-This **User Flow Chart** ensures a **frictionless, AI-enhanced event photography experience** for both guests and event hosts. Cloud Capture **streamlines access, organization, and sharing**, making event memories more accessible than ever. 🎉  
+### 📊 **Dashboards**
+- Role-Specific Views
+- Protected Features
+- Secure Operations
+- Real-time Updates
 
 ---

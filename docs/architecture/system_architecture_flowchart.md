@@ -1,7 +1,63 @@
 # 🏛️ **System Architecture Flowchart**  
 
-## 📡 Cloud ☁️ Capture  
-📅 *Feb 15, 2025*  
+## 📡 Cloud Capture  
+📅 *Feb 16, 2024*  
+
+---
+
+```mermaid
+flowchart TD
+    subgraph Client[📱 Client Layer]
+        WebApp[🌐 Next.js 14 App]
+        AuthForms[🔐 Auth Forms]
+        Protected[🛡️ Protected Routes]
+    end
+
+    subgraph Auth[🔑 Authentication Layer]
+        SupaAuth[Supabase Auth]
+        Session[📝 Session Management]
+        Roles[👥 Role Management]
+    end
+
+    subgraph Data[💾 Data Layer]
+        Database[🗄️ Supabase PostgreSQL]
+        Storage[📦 Supabase Storage]
+        RLS[🔒 Row Level Security]
+    end
+
+    WebApp -->|1. Auth Request| AuthForms
+    AuthForms -->|2. Credentials| SupaAuth
+    SupaAuth -->|3. Validate| Session
+    Session -->|4. Create| Roles
+    Roles -->|5. Assign| RLS
+    RLS -->|6. Secure| Database
+    RLS -->|6. Secure| Storage
+    
+    Protected -->|Verify| Session
+    Protected -->|Check| Roles
+```
+
+---
+
+## 🛠️ **System Components**  
+
+### 📱 **Client Layer**
+- Next.js 14 App Router
+- TypeScript + React
+- Shadcn/ui Components
+- Protected Routes HOC
+
+### 🔑 **Authentication Layer**
+- Supabase Auth
+- JWT Sessions
+- Role-Based Access
+- Security Middleware
+
+### 💾 **Data Layer**
+- PostgreSQL Database
+- Supabase Storage
+- Row Level Security
+- Real-time Subscriptions
 
 ---
 
@@ -26,40 +82,6 @@ flowchart TD
     AIService --> CloudStorage
     CloudStorage --> CDN[🚀 Cloudflare CDN] (To Be Determined)
 ```
-
----
-
-## 🛠️ **System Components**  
-
-### 📱 **Client (User Devices)**  
-✔️ Users access Cloud Capture via **mobile & desktop browsers**.  
-✔️ **QR-based login** for frictionless event entry.  
-
-### 🌐 **Web App (Frontend)**  
-✔️ **Next.js + React.js** for dynamic user experiences.  
-✔️ **Tailwind CSS** for responsive design.  
-✔️ **Shadcn UI** for rapid UI development.  
-✔️ **Monochromatic design system** for consistent branding.  
-
-### 🖥️ **API Gateway (Backend)**  
-✔️ **Node.js + Express.js + GraphQL API**.  
-✔️ Routes requests to **authentication, AI, database, and storage layers**.  
-
-### 🔑 **Authentication Service**  
-✔️ **Supabase Auth, OAuth 2.0** for secure access.  
-✔️ Supports **Google, Apple, & social logins**.  
-
-### 🤖 **AI Processing Layer**  
-✔️ **OpenAI** enhance and categorize images.  
-✔️ **Duplicate & quality detection, facial recognition**.  
-
-### 🗄️ **Database (PostgreSQL)**  
-✔️ Stores **user profiles, event details, and metadata**.  
-✔️ **Supabase integration** for real-time data.  
-
-### ☁️ **Cloud Storage (AWS S3)**  
-✔️ Securely **stores all event photos**.  
-✔️ **Cloudflare CDN integration** for fast delivery.  
 
 ---
 
