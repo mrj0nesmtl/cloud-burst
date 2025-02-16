@@ -51,34 +51,34 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* How It Works Section */}
+        {/* How It Works Section - Enhanced hover effects */}
         <section className="space-y-6">
           <h2 className="text-3xl font-bold">How It Works</h2>
           <div className="grid gap-6 sm:grid-cols-2">
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <Brain className="h-8 w-8 text-blue-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Frictionless Access</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Brain className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-500 transition-colors">Frictionless Access</h3>
               <p className="text-muted-foreground">
                 No app download required—guests scan & capture moments instantly via QR code.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <Sparkles className="h-8 w-8 text-blue-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">AI-Powered Curation</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Sparkles className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-500 transition-colors">AI-Powered Curation</h3>
               <p className="text-muted-foreground">
                 Smart filters remove duplicates & categorize photos using facial recognition & timestamps.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <Share2 className="h-8 w-8 text-blue-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Seamless Collection</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Share2 className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-500 transition-colors">Seamless Collection</h3>
               <p className="text-muted-foreground">
                 All images are automatically uploaded to a centralized event gallery.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <Shield className="h-8 w-8 text-blue-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Privacy Controls</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Shield className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-500 transition-colors">Privacy Controls</h3>
               <p className="text-muted-foreground">
                 Event hosts can moderate content & set permissions for sharing.
               </p>
@@ -86,41 +86,41 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Perfect For Section */}
+        {/* Perfect For Section - Enhanced hover effects */}
         <section className="space-y-6">
           <h2 className="text-3xl font-bold">Perfect For</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-card rounded-lg p-6 shadow-sm border hover:border-blue-500 transition-colors">
-              <PartyPopper className="h-8 w-8 text-blue-500 mb-4" />
-              <h3 className="font-semibold mb-2">Wedding Planners & Celebrations</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <PartyPopper className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="font-semibold mb-2 group-hover:text-blue-500 transition-colors">Wedding Planners & Celebrations</h3>
               <p className="text-sm text-muted-foreground">
                 Capture every precious moment of the special day.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border hover:border-blue-500 transition-colors">
-              <Building2 className="h-8 w-8 text-blue-500 mb-4" />
-              <h3 className="font-semibold mb-2">Corporate Events & Conferences</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Building2 className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="font-semibold mb-2 group-hover:text-blue-500 transition-colors">Corporate Events & Conferences</h3>
               <p className="text-sm text-muted-foreground">
                 Professional documentation of business gatherings.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border hover:border-blue-500 transition-colors">
-              <Music className="h-8 w-8 text-blue-500 mb-4" />
-              <h3 className="font-semibold mb-2">Music Festivals & Entertainment</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Music className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="font-semibold mb-2 group-hover:text-blue-500 transition-colors">Music Festivals & Entertainment</h3>
               <p className="text-sm text-muted-foreground">
                 Crowd-sourced memories from live events.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border hover:border-blue-500 transition-colors">
-              <Rocket className="h-8 w-8 text-blue-500 mb-4" />
-              <h3 className="font-semibold mb-2">Brand Activations & Launches</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Rocket className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="font-semibold mb-2 group-hover:text-blue-500 transition-colors">Brand Activations & Launches</h3>
               <p className="text-sm text-muted-foreground">
                 Engage audiences and capture brand moments.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border hover:border-blue-500 transition-colors">
-              <Users2 className="h-8 w-8 text-blue-500 mb-4" />
-              <h3 className="font-semibold mb-2">Private Celebrations</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Users2 className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="font-semibold mb-2 group-hover:text-blue-500 transition-colors">Private Celebrations</h3>
               <p className="text-sm text-muted-foreground">
                 Personal gatherings and intimate events.
               </p>

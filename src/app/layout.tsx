@@ -16,11 +16,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Cloud Capture',
+  title: 'Cloud Burst',
   description: 'AI-powered event photography platform',
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   ),
+  applicationName: 'Cloud Burst',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Cloud Burst',
+  },
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -41,9 +47,9 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
   openGraph: {
     type: 'website',
-    title: 'Cloud Capture',
+    title: 'Cloud Burst',
     description: 'AI-Powered Event Photography Platform',
-    siteName: 'Cloud Capture',
+    siteName: 'Cloud Burst',
     images: [
       {
         url: '/og-image.png',
@@ -54,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cloud Capture',
+    title: 'Cloud Burst',
     description: 'AI-Powered Event Photography Platform',
     images: ['/og-image.png']
   }

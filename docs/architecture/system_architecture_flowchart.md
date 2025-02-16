@@ -1,7 +1,7 @@
 # 🏛️ **System Architecture Flowchart**  
 
 ## 📡 Cloud ☁️ Capture  
-📅 *Feb 9, 2025*  
+📅 *Feb 15, 2025*  
 
 ---
 
@@ -37,8 +37,9 @@ flowchart TD
 
 ### 🌐 **Web App (Frontend)**  
 ✔️ **Next.js + React.js** for dynamic user experiences.  
-✔️ **Tailwind CSS** for responsive design.
+✔️ **Tailwind CSS** for responsive design.  
 ✔️ **Shadcn UI** for rapid UI development.  
+✔️ **Monochromatic design system** for consistent branding.  
 
 ### 🖥️ **API Gateway (Backend)**  
 ✔️ **Node.js + Express.js + GraphQL API**.  
@@ -70,6 +71,6 @@ flowchart TD
 ---
 
 ## 🎯 **Conclusion**  
-This **System Architecture Flowchart** provides a **clear, structured overview** of Cloud Capture’s backend, frontend, and AI-driven operations. Designed for **scalability, security, and real-time performance**, Cloud Capture **delivers a next-gen event photography experience**. 🚀  
+This **System Architecture Flowchart** provides a **clear, structured overview** of Cloud Capture's backend, frontend, and AI-driven operations. Designed for **scalability, security, and real-time performance**, Cloud Capture **delivers a next-gen event photography experience**. 🚀  
 
 ---

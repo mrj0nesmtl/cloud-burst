@@ -20,9 +20,9 @@
 │   │   ├── UI_components.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── prompt_archive
-│   │   ├── session 3.md
-│   │   ├── session_1_prompt.md
-│   │   ├── session_4.md
+│   │   │   ├── session 3.md
+│   │   │   ├── session_1_prompt.md
+│   │   │   └── session_4.md
 │   │   └── session_5.md
 │   ├── planning
 │   │   ├── business_proposition.md
@@ -110,12 +110,16 @@
 │   │   │       └── page.tsx
 │   │   └── page.tsx
 │   ├── components
+│   │   ├── cookie-consent.tsx
 │   │   ├── theme-provider.tsx
 │   │   └── ui
+│   │       ├── alert.tsx
 │   │       ├── aspect-ratio.tsx
 │   │       ├── avatar.tsx
 │   │       ├── button.tsx
 │   │       ├── card.tsx
+│   │       ├── contact
+│   │       │   └── page.tsx
 │   │       ├── dialog.tsx
 │   │       ├── dropdown-menu.tsx
 │   │       ├── form.tsx
@@ -126,12 +130,14 @@
 │   │       ├── navigation-menu.tsx
 │   │       ├── newsletter-form.tsx
 │   │       ├── radio-group.tsx
+│   │       ├── scroll-area.tsx
 │   │       ├── select.tsx
 │   │       ├── separator.tsx
 │   │       ├── sheet.tsx
 │   │       ├── site-footer.tsx
 │   │       ├── site-header.tsx
 │   │       ├── skeleton.tsx
+│   │       ├── switch.tsx
 │   │       ├── textarea.tsx
 │   │       ├── toast.tsx
 │   │       └── toaster.tsx
@@ -143,6 +149,6 @@
 ├── tailwind.config.ts
 └── tsconfig.json
 
-33 directories, 108 files
+34 directories, 113 files
 
 ```
