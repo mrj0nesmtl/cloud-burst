@@ -6,9 +6,10 @@
 │   ├── auth
 │   │   ├── login
 │   │   │   └── page.tsx
-│   │   └── register
+│   │   ├── register
+│   │   │   └── page.tsx
+│   │   └── signin
 │   │       └── page.tsx
-│   ├── favicon.ico
 │   ├── globals.css
 │   ├── layout.tsx
 │   ├── legal
@@ -41,6 +42,7 @@
 │       ├── form.tsx
 │       ├── input.tsx
 │       ├── label.tsx
+│       ├── mobile-nav.tsx
 │       ├── mode-toggle.tsx
 │       ├── navigation-menu.tsx
 │       ├── newsletter-form.tsx
@@ -59,6 +61,6 @@
 └── lib
     └── utils.ts
 
-17 directories, 40 files
+18 directories, 41 files
 
 ```

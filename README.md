@@ -1,5 +1,13 @@
 # Cloud ☁️ Capture
 
+<div align="center">
+
+`v0.1.2` • `Next.js 14` • `TypeScript 5.0` • `Supabase` • `TailwindCSS` • `MIT License`
+
+</div>
+
+<!-- GitHub-only badges (hidden from Replit but visible on GitHub) -->
+<!--
 [![Version](https://img.shields.io/badge/version-0.1.2-blue.svg)](https://github.com/mrj0nesmtl/cloud-capture/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
@@ -8,6 +16,22 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Last Updated](https://img.shields.io/badge/last%20updated-February%202024-brightgreen)](CHANGELOG.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+-->
+
+## 🎯 Current Status
+
+We're currently in the foundation phase, focusing on authentication system implementation. Recent achievements include:
+- ✅ Complete UI framework with responsive design
+- ✅ Brand identity system implementation
+- ✅ Marketing and legal pages
+- ✅ Enhanced navigation system
+- ✅ Documentation structure
+
+Next major features:
+- 🔐 Supabase authentication integration
+- 📱 User dashboard development
+- 💳 Payment system implementation
+- 📸 Core photography features
 
 ## 📸 Elevating Event Photography
 
@@ -102,21 +126,62 @@ Open [http://localhost:3000](http://localhost:3000) to view the app.
 cloud-capture/
 ├── src/
 │   ├── app/           # Next.js App Router pages
-│   │   ├── (marketing)/
-│   │   ├── (auth)/
-│   │   └── (dashboard)/
+│   │   ├── auth/      # Authentication pages
+│   │   │   ├── login/
+│   │   │   ├── register/
+│   │   │   └── signin/
+│   │   ├── legal/     # Legal & compliance pages
+│   │   │   ├── cookies/
+│   │   │   ├── privacy/
+│   │   │   └── terms/
+│   │   ├── marketing/ # Marketing & public pages
+│   │   │   ├── about/
+│   │   │   ├── contact/
+│   │   │   └── pricing/
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
 │   ├── components/    # Reusable UI components
 │   │   ├── ui/       # Shadcn UI components
-│   │   └── custom/   # Custom components
-│   ├── lib/          # Utility functions & configurations
+│   │   │   ├── aspect-ratio.tsx
+│   │   │   ├── avatar.tsx
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── dropdown-menu.tsx
+│   │   │   ├── form.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── label.tsx
+│   │   │   ├── mobile-nav.tsx
+│   │   │   ├── mode-toggle.tsx
+│   │   │   ├── navigation-menu.tsx
+│   │   │   ├── newsletter-form.tsx
+│   │   │   ├── radio-group.tsx
+│   │   │   ├── select.tsx
+│   │   │   ├── separator.tsx
+│   │   │   ├── sheet.tsx
+│   │   │   ├── site-footer.tsx
+│   │   │   ├── site-header.tsx
+│   │   │   ├── skeleton.tsx
+│   │   │   ├── textarea.tsx
+│   │   │   ├── toast.tsx
+│   │   │   └── toaster.tsx
+│   │   └── theme-provider.tsx
 │   ├── hooks/        # Custom React hooks
-│   ├── services/     # API & external service integrations
-│   ├── store/        # Zustand state management
-│   ├── types/        # TypeScript type definitions
-│   └── utils/        # Helper functions
-├── public/           # Static assets
-└── docs/            # Project documentation
+│   │   └── use-toast.ts
+│   └── lib/         # Utility functions & configurations
+│       └── utils.ts
+├── public/          # Static assets
+└── docs/           # Project documentation
 ```
+
+Key directories:
+- `/app`: Next.js 14 App Router pages and layouts
+- `/components`: Reusable UI components and Shadcn/ui integrations
+- `/hooks`: Custom React hooks for shared functionality
+- `/lib`: Utility functions and configurations
+- `/public`: Static assets and resources
+- `/docs`: Project documentation and guides
 
 ---
 

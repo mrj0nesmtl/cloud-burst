@@ -11,14 +11,19 @@
 │   ├── architecture
 │   │   ├── application_design_document.md
 │   │   └── system_architecture_flowchart.md
+│   ├── deployment
+│   │   └── REPLIT_DEPLOYMENT.md
 │   ├── design
 │   │   └── website_overview.md
 │   ├── development
 │   │   ├── STATUS_NOTES.md
 │   │   ├── UI_components.md
 │   │   ├── VERSION_CONTROL.md
+│   │   ├── prompt_archive
 │   │   ├── session 3.md
-│   │   └── session_1_prompt.md
+│   │   ├── session_1_prompt.md
+│   │   ├── session_4.md
+│   │   └── session_5.md
 │   ├── planning
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -69,6 +74,7 @@
 │   ├── sitemap.xml
 │   ├── vercel.svg
 │   └── window.svg
+├── replit.nix
 ├── scripts
 │   ├── generate-favicons.sh
 │   ├── generate-structure.js
@@ -79,9 +85,10 @@
 │   │   ├── auth
 │   │   │   ├── login
 │   │   │   │   └── page.tsx
-│   │   │   └── register
+│   │   │   ├── register
+│   │   │   │   └── page.tsx
+│   │   │   └── signin
 │   │   │       └── page.tsx
-│   │   ├── favicon.ico
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   ├── legal
@@ -114,6 +121,7 @@
 │   │       ├── form.tsx
 │   │       ├── input.tsx
 │   │       ├── label.tsx
+│   │       ├── mobile-nav.tsx
 │   │       ├── mode-toggle.tsx
 │   │       ├── navigation-menu.tsx
 │   │       ├── newsletter-form.tsx
@@ -135,6 +143,6 @@
 ├── tailwind.config.ts
 └── tsconfig.json
 
-30 directories, 103 files
+33 directories, 108 files
 
 ```

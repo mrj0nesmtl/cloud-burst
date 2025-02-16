@@ -7,27 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Authentication UI components (login/register pages)
+- Enhanced responsive navigation system
+- Mobile menu functionality improvements
+- Consistent component layouts
+- Standardized spacing system
+
+### Infrastructure
+- Improved responsive breakpoints
+- Enhanced component architecture
+- Layout optimization
+- Performance improvements
+- Accessibility enhancements
+
+### Documentation
+- Updated project roadmap
+- Enhanced development status notes
+- Added session documentation
+- Updated technical implementation notes
+- Improved component documentation
+
+## [0.1.2] - 2024-02-14
+### Added
 - Legal pages (Privacy, Terms, Cookie Policy)
 - Newsletter subscription component
-- Favicons and app icons generation script
-- Brand identity implementation with cloud-lightning icon
-- SEO optimization with meta tags and OpenGraph
+- Favicons and app icons
+- Brand identity with cloud-lightning icon
+- SEO optimization with meta tags
 - Robots.txt and sitemap.xml
 - Site manifest for PWA support
 
 ### Infrastructure
-- Automated favicon generation pipeline
+- Automated favicon generation
 - SEO and sharing optimization
 - Legal compliance framework
-- Newsletter integration preparation
+- Newsletter integration
 - Brand identity system
 
 ### Documentation
-- Updated project status with UI/branding progress
-- Enhanced development roadmap timelines
-- Added legal documentation structure
-- Updated technical implementation notes
-- Documented brand identity guidelines
+- Updated project status
+- Enhanced development roadmap
+- Added legal documentation
+- Updated technical notes
+- Brand identity guidelines
 
 ## [0.1.1] - 2024-02-12
 ### Added
@@ -61,8 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 - Project README
-- Technical documentation structure
-- Development rules and standards
+- Technical documentation
+- Development standards
 - Architecture documentation
 
 ### Development Setup
@@ -72,5 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shadcn UI setup
 - Supabase initialization
 
-[Unreleased]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/mrj0nesmtl/cloud-capture/releases/tag/v0.1.0 
