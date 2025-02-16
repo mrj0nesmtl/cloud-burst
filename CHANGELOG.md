@@ -4,6 +4,23 @@ All notable changes to Cloud Capture will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2024-02-16
+### Changed
+- Rolled back authentication implementation to restore stability
+- Refined development approach for auth system
+- Updated documentation to reflect current status
+
+### Infrastructure
+- Cleaned up TypeScript errors
+- Removed incomplete auth implementation
+- Restored stable development environment
+
+### Documentation
+- Updated project status
+- Revised authentication implementation plan
+- Enhanced development guidelines
+- Added session 6 planning
+
 ## [0.1.3] - 2024-02-15
 ### Added
 - Enhanced pricing page with contact form integration
