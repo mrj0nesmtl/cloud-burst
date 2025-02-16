@@ -17,8 +17,9 @@
 │   ├── prompt_archive
 │   │   ├── session 3.md
 │   │   ├── session_1_prompt.md
-│   │   └── session_4.md
-│   └── session_5.md
+│   │   ├── session_4.md
+│   │   └── session_5.md
+│   └── session_6.md
 ├── planning
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -29,19 +30,19 @@
 │   ├── roadmap.md
 │   └── statement_or_work.md
 ├── project-structure
+│   ├── DOCS_TREE.md
+│   ├── FULL_TREE.md
+│   ├── README.md
+│   ├── SRC_TREE.md
 │   ├── cursor_tree.md
-│   ├── docs_tree.md
-│   ├── full_tree.md
 │   ├── github_tree.md
-│   ├── public_tree.md
-│   ├── readme.md
-│   └── src_tree.md
+│   └── public_tree.md
 └── user-flows
     ├── invited_user_flow_design_document.md
     ├── photo_upload_sequence_diagram.md
     ├── user_flow_chart.md
     └── user_flow_overview.md
 
-9 directories, 31 files
+9 directories, 32 files
 
 ```
