@@ -7,8 +7,8 @@ import { Card } from "@/components/ui/card"
 import { Github, CloudLightning } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Sign In | Cloud Capture",
-  description: "Sign in to your Cloud Capture account",
+  title: "Sign In | Cloud Burst",
+  description: "Sign in to your Cloud Burst account",
 }
 
 export default function LoginPage() {
