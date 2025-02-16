@@ -4,10 +4,10 @@ import Link from "next/link"
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Cloud Capture - Transform Your Event Photography',
+  title: 'Cloud Burst - Transform Your Event Photography',
   description: 'Capture, enhance, and share event photos with AI-powered technology. Perfect for weddings, corporate events, and celebrations.',
   openGraph: {
-    title: 'Cloud Capture - Transform Your Event Photography',
+    title: 'Cloud Burst - Transform Your Event Photography',
     description: 'AI-powered event photography platform for seamless photo sharing and management.'
   }
 }
@@ -97,7 +97,7 @@ export default function Home() {
             Ready to Revolutionize Your Event Photography?
           </h2>
           <p className="text-xl text-muted-foreground max-w-[600px] mx-auto mb-8">
-            Join thousands of event planners and photographers who trust Cloud Capture.
+            Join thousands of event planners and photographers who trust Cloud Burst.
           </p>
           <Button asChild size="lg" className="text-lg">
             <Link href="/marketing/about">

@@ -16,8 +16,8 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export const metadata = {
-  title: 'About | Cloud Capture',
-  description: 'Learn about Cloud Capture - AI-powered event photography platform',
+  title: 'About | Cloud Burst',
+  description: 'Learn about Cloud Burst - AI-powered event photography platform',
 }
 
 export default function AboutPage() {
@@ -31,10 +31,10 @@ export default function AboutPage() {
               <CloudLightning className="h-12 w-12 text-blue-500" />
             </div>
             <h1 className="text-5xl font-bold tracking-tighter sm:text-6xl">
-              About Cloud Capture
+              What is Cloud Burst?
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Revolutionizing event photography by blending nostalgia with modern technology.
+              Elevating event photography by blending nostalgia with modern technology.
             </p>
           </div>
         </div>
@@ -43,9 +43,9 @@ export default function AboutPage() {
       <div className="container mx-auto max-w-4xl py-16 px-4 space-y-16">
         {/* Vision Section */}
         <section className="space-y-4">
-          <h2 className="text-3xl font-bold">Our Vision</h2>
+          <h2 className="text-3xl font-bold">The Vision</h2>
           <p className="text-lg text-muted-foreground">
-            Inspired by the nostalgia of disposable cameras on event tables, Cloud Capture 
+            Inspired by the nostalgia of disposable cameras on event tables, Cloud Burst 
             modernizes the experience using guests' smartphones and a seamless cloud-based 
             infrastructure. We're transforming event photography for a digital-first audience.
           </p>
@@ -130,10 +130,10 @@ export default function AboutPage() {
 
         {/* Why Choose Section */}
         <section className="space-y-4">
-          <h2 className="text-3xl font-bold">Why Choose Cloud Capture?</h2>
+          <h2 className="text-3xl font-bold">Why Choose Cloud Burst?</h2>
           <p className="text-lg text-muted-foreground">
             Unlike traditional solutions that rely on expensive photographers or 
-            disorganized social media hashtags, Cloud Capture provides a private, 
+            disorganized social media hashtags, Cloud Burst provides a private, 
             AI-powered ecosystem that ensures high-quality photos while being more 
             cost-effective than traditional photography solutions.
           </p>
@@ -144,7 +144,7 @@ export default function AboutPage() {
           <div className="max-w-2xl mx-auto space-y-6">
             <h2 className="text-3xl font-bold">Ready to Transform Your Events?</h2>
             <p className="text-lg text-muted-foreground">
-              Join Cloud Capture today and experience the future of event photography.
+              Join Cloud Burst today and experience the future of event photography.
             </p>
             <div className="flex gap-4 justify-center">
               <Button asChild size="lg">

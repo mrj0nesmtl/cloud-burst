@@ -13,8 +13,8 @@ import {
 } from "lucide-react"
 
 export const metadata = {
-  title: 'Contact | Cloud Capture',
-  description: 'Get in touch with the Cloud Capture team',
+  title: 'Contact | Cloud Burst',
+  description: 'Get in touch with the Cloud Burst team',
 }
 
 export default function ContactPage() {
@@ -47,7 +47,7 @@ export default function ContactPage() {
                   <Mail className="h-5 w-5 text-blue-500" />
                   <div>
                     <h3 className="font-medium">Email Us</h3>
-                    <p className="text-sm text-muted-foreground">support@cloudcapture.com</p>
+                    <p className="text-sm text-muted-foreground">support@cloudburst.com</p>
                   </div>
                 </div>
 
@@ -56,12 +56,12 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-medium">Facebook</h3>
                     <a 
-                      href="https://facebook.com/cloudcapture" 
+                      href="https://facebook.com/cloudburst" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-sm text-muted-foreground hover:text-blue-500 transition-colors"
                     >
-                      @cloudcapture
+                      @cloudburst
                     </a>
                   </div>
                 </div>
@@ -71,12 +71,12 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-medium">Instagram</h3>
                     <a 
-                      href="https://instagram.com/cloudcapture" 
+                      href="https://instagram.com/cloudburst" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-sm text-muted-foreground hover:text-blue-500 transition-colors"
                     >
-                      @cloudcapture
+                      @cloudburst
                     </a>
                   </div>
                 </div>
@@ -86,12 +86,12 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-medium">BlueSky</h3>
                     <a 
-                      href="https://bsky.app/profile/cloudcapture.bsky.social" 
+                      href="https://bsky.app/profile/cloudburst.bsky.social" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-sm text-muted-foreground hover:text-blue-500 transition-colors"
                     >
-                      @cloudcapture
+                      @cloudburst
                     </a>
                   </div>
                 </div>
@@ -101,12 +101,12 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-medium">LinkedIn</h3>
                     <a 
-                      href="https://linkedin.com/company/cloudcapture" 
+                      href="https://linkedin.com/company/cloudburst" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-sm text-muted-foreground hover:text-blue-500 transition-colors"
                     >
-                      Cloud Capture
+                      Cloud Burst
                     </a>
                   </div>
                 </div>

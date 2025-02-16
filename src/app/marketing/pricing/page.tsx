@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 export const metadata = {
-  title: 'Pricing | Cloud Capture',
+  title: 'Pricing | Cloud Burst',
   description: 'Simple, transparent pricing for events of any size',
 }
 
