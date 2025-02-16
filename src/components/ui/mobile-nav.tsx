@@ -71,7 +71,7 @@ export function MobileNav() {
           <div className="px-6 py-4 border-b">
             <div className="flex items-center gap-2">
               <CloudLightning className="h-6 w-6 text-blue-500" />
-              <h2 className="text-lg font-semibold">Cloud Capture</h2>
+              <h2 className="text-lg font-semibold">Cloud Burst</h2>
             </div>
           </div>
 

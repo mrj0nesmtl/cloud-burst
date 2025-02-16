@@ -12,7 +12,7 @@ export function SiteFooter() {
           <div className="space-y-3 relative z-10">
             <div className="flex items-center space-x-2">
               <CloudLightning className="h-6 w-6 text-blue-500" />
-              <span className="font-semibold">Cloud Capture</span>
+              <span className="font-semibold">Cloud Burst</span>
             </div>
             <p className="text-sm text-muted-foreground">
               AI-Powered Event Photography Platform
@@ -84,7 +84,7 @@ export function SiteFooter() {
         {/* Bottom Bar */}
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 relative z-10">
           <span className="text-sm text-muted-foreground">
-            © 2025 Cloud Capture. All rights reserved.
+            © 2025 Cloud Burst. All rights reserved.
           </span>
           <div className="flex items-center space-x-4">
             <a 

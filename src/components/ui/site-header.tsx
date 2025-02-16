@@ -24,7 +24,7 @@ export function SiteHeader() {
         <div className="flex shrink-0 items-center">
           <Link href="/" className="flex items-center space-x-2">
             <CloudLightning className="h-6 w-6 text-blue-500" />
-            <span className="font-semibold text-lg whitespace-nowrap">Cloud Capture</span>
+            <span className="font-semibold text-lg whitespace-nowrap">Cloud Burst</span>
           </Link>
         </div>
 
