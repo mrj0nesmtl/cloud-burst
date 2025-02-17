@@ -83,7 +83,12 @@
 │       └── tree-cli.d.ts
 ├── src
 │   ├── app
+│   │   ├── admin
+│   │   │   ├── dashboard
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx
 │   │   ├── auth
+│   │   │   ├── layout.tsx
 │   │   │   ├── login
 │   │   │   │   └── page.tsx
 │   │   │   ├── register
@@ -112,6 +117,7 @@
 │   │   └── page.tsx
 │   ├── components
 │   │   ├── cookie-consent.tsx
+│   │   ├── error-boundary.tsx
 │   │   ├── theme-provider.tsx
 │   │   └── ui
 │   │       ├── alert.tsx
@@ -126,6 +132,7 @@
 │   │       ├── form.tsx
 │   │       ├── input.tsx
 │   │       ├── label.tsx
+│   │       ├── loading-spinner.tsx
 │   │       ├── mobile-nav.tsx
 │   │       ├── mode-toggle.tsx
 │   │       ├── navigation-menu.tsx
@@ -142,14 +149,26 @@
 │   │       ├── textarea.tsx
 │   │       ├── toast.tsx
 │   │       └── toaster.tsx
+│   ├── contexts
+│   │   └── auth-context.tsx
 │   ├── hooks
+│   │   ├── use-permissions.ts
 │   │   └── use-toast.ts
-│   └── lib
-│       └── utils.ts
+│   ├── lib
+│   │   ├── supabase
+│   │   │   └── config.ts
+│   │   └── utils.ts
+│   └── types
+│       ├── auth.ts
+│       └── supabase.ts
 ├── supabase
+│   ├── Supabase Snippet Column Information Retrieval (1).csv
+│   ├── Supabase Snippet Column Information Retrieval.csv
+│   ├── Supabase Snippet Foreign Key Relationships.csv
+│   └── Supabase Snippet Policy Information Retrieval.csv
 ├── tailwind.config.ts
 └── tsconfig.json
 
-34 directories, 114 files
+39 directories, 128 files
 
 ```
