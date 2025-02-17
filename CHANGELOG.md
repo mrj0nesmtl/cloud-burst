@@ -4,6 +4,17 @@ All notable changes to Cloud Capture will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version Strategy
+- 0.x.y: Development Phase
+  - 0.1.x: Foundation Setup
+  - 0.2.x: Authentication System
+  - 0.3.x: User Dashboard & Profiles
+  - 0.4.x: Core Photo Features
+  - 0.5.x: Foundation Complete
+  - 0.6.x-0.8.x: Feature Implementation
+  - 0.9.x: Pre-release & Testing
+- 1.0.0: Production Launch
+
 ## [0.1.5] - 2024-02-16
 ### Added
 - Supabase client configuration
@@ -70,27 +81,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation updates
 
 ## [Unreleased]
-
-### Added
-- Authentication UI components (login/register pages)
-- Enhanced responsive navigation system
-- Mobile menu functionality improvements
-- Consistent component layouts
-- Standardized spacing system
-
-### Infrastructure
-- Improved responsive breakpoints
-- Enhanced component architecture
-- Layout optimization
-- Performance improvements
-- Accessibility enhancements
-
-### Documentation
-- Updated project roadmap
-- Enhanced development status notes
-- Added session documentation
-- Updated technical implementation notes
-- Improved component documentation
+### Planned
+- Complete authentication system
+- User dashboard implementation
+- Protected routes
+- Role-based access control
 
 ## [0.1.2] - 2024-02-14
 ### Added

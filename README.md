@@ -1,6 +1,6 @@
 # Cloud ☁️ Capture
 
-[![Version](https://img.shields.io/badge/version-0.1.3-blue.svg)](https://github.com/mrj0nesmtl/cloud-capture/releases)
+[![Version](https://img.shields.io/badge/version-0.1.5-blue.svg)](https://github.com/mrj0nesmtl/cloud-capture/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -12,7 +12,7 @@
 <!-- Replit-friendly version -->
 <div align="center">
 
-`v0.1.2` • `Next.js 14` • `TypeScript 5.0` • `Supabase` • `TailwindCSS` • `MIT License`
+`v0.1.5` • `Next.js 14` • `TypeScript 5.0` • `Supabase` • `TailwindCSS` • `MIT License`
 
 </div>
 
