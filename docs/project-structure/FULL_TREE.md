@@ -5,6 +5,7 @@
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
+├── cloud-burst.code-workspace
 ├── components.json
 ├── docs
 │   ├── README.md
@@ -89,12 +90,12 @@
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
 │   │   ├── auth
+│   │   │   ├── callback
+│   │   │   │   └── route.ts
 │   │   │   ├── layout.tsx
 │   │   │   ├── login
 │   │   │   │   └── page.tsx
-│   │   │   ├── register
-│   │   │   │   └── page.tsx
-│   │   │   └── signin
+│   │   │   └── register
 │   │   │       └── page.tsx
 │   │   ├── globals.css
 │   │   ├── layout.tsx
@@ -117,8 +118,15 @@
 │   │   │       └── page.tsx
 │   │   └── page.tsx
 │   ├── components
+│   │   ├── auth
+│   │   │   ├── auth-form.tsx
+│   │   │   ├── email-auth-form.tsx
+│   │   │   ├── login-form.tsx
+│   │   │   └── social-auth-buttons.tsx
 │   │   ├── cookie-consent.tsx
 │   │   ├── error-boundary.tsx
+│   │   ├── providers
+│   │   │   └── toast-provider.tsx
 │   │   ├── theme-provider.tsx
 │   │   └── ui
 │   │       ├── alert.tsx
@@ -126,6 +134,7 @@
 │   │       ├── avatar.tsx
 │   │       ├── button.tsx
 │   │       ├── card.tsx
+│   │       ├── checkbox.tsx
 │   │       ├── contact
 │   │       │   └── page.tsx
 │   │       ├── dialog.tsx
@@ -153,12 +162,17 @@
 │   ├── contexts
 │   │   └── auth-context.tsx
 │   ├── hooks
+│   │   ├── use-analytics.ts
 │   │   ├── use-permissions.ts
 │   │   └── use-toast.ts
 │   ├── lib
+│   │   ├── auth
+│   │   │   └── auth-store.ts
 │   │   ├── supabase
-│   │   │   └── config.ts
+│   │   │   ├── config.ts
+│   │   │   └── server-config.ts
 │   │   └── utils.ts
+│   ├── middleware.ts
 │   └── types
 │       ├── auth.ts
 │       └── supabase.ts
@@ -170,6 +184,6 @@
 ├── tailwind.config.ts
 └── tsconfig.json
 
-39 directories, 129 files
+42 directories, 140 files
 
 ```
