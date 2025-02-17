@@ -15,6 +15,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.7] - 2024-02-17
+### Added
+- Google OAuth authentication
+- Social auth buttons component
+- Auth callback handling
+- Toast notifications for auth states
+- Loading states for auth actions
+
+### Changed
+- Updated auth store with social auth support
+- Enhanced error handling for auth flows
+- Improved auth UI components
+- Refined auth callback routing
+
+### Infrastructure
+- Configured Google OAuth in Supabase
+- Implemented auth middleware
+- Added toast notification system
+- Enhanced type definitions for auth
+
+### Documentation
+- Updated auth implementation details
+- Added Google OAuth setup guide
+- Enhanced error handling documentation
+
 ## [0.1.6] - 2024-02-17
 ### Added
 - Enhanced development rules and standards

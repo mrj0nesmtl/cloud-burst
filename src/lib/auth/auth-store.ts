@@ -18,6 +18,8 @@ interface AuthState {
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
   signInWithSocial: (provider: Provider) => Promise<void>
+  signInWithEmail: (email: string, password: string) => Promise<void>
+  signUpWithEmail: (email: string, password: string) => Promise<void>
   
   // Session management
   initializeAuth: () => Promise<void>
@@ -181,6 +183,39 @@ export const useAuthStore = create<AuthState>()(
             if (error) throw error
           } catch (error: any) {
             set({ error: error.message })
+          } finally {
+            set({ isLoading: false })
+          }
+        },
+
+        signInWithEmail: async (email: string, password: string) => {
+          set({ isLoading: true })
+          try {
+            const { error } = await supabase.auth.signInWithPassword({
+              email,
+              password,
+            })
+            if (error) throw error
+          } catch (error: any) {
+            throw error
+          } finally {
+            set({ isLoading: false })
+          }
+        },
+
+        signUpWithEmail: async (email: string, password: string) => {
+          set({ isLoading: true })
+          try {
+            const { error } = await supabase.auth.signUp({
+              email,
+              password,
+              options: {
+                emailRedirectTo: `${window.location.origin}/auth/callback`,
+              },
+            })
+            if (error) throw error
+          } catch (error: any) {
+            throw error
           } finally {
             set({ isLoading: false })
           }

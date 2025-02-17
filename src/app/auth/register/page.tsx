@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { AuthForm } from "@/components/auth/auth-form"
-import { CloudLightning } from "lucide-react"
+import { EmailAuthForm } from "@/components/auth/email-auth-form"
+import { SocialAuthButtons } from "@/components/auth/social-auth-buttons"
+import { Separator } from "@/components/ui/separator"
 
 export const metadata: Metadata = {
   title: "Create Account | Cloud Burst",
@@ -10,17 +11,16 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="flex flex-col space-y-6">
-      <div className="flex flex-col items-center space-y-2">
-        <CloudLightning className="h-12 w-12 text-blue-500" />
-        <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
+    <div className="space-y-6">
+      <div className="space-y-2 text-center">
+        <h1 className="text-2xl font-semibold tracking-tight">Create an account</h1>
         <p className="text-sm text-muted-foreground">
           Enter your email below to create your account
         </p>
       </div>
-
-      <AuthForm mode="signup" />
-
+      
+      <EmailAuthForm mode="signup" />
+      
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -31,6 +31,8 @@ export default function RegisterPage() {
           </span>
         </div>
       </div>
+
+      <SocialAuthButtons />
 
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{' '}
