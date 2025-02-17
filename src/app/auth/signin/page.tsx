@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import Link from "next/link"
+import { createServerClient } from '@/lib/supabase/config'
 
 export const metadata = {
   title: 'Sign In | Cloud Capture',

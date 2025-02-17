@@ -1,0 +1,11 @@
+﻿"schemaname","tablename","policyname","permissive","roles","cmd","qual"
+"public","user_profiles","Users can update their own profile","PERMISSIVE","{public}","UPDATE","(auth.uid() = id)"
+"public","user_profiles","Super admins can view all profiles","PERMISSIVE","{public}","SELECT","((auth.jwt() ->> 'role'::text) = 'super_admin'::text)"
+"public","user_profiles","Users can view their own profile","PERMISSIVE","{public}","SELECT","(auth.uid() = id)"
+"public","events","Super admins have full access to events","PERMISSIVE","{public}","ALL","((auth.jwt() ->> 'role'::text) = 'super_admin'::text)"
+"public","events","Organizers can CRUD their own events","PERMISSIVE","{public}","ALL","(auth.uid() = organizer_id)"
+"public","events","Public can view published events","PERMISSIVE","{public}","SELECT","(status = 'published'::text)"
+"public","photos","Users can upload photos to published events","PERMISSIVE","{public}","INSERT","null"
+"public","photos","Users can view photos from published events","PERMISSIVE","{public}","SELECT","(EXISTS ( SELECT 1
+   FROM events
+  WHERE ((events.id = photos.event_id) AND (events.status = 'published'::text))))"
