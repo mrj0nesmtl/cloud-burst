@@ -1,14 +1,14 @@
 # 📑 **Request for Product (RFP)**  
 
-## 📡 Cloud ☁️ Capture  
+## 📡 Cloud Burst
 📅 *Feb 9, 2025*  
 
 ---
 
 ## 📝 **Introduction**  
-Cloud Capture is a **event photography platform** designed to **enhance guest engagement** and **streamline photo collection** at large gatherings.  
+Cloud Burst is a **event photography platform** designed to **enhance guest engagement** and **streamline photo collection** at large gatherings.  
 
-💡 *This RFP outlines the technical requirements, user experience expectations, and development scope for Cloud Capture.*  
+💡 *This RFP outlines the technical requirements, user experience expectations, and development scope for Cloud Burst.*  
 
 ---
 
@@ -107,6 +107,6 @@ Interested vendors should submit proposals to **[joel@arcanaconcept.com](mailto:
 ---
 
 ## 🎯 **Conclusion**  
-Cloud Capture’s **QR Code-based event photography platform** ensures **efficiency, automation, and enhanced user experience**. This RFP serves as a **guideline for vendors** to submit their proposals and **help bring Cloud Capture to life**.  
+Cloud Burst **QR Code-based event photography platform** ensures **efficiency, automation, and enhanced user experience**. This RFP serves as a **guideline for vendors** to submit their proposals and **help bring Cloud Burst to life**.  
 
 ---

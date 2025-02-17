@@ -1,15 +1,15 @@
 # 2 - Pitch Deck Draft
 
-CaptureCloud Pitch Deck
+Cloud Burst Pitch Deck
 
-Cloud ☁️ Capture
+Cloud Burst
 Feb 9, 2025
 
 Pitch Deck Draft
 
 Slide 1: Cover Slide
 
-Title: Cloud Capture: Elevating Event Photography
+Title: Cloud Burst: Elevating Event Photography
 
 Subtitle: A Seamless Experience for XXXXXXXXX
 
@@ -29,15 +29,15 @@ High-end event organizers need curated, high-quality photo collections that alig
 
 Disposable cameras and traditional photographers are costly and limited in reach.
 
-Solution: Cloud Capture—a seamless way to crowdsource, enhance, and curate event photography.
+Solution: Cloud Burst seamless way to crowdsource, enhance, and curate event photography.
 
 
 
-Slide 3: How Cloud Capture Works
+Slide 3: How Cloud Burst Works
 
 Step 1: Guests receive a QR code in their ticket confirmation or on-site marketing.
 
-Step 2: They scan the QR code and access the Cloud Capture web app.
+Step 2: They scan the QR code and access the Cloud Burst web app.
 
 Step 3: Guests use their own phone cameras to take and upload photos.
 
@@ -89,7 +89,7 @@ Slide 7: Implementation & Next Steps
 
 Phase 1: Pilot Program for XXXXXXX, Montreal
 
-Setup custom Cloud Capture instance for the event.
+Setup custom Cloud Burst instance for the event.
 
 Run a small-scale test at a pre-event gathering.
 
@@ -105,7 +105,7 @@ Phase 3: Expansion & Customization
 
 Explore additional features tailored to XXXXXXX needs.
 
-Introduce Cloud Capture to global XXXXXXX affiliates, etc..
+Introduce Cloud Burst to global XXXXXXX affiliates, etc..
 
 
 
@@ -125,7 +125,7 @@ Website: [Your Website]
 
 
 
-Conclusion: This pitch deck presents Cloud Capture as an innovative and elegant solution tailored to the aesthetic and operational needs of XXXXXXX Montreal. Let’s move forward with a pilot program and redefine how guests experience event photography!
+Conclusion: This pitch deck presents Cloud Burst as an innovative and elegant solution tailored to the aesthetic and operational needs of XXXXXXX Montreal. Let’s move forward with a pilot program and redefine how guests experience event photography!
 
 
 

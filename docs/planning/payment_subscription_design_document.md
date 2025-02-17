@@ -1,12 +1,12 @@
 # 💳 **Payment & Subscription Design Document**  
 
-## 📸 Cloud ☁️ Capture  
+## 📸 Cloud Burst
 📅 *Feb 9, 2025*  
 
 ---
 
 ## 🏦 Introduction  
-The **Cloud Capture** subscription and payment system enables event planners, wedding coordinators, and organizers to **seamlessly subscribe and purchase** services.  
+The **Cloud Burst** subscription and payment system enables event planners, wedding coordinators, and organizers to **seamlessly subscribe and purchase** services.  
 
 💡 *This document outlines the business model, payment rails, and technical architecture required for managing payments.*  
 
@@ -105,6 +105,6 @@ graph LR
 
 ## 🚀 Conclusion  
 
-Cloud Capture’s **secure, flexible, and AI-powered** subscription model ensures a **seamless experience for event organizers**. With robust **payment security, flexible pricing, and future-ready features**, Cloud Capture is built for **scalability and innovation**.  
+Cloud Burst **secure, flexible, and AI-powered** subscription model ensures a **seamless experience for event organizers**. With robust **payment security, flexible pricing, and future-ready features**, Cloud Burst is built for **scalability and innovation**.  
 
 ---

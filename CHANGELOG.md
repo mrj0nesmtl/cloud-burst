@@ -15,6 +15,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.6] - 2024-02-17
+### Added
+- Enhanced development rules and standards
+- Session 7 planning documentation
+- Stricter TypeScript configurations
+- New API standards for auth and uploads
+- Updated React component patterns
+- Enhanced state management rules
+- Improved security standards
+
+### Changed
+- Reorganized project documentation structure
+- Updated development rules format
+- Enhanced code style guidelines
+- Improved API documentation
+- Updated authentication implementation plan
+
+### Documentation
+- Added comprehensive rules documentation
+- Enhanced project structure documentation
+- Updated development status
+- Added session 7 planning
+- Archived session 6 documentation
+
 ## [0.1.5] - 2024-02-16
 ### Added
 - Supabase client configuration
@@ -154,7 +178,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shadcn UI setup
 - Supabase initialization
 
-[Unreleased]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.5...HEAD
+[Unreleased]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.6...HEAD
+[0.1.6]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.2...v0.1.3

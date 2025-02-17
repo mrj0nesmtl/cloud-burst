@@ -1,7 +1,7 @@
 # Version Control Guidelines
 
 ## Semantic Versioning
-Cloud Capture follows [Semantic Versioning 2.0.0](https://semver.org/):
+Cloud Burst follows [Semantic Versioning 2.0.0](https://semver.org/):
 
 - **MAJOR** version (X.0.0) - incompatible API changes
 - **MINOR** version (0.X.0) - backwards-compatible functionality

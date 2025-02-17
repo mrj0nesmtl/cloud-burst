@@ -1,14 +1,16 @@
-# 🛠️ **Cloud Capture - Development Roadmap**
+# 🛠️ **Cloud Burst - Development Roadmap**
+📊 Overall Project Completion: ~25%
 
 ## 📊 Project Timeline Overview
 
 | Phase | Timeline | Status | Progress |
 |-------|----------|---------|-----------|
-| 🏗️ Act I: Foundation | Feb-Mar 2025 | 🟢 Active | 70% |
+| 🏗️ Act I: Foundation | Feb-Mar 2025 | 🟡 In Progress | 75% |
 | ⚙️ Act II: Features | Apr-May 2025 | ⚪ Planned | 0% |
 | 🚀 Act III: Launch | Jun-Jul 2025 | ⚪ Planned | 0% |
 
 ### 📈 Current Sprint Status
+## [0.1.6] - 2024-02-17
 
 | Component | Status | Owner | Due Date | Progress |
 |-----------|--------|-------|----------|-----------|
@@ -18,12 +20,12 @@
 | 🎨 Brand Identity | ✅ Done | @mrj0nesmtl | Feb 15, 2025 | 100% |
 | 📜 Legal Framework | ✅ Done | @mrj0nesmtl | Feb 15, 2025 | 100% |
 | 💰 Pricing System | ✅ Done | @mrj0nesmtl | Feb 15, 2025 | 100% |
-| 🔐 Auth System | 🏗️ In Progress | @mrj0nesmtl | Feb 20, 2025 | 0% |
+| 🔐 Auth System | 🟡 In Progress | @mrj0nesmtl | Feb 20, 2025 | 30% |
 
 ## 📡 Project Status Abstract
 
 ### Completed Milestones
-We have successfully completed the foundational phase of Cloud Capture's development. The platform now has a robust UI framework, consistent brand identity, and all critical bug fixes have been implemented. The development environment is fully configured, and all marketing pages are polished and responsive.
+We have successfully completed the foundational phase of Cloud Burst's development. The platform now has a robust UI framework, consistent brand identity, and all critical bug fixes have been implemented. The development environment is fully configured, and all marketing pages are polished and responsive.
 
 ### Current Phase
 We are transitioning into the authentication and user management phase. This involves setting up Supabase authentication, implementing protected routes, and creating a comprehensive role-based access control system. This phase is crucial for enabling user-specific features and securing the platform.
@@ -42,50 +44,38 @@ We are transitioning into the authentication and user management phase. This inv
 - Optimized performance metrics
 - Enhanced accessibility compliance
 
-## 📡 Cloud ☁️ Capture
+## 📡 Cloud Burst
 📅 *Feb 2025*
 
 ---
 
 ## 🎯 **Objective**
-Leverage **AI-powered development tools** to build and launch Cloud Capture within a structured three-act development cycle.
+Leverage **AI-powered development tools** to build and launch Cloud Burst within a structured three-act development cycle.
 
 ---
 
-## 🏗️ **Act I: The Foundation**
-### Objective: Establish core architecture and development environment
+## 🏗️ **Act I: The Foundation** (75% Complete)
+### **Sprint 1-2: Environment & Repository Setup** ✅ 100%
+- ✅ Initialize GitHub repository
+- ✅ Configure development environment
+- ✅ Define branching strategy
+- ✅ Set up CI/CD pipeline
 
-### **Sprint 1-2: Environment & Repository Setup**
-✔️ Initialize **GitHub repository** (`cloud-capture`)
-✔️ Configure **development environment**:
-  - Next.js 14 with TypeScript
-  - Tailwind CSS + Shadcn UI
-  - Supabase integration
-✔️ Define **branching strategy** & commit guidelines
-✔️ Set up **CI/CD pipeline** (GitHub Actions)
+### **Sprint 3-4: Core Infrastructure** 🟡 50%
+- ✅ Database Schema & API Architecture
+- 🟡 Authentication System (30% complete)
+  - ✅ Supabase Auth integration started
+  - 🟡 OAuth 2.0 (Pending)
+  - ⚪ Guest access flow (Pending)
 
-### **Sprint 3-4: Core Infrastructure**
-✔️ **Database Schema & API Architecture**:
-  - Define ERD for `users`, `events`, `photos`
-  - Design API endpoints structure
-  - Configure Supabase real-time features
-✔️ **Authentication System**:
-  - Supabase Auth integration
-  - OAuth 2.0 (Google, Apple Sign-in)
-  - Guest access flow
-
-### **Sprint 5-7: UI/UX Foundation**
-✔️ Create **interactive wireframes**:
-  - Event landing page with QR entry
-  - Photo capture/upload interface
-  - Real-time gallery view
-  - Host dashboard
-✔️ Implement **base components** with Shadcn UI
-✔️ Develop **responsive layouts**
+### **Sprint 5-7: UI/UX Foundation** ✅ 100%
+- ✅ Create interactive wireframes
+- ✅ Implement base components
+- ✅ Develop responsive layouts
 
 ---
 
-## ⚙️ **Act II: Feature Implementation**
+## ⚙️ **Act II: Feature Implementation** (0% Complete)
 ### Objective: Build core functionalities and AI integration
 
 ### **Sprint 8-10: Core Features**
@@ -131,7 +121,7 @@ Leverage **AI-powered development tools** to build and launch Cloud Capture with
 
 ---
 
-## 🚀 **Act III: Deployment & Launch**
+## 🚀 **Act III: Deployment & Launch** (0% Complete)
 ### Objective: Optimize and prepare for production
 
 ### **Sprint 22-24: Security & Compliance**
@@ -166,7 +156,7 @@ Leverage **AI-powered development tools** to build and launch Cloud Capture with
 
 ---
 
-## 📈 **Post-Launch Plan**
+## 📈 **Post-Launch Plan** (0% Complete)
 
 ### **Continuous Improvement**
 ✔️ Monitor system performance
@@ -184,14 +174,15 @@ Leverage **AI-powered development tools** to build and launch Cloud Capture with
 ---
 
 ## 🎯 **Success Metrics**
-- User adoption rate
-- Photo processing speed
-- AI accuracy rates
-- Customer satisfaction
-- Platform stability
-- Revenue growth
-
----
+Current Progress:
+- ✅ Development Environment: 100%
+- ✅ UI Framework: 100%
+- ✅ Brand Identity: 100%
+- ✅ Documentation: 100%
+- 🟡 Authentication: 30%
+- ⚪ Core Features: 0%
+- ⚪ Payment System: 0%
+- ⚪ AI Features: 0%
 
 ## 📝 **Note**
 This roadmap is a living document and will be updated as the project evolves. All timelines are approximate and may be adjusted based on development progress and priorities.

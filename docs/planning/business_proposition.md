@@ -1,14 +1,14 @@
 # 🌟 **Business Proposition**  
 
-## 📸 Cloud ☁️ Capture  
+## 📸 Cloud Burst 
 📅 *Feb 9, 2025*  
 
 ---
 
 ## 📝 Abstract  
-Cloud Capture is a **cutting-edge event photography platform** designed to **enhance guest engagement** and streamline **photo collection** at large gatherings.  
+Cloud Burst is a **cutting-edge event photography platform** designed to **enhance guest engagement** and streamline **photo collection** at large gatherings.  
 
-🎞️ *Inspired by the nostalgia of disposable cameras on event tables, Cloud Capture modernizes the experience using guests' smartphones and a seamless cloud-based infrastructure.*  
+🎞️ *Inspired by the nostalgia of disposable cameras on event tables, Cloud Burst modernizes the experience using guests' smartphones and a seamless cloud-based infrastructure.*  
 
 ---
 
@@ -16,11 +16,11 @@ Cloud Capture is a **cutting-edge event photography platform** designed to **enh
 
 ### 📲 **How It Works**  
 ✔️ Event hosts provide a **QR code** printed on invitations, event signage, or table cards.  
-✔️ Guests **scan the QR code** and are instantly redirected to the Cloud Capture **mobile-friendly web app**.  
+✔️ Guests **scan the QR code** and are instantly redirected to the Cloud Burst **mobile-friendly web app**.  
 ✔️ Guests take and **upload** photos directly from their devices.  
 ✔️ AI-powered **photo curation** ensures **organized, high-quality images** in real time.  
 
-💡 Unlike traditional event photography solutions, Cloud Capture ensures **organic guest-driven photo collection** without the need for costly **single-use cameras or professional photographers**.  
+💡 Unlike traditional event photography solutions, Cloud Burst ensures **organic guest-driven photo collection** without the need for costly **single-use cameras or professional photographers**.  
 
 ---
 
@@ -37,7 +37,7 @@ Cloud Capture is a **cutting-edge event photography platform** designed to **enh
 
 ## 📊 Market Opportunity  
 
-Cloud Capture caters to the growing **demand for immersive event experiences** and **digital content curation**.  
+Cloud Burst caters to the growing **demand for immersive event experiences** and **digital content curation**.  
 
 🎯 **Target Customers**:  
 - Wedding Planners 💍  
@@ -46,7 +46,7 @@ Cloud Capture caters to the growing **demand for immersive event experiences** a
 - Brand Activations 🚀  
 - Private Celebrations 🎉  
 
-By **eliminating the need for costly photographers** and **encouraging organic guest participation**, Cloud Capture positions itself as an **affordable and innovative solution** in the event tech industry.  
+By **eliminating the need for costly photographers** and **encouraging organic guest participation**, Cloud Burst positions itself as an **affordable and innovative solution** in the event tech industry.  
 
 ---
 
@@ -56,7 +56,7 @@ Unlike existing solutions that rely on:
 ❌ **Professional photographers** (expensive)  
 ❌ **Social media hashtags** (disorganized & public)  
 
-Cloud Capture provides a **private, AI-powered, and seamless photo-sharing ecosystem**.  
+Cloud Burst provides a **private, AI-powered, and seamless photo-sharing ecosystem**.  
 ✔️ **AI-powered curation** ensures a **high-quality user experience**.  
 ✔️ **A dedicated platform** means **no reliance on generic file-sharing apps**.  
 ✔️ **More affordable** than hiring professional photographers.  
@@ -65,7 +65,7 @@ Cloud Capture provides a **private, AI-powered, and seamless photo-sharing ecosy
 
 ## 🔮 Conclusion  
 
-Cloud Capture **revolutionizes event photography** by blending **nostalgia with modern technology**.  
+Cloud Burst **revolutionizes event photography** by blending **nostalgia with modern technology**.  
 📸 Hosts & guests can relive **event memories effortlessly**.  
 🚀 A **scalable, AI-enhanced solution** set to redefine how event photography is captured, shared, and preserved in the digital age.  
 

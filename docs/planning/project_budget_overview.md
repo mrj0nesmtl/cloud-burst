@@ -2,12 +2,12 @@
 
 Budget Breakdown
 
-Cloud ☁️ Capture
+Cloud Burst
 Feb 9, 2025
 
 Project Budget 
 
-Abstract: This budget outlines the estimated costs for the development and launch of Cloud Capture, an AI-powered event photography web application. The project will leverage AI-driven development tools such as Cursor and Replit combined with a super-lean, agile development team, to complete the build within 30-40 days! The budget has been designed to maximize efficiency while ensuring high-quality execution, with an estimated total cost of $5,500.
+Abstract: This budget outlines the estimated costs for the development and launch of Cloud Burst, an AI-powered event photography web application. The project will leverage AI-driven development tools such as Cursor and Replit combined with a super-lean, agile development team, to complete the build within 30-40 days! The budget has been designed to maximize efficiency while ensuring high-quality execution, with an estimated total cost of $5,500.
 
 
 
@@ -49,7 +49,7 @@ Grand Total: $5,500
 
 
 
-Conclusion: With a total estimated budget of approximately $5,500, Cloud Capture can be developed, tested, and launched within the 30-40 day timeframe. The investment focuses on leveraging AI-driven tools for efficiency, maintaining a lean effective development team, and allocating resources for a successful launch. Additional post-launch expenses can be evaluated based on user adoption and scaling requirements.
+Conclusion: With a total estimated budget of approximately $5,500, Cloud Burst can be developed, tested, and launched within the 30-40 day timeframe. The investment focuses on leveraging AI-driven tools for efficiency, maintaining a lean effective development team, and allocating resources for a successful launch. Additional post-launch expenses can be evaluated based on user adoption and scaling requirements.
 
 
 

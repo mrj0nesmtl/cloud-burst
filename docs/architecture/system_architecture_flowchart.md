@@ -1,6 +1,6 @@
 # 🏛️ **System Architecture Flowchart**  
 
-## 📡 Cloud Capture  
+## 📡 Cloud Burst  
 📅 *Feb 16, 2024*  
 
 ---
@@ -73,9 +73,9 @@ flowchart TD
 
 ---
 
-## 📐 **Cloud Capture System Overview**  
+## 📐 **Cloud Burst System Overview**  
 
-This **System Architecture Diagram** illustrates the **interaction flow** between different components within Cloud Capture.  
+This **System Architecture Diagram** illustrates the **interaction flow** between different components within Cloud Burst.  
 
 ---
 
@@ -105,6 +105,6 @@ flowchart TD
 ---
 
 ## 🎯 **Conclusion**  
-This **System Architecture Flowchart** provides a **clear, structured overview** of Cloud Capture's backend, frontend, and AI-driven operations. Designed for **scalability, security, and real-time performance**, Cloud Capture **delivers a next-gen event photography experience**. 🚀  
+This **System Architecture Flowchart** provides a **clear, structured overview** of Cloud Burst's backend, frontend, and AI-driven operations. Designed for **scalability, security, and real-time performance**, Cloud Burst **delivers a next-gen event photography experience**. 🚀  
 
 ---

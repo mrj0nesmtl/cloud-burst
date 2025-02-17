@@ -1,6 +1,6 @@
 # UI Components Documentation
 
-## 🎨 Cloud Capture Component Library
+## 🎨 Cloud Burst Component Library
 📅 *Updated: Feb 2024*
 
 ## 📚 Core Components

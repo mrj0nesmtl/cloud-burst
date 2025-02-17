@@ -1,4 +1,4 @@
-# 🚀 Replit Deployment Guide for Cloud Capture
+# 🚀 Replit Deployment Guide for Cloud Burst
 
 ## 📋 Prerequisites
 - Replit account
@@ -12,7 +12,7 @@
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-// NEXT_PUBLIC_SITE_URL=https://cloud-capture.replip.com
+// NEXT_PUBLIC_SITE_URL=https://cloudburst.replip.com
 NODE_ENV=production
 NEXT_TELEMETRY_DISABLED=1
 ```
@@ -22,7 +22,7 @@ NEXT_TELEMETRY_DISABLED=1
 ### 1. Initial Setup
 1. Create new Repl
    - Choose "Import from GitHub"
-   - Select cloud-capture repository
+   - Select cloud-burst repository
    - Choose "Node.js" as language
 
 ### 2. Configuration Files
@@ -105,11 +105,11 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 # Site Configuration
-NEXT_PUBLIC_SITE_URL=https://cloud-capture.replit.app
+NEXT_PUBLIC_SITE_URL=https://cloudburst.replit.app
 
 # Security and Features
 NEXTAUTH_SECRET=generate_a_secure_random_string
-NEXTAUTH_URL=https://cloud-capture.replit.app
+NEXTAUTH_URL=https://cloudburst.replit.app
 
 # AI Service Keys (if implementing immediately)
 OPENAI_API_KEY=your_openai_api_key

@@ -1,6 +1,6 @@
 # 🎨 **Application Design Document**  
 
-## 📸 Cloud ☁️ Capture  
+## 📸 Cloud Burst
 📅 *Updated: Feb 16, 2024*  
 
 ## 📊 Implementation Status
@@ -30,7 +30,7 @@
 ---
 
 ## 🔍 Overview  
-The **Cloud Capture** is a web-based solution designed to provide event organizers and participants with an intuitive, AI-enhanced photography platform. This document details the **design and architecture** of the application, covering:  
+The **Cloud Burst** is a web-based solution designed to provide event organizers and participants with an intuitive, AI-enhanced photography platform. This document details the **design and architecture** of the application, covering:  
 ✔️ Specific pages  
 ✔️ UI components  
 ✔️ Role-based access control  

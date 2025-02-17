@@ -35,7 +35,7 @@
 
 ---
 
-## 🤔 **Why Cloud Capture?**  
+## 🤔 **Why Cloud Burst?**  
 
 ### **🎯 The Future of Event Photography**  
 💡 **Problem Statement**:  
@@ -58,13 +58,13 @@
 
 ---
 
-## 🚀 **Features – What Cloud Capture Offers**  
+## 🚀 **Features – What Cloud Burst Offers**  
 
 ### ⚡ **Effortless Event Setup**  
 ✔️ Customizable event pages **branded** to match themes.  
 ✔️ QR code integration **on invitations & event materials**.  
 
-### 📷 **Photo Capture & Upload**  
+### 📷 **Photo Burst & Upload**  
 ✔️ Guests use their smartphones to **capture & instantly upload images**.  
 ✔️ **Real-time gallery display** enhances the **live event experience**.  
 
@@ -172,12 +172,12 @@
 ## 🎤 **Testimonials & Case Studies**  
 
 📢 **Success Stories**  
-💍 *"Cloud Capture transformed our wedding! Every guest felt engaged, and the gallery was stunning!"* – Wedding Planner  
+💍 *"Cloud Burst transformed our wedding! Every guest felt engaged, and the gallery was stunning!"* – Wedding Planner  
 🏢 *"A game-changer for our wedding events. The real-time gallery keeps everyone clicking!"* – Event Producer  
 
 📖 **Case Studies**  
 ✔️ Featured **before-and-after** event photography samples.  
-✔️ Showcasing **how Cloud Capture enhances guest engagement**.  
+✔️ Showcasing **how Cloud Burst enhances guest engagement**.  
 
 ### 🎤 Testimonials
 - **Display**: 
@@ -224,7 +224,7 @@
 ---
 
 ## 🎯 **Conclusion**  
-The **Cloud Burst website** is designed for **event planners & organizers**, offering **seamless event photography management**. With a focus on **ease-of-use, AI-driven enhancements, and deep customization**, Cloud Capture is the **ultimate event photo-sharing solution**. 🚀  
+The **Cloud Burst website** is designed for **event planners & organizers**, offering **seamless event photography management**. With a focus on **ease-of-use, AI-driven enhancements, and deep customization**, Cloud Burst is the **ultimate event photo-sharing solution**. 🚀  
 
 ## 📱 Responsive Considerations
 - Mobile-first design
