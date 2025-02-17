@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/ui/site-header"
 import { SiteFooter } from "@/components/ui/site-footer"
+import { ToastProvider } from "@/components/providers/toast-provider";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Toaster } from "@/components/ui/toaster"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -81,12 +85,18 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SiteHeader />
-          <main className="flex-1">
-            {children}
-          </main>
-          <SiteFooter />
+          <Suspense fallback={<div className="flex min-h-screen items-center justify-center">
+            <LoadingSpinner size="lg" />
+          </div>}>
+            <SiteHeader />
+            <main className="flex-1">
+              {children}
+            </main>
+            <SiteFooter />
+            <ToastProvider />
+          </Suspense>
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );
