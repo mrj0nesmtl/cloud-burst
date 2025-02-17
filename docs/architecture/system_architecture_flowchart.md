@@ -11,30 +11,36 @@ flowchart TD
         WebApp[🌐 Next.js 14 App]
         AuthForms[🔐 Auth Forms]
         Protected[🛡️ Protected Routes]
+        ErrorBoundary[🚧 Error Boundary]
     end
 
     subgraph Auth[🔑 Authentication Layer]
         SupaAuth[Supabase Auth]
         Session[📝 Session Management]
         Roles[👥 Role Management]
+        Permissions[🔑 Permission System]
     end
 
     subgraph Data[💾 Data Layer]
         Database[🗄️ Supabase PostgreSQL]
         Storage[📦 Supabase Storage]
         RLS[🔒 Row Level Security]
+        Capabilities[⚡ Role Capabilities]
     end
 
     WebApp -->|1. Auth Request| AuthForms
     AuthForms -->|2. Credentials| SupaAuth
     SupaAuth -->|3. Validate| Session
     Session -->|4. Create| Roles
-    Roles -->|5. Assign| RLS
-    RLS -->|6. Secure| Database
-    RLS -->|6. Secure| Storage
+    Roles -->|5. Assign| Permissions
+    Permissions -->|6. Check| Capabilities
+    Capabilities -->|7. Enforce| RLS
+    RLS -->|8. Secure| Database
+    RLS -->|8. Secure| Storage
     
     Protected -->|Verify| Session
-    Protected -->|Check| Roles
+    Protected -->|Check| Permissions
+    ErrorBoundary -->|Handle| WebApp
 ```
 
 ---
@@ -46,18 +52,24 @@ flowchart TD
 - TypeScript + React
 - Shadcn/ui Components
 - Protected Routes HOC
+- Error Boundaries
+- Loading States
 
 ### 🔑 **Authentication Layer**
 - Supabase Auth
 - JWT Sessions
 - Role-Based Access
+- Permission System
 - Security Middleware
+- Capability Checking
 
 ### 💾 **Data Layer**
 - PostgreSQL Database
 - Supabase Storage
 - Row Level Security
 - Real-time Subscriptions
+- Role Capabilities
+- User Profiles
 
 ---
 
