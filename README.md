@@ -1,6 +1,6 @@
-# Cloud ☁️ Capture
+# Cloud ☁️ Burst
 
-[![Version](https://img.shields.io/badge/version-0.1.5-blue.svg)](https://github.com/mrj0nesmtl/cloud-capture/releases)
+[![Version](https://img.shields.io/badge/version-0.1.6-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -12,7 +12,7 @@
 <!-- Replit-friendly version -->
 <div align="center">
 
-`v0.1.5` • `Next.js 14` • `TypeScript 5.0` • `Supabase` • `TailwindCSS` • `MIT License`
+`v0.1.6` • `Next.js 14` • `TypeScript 5.0` • `Supabase` • `TailwindCSS` • `MIT License`
 
 </div>
 
@@ -38,7 +38,7 @@ Next major features:
 
 ## 📸 Elevating Event Photography
 
-Cloud Capture is an AI-powered event photography platform designed to enhance guest engagement and streamline photo collection at large gatherings. Inspired by the nostalgia of disposable cameras placed on event tables, Cloud Capture modernizes the experience by leveraging guests' smartphones and a seamless cloud-based infrastructure.
+Cloud Burst is an AI-powered event photography platform designed to enhance guest engagement and streamline photo collection at large gatherings. Inspired by the nostalgia of disposable cameras placed on event tables, Cloud Burst modernizes the experience by leveraging guests' smartphones and a seamless cloud-based infrastructure.
 
 ---
 
@@ -101,15 +101,15 @@ Create a `.env.local` file:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-NEXT_PUBLIC_SITE_URL=your_site_url
+NEXT_PUBLIC_SITE_URL=https://cloudburst-ai.replit.app
 ```
 
 ### Getting Started
 
 1. **Clone the Repository**
 ```bash
-git clone https://github.com/mrj0nesmtl/cloud-capture.git
-cd cloud-capture
+git clone https://github.com/mrj0nesmtl/cloud-burst.git
+cd cloud-burst
 ```
 
 2. **Install Dependencies**
@@ -121,3 +121,5 @@ npm install
 ```bash
 npm run dev
 ```
+
+Visit [https://cloudburst-ai.replit.app](https://cloudburst-ai.replit.app) to see the live deployment.
