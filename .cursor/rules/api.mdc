@@ -14,19 +14,27 @@ globs: src/services/**/*.ts", "src/lib/api/**/*.ts
         "auth": "/api/auth",
         "events": "/api/events",
         "photos": "/api/photos",
-        "users": "/api/users"
+        "users": "/api/users",
+        "ai": "/api/ai", // Added AI endpoints
+        "upload": "/api/upload" // Added upload endpoint
       },
-      "middleware": "src/middleware.ts"
+      "middleware": {
+        "base": "src/middleware.ts",
+        "auth": "src/middleware/auth.ts",
+        "upload": "src/middleware/upload.ts"
+      }
     },
     "supabase": {
       "client": {
         "location": "src/lib/supabase.ts",
-        "types": "src/types/supabase.ts"
+        "types": "src/types/supabase.ts",
+        "config": "src/lib/supabase-config.ts"
       },
       "services": {
         "auth": "src/services/auth.ts",
         "storage": "src/services/storage.ts",
-        "realtime": "src/services/realtime.ts"
+        "realtime": "src/services/realtime.ts",
+        "ai": "src/services/ai.ts" // Added AI service
       }
     },
     "error": {
@@ -37,8 +45,11 @@ globs: src/services/**/*.ts", "src/lib/api/**/*.ts
           "400": "(╯°□°）╯︵ ┻━┻ Bad Request",
           "401": "(ಠ_ಠ) Unauthorized – Who goes there?",
           "403": "(ノಠ益ಠ)ノ彡 Forbidden – You shall not pass!",
-          "404": "¯\_(ツ)_/¯ Not Found – Lost in the void...",
+          "404": "¯\\_(ツ)_/¯ Not Found – Lost in the void...",
+          "413": "(；一_一) Payload Too Large – That's too much data!",
+          "429": "(⊙_⊙;) Too Many Requests – Slow down!",
           "500": "(╥﹏╥) Internal Server Error – Everything is on fire..."
+        }
       }
     },
     "rateLimit": {
@@ -49,6 +60,10 @@ globs: src/services/**/*.ts", "src/lib/api/**/*.ts
       "authenticated": {
         "window": "1m",
         "max": 120
+      },
+      "upload": {
+        "window": "1m",
+        "max": 30
       }
     }
   }

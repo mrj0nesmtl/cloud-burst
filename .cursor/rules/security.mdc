@@ -10,21 +10,41 @@ globs: src/**/*.{ts,tsx}, middleware.ts
   "securityStandards": {
     "authentication": {
       "supabase": {
-        "providers": ["google", "apple"],
+        "providers": [
+          "email",
+          "google",
+          "apple"
+        ],
         "session": {
           "persistence": true,
-          "refreshInterval": 60 * 60 * 1000
+          "refreshInterval": 60 * 60 * 1000,
+          "storage": "serverSession",
+          "middleware": "required"
+        },
+        "flows": {
+          "emailAuth": {
+            "verification": true,
+            "passwordReset": true
+          },
+          "oauth": {
+            "enabled": true,
+            "providers": ["google", "apple"]
+          }
         }
       },
       "routes": {
         "protected": [
           "/dashboard",
           "/events/[id]",
-          "/admin"
+          "/admin",
+          "/settings",
+          "/profile"
         ],
         "public": [
           "/",
-          "/auth",
+          "/auth/signin",
+          "/auth/register",
+          "/auth/reset-password",
           "/event/[code]"
         ]
       }
@@ -41,31 +61,28 @@ globs: src/**/*.{ts,tsx}, middleware.ts
           "upload": ["USER", "GUEST"],
           "moderate": ["EVENT_HOST", "ADMIN"],
           "delete": ["EVENT_HOST", "ADMIN"]
+        },
+        "events": {
+          "create": ["EVENT_HOST", "ADMIN"],
+          "manage": ["EVENT_HOST", "ADMIN"],
+          "view": ["USER", "GUEST"]
         }
       }
     },
-    "data": {
-      "encryption": {
-        "inTransit": "TLS 1.3",
-        "atRest": "AES-256"
-      },
-      "sanitization": {
-        "input": "src/lib/security/sanitize.ts",
-        "output": "src/lib/security/escape.ts"
-      }
-    },
-    "csrf": {
-      "enabled": true,
-      "excludePaths": ["/api/webhooks"]
-    },
+    // ... rest of existing configuration ...
     "headers": {
       "security": {
         "X-Frame-Options": "DENY",
         "X-Content-Type-Options": "nosniff",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-        "Content-Security-Policy": "default-src 'self'"
+        "Content-Security-Policy": "default-src 'self'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
       }
+    },
+    "rateLimit": {
+      "enabled": true,
+      "windowMs": 15 * 60 * 1000,
+      "max": 100
     }
   }
 }
-```

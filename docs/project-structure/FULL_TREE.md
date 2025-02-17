@@ -23,8 +23,9 @@
 │   │   │   ├── session 3.md
 │   │   │   ├── session_1_prompt.md
 │   │   │   ├── session_4.md
-│   │   │   └── session_5.md
-│   │   └── session_6.md
+│   │   │   ├── session_5.md
+│   │   │   └── session_6.md
+│   │   └── session_7.md
 │   ├── planning
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -169,6 +170,6 @@
 ├── tailwind.config.ts
 └── tsconfig.json
 
-39 directories, 128 files
+39 directories, 129 files
 
 ```

@@ -10,18 +10,20 @@ globs: src/**/*.tsx", "src/**/*.ts
   "componentRules": {
     "structure": {
       "atomic": {
-        "atoms": "src/components/ui", // Basic UI elements
-        "molecules": "src/components/common", // Combinations of atoms
-        "organisms": "src/components/features", // Complex UI sections
-        "templates": "src/components/layouts", // Page layouts
-        "pages": "src/app" // Next.js App Router pages
+        "atoms": "src/components/ui",
+        "molecules": "src/components/common",
+        "organisms": "src/components/features",
+        "templates": "src/components/layouts",
+        "pages": "src/app"
       },
       "naming": {
         "prefix": {
           "atoms": "Ui",
           "molecules": "",
           "organisms": "",
-          "templates": "Layout"
+          "templates": "Layout",
+          "providers": "Provider", // Added provider prefix
+          "context": "Context" // Added context prefix
         }
       }
     },
@@ -29,7 +31,8 @@ globs: src/**/*.tsx", "src/**/*.ts
       "props": {
         "required": ["children?", "className?"],
         "naming": "camelCase",
-        "typing": "strict"
+        "typing": "strict",
+        "defaults": "required" // Added defaults requirement
       },
       "hooks": {
         "location": "top",
@@ -38,8 +41,18 @@ globs: src/**/*.tsx", "src/**/*.ts
           "useEffect",
           "useCallback",
           "useMemo",
+          "useStore", // Added store hooks
+          "useQuery", // Added query hooks
           "custom"
         ]
+      },
+      "errorBoundary": {
+        "required": true,
+        "location": "src/components/error-boundary"
+      },
+      "suspense": {
+        "required": true,
+        "fallback": "required"
       }
     },
     "patterns": {
@@ -47,7 +60,9 @@ globs: src/**/*.tsx", "src/**/*.ts
         "stateManagement": "zustand",
         "styling": "tailwind",
         "forms": "react-hook-form",
-        "validation": "zod"
+        "validation": "zod",
+        "loading": "suspense",
+        "errors": "error-boundary"
       },
       "hoc": {
         "naming": "with{Name}",
@@ -57,7 +72,8 @@ globs: src/**/*.tsx", "src/**/*.ts
     "shadcn": {
       "location": "src/components/ui",
       "customization": "src/styles/shadcn",
-      "registry": "src/components/ui/registry.tsx"
+      "registry": "src/components/ui/registry.tsx",
+      "themes": "src/styles/themes" // Added themes
     }
   }
 }

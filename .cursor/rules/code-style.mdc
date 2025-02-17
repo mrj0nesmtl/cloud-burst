@@ -21,12 +21,18 @@ globs: src/**/*.{ts,tsx}
       "hooks": "usePrefix",
       "utils": "camelCase",
       "constants": "UPPER_SNAKE_CASE",
+      "stores": "camelCase", // Added store naming
+      "routes": "kebab-case", // Added route naming
       "files": {
         "components": "{ComponentName}.tsx",
         "hooks": "use{hookName}.ts",
         "utils": "{utilName}.ts",
         "types": "{typeName}.types.ts",
-        "stores": "{storeName}.store.ts"
+        "stores": "{storeName}.store.ts",
+        "routes": "page.tsx", // Added route file naming
+        "layouts": "layout.tsx", // Added layout file naming
+        "loading": "loading.tsx", // Added loading file naming
+        "error": "error.tsx" // Added error file naming
       }
     },
     "organization": {
@@ -36,6 +42,7 @@ globs: src/**/*.{ts,tsx}
         "external",
         "components",
         "hooks",
+        "stores", // Added stores imports
         "utils",
         "types",
         "styles"
@@ -45,22 +52,46 @@ globs: src/**/*.{ts,tsx}
         "types",
         "constants",
         "helpers",
+        "hooks", // Added hooks
+        "store", // Added store
         "component",
         "exports"
       ],
       "directories": {
         "src": {
-          "app": "Next.js pages",
-          "components": "React components",
-          "lib": "Utility functions",
+          "app": {
+            "auth": "Authentication routes",
+            "dashboard": "Protected dashboard routes",
+            "events": "Event management routes",
+            "settings": "User settings routes"
+          },
+          "components": {
+            "auth": "Authentication components",
+            "ui": "Shadcn UI components",
+            "shared": "Shared components",
+            "forms": "Form components"
+          },
+          "lib": {
+            "utils": "Utility functions",
+            "supabase": "Supabase client",
+            "validation": "Zod schemas"
+          },
           "hooks": "Custom hooks",
           "types": "TypeScript types",
           "styles": "CSS/Tailwind styles",
           "services": "API services",
-          "store": "Zustand stores"
+          "store": "Zustand stores",
+          "middleware": "Route middleware"
         }
+      }
+    },
+    "comments": {
+      "required": {
+        "components": "TSDoc for props interface",
+        "hooks": "TSDoc for parameters and return",
+        "utils": "TSDoc for functions",
+        "types": "TSDoc for type definitions"
       }
     }
   }
 }
-``` 

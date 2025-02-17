@@ -18,8 +18,9 @@
 │   │   ├── session 3.md
 │   │   ├── session_1_prompt.md
 │   │   ├── session_4.md
-│   │   └── session_5.md
-│   └── session_6.md
+│   │   ├── session_5.md
+│   │   └── session_6.md
+│   └── session_7.md
 ├── planning
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -43,6 +44,6 @@
     ├── user_flow_chart.md
     └── user_flow_overview.md
 
-9 directories, 32 files
+9 directories, 33 files
 
 ```

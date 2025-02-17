@@ -17,20 +17,28 @@ globs: **/*.ts", "**/*.tsx
       "strictPropertyInitialization": true,
       "noImplicitThis": true,
       "useUnknownInCatchVariables": true,
-      "alwaysStrict": true
+      "alwaysStrict": true,
+      "exactOptionalPropertyTypes": true, // Added for stricter optional props
+      "noUncheckedIndexedAccess": true // Added for safer array/object access
     },
     "naming": {
       "interfaces": "I{Name}",
       "types": "T{Name}",
       "enums": "E{Name}",
-      "generics": "{T}Props"
+      "generics": "{T}Props",
+      "stores": "T{Name}Store", // Added store types
+      "hooks": "T{Name}Hook", // Added hook types
+      "context": "T{Name}Context" // Added context types
     },
     "organization": {
       "types": {
         "shared": "src/types",
         "components": "alongside-component",
         "api": "src/types/api",
-        "store": "src/types/store"
+        "store": "src/types/store",
+        "hooks": "src/types/hooks", // Added hooks types
+        "auth": "src/types/auth", // Added auth types
+        "events": "src/types/events" // Added event types
       },
       "imports": {
         "typeOnly": true,
@@ -40,12 +48,15 @@ globs: **/*.ts", "**/*.tsx
     "supabase": {
       "location": "src/types/supabase.ts",
       "generation": "automatic",
-      "strict": true
+      "strict": true,
+      "customTypes": "src/types/supabase.custom.ts" // Added custom types
     },
     "zod": {
       "location": "src/lib/validations",
-      "naming": "{name}.schema.ts"
+      "naming": "{name}.schema.ts",
+      "errorMap": "src/lib/validations/error-map.ts", // Added error mapping
+      "transforms": "src/lib/validations/transforms.ts" // Added custom transforms
     }
   }
 }
-```
+,,,

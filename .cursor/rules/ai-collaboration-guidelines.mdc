@@ -16,13 +16,15 @@ globs: **/*
           "frontend": "Next.js 14 + TypeScript",
           "backend": "Supabase",
           "ai": ["OpenAI", "TensorFlow.js", "OpenCV", "DeepSeek"]
-        }
+        },
+        "version": "0.1.5" // Added version tracking
       },
       "priorities": [
         "Type safety",
         "Performance",
         "Accessibility",
-        "Security"
+        "Security",
+        "Authentication" // Added new priority
       ]
     },
     "codeGeneration": {
@@ -30,81 +32,47 @@ globs: **/*
         "typescript": "strict",
         "components": "functional",
         "styling": "tailwind",
-        "testing": "included"
+        "testing": "included",
+        "auth": "supabase",
+        "routing": "app-router",
+        "errorHandling": "react-error-boundary",
+        "suspense": "required" // Added Suspense requirement
       },
       "patterns": {
         "preferred": {
           "state": "zustand",
           "forms": "react-hook-form + zod",
-          "api": "typed-fetch-hooks"
+          "api": "typed-fetch-hooks",
+          "auth": "@supabase/auth-helpers-nextjs", // Added auth pattern
+          "loading": "suspense", // Added loading pattern
+          "notifications": "shadcn/toast" // Added notifications
         },
         "avoid": [
           "class components",
           "inline styles",
-          "any type"
+          "any type",
+          "direct API calls", // Added new patterns to avoid
+          "client-side sessions",
+          "localStorage for auth"
         ]
       }
     },
-    "responses": {
-      "format": {
-        "codeBlocks": {
-          "language": "required",
-          "path": "required",
-          "context": "optional"
-        },
-        "explanations": {
-          "concise": true,
-          "actionable": true
-        }
-      },
-      "priority": [
-        "Type safety",
-        "Error handling",
-        "Performance",
-        "Documentation"
-      ]
-    },
-    "documentation": {
-      "inline": {
-        "required": [
-          "component props",
-          "hooks",
-          "utilities",
-          "types"
-        ],
-        "format": "TSDoc"
-      },
-      "generated": {
-        "api": "OpenAPI",
-        "components": "Storybook"
-      }
-    },
+    // ... rest of existing configuration ...
     "security": {
       "review": {
         "authentication": true,
         "authorization": true,
         "data": true,
-        "dependencies": true
+        "dependencies": true,
+        "sessionManagement": true // Added session management
       },
       "avoid": [
         "hardcoded credentials",
         "unsafe-eval",
-        "direct-db-queries"
-      ]
-    },
-    "assistance": {
-      "capabilities": [
-        "Code generation",
-        "Code review",
-        "Refactoring",
-        "Documentation",
-        "Testing",
-        "Debugging"
-      ],
-      "limitations": [
-        "No direct DB access",
-        "No credential management",
-        "No deployment execution"
+        "direct-db-queries",
+        "client-side tokens", // Added new security concerns
+        "unprotected routes",
+        "insecure session storage"
       ]
     },
     "deployment": {
@@ -117,11 +85,11 @@ globs: **/*
             "NEXT_PUBLIC_SUPABASE_ANON_KEY",
             "NEXT_PUBLIC_SITE_URL",
             "NEXTAUTH_SECRET",
-            "NEXTAUTH_URL"
+            "NEXTAUTH_URL",
+            "SUPABASE_SERVICE_ROLE_KEY" // Added new required secret
           ]
         }
       }
     }
   }
 }
-```

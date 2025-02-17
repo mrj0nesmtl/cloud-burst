@@ -12,12 +12,14 @@ globs: src/store/**/*.ts", "src/hooks/**/*.ts
       "structure": {
         "baseLocation": "src/store",
         "slicePattern": "{feature}.slice.ts",
-        "hookPattern": "use{Feature}Store"
+        "hookPattern": "use{Feature}Store",
+        "typesPattern": "{feature}.types.ts" // Added types pattern
       },
       "patterns": {
         "persistence": {
           "required": ["auth", "settings", "theme"],
-          "storage": "localStorage"
+          "storage": "localStorage",
+          "version": 1 // Added version control
         },
         "devtools": {
           "enabled": true,
@@ -30,21 +32,31 @@ globs: src/store/**/*.ts", "src/hooks/**/*.ts
         "required": [
           "user",
           "session",
-          "loading"
+          "loading",
+          "error" // Added error state
         ]
       },
       "events": {
         "required": [
           "currentEvent",
           "photos",
-          "settings"
+          "settings",
+          "participants" // Added participants
         ]
       },
       "ui": {
         "required": [
           "theme",
           "modal",
-          "toast"
+          "toast",
+          "loading" // Added loading state
+        ]
+      },
+      "upload": { // Added upload slice
+        "required": [
+          "files",
+          "progress",
+          "error"
         ]
       }
     },
@@ -52,8 +64,10 @@ globs: src/store/**/*.ts", "src/hooks/**/*.ts
       "location": "src/lib/query",
       "keys": "src/lib/query/keys.ts",
       "staleTime": 5 * 60 * 1000,
-      "cacheTime": 30 * 60 * 1000
+      "cacheTime": 30 * 60 * 1000,
+      "suspense": true, // Added suspense config
+      "retries": 3 // Added retry config
     }
   }
 }
-```
+,,,
