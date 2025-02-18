@@ -1,0 +1,5 @@
+name,description,created_at
+admin,Administrative access,2025-02-17 01:18:11.391465+00
+organizer,Event management access,2025-02-17 01:18:11.391465+00
+super_admin,Full system access,2025-02-17 01:18:11.391465+00
+user,Basic user access,2025-02-17 01:18:11.391465+00

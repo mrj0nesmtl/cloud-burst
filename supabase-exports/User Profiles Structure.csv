@@ -1,0 +1,8 @@
+﻿"column_name","data_type","is_nullable","column_default"
+"id","uuid","NO","null"
+"email","text","NO","null"
+"full_name","text","YES","null"
+"avatar_url","text","YES","null"
+"role","text","NO","'user'::text"
+"created_at","timestamp with time zone","NO","timezone('utc'::text, now())"
+"updated_at","timestamp with time zone","NO","timezone('utc'::text, now())"

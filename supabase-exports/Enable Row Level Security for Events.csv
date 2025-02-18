@@ -1,0 +1,17 @@
+﻿"schemaname","tablename","policyname","permissive","roles","cmd","qual"
+"public","events","events_create_policy","PERMISSIVE","{authenticated}","INSERT","null"
+"public","events","events_delete_policy","PERMISSIVE","{public}","DELETE","(EXISTS ( SELECT 1
+   FROM user_profiles
+  WHERE ((user_profiles.id = auth.uid()) AND (user_profiles.role = ANY (ARRAY['super_admin'::text, 'admin'::text])))))"
+"public","events","events_read_policy","PERMISSIVE","{public}","SELECT","((status = 'published'::text) OR (auth.uid() = organizer_id) OR (EXISTS ( SELECT 1
+   FROM user_profiles
+  WHERE ((user_profiles.id = auth.uid()) AND (user_profiles.role = ANY (ARRAY['super_admin'::text, 'admin'::text]))))))"
+"public","events","events_update_policy","PERMISSIVE","{public}","UPDATE","((auth.uid() = organizer_id) OR (EXISTS ( SELECT 1
+   FROM user_profiles
+  WHERE ((user_profiles.id = auth.uid()) AND (user_profiles.role = ANY (ARRAY['super_admin'::text, 'admin'::text]))))))"
+"public","photos","photos_read_policy","PERMISSIVE","{public}","SELECT","(EXISTS ( SELECT 1
+   FROM events
+  WHERE ((events.id = photos.event_id) AND ((events.status = 'published'::text) OR check_user_capability(auth.uid(), 'manage_photos'::text) OR ((events.organizer_id = auth.uid()) AND check_user_capability(auth.uid(), 'manage_event_photos'::text))))))"
+"public","photos","photos_write_policy","PERMISSIVE","{public}","ALL","(check_user_capability(auth.uid(), 'manage_photos'::text) OR ((uploaded_by = auth.uid()) AND check_user_capability(auth.uid(), 'manage_own_photos'::text)))"
+"public","user_profiles","profiles_read_policy","PERMISSIVE","{public}","SELECT","((id = auth.uid()) OR check_user_capability(auth.uid(), 'manage_users'::text))"
+"public","user_profiles","profiles_write_policy","PERMISSIVE","{public}","UPDATE","((id = auth.uid()) OR check_user_capability(auth.uid(), 'manage_users'::text))"

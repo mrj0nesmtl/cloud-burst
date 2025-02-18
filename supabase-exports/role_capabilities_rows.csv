@@ -1,0 +1,16 @@
+role,capability,created_at
+admin,manage_events,2025-02-17 01:19:56.468799+00
+admin,manage_photos,2025-02-17 01:19:56.468799+00
+admin,view_analytics,2025-02-17 01:19:56.468799+00
+organizer,create_event,2025-02-17 01:19:56.468799+00
+organizer,edit_own_event,2025-02-17 01:19:56.468799+00
+organizer,manage_event_photos,2025-02-17 01:19:56.468799+00
+organizer,view_event_analytics,2025-02-17 01:19:56.468799+00
+super_admin,manage_events,2025-02-17 01:19:56.468799+00
+super_admin,manage_photos,2025-02-17 01:19:56.468799+00
+super_admin,manage_roles,2025-02-17 01:19:56.468799+00
+super_admin,manage_users,2025-02-17 01:19:56.468799+00
+super_admin,view_analytics,2025-02-17 01:19:56.468799+00
+user,manage_own_photos,2025-02-17 01:19:56.468799+00
+user,upload_photos,2025-02-17 01:19:56.468799+00
+user,view_public_events,2025-02-17 01:19:56.468799+00
