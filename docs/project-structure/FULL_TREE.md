@@ -5,6 +5,7 @@
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
+├── cloud-burst.code-workspace
 ├── components.json
 ├── docs
 │   ├── README.md
@@ -89,12 +90,12 @@
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
 │   │   ├── auth
+│   │   │   ├── callback
+│   │   │   │   └── route.ts
 │   │   │   ├── layout.tsx
 │   │   │   ├── login
 │   │   │   │   └── page.tsx
-│   │   │   ├── register
-│   │   │   │   └── page.tsx
-│   │   │   └── signin
+│   │   │   └── register
 │   │   │       └── page.tsx
 │   │   ├── globals.css
 │   │   ├── layout.tsx
@@ -115,10 +116,35 @@
 │   │   │   ├── page.tsx
 │   │   │   └── pricing
 │   │   │       └── page.tsx
-│   │   └── page.tsx
+│   │   ├── page.tsx
+│   │   └── protected
+│   │       ├── admin
+│   │       │   └── page.tsx
+│   │       ├── dashboard
+│   │       │   ├── loading.tsx
+│   │       │   └── page.tsx
+│   │       ├── events
+│   │       │   ├── loading.tsx
+│   │       │   └── page.tsx
+│   │       ├── layout.tsx
+│   │       ├── profile
+│   │       │   └── page.tsx
+│   │       └── settings
+│   │           ├── loading.tsx
+│   │           └── page.tsx
 │   ├── components
+│   │   ├── auth
+│   │   │   ├── auth-form.tsx
+│   │   │   ├── email-auth-form.tsx
+│   │   │   ├── login-form.tsx
+│   │   │   └── social-auth-buttons.tsx
 │   │   ├── cookie-consent.tsx
 │   │   ├── error-boundary.tsx
+│   │   ├── nav
+│   │   │   ├── main-nav.tsx
+│   │   │   └── user-nav.tsx
+│   │   ├── providers
+│   │   │   └── toast-provider.tsx
 │   │   ├── theme-provider.tsx
 │   │   └── ui
 │   │       ├── alert.tsx
@@ -126,6 +152,7 @@
 │   │       ├── avatar.tsx
 │   │       ├── button.tsx
 │   │       ├── card.tsx
+│   │       ├── checkbox.tsx
 │   │       ├── contact
 │   │       │   └── page.tsx
 │   │       ├── dialog.tsx
@@ -153,23 +180,38 @@
 │   ├── contexts
 │   │   └── auth-context.tsx
 │   ├── hooks
+│   │   ├── use-analytics.ts
 │   │   ├── use-permissions.ts
 │   │   └── use-toast.ts
 │   ├── lib
+│   │   ├── auth
+│   │   │   └── auth-store.ts
 │   │   ├── supabase
-│   │   │   └── config.ts
+│   │   │   ├── config.ts
+│   │   │   └── server-config.ts
 │   │   └── utils.ts
+│   ├── middleware.ts
 │   └── types
 │       ├── auth.ts
 │       └── supabase.ts
-├── supabase
+├── supabase-exports
+│   ├── Enable Row Level Security for Events.csv
+│   ├── Events Structure.csv
+│   ├── Public User Profiles.csv
 │   ├── Supabase Snippet Column Information Retrieval (1).csv
 │   ├── Supabase Snippet Column Information Retrieval.csv
 │   ├── Supabase Snippet Foreign Key Relationships.csv
-│   └── Supabase Snippet Policy Information Retrieval.csv
+│   ├── Supabase Snippet List of User Tables.csv
+│   ├── Supabase Snippet Policy Information Retrieval.csv
+│   ├── User Profiles Structure.csv
+│   ├── prod-ca-2021.crt
+│   ├── role_capabilities_rows.csv
+│   ├── roles_rows.csv
+│   ├── user_profiles_rows (1).csv
+│   └── user_profiles_rows.csv
 ├── tailwind.config.ts
 └── tsconfig.json
 
-39 directories, 129 files
+49 directories, 161 files
 
 ```
