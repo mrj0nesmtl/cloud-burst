@@ -46,3 +46,8 @@ next-env.d.ts
 # TEMPORARILY COMMENT OUT FOR FIRST REPLIT SYNC
 # .replit
 # replit.nix
+
+# Supabase
+supabase-exports/
+*.csv
+prod-ca-2021.crt
