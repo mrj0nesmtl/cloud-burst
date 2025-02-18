@@ -15,6 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.8] - 2024-02-17
+### Added
+- Secure database connection implementation
+- Database schema verification
+- Access workflow documentation
+- SSL certificate configuration
+
+### Infrastructure
+- Established secure psql connection
+- Verified table structures and relationships
+- Documented database access procedures
+- Enhanced security configurations
+
+### Documentation
+- Added database connection guide
+- Updated schema documentation
+- Enhanced security procedures
+- Improved infrastructure docs
+
 ## [0.1.7] - 2024-02-17
 ### Added
 - Google OAuth authentication
