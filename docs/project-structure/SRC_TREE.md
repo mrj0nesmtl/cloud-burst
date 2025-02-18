@@ -34,7 +34,22 @@
 │   │   ├── page.tsx
 │   │   └── pricing
 │   │       └── page.tsx
-│   └── page.tsx
+│   ├── page.tsx
+│   └── protected
+│       ├── admin
+│       │   └── page.tsx
+│       ├── dashboard
+│       │   ├── loading.tsx
+│       │   └── page.tsx
+│       ├── events
+│       │   ├── loading.tsx
+│       │   └── page.tsx
+│       ├── layout.tsx
+│       ├── profile
+│       │   └── page.tsx
+│       └── settings
+│           ├── loading.tsx
+│           └── page.tsx
 ├── components
 │   ├── auth
 │   │   ├── auth-form.tsx
@@ -43,6 +58,9 @@
 │   │   └── social-auth-buttons.tsx
 │   ├── cookie-consent.tsx
 │   ├── error-boundary.tsx
+│   ├── nav
+│   │   ├── main-nav.tsx
+│   │   └── user-nav.tsx
 │   ├── providers
 │   │   └── toast-provider.tsx
 │   ├── theme-provider.tsx
@@ -95,6 +113,6 @@
     ├── auth.ts
     └── supabase.ts
 
-27 directories, 66 files
+34 directories, 77 files
 
 ```

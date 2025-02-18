@@ -4,6 +4,7 @@ import type { Database } from '@/types/supabase'
 
 // Server-side Supabase instance
 export const createServer = () => {
+  // Get the cookies from the request
   const cookieStore = cookies()
 
   return createServerClient<Database>(
@@ -31,6 +32,22 @@ export const createServer = () => {
           }
         }
       }
+    }
+  )
+}
+
+export const createClient = () => {
+  const cookieStore = cookies()
+
+  return createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+      },
     }
   )
 } 

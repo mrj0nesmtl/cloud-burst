@@ -116,7 +116,22 @@
 │   │   │   ├── page.tsx
 │   │   │   └── pricing
 │   │   │       └── page.tsx
-│   │   └── page.tsx
+│   │   ├── page.tsx
+│   │   └── protected
+│   │       ├── admin
+│   │       │   └── page.tsx
+│   │       ├── dashboard
+│   │       │   ├── loading.tsx
+│   │       │   └── page.tsx
+│   │       ├── events
+│   │       │   ├── loading.tsx
+│   │       │   └── page.tsx
+│   │       ├── layout.tsx
+│   │       ├── profile
+│   │       │   └── page.tsx
+│   │       └── settings
+│   │           ├── loading.tsx
+│   │           └── page.tsx
 │   ├── components
 │   │   ├── auth
 │   │   │   ├── auth-form.tsx
@@ -125,6 +140,9 @@
 │   │   │   └── social-auth-buttons.tsx
 │   │   ├── cookie-consent.tsx
 │   │   ├── error-boundary.tsx
+│   │   ├── nav
+│   │   │   ├── main-nav.tsx
+│   │   │   └── user-nav.tsx
 │   │   ├── providers
 │   │   │   └── toast-provider.tsx
 │   │   ├── theme-provider.tsx
@@ -176,14 +194,24 @@
 │   └── types
 │       ├── auth.ts
 │       └── supabase.ts
-├── supabase
+├── supabase-exports
+│   ├── Enable Row Level Security for Events.csv
+│   ├── Events Structure.csv
+│   ├── Public User Profiles.csv
 │   ├── Supabase Snippet Column Information Retrieval (1).csv
 │   ├── Supabase Snippet Column Information Retrieval.csv
 │   ├── Supabase Snippet Foreign Key Relationships.csv
-│   └── Supabase Snippet Policy Information Retrieval.csv
+│   ├── Supabase Snippet List of User Tables.csv
+│   ├── Supabase Snippet Policy Information Retrieval.csv
+│   ├── User Profiles Structure.csv
+│   ├── prod-ca-2021.crt
+│   ├── role_capabilities_rows.csv
+│   ├── roles_rows.csv
+│   ├── user_profiles_rows (1).csv
+│   └── user_profiles_rows.csv
 ├── tailwind.config.ts
 └── tsconfig.json
 
-42 directories, 140 files
+49 directories, 161 files
 
 ```

@@ -1,9 +1,8 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { User, Session, Provider, AuthError } from '@supabase/supabase-js'
-import { createClient } from '../supabase/config'
+import { createClient } from '@/lib/supabase/config'
 import { toast } from "@/hooks/use-toast"
-import { supabase } from '@/lib/supabase/client'
 
 interface AuthState {
   user: User | null
@@ -110,16 +109,73 @@ export const useAuthStore = create<AuthState>()(
         // Auth actions
         signIn: async (email: string, password: string) => {
           set({ isLoading: true, error: null })
+          
           try {
-            const { error } = await supabase.auth.signInWithPassword({
+            console.log('1. Starting sign in process...', { email }) // Debug point 1
+            
+            const supabase = createClient()
+            console.log('2. Supabase client created', { 
+              url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+              hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY 
+            }) // Debug point 2
+            
+            console.log('3. Attempting signInWithPassword...') // Debug point 3
+            const { data, error } = await supabase.auth.signInWithPassword({
               email,
               password,
             })
-            if (error) throw error
+            
+            console.log('4. Sign in response:', { 
+              hasData: !!data,
+              hasUser: !!data?.user,
+              hasSession: !!data?.session,
+              error 
+            }) // Debug point 4
+            
+            if (error) {
+              console.error('5. Supabase error:', error) // Debug point 5
+              throw error
+            }
+            
+            if (!data.user || !data.session) {
+              console.error('6. Missing user or session:', { data }) // Debug point 6
+              throw new Error('No user or session returned')
+            }
+            
+            console.log('7. Setting user and session...') // Debug point 7
+            set({ 
+              user: data.user,
+              session: data.session
+            })
+            
+            console.log('8. Showing success toast...') // Debug point 8
+            toast({
+              title: "Success",
+              description: "Signed in successfully"
+            })
+            
+            console.log('9. Redirecting to dashboard...') // Debug point 9
+            window.location.href = '/protected/dashboard'
+            
           } catch (error: any) {
+            console.error('ERROR in sign in process:', {
+              name: error.name,
+              message: error.message,
+              stack: error.stack,
+              details: error.details,
+              hint: error.hint,
+              code: error.code
+            }) // Detailed error logging
+            
             set({ error: error.message })
+            toast({
+              title: "Error",
+              description: error.message || 'An error occurred during sign in',
+              variant: "destructive"
+            })
           } finally {
             set({ isLoading: false })
+            console.log('10. Sign in process completed') // Debug point 10
           }
         },
 
@@ -237,4 +293,16 @@ export const useAuthStore = create<AuthState>()(
 // Initialize auth on app load
 if (typeof window !== 'undefined') {
   useAuthStore.getState().initializeAuth()
+}
+
+export const checkAuthSession = async () => {
+  const store = useAuthStore.getState()
+  if (!store.isInitialized) {
+    await store.initializeAuth()
+  }
+  return {
+    user: store.user,
+    session: store.session,
+    isLoading: store.isLoading
+  }
 } 
