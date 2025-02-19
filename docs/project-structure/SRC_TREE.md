@@ -11,9 +11,9 @@
 │   │   ├── callback
 │   │   │   └── route.ts
 │   │   ├── layout.tsx
-│   │   ├── login
+│   │   ├── register
 │   │   │   └── page.tsx
-│   │   └── register
+│   │   └── signin
 │   │       └── page.tsx
 │   ├── globals.css
 │   ├── layout.tsx

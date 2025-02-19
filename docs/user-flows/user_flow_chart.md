@@ -1,60 +1,61 @@
 # 🔄 **User Flow Chart**  
 
-## 📡 Cloud Capture
-📅 *Feb 16, 2024*  
+## Cloud Capture V.1
+📅 *Updated: Feb 17, 2024*  
 
 ---
 
 ```mermaid
 graph TD
-    subgraph Authentication
-        A[📧 User Arrives] -->|Next.js Route| B[🔐 Auth Page]
-        B -->|Form Component| C{Authentication Choice}
+    subgraph Authentication [🔐 Enhanced Authentication]
+        A[📧 User Arrives] -->|Protected Route| B[🔐 Auth Page]
+        B -->|Validated Form| C{Authentication Choice}
         
-        C -->|Email Form| D[📝 Email Sign In]
-        C -->|Email Form| E[📝 Email Sign Up]
+        C -->|Rate Limited| D[📝 Email Sign In]
+        C -->|Rate Limited| E[📝 Email Sign Up]
         
-        D -->|Supabase Auth| F[🔑 Session Created]
-        E -->|Supabase Auth| F
+        D -->|Session Refresh| F[🔑 Session Created]
+        E -->|Cookie Security| F
         
-        F -->|Route Guard| G[🛡️ Protected Route]
+        F -->|Middleware Guard| G[🛡️ Protected Route]
     end
 
-    subgraph Authorization
-        G -->|Role Check| H{👥 Role Verification}
-        H -->|Event Planner| I[📊 Planner Dashboard]
-        H -->|Attendee| J[📱 Attendee Dashboard]
+    subgraph Authorization [🛡️ Enhanced Authorization]
+        G -->|Role Validation| H{👥 Role Check}
+        H -->|Method Validation| I[📊 Planner Dashboard]
+        H -->|Pattern Matching| J[📱 Guest Dashboard]
     end
 
-    subgraph Features
-        I -->|Auth Required| K[Event Management]
-        J -->|Auth Required| L[Photo Gallery]
+    subgraph Features [✨ Secure Features]
+        I -->|Protected API| K[Event Management]
+        J -->|Protected API| L[Photo Gallery]
         
-        K -->|Protected| M[📸 Photo Operations]
-        L -->|Protected| M
+        K -->|Rate Limited| M[📸 Photo Operations]
+        L -->|Rate Limited| M
     end
 ```
 
 ---
 
-## 🎯 **Key Components**  
+## 🎯 **Key Security Components**  
 
-### 🔐 **Authentication**
-- Email Sign In/Up Forms
-- Session Management
-- Protected Routes
-- Loading States
+### 🔐 **Enhanced Authentication**
+- Rate limiting protection
+- Security headers
+- Session management
+- Cookie security
+- Error handling
 
-### 👥 **Authorization**
-- Role Assignment
-- Permission Checks
-- Access Control
-- Security Rules
+### 👥 **Robust Authorization**
+- Dynamic route matching
+- Method validation
+- Role-based access
+- Protected API routes
 
-### 📊 **Dashboards**
-- Role-Specific Views
-- Protected Features
-- Secure Operations
-- Real-time Updates
+### 📊 **Secure Operations**
+- Protected endpoints
+- Rate limited APIs
+- Session refresh
+- Error boundaries
 
 ---

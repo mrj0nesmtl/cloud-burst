@@ -1,5 +1,5 @@
 # Changelog
-All notable changes to Cloud Capture will be documented in this file.
+All notable changes to Cloud Burst will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -14,6 +14,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.6.x-0.8.x: Feature Implementation
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
+
+## [0.1.9] - 2024-02-17
+### Added
+- QR code generation system
+- Enhanced security documentation
+- Service role key implementation
+- Rate limiting configuration
+- Protected API routes
+- Error boundary system
+
+### Security
+- Implemented service role key protection
+- Enhanced JWT secret management
+- Added Row Level Security bypass protection
+- Updated security documentation
+- Added key rotation guidelines
+
+### Documentation
+- Added service key security notes
+- Enhanced API documentation
+- Updated security guidelines
+- Added key management procedures
 
 ## [0.1.8] - 2024-02-17
 ### Added

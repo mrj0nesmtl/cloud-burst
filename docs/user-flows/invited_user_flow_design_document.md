@@ -1,7 +1,7 @@
 # 🎟️ **Invited Guest - User Flow Design Document**  
 
 ## 📸 Cloud ☁️ Capture  
-📅 *Feb 9, 2025*  
+📅 *Updated: Feb 17, 2024*  
 
 ---
 
@@ -11,6 +11,23 @@ Cloud Capture is an **event photography platform** that enables guests to captur
 📸 *This document details the guest user flow, authentication options, and the event gallery's temporary nature.*  
 
 ---
+
+## 🔒 **Security Implementation**
+
+### 🛡️ **Enhanced Protection**
+- Rate limiting on all routes
+- Method validation
+- Pattern matching
+- Session management
+- Cookie security
+- Error handling
+
+### 🔐 **Guest Authentication**
+- Secure session handling
+- Protected routes
+- Rate limited endpoints
+- Cookie cleanup
+- Loading states
 
 ## 👤 Guest User Journey  
 

@@ -238,4 +238,21 @@ The **Cloud Burst website** is designed for **event planners & organizers**, off
 - Branded component variants
 - Accessible contrast ratios
 
+## 🔐 Security Architecture
+
+### Middleware Protection
+- Rate limiting for all API routes
+- Comprehensive security headers
+- Session management
+- Route pattern matching
+- Method validation
+- Role-based access
+
+### Protected Routes
+- /dashboard/*
+- /admin/*
+- /api/*
+- /events/*
+- /profile/*
+
 ---

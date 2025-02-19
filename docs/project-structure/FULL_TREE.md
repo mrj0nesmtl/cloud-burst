@@ -25,8 +25,9 @@
 │   │   │   ├── session_1_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
-│   │   │   └── session_6.md
-│   │   └── session_7.md
+│   │   │   ├── session_6.md
+│   │   │   └── session_7.md
+│   │   └── session_8.md
 │   ├── planning
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -93,9 +94,9 @@
 │   │   │   ├── callback
 │   │   │   │   └── route.ts
 │   │   │   ├── layout.tsx
-│   │   │   ├── login
+│   │   │   ├── register
 │   │   │   │   └── page.tsx
-│   │   │   └── register
+│   │   │   └── signin
 │   │   │       └── page.tsx
 │   │   ├── globals.css
 │   │   ├── layout.tsx
@@ -212,6 +213,6 @@
 ├── tailwind.config.ts
 └── tsconfig.json
 
-49 directories, 161 files
+49 directories, 162 files
 
 ```

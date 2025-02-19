@@ -1,9 +1,25 @@
 # 📖 **User Flow Overview**  
 
 ## 📡 Cloud ☁️ Capture  
-📅 *Feb 9, 2025*  
+📅 *Updated: Feb 17, 2024*  
 
 ---
+
+## 🔒 **Security-Enhanced Flow**  
+
+### 🛡️ **Protected Routes**
+- Rate limiting protection
+- Method validation
+- Dynamic pattern matching
+- Session management
+- Cookie security
+
+### 🔐 **Authentication Layer**
+- Secure session handling
+- Cookie cleanup
+- Rate limited endpoints
+- Error boundaries
+- Loading states
 
 ## 📝 **Introduction**  
 Cloud Capture is an **AI-powered event photography platform** designed to **seamlessly collect, filter, and organize event photos**.  

@@ -108,3 +108,31 @@ flowchart TD
 This **System Architecture Flowchart** provides a **clear, structured overview** of Cloud Burst's backend, frontend, and AI-driven operations. Designed for **scalability, security, and real-time performance**, Cloud Burst **delivers a next-gen event photography experience**. 🚀  
 
 ---
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Middleware
+    participant Auth
+    participant API
+    participant Supabase
+
+    Client->>Middleware: Request
+    Middleware->>Middleware: Rate Limit Check
+    Middleware->>Middleware: Security Headers
+    Middleware->>Auth: Session Check
+    Auth-->>Middleware: Session Status
+    Middleware->>API: Forward Request
+    API->>Supabase: Database Query
+    Supabase-->>API: Response
+    API-->>Client: Protected Data
+```
+
+### 🔒 Security Layer
+- Rate limiting protection
+- Security headers
+- Session validation
+- Route protection
+- RBAC enforcement
+
+---
