@@ -4,10 +4,10 @@ import Link from "next/link"
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Cloud Burst - Transform Your Event Photography',
+  title: 'Cloud Burst - Elevate Your Event Photography',
   description: 'Capture, enhance, and share event photos with AI-powered technology. Perfect for weddings, corporate events, and celebrations.',
   openGraph: {
-    title: 'Cloud Burst - Transform Your Event Photography',
+    title: 'Cloud Burst - Elevate Your Event Photography',
     description: 'AI-powered event photography platform for seamless photo sharing and management.'
   }
 }
@@ -34,7 +34,7 @@ export default function Home() {
             <CloudLightning className="h-16 w-16 text-blue-500" />
           </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">
-            Transform Your Event Photography
+            Elevate Your Event Photography
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-[800px] mx-auto mb-8">
             AI-powered platform for seamless photo capture, enhancement, and sharing.
