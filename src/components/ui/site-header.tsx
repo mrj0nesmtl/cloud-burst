@@ -13,6 +13,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { ModeToggle } from "@/components/ui/mode-toggle"
+import { buttonVariants } from "@/components/ui/button"
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -58,12 +59,20 @@ export function SiteHeader() {
 
           <div className="flex items-center space-x-4">
             <ModeToggle />
-            <Button variant="outline" asChild className="whitespace-nowrap">
-              <Link href="/auth/login">Sign In</Link>
-            </Button>
-            <Button asChild className="whitespace-nowrap">
-              <Link href="/auth/register">Get Started</Link>
-            </Button>
+            <nav className="flex items-center space-x-2">
+              <Link
+                href="/auth/signin"
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/auth/register"
+                className={buttonVariants({ size: "sm" })}
+              >
+                Get Started
+              </Link>
+            </nav>
           </div>
         </div>
 
