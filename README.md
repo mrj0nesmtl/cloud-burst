@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/android-chrome-192x192.png" alt="Cloud Burst Logo" width="120" height="120" />
 
-# ⚡ Cloud Burst
+# CloudBurst AI
 
 [![Version](https://img.shields.io/badge/version-0.1.9-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)

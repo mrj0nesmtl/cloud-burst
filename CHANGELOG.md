@@ -15,6 +15,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.10] - 2024-02-19
+### Added
+- Session 9 development planning
+- Dashboard layout structure
+- Photo management foundation
+- Protected routes planning
+- QR code system design
+
+### Changed
+- Reorganized auth pages structure
+- Enhanced form layouts
+- Improved responsive design
+- Updated navigation flow
+- Refined user experience
+
+### Documentation
+- Added Session 9 roadmap
+- Enhanced development timeline
+- Updated technical implementation plan
+- Added photo management specs
+- Enhanced security documentation
+
+### Infrastructure
+- Prepared dashboard structure
+- Enhanced middleware configuration
+- Updated auth flow
+- Improved route protection
+- Added photo upload foundation
+
 ## [0.1.9] - 2024-02-17
 ### Added
 - QR code generation system
