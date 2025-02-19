@@ -12,8 +12,7 @@ globs: src/**/*.{ts,tsx}, middleware.ts
       "supabase": {
         "providers": [
           "email",
-          "google",
-          "apple"
+          "google"
         ],
         "session": {
           "persistence": true,
@@ -28,7 +27,7 @@ globs: src/**/*.{ts,tsx}, middleware.ts
           },
           "oauth": {
             "enabled": true,
-            "providers": ["google", "apple"]
+            "providers": ["google"]
           }
         }
       },
@@ -69,7 +68,6 @@ globs: src/**/*.{ts,tsx}, middleware.ts
         }
       }
     },
-    // ... rest of existing configuration ...
     "headers": {
       "security": {
         "X-Frame-Options": "DENY",
