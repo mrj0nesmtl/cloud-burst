@@ -1,15 +1,15 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import type { Database } from '@/types/supabase'
+import { supabaseUrl, supabaseAnonKey } from './config'
 
 // Server-side Supabase instance
 export const createServer = () => {
-  // Get the cookies from the request
   const cookieStore = cookies()
 
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         get(name: string) {
@@ -19,7 +19,6 @@ export const createServer = () => {
           try {
             cookieStore.set(name, value, options)
           } catch (error) {
-            // Handle cookie setting errors in development
             console.error('Cookie setting error:', error)
           }
         },
@@ -27,7 +26,6 @@ export const createServer = () => {
           try {
             cookieStore.delete(name, options)
           } catch (error) {
-            // Handle cookie deletion errors in development
             console.error('Cookie deletion error:', error)
           }
         }
