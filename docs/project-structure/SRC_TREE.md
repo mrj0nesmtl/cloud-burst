@@ -3,10 +3,6 @@
 ```
 ./src
 ├── app
-│   ├── admin
-│   │   ├── dashboard
-│   │   │   └── page.tsx
-│   │   └── layout.tsx
 │   ├── auth
 │   │   ├── callback
 │   │   │   └── route.ts
@@ -37,6 +33,11 @@
 │   ├── page.tsx
 │   └── protected
 │       ├── admin
+│       │   ├── components
+│       │   │   ├── audit-log-columns.tsx
+│       │   │   └── audit-log-viewer.tsx
+│       │   ├── layout.tsx
+│       │   ├── loading.tsx
 │       │   └── page.tsx
 │       ├── dashboard
 │       │   ├── loading.tsx
@@ -52,9 +53,10 @@
 │           └── page.tsx
 ├── components
 │   ├── auth
-│   │   ├── auth-form.tsx
+│   │   ├── auth-debug.tsx
 │   │   ├── email-auth-form.tsx
 │   │   ├── login-form.tsx
+│   │   ├── role-guard.tsx
 │   │   └── social-auth-buttons.tsx
 │   ├── cookie-consent.tsx
 │   ├── error-boundary.tsx
@@ -103,7 +105,8 @@
 │   └── use-toast.ts
 ├── lib
 │   ├── auth
-│   │   └── auth-store.ts
+│   │   ├── auth-store.ts
+│   │   └── session.ts
 │   ├── supabase
 │   │   ├── config.ts
 │   │   └── server-config.ts
@@ -113,6 +116,6 @@
     ├── auth.ts
     └── supabase.ts
 
-34 directories, 77 files
+33 directories, 81 files
 
 ```

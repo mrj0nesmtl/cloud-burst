@@ -20,6 +20,7 @@
 │   │   ├── STATUS_NOTES.md
 │   │   ├── UI_components.md
 │   │   ├── VERSION_CONTROL.md
+│   │   ├── additional_notes.md
 │   │   ├── prompt_archive
 │   │   │   ├── session 3.md
 │   │   │   ├── session_1_prompt.md
@@ -27,7 +28,8 @@
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
 │   │   │   └── session_7.md
-│   │   └── session_8.md
+│   │   ├── session_8.md
+│   │   └── session_9.md
 │   ├── planning
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -86,10 +88,6 @@
 │       └── tree-cli.d.ts
 ├── src
 │   ├── app
-│   │   ├── admin
-│   │   │   ├── dashboard
-│   │   │   │   └── page.tsx
-│   │   │   └── layout.tsx
 │   │   ├── auth
 │   │   │   ├── callback
 │   │   │   │   └── route.ts
@@ -120,6 +118,11 @@
 │   │   ├── page.tsx
 │   │   └── protected
 │   │       ├── admin
+│   │       │   ├── components
+│   │       │   │   ├── audit-log-columns.tsx
+│   │       │   │   └── audit-log-viewer.tsx
+│   │       │   ├── layout.tsx
+│   │       │   ├── loading.tsx
 │   │       │   └── page.tsx
 │   │       ├── dashboard
 │   │       │   ├── loading.tsx
@@ -135,9 +138,10 @@
 │   │           └── page.tsx
 │   ├── components
 │   │   ├── auth
-│   │   │   ├── auth-form.tsx
+│   │   │   ├── auth-debug.tsx
 │   │   │   ├── email-auth-form.tsx
 │   │   │   ├── login-form.tsx
+│   │   │   ├── role-guard.tsx
 │   │   │   └── social-auth-buttons.tsx
 │   │   ├── cookie-consent.tsx
 │   │   ├── error-boundary.tsx
@@ -186,7 +190,8 @@
 │   │   └── use-toast.ts
 │   ├── lib
 │   │   ├── auth
-│   │   │   └── auth-store.ts
+│   │   │   ├── auth-store.ts
+│   │   │   └── session.ts
 │   │   ├── supabase
 │   │   │   ├── config.ts
 │   │   │   └── server-config.ts
@@ -205,14 +210,18 @@
 │   ├── Supabase Snippet List of User Tables.csv
 │   ├── Supabase Snippet Policy Information Retrieval.csv
 │   ├── User Profiles Structure.csv
+│   ├── identities_rows.csv
 │   ├── prod-ca-2021.crt
 │   ├── role_capabilities_rows.csv
 │   ├── roles_rows.csv
+│   ├── supabase-auth-schema-kbjdrwtiqimbwbiknoul.png
+│   ├── supabase-public-schema-kbjdrwtiqimbwbiknoul (1).png
 │   ├── user_profiles_rows (1).csv
-│   └── user_profiles_rows.csv
+│   ├── user_profiles_rows.csv
+│   └── user_profiles_rows.sql
 ├── tailwind.config.ts
 └── tsconfig.json
 
-49 directories, 162 files
+48 directories, 172 files
 
 ```

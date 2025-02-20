@@ -7,18 +7,12 @@ import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
-import { useAuthStore } from "@/lib/auth/auth-store"
-import { Loader2 } from "lucide-react"
+import { createClient } from '@/lib/supabase/config'
+import { useEffect, useState } from 'react'
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      "Password must contain uppercase, lowercase and numbers"
-    ),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 })
 
 type AuthFormData = z.infer<typeof authSchema>
@@ -28,8 +22,9 @@ interface EmailAuthFormProps {
 }
 
 export function EmailAuthForm({ mode }: EmailAuthFormProps) {
-  const { signInWithEmail, signUpWithEmail, isLoading } = useAuthStore()
   const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false)
+  const [supabase, setSupabase] = useState<any>(null)
 
   const {
     register,
@@ -39,19 +34,87 @@ export function EmailAuthForm({ mode }: EmailAuthFormProps) {
     resolver: zodResolver(authSchema),
   })
 
-  const onSubmit = async (data: AuthFormData) => {
-    try {
-      if (mode === "signin") {
-        await signInWithEmail(data.email, data.password)
-      } else {
-        await signUpWithEmail(data.email, data.password)
+  useEffect(() => {
+    // Initialize Supabase client only on the client side
+    setSupabase(createClient())
+  }, [])
+
+  useEffect(() => {
+    const testConnection = async () => {
+      try {
+        console.log('Testing Supabase connection...')
+        console.log('URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+        // Don't log the full key, just the first few characters
+        console.log('ANON KEY (first 8 chars):', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 8))
+        
+        const { data, error } = await supabase.from('user_profiles').select('*', { count: 'exact' })
+        
+        if (error) {
+          console.error('Connection test error:', error)
+        } else {
+          console.log('Connection successful:', data)
+        }
+      } catch (err) {
+        console.error('Connection test failed:', err)
       }
+    }
+
+    testConnection()
+  }, [])
+
+  const onSubmit = async (data: AuthFormData) => {
+    if (!supabase) return
+    
+    setIsLoading(true)
+    try {
+      console.log('Starting auth attempt...', {
+        email: data.email,
+        timestamp: new Date().toISOString()
+      })
+
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      })
+
+      if (error) {
+        console.error('Detailed auth error:', {
+          message: error.message,
+          status: error.status,
+          name: error.name,
+          details: error
+        })
+        throw error
+      }
+
+      // Get user profile
+      const { data: profile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('id', authData.user.id)
+        .single()
+
+      if (profileError) throw profileError
+
+      toast({
+        title: "Success",
+        description: "Signed in successfully"
+      })
+
+      // Redirect based on role
+      window.location.href = profile.role === 'super_admin' 
+        ? '/protected/admin'
+        : '/protected/dashboard'
+
     } catch (error: any) {
+      console.error('Auth error:', error)
       toast({
         variant: "destructive",
-        title: "Authentication Error",
-        description: error.message || "An error occurred during authentication",
+        title: "Error",
+        description: error.message
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -81,15 +144,12 @@ export function EmailAuthForm({ mode }: EmailAuthFormProps) {
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {mode === "signin" ? "Signing in..." : "Creating account..."}
-          </>
-        ) : (
-          <>{mode === "signin" ? "Sign in" : "Create account"}</>
-        )}
+      <Button 
+        type="submit" 
+        className="w-full"
+        disabled={isLoading}
+      >
+        {isLoading ? "Signing in..." : "Sign in"}
       </Button>
     </form>
   )

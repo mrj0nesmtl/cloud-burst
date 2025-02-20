@@ -2,6 +2,7 @@ import React from 'react'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { Card, CardContent } from '@/components/ui/card'
+import { AuthDebug } from "@/components/auth/auth-debug"
 
 export default function AuthLayout({
   children,
@@ -19,6 +20,7 @@ export default function AuthLayout({
           </CardContent>
         </Card>
       </div>
+      {process.env.NODE_ENV === 'development' && <AuthDebug />}
     </ErrorBoundary>
   )
 }

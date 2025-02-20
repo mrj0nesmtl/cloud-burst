@@ -120,7 +120,7 @@ export function MobileNav() {
           {/* Auth Buttons */}
           <div className="px-6 py-4 border-t space-y-2">
             <Button asChild variant="outline" className="w-full">
-              <Link href="/auth/login">Sign In</Link>
+              <Link href="/auth/signin">Sign In</Link>
             </Button>
             <Button asChild className="w-full">
               <Link href="/auth/register">Get Started</Link>

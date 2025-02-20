@@ -2,7 +2,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 // Define valid user roles
-type UserRole = 'ADMIN' | 'EVENT_HOST' | 'USER' | 'GUEST'
+type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'EVENT_HOST' | 'USER' | 'GUEST'
 
 // Define route patterns based on security standards
 const PUBLIC_ROUTES = [
@@ -14,6 +14,13 @@ const PUBLIC_ROUTES = [
 ] as const
 
 const ROLE_PROTECTED_ROUTES: Record<UserRole, string[]> = {
+  SUPER_ADMIN: [
+    '/admin',
+    '/dashboard',
+    '/events/[id]',
+    '/settings',
+    '/profile'
+  ],
   ADMIN: [
     '/admin',
     '/dashboard',
@@ -51,6 +58,7 @@ const ipRequests = new Map<string, { count: number; resetTime: number }>()
 
 // Add role-specific dashboard routes
 const ROLE_DASHBOARDS: Record<UserRole, string> = {
+  SUPER_ADMIN: '/admin/dashboard',
   ADMIN: '/admin/dashboard',
   EVENT_HOST: '/events/manage',
   USER: '/dashboard',
@@ -221,6 +229,14 @@ export async function middleware(request: NextRequest) {
 
     if (!hasAccess) {
       return NextResponse.redirect(new URL(ROLE_DASHBOARDS[userRole], request.url))
+    }
+
+    // Add debug logging for development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Session:', session)
+      console.log('User role:', userRole)
+      console.log('Accessing path:', path)
+      console.log('Has access:', hasAccess)
     }
 
     return response
