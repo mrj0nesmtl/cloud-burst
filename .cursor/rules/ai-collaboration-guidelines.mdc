@@ -17,7 +17,7 @@ globs: **/*
           "backend": "Supabase",
           "ai": ["OpenAI", "TensorFlow.js", "OpenCV", "DeepSeek"]
         },
-        "version": "0.1.5" // Added version tracking
+        "version": "0.1.9" // Added version tracking
       },
       "priorities": [
         "Type safety",

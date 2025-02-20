@@ -1,4 +1,4 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse, type NextRequest } from 'next/server'
 
 // Define valid user roles
@@ -86,6 +86,15 @@ function routeToRegex(route: string): RegExp {
 
 export async function middleware(request: NextRequest) {
   try {
+    // Create response early for cookie handling
+    const res = NextResponse.next()
+
+    // Update to new middleware client
+    const supabase = createMiddlewareClient({ 
+      req: request,
+      res,
+    })
+
     // Implement rate limiting
     const ip = request.ip ?? 'unknown'
     const now = Date.now()
@@ -106,69 +115,23 @@ export async function middleware(request: NextRequest) {
       return new NextResponse('Too Many Requests', { status: 429 })
     }
 
-    // Initialize response with security headers from our standards
-    let response = NextResponse.next({
-      request: {
-        headers: new Headers({
-          'X-Frame-Options': 'DENY',
-          'X-Content-Type-Options': 'nosniff',
-          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-          'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co",
-          'Permissions-Policy': "camera=(), microphone=(), geolocation=()"
-        })
-      },
+    // Add security headers from our standards
+    Object.entries({
+      'X-Frame-Options': 'DENY',
+      'X-Content-Type-Options': 'nosniff',
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+      'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co",
+      'Permissions-Policy': "camera=(), microphone=(), geolocation=()"
+    }).forEach(([key, value]) => {
+      res.headers.set(key, value)
     })
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return request.cookies.get(name)?.value
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            response.cookies.set({
-              name,
-              value,
-              ...options,
-              secure: process.env.NODE_ENV === 'production',
-              sameSite: 'lax',
-              maxAge: 60 * 60
-            })
-          },
-          remove(name: string, options: CookieOptions) {
-            // Enhanced cookie removal
-            const cookieNames = [
-              'sb-access-token',
-              'sb-refresh-token',
-              'sb-provider-token',
-              'supabase-auth-token'
-            ]
-            
-            // Clean up all auth-related cookies
-            cookieNames.forEach(cookieName => {
-              response.cookies.set({
-                name: cookieName,
-                value: '',
-                path: '/',
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'lax',
-                maxAge: 0,
-                httpOnly: true
-              })
-            })
-          },
-        },
-      }
-    )
-
-    // Get session and handle invalid/expired sessions
+    // Get session with new client
     const { data: { session }, error: sessionError } = await supabase.auth.getSession()
     
     if (sessionError || (session?.expires_at && new Date(session.expires_at) <= new Date())) {
       // Clean up cookies for invalid/expired sessions
-      supabase.auth.signOut()
+      await supabase.auth.signOut()
       
       // Redirect to signin unless already heading there
       const path = request.nextUrl.pathname
@@ -209,7 +172,7 @@ export async function middleware(request: NextRequest) {
 
     // Check if route is public using regex patterns
     if (PUBLIC_ROUTES.some(route => routeToRegex(route).test(path))) {
-      return response
+      return res
     }
 
     // No session, redirect to login with return URL
@@ -239,7 +202,7 @@ export async function middleware(request: NextRequest) {
       console.log('Has access:', hasAccess)
     }
 
-    return response
+    return res
   } catch (error) {
     // Log the error (you might want to use a proper logging service in production)
     console.error('Middleware error:', error)

@@ -1,8 +1,8 @@
 import { Session } from '@supabase/supabase-js'
 import * as z from 'zod'
 
-// User Roles with descriptions
-export const UserRole = z.enum(['super_admin', 'admin', 'organizer', 'user'], {
+// Update UserRole to match middleware roles
+export const UserRole = z.enum(['SUPER_ADMIN', 'ADMIN', 'EVENT_HOST', 'USER', 'GUEST'], {
   description: 'User role determines access level and permissions',
 })
 
@@ -22,22 +22,10 @@ export const passwordSchema = z.string()
     "Password must include uppercase, lowercase, number and special character"
   )
 
-// Auth Form Schemas
-export const loginSchema = z.object({
+// Simplified auth form schemas
+export const authSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
-  remember: z.boolean().default(false),
-})
-
-export const registerSchema = z.object({
-  email: emailSchema,
-  password: passwordSchema,
-  confirmPassword: passwordSchema,
-  full_name: z.string().min(2, "Name is too short").max(100, "Name is too long").optional(),
-  terms: z.boolean().refine((val) => val, "You must accept the terms and conditions"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
 })
 
 // User Profile Schema
@@ -60,33 +48,36 @@ export const authStateSchema = z.object({
 })
 
 // Type Exports
-export type LoginForm = z.infer<typeof loginSchema>
-export type RegisterForm = z.infer<typeof registerSchema>
+export type AuthForm = z.infer<typeof authSchema>
 export type UserProfile = z.infer<typeof userProfileSchema>
 export type AuthState = z.infer<typeof authStateSchema>
 
-// Role-based Capabilities
-export const roleCapabilities: Record<UserRole, string[]> = {
-  super_admin: [
+// Role-based Capabilities aligned with middleware
+export const roleCapabilities: Record<z.infer<typeof UserRole>, string[]> = {
+  SUPER_ADMIN: [
     'manage:all',
     'manage:users',
     'manage:content',
     'manage:settings',
     'view:analytics'
   ],
-  admin: [
+  ADMIN: [
     'manage:content',
     'manage:users',
     'view:analytics'
   ],
-  organizer: [
+  EVENT_HOST: [
     'manage:events',
     'manage:photos',
     'view:analytics'
   ],
-  user: [
+  USER: [
     'view:content',
     'upload:photos',
     'manage:profile'
+  ],
+  GUEST: [
+    'view:photos',
+    'upload:photos'
   ]
 } 

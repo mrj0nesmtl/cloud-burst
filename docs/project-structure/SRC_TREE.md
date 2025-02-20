@@ -11,6 +11,8 @@
 │   │   │   └── page.tsx
 │   │   └── signin
 │   │       └── page.tsx
+│   ├── auth-test
+│   │   └── page.tsx
 │   ├── globals.css
 │   ├── layout.tsx
 │   ├── legal
@@ -54,12 +56,16 @@
 ├── components
 │   ├── auth
 │   │   ├── auth-debug.tsx
-│   │   ├── email-auth-form.tsx
-│   │   ├── login-form.tsx
-│   │   ├── role-guard.tsx
+│   │   ├── auth-form.tsx
+│   │   ├── debug-panel.tsx
 │   │   └── social-auth-buttons.tsx
 │   ├── cookie-consent.tsx
 │   ├── error-boundary.tsx
+│   ├── forms
+│   │   ├── avatar-upload.tsx
+│   │   ├── notifications-form.tsx
+│   │   ├── preferences-form.tsx
+│   │   └── profile-form.tsx
 │   ├── nav
 │   │   ├── main-nav.tsx
 │   │   └── user-nav.tsx
@@ -98,24 +104,23 @@
 │       ├── toast.tsx
 │       └── toaster.tsx
 ├── contexts
-│   └── auth-context.tsx
 ├── hooks
 │   ├── use-analytics.ts
 │   ├── use-permissions.ts
-│   └── use-toast.ts
+│   ├── use-profile.ts
+│   ├── use-toast.ts
+│   └── use-update-profile.ts
 ├── lib
 │   ├── auth
-│   │   ├── auth-store.ts
-│   │   └── session.ts
 │   ├── supabase
-│   │   ├── config.ts
-│   │   └── server-config.ts
+│   │   ├── client.ts
+│   │   └── debug-queries.ts
 │   └── utils.ts
 ├── middleware.ts
 └── types
     ├── auth.ts
     └── supabase.ts
 
-33 directories, 81 files
+35 directories, 84 files
 
 ```

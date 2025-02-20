@@ -28,6 +28,18 @@ flowchart TD
         Capabilities[⚡ Role Capabilities]
     end
 
+    subgraph Settings[⚙️ Settings Layer]
+        Profile[👤 Profile Management]
+        Prefs[🎛️ User Preferences]
+        Notifs[🔔 Notifications]
+    end
+
+    subgraph Forms[📝 Form Layer]
+        ProfileForm[Profile Form]
+        PrefsForm[Preferences Form]
+        NotifsForm[Notifications Form]
+    end
+
     WebApp -->|1. Auth Request| AuthForms
     AuthForms -->|2. Credentials| SupaAuth
     SupaAuth -->|3. Validate| Session
@@ -41,6 +53,14 @@ flowchart TD
     Protected -->|Verify| Session
     Protected -->|Check| Permissions
     ErrorBoundary -->|Handle| WebApp
+
+    Profile -->|Update| ProfileForm
+    Prefs -->|Configure| PrefsForm
+    Notifs -->|Manage| NotifsForm
+
+    ProfileForm -->|Save| Database
+    PrefsForm -->|Store| Database
+    NotifsForm -->|Update| Database
 ```
 
 ---
@@ -70,6 +90,16 @@ flowchart TD
 - Real-time Subscriptions
 - Role Capabilities
 - User Profiles
+
+### ⚙️ **Settings Layer**
+- Profile Management
+- User Preferences
+- Notifications
+
+### 📝 **Form Layer**
+- Profile Form
+- Preferences Form
+- Notifications Form
 
 ---
 
@@ -136,3 +166,17 @@ sequenceDiagram
 - RBAC enforcement
 
 ---
+
+## 🆕 New Components
+- Profile Management System
+- User Preferences
+- Notification Settings
+- Form Validation
+- Real-time Updates
+
+## 🔄 Next Steps
+1. Complete API routes for settings
+2. Add database migrations
+3. Implement real-time updates
+4. Add comprehensive testing
+5. Update documentation

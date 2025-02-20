@@ -10,17 +10,14 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   return (
-    <ErrorBoundary fallback={<div>Something went wrong</div>}>
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="max-w-md w-full">
-          <CardContent className="pt-6">
-            <React.Suspense fallback={<LoadingSpinner />}>
-              {children}
-            </React.Suspense>
-          </CardContent>
-        </Card>
+    <div className="min-h-screen flex items-center justify-center bg-muted/50">
+      <div className="w-full max-w-md p-6 bg-background rounded-lg shadow-lg border">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-center">Cloud Burst</h1>
+          <p className="text-center text-muted-foreground">Event Photography Platform</p>
+        </div>
+        {children}
       </div>
-      {process.env.NODE_ENV === 'development' && <AuthDebug />}
-    </ErrorBoundary>
+    </div>
   )
 }

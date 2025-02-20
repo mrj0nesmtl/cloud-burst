@@ -17,9 +17,9 @@ globs: src/store/**/*.ts", "src/hooks/**/*.ts
       },
       "patterns": {
         "persistence": {
-          "required": ["auth", "settings", "theme"],
+          "required": ["auth", "settings", "theme", "profile"],
           "storage": "localStorage",
-          "version": 1 // Added version control
+          "version": 2 // Bumped for new auth system
         },
         "devtools": {
           "enabled": true,
@@ -33,7 +33,8 @@ globs: src/store/**/*.ts", "src/hooks/**/*.ts
           "user",
           "session",
           "loading",
-          "error" // Added error state
+          "error",
+          "provider" // Added for OAuth support
         ]
       },
       "events": {

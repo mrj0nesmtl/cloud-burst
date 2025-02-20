@@ -79,13 +79,47 @@ import { Dialog } from "@/components/ui/dialog"
 
 #### Form
 ```typescript
-// Usage: Data input
+// Usage: Data input & settings forms
 import { Form } from "@/components/ui/form"
+
+// Implementations:
+- Profile settings
+- User preferences
+- Notification settings
+- Authentication forms
 
 // Validation:
 - React Hook Form
 - Zod schemas
 - Custom validation
+```
+
+#### PreferencesForm
+```typescript
+// Usage: User preferences management
+import { PreferencesForm } from "@/components/forms/preferences-form"
+
+// Features:
+- Theme selection
+- Language preferences
+- Display settings
+- Interface customization
+- Download quality
+- View preferences
+```
+
+#### NotificationsForm
+```typescript
+// Usage: Notification settings
+import { NotificationsForm } from "@/components/forms/notifications-form"
+
+// Features:
+- Email preferences
+- Push notifications
+- Event alerts
+- Digest frequency
+- Quiet hours
+- Marketing opt-in
 ```
 
 #### Input
@@ -147,6 +181,31 @@ import { Tabs } from "@/components/ui/tabs"
 - Dashboard views
 - Settings panels
 - Gallery layouts
+```
+
+### 🎛️ Settings Components
+
+#### SettingsTabs
+```typescript
+// Usage: Settings navigation
+import { Tabs } from "@/components/ui/tabs"
+
+// Implementations:
+- Profile settings
+- Preferences
+- Notifications
+- Security
+```
+
+#### SettingsCard
+```typescript
+// Usage: Settings container
+import { Card } from "@/components/ui/card"
+
+// Variants:
+- default: Basic settings
+- interactive: With actions
+- form: Contains form elements
 ```
 
 ### 📊 Data Display
@@ -255,6 +314,25 @@ import { ErrorBoundary } from "@/components/ui/error-boundary"
   <Component />
 </ErrorBoundary>
 ```
+
+### Settings Components Best Practices
+1. **Form Organization**
+   - Group related settings
+   - Use clear labels
+   - Provide descriptions
+   - Show validation feedback
+
+2. **State Management**
+   - Use controlled components
+   - Implement proper loading states
+   - Handle errors gracefully
+   - Show success feedback
+
+3. **Accessibility**
+   - Maintain keyboard navigation
+   - Use ARIA labels
+   - Provide error messages
+   - Support screen readers
 
 ## 📱 Responsive Patterns
 
