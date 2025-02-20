@@ -17,12 +17,13 @@
 | 🎨 Brand Identity | ✅ Complete | Icons, Favicons, Theme | 100% |
 | 📜 Legal Framework | ✅ Complete | Privacy, Terms, Cookies | 100% |
 | 🔐 Authentication | ✅ Complete | Supabase Auth + Middleware | 100% |
+| ⚙️ Settings System | 🟡 In Progress | Profile, Preferences, Notifications | 75% |
 | 🤖 AI Integration | ⚪ Planned | TensorFlow.js, OpenCV | 0% |
 | 📱 UI/UX | ✅ Complete | Shadcn/ui Components | 100% |
 | 🚀 Deployment | ✅ Complete | Replit Configuration | 100% |
 
 ## Cloud Burst 
-📅 *Feb 17, 2024*  
+📅 *Feb 21, 2024*  
 
 ---
 
@@ -30,7 +31,7 @@
 This **Statement of Work** outlines the **production requirements** for Cloud Burst, an **AI-powered event photography platform**.  
 
 📌 *The project is structured into three phases:*  
-1️⃣ **The Foundation** – Setup, infrastructure, and integrations (75% Complete)  
+1️⃣ **The Foundation** – Setup, infrastructure, and integrations (90% Complete)  
 2️⃣ **The Features** – Core frontend & backend development (Pending)  
 3️⃣ **Deployment & Launch** – CI/CD pipelines, testing, and go-live (Pending)  
 
@@ -46,13 +47,16 @@ This **Statement of Work** outlines the **production requirements** for Cloud Bu
 ### ☁️ **2. Infrastructure & Tech Stack**  
 ✅ **Frontend** – Next.js 14, Tailwind CSS, Shadcn UI  
 ✅ **Backend** – Supabase, PostgreSQL  
-🟡 **Authentication** – Supabase Auth (30% Complete)  
+✅ **Authentication** – Supabase Auth (100% Complete)  
+✅ **User Settings** – Profile, Preferences, Notifications (75% Complete)  
 ⚪ **AI/ML Components** – TensorFlow.js, OpenCV, DeepSeek, OpenAI  
 ⚪ **Storage & Delivery** – Supabase Storage  
 
 ### 🔗 **3. API & Database Architecture**  
 ✅ Define **ERD & API endpoints** for:  
   - Authentication & user management  
+  - User settings & preferences
+  - Notification preferences
   - Photo upload, AI processing, and retrieval  
 ✅ **Security Measures** – Data encryption, HTTPS, API key management  
 
@@ -61,10 +65,11 @@ This **Statement of Work** outlines the **production requirements** for Cloud Bu
 ## ⚙️ **Act 2: The Features**  
 
 ### 📲 **1. Frontend Features**  
+✅ **User Settings** – Profile, preferences, notifications
 ⚪ **QR Code Integration** – Instant event access  
 ⚪ **Photo Burst & Upload** – Enhanced user experience  
 ⚪ **Real-Time Gallery** – Dynamic, AI-powered image curation  
-🟡 **Authentication & User Management** – Social logins & guest mode  
+✅ **Authentication & User Management** – Social logins & guest mode  
 
 ### 🖥️ **2. Backend Features**  
 🟡 **Robust API** for seamless interactions  

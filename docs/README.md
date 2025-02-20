@@ -8,11 +8,14 @@
 
 ### 🎨 Design
 - [Website Overview](design/website_overview.md)
+- [Settings System Design](design/settings_system_design.md)
 
 ### 💻 Development
 - [Next Session Prompt](development/NEXT_SESSION_PROMPT.md)
 - [UI Components](development/UI_components.md)
 - [Version Control](development/VERSION_CONTROL.md)
+- [Auth Cleanup](development/auth-cleanup.md)
+- [Settings Implementation](development/settings_implementation.md)
 
 ### 📋 Planning
 - [Business Proposition](planning/business_proposition.md)
@@ -33,15 +36,14 @@
 - [User Flow Chart](user-flows/user_flow_chart.md)
 - [Invited User Flow](user-flows/invited_user_flow_design_document.md)
 - [Photo Upload Sequence](user-flows/photo_upload_sequence_diagram.md)
+- [Settings Flow](user-flows/settings_flow.md)
 
-## 🔄 Documentation Updates
-All documentation should follow our established standards. When updating docs:
-
-1. Use lowercase with underscores for filenames
-2. Keep file paths relative to the docs root
-3. Update this index when adding new documentation
-4. Store images and diagrams in the `assets` directory
-5. Follow markdown formatting guidelines
+## 🔄 Recent Updates
+- Added Settings System documentation
+- Updated Authentication cleanup docs
+- Added new user flow diagrams
+- Updated component documentation
+- Added security implementation details
 
 ## 🤝 Contributing
 Before contributing to the documentation:
