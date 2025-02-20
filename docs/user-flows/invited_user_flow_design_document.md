@@ -1,7 +1,7 @@
 # 🎟️ **Invited Guest - User Flow Design Document**  
 
 ## 📸 Cloud ☁️ Capture  
-📅 *Updated: Feb 17, 2024*  
+📅 *Updated: Feb 21, 2024*  
 
 ---
 
@@ -29,6 +29,13 @@ Cloud Capture is an **event photography platform** that enables guests to captur
 - Cookie cleanup
 - Loading states
 
+### ⚙️ **User Settings**
+- Profile customization
+- Theme preferences
+- Language selection
+- Notification management
+- Display options
+
 ## 👤 Guest User Journey  
 
 ### 📩 **Step 1: Invitation & QR Code Distribution**  
@@ -43,13 +50,16 @@ Cloud Capture is an **event photography platform** that enables guests to captur
 - `<Toast>` for scan confirmation
 - `<Progress>` for loading states
 
-### 🔑 **Step 3: Authentication Options**  
+### 🔑 **Step 3: Authentication & Settings**  
 ✔️ **Guest Mode** – Instant access, no sign-up required
 ✔️ **Social Sign-In** – Login via Google, Apple, or Facebook
+✔️ **Profile Setup** – Optional profile customization
 - `<Tabs>` for auth options
 - `<Form>` with validation for guest info
 - `<Button>` variants for social login
 - `<Alert>` for authentication status
+- `<PreferencesForm>` for settings
+- `<NotificationsForm>` for alerts
 
 ### 📷 **Step 4: Photo Capture & Upload**  
 ✔️ **Capture & Upload** button opens the camera/file picker
@@ -113,9 +123,19 @@ Cloud Capture is an **event photography platform** that enables guests to captur
 - `<Button>` for actions
 - `<Alert>` for expiry notices
 
+### ⚙️ **Settings Page**
+✔️ Profile management & customization
+✔️ Theme & language preferences
+✔️ Notification settings
+- `<Tabs>` for settings navigation
+- `<Form>` for preferences
+- `<Select>` for options
+- `<Switch>` for toggles
+- `<Toast>` for updates
+
 ---
 
-## 🎯 User Benefits  
+## �� User Benefits  
 
 ✔️ **Frictionless Access** – No app installation needed
 ✔️ **AI-Enhanced Images** – Automatic quality improvements

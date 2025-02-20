@@ -1,9 +1,7 @@
 # 🔄 **User Flow Chart**  
 
 ## Cloud Capture V.1
-📅 *Updated: Feb 17, 2024*  
-
----
+📅 *Updated: Feb 21, 2024*  
 
 ```mermaid
 graph TD
@@ -20,24 +18,25 @@ graph TD
         F -->|Middleware Guard| G[🛡️ Protected Route]
     end
 
-    subgraph Authorization [🛡️ Enhanced Authorization]
-        G -->|Role Validation| H{👥 Role Check}
-        H -->|Method Validation| I[📊 Planner Dashboard]
-        H -->|Pattern Matching| J[📱 Guest Dashboard]
+    subgraph Settings [⚙️ User Settings]
+        G -->|Profile| H[👤 Profile Management]
+        G -->|Preferences| I[🎛️ User Preferences]
+        G -->|Notifications| J[🔔 Notification Settings]
+        
+        H -->|Update| K[💾 Save Changes]
+        I -->|Configure| K
+        J -->|Manage| K
+        
+        K -->|API| L[📡 Database Update]
     end
 
     subgraph Features [✨ Secure Features]
-        I -->|Protected API| K[Event Management]
-        J -->|Protected API| L[Photo Gallery]
-        
-        K -->|Rate Limited| M[📸 Photo Operations]
-        L -->|Rate Limited| M
+        L -->|Real-time| M[🔄 UI Update]
+        M -->|Toast| N[✅ Success Notification]
     end
 ```
 
----
-
-## 🎯 **Key Security Components**  
+## 🎯 **Key Components**  
 
 ### 🔐 **Enhanced Authentication**
 - Rate limiting protection
@@ -46,11 +45,12 @@ graph TD
 - Cookie security
 - Error handling
 
-### 👥 **Robust Authorization**
-- Dynamic route matching
-- Method validation
-- Role-based access
-- Protected API routes
+### ⚙️ **Settings System**
+- Profile management
+- User preferences
+- Notification settings
+- Real-time updates
+- Form validation
 
 ### 📊 **Secure Operations**
 - Protected endpoints

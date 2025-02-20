@@ -34,6 +34,10 @@ Transform every event into a curated collection of memories through our AI-power
 - ✅ Protected route architecture
 - ✅ Session management
 - ✅ Rate limiting implementation
+- ✅ Settings system implementation
+- ✅ User preferences management
+- ✅ Profile customization
+- ✅ Notification preferences
 
 ### Next Milestones
 - 📊 Dashboard implementation
@@ -63,6 +67,14 @@ Transform every event into a curated collection of memories through our AI-power
 - Method validation
 - Pattern matching
 - Error handling
+
+### ⚙️ User Settings & Preferences
+- Profile management
+- Theme customization
+- Language preferences
+- Notification settings
+- Display options
+- Real-time updates
 
 ## 🛠️ Tech Stack
 
