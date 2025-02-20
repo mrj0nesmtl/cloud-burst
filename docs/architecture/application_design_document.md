@@ -1,7 +1,7 @@
 # 🎨 **Application Design Document**  
 
 ## 📸 Cloud Burst
-📅 *Updated: Feb 16, 2024*  
+📅 *Updated: Feb 20, 2024*  
 
 ## 📊 Implementation Status
 
@@ -10,13 +10,13 @@
 | 🏗️ Core Architecture | ✅ Done | P0 | None | 100% |
 | 🎨 Project Structure | ✅ Done | P0 | None | 100% |
 | 📚 Documentation | 🟢 Active | P0 | None | 85% |
-| 🔐 Authentication | 🟢 Active | P0 | Supabase | 75% |
+| 🔐 Authentication | 🔄 Reset | P0 | Supabase | 0% |
 | 📱 Public Pages | ✅ Done | P0 | Shadcn UI | 100% |
 | 🎨 Brand Identity | ✅ Done | P0 | None | 100% |
 | 📜 Legal Framework | ✅ Done | P0 | None | 100% |
 | 💰 Pricing System | ✅ Done | P0 | None | 100% |
-| 🖼️ Photo Upload | ⚪ Planned | P1 | Storage | 0% |
-| 🤖 AI Processing | ⚪ Planned | P1 | TensorFlow | 0% |
+| 🖼️ Photo Upload | ⏸️ On Hold | P1 | Storage | 0% |
+| 🤖 AI Processing | ⏸️ On Hold | P1 | TensorFlow | 0% |
 
 ### 🎯 Sprint Progress
 
@@ -46,7 +46,7 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 - **Database**: 🗄️ PostgreSQL with Supabase (real-time updates)  
 - **AI/ML**: 🤖 TensorFlow.js, OpenCV, DeepSeek (planned)  
 - **Storage**: ☁️ Supabase Storage  
-- **Authentication**: �� Supabase Auth with JWT, Role-Based Access  
+- **Authentication**: 🟢 Supabase Auth with JWT, Role-Based Access  
 - **Deployment**: 🚀 Replit (development)  
 
 ---
@@ -90,7 +90,7 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 - ⚪ Photo Moderation
 - ⚪ Analytics
 
-### �� **Event Pages**  
+### 🎛️ **Event Pages**  
 📍 *Status: Planned*
 - ⚪ Photo Upload
 - ⚪ Gallery View
@@ -100,7 +100,7 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 
 ## 📂 Project Structure  
 
-```
+```typescript
 src/
 ├── app/
 │   ├── (marketing)/
@@ -108,74 +108,94 @@ src/
 │   │   ├── about/
 │   │   ├── pricing/
 │   │   └── contact/
-│   ├── (auth)/
+│   ├── auth/
 │   │   ├── login/
 │   │   ├── register/
 │   │   └── layout.tsx
 │   ├── admin/
 │   │   └── dashboard/
-│   └── layout.tsx
+│   └── middleware.ts
 ├── components/
 │   ├── ui/
 │   ├── auth/
+│   │   ├── auth-form.tsx
+│   │   └── auth-provider.tsx
 │   └── marketing/
-├── contexts/
-│   └── auth-context.tsx
-├── hooks/
-│   └── use-permissions.ts
 ├── lib/
 │   ├── supabase/
-│   │   └── config.ts
+│   │   ├── client.ts
+│   │   ├── server.ts
+│   │   └── types.ts
 │   └── utils/
 └── types/
-    ├── auth.ts
     └── supabase.ts
 ```
 
 ---
 
 ## 🔒 Security Considerations  
-✔️ **Authentication**: Supabase Auth, JWT  
-✔️ **Authorization**: Row Level Security (RLS)  
-✔️ **Data Privacy**: GDPR & CCPA compliance  
-✔️ **Role-Based Access**: Implemented with Supabase  
 
----
+### Authentication & Authorization
+✔️ **Authentication System**: [RESET IN PROGRESS]
+- Implementing new Supabase Auth with PKCE flow
+- Single source of truth for auth state
+- Server-side session management
+- Proper token handling
+- Secure cookie implementation
+
+### Database Security
+✔️ **Row Level Security (RLS)**:
+- Fresh implementation of RLS policies
+- Table-level security rules
+- Role-based data access
+- Proper schema isolation
+
+### Session Management
+✔️ **Enhanced Session Security**:
+- Server-side session validation
+- Secure cookie handling
+- Token refresh mechanism
+- Session timeout handling
+- CSRF protection
+
+### Access Control
+✔️ **Role-Based Access Control (RBAC)**:
+- Granular permission system
+- Role hierarchy
+- Protected route middleware
+- API route protection
 
 ## 🎯 Next Steps  
-1. 🔐 Complete authentication flow
-2. 🎛️ Implement admin dashboard
-3. 📱 Add user profile management
-4. 🎨 Enhance UI components
-
----
+1. 🔄 Complete authentication system reset
+2. 🔐 Implement new auth flow
+3. 🛡️ Set up RLS policies
+4. 📝 Update documentation
+5. 🧪 Comprehensive testing
 
 ## 📝 Notes  
-- Following TypeScript strict mode
-- Implementing proper error boundaries
-- Maintaining accessibility standards
-- Using Shadcn UI components
-- Following Git commit conventions
-
----
+- Following Next.js 14 auth patterns
+- Implementing strict TypeScript checks
+- Using @supabase/auth-helpers-nextjs
+- Following security best practices
+- Maintaining comprehensive testing
 
 ## 🔒 Security Implementation
 
 ### Middleware Protection
-- Rate limiting for API and auth routes
+- Rate limiting for API routes
 - Security headers implementation
-- Session management and refresh
-- Dynamic route pattern matching
-- Request method validation
-- Role-based access control (RBAC)
-- Comprehensive error handling
-
-### Authentication Flow
-- Supabase Auth integration
-- JWT token management
-- Session persistence
-- Cookie security
-- Protected route guards
+- New session management system
+- Protected route patterns
+- Method validation
 - Role-based middleware
+- Error boundary implementation
+
+### New Authentication Flow
+- PKCE auth flow
+- Secure token management
+- Server-side validation
+- Protected routes
+- Role-based access
+- Error handling
 
 ---
