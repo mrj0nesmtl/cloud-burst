@@ -12,6 +12,11 @@
 │   ├── architecture
 │   │   ├── application_design_document.md
 │   │   └── system_architecture_flowchart.md
+│   ├── archive
+│   │   └── 2024-02-20
+│   │       └── development
+│   │           └── auth-debug-pre-reset.md
+│   ├── auth-cleanup.md
 │   ├── deployment
 │   │   └── REPLIT_DEPLOYMENT.md
 │   ├── design
@@ -20,16 +25,20 @@
 │   │   ├── STATUS_NOTES.md
 │   │   ├── UI_components.md
 │   │   ├── VERSION_CONTROL.md
-│   │   ├── additional_notes.md
+│   │   ├── auth-debug.md
 │   │   ├── prompt_archive
+│   │   │   ├── additional_notes.md
 │   │   │   ├── session 3.md
 │   │   │   ├── session_1_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
-│   │   │   └── session_7.md
-│   │   ├── session_8.md
-│   │   └── session_9.md
+│   │   │   ├── session_7.md
+│   │   │   ├── session_8.md
+│   │   │   └── session_9.md
+│   │   ├── session_10.md
+│   │   ├── session_11_checklist.md
+│   │   └── session_11_kickoff.md
 │   ├── planning
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -96,6 +105,8 @@
 │   │   │   │   └── page.tsx
 │   │   │   └── signin
 │   │   │       └── page.tsx
+│   │   ├── auth-test
+│   │   │   └── page.tsx
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   ├── legal
@@ -139,12 +150,16 @@
 │   ├── components
 │   │   ├── auth
 │   │   │   ├── auth-debug.tsx
-│   │   │   ├── email-auth-form.tsx
-│   │   │   ├── login-form.tsx
-│   │   │   ├── role-guard.tsx
+│   │   │   ├── auth-form.tsx
+│   │   │   ├── debug-panel.tsx
 │   │   │   └── social-auth-buttons.tsx
 │   │   ├── cookie-consent.tsx
 │   │   ├── error-boundary.tsx
+│   │   ├── forms
+│   │   │   ├── avatar-upload.tsx
+│   │   │   ├── notifications-form.tsx
+│   │   │   ├── preferences-form.tsx
+│   │   │   └── profile-form.tsx
 │   │   ├── nav
 │   │   │   ├── main-nav.tsx
 │   │   │   └── user-nav.tsx
@@ -183,45 +198,28 @@
 │   │       ├── toast.tsx
 │   │       └── toaster.tsx
 │   ├── contexts
-│   │   └── auth-context.tsx
 │   ├── hooks
 │   │   ├── use-analytics.ts
 │   │   ├── use-permissions.ts
-│   │   └── use-toast.ts
+│   │   ├── use-profile.ts
+│   │   ├── use-toast.ts
+│   │   └── use-update-profile.ts
 │   ├── lib
 │   │   ├── auth
-│   │   │   ├── auth-store.ts
-│   │   │   └── session.ts
 │   │   ├── supabase
-│   │   │   ├── config.ts
-│   │   │   └── server-config.ts
+│   │   │   ├── client.ts
+│   │   │   └── debug-queries.ts
 │   │   └── utils.ts
 │   ├── middleware.ts
 │   └── types
 │       ├── auth.ts
 │       └── supabase.ts
 ├── supabase-exports
-│   ├── Enable Row Level Security for Events.csv
-│   ├── Events Structure.csv
-│   ├── Public User Profiles.csv
-│   ├── Supabase Snippet Column Information Retrieval (1).csv
-│   ├── Supabase Snippet Column Information Retrieval.csv
-│   ├── Supabase Snippet Foreign Key Relationships.csv
-│   ├── Supabase Snippet List of User Tables.csv
-│   ├── Supabase Snippet Policy Information Retrieval.csv
-│   ├── User Profiles Structure.csv
-│   ├── identities_rows.csv
-│   ├── prod-ca-2021.crt
-│   ├── role_capabilities_rows.csv
-│   ├── roles_rows.csv
-│   ├── supabase-auth-schema-kbjdrwtiqimbwbiknoul.png
-│   ├── supabase-public-schema-kbjdrwtiqimbwbiknoul (1).png
-│   ├── user_profiles_rows (1).csv
-│   ├── user_profiles_rows.csv
-│   └── user_profiles_rows.sql
+│   ├── supabase-auth-schema-bxvbovzqzjfomnqidzzx (1).png
+│   └── supabase-public-schema-bxvbovzqzjfomnqidzzx.png
 ├── tailwind.config.ts
 └── tsconfig.json
 
-48 directories, 172 files
+53 directories, 165 files
 
 ```

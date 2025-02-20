@@ -6,18 +6,26 @@
 - Supabase project credentials
 
 ## 🔑 Environment Variables Setup
-1. In Replit, navigate to "Secrets" (lock icon)
-2. Add the following environment variables:
-
 ```env
+# Core Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-// NEXT_PUBLIC_SITE_URL=https://cloudburst.replip.com
+NEXT_PUBLIC_SITE_URL=https://cloudburst-ai.replit.app
 NODE_ENV=production
 NEXT_TELEMETRY_DISABLED=1
+
+# User Settings & Preferences
+NEXT_PUBLIC_DEFAULT_THEME=system
+NEXT_PUBLIC_DEFAULT_LANGUAGE=en
+NEXT_PUBLIC_ENABLE_NOTIFICATIONS=true
+
+# Security Configuration
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+NEXTAUTH_SECRET=your_secure_secret
+NEXTAUTH_URL=https://cloudburst-ai.replit.app
 ```
 
-## 🛠️ Deployment Steps
+## ��️ Deployment Steps
 
 ### 1. Initial Setup
 1. Create new Repl
@@ -25,8 +33,11 @@ NEXT_TELEMETRY_DISABLED=1
    - Select cloud-burst repository
    - Choose "Node.js" as language
 
-### 2. Configuration Files
-`.replit` and `replit.nix` will be automatically imported
+### 2. Database Setup
+1. Run migrations for user settings
+2. Configure RLS policies for preferences
+3. Set up notifications tables
+4. Verify database connections
 
 ### 3. Build Process
 ```bash
@@ -39,6 +50,9 @@ npm run start
 - Check build logs for errors
 - Verify environment variables
 - Test application functionality
+- Test user settings flow
+- Test preferences saving
+- Test notification system
 - Confirm database connectivity
 
 ## 🔄 Continuous Deployment

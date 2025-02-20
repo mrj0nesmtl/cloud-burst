@@ -6,35 +6,32 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+export type UserRole = 'super_admin' | 'admin' | 'event_host' | 'user' | 'guest'
+
 export interface Database {
   public: {
     Tables: {
-      user_profiles: {
+      profiles: {
         Row: {
           id: string
-          email: string
-          role: 'super_admin' | 'admin' | 'organizer' | 'user'
+          username: string | null
           full_name: string | null
           avatar_url: string | null
-          created_at: string
+          role: UserRole
           updated_at: string
         }
         Insert: {
           id: string
-          email: string
-          role?: 'super_admin' | 'admin' | 'organizer' | 'user'
+          username?: string | null
           full_name?: string | null
           avatar_url?: string | null
-          created_at?: string
-          updated_at?: string
+          role?: UserRole
         }
         Update: {
-          id?: string
-          email?: string
-          role?: 'super_admin' | 'admin' | 'organizer' | 'user'
+          username?: string | null
           full_name?: string | null
           avatar_url?: string | null
-          created_at?: string
+          role?: UserRole
           updated_at?: string
         }
       }
@@ -52,6 +49,15 @@ export interface Database {
           capability?: string
         }
       }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
     }
   }
 } 

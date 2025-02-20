@@ -255,4 +255,33 @@ The **Cloud Burst website** is designed for **event planners & organizers**, off
 - /events/*
 - /profile/*
 
+## 🎯 **User Settings & Profile**
+
+### 👤 **Profile Management**
+✔️ **Customizable Profiles** – Personal information & preferences
+✔️ **Avatar Upload** – Image management with preview
+✔️ **Contact Details** – Email & notification preferences
+
+### ⚙️ **User Preferences**
+✔️ **Theme Settings** – Light/Dark/System
+✔️ **Language Options** – Multiple language support
+✔️ **Display Preferences** – Layout & density options
+✔️ **Accessibility Settings** – Enhanced user experience
+
+### 🔔 **Notification Management**
+✔️ **Email Preferences** – Customizable email notifications
+✔️ **Push Notifications** – Real-time updates
+✔️ **Digest Settings** – Daily/Weekly summaries
+✔️ **Event Alerts** – Custom event notifications
+
+### 🎯 Settings Components
+- **Forms**: 
+  - `<ProfileForm>` for user details
+  - `<PreferencesForm>` for settings
+  - `<NotificationsForm>` for alerts
+- **Layout**: 
+  - `<Tabs>` for section navigation
+  - `<Card>` for content grouping
+  - `<Form>` with validation
+
 ---

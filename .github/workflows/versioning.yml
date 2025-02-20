@@ -26,7 +26,6 @@ on:
 jobs:
   version-check:
     runs-on: ubuntu-latest
-    # Job-specific permissions
     permissions:
       contents: read
     steps:
@@ -41,18 +40,39 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Check version consistency
+        run: |
+          # Extract versions
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          README_VERSION=$(grep -o 'version-[0-9.]*-blue' README.md | cut -d'-' -f2)
+          AI_GUIDELINES_VERSION=$(grep -o '"version": "[0-9.]*"' docs/ai-collaboration-guidelines.mdc | cut -d'"' -f4)
+          
+          echo "Found versions:"
+          echo "package.json: $PACKAGE_VERSION"
+          echo "README.md: $README_VERSION"
+          echo "ai-collaboration-guidelines.mdc: $AI_GUIDELINES_VERSION"
+          
+          # Compare versions
+          if [ "$PACKAGE_VERSION" != "$README_VERSION" ] || [ "$PACKAGE_VERSION" != "$AI_GUIDELINES_VERSION" ]; then
+            echo "❌ Version mismatch found!"
+            echo "All versions must match package.json version: $PACKAGE_VERSION"
+            exit 1
+          fi
+          
+          echo "✅ All versions match: $PACKAGE_VERSION"
+
       - name: Verify changelog
         run: |
           if ! grep -q "## \[Unreleased\]" CHANGELOG.md; then
-            echo "Error: CHANGELOG.md must contain an [Unreleased] section"
+            echo "❌ Error: CHANGELOG.md must contain an [Unreleased] section"
             exit 1
           fi
+          echo "✅ CHANGELOG.md format verified"
 
   version-bump:
     needs: version-check
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    # Job-specific permissions
     permissions:
       contents: write
       pull-requests: write
@@ -90,6 +110,12 @@ jobs:
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
           
+          # Update README.md version badge
+          sed -i "s/version-[0-9.]*-blue/version-${NEW_VERSION}-blue/" README.md
+          
+          # Update AI guidelines version
+          sed -i "s/\"version\": \"[0-9.]*\"/\"version\": \"${NEW_VERSION}\"/" docs/ai-collaboration-guidelines.mdc
+          
           # Update CHANGELOG.md
           DATE=$(date +%Y-%m-%d)
           sed -i "s/## \[Unreleased\]/## [Unreleased]\n\n## [$NEW_VERSION] - $DATE/" CHANGELOG.md
@@ -100,16 +126,23 @@ jobs:
           echo "[$NEW_VERSION]: https://github.com/${{ github.repository }}/releases/tag/v$NEW_VERSION" >> CHANGELOG.md
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38
+        uses: peter-evans/create-pull-request@v5
         with:
-          title: 'chore(release): prepare release ${{ steps.bump_version.outputs.new_version }}'
+          title: '🔖 chore(release): prepare release ${{ steps.bump_version.outputs.new_version }}'
           body: |
-            🚀 Release Preparation
+            # 🚀 Release Preparation v${{ steps.bump_version.outputs.new_version }}
             
-            This PR includes:
+            ## 📝 Changes
             - Version bump in package.json
+            - Updated version badge in README.md
+            - Updated version in AI guidelines
             - Updated CHANGELOG.md
             - Updated version links
+            
+            ## ✅ Checklist
+            - [ ] Review version numbers
+            - [ ] Review CHANGELOG.md
+            - [ ] Review documentation updates
             
             Please review the changes and merge if everything looks correct.
           branch: release/v${{ steps.bump_version.outputs.new_version }}
@@ -121,7 +154,6 @@ jobs:
     needs: version-bump
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    # Job-specific permissions
     permissions:
       contents: write
     steps:
@@ -135,10 +167,10 @@ jobs:
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
-          name: Release v${{ steps.get_version.outputs.version }}
+          name: 🎉 Release v${{ steps.get_version.outputs.version }}
           body_path: CHANGELOG.md
           draft: false
           prerelease: false 

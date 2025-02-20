@@ -67,6 +67,7 @@ globs: src/**/*.{ts,tsx}
           },
           "components": {
             "auth": "Authentication components",
+            "profile": "Profile management components",
             "ui": "Shadcn UI components",
             "shared": "Shared components",
             "forms": "Form components"

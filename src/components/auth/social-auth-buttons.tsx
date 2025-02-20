@@ -54,29 +54,5 @@ function SocialAuthButton({ provider, isLoading, onClick }: SocialButtonProps) {
 }
 
 export function SocialAuthButtons() {
-  const { signInWithSocial, isLoading } = useAuthStore()
-  const { toast } = useToast()
-
-  const handleSocialSignIn = async (provider: SupportedProvider) => {
-    try {
-      await signInWithSocial(provider)
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Authentication Error",
-        description: error.message || 'An error occurred during sign in'
-      })
-      console.error(`Error signing in with ${provider}:`, error)
-    }
-  }
-
-  return (
-    <div className="grid gap-2">
-      <SocialAuthButton 
-        provider="google"
-        isLoading={isLoading}
-        onClick={handleSocialSignIn}
-      />
-    </div>
-  )
+  return null // Will implement when adding OAuth providers
 } 

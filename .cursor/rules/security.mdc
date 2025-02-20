@@ -17,7 +17,7 @@ globs: src/**/*.{ts,tsx}, middleware.ts
         "session": {
           "persistence": true,
           "refreshInterval": 60 * 60 * 1000,
-          "storage": "serverSession",
+          "storage": "cookieSession",
           "middleware": "required"
         },
         "flows": {
@@ -37,7 +37,8 @@ globs: src/**/*.{ts,tsx}, middleware.ts
           "/events/[id]",
           "/admin",
           "/settings",
-          "/profile"
+          "/profile",
+          "/profile/settings"
         ],
         "public": [
           "/",
