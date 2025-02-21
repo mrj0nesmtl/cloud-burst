@@ -46,13 +46,24 @@ const routes = [
 ]
 
 export function MobileNav() {
+  // Use useEffect to handle client-side state
+  const [mounted, setMounted] = useState(false)
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
-  // Close sheet when route changes
+  // Ensure we only render after hydration
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   useEffect(() => {
     setOpen(false)
   }, [pathname])
+
+  // Don't render anything until mounted
+  if (!mounted) {
+    return null
+  }
 
   const handleLinkClick = () => {
     setOpen(false)
@@ -65,6 +76,7 @@ export function MobileNav() {
           variant="ghost" 
           size="icon" 
           className="md:hidden"
+          aria-label="Toggle menu"
         >
           <Menu className="h-6 w-6" />
           <span className="sr-only">Toggle menu</span>

@@ -1,24 +1,34 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CloudLightning, ArrowRight, Brain, Shield, Share2, Sparkles } from "lucide-react"
 import Link from "next/link"
-import { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Cloud Burst - Elevate Your Event Photography',
-  description: 'Capture, enhance, and share event photos with AI-powered technology. Perfect for weddings, corporate events, and celebrations.',
-  openGraph: {
-    title: 'Cloud Burst - Elevate Your Event Photography',
-    description: 'AI-powered event photography platform for seamless photo sharing and management.'
-  }
-}
 
 export default function Home() {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return null // Return null on server-side to prevent hydration mismatch
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <div className="relative min-h-[80vh] flex items-center justify-center">
         <div 
-          className="absolute inset-0 z-0 bg-hero-pattern bg-cover bg-center bg-no-repeat opacity-15"
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: 'url(/images/pexels-themo1-bg.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: '0.15'
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background z-0" />
         

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/ui/site-header"
@@ -9,15 +9,7 @@ import { ToastProvider } from "@/components/providers/toast-provider";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Toaster } from "@/components/ui/toaster"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const geist = Geist({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: 'Cloud Burst',
@@ -83,31 +75,38 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
+    <html lang="en">
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <meta
+          name="format-detection"
+          content="telephone=no, date=no, email=no, address=no"
+        />
+      </head>
+      <body className={geist.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
+          storageKey="cloud-burst-theme"
         >
-          <Suspense fallback={<div className="flex min-h-screen items-center justify-center">
-            <LoadingSpinner size="lg" />
-          </div>}>
-            <SiteHeader />
-            <main className="flex-1">
-              {children}
-            </main>
+          <div className="relative flex min-h-screen flex-col">
+            <Suspense fallback={null}>
+              <SiteHeader />
+            </Suspense>
+            <main className="flex-1">{children}</main>
             <SiteFooter />
-            <ToastProvider />
-          </Suspense>
+          </div>
+          <Toaster />
         </ThemeProvider>
-        <Toaster />
       </body>
     </html>
   );

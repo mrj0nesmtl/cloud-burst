@@ -27,6 +27,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import Link from "next/link"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export const metadata = {
   title: 'Pricing | Cloud Burst',
@@ -124,9 +126,12 @@ export default function PricingPage() {
                   className="w-full bg-background border hover:bg-muted/50 transition-colors" 
                   size="lg"
                   variant="outline"
+                  asChild
                 >
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <Link href="/auth/register">
+                    Get Started
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
               ) : (
                 <Dialog>
@@ -140,114 +145,116 @@ export default function PricingPage() {
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[600px]">
+                  <DialogContent className="sm:max-w-[600px] h-[90vh] sm:h-auto">
                     <DialogHeader>
                       <DialogTitle>Contact Sales Team</DialogTitle>
                       <DialogDescription>
                         Tell us about your event needs and we'll help you find the perfect solution.
                       </DialogDescription>
                     </DialogHeader>
-                    <form className="grid gap-6 py-4">
-                      {/* Account Type Selection */}
-                      <div className="space-y-3">
-                        <Label>I am a(n):</Label>
-                        <RadioGroup defaultValue="individual" className="flex gap-4">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="individual" id="individual" />
-                            <Label htmlFor="individual">Individual</Label>
+                    <ScrollArea className="h-full max-h-[calc(90vh-120px)] sm:max-h-none">
+                      <form className="grid gap-6 py-4 px-2">
+                        {/* Account Type Selection */}
+                        <div className="space-y-3">
+                          <Label>I am a(n):</Label>
+                          <RadioGroup defaultValue="individual" className="flex gap-4">
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="individual" id="individual" />
+                              <Label htmlFor="individual">Individual</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="company" id="company" />
+                              <Label htmlFor="company">Company</Label>
+                            </div>
+                          </RadioGroup>
+                        </div>
+
+                        {/* Basic Info */}
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div className="grid gap-2">
+                            <Label htmlFor="name">Name *</Label>
+                            <Input id="name" required placeholder="Your name" />
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="company" id="company" />
-                            <Label htmlFor="company">Company</Label>
+                          <div className="grid gap-2">
+                            <Label htmlFor="email">Email *</Label>
+                            <Input id="email" type="email" required placeholder="your@email.com" />
                           </div>
-                        </RadioGroup>
-                      </div>
+                        </div>
 
-                      {/* Basic Info */}
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="grid gap-2">
-                          <Label htmlFor="name">Name *</Label>
-                          <Input id="name" required placeholder="Your name" />
+                        {/* Company Details (Optional) */}
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div className="grid gap-2">
+                            <Label htmlFor="company-name">Company Name (Optional)</Label>
+                            <Input id="company-name" placeholder="Your company" />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="industry">Industry (Optional)</Label>
+                            <Select>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select industry" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="weddings">Weddings & Celebrations</SelectItem>
+                                <SelectItem value="corporate">Corporate Events</SelectItem>
+                                <SelectItem value="entertainment">Entertainment & Festivals</SelectItem>
+                                <SelectItem value="education">Education & Conferences</SelectItem>
+                                <SelectItem value="sports">Sports & Recreation</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="email">Email *</Label>
-                          <Input id="email" type="email" required placeholder="your@email.com" />
-                        </div>
-                      </div>
 
-                      {/* Company Details (Optional) */}
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="grid gap-2">
-                          <Label htmlFor="company-name">Company Name (Optional)</Label>
-                          <Input id="company-name" placeholder="Your company" />
+                        {/* Event Details (Optional) */}
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div className="grid gap-2">
+                            <Label htmlFor="event-size">Average Event Size (Optional)</Label>
+                            <Select>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select size" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="small">Small (Up to 50 people)</SelectItem>
+                                <SelectItem value="medium">Medium (51-150 people)</SelectItem>
+                                <SelectItem value="large">Large (151-500 people)</SelectItem>
+                                <SelectItem value="xlarge">Extra Large (500+ people)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="events-per-year">Events per Year (Optional)</Label>
+                            <Select>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select frequency" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="1-2">1-2 events</SelectItem>
+                                <SelectItem value="3-5">3-5 events</SelectItem>
+                                <SelectItem value="6-12">6-12 events</SelectItem>
+                                <SelectItem value="12+">12+ events</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="industry">Industry (Optional)</Label>
-                          <Select>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select industry" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="weddings">Weddings & Celebrations</SelectItem>
-                              <SelectItem value="corporate">Corporate Events</SelectItem>
-                              <SelectItem value="entertainment">Entertainment & Festivals</SelectItem>
-                              <SelectItem value="education">Education & Conferences</SelectItem>
-                              <SelectItem value="sports">Sports & Recreation</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
 
-                      {/* Event Details (Optional) */}
-                      <div className="grid gap-4 sm:grid-cols-2">
+                        {/* Message */}
                         <div className="grid gap-2">
-                          <Label htmlFor="event-size">Average Event Size (Optional)</Label>
-                          <Select>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select size" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="small">Small (Up to 50 people)</SelectItem>
-                              <SelectItem value="medium">Medium (51-150 people)</SelectItem>
-                              <SelectItem value="large">Large (151-500 people)</SelectItem>
-                              <SelectItem value="xlarge">Extra Large (500+ people)</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <Label htmlFor="message">Additional Details (Optional)</Label>
+                          <Textarea 
+                            id="message" 
+                            placeholder="Tell us about your specific needs, event types, or any questions you have."
+                            className="min-h-[100px]"
+                          />
                         </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="events-per-year">Events per Year (Optional)</Label>
-                          <Select>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select frequency" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="1-2">1-2 events</SelectItem>
-                              <SelectItem value="3-5">3-5 events</SelectItem>
-                              <SelectItem value="6-12">6-12 events</SelectItem>
-                              <SelectItem value="12+">12+ events</SelectItem>
-                            </SelectContent>
-                          </Select>
+
+                        <div className="flex justify-end gap-4">
+                          <DialogTrigger asChild>
+                            <Button variant="outline">Cancel</Button>
+                          </DialogTrigger>
+                          <Button type="submit">Send Message</Button>
                         </div>
-                      </div>
-
-                      {/* Message */}
-                      <div className="grid gap-2">
-                        <Label htmlFor="message">Additional Details (Optional)</Label>
-                        <Textarea 
-                          id="message" 
-                          placeholder="Tell us about your specific needs, event types, or any questions you have."
-                          className="min-h-[100px]"
-                        />
-                      </div>
-
-                      <div className="flex justify-end gap-4">
-                        <DialogTrigger asChild>
-                          <Button variant="outline">Cancel</Button>
-                        </DialogTrigger>
-                        <Button type="submit">Send Message</Button>
-                      </div>
-                    </form>
+                      </form>
+                    </ScrollArea>
                   </DialogContent>
                 </Dialog>
               )}
