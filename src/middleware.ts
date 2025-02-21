@@ -85,9 +85,43 @@ function routeToRegex(route: string): RegExp {
 }
 
 export async function middleware(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+  const isDev = process.env.NODE_ENV === 'development'
+
+  const cspHeader = isDev 
+    ? // Development CSP
+      [
+        "default-src 'self'",
+        `script-src 'self' 'unsafe-eval' 'unsafe-inline' ${request.nextUrl.origin}`,
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "img-src 'self' data: blob: https:",
+        "font-src 'self' https://fonts.gstatic.com",
+        "connect-src 'self' ws: wss: *",
+        "frame-src 'self'",
+      ].join('; ')
+    : // Production CSP
+      [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline'",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "img-src 'self' data: blob: https:",
+        "font-src 'self' https://fonts.gstatic.com",
+        "connect-src 'self'",
+        "frame-src 'self'",
+      ].join('; ')
+
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('Content-Security-Policy', cspHeader)
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    }
+  })
+
   try {
     // Create response early for cookie handling
-    const res = NextResponse.next()
+    const res = response
 
     // Update to new middleware client
     const supabase = createMiddlewareClient({ 
@@ -120,7 +154,6 @@ export async function middleware(request: NextRequest) {
       'X-Frame-Options': 'DENY',
       'X-Content-Type-Options': 'nosniff',
       'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-      'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co",
       'Permissions-Policy': "camera=(), microphone=(), geolocation=()"
     }).forEach(([key, value]) => {
       res.headers.set(key, value)

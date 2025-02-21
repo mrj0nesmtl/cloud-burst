@@ -1,5 +1,7 @@
 # 🛠️ **Cloud Burst - Development Roadmap**
 📊 Overall Project Completion: ~45% [Progress on Settings]
+📅 February 21, 2025
+Version: 0.1.11
 
 ## 📊 Project Timeline Overview
 

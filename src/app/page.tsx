@@ -18,14 +18,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="relative min-h-[80vh] flex items-center justify-center">
         <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: 'url(/images/pexels-themo1-bg.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            opacity: '0.15'
-          }}
+          className="absolute inset-0 z-0 bg-hero-pattern bg-cover bg-center bg-no-repeat opacity-15"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background z-0" />
         

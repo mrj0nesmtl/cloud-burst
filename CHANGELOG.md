@@ -15,6 +15,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.12] - 2024-02-21
+### Added
+- Session 12 development kickoff
+- Mobile navigation fixes
+- Enhanced responsive design
+
+### Fixed
+- Mobile menu activation issue
+- Navigation accessibility improvements
+- Menu interaction states
+
+### Documentation
+- Added Session 12 planning
+- Updated development timeline
+- Enhanced mobile navigation docs
+
 ## [0.1.10] - 2024-02-19
 ### Added
 - Session 9 development planning

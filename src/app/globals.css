@@ -70,3 +70,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.bg-hero-pattern {
+  background-image: url('/images/pexels-themo1-bg.jpg');
+}

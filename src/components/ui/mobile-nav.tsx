@@ -46,18 +46,26 @@ const routes = [
 ]
 
 export function MobileNav() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
   // Close sheet when route changes
   useEffect(() => {
-    setIsOpen(false)
+    setOpen(false)
   }, [pathname])
 
+  const handleLinkClick = () => {
+    setOpen(false)
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="md:hidden"
+        >
           <Menu className="h-6 w-6" />
           <span className="sr-only">Toggle menu</span>
         </Button>
@@ -82,6 +90,7 @@ export function MobileNav() {
                 <li key={route.href}>
                   <Link 
                     href={route.href}
+                    onClick={handleLinkClick}
                     className={cn(
                       "flex items-center w-full py-2 text-lg hover:text-blue-500 transition-colors",
                       pathname === route.href && "text-blue-500 font-medium"
@@ -101,6 +110,7 @@ export function MobileNav() {
               <Link 
                 href="https://github.com/cloudburst" 
                 target="_blank"
+                onClick={handleLinkClick}
                 className="hover:text-blue-500 transition-colors"
               >
                 <Github className="h-5 w-5" />
@@ -109,6 +119,7 @@ export function MobileNav() {
               <Link 
                 href="https://twitter.com/cloudburst" 
                 target="_blank"
+                onClick={handleLinkClick}
                 className="hover:text-blue-500 transition-colors"
               >
                 <Twitter className="h-5 w-5" />
@@ -120,10 +131,14 @@ export function MobileNav() {
           {/* Auth Buttons */}
           <div className="px-6 py-4 border-t space-y-2">
             <Button asChild variant="outline" className="w-full">
-              <Link href="/auth/signin">Sign In</Link>
+              <Link href="/auth/signin" onClick={handleLinkClick}>
+                Sign In
+              </Link>
             </Button>
             <Button asChild className="w-full">
-              <Link href="/auth/register">Get Started</Link>
+              <Link href="/auth/register" onClick={handleLinkClick}>
+                Get Started
+              </Link>
             </Button>
           </div>
         </div>

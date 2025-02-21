@@ -67,6 +67,17 @@ export const metadata: Metadata = {
     title: 'Cloud Burst',
     description: 'AI-Powered Event Photography Platform',
     images: ['/og-image.png']
+  },
+  other: {
+    'Content-Security-Policy': [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "style-src 'self' 'unsafe-inline' 'unsafe-hashes'",
+      "img-src 'self' data: blob:",
+      "font-src 'self' https://fonts.gstatic.com",
+      "connect-src 'self' https://fonts.googleapis.com",
+      "frame-src 'self'"
+    ].join('; ')
   }
 };
 
