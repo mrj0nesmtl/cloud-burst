@@ -1,5 +1,16 @@
 # Version Control Guidelines
 
+## Version Strategy
+- 0.1.x: Foundation Phase
+  - 0.1.12: Current (Mobile & Responsive)
+  - 0.1.13: Dashboard & Upload Setup
+  - 0.1.14: Auth Flow Completion
+- 0.2.0: Authentication Milestone
+  - Complete auth system
+  - Protected routes
+  - User sessions
+  - Role-based access
+
 ## Semantic Versioning
 Cloud Burst follows [Semantic Versioning 2.0.0](https://semver.org/):
 

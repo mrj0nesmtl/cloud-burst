@@ -11,8 +11,6 @@
 │   │   │   └── page.tsx
 │   │   └── signin
 │   │       └── page.tsx
-│   ├── auth-test
-│   │   └── page.tsx
 │   ├── globals.css
 │   ├── layout.tsx
 │   ├── legal
@@ -32,6 +30,7 @@
 │   │   ├── page.tsx
 │   │   └── pricing
 │   │       └── page.tsx
+│   ├── metadata.ts
 │   ├── page.tsx
 │   └── protected
 │       ├── admin
@@ -103,7 +102,6 @@
 │       ├── textarea.tsx
 │       ├── toast.tsx
 │       └── toaster.tsx
-├── contexts
 ├── hooks
 │   ├── use-analytics.ts
 │   ├── use-permissions.ts
@@ -111,7 +109,6 @@
 │   ├── use-toast.ts
 │   └── use-update-profile.ts
 ├── lib
-│   ├── auth
 │   ├── supabase
 │   │   ├── client.ts
 │   │   └── debug-queries.ts
@@ -121,6 +118,6 @@
     ├── auth.ts
     └── supabase.ts
 
-35 directories, 84 files
+32 directories, 84 files
 
 ```

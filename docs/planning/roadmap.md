@@ -1,7 +1,7 @@
 # 🛠️ **Cloud Burst - Development Roadmap**
-📊 Overall Project Completion: ~45% [Progress on Settings]
+📊 Overall Project Completion: ~55% [Auth Complete, Settings Progress]
 📅 February 21, 2025
-Version: 0.1.11
+Version: 0.1.12
 
 ## 📊 Project Timeline Overview
 
@@ -12,7 +12,7 @@ Version: 0.1.11
 | 🚀 Act III: Launch | Jun-Jul 2025 | ⚪ Planned | 0% |
 
 ### 📈 Current Sprint Status
-## [0.1.11] - 2024-02-21 [SETTINGS UPDATE]
+## [0.1.12] - 2024-02-21 [DASHBOARD & UPLOAD PREP]
 
 | Component | Status | Owner | Due Date | Progress |
 |-----------|--------|-------|----------|-----------|
@@ -24,7 +24,7 @@ Version: 0.1.11
 | 💰 Pricing System | ✅ Done | @mrj0nesmtl | Feb 15, 2025 | 100% |
 | 🔐 Auth System | ✅ Done | @mrj0nesmtl | Feb 20, 2025 | 100% |
 | ⚙️ Settings System | 🟡 Active | @mrj0nesmtl | Feb 25, 2025 | 75% |
-| 📊 Dashboard | ⏸️ On Hold | @mrj0nesmtl | Mar 5, 2025 | 0% |
+| 📊 Dashboard | 🟡 Starting | @mrj0nesmtl | Mar 5, 2025 | 5% |
 
 ### ⚡ Settings System Progress
 - ✅ Profile Management

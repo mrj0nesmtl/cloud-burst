@@ -12,10 +12,6 @@
 │   ├── architecture
 │   │   ├── application_design_document.md
 │   │   └── system_architecture_flowchart.md
-│   ├── archive
-│   │   └── 2024-02-20
-│   │       └── development
-│   │           └── auth-debug-pre-reset.md
 │   ├── auth-cleanup.md
 │   ├── deployment
 │   │   └── REPLIT_DEPLOYMENT.md
@@ -29,6 +25,9 @@
 │   │   ├── prompt_archive
 │   │   │   ├── additional_notes.md
 │   │   │   ├── session 3.md
+│   │   │   ├── session_10.md
+│   │   │   ├── session_11_checklist.md
+│   │   │   ├── session_11_kickoff.md
 │   │   │   ├── session_1_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
@@ -36,9 +35,8 @@
 │   │   │   ├── session_7.md
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
-│   │   ├── session_10.md
-│   │   ├── session_11_checklist.md
-│   │   └── session_11_kickoff.md
+│   │   ├── session_12_checklist.md
+│   │   └── session_12_kickoff.md
 │   ├── planning
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -105,8 +103,6 @@
 │   │   │   │   └── page.tsx
 │   │   │   └── signin
 │   │   │       └── page.tsx
-│   │   ├── auth-test
-│   │   │   └── page.tsx
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   ├── legal
@@ -126,6 +122,7 @@
 │   │   │   ├── page.tsx
 │   │   │   └── pricing
 │   │   │       └── page.tsx
+│   │   ├── metadata.ts
 │   │   ├── page.tsx
 │   │   └── protected
 │   │       ├── admin
@@ -197,7 +194,6 @@
 │   │       ├── textarea.tsx
 │   │       ├── toast.tsx
 │   │       └── toaster.tsx
-│   ├── contexts
 │   ├── hooks
 │   │   ├── use-analytics.ts
 │   │   ├── use-permissions.ts
@@ -205,7 +201,6 @@
 │   │   ├── use-toast.ts
 │   │   └── use-update-profile.ts
 │   ├── lib
-│   │   ├── auth
 │   │   ├── supabase
 │   │   │   ├── client.ts
 │   │   │   └── debug-queries.ts
@@ -220,6 +215,6 @@
 ├── tailwind.config.ts
 └── tsconfig.json
 
-53 directories, 165 files
+47 directories, 166 files
 
 ```

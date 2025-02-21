@@ -6,10 +6,6 @@
 ├── architecture
 │   ├── application_design_document.md
 │   └── system_architecture_flowchart.md
-├── archive
-│   └── 2024-02-20
-│       └── development
-│           └── auth-debug-pre-reset.md
 ├── auth-cleanup.md
 ├── deployment
 │   └── REPLIT_DEPLOYMENT.md
@@ -23,6 +19,9 @@
 │   ├── prompt_archive
 │   │   ├── additional_notes.md
 │   │   ├── session 3.md
+│   │   ├── session_10.md
+│   │   ├── session_11_checklist.md
+│   │   ├── session_11_kickoff.md
 │   │   ├── session_1_prompt.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
@@ -30,9 +29,8 @@
 │   │   ├── session_7.md
 │   │   ├── session_8.md
 │   │   └── session_9.md
-│   ├── session_10.md
-│   ├── session_11_checklist.md
-│   └── session_11_kickoff.md
+│   ├── session_12_checklist.md
+│   └── session_12_kickoff.md
 ├── planning
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -56,6 +54,6 @@
     ├── user_flow_chart.md
     └── user_flow_overview.md
 
-12 directories, 42 files
+9 directories, 43 files
 
 ```
