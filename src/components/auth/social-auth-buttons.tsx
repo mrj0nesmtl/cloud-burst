@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
-import { useAuthStore } from "@/lib/auth/auth-store"
 import { Provider } from "@supabase/supabase-js"
 import { FcGoogle } from "react-icons/fc"
 import { useToast } from "@/hooks/use-toast"
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 // Only include Google provider
 type SupportedProvider = Extract<Provider, 'google'>
@@ -54,5 +54,16 @@ function SocialAuthButton({ provider, isLoading, onClick }: SocialButtonProps) {
 }
 
 export function SocialAuthButtons() {
+  const supabase = createClientComponentClient()
+  
+  const signInWithProvider = async (provider: Provider) => {
+    await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    })
+  }
+
   return null // Will implement when adding OAuth providers
 } 

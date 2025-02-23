@@ -10,15 +10,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useAuthStore } from "@/lib/auth/auth-store"
 import Link from "next/link"
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 interface UserNavProps {
   user: User
 }
 
 export function UserNav({ user }: UserNavProps) {
-  const { signOut } = useAuthStore()
+  const supabase = createClientComponentClient()
+  
+  const signOut = async () => {
+    await supabase.auth.signOut()
+  }
 
   return (
     <DropdownMenu>
@@ -51,7 +55,7 @@ export function UserNav({ user }: UserNavProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="text-red-600 focus:text-red-600"
-          onClick={() => signOut()}
+          onClick={signOut}
         >
           Sign Out
         </DropdownMenuItem>
