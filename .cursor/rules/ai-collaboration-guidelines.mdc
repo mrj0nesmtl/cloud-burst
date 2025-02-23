@@ -10,7 +10,7 @@ globs: **/*
   "aiCollaboration": {
     "context": {
       "project": {
-        "name": "Cloud Capture",
+        "name": "Cloud Burst",
         "type": "Event Photography Platform",
         "stack": {
           "frontend": "Next.js 14 + TypeScript",

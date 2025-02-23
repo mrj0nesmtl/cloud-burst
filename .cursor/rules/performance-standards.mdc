@@ -2,10 +2,6 @@
 description: Performance Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}, next.config.js
 ---
----
-description: Performance Standards for Cloud Capture
-globs: ["src/**/*.{ts,tsx}", "next.config.js"]
----
 # Performance Standards
 
 ## Performance Metrics

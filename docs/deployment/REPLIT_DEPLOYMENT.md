@@ -1,5 +1,10 @@
 # 🚀 Replit Deployment Guide for Cloud Burst
-Version: 0.1.13 (Updated: Feb 23, 2025)
+Version: 0.1.14 (Updated: Feb 23, 2025)
+
+## 📚 Related Documentation
+- [Environment Setup Guide](./ENVIRONMENT_SETUP.md)
+- [Build Configuration Guide](./BUILD_CONFIGURATION.md)
+- [Testing Guide](./TESTING_GUIDE.md)
 
 ## 📋 Prerequisites
 - Replit account with Node.js 20.x support
@@ -7,142 +12,147 @@ Version: 0.1.13 (Updated: Feb 23, 2025)
 - Supabase project credentials
 - Minimum 512MB memory allocation
 
-## 🔑 Environment Variables
+## 🔑 Environment Setup
+See [Environment Setup Guide](./ENVIRONMENT_SETUP.md) for detailed configuration.
+
 ```env
 # Required Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_SITE_URL=https://cloudburst.replit.app
+NEXT_PUBLIC_SITE_URL=https://cloud-burst.replit.app
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
-# Optional Configuration
-NEXT_PUBLIC_DEFAULT_THEME=system
-NEXT_PUBLIC_DEFAULT_LANGUAGE=en
-NEXT_PUBLIC_ENABLE_NOTIFICATIONS=true
 
 # System Configuration
 NODE_ENV=production
 NEXT_TELEMETRY_DISABLED=1
 ```
 
-## 🛠️ Deployment Steps
+## 🛠️ Deployment Process
 
-### 1. Initial Setup
+### 1. Repository Setup
 ```bash
-# Clone and setup
-git clone https://github.com/your-username/cloud-burst.git
+# Clone repository
+git clone https://github.com/mrj0nesmtl/cloud-burst.git
 cd cloud-burst
 
+# Switch to deployment branch
+git checkout -b deployment/v0.1.14
+```
+
+### 2. Configuration Files
+See [Build Configuration Guide](./BUILD_CONFIGURATION.md) for detailed settings.
+
+```nix
+# replit.nix
+{ pkgs }: {
+    deps = [
+        pkgs.nodejs-20_x
+        pkgs.python3
+        pkgs.gcc
+        pkgs.git
+    ];
+}
+```
+
+### 3. Build Process
+```bash
 # Install dependencies
-npm install
+npm ci --production
 
 # Build application
-npm run build
+NODE_OPTIONS="--max-old-space-size=512" npm run build
 
 # Start production server
 npm run start
 ```
 
-### 2. Replit Configuration
-```nix
-# replit.nix
-{
-  deps = [
-    pkgs.nodejs-20_x
-    pkgs.python3
-    pkgs.gcc
-    pkgs.git
-  ];
-}
-```
+## 🔍 Verification Steps
+See [Testing Guide](./TESTING_GUIDE.md) for comprehensive testing procedures.
 
-### 3. Security Headers
-```typescript
-// next.config.js
-const securityHeaders = [
-  {
-    key: 'Content-Security-Policy',
-    value: "default-src 'self'; connect-src 'self' https://*.supabase.co"
-  },
-  {
-    key: 'X-Frame-Options',
-    value: 'DENY'
-  },
-  // ... other headers from deployment.mdc
-]
-```
+### Quick Checks
+- [ ] Node.js version verification
+- [ ] Environment variables loaded
+- [ ] Build completion
+- [ ] Security headers active
+- [ ] Health endpoint response
+- [ ] Memory utilization
 
-## 🔍 Verification Checklist
-- [ ] Node.js 20.x is active
-- [ ] All environment variables are set
-- [ ] Build completes successfully
-- [ ] Security headers are active
-- [ ] Supabase connection is verified
-- [ ] Health endpoint responds
-- [ ] Memory usage is within limits
+## 🚨 Common Issues & Solutions
 
-## 🚨 Troubleshooting
-
-### Memory Issues
+### Memory Management
 ```bash
-# Check memory usage
-free -h
-
-# Clear build cache
+# Memory optimization
+NODE_OPTIONS="--max-old-space-size=512"
 rm -rf .next
 npm run build
 ```
 
 ### Build Failures
 ```bash
-# Clean install
+# Clean installation
 rm -rf node_modules
-npm install --production
-
-# Verify Node version
-node --version  # Should be >=20.x
-```
-
-## 📊 Monitoring
-- Health Check: `/api/health`
-- Memory Usage: Monitor via Replit dashboard
-- Error Logs: Check application logs
-- Performance: Use Lighthouse reports
-
-## 🔒 Security Checklist
-- [ ] All secrets in Replit Secrets
-- [ ] HTTPS enforced
-- [ ] CSP headers active
-- [ ] CORS properly configured
-- [ ] Rate limiting active
-- [ ] No sensitive data in logs
-
-## 📝 Maintenance
-- Weekly dependency updates
-- Monthly security audits
-- Regular backup verification
-- Performance monitoring
-- Log rotation
-
-## 🔄 Rollback Procedure
-```bash
-# Tag current version
-git tag v0.1.13
-
-# Revert to previous stable
-git checkout v0.1.12
-
-# Rebuild
-npm install
+npm ci
 npm run build
 ```
+
+## 📊 Monitoring & Maintenance
+
+### Health Checks
+- `/api/health` endpoint monitoring
+- Memory usage tracking
+- Error logging
+- Performance metrics
+
+### Security Measures
+- Weekly security audits
+- Secret rotation
+- Access log review
+- Dependency updates
+
+## 🔄 Version Control
+```bash
+# Version tagging
+git tag v0.1.14
+git push origin v0.1.14
+
+# Rollback if needed
+git checkout v0.1.13
+```
+
+## 📝 Documentation Updates
+- Update CHANGELOG.md
+- Review environment variables
+- Update version numbers
+- Document any issues
+
+## 🔒 Security Checklist
+- [ ] Secrets in Replit Secrets
+- [ ] HTTPS enforced
+- [ ] CSP headers active
+- [ ] CORS configured
+- [ ] Rate limiting enabled
+- [ ] Audit logging active
+
+## 🤝 Support & Resources
+- [Replit Documentation](https://docs.replit.com)
+- [Next.js Deployment Guide](https://nextjs.org/docs/deployment)
+- [Supabase Documentation](https://supabase.io/docs)
+- Internal Support: #deployment-support
+
+## 📈 Performance Monitoring
+- Lighthouse scores
+- API response times
+- Build performance
+- Memory usage trends
+
+Remember to check the specific guides for detailed information on each aspect of the deployment process.
 
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 # Site Configuration
-NEXT_PUBLIC_SITE_URL=https://cloudburst.replit.app
+NEXT_PUBLIC_SITE_URL=https://cloudburst-beta.replit.app
 
 # Security and Features
 NEXTAUTH_SECRET=generate_a_secure_random_string

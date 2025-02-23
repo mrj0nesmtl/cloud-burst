@@ -3,16 +3,16 @@ run = "npm run start"
 # Added modules specification
 modules = ["nodejs-20", "web", "bash", "nix"]
 
-hidden = [".build", ".config", ".next", "node_modules"]
+hidden = [".config", ".git", ".next", "node_modules"]
 
 [nix]
-channel = "stable-24_05"
+channel = "stable-22_11"
 
 [env]
 PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin"
 npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
 NEXT_TELEMETRY_DISABLED = "1"
-NODE_ENV = "production"                                                                                # Changed to production
+NODE_ENV = "production"
 
 [packager]
 language = "nodejs"
@@ -22,9 +22,12 @@ packageSearch = true
 guessImports = true
 enabledForHosting = true
 
+[languages]
+javascript = "nodejs-20"
+
 [languages.javascript]
-pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
-syntax = "javascript"
+pattern = "**/{*.js,*.jsx,*.ts,*.tsx,*.json}"
+module = true
 
 [languages.javascript.languageServer]
 start = ["typescript-language-server", "--stdio"]
@@ -42,3 +45,6 @@ build = "npm run build" # This is important
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[unitTest]
+language = "nodejs"

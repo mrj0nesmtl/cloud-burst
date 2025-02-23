@@ -1,13 +1,13 @@
 nix:replit.nix
 { pkgs }: {
     deps = [
-        pkgs.nodejs-18_x
-        pkgs.nodePackages.typescript-language-server
-        pkgs.nodePackages.typescript
-        pkgs.yarn
-        pkgs.replitPackages.jest
+        pkgs.nodejs-20_x
+        pkgs.python3
+        pkgs.gcc
         pkgs.git
-        pkgs.openssh
+        pkgs.nodePackages.npm
+        pkgs.nodePackages.typescript
+        pkgs.nodePackages.yarn
     ];
     env = {
         LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
