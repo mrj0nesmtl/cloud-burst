@@ -1,7 +1,7 @@
 # UI Components Documentation
 
 ## 🎨 Cloud Burst Component Library
-📅 *Updated: Feb 2024*
+📅 *Updated: Feb 23, 2025*
 
 ## 📚 Core Components
 
@@ -16,6 +16,13 @@ import { NavigationMenu } from "@/components/ui/navigation-menu"
 - Default: Main header navigation
 - Mobile: Condensed for small screens
 - Dashboard: Admin navigation
+
+// Props:
+type NavigationMenuProps = {
+  items: NavItem[]
+  className?: string
+  orientation?: "horizontal" | "vertical"
+}
 ```
 
 #### Menubar
@@ -27,6 +34,13 @@ import { Menubar } from "@/components/ui/menubar"
 - Photo editing tools
 - Dashboard actions
 - Content filters
+
+// Props:
+type MenubarProps = {
+  items: MenuItem[]
+  className?: string
+  orientation?: "horizontal" | "vertical"
+}
 ```
 
 #### Sheet
@@ -38,6 +52,13 @@ import { Sheet } from "@/components/ui/sheet"
 - Mobile menu
 - Quick settings
 - Filter panels
+
+// Props:
+type SheetProps = {
+  side?: "left" | "right" | "top" | "bottom"
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 ### 🖼️ Layout Components
@@ -51,6 +72,13 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
 - 16:9 (Video content)
 - 1:1 (Profile photos)
 - 4:3 (Gallery images)
+
+// Props:
+type AspectRatioProps = {
+  ratio?: number
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 #### Card
@@ -62,6 +90,13 @@ import { Card } from "@/components/ui/card"
 - Default: Basic content card
 - Interactive: Hover effects
 - Featured: Highlighted content
+
+// Props:
+type CardProps = {
+  variant?: "default" | "interactive" | "featured"
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 #### Dialog
@@ -73,6 +108,14 @@ import { Dialog } from "@/components/ui/dialog"
 - Image preview
 - Settings forms
 - Confirmations
+
+// Props:
+type DialogProps = {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 ### 📝 Form Components
@@ -92,6 +135,13 @@ import { Form } from "@/components/ui/form"
 - React Hook Form
 - Zod schemas
 - Custom validation
+
+// Props:
+type FormProps = {
+  onSubmit: (data: any) => Promise<void>
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 #### PreferencesForm
@@ -132,6 +182,14 @@ import { Input } from "@/components/ui/input"
 - Email
 - Password
 - Search
+
+// Props:
+type InputProps = {
+  type?: "text" | "email" | "password" | "search"
+  className?: string
+  error?: string
+  disabled?: boolean
+}
 ```
 
 #### Select
@@ -143,6 +201,14 @@ import { Select } from "@/components/ui/select"
 - Searchable
 - Multi-select
 - Grouped options
+
+// Props:
+type SelectProps = {
+  options: SelectOption[]
+  multiple?: boolean
+  searchable?: boolean
+  className?: string
+}
 ```
 
 ### 🎛️ Interactive Components
@@ -157,8 +223,18 @@ import { Button } from "@/components/ui/button"
 - secondary: Alternative actions
 - ghost: Subtle actions
 - destructive: Delete/remove
-- outline: Bordered style (New)
-- link: Text-like button (New)
+- outline: Bordered style
+- link: Text-like button
+
+// Props:
+type ButtonProps = {
+  variant?: "default" | "secondary" | "ghost" | "destructive" | "outline" | "link"
+  size?: "sm" | "md" | "lg"
+  loading?: boolean
+  disabled?: boolean
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 #### Carousel
@@ -170,6 +246,14 @@ import { Carousel } from "@/components/ui/carousel"
 - Auto-play
 - Touch support
 - Custom navigation
+
+// Props:
+type CarouselProps = {
+  items: CarouselItem[]
+  autoPlay?: boolean
+  interval?: number
+  className?: string
+}
 ```
 
 #### Tabs
@@ -181,6 +265,14 @@ import { Tabs } from "@/components/ui/tabs"
 - Dashboard views
 - Settings panels
 - Gallery layouts
+
+// Props:
+type TabsProps = {
+  items: TabItem[]
+  defaultValue?: string
+  className?: string
+  onChange?: (value: string) => void
+}
 ```
 
 ### 🎛️ Settings Components
@@ -244,6 +336,14 @@ import { Alert } from "@/components/ui/alert"
 - success: Confirmation
 - warning: Caution
 - destructive: Error
+
+// Props:
+type AlertProps = {
+  variant?: "default" | "success" | "warning" | "destructive"
+  title?: string
+  description?: string
+  className?: string
+}
 ```
 
 #### Toast
@@ -255,6 +355,14 @@ import { Toast } from "@/components/ui/toast"
 - Success messages
 - Error notifications
 - Process updates
+
+// Props:
+type ToastProps = {
+  variant?: "default" | "success" | "error" | "loading"
+  title: string
+  description?: string
+  duration?: number
+}
 ```
 
 ## 🎨 Theme Configuration

@@ -1,118 +1,141 @@
 # 🚀 Replit Deployment Guide for Cloud Burst
+Version: 0.1.13 (Updated: Feb 23, 2025)
 
 ## 📋 Prerequisites
-- Replit account
+- Replit account with Node.js 20.x support
 - GitHub repository access
 - Supabase project credentials
+- Minimum 512MB memory allocation
 
-## 🔑 Environment Variables Setup
+## 🔑 Environment Variables
 ```env
-# Core Configuration
+# Required Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_SITE_URL=https://cloudburst-ai.replit.app
-NODE_ENV=production
-NEXT_TELEMETRY_DISABLED=1
+NEXT_PUBLIC_SITE_URL=https://cloudburst.replit.app
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-# User Settings & Preferences
+# Optional Configuration
 NEXT_PUBLIC_DEFAULT_THEME=system
 NEXT_PUBLIC_DEFAULT_LANGUAGE=en
 NEXT_PUBLIC_ENABLE_NOTIFICATIONS=true
 
-# Security Configuration
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-NEXTAUTH_SECRET=your_secure_secret
-NEXTAUTH_URL=https://cloudburst-ai.replit.app
+# System Configuration
+NODE_ENV=production
+NEXT_TELEMETRY_DISABLED=1
 ```
 
-## ��️ Deployment Steps
+## 🛠️ Deployment Steps
 
 ### 1. Initial Setup
-1. Create new Repl
-   - Choose "Import from GitHub"
-   - Select cloud-burst repository
-   - Choose "Node.js" as language
-
-### 2. Database Setup
-1. Run migrations for user settings
-2. Configure RLS policies for preferences
-3. Set up notifications tables
-4. Verify database connections
-
-### 3. Build Process
 ```bash
+# Clone and setup
+git clone https://github.com/your-username/cloud-burst.git
+cd cloud-burst
+
+# Install dependencies
 npm install
+
+# Build application
 npm run build
+
+# Start production server
 npm run start
 ```
 
-### 4. Verify Deployment
-- Check build logs for errors
-- Verify environment variables
-- Test application functionality
-- Test user settings flow
-- Test preferences saving
-- Test notification system
-- Confirm database connectivity
+### 2. Replit Configuration
+```nix
+# replit.nix
+{
+  deps = [
+    pkgs.nodejs-20_x
+    pkgs.python3
+    pkgs.gcc
+    pkgs.git
+  ];
+}
+```
 
-## 🔄 Continuous Deployment
+### 3. Security Headers
+```typescript
+// next.config.js
+const securityHeaders = [
+  {
+    key: 'Content-Security-Policy',
+    value: "default-src 'self'; connect-src 'self' https://*.supabase.co"
+  },
+  {
+    key: 'X-Frame-Options',
+    value: 'DENY'
+  },
+  // ... other headers from deployment.mdc
+]
+```
 
-### GitHub Integration
-1. Enable GitHub sync
-2. Configure auto-deploy settings
-3. Set up branch protection rules
-
-### Health Checks
-- Monitor build status
-- Check application logs
-- Verify database connections
-- Test authentication flow
+## 🔍 Verification Checklist
+- [ ] Node.js 20.x is active
+- [ ] All environment variables are set
+- [ ] Build completes successfully
+- [ ] Security headers are active
+- [ ] Supabase connection is verified
+- [ ] Health endpoint responds
+- [ ] Memory usage is within limits
 
 ## 🚨 Troubleshooting
 
-### Common Issues
-1. Build Failures
-   - Check Node.js version
-   - Verify dependencies
-   - Review build logs
+### Memory Issues
+```bash
+# Check memory usage
+free -h
 
-2. Runtime Errors
-   - Check environment variables
-   - Verify Supabase connection
-   - Review application logs
+# Clear build cache
+rm -rf .next
+npm run build
+```
 
-3. Database Connection
-   - Confirm Supabase credentials
-   - Check RLS policies
-   - Verify network access
+### Build Failures
+```bash
+# Clean install
+rm -rf node_modules
+npm install --production
+
+# Verify Node version
+node --version  # Should be >=20.x
+```
+
+## 📊 Monitoring
+- Health Check: `/api/health`
+- Memory Usage: Monitor via Replit dashboard
+- Error Logs: Check application logs
+- Performance: Use Lighthouse reports
+
+## 🔒 Security Checklist
+- [ ] All secrets in Replit Secrets
+- [ ] HTTPS enforced
+- [ ] CSP headers active
+- [ ] CORS properly configured
+- [ ] Rate limiting active
+- [ ] No sensitive data in logs
 
 ## 📝 Maintenance
+- Weekly dependency updates
+- Monthly security audits
+- Regular backup verification
+- Performance monitoring
+- Log rotation
 
-### Regular Tasks
-- Monitor resource usage
-- Update dependencies
-- Review security alerts
-- Backup configuration
+## 🔄 Rollback Procedure
+```bash
+# Tag current version
+git tag v0.1.13
 
-### Performance Optimization
-- Enable caching
-- Optimize build size
-- Configure CDN
-- Monitor response times
+# Revert to previous stable
+git checkout v0.1.12
 
-## 🔒 Security Considerations
-
-### Best Practices
-- Keep secrets in Replit Secrets
-- Enable HTTPS only
-- Configure CORS properly
-- Regular security audits
-
-### Access Control
-- Manage deployment tokens
-- Review collaborator access
-- Monitor auth logs
-- Regular permission audits 
+# Rebuild
+npm install
+npm run build
+```
 
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url

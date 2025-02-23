@@ -1,7 +1,7 @@
 # 🏛️ **System Architecture Flowchart**  
 
 ## 📡 Cloud Burst  
-📅 *Feb 16, 2024*  
+📅 *Feb 23, 2025*  
 
 ---
 
@@ -180,3 +180,49 @@ sequenceDiagram
 3. Implement real-time updates
 4. Add comprehensive testing
 5. Update documentation
+
+```mermaid
+flowchart TD
+    subgraph Deployment[🚀 Deployment Layer]
+        Build[📦 Build Process]
+        Config[⚙️ Configuration]
+        Security[🔒 Security Layer]
+        Monitor[📊 Monitoring]
+    end
+
+    subgraph Platform[💻 Replit Platform]
+        Node[Node.js 20.x]
+        Memory[Memory: 512MB]
+        Storage[Storage Layer]
+        Network[Network Layer]
+    end
+
+    subgraph Process[🔄 Deployment Process]
+        Install[📥 Install]
+        Compile[🔨 Compile]
+        Optimize[⚡ Optimize]
+        Deploy[🚀 Deploy]
+    end
+
+    Build -->|Configure| Config
+    Config -->|Secure| Security
+    Security -->|Monitor| Monitor
+
+    Install -->|Dependencies| Node
+    Compile -->|TypeScript| Node
+    Optimize -->|Assets| Storage
+    Deploy -->|Release| Network
+
+    Monitor -->|Health| Platform
+    Security -->|Headers| Platform
+    Config -->|Settings| Platform
+```
+
+## 🔄 Updated Deployment Flow
+- Enhanced build pipeline
+- Strict security measures
+- Comprehensive monitoring
+- Resource optimization
+- Error handling
+- Health checks
+- Performance metrics

@@ -1,7 +1,7 @@
 # 🎨 **Application Design Document**  
 
 ## 📸 Cloud Burst
-📅 *Updated: Feb 20, 2024*  
+📅 *Updated: Feb 23, 2025*  
 
 ## 📊 Implementation Status
 
@@ -51,7 +51,7 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 - **AI/ML**: 🤖 TensorFlow.js, OpenCV, DeepSeek (planned)  
 - **Storage**: ☁️ Supabase Storage  
 - **Authentication**: 🟢 Supabase Auth with JWT, Role-Based Access  
-- **Deployment**: 🚀 Replit (development)  
+- **Deployment**: 🚀 Replit (production)  
 
 ---
 
@@ -220,5 +220,45 @@ src/
 - Protected routes
 - Role-based access
 - Error handling
+
+---
+
+## 🚀 Deployment Architecture
+
+### Platform: Replit
+- Node.js 20.x environment
+- 512MB memory allocation
+- Production-grade configuration
+- Automated deployment pipeline
+
+### Configuration Files
+```typescript
+├── .replit                 // Replit configuration
+├── replit.nix             // Nix package management
+├── next.config.js         // Next.js configuration
+└── deployment/
+    ├── security.ts        // Security headers
+    ├── middleware.ts      // Rate limiting
+    └── monitoring.ts      // Health checks
+```
+
+### Deployment Process
+1. **Build Phase**
+   - Dependencies installation
+   - TypeScript compilation
+   - Asset optimization
+   - Environment validation
+
+2. **Security Layer**
+   - Headers implementation
+   - CORS configuration
+   - Rate limiting
+   - Session management
+
+3. **Monitoring**
+   - Health endpoints
+   - Error tracking
+   - Performance metrics
+   - Resource utilization
 
 ---
