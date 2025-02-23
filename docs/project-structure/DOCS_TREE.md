@@ -1,23 +1,19 @@
 # docs Directory Structure
+Generated: 2025-02-23T19:16:31.866Z
 
 ```
-./docs
-├── README.md
-├── architecture
+./docs/
+├── architecture/
 │   ├── application_design_document.md
 │   └── system_architecture_flowchart.md
-├── auth-cleanup.md
-├── deployment
-│   └── REPLIT_DEPLOYMENT.md
-├── design
+├── deployment/
+│   └── replit_deployment.md
+├── design/
 │   └── website_overview.md
-├── development
-│   ├── STATUS_NOTES.md
-│   ├── UI_components.md
-│   ├── VERSION_CONTROL.md
-│   ├── auth-debug.md
-│   ├── prompt_archive
+├── development/
+│   ├── prompt_archive/
 │   │   ├── additional_notes.md
+│   │   ├── auth-debug.md
 │   │   ├── session 3.md
 │   │   ├── session_10.md
 │   │   ├── session_11_checklist.md
@@ -29,9 +25,12 @@
 │   │   ├── session_7.md
 │   │   ├── session_8.md
 │   │   └── session_9.md
+│   ├── STATUS_NOTES.md
+│   ├── UI_components.md
+│   ├── VERSION_CONTROL.md
 │   ├── session_12_checklist.md
 │   └── session_12_kickoff.md
-├── planning
+├── planning/
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
 │   ├── payment_subscription_design_document.md
@@ -40,20 +39,41 @@
 │   ├── request_for_product_RFP.md
 │   ├── roadmap.md
 │   └── statement_or_work.md
-├── project-structure
-│   ├── DOCS_TREE.md
-│   ├── FULL_TREE.md
+├── project-structure/
 │   ├── README.md
-│   ├── SRC_TREE.md
-│   ├── cursor_tree.md
-│   ├── github_tree.md
-│   └── public_tree.md
-└── user-flows
-    ├── invited_user_flow_design_document.md
-    ├── photo_upload_sequence_diagram.md
-    ├── user_flow_chart.md
-    └── user_flow_overview.md
+│   ├── full_tree.md
+│   └── src_tree.md
+├── user-flows/
+│   ├── invited_user_flow_design_document.md
+│   ├── photo_upload_sequence_diagram.md
+│   ├── user_flow_chart.md
+│   └── user_flow_overview.md
+├── README.md
+└── auth-cleanup.md
 
-9 directories, 43 files
+9 directories, 39 files
 
 ```
+
+## File Types
+- *.ts
+- *.tsx
+- *.js
+- *.jsx
+- *.json
+- *.md
+- *.mdx
+- *.css
+- *.scss
+- *.yaml
+- *.yml
+
+## Ignored Patterns
+- node_modules
+- .git
+- .next
+- dist
+- coverage
+- .vercel
+- .env*
+- *.log

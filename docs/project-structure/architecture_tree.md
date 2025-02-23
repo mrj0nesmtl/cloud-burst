@@ -1,13 +1,12 @@
-# github Directory Structure
-Generated: 2025-02-23T19:16:31.882Z
+# architecture Directory Structure
+Generated: 2025-02-23T19:16:32.026Z
 
 ```
-./.github/
-├── workflows/
-│   └── versioning.yml
-└── dependabot.yml
+./docs/architecture/
+├── application_design_document.md
+└── system_architecture_flowchart.md
 
-2 directories, 2 files
+1 directory, 2 files
 
 ```
 

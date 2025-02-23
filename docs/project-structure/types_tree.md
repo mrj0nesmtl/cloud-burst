@@ -1,13 +1,12 @@
-# github Directory Structure
-Generated: 2025-02-23T19:16:31.882Z
+# types Directory Structure
+Generated: 2025-02-23T19:16:31.970Z
 
 ```
-./.github/
-├── workflows/
-│   └── versioning.yml
-└── dependabot.yml
+./src/types/
+├── auth.ts
+└── supabase.ts
 
-2 directories, 2 files
+1 directory, 2 files
 
 ```
 
