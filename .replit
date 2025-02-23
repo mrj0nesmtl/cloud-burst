@@ -1,19 +1,24 @@
+# Main run command
 run = "npm run start"
 
-# Added modules specification
+# Language and environment modules
 modules = ["nodejs-20", "web", "bash", "nix"]
 
-hidden = [".config", ".git", ".next", "node_modules"]
+# Hide unnecessary files
+hidden = [".build", ".config", ".next", "node_modules"]
 
+# Nix configuration
 [nix]
-channel = "stable-22_11"
+channel = "stable-23_05"
 
+# Environment variables
 [env]
 PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin"
 npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
-NEXT_TELEMETRY_DISABLED = "1"
 NODE_ENV = "production"
+NEXT_TELEMETRY_DISABLED = "1"
 
+# Package management
 [packager]
 language = "nodejs"
 
@@ -22,6 +27,7 @@ packageSearch = true
 guessImports = true
 enabledForHosting = true
 
+# Language configuration
 [languages]
 javascript = "nodejs-20"
 
@@ -32,16 +38,13 @@ module = true
 [languages.javascript.languageServer]
 start = ["typescript-language-server", "--stdio"]
 
+# Deployment configuration
 [deployment]
+build = ["sh", "-c", "npm run build"]
 run = ["sh", "-c", "npm run start"]
 deploymentTarget = "cloudrun"
-build = ["sh", "-c", "npm run build"]
 
-[server]
-run = "npm run dev"     # Keep dev for local development
-start = "npm run start"
-build = "npm run build" # This is important
-
+# Port configuration
 [[ports]]
 localPort = 3000
 externalPort = 80
