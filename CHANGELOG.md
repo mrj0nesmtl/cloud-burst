@@ -15,6 +15,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.13] - 2024-02-23
+### Security
+- Rolled back to stable authentication implementation
+- Removed deprecated auth helpers
+- Fixed environment variable configuration
+- Enhanced deployment security measures
+
+### Fixed
+- Node.js version conflicts in deployment
+- Package dependency mismatches
+- Build process configuration
+- Environment variable loading
+- Module type conflicts
+
+### Changed
+- Updated Supabase auth implementation
+- Revised deployment configuration
+- Optimized build process
+- Enhanced error handling
+- Improved security measures
+
+### Infrastructure
+- Updated Node.js to version 20.x
+- Fixed Replit deployment configuration
+- Corrected build tool dependencies
+- Enhanced deployment pipeline
+- Optimized memory allocation
+
+### Documentation
+- Updated deployment documentation
+- Revised status notes
+- Enhanced configuration guides
+- Added deployment troubleshooting
+- Updated rollback procedures
+
 ## [0.1.12] - 2024-02-21
 ### Added
 - Session 12 development kickoff
