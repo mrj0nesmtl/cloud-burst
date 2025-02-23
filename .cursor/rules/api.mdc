@@ -1,5 +1,5 @@
 ---
-description: API Standards for Cloud Capture
+description: API Standards for Cloud Burst
 globs: src/services/**/*.ts", "src/lib/api/**/*.ts
 ---
 # API Standards
@@ -9,32 +9,34 @@ globs: src/services/**/*.ts", "src/lib/api/**/*.ts
 {
   "apiStandards": {
     "structure": {
-      "baseLocation": "src/services",
+      "baseLocation": "src/app/api",  // Updated for App Router
       "endpoints": {
         "auth": "/api/auth",
         "events": "/api/events",
         "photos": "/api/photos",
         "users": "/api/users",
-        "ai": "/api/ai", // Added AI endpoints
-        "upload": "/api/upload" // Added upload endpoint
+        "ai": "/api/ai",
+        "upload": "/api/upload",
+        "health": "/api/health"  // Added health check
       },
       "middleware": {
         "base": "src/middleware.ts",
-        "auth": "src/middleware/auth.ts",
-        "upload": "src/middleware/upload.ts"
+        "auth": "src/lib/auth",  // Updated path
+        "upload": "src/lib/upload",
+        "error": "src/lib/error"
       }
     },
     "supabase": {
       "client": {
-        "location": "src/lib/supabase.ts",
+        "location": "src/lib/supabase/client.ts",
         "types": "src/types/supabase.ts",
-        "config": "src/lib/supabase-config.ts"
+        "config": "src/lib/supabase/config.ts"
       },
       "services": {
-        "auth": "src/services/auth.ts",
-        "storage": "src/services/storage.ts",
-        "realtime": "src/services/realtime.ts",
-        "ai": "src/services/ai.ts" // Added AI service
+        "auth": "src/services/auth/index.ts",
+        "storage": "src/services/storage/index.ts",
+        "realtime": "src/services/realtime/index.ts",
+        "ai": "src/services/ai/index.ts"
       }
     },
     "error": {
@@ -42,30 +44,30 @@ globs: src/services/**/*.ts", "src/lib/api/**/*.ts
         "types": "src/types/api.ts",
         "middleware": "src/middleware/error.ts",
         "responses": {
-          "400": "(╯°□°）╯︵ ┻━┻ Bad Request",
-          "401": "(ಠ_ಠ) Unauthorized – Who goes there?",
-          "403": "(ノಠ益ಠ)ノ彡 Forbidden – You shall not pass!",
-          "404": "¯\\_(ツ)_/¯ Not Found – Lost in the void...",
-          "413": "(；一_一) Payload Too Large – That's too much data!",
-          "429": "(⊙_⊙;) Too Many Requests – Slow down!",
-          "500": "(╥﹏╥) Internal Server Error – Everything is on fire..."
+          "400": "Bad Request - Invalid parameters",
+          "401": "Unauthorized - Authentication required",
+          "403": "Forbidden - Insufficient permissions",
+          "404": "Not Found - Resource unavailable",
+          "413": "Payload Too Large - Request exceeds limit",
+          "429": "Too Many Requests - Rate limit exceeded",
+          "500": "Internal Server Error"
         }
       }
     },
     "rateLimit": {
       "public": {
-        "window": "1m",
-        "max": 60
+        "window": "15m",
+        "max": 100
       },
       "authenticated": {
-        "window": "1m",
-        "max": 120
+        "window": "15m",
+        "max": 300
       },
       "upload": {
-        "window": "1m",
-        "max": 30
+        "window": "15m",
+        "max": 50,
+        "maxSize": "10mb"
       }
     }
   }
 }
-```

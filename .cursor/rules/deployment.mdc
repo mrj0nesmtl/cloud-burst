@@ -1,0 +1,83 @@
+---
+description: Deployment configuration and standards for Cloud Burst platform
+globs: *.tsx, *.ts, *.js, *.jsx, *.json, *.md, *.mdx, *.yml, *.yaml,  .replit, replit.nix, .env*, next.config.js, package.json,  tsconfig.json, tailwind.config.ts, postcss.config.js
+---
+{
+  "deployment": {
+    "platform": {
+      "name": "Replit",
+      "requirements": {
+        "node": "20.x",
+        "memory": "512MB",
+        "storage": "1GB"
+      },
+      "configuration": {
+        "files": {
+          ".replit": {
+            "run": "npm run start",
+            "modules": ["nodejs-20", "web", "bash", "nix"],
+            "env": {
+              "NODE_ENV": "production",
+              "NEXT_TELEMETRY_DISABLED": "1"
+            }
+          },
+          "replit.nix": {
+            "deps": [
+              "nodejs-20_x",
+              "python3",
+              "gcc",
+              "git"
+            ]
+          }
+        }
+      }
+    },
+    "environment": {
+      "required": {
+        "NEXT_PUBLIC_SUPABASE_URL": "string",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY": "string",
+        "NEXT_PUBLIC_SITE_URL": "string",
+        "SUPABASE_SERVICE_ROLE_KEY": "string"
+      },
+      "optional": {
+        "NEXT_PUBLIC_DEFAULT_THEME": "system | light | dark",
+        "NEXT_PUBLIC_DEFAULT_LANGUAGE": "en",
+        "NEXT_PUBLIC_ENABLE_NOTIFICATIONS": "boolean"
+      }
+    },
+    "security": {
+      "headers": {
+        "Content-Security-Policy": "default-src 'self'; connect-src 'self' https://*.supabase.co",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+      },
+      "cors": {
+        "origins": ["https://*.replit.app"],
+        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "credentials": true
+      }
+    },
+    "build": {
+      "commands": {
+        "install": "npm install",
+        "build": "npm run build",
+        "start": "npm run start"
+      },
+      "optimization": {
+        "compression": true,
+        "imageOptimization": true,
+        "fontOptimization": true
+      }
+    },
+    "monitoring": {
+      "health": "/api/health",
+      "metrics": {
+        "memory": true,
+        "cpu": true,
+        "requests": true
+      }
+    }
+  }
+}

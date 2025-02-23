@@ -1,5 +1,5 @@
 ---
-description: State Management Standards for Cloud Capture
+description: State Management Standards for Cloud Burst
 globs: src/store/**/*.ts", "src/hooks/**/*.ts
 ---
 # State Management Rules

@@ -1,7 +1,7 @@
-# Cloud Capture Development Rules
+# Cloud Burst Development Rules
 
 ## 🎯 Overview
-These rules define the development standards and practices for the Cloud Capture project. They are designed to be used by both developers and AI assistants to maintain consistency and quality across the codebase.
+These rules define the development standards and practices for the Cloud Burst project. They are designed to be used by both developers and AI assistants to maintain consistency and quality across the codebase.
 
 ## 📚 Rule Categories
 

@@ -1,5 +1,5 @@
 ---
-description: Code Style Rules for Cloud Capture
+description: Code Style Rules for Cloud Burst
 globs: src/**/*.{ts,tsx}
 ---
 # Code Style Rules

@@ -1,5 +1,5 @@
 ---
-description: Security Standards for Cloud Capture
+description: Security Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}, middleware.ts
 ---
 # Security Standards

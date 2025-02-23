@@ -1,5 +1,5 @@
 ---
-description: Accessibility Standards for Cloud Capture
+description: Accessibility Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}
 ---
 # Accessibility Standards

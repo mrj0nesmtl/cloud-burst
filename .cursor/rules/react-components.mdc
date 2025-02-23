@@ -1,5 +1,5 @@
 ---
-description: React Component Standards for Cloud Capture
+description: React Component Standards for Cloud Burst
 globs: src/**/*.tsx", "src/**/*.ts
 ---
 # React Component Rules
@@ -18,41 +18,43 @@ globs: src/**/*.tsx", "src/**/*.ts
       },
       "naming": {
         "prefix": {
-          "atoms": "Ui",
+          "atoms": "",
           "molecules": "",
           "organisms": "",
           "templates": "Layout",
-          "providers": "Provider", // Added provider prefix
-          "context": "Context" // Added context prefix
+          "providers": "Provider",
+          "context": "Context"
         }
       }
     },
     "composition": {
       "props": {
-        "required": ["children?", "className?"],
+        "required": ["className?"],
         "naming": "camelCase",
         "typing": "strict",
-        "defaults": "required" // Added defaults requirement
+        "defaults": "required"
       },
       "hooks": {
-        "location": "top",
+        "location": "src/hooks",
         "ordering": [
           "useState",
           "useEffect",
           "useCallback",
           "useMemo",
-          "useStore", // Added store hooks
-          "useQuery", // Added query hooks
+          "useStore",
+          "useQuery",
           "custom"
         ]
       },
       "errorBoundary": {
         "required": true,
-        "location": "src/components/error-boundary"
+        "location": "src/components/error-boundary.tsx",
+        "fallback": "required"
       },
       "suspense": {
         "required": true,
-        "fallback": "required"
+        "fallback": "required",
+        "location": "src/components/loading.tsx"
       }
     },
     "patterns": {
@@ -62,7 +64,8 @@ globs: src/**/*.tsx", "src/**/*.ts
         "forms": "react-hook-form",
         "validation": "zod",
         "loading": "suspense",
-        "errors": "error-boundary"
+        "errors": "error-boundary",
+        "auth": "@supabase/auth-helpers-nextjs"
       },
       "hoc": {
         "naming": "with{Name}",
@@ -72,8 +75,11 @@ globs: src/**/*.tsx", "src/**/*.ts
     "shadcn": {
       "location": "src/components/ui",
       "customization": "src/styles/shadcn",
-      "registry": "src/components/ui/registry.tsx",
-      "themes": "src/styles/themes" // Added themes
+      "registry": "src/registry/index.tsx",
+      "themes": {
+        "location": "src/styles/themes",
+        "default": "zinc"
+      }
     }
   }
 }

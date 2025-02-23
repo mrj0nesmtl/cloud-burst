@@ -1,5 +1,5 @@
 ---
-description: Testing Standards for Cloud Capture
+description: Testing Standards for Cloud Burst
 globs: **/*.test.ts, **/*.test.tsx, cypress/**/*.cy.ts
 ---
 # Testing Standards

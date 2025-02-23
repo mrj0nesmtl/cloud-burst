@@ -1,5 +1,5 @@
 ---
-description: TypeScript Standards for Cloud Capture
+description: TypeScript Standards for Cloud Burst
 globs: **/*.ts", "**/*.tsx
 ---
 # TypeScript Rules
