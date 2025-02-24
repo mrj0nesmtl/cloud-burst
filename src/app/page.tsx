@@ -94,14 +94,14 @@ export default function Home() {
       <section className="py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Revolutionize Your Event Photography?
+            Ready to Start?
           </h2>
           <p className="text-xl text-muted-foreground max-w-[600px] mx-auto mb-8">
-            Join thousands of event planners and photographers who trust Cloud Burst.
+            Join photographers who trust Cloud Burst.
           </p>
           <Button asChild size="lg" className="text-lg">
-            <Link href="/marketing/about">
-              Learn More
+            <Link href="/auth/signin">
+              Get Started
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>

@@ -12,8 +12,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 const authSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters')
+  email: z.string().email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters')
 })
 
 type AuthFormData = z.infer<typeof authSchema>
@@ -24,15 +24,15 @@ export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
   const { toast } = useToast()
   const router = useRouter()
   
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<AuthFormData>({
-    resolver: zodResolver(authSchema)
+  const form = useForm<AuthFormData>({
+    resolver: zodResolver(authSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    }
   })
 
-  const onSubmit = async (data: AuthFormData) => {
+  async function onSubmit(data: AuthFormData) {
     setIsLoading(true)
     try {
       const { error } = mode === 'signin' 
@@ -41,18 +41,17 @@ export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
 
       if (error) throw error
 
-      toast({
-        title: mode === 'signin' ? 'Signed in successfully' : 'Account created',
-        description: mode === 'signin' 
-          ? 'Welcome back!'
-          : 'Please check your email to verify your account.',
-      })
-
-      // Redirect after successful auth
       if (mode === 'signin') {
         router.push('/dashboard')
+        toast({
+          title: 'Welcome back!'
+        })
+      } else {
+        toast({
+          title: 'Check your email',
+          description: 'We sent you a verification link.'
+        })
       }
-      
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -65,62 +64,50 @@ export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
   }
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2">
-          <Input
-            {...register('email')}
-            type="email"
-            placeholder="Email"
-            disabled={isLoading}
-          />
-          {errors.email && (
-            <p className="text-sm text-destructive">{errors.email.message}</p>
-          )}
-        </div>
+    <div className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <Input
+          {...form.register('email')}
+          type="email"
+          placeholder="Email"
+          disabled={isLoading}
+        />
+        {form.formState.errors.email && (
+          <p className="text-sm text-destructive">
+            {form.formState.errors.email.message}
+          </p>
+        )}
         
-        <div className="space-y-2">
-          <Input
-            {...register('password')}
-            type="password"
-            placeholder="Password"
-            disabled={isLoading}
-          />
-          {errors.password && (
-            <p className="text-sm text-destructive">{errors.password.message}</p>
-          )}
-        </div>
+        <Input
+          {...form.register('password')}
+          type="password"
+          placeholder="Password"
+          disabled={isLoading}
+        />
+        {form.formState.errors.password && (
+          <p className="text-sm text-destructive">
+            {form.formState.errors.password.message}
+          </p>
+        )}
 
         <Button
           type="submit"
           className="w-full"
           disabled={isLoading}
         >
-          {isLoading ? (
-            'Loading...'
-          ) : mode === 'signin' ? (
-            'Sign In'
-          ) : (
-            'Create Account'
-          )}
+          {isLoading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Sign Up'}
         </Button>
       </form>
 
       <div className="text-center text-sm">
         {mode === 'signin' ? (
-          <p>
-            Don't have an account?{' '}
-            <Link href="/auth/register" className="text-primary hover:underline">
-              Create one
-            </Link>
-          </p>
+          <Link href="/auth/register" className="text-primary hover:underline">
+            Create account
+          </Link>
         ) : (
-          <p>
-            Already have an account?{' '}
-            <Link href="/auth/signin" className="text-primary hover:underline">
-              Sign in
-            </Link>
-          </p>
+          <Link href="/auth/signin" className="text-primary hover:underline">
+            Sign in
+          </Link>
         )}
       </div>
     </div>
