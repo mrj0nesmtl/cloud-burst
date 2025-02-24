@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost', 'cloud-burst.replit.app'],
+    domains: ['localhost', 'cloudburst-beta.replit.app'],
   },
   swcMinify: true,
   poweredByHeader: false,
