@@ -1,25 +1,33 @@
 
 run = "npm run dev"
 entrypoint = "app/page.tsx"
-modules = ["nodejs-20", "bash", "web", "nix"]
 
-# Hide unnecessary files
-hidden = [".build", ".config", ".next", "node_modules"]
-
-# Nix configuration
 [nix]
 channel = "stable-23_05"
 
-# Environment variables
-[env]
-PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin"
-npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
-NODE_ENV = "development"
-NEXT_TELEMETRY_DISABLED = "1"
-HOSTNAME = "0.0.0.0"
-PORT = "3000"
+[deployment]
+run = ["sh", "-c", "npm run start"]
+deploymentTarget = "cloudrun"
+build = ["sh", "-c", "npm run build"]
 
-# Package management
+[languages]
+[languages.typescript]
+pattern = "**/{*.ts,*.tsx}"
+[languages.typescript.languageServer]
+start = "typescript-language-server --stdio"
+
+[env]
+NEXT_TELEMETRY_DISABLED = "1"
+NODE_ENV = "development"
+PORT = "3000"
+HOSTNAME = "0.0.0.0"
+
+[ports]
+3000 = { handler = "proxy" }
+
+[debugger]
+support = true
+
 [packager]
 language = "nodejs"
 
@@ -28,13 +36,8 @@ packageSearch = true
 guessImports = true
 enabledForHosting = true
 
-# Language configuration
-[languages]
-[languages.typescript]
-pattern = "**/{*.ts,*.tsx}"
-
-[languages.typescript.languageServer]
-start = "typescript-language-server --stdio"
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix", ".config"]
 
 [languages.javascript]
 pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
@@ -42,19 +45,3 @@ syntax = "typescript"
 
 [languages.javascript.languageServer]
 start = "typescript-language-server --stdio"
-
-# Deployment configuration
-[deployment]
-run = ["sh", "-c", "npm run start"]
-deploymentTarget = "cloudrun"
-build = ["sh", "-c", "npm run build"]
-
-# Port configuration
-[ports]
-3000 = { handler = "proxy" }
-
-[debugger]
-support = true
-
-[gitHubImport]
-requiredFiles = [".replit", "replit.nix", ".config"]
