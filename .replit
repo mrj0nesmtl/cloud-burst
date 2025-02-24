@@ -1,15 +1,14 @@
+
 run = "npm run dev"
 entrypoint = "app/page.tsx"
-
-# Language and environment modules
-modules = ["nodejs-20:v8-20230920-bd784b9"]
+modules = ["nodejs-20", "bash", "web", "nix"]
 
 # Hide unnecessary files
 hidden = [".build", ".config", ".next", "node_modules"]
 
 # Nix configuration
 [nix]
-channel = "stable-23_05"
+channel = "stable-24_05"
 
 # Environment variables
 [env]
@@ -49,7 +48,7 @@ build = ["sh", "-c", "npm run build"]
 
 # Port configuration
 [ports]
-3000 = { handler = "proxy" }
+3000 = ["proxy"]
 
 [debugger]
 support = true
