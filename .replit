@@ -8,7 +8,7 @@ hidden = [".build", ".config", ".next", "node_modules"]
 
 # Nix configuration
 [nix]
-channel = "stable-24_05"
+channel = "stable-23_05"
 
 # Environment variables
 [env]
@@ -33,6 +33,9 @@ enabledForHosting = true
 [languages.typescript]
 pattern = "**/{*.ts,*.tsx}"
 
+[languages.typescript.languageServer]
+start = "typescript-language-server --stdio"
+
 [languages.javascript]
 pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
 syntax = "typescript"
@@ -48,7 +51,7 @@ build = ["sh", "-c", "npm run build"]
 
 # Port configuration
 [ports]
-3000 = ["proxy"]
+3000 = { handler = "proxy" }
 
 [debugger]
 support = true
