@@ -1,9 +1,9 @@
-
 run = "npm run dev"
 hidden = [".config", "package-lock.json"]
+modules = ["nodejs-20", "bash", "web", "nix"]
 
 [nix]
-channel = "stable-23_05"
+channel = "stable-24_05"
 
 [env]
 NODE_ENV = "development"
@@ -23,3 +23,8 @@ language = "nodejs"
 enabledForHosting = true
 packageSearch = true
 guessImports = true
+
+[deployment]
+run = ["sh", "-c", "npm run start"]
+build = ["sh", "-c", "npm install --legacy-peer-deps && npm run build"]
+deploymentTarget = "cloudrun"
