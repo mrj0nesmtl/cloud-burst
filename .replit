@@ -1,7 +1,7 @@
-run = "npm run dev"
+run = "npm run start"
 
-# Added modules specification
-modules = ["nodejs-20", "web", "bash", "nix"]
+# Simplified modules for beta
+modules = ["nodejs-20", "web"]
 
 hidden = [".build", ".config", ".next", "node_modules"]
 
@@ -10,17 +10,15 @@ hidden = [".build", ".config", ".next", "node_modules"]
 channel = "stable-24_05"
 
 [env]
-PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin"
-npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
+PATH = "/home/runner/$REPL_SLUG/node_modules/.bin"
 NEXT_TELEMETRY_DISABLED = "1"
-NODE_ENV = "development"
+NODE_ENV = "production"
 
 [packager]
 language = "nodejs"
 
 [packager.features]
 packageSearch = true
-guessImports = true
 enabledForHosting = true
 
 [languages.javascript]
@@ -31,9 +29,8 @@ syntax = "javascript"
 start = [ "typescript-language-server", "--stdio" ]
 
 [deployment]
-# Simplified deployment configuration
-run = ["sh", "-c", "npm run dev"]
-deploymentTarget = "cloudrun"
+run = ["sh", "-c", "npm run start"]
+build = ["sh", "-c", "npm run build"]
 
 [server]
 run = "npm run dev"
