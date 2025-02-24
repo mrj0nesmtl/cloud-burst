@@ -25,6 +25,6 @@ packageSearch = true
 guessImports = true
 
 [deployment]
-run = ["sh", "-c", "npm run dev"]
-build = ["sh", "-c", "npm run build"]
+run = ["sh", "-c", "npm run start"]
+build = ["sh", "-c", "npm install --legacy-peer-deps && npm run build"]
 deploymentTarget = "cloudrun"
