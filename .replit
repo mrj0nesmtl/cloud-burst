@@ -1,47 +1,25 @@
 
 run = "npm run dev"
-entrypoint = "app/page.tsx"
+hidden = [".config", "package-lock.json"]
 
 [nix]
 channel = "stable-23_05"
 
-[deployment]
-run = ["sh", "-c", "npm run start"]
-deploymentTarget = "cloudrun"
-build = ["sh", "-c", "npm run build"]
+[env]
+NODE_ENV = "development"
 
 [languages]
-[languages.typescript]
-pattern = "**/{*.ts,*.tsx}"
-[languages.typescript.languageServer]
+
+[languages.javascript]
+pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
+
+[languages.javascript.languageServer]
 start = "typescript-language-server --stdio"
-
-[env]
-NEXT_TELEMETRY_DISABLED = "1"
-NODE_ENV = "development"
-PORT = "3000"
-HOSTNAME = "0.0.0.0"
-
-[ports]
-3000 = { handler = "proxy" }
-
-[debugger]
-support = true
 
 [packager]
 language = "nodejs"
 
 [packager.features]
+enabledForHosting = true
 packageSearch = true
 guessImports = true
-enabledForHosting = true
-
-[gitHubImport]
-requiredFiles = [".replit", "replit.nix", ".config"]
-
-[languages.javascript]
-pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
-syntax = "typescript"
-
-[languages.javascript.languageServer]
-start = "typescript-language-server --stdio"
