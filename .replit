@@ -1,6 +1,5 @@
-
-# Main run command
-run = "npm run dev -- -H 0.0.0.0"
+run = "npm run dev"
+entrypoint = "app/page.tsx"
 
 # Language and environment modules
 modules = ["nodejs-20:v8-20230920-bd784b9"]
@@ -19,6 +18,7 @@ npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
 NODE_ENV = "development"
 NEXT_TELEMETRY_DISABLED = "1"
 HOSTNAME = "0.0.0.0"
+PORT = "3000"
 
 # Package management
 [packager]
@@ -31,22 +31,28 @@ enabledForHosting = true
 
 # Language configuration
 [languages]
-javascript = "nodejs-20"
+[languages.typescript]
+pattern = "**/{*.ts,*.tsx}"
 
 [languages.javascript]
-pattern = "**/{*.js,*.jsx,*.ts,*.tsx,*.json}"
-module = true
+pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
+syntax = "typescript"
 
 [languages.javascript.languageServer]
-start = ["typescript-language-server", "--stdio"]
+start = "typescript-language-server --stdio"
 
 # Deployment configuration
 [deployment]
-build = "npm run build"
-run = "npm run start"
+run = ["sh", "-c", "npm run start"]
 deploymentTarget = "cloudrun"
+build = ["sh", "-c", "npm run build"]
 
 # Port configuration
-[[ports]]
-localPort = 3000
-externalPort = 80
+[ports]
+3000 = { handler = "proxy" }
+
+[debugger]
+support = true
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix", ".config"]
