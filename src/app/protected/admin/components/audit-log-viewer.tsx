@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/client'
 import { DataTable } from '@/components/ui/data-table'
 import { columns } from './audit-log-columns'
 
