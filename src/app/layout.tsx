@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/ui/site-header"
@@ -9,7 +9,7 @@ import { ToastProvider } from "@/components/providers/toast-provider";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Toaster } from "@/components/ui/toaster"
 
-const geist = Geist({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: 'Cloud Burst',
@@ -90,7 +90,7 @@ export default function RootLayout({
           content="telephone=no, date=no, email=no, address=no"
         />
       </head>
-      <body className={geist.className}>
+      <body className={inter.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
