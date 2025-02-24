@@ -1,13 +1,15 @@
 # cursor Directory Structure
+Generated: 2025-02-23T19:16:31.896Z
 
 ```
-./.cursor
-└── rules
+./.cursor/
+└── rules/
     ├── README.md
     ├── accessibility.mdc
     ├── ai-collaboration-guidelines.mdc
     ├── api.mdc
     ├── code-style.mdc
+    ├── deployment.mdc
     ├── documentation-standards.mdc
     ├── performance-standards.mdc
     ├── react-components.mdc
@@ -16,6 +18,29 @@
     ├── testing.mdc
     └── typescript.mdc
 
-2 directories, 12 files
+2 directories, 13 files
 
 ```
+
+## File Types
+- *.ts
+- *.tsx
+- *.js
+- *.jsx
+- *.json
+- *.md
+- *.mdx
+- *.css
+- *.scss
+- *.yaml
+- *.yml
+
+## Ignored Patterns
+- node_modules
+- .git
+- .next
+- dist
+- coverage
+- .vercel
+- .env*
+- *.log

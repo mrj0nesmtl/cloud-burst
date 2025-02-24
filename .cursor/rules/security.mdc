@@ -1,8 +1,15 @@
 ---
-description: Security Standards for Cloud Capture
+description: Security Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}, middleware.ts
 ---
-# Security Standards
+# Security Standards (Beta)
+
+## Core Standards
+- Basic Supabase RLS policies
+- Simple role-based auth (User/Admin)
+- Default Next.js security headers
+- Basic input validation
+- Remove: Complex CSP, rate limiting, advanced RBAC
 
 ## Security Configuration
 ```typescript
@@ -10,13 +17,9 @@ globs: src/**/*.{ts,tsx}, middleware.ts
   "securityStandards": {
     "authentication": {
       "supabase": {
-        "providers": [
-          "email",
-          "google"
-        ],
+        "providers": ["email"],  // Removed google auth
         "session": {
           "persistence": true,
-          "refreshInterval": 60 * 60 * 1000,
           "storage": "cookieSession",
           "middleware": "required"
         },
@@ -24,10 +27,6 @@ globs: src/**/*.{ts,tsx}, middleware.ts
           "emailAuth": {
             "verification": true,
             "passwordReset": true
-          },
-          "oauth": {
-            "enabled": true,
-            "providers": ["google"]
           }
         }
       },
@@ -37,8 +36,7 @@ globs: src/**/*.{ts,tsx}, middleware.ts
           "/events/[id]",
           "/admin",
           "/settings",
-          "/profile",
-          "/profile/settings"
+          "/profile"
         ],
         "public": [
           "/",
@@ -52,19 +50,17 @@ globs: src/**/*.{ts,tsx}, middleware.ts
     "authorization": {
       "roles": {
         "ADMIN": "Full system access",
-        "EVENT_HOST": "Event management access",
         "USER": "Basic authenticated access",
         "GUEST": "Limited event access"
       },
       "permissions": {
         "photos": {
-          "upload": ["USER", "GUEST"],
-          "moderate": ["EVENT_HOST", "ADMIN"],
-          "delete": ["EVENT_HOST", "ADMIN"]
+          "upload": ["USER"],
+          "moderate": ["ADMIN"],
+          "delete": ["ADMIN"]
         },
         "events": {
-          "create": ["EVENT_HOST", "ADMIN"],
-          "manage": ["EVENT_HOST", "ADMIN"],
+          "create": ["ADMIN"],
           "view": ["USER", "GUEST"]
         }
       }
@@ -73,15 +69,9 @@ globs: src/**/*.{ts,tsx}, middleware.ts
       "security": {
         "X-Frame-Options": "DENY",
         "X-Content-Type-Options": "nosniff",
-        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-        "Content-Security-Policy": "default-src 'self'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co",
-        "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+        "Referrer-Policy": "strict-origin-when-cross-origin"
       }
-    },
-    "rateLimit": {
-      "enabled": true,
-      "windowMs": 15 * 60 * 1000,
-      "max": 100
     }
   }
 }
+```

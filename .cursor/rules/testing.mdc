@@ -1,8 +1,8 @@
 ---
-description: Testing Standards for Cloud Capture
+description: Testing Standards for Cloud Burst
 globs: **/*.test.ts, **/*.test.tsx, cypress/**/*.cy.ts
 ---
-# Testing Standards
+# Testing Standards (Beta)
 
 ## Testing Configuration
 ```typescript
@@ -10,68 +10,35 @@ globs: **/*.test.ts, **/*.test.tsx, cypress/**/*.cy.ts
   "testingStandards": {
     "unit": {
       "framework": "vitest",
-      "location": {
-        "tests": "__tests__",
-        "utils": "src/utils/test"
-      },
-      "naming": "{feature}.test.ts",
-      "coverage": {
-        "threshold": 80,
-        "excludes": [
-          "**/*.d.ts",
-          "**/*.config.*"
-        ]
-      }
-    },
-    "integration": {
-      "framework": "vitest",
-      "location": "src/tests/integration",
-      "naming": "{feature}.integration.test.ts",
-      "mocks": {
-        "location": "src/mocks",
-        "naming": "{service}.mock.ts"
-      }
-    },
-    "e2e": {
-      "framework": "cypress",
-      "location": "cypress/e2e",
-      "naming": "{feature}.cy.ts",
-      "viewports": {
-        "mobile": [375, 667],
-        "tablet": [768, 1024],
-        "desktop": [1280, 800]
-      }
+      "location": "__tests__",
+      "naming": "{feature}.test.ts"
     },
     "components": {
       "framework": "vitest",
       "location": "src/components/__tests__",
       "utilities": {
-        "render": "src/utils/test-utils.tsx",
-        "mocks": "src/mocks/handlers.ts"
+        "render": "src/utils/test-utils.tsx"
       }
     },
     "conventions": {
       "assertions": {
         "components": [
-          "accessibility",
           "rendering",
-          "interactions",
-          "props",
-          "state"
+          "interactions"
         ],
         "api": [
           "success",
-          "validation",
-          "error",
-          "edge-cases"
+          "error"
         ]
-      },
-      "mocking": {
-        "api": "msw",
-        "date": "vitest",
-        "storage": "jest-localstorage-mock"
       }
     }
   }
 }
 ```
+
+## Removed Features
+- Complex test hierarchies
+- E2E testing
+- Integration testing
+- Complex mocking
+- Advanced assertions

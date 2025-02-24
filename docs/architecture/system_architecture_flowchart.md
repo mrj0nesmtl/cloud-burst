@@ -1,7 +1,7 @@
-# 🏛️ **System Architecture Flowchart**  
+# 🏛️ **System Architecture Flowchart (Beta)**  
 
 ## 📡 Cloud Burst  
-📅 *Feb 16, 2024*  
+📅 *Feb 24, 2024*  
 
 ---
 
@@ -11,172 +11,67 @@ flowchart TD
         WebApp[🌐 Next.js 14 App]
         AuthForms[🔐 Auth Forms]
         Protected[🛡️ Protected Routes]
-        ErrorBoundary[🚧 Error Boundary]
     end
 
     subgraph Auth[🔑 Authentication Layer]
         SupaAuth[Supabase Auth]
         Session[📝 Session Management]
-        Roles[👥 Role Management]
-        Permissions[🔑 Permission System]
+        Roles[👥 Basic Roles]
     end
 
     subgraph Data[💾 Data Layer]
         Database[🗄️ Supabase PostgreSQL]
         Storage[📦 Supabase Storage]
-        RLS[🔒 Row Level Security]
-        Capabilities[⚡ Role Capabilities]
-    end
-
-    subgraph Settings[⚙️ Settings Layer]
-        Profile[👤 Profile Management]
-        Prefs[🎛️ User Preferences]
-        Notifs[🔔 Notifications]
-    end
-
-    subgraph Forms[📝 Form Layer]
-        ProfileForm[Profile Form]
-        PrefsForm[Preferences Form]
-        NotifsForm[Notifications Form]
+        RLS[🔒 Basic RLS]
     end
 
     WebApp -->|1. Auth Request| AuthForms
     AuthForms -->|2. Credentials| SupaAuth
     SupaAuth -->|3. Validate| Session
     Session -->|4. Create| Roles
-    Roles -->|5. Assign| Permissions
-    Permissions -->|6. Check| Capabilities
-    Capabilities -->|7. Enforce| RLS
-    RLS -->|8. Secure| Database
-    RLS -->|8. Secure| Storage
-    
-    Protected -->|Verify| Session
-    Protected -->|Check| Permissions
-    ErrorBoundary -->|Handle| WebApp
-
-    Profile -->|Update| ProfileForm
-    Prefs -->|Configure| PrefsForm
-    Notifs -->|Manage| NotifsForm
-
-    ProfileForm -->|Save| Database
-    PrefsForm -->|Store| Database
-    NotifsForm -->|Update| Database
+    Roles -->|5. Access| Database
+    Roles -->|5. Access| Storage
 ```
 
----
-
-## 🛠️ **System Components**  
+## 🛠️ **Beta Components**  
 
 ### 📱 **Client Layer**
 - Next.js 14 App Router
 - TypeScript + React
 - Shadcn/ui Components
-- Protected Routes HOC
-- Error Boundaries
-- Loading States
+- Basic Protected Routes
 
 ### 🔑 **Authentication Layer**
 - Supabase Auth
-- JWT Sessions
-- Role-Based Access
-- Permission System
-- Security Middleware
-- Capability Checking
+- Basic Session Management
+- Simple User/Admin Roles
 
 ### 💾 **Data Layer**
 - PostgreSQL Database
-- Supabase Storage
-- Row Level Security
-- Real-time Subscriptions
-- Role Capabilities
-- User Profiles
-
-### ⚙️ **Settings Layer**
-- Profile Management
-- User Preferences
-- Notifications
-
-### 📝 **Form Layer**
-- Profile Form
-- Preferences Form
-- Notifications Form
+- Basic Storage
+- Simple RLS Policies
 
 ---
 
-## 📐 **Cloud Burst System Overview**  
-
-This **System Architecture Diagram** illustrates the **interaction flow** between different components within Cloud Burst.  
-
----
+## 📐 **Beta System Overview**  
 
 ```mermaid
 flowchart TD
-
-    Client[📱 Client Device] -->|🔗 HTTPS Request| WebApp[🌐 Web App (React/Next.js)]
-
-    WebApp -->|🔌 API Calls| APIGateway[🖥️ API Gateway (Node.js/Express/GraphQL)]
-
-    APIGateway --> Auth[🔑 Authentication Service (Supabase/OAuth)]
-    APIGateway --> Database[🗄️ Supabase PostgreSQL Database]
-    APIGateway --> CloudStorage[☁️ To be Determined]
-    APIGateway --> AIService[🤖 AI Processing (OpenAI)]
-
-    AIService --> CloudStorage
-    CloudStorage --> CDN[🚀 Cloudflare CDN] (To Be Determined)
+    Client[📱 Client Device] -->|🔗 HTTPS Request| WebApp[🌐 Web App (Next.js)]
+    WebApp -->|🔌 API Calls| Supabase[🗄️ Supabase]
+    Supabase --> Auth[🔑 Auth]
+    Supabase --> Database[💾 Database]
+    Supabase --> Storage[📦 Storage]
 ```
 
----
+## 🔒 **Security (Beta)**  
+✔️ **Basic Auth** – Email/password login  
+✔️ **Simple RLS** – Basic data protection  
+✔️ **Route Guards** – Protected routes  
 
-## 🔒 **Security & Performance Considerations**  
-✔️ **JWT Authentication** – Secure login and API access.  
-✔️ **End-to-End Encryption** – Protects all user data.  
-✔️ **Global CDN Optimization** – Ensures low-latency content delivery.  
-
----
-
-## 🎯 **Conclusion**  
-This **System Architecture Flowchart** provides a **clear, structured overview** of Cloud Burst's backend, frontend, and AI-driven operations. Designed for **scalability, security, and real-time performance**, Cloud Burst **delivers a next-gen event photography experience**. 🚀  
-
----
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Middleware
-    participant Auth
-    participant API
-    participant Supabase
-
-    Client->>Middleware: Request
-    Middleware->>Middleware: Rate Limit Check
-    Middleware->>Middleware: Security Headers
-    Middleware->>Auth: Session Check
-    Auth-->>Middleware: Session Status
-    Middleware->>API: Forward Request
-    API->>Supabase: Database Query
-    Supabase-->>API: Response
-    API-->>Client: Protected Data
-```
-
-### 🔒 Security Layer
-- Rate limiting protection
-- Security headers
-- Session validation
-- Route protection
-- RBAC enforcement
-
----
-
-## 🆕 New Components
-- Profile Management System
-- User Preferences
-- Notification Settings
-- Form Validation
-- Real-time Updates
-
-## 🔄 Next Steps
-1. Complete API routes for settings
-2. Add database migrations
-3. Implement real-time updates
-4. Add comprehensive testing
+## 🎯 **Next Steps**  
+1. Complete core auth flow
+2. Implement basic storage
+3. Add essential routes
+4. Basic testing
 5. Update documentation

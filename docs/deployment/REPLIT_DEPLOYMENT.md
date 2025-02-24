@@ -1,133 +1,92 @@
-# 🚀 Replit Deployment Guide for Cloud Burst
+# 🚀 Replit Deployment Guide (Beta)
+Version: 0.1.9 (Updated: Feb 24, 2024)
 
-## 📋 Prerequisites
-- Replit account
+## 📚 Related Documentation
+- [Environment Setup Guide](./ENVIRONMENT_SETUP.md)
+- [Build Configuration Guide](./BUILD_CONFIGURATION.md)
+- [Testing Guide](./TESTING_GUIDE.md)
+
+## 📋 Prerequisites [Verified Working]
+- Replit account with Node.js 20.x
 - GitHub repository access
 - Supabase project credentials
+- 512MB memory allocation [Critical]
 
-## 🔑 Environment Variables Setup
+## 🔑 Essential Environment Setup
 ```env
-# Core Configuration
+# Required Configuration [Beta]
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_SITE_URL=https://cloudburst-ai.replit.app
+NEXT_PUBLIC_SITE_URL=https://cloudburst-beta.replit.app
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# System Configuration
 NODE_ENV=production
 NEXT_TELEMETRY_DISABLED=1
-
-# User Settings & Preferences
-NEXT_PUBLIC_DEFAULT_THEME=system
-NEXT_PUBLIC_DEFAULT_LANGUAGE=en
-NEXT_PUBLIC_ENABLE_NOTIFICATIONS=true
-
-# Security Configuration
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-NEXTAUTH_SECRET=your_secure_secret
-NEXTAUTH_URL=https://cloudburst-ai.replit.app
 ```
 
-## ��️ Deployment Steps
+## 🛠️ Deployment Process [Beta Tested]
 
-### 1. Initial Setup
-1. Create new Repl
-   - Choose "Import from GitHub"
-   - Select cloud-burst repository
-   - Choose "Node.js" as language
-
-### 2. Database Setup
-1. Run migrations for user settings
-2. Configure RLS policies for preferences
-3. Set up notifications tables
-4. Verify database connections
-
-### 3. Build Process
+### 1. Repository Setup
 ```bash
-npm install
-npm run build
+# Clone repository
+git clone https://github.com/mrj0nesmtl/cloud-burst.git
+cd cloud-burst
+```
+
+### 2. Essential Configuration
+```nix
+# replit.nix [Verified Working]
+{ pkgs }: {
+    deps = [
+        pkgs.nodejs-20_x
+    ];
+}
+```
+
+### 3. Build Process [Memory Optimized]
+```bash
+# Install dependencies
+npm ci --production
+
+# Build with memory limit
+NODE_OPTIONS="--max-old-space-size=512" npm run build
+
+# Start server
 npm run start
 ```
 
-### 4. Verify Deployment
-- Check build logs for errors
-- Verify environment variables
-- Test application functionality
-- Test user settings flow
-- Test preferences saving
-- Test notification system
-- Confirm database connectivity
+## 🔍 Quick Verification
+- [ ] Node.js version check
+- [ ] Environment variables loaded
+- [ ] Build completion
+- [ ] Basic security headers
 
-## 🔄 Continuous Deployment
+## 🚨 Common Issues & Solutions [Beta Tested]
 
-### GitHub Integration
-1. Enable GitHub sync
-2. Configure auto-deploy settings
-3. Set up branch protection rules
+### Memory Management [Critical]
+```bash
+# Memory optimization
+NODE_OPTIONS="--max-old-space-size=512"
+rm -rf .next
+npm run build
+```
 
-### Health Checks
-- Monitor build status
-- Check application logs
-- Verify database connections
-- Test authentication flow
+### Build Failures
+```bash
+# Clean installation
+rm -rf node_modules
+npm ci
+npm run build
+```
 
-## 🚨 Troubleshooting
+## 📊 Basic Monitoring [Beta]
+- Build status
+- Memory usage
+- Basic error logging
 
-### Common Issues
-1. Build Failures
-   - Check Node.js version
-   - Verify dependencies
-   - Review build logs
-
-2. Runtime Errors
-   - Check environment variables
-   - Verify Supabase connection
-   - Review application logs
-
-3. Database Connection
-   - Confirm Supabase credentials
-   - Check RLS policies
-   - Verify network access
-
-## 📝 Maintenance
-
-### Regular Tasks
-- Monitor resource usage
-- Update dependencies
-- Review security alerts
-- Backup configuration
-
-### Performance Optimization
-- Enable caching
-- Optimize build size
-- Configure CDN
-- Monitor response times
-
-## 🔒 Security Considerations
-
-### Best Practices
-- Keep secrets in Replit Secrets
-- Enable HTTPS only
-- Configure CORS properly
-- Regular security audits
-
-### Access Control
-- Manage deployment tokens
-- Review collaborator access
-- Monitor auth logs
-- Regular permission audits 
-
-# Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# Site Configuration
-NEXT_PUBLIC_SITE_URL=https://cloudburst.replit.app
-
-# Security and Features
-NEXTAUTH_SECRET=generate_a_secure_random_string
-NEXTAUTH_URL=https://cloudburst.replit.app
-
-# AI Service Keys (if implementing immediately)
-OPENAI_API_KEY=your_openai_api_key
-DEEPSEEK_API_KEY=your_deepseek_api_key
-
-# Optional Analytics (if implementing)
-NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id
+### Features On Hold [Post-Beta]
+⏸️ Advanced monitoring
+⏸️ Complex security
+⏸️ Detailed metrics
+⏸️ Advanced caching

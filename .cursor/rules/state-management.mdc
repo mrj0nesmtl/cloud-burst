@@ -1,8 +1,8 @@
 ---
-description: State Management Standards for Cloud Capture
+description: State Management Standards for Cloud Burst
 globs: src/store/**/*.ts", "src/hooks/**/*.ts
 ---
-# State Management Rules
+# State Management Rules (Beta)
 
 ## Zustand Store Standards
 ```typescript
@@ -11,64 +11,35 @@ globs: src/store/**/*.ts", "src/hooks/**/*.ts
     "zustand": {
       "structure": {
         "baseLocation": "src/store",
-        "slicePattern": "{feature}.slice.ts",
-        "hookPattern": "use{Feature}Store",
-        "typesPattern": "{feature}.types.ts" // Added types pattern
+        "slicePattern": "{feature}.slice.ts"
       },
       "patterns": {
         "persistence": {
-          "required": ["auth", "settings", "theme", "profile"],
-          "storage": "localStorage",
-          "version": 2 // Bumped for new auth system
-        },
-        "devtools": {
-          "enabled": true,
-          "name": "CloudCapture"
+          "required": ["auth", "theme"],
+          "storage": "localStorage"
         }
       }
     },
     "storeSlices": {
       "auth": {
-        "required": [
-          "user",
-          "session",
-          "loading",
-          "error",
-          "provider" // Added for OAuth support
-        ]
-      },
-      "events": {
-        "required": [
-          "currentEvent",
-          "photos",
-          "settings",
-          "participants" // Added participants
-        ]
+        "required": ["user", "session", "loading", "error"]
       },
       "ui": {
-        "required": [
-          "theme",
-          "modal",
-          "toast",
-          "loading" // Added loading state
-        ]
-      },
-      "upload": { // Added upload slice
-        "required": [
-          "files",
-          "progress",
-          "error"
-        ]
+        "required": ["theme", "modal", "toast"]
       }
     },
     "reactQuery": {
       "location": "src/lib/query",
-      "keys": "src/lib/query/keys.ts",
       "staleTime": 5 * 60 * 1000,
-      "cacheTime": 30 * 60 * 1000,
-      "suspense": true, // Added suspense config
-      "retries": 3 // Added retry config
+      "retries": 3
     }
   }
 }
-,,,
+```
+
+## Removed Features
+- Complex store patterns
+- Advanced persistence
+- Complex devtools
+- Multiple store slices
+- Advanced query configurations

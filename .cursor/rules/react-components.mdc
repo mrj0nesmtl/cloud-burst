@@ -1,8 +1,8 @@
 ---
-description: React Component Standards for Cloud Capture
+description: React Component Standards for Cloud Burst
 globs: src/**/*.tsx", "src/**/*.ts
 ---
-# React Component Rules
+# React Component Rules (Beta)
 
 ## Component Architecture
 ```typescript
@@ -12,47 +12,7 @@ globs: src/**/*.tsx", "src/**/*.ts
       "atomic": {
         "atoms": "src/components/ui",
         "molecules": "src/components/common",
-        "organisms": "src/components/features",
-        "templates": "src/components/layouts",
         "pages": "src/app"
-      },
-      "naming": {
-        "prefix": {
-          "atoms": "Ui",
-          "molecules": "",
-          "organisms": "",
-          "templates": "Layout",
-          "providers": "Provider", // Added provider prefix
-          "context": "Context" // Added context prefix
-        }
-      }
-    },
-    "composition": {
-      "props": {
-        "required": ["children?", "className?"],
-        "naming": "camelCase",
-        "typing": "strict",
-        "defaults": "required" // Added defaults requirement
-      },
-      "hooks": {
-        "location": "top",
-        "ordering": [
-          "useState",
-          "useEffect",
-          "useCallback",
-          "useMemo",
-          "useStore", // Added store hooks
-          "useQuery", // Added query hooks
-          "custom"
-        ]
-      },
-      "errorBoundary": {
-        "required": true,
-        "location": "src/components/error-boundary"
-      },
-      "suspense": {
-        "required": true,
-        "fallback": "required"
       }
     },
     "patterns": {
@@ -61,20 +21,22 @@ globs: src/**/*.tsx", "src/**/*.ts
         "styling": "tailwind",
         "forms": "react-hook-form",
         "validation": "zod",
-        "loading": "suspense",
-        "errors": "error-boundary"
-      },
-      "hoc": {
-        "naming": "with{Name}",
-        "location": "src/components/hoc"
+        "auth": "@supabase/auth-helpers-nextjs"
       }
     },
     "shadcn": {
       "location": "src/components/ui",
-      "customization": "src/styles/shadcn",
-      "registry": "src/components/ui/registry.tsx",
-      "themes": "src/styles/themes" // Added themes
+      "themes": {
+        "default": "zinc"
+      }
     }
   }
 }
 ```
+
+## Removed Features
+- Complex component hierarchies
+- Advanced error boundaries
+- Complex suspense patterns
+- Advanced HOC patterns
+- Complex theming

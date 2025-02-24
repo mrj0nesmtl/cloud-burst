@@ -1,7 +1,10 @@
 # public Directory Structure
+Generated: 2025-02-23T19:16:31.910Z
 
 ```
-./public
+./public/
+├── images/
+│   └── pexels-themo1-bg.jpg
 ├── android-chrome-192x192.png
 ├── android-chrome-512x512.png
 ├── apple-touch-icon.png
@@ -12,8 +15,6 @@
 ├── favicon.ico
 ├── file.svg
 ├── globe.svg
-├── images
-│   └── pexels-themo1-bg.jpg
 ├── manifest.json
 ├── next.svg
 ├── pexels-themo-bg.jpg
@@ -27,3 +28,26 @@
 2 directories, 20 files
 
 ```
+
+## File Types
+- *.ts
+- *.tsx
+- *.js
+- *.jsx
+- *.json
+- *.md
+- *.mdx
+- *.css
+- *.scss
+- *.yaml
+- *.yml
+
+## Ignored Patterns
+- node_modules
+- .git
+- .next
+- dist
+- coverage
+- .vercel
+- .env*
+- *.log

@@ -1,141 +1,45 @@
 ---
-description: Performance Standards for Cloud Capture
+description: Performance Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}, next.config.js
 ---
----
-description: Performance Standards for Cloud Capture
-globs: ["src/**/*.{ts,tsx}", "next.config.js"]
----
-# Performance Standards
+# Performance Standards (Beta)
 
-## Performance Metrics
+## Core Metrics
 ```typescript
 {
   "performanceStandards": {
     "metrics": {
       "core": {
-        "FCP": "< 1.8s",
-        "LCP": "< 2.5s",
-        "FID": "< 100ms",
-        "CLS": "< 0.1",
-        "TTFB": "< 0.8s"
-      },
-      "custom": {
-        "imageLoad": "< 1s",
-        "apiResponse": "< 300ms",
-        "routeChange": "< 100ms"
+        "FCP": "< 2.5s",
+        "LCP": "< 3.0s"
       }
     },
     "optimization": {
       "images": {
-        "formats": ["webp", "avif"],
+        "formats": ["webp"],
         "loading": "lazy",
-        "sizing": "responsive",
-        "quality": 80,
-        "placeholder": "blur"
+        "quality": 80
       },
       "javascript": {
         "bundling": {
           "splitting": true,
-          "treeshaking": true,
           "minification": true
-        },
-        "execution": {
-          "defer": "non-critical",
-          "async": "third-party"
         }
-      },
-      "styles": {
-        "tailwind": {
-          "purge": true,
-          "jit": true
-        },
-        "critical": "inline",
-        "loading": "async"
       }
     },
     "caching": {
       "static": {
-        "images": "1 year",
-        "fonts": "1 year",
-        "assets": "1 month"
-      },
-      "dynamic": {
-        "api": "stale-while-revalidate",
-        "pages": "1 day"
-      },
-      "revalidation": {
-        "isr": {
-          "default": "1 hour",
-          "dynamic": "on-demand"
-        }
-      }
-    },
-    "monitoring": {
-      "realUser": {
-        "tool": "Vercel Analytics",
-        "metrics": [
-          "navigation",
-          "resources",
-          "paint",
-          "errors"
-        ]
-      },
-      "synthetic": {
-        "tool": "Lighthouse CI",
-        "frequency": "per-deploy",
-        "thresholds": {
-          "performance": 90,
-          "accessibility": 95,
-          "bestPractices": 90,
-          "seo": 90
-        }
-      }
-    },
-    "mediaOptimization": {
-      "photos": {
-        "upload": {
-          "maxSize": "10MB",
-          "compression": "smart",
-          "quality": {
-            "high": 85,
-            "medium": 75,
-            "low": 60
-          }
-        },
-        "delivery": {
-          "cdn": true,
-          "responsive": true,
-          "formats": ["webp", "avif"]
-        }
-      },
-      "ai": {
-        "processing": {
-          "timing": "background",
-          "priority": "low",
-          "batching": true
-        }
-      }
-    },
-    "errorBoundary": {
-      "implementation": "required",
-      "fallback": "graceful",
-      "reporting": {
-        "sentry": true,
-        "console": "development"
-      }
-    },
-    "assets": {
-      "favicon": {
-        "formats": ["ico", "png", "svg"],
-        "sizes": [16, 32, 180, 192, 512],
-        "location": "public/",
-        "optimization": {
-          "compression": true,
-          "caching": "1 year"
-        }
+        "images": "1 month",
+        "assets": "1 week"
       }
     }
   }
 }
 ```
+
+## Removed Features
+- Complex monitoring systems
+- Advanced image processing
+- AI optimizations
+- Synthetic testing
+- Complex error reporting

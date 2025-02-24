@@ -1,95 +1,41 @@
 ---
-description: AI Collaboration Guidelines for Cloud Capture
+description: AI Collaboration Guidelines for Cloud Burst
 globs: **/*
 ---
- # AI Collaboration Guidelines
+# AI Collaboration Guidelines (Beta)
 
-## AI Integration Standards
+## Core Standards
 ```typescript
 {
   "aiCollaboration": {
     "context": {
       "project": {
-        "name": "Cloud Capture",
+        "name": "Cloud Burst",
         "type": "Event Photography Platform",
         "stack": {
           "frontend": "Next.js 14 + TypeScript",
-          "backend": "Supabase",
-          "ai": ["OpenAI", "TensorFlow.js", "OpenCV", "DeepSeek"]
+          "backend": "Supabase"
         },
-        "version": "0.1.9" // Added version tracking
-      },
-      "priorities": [
-        "Type safety",
-        "Performance",
-        "Accessibility",
-        "Security",
-        "Authentication" // Added new priority
-      ]
-    },
-    "codeGeneration": {
-      "standards": {
-        "typescript": "strict",
-        "components": "functional",
-        "styling": "tailwind",
-        "testing": "included",
-        "auth": "supabase",
-        "routing": "app-router",
-        "errorHandling": "react-error-boundary",
-        "suspense": "required" // Added Suspense requirement
-      },
-      "patterns": {
-        "preferred": {
-          "state": "zustand",
-          "forms": "react-hook-form + zod",
-          "api": "typed-fetch-hooks",
-          "auth": "@supabase/auth-helpers-nextjs", // Added auth pattern
-          "loading": "suspense", // Added loading pattern
-          "notifications": "shadcn/toast" // Added notifications
-        },
-        "avoid": [
-          "class components",
-          "inline styles",
-          "any type",
-          "direct API calls", // Added new patterns to avoid
-          "client-side sessions",
-          "localStorage for auth"
-        ]
+        "version": "0.1.9"
       }
     },
-    // ... rest of existing configuration ...
-    "security": {
-      "review": {
-        "authentication": true,
-        "authorization": true,
-        "data": true,
-        "dependencies": true,
-        "sessionManagement": true // Added session management
-      },
-      "avoid": [
-        "hardcoded credentials",
-        "unsafe-eval",
-        "direct-db-queries",
-        "client-side tokens", // Added new security concerns
-        "unprotected routes",
-        "insecure session storage"
-      ]
+    "patterns": {
+      "preferred": {
+        "state": "zustand",
+        "forms": "react-hook-form + zod",
+        "auth": "@supabase/auth-helpers-nextjs"
+      }
     },
     "deployment": {
       "platform": "Replit",
-      "configuration": {
-        "files": [".replit", "replit.nix"],
-        "environment": {
-          "secrets": [
-            "NEXT_PUBLIC_SUPABASE_URL",
-            "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-            "NEXT_PUBLIC_SITE_URL",
-            "NEXTAUTH_SECRET",
-            "NEXTAUTH_URL",
-            "SUPABASE_SERVICE_ROLE_KEY" // Added new required secret
-          ]
-        }
+      "environment": {
+        "secrets": [
+          "NEXT_PUBLIC_SUPABASE_URL",
+          "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+          "NEXT_PUBLIC_SITE_URL"
+        ]
       }
     }
   }
 }
+```

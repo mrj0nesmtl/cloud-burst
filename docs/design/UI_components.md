@@ -1,119 +1,170 @@
-# UI Components Documentation
+# UI Components Documentation (Beta)
 
 ## 🎨 Cloud Burst Component Library
-📅 *Updated: Feb 2024*
+📅 *Updated: Feb 24, 2024*
 
-## 📚 Core Components
+## 📚 Core Components [Beta Priority]
 
 ### 🎯 Navigation Components
 
 #### NavigationMenu
 ```typescript
-// Usage: Main navigation
+// Usage: Main navigation [Beta Tested]
 import { NavigationMenu } from "@/components/ui/navigation-menu"
 
 // Variants:
-- Default: Main header navigation
-- Mobile: Condensed for small screens
-- Dashboard: Admin navigation
+- ✅ Default: Main header navigation
+- 🟡 Mobile: Condensed for small screens
+- ⏸️ Dashboard: Admin navigation [Post-Beta]
+
+// Props:
+type NavigationMenuProps = {
+  items: NavItem[]
+  className?: string
+  orientation?: "horizontal" | "vertical"
+}
 ```
 
 #### Menubar
 ```typescript
-// Usage: Context-specific menus
+// Usage: Context-specific menus [Beta Priority]
 import { Menubar } from "@/components/ui/menubar"
 
 // Implementations:
-- Photo editing tools
-- Dashboard actions
-- Content filters
+- 🟡 Photo editing tools
+- ⏸️ Dashboard actions [Post-Beta]
+- ⏸️ Content filters [Post-Beta]
+
+// Props:
+type MenubarProps = {
+  items: MenuItem[]
+  className?: string
+  orientation?: "horizontal" | "vertical"
+}
 ```
 
 #### Sheet
 ```typescript
-// Usage: Mobile navigation & sidebars
+// Usage: Mobile navigation & sidebars [Beta Tested]
 import { Sheet } from "@/components/ui/sheet"
 
 // Common uses:
-- Mobile menu
-- Quick settings
-- Filter panels
+- ✅ Mobile menu
+- 🟡 Quick settings
+- ⏸️ Filter panels [Post-Beta]
+
+// Props:
+type SheetProps = {
+  side?: "left" | "right" | "top" | "bottom"
+  className?: string
+  children: React.ReactNode
+}
 ```
 
-### 🖼️ Layout Components
+### 🖼️ Layout Components [Beta Priority]
 
 #### AspectRatio
 ```typescript
-// Usage: Image & video containers
+// Usage: Image & video containers [Beta Tested]
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 // Common ratios:
-- 16:9 (Video content)
-- 1:1 (Profile photos)
-- 4:3 (Gallery images)
+- ✅ 16:9 (Video content)
+- ✅ 1:1 (Profile photos)
+- 🟡 4:3 (Gallery images)
+
+// Props:
+type AspectRatioProps = {
+  ratio?: number
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 #### Card
 ```typescript
-// Usage: Content containers
+// Usage: Content containers [Beta Tested]
 import { Card } from "@/components/ui/card"
 
 // Variants:
-- Default: Basic content card
-- Interactive: Hover effects
-- Featured: Highlighted content
+- ✅ Default: Basic content card
+- 🟡 Interactive: Hover effects
+- ⏸️ Featured: Highlighted content [Post-Beta]
+
+// Props:
+type CardProps = {
+  variant?: "default" | "interactive" | "featured"
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 #### Dialog
 ```typescript
-// Usage: Modal windows
+// Usage: Modal windows [Beta Priority]
 import { Dialog } from "@/components/ui/dialog"
 
 // Implementations:
-- Image preview
-- Settings forms
-- Confirmations
+- ✅ Settings forms
+- 🟡 Confirmations
+- ⏸️ Image preview [Post-Beta]
+
+// Props:
+type DialogProps = {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  className?: string
+  children: React.ReactNode
+}
 ```
 
-### 📝 Form Components
+### 📝 Form Components [Beta Priority]
 
 #### Form
 ```typescript
-// Usage: Data input & settings forms
+// Usage: Data input & settings [Beta Tested]
 import { Form } from "@/components/ui/form"
 
 // Implementations:
-- Profile settings
-- User preferences
-- Notification settings
-- Authentication forms
+- ✅ Authentication forms
+- ✅ Profile settings
+- 🟡 User preferences
+- ⏸️ Notification settings [Post-Beta]
 
 // Validation:
-- React Hook Form
-- Zod schemas
-- Custom validation
+- ✅ React Hook Form
+- ✅ Zod schemas
+- 🟡 Custom validation
+
+// Props:
+type FormProps = {
+  onSubmit: (data: any) => Promise<void>
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 #### PreferencesForm
 ```typescript
-// Usage: User preferences management
+// Usage: User preferences [Beta Priority]
 import { PreferencesForm } from "@/components/forms/preferences-form"
 
 // Features:
-- Theme selection
-- Language preferences
-- Display settings
-- Interface customization
-- Download quality
-- View preferences
+- ✅ Theme selection
+- ✅ Language preferences
+- 🟡 Display settings
+- ⏸️ Interface customization [Post-Beta]
+- ⏸️ Download quality [Post-Beta]
+- ⏸️ View preferences [Post-Beta]
 ```
 
 #### NotificationsForm
 ```typescript
-// Usage: Notification settings
+// Usage: Notification settings [Post-Beta]
 import { NotificationsForm } from "@/components/forms/notifications-form"
 
 // Features:
+⏸️ All features on hold for post-beta:
 - Email preferences
 - Push notifications
 - Event alerts
@@ -132,6 +183,14 @@ import { Input } from "@/components/ui/input"
 - Email
 - Password
 - Search
+
+// Props:
+type InputProps = {
+  type?: "text" | "email" | "password" | "search"
+  className?: string
+  error?: string
+  disabled?: boolean
+}
 ```
 
 #### Select
@@ -143,6 +202,14 @@ import { Select } from "@/components/ui/select"
 - Searchable
 - Multi-select
 - Grouped options
+
+// Props:
+type SelectProps = {
+  options: SelectOption[]
+  multiple?: boolean
+  searchable?: boolean
+  className?: string
+}
 ```
 
 ### 🎛️ Interactive Components
@@ -157,8 +224,18 @@ import { Button } from "@/components/ui/button"
 - secondary: Alternative actions
 - ghost: Subtle actions
 - destructive: Delete/remove
-- outline: Bordered style (New)
-- link: Text-like button (New)
+- outline: Bordered style
+- link: Text-like button
+
+// Props:
+type ButtonProps = {
+  variant?: "default" | "secondary" | "ghost" | "destructive" | "outline" | "link"
+  size?: "sm" | "md" | "lg"
+  loading?: boolean
+  disabled?: boolean
+  className?: string
+  children: React.ReactNode
+}
 ```
 
 #### Carousel
@@ -170,6 +247,14 @@ import { Carousel } from "@/components/ui/carousel"
 - Auto-play
 - Touch support
 - Custom navigation
+
+// Props:
+type CarouselProps = {
+  items: CarouselItem[]
+  autoPlay?: boolean
+  interval?: number
+  className?: string
+}
 ```
 
 #### Tabs
@@ -181,6 +266,14 @@ import { Tabs } from "@/components/ui/tabs"
 - Dashboard views
 - Settings panels
 - Gallery layouts
+
+// Props:
+type TabsProps = {
+  items: TabItem[]
+  defaultValue?: string
+  className?: string
+  onChange?: (value: string) => void
+}
 ```
 
 ### 🎛️ Settings Components
@@ -244,6 +337,14 @@ import { Alert } from "@/components/ui/alert"
 - success: Confirmation
 - warning: Caution
 - destructive: Error
+
+// Props:
+type AlertProps = {
+  variant?: "default" | "success" | "warning" | "destructive"
+  title?: string
+  description?: string
+  className?: string
+}
 ```
 
 #### Toast
@@ -255,6 +356,14 @@ import { Toast } from "@/components/ui/toast"
 - Success messages
 - Error notifications
 - Process updates
+
+// Props:
+type ToastProps = {
+  variant?: "default" | "success" | "error" | "loading"
+  title: string
+  description?: string
+  duration?: number
+}
 ```
 
 ## 🎨 Theme Configuration

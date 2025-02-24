@@ -1,113 +1,33 @@
 ---
-description: Accessibility Standards for Cloud Capture
+description: Accessibility Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}
 ---
-# Accessibility Standards
+# Accessibility Standards (Beta)
 
-## WCAG 2.1 Compliance
+## Core Requirements
+- Basic WCAG 2.1 compliance
+- Essential keyboard navigation
+- Basic screen reader support
+- Simple focus management
+
+## Component Standards
 ```typescript
 {
   "accessibilityStandards": {
-    "compliance": {
-      "level": "AA",
-      "guidelines": ["WCAG 2.1", "WAI-ARIA 1.2"],
-      "testing": {
-        "automated": "axe-core",
-        "manual": "checklist-driven"
-      }
-    },
     "components": {
-      "requirements": {
-        "interactive": {
-          "focus": {
-            "visible": true,
-            "outline": "2px solid primary",
-            "outlineOffset": "2px"
-          },
-          "keyboard": {
-            "tabIndex": "managed",
-            "shortcuts": "documented"
-          }
-        },
-        "images": {
-          "alt": "required",
-          "decorative": "role-presentation"
-        },
-        "forms": {
-          "labels": "required",
-          "errorMessages": "explicit",
-          "ariaDescribed": true
-        }
+      "basic": {
+        "images": { "alt": "required" },
+        "forms": { "labels": "required" },
+        "buttons": { "role": "required" }
       },
-      "shadcn": {
-        "enforce": true,
-        "customization": {
-          "contrast": "minimum 4.5:1",
-          "focusStyles": "enhanced"
-        }
-      }
-    },
-    "media": {
-      "images": {
-        "alt": "required",
-        "lazy": "enabled",
-        "placeholder": "blur"
-      },
-      "video": {
-        "captions": "required",
-        "controls": "visible",
-        "autoplay": "prohibited"
-      }
-    },
-    "semantics": {
-      "headings": {
-        "hierarchy": "enforced",
-        "maxLevel": 3
-      },
-      "landmarks": {
-        "required": [
-          "header",
-          "main",
-          "navigation",
-          "footer"
-        ]
-      },
-      "aria": {
-        "required": {
-          "buttons": "role",
-          "inputs": "label",
-          "images": "alt",
-          "modals": "dialog"
-        }
-      }
-    },
-    "responsive": {
-      "textSize": {
-        "minimum": "16px",
-        "scaling": "rem-based"
-      },
-      "spacing": {
-        "clickable": "minimum 44px",
-        "touch": "minimum 48px"
-      },
-      "reflow": {
-        "breakpoints": "maintained",
-        "zoom": "supported-200%"
+      "navigation": {
+        "keyboard": true,
+        "skipLinks": false
       }
     },
     "testing": {
-      "tools": {
-        "automated": ["axe-core", "pa11y"],
-        "manual": ["NVDA", "VoiceOver"]
-      },
-      "frequency": {
-        "automated": "pre-commit",
-        "manual": "pre-release"
-      },
-      "reporting": {
-        "violations": "error",
-        "warnings": "warn"
-      }
+      "tools": ["axe-core"],
+      "frequency": "pre-release"
     }
   }
 }

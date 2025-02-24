@@ -1,7 +1,7 @@
 # 🎨 **Application Design Document**  
 
 ## 📸 Cloud Burst
-📅 *Updated: Feb 20, 2024*  
+📅 *Updated: Feb 24, 2024*  
 
 ## 📊 Implementation Status
 
@@ -10,16 +10,16 @@
 | 🏗️ Core Architecture | ✅ Done | P0 | None | 100% |
 | 🎨 Project Structure | ✅ Done | P0 | None | 100% |
 | 📚 Documentation | 🟢 Active | P0 | None | 85% |
-| 🔐 Authentication | ✅ Done | P0 | Supabase | 100% |
+| 🔐 Authentication | 🟡 In Progress | P0 | Supabase | 50% |
 | 📱 Public Pages | ✅ Done | P0 | Shadcn UI | 100% |
 | 🎨 Brand Identity | ✅ Done | P0 | None | 100% |
-| 📜 Legal Framework | ✅ Done | P0 | None | 100% |
-| 💰 Pricing System | ✅ Done | P0 | None | 100% |
-| 🖼️ Photo Upload | ⏸️ On Hold | P1 | Storage | 0% |
-| 🤖 AI Processing | ⏸️ On Hold | P1 | TensorFlow | 0% |
-| ⚙️ User Settings | 🟢 Active | P0 | Auth | 75% |
-| 👤 Profile Management | 🟢 Active | P0 | Auth | 75% |
-| 🔔 Notifications | 🟡 In Progress | P1 | Settings | 50% |
+| 📜 Legal Framework | ⏸️ On Hold | P2 | None | 100% |
+| 💰 Pricing System | ⏸️ On Hold | P2 | None | 100% |
+| 🖼️ Photo Upload | ⏸️ On Hold | P2 | Storage | 0% |
+| 🤖 AI Processing | ⏸️ On Hold | P3 | TensorFlow | 0% |
+| ⚙️ User Settings | 🟡 In Progress | P0 | Auth | 50% |
+| 👤 Profile Management | 🟡 In Progress | P0 | Auth | 50% |
+| 🔔 Notifications | ⏸️ On Hold | P2 | Settings | 0% |
 
 ### 🎯 Sprint Progress
 
@@ -27,9 +27,10 @@
 |--------|-------|--------|----------|-----------|
 | 1 | 🛠️ Setup & Structure | ✅ Done | Feb 2024 | 100% |
 | 2 | 🎨 UI & Branding | ✅ Done | Feb 2024 | 100% |
-| 3 | 🔐 Auth & Core | ✅ Done | Feb 2024 | 100% |
-| 4 | ⚙️ Settings & Profile | 🟢 Active | Feb 2024 | 75% |
-| 5 | 🤖 AI Features | ⚪ Planned | Mar 2024 | 0% |
+| 3 | 🔐 Auth Reset | 🟡 Active | Feb 2024 | 50% |
+| 4 | ⚙️ Settings & Profile | ⚪ Planned | Mar 2024 | 0% |
+| 5 | 🖼️ Photo Features | ⏸️ On Hold | TBD | 0% |
+| 6 | 🤖 AI Integration | ⏸️ On Hold | TBD | 0% |
 
 ---
 
@@ -51,7 +52,7 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 - **AI/ML**: 🤖 TensorFlow.js, OpenCV, DeepSeek (planned)  
 - **Storage**: ☁️ Supabase Storage  
 - **Authentication**: 🟢 Supabase Auth with JWT, Role-Based Access  
-- **Deployment**: 🚀 Replit (development)  
+- **Deployment**: 🚀 Replit (production)  
 
 ---
 
@@ -78,21 +79,21 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 📍 *Status: Complete*
 - ✅ Landing Page
 - ✅ About Page
-- ✅ Pricing Page
+- ✅ Pricing Page [Beta: Hidden]
 - ✅ Contact Page
 
 ### 🔐 **Authentication Pages**  
-📍 *Status: Complete*
-- ✅ Login
-- ✅ Register
-- ✅ Password Recovery
+📍 *Status: In Progress - Auth Reset*
+- 🟡 Login
+- 🟡 Register
+- 🟡 Password Recovery
 
-### 🎛️ **Dashboard (Event Organizer)**  
-📍 *Status: In Progress*
-- 🟢 Basic Layout
-- ⚪ Event Management
-- ⚪ Photo Moderation
-- ⚪ Analytics
+### 🎛️ **Dashboard**  
+📍 *Status: Beta Focus*
+- 🟡 Basic Layout
+- ⏸️ Event Management [Post-Beta]
+- ⏸️ Photo Moderation [Post-Beta]
+- ⏸️ Analytics [Post-Beta]
 
 ### 🎛️ **Event Pages**  
 📍 *Status: Planned*
@@ -102,10 +103,9 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 
 ### ⚙️ User Settings
 📍 *Status: In Progress*
-- ✅ Profile Management
-- ✅ Preferences
-- ✅ Notifications
-- 🟡 API Integration
+- 🟡 Profile Management
+- 🟡 Basic Preferences
+- ⏸️ Advanced Features [Post-Beta]
 
 ---
 
@@ -158,28 +158,22 @@ src/
 
 ## 🔒 Security Considerations  
 
-### Authentication & Authorization
+### Authentication & Authorization [Beta Priority]
 ✔️ **Authentication System**: [RESET IN PROGRESS]
-- Implementing new Supabase Auth with PKCE flow
-- Single source of truth for auth state
-- Server-side session management
-- Proper token handling
-- Secure cookie implementation
+- 🟡 Basic Supabase Auth
+- 🟡 Session management
+- ⏸️ Advanced features [Post-Beta]
 
-### Database Security
+### Database Security [Beta Priority]
 ✔️ **Row Level Security (RLS)**:
-- Fresh implementation of RLS policies
-- Table-level security rules
-- Role-based data access
-- Proper schema isolation
+- 🟡 Basic RLS policies
+- 🟡 Essential access rules
+- ⏸️ Advanced policies [Post-Beta]
 
-### Session Management
-✔️ **Enhanced Session Security**:
-- Server-side session validation
-- Secure cookie handling
-- Token refresh mechanism
-- Session timeout handling
-- CSRF protection
+### Session Management [Beta Priority]
+- 🟡 Basic session validation
+- 🟡 Essential cookie handling
+- ⏸️ Advanced features [Post-Beta]
 
 ### Access Control
 ✔️ **Role-Based Access Control (RBAC)**:
@@ -188,12 +182,12 @@ src/
 - Protected route middleware
 - API route protection
 
-## 🎯 Next Steps  
-1. 🔄 Complete authentication system reset
-2. 🔐 Implement new auth flow
-3. 🛡️ Set up RLS policies
-4. 📝 Update documentation
-5. 🧪 Comprehensive testing
+## 🎯 Next Steps [Beta Focus] 
+1. 🔄 Complete basic auth reset
+2. 🔐 Implement core auth flow
+3. 🛡️ Set up essential RLS
+4. 📝 Update beta documentation
+5. 🧪 Basic testing coverage
 
 ## 📝 Notes  
 - Following Next.js 14 auth patterns
@@ -220,5 +214,38 @@ src/
 - Protected routes
 - Role-based access
 - Error handling
+
+---
+
+## 🚀 Deployment Architecture [Beta Focus]
+
+### Platform: Replit
+- ✅ Node.js 20.x environment
+- ✅ 512MB memory allocation
+- 🟡 Basic configuration
+- ⏸️ Advanced features [Post-Beta]
+
+### Configuration Files
+```typescript
+├── .replit                 // Basic configuration
+├── replit.nix             // Essential dependencies
+└── next.config.js         // Core settings
+```
+
+### Deployment Process [Beta]
+1. **Essential Build**
+   - ✅ Dependencies installation
+   - ✅ Basic compilation
+   - 🟡 Core optimization
+
+2. **Basic Security**
+   - 🟡 Essential headers
+   - 🟡 Basic CORS
+   - ⏸️ Advanced features [Post-Beta]
+
+3. **Simple Monitoring**
+   - 🟡 Basic health check
+   - ⏸️ Advanced tracking [Post-Beta]
+   - ⏸️ Complex metrics [Post-Beta]
 
 ---

@@ -1,0 +1,67 @@
+---
+description: Deployment configuration and standards for Cloud Burst platform
+globs: *.tsx, *.ts, *.js, *.jsx, *.json, *.md, *.mdx, *.yml, *.yaml,  .replit, replit.nix, .env*, next.config.js, package.json,  tsconfig.json, tailwind.config.ts, postcss.config.js
+---
+# Deployment Standards (Beta)
+- Simplified Replit configuration
+- Basic environment variables only
+- Remove: Complex monitoring, advanced caching
+- Focus on quick deployment and testing
+
+# Deployment Standards (Beta)
+
+## Core Configuration
+```typescript
+{
+  "deployment": {
+    "platform": {
+      "name": "Replit",
+      "requirements": {
+        "node": "20.x",
+        "memory": "512MB",
+        "storage": "1GB"
+      }
+    },
+    "configuration": {
+      "files": {
+        ".replit": {
+          "run": "npm run start",
+          "modules": ["nodejs-20", "web"]
+        },
+        "replit.nix": {
+          "deps": ["nodejs-20_x"]
+        }
+      }
+    },
+    "environment": {
+      "required": {
+        "NEXT_PUBLIC_SUPABASE_URL": "string",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY": "string",
+        "NEXT_PUBLIC_SITE_URL": "string"
+      }
+    },
+    "build": {
+      "commands": {
+        "install": "npm install",
+        "build": "npm run build",
+        "start": "npm run start"
+      }
+    }
+  }
+}
+```
+
+## Removed Features
+- Complex monitoring systems
+- Advanced caching layers
+- Detailed metrics collection
+- Complex security headers
+- Optimization configurations
+- CORS settings (using Next.js defaults)
+- Health check endpoints
+
+## Beta Focus
+- Quick deployment
+- Basic environment setup
+- Essential dependencies only
+- Simple build process

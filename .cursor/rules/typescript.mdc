@@ -1,8 +1,8 @@
 ---
-description: TypeScript Standards for Cloud Capture
+description: TypeScript Standards for Cloud Burst
 globs: **/*.ts", "**/*.tsx
 ---
-# TypeScript Rules
+# TypeScript Rules (Beta)
 
 ## Type Standards
 ```typescript
@@ -11,52 +11,35 @@ globs: **/*.ts", "**/*.tsx
     "strictness": {
       "strict": true,
       "noImplicitAny": true,
-      "strictNullChecks": true,
-      "strictFunctionTypes": true,
-      "strictBindCallApply": true,
-      "strictPropertyInitialization": true,
-      "noImplicitThis": true,
-      "useUnknownInCatchVariables": true,
-      "alwaysStrict": true,
-      "exactOptionalPropertyTypes": true, // Added for stricter optional props
-      "noUncheckedIndexedAccess": true // Added for safer array/object access
+      "strictNullChecks": true
     },
     "naming": {
       "interfaces": "I{Name}",
       "types": "T{Name}",
-      "enums": "E{Name}",
-      "generics": "{T}Props",
-      "stores": "T{Name}Store", // Added store types
-      "hooks": "T{Name}Hook", // Added hook types
-      "context": "T{Name}Context" // Added context types
+      "generics": "{T}Props"
     },
     "organization": {
       "types": {
         "shared": "src/types",
         "components": "alongside-component",
-        "api": "src/types/api",
-        "store": "src/types/store",
-        "hooks": "src/types/hooks", // Added hooks types
-        "auth": "src/types/auth", // Added auth types
-        "events": "src/types/events" // Added event types
-      },
-      "imports": {
-        "typeOnly": true,
-        "grouped": true
+        "api": "src/types/api"
       }
     },
     "supabase": {
       "location": "src/types/supabase.ts",
-      "generation": "automatic",
-      "strict": true,
-      "customTypes": "src/types/supabase.custom.ts" // Added custom types
+      "generation": "automatic"
     },
     "zod": {
       "location": "src/lib/validations",
-      "naming": "{name}.schema.ts",
-      "errorMap": "src/lib/validations/error-map.ts", // Added error mapping
-      "transforms": "src/lib/validations/transforms.ts" // Added custom transforms
+      "naming": "{name}.schema.ts"
     }
   }
 }
-,,,
+```
+
+## Removed Features
+- Complex type hierarchies
+- Advanced type patterns
+- Complex validation schemas
+- Custom type utilities
+- Advanced type checking
