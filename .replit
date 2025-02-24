@@ -28,3 +28,7 @@ guessImports = true
 run = ["sh", "-c", "npm run start"]
 build = ["sh", "-c", "npm install --legacy-peer-deps && npm run build"]
 deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 3000
+externalPort = 80

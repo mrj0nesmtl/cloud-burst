@@ -11,6 +11,7 @@
     "generate:structure": "ts-node --esm scripts/generate-project-structure.ts"
   },
   "dependencies": {
+    "@eslint/eslintrc": "^3.3.0",
     "@hookform/resolvers": "^4.1.0",
     "@radix-ui/react-aspect-ratio": "^1.1.2",
     "@radix-ui/react-avatar": "^1.1.3",
