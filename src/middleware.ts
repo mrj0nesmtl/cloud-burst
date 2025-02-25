@@ -6,13 +6,12 @@ const PUBLIC_ROUTES = [
   '/',
   '/auth/signin',
   '/auth/register',
-  '/auth/reset-password',
-  '/event/[code]'
+  '/auth/reset-password'
 ]
 
 const PROTECTED_ROUTES = [
   '/dashboard',
-  '/events/[id]',
+  '/events',
   '/admin',
   '/settings',
   '/profile'
@@ -34,17 +33,13 @@ export async function middleware(request: NextRequest) {
 
     const path = request.nextUrl.pathname
 
-    // Allow public routes
-    if (PUBLIC_ROUTES.some(route => 
-      path === route || path.match(new RegExp(`^${route.replace('[code]', '[^/]+')}`))
-    )) {
+    // Allow public routes and dynamic event routes
+    if (PUBLIC_ROUTES.includes(path) || path.startsWith('/event/')) {
       return res
     }
 
-    // Check auth for protected routes
-    if (PROTECTED_ROUTES.some(route => 
-      path === route || path.match(new RegExp(`^${route.replace('[id]', '[^/]+')}`))
-    )) {
+    // Check auth for protected routes and their dynamic variants
+    if (PROTECTED_ROUTES.some(route => path.startsWith(route))) {
       if (!session) {
         const loginUrl = new URL('/auth/signin', request.url)
         loginUrl.searchParams.set('returnTo', path)
