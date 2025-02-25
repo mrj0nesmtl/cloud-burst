@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-02-23T19:16:31.850Z
+Generated: 2025-02-25T01:34:12.816Z
 
 ```
 ./src/
@@ -52,8 +52,7 @@ Generated: 2025-02-23T19:16:31.850Z
 │   ├── globals.css
 │   ├── layout.tsx
 │   ├── metadata.ts
-│   ├── page.tsx
-│   └── version-sync.plan
+│   └── page.tsx
 ├── components/
 │   ├── auth/
 │   │   ├── auth-debug.tsx
@@ -121,7 +120,7 @@ Generated: 2025-02-23T19:16:31.850Z
 ├── .DS_Store
 └── middleware.ts
 
-32 directories, 86 files
+32 directories, 85 files
 
 ```
 

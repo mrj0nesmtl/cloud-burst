@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-02-23T19:16:31.866Z
+Generated: 2025-02-25T01:34:12.829Z
 
 ```
 ./docs/
@@ -7,8 +7,13 @@ Generated: 2025-02-23T19:16:31.866Z
 │   ├── application_design_document.md
 │   └── system_architecture_flowchart.md
 ├── deployment/
-│   └── replit_deployment.md
+│   ├── BUILD_CONFIGURATION.md
+│   ├── ENVIRONMENT_SETUP.md
+│   ├── README.md
+│   ├── REPLIT_DEPLOYMENT.md
+│   └── quick_start.md
 ├── design/
+│   ├── UI_components.md
 │   └── website_overview.md
 ├── development/
 │   ├── prompt_archive/
@@ -18,6 +23,13 @@ Generated: 2025-02-23T19:16:31.866Z
 │   │   ├── session_10.md
 │   │   ├── session_11_checklist.md
 │   │   ├── session_11_kickoff.md
+│   │   ├── session_12_checklist.md
+│   │   ├── session_12_kickoff.md
+│   │   ├── session_13_checklist.md
+│   │   ├── session_13_context.md
+│   │   ├── session_13_kickoff.md
+│   │   ├── session_14_checklist.md
+│   │   ├── session_14_kickoff.md
 │   │   ├── session_1_prompt.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
@@ -25,11 +37,10 @@ Generated: 2025-02-23T19:16:31.866Z
 │   │   ├── session_7.md
 │   │   ├── session_8.md
 │   │   └── session_9.md
+│   ├── .DS_Store
 │   ├── STATUS_NOTES.md
-│   ├── UI_components.md
 │   ├── VERSION_CONTROL.md
-│   ├── session_12_checklist.md
-│   └── session_12_kickoff.md
+│   └── version-sync.plan
 ├── planning/
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
@@ -41,17 +52,30 @@ Generated: 2025-02-23T19:16:31.866Z
 │   └── statement_or_work.md
 ├── project-structure/
 │   ├── README.md
+│   ├── app_tree.md
+│   ├── architecture_tree.md
+│   ├── components_tree.md
+│   ├── cursor_tree.md
+│   ├── development_tree.md
+│   ├── docs_tree.md
 │   ├── full_tree.md
-│   └── src_tree.md
+│   ├── github_tree.md
+│   ├── hooks_tree.md
+│   ├── lib_tree.md
+│   ├── planning_tree.md
+│   ├── public_tree.md
+│   ├── src_tree.md
+│   └── types_tree.md
 ├── user-flows/
 │   ├── invited_user_flow_design_document.md
 │   ├── photo_upload_sequence_diagram.md
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
+├── .DS_Store
 ├── README.md
 └── auth-cleanup.md
 
-9 directories, 39 files
+9 directories, 63 files
 
 ```
 
