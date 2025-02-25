@@ -8,7 +8,6 @@ channel = "stable-24_05"
 
 [env]
 PATH = "/home/runner/$REPL_SLUG/node_modules/.bin"
-NEXT_TELEMETRY_DISABLED = "1"
 NODE_ENV = "production"
 
 [packager]
