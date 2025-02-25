@@ -1,14 +1,13 @@
-nix:replit.nix
 { pkgs }: {
-    deps = [
-        pkgs.nodejs-20_x
-        pkgs.nodePackages.typescript-language-server
-        pkgs.nodePackages.typescript
-        pkgs.git
+  deps = [
+    pkgs.nodejs_20
+    pkgs.nodePackages.typescript-language-server
+    pkgs.nodePackages.typescript
+    pkgs.git
+  ];
+  env = {
+    LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+      pkgs.libuuid
     ];
-    env = {
-        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-            pkgs.libuuid
-        ];
-    };
+  };
 }
