@@ -1,5 +1,5 @@
 # development Directory Structure
-Generated: 2025-02-23T19:16:32.010Z
+Generated: 2025-02-25T01:34:12.952Z
 
 ```
 ./docs/development/
@@ -10,6 +10,13 @@ Generated: 2025-02-23T19:16:32.010Z
 │   ├── session_10.md
 │   ├── session_11_checklist.md
 │   ├── session_11_kickoff.md
+│   ├── session_12_checklist.md
+│   ├── session_12_kickoff.md
+│   ├── session_13_checklist.md
+│   ├── session_13_context.md
+│   ├── session_13_kickoff.md
+│   ├── session_14_checklist.md
+│   ├── session_14_kickoff.md
 │   ├── session_1_prompt.md
 │   ├── session_4.md
 │   ├── session_5.md
@@ -17,13 +24,12 @@ Generated: 2025-02-23T19:16:32.010Z
 │   ├── session_7.md
 │   ├── session_8.md
 │   └── session_9.md
+├── .DS_Store
 ├── STATUS_NOTES.md
-├── UI_components.md
 ├── VERSION_CONTROL.md
-├── session_12_checklist.md
-└── session_12_kickoff.md
+└── version-sync.plan
 
-2 directories, 18 files
+2 directories, 24 files
 
 ```
 

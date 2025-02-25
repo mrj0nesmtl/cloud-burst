@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-02-23T19:16:31.927Z
+Generated: 2025-02-25T01:34:12.876Z
 
 ```
 ./src/app/
@@ -51,10 +51,9 @@ Generated: 2025-02-23T19:16:31.927Z
 ├── globals.css
 ├── layout.tsx
 ├── metadata.ts
-├── page.tsx
-└── version-sync.plan
+└── page.tsx
 
-20 directories, 31 files
+20 directories, 30 files
 
 ```
 

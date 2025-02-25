@@ -87,24 +87,19 @@ export function SiteFooter() {
             © 2025 Cloud Burst. All rights reserved.
           </span>
           <div className="flex items-center space-x-4">
-            <a 
-              href="https://instagram.com/cloudburst" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-muted-foreground hover:text-blue-500 transition-colors"
-            >
+            {/* Instagram icon without link */}
+            <span className="text-muted-foreground cursor-not-allowed opacity-50">
               <Instagram className="h-5 w-5" />
-            </a>
-            <a 
-              href="https://facebook.com/cloudburst" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-muted-foreground hover:text-blue-500 transition-colors"
-            >
+            </span>
+            
+            {/* Facebook icon without link */}
+            <span className="text-muted-foreground cursor-not-allowed opacity-50">
               <Facebook className="h-5 w-5" />
-            </a>
+            </span>
+            
+            {/* Updated GitHub link */}
             <a 
-              href="https://github.com/cloudburst" 
+              href="https://github.com/mrj0nesmtl/cloud-burst" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-muted-foreground hover:text-blue-500 transition-colors"

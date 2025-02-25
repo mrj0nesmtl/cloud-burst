@@ -15,6 +15,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.11] - 2024-02-24
+### Changed
+- Rolled back to stable version for beta focus
+- Simplified deployment configuration
+- Optimized UI components for Replit
+- Enhanced error handling
+- Streamlined authentication system
+
+### Fixed
+- Resolved UI component dependencies
+- Fixed navigation menu issues
+- Corrected Shadcn/ui integration
+- Stabilized local development
+- Optimized build process
+
+### Infrastructure
+- Updated Replit configuration
+- Simplified deployment process
+- Enhanced memory management
+- Optimized build commands
+- Updated environment handling
+
+### Documentation
+- Updated deployment guidelines
+- Enhanced beta documentation
+- Revised status notes
+- Updated project structure
+- Refined development rules
+
 ## [0.1.10] - 2024-02-19
 ### Added
 - Session 9 development planning
