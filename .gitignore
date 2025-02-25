@@ -25,12 +25,15 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# env files (can opt-in for committing if needed)
+# Keep Replit config files for deployment
+# .replit
+# replit.nix
+
+# env files
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
+# But keep example for reference
+!.env.example
 
 # vercel
 .vercel
@@ -43,15 +46,10 @@ next-env.d.ts
 .idea
 .vscode
 
-# TEMPORARILY COMMENT OUT FOR FIRST REPLIT SYNC
-# .replit
-# replit.nix
-
 # Supabase
 supabase-exports/
 *.csv
 prod-ca-2021.crt
-*.code-workspace
 *.code-workspace
 
 # Backup files
