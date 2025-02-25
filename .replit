@@ -1,12 +1,9 @@
-run = "npm run start"
-
-# Simplified modules for beta
-modules = ["nodejs-20", "web"]
+run = "npm run dev"
+modules = ["nodejs-20", "bash", "web", "nix"]
 
 hidden = [".build", ".config", ".next", "node_modules"]
 
 [nix]
-# Updated to latest stable channel
 channel = "stable-24_05"
 
 [env]
@@ -31,6 +28,7 @@ start = [ "typescript-language-server", "--stdio" ]
 [deployment]
 run = ["sh", "-c", "npm run start"]
 build = ["sh", "-c", "npm run build"]
+deploymentTarget = "cloudrun"
 
 [server]
 run = "npm run dev"
