@@ -53,3 +53,7 @@ supabase-exports/
 prod-ca-2021.crt
 *.code-workspace
 *.code-workspace
+
+# Backup files
+*.bak
+*.swp
