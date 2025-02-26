@@ -64,32 +64,47 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     const { children, fallback, className } = this.props
 
     if (hasError) {
-      if (fallback) return fallback
+      // Only show error UI in development
+      if (process.env.NODE_ENV === 'development') {
+        if (fallback) return fallback
 
-      return (
-        <div className={cn(
-          "flex h-[50vh] flex-col items-center justify-center gap-4",
-          className
-        )}>
-          <AlertCircle className="h-10 w-10 text-destructive" />
-          <h2 className="text-xl font-semibold">Something went wrong!</h2>
-          <p className="text-sm text-muted-foreground max-w-md text-center">
-            {error?.message || 'An unexpected error occurred'}
-          </p>
-          <div className="flex gap-2">
-            <Button 
-              onClick={this.handleReset}
-              variant="default"
-            >
-              Try again
-            </Button>
-            <Button 
-              onClick={() => window.location.reload()}
-              variant="outline"
-            >
-              Reload page
-            </Button>
+        return (
+          <div className={cn(
+            "flex h-[50vh] flex-col items-center justify-center gap-4",
+            className
+          )}>
+            <AlertCircle className="h-10 w-10 text-destructive" />
+            <h2 className="text-xl font-semibold">Something went wrong!</h2>
+            <p className="text-sm text-muted-foreground max-w-md text-center">
+              {error?.message || 'An unexpected error occurred'}
+            </p>
+            <div className="flex gap-2">
+              <Button 
+                onClick={this.handleReset}
+                variant="default"
+              >
+                Try again
+              </Button>
+              <Button 
+                onClick={() => window.location.reload()}
+                variant="outline"
+              >
+                Reload page
+              </Button>
+            </div>
           </div>
+        )
+      }
+
+      // In production, just try to recover silently
+      return (
+        <div className="hidden">
+          <Button 
+            onClick={this.handleReset}
+            className="hidden"
+          >
+            Reset
+          </Button>
         </div>
       )
     }
