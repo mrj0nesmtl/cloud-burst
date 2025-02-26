@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
-## [0.1.13] - 2024-02-24
+## [0.1.13] - 2024-02-26
 ### Added
 - Stable deployment at cb-beta.replit.app
 - Optimized toast notifications
