@@ -10,6 +10,18 @@ import { Toaster } from "@/components/ui/toaster"
 
 const geist = GeistSans
 
+// Suppress hydration warnings in production only
+if (process.env.NODE_ENV === 'production') {
+  const originalConsoleError = console.error
+  console.error = (...args) => {
+    // Suppress specific hydration warnings
+    if (args[0]?.includes?.('Hydration failed')) return
+    if (args[0]?.includes?.('Text content does not match')) return
+    if (args[0]?.includes?.('Prop `style` did not match')) return
+    originalConsoleError(...args)
+  }
+}
+
 export const metadata = {
   title: 'Cloud Burst',
   description: 'Elevate Your Event Photography',
