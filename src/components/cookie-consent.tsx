@@ -22,6 +22,9 @@ export function CookieConsent() {
   const { toast } = useToast()
 
   useEffect(() => {
+    if (process.env.NODE_ENV === 'production' && localStorage.getItem("cookie-consent")) {
+      return
+    }
     const consent = localStorage.getItem("cookie-consent")
     if (!consent) {
       setOpen(true)
@@ -31,10 +34,12 @@ export function CookieConsent() {
   const savePreferences = () => {
     localStorage.setItem("cookie-consent", JSON.stringify(settings))
     setOpen(false)
-    toast({
-      title: "Preferences saved",
-      description: "Your cookie preferences have been updated.",
-    })
+    if (process.env.NODE_ENV !== 'production') {
+      toast({
+        title: "Preferences saved",
+        description: "Your cookie preferences have been updated.",
+      })
+    }
   }
 
   if (!open) return null
