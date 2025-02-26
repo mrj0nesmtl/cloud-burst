@@ -55,3 +55,4 @@ prod-ca-2021.crt
 # Backup files
 *.bak
 *.swp
+.env.local
