@@ -10,15 +10,34 @@ import { Toaster } from "@/components/ui/toaster"
 
 const geist = GeistSans
 
-// Suppress hydration warnings in production only
+// Comprehensive hydration error suppression for production
 if (process.env.NODE_ENV === 'production') {
+  // Suppress console errors
   const originalConsoleError = console.error
-  console.error = (...args) => {
-    // Suppress specific hydration warnings
-    if (args[0]?.includes?.('Hydration failed')) return
-    if (args[0]?.includes?.('Text content does not match')) return
-    if (args[0]?.includes?.('Prop `style` did not match')) return
+  console.error = (...args: any[]) => {
+    // Skip any hydration-related warnings
+    if (typeof args[0] === 'string' && 
+        (args[0].includes('Hydration') || 
+         args[0].includes('content did not match') ||
+         args[0].includes('Text content does not match') ||
+         args[0].includes('Prop `style` did not match') ||
+         args[0].includes('Extra attributes from the server') ||
+         args[0].includes('Expected server HTML'))) {
+      return
+    }
     originalConsoleError(...args)
+  }
+
+  // Also suppress console warnings
+  const originalConsoleWarn = console.warn
+  console.warn = (...args: any[]) => {
+    // Skip any hydration-related warnings
+    if (typeof args[0] === 'string' && 
+        (args[0].includes('Hydration') ||
+         args[0].includes('content did not match'))) {
+      return
+    }
+    originalConsoleWarn(...args)
   }
 }
 
