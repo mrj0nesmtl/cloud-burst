@@ -5,7 +5,7 @@
 
 *Reimagining Event Photography with AI*
 
-[![Version](https://img.shields.io/badge/version-0.1.9-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
+[![Version](https://img.shields.io/badge/version-0.1.13-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -14,7 +14,7 @@
 
 Remember the charm of disposable cameras at wedding tables? We're bringing that magic into the digital age. Cloud Burst transforms every event into a collaborative photo story, powered by AI and created by everyone who matters – your guests.
 
-[Live Demo](https://cloudburst-ai.replit.app) • [Documentation](docs/) • [Contributing](CONTRIBUTING.md)
+[Live Demo](https://cb-beta.replit.app) • [Documentation](docs/) • [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -44,18 +44,15 @@ Your memories deserve the best protection.
 - **Secure Sharing** - Safe, controlled distribution options
 - **Data Protection** - Regular backups and disaster recovery
 
-## 🚀 Quick Start
+## 🚀 Project Status
 
-```bash
-# Clone & Install
-git clone https://github.com/mrj0nesmtl/cloud-burst.git
-cd cloud-burst
-npm install
-
-# Configure & Run
-cp .env.example .env.local
-npm run dev
-```
+Currently in beta (v0.1.13), with focus on:
+- ✅ Core platform stability
+- ✅ Authentication system
+- ✅ Deployment optimization
+- 🚧 Photo galleries
+- 🚧 QR code system
+- 🚧 Event management
 
 ## 🛠️ Built With Excellence
 
@@ -75,16 +72,6 @@ npm run dev
 }
 ```
 
-## 📈 Project Status
-
-We're currently in beta (v0.1.9), focusing on:
-- ✅ Core authentication system
-- ✅ Real-time photo uploads
-- ✅ AI enhancement pipeline
-- ✅ Gallery experience
-- 🚧 Advanced AI features
-- 🚧 Event management tools
-
 ## 🤝 Join Our Journey
 
 Whether you're a developer, photographer, or event planner, we'd love your input. Check our [Contributing Guide](CONTRIBUTING.md) to get started.
@@ -93,6 +80,7 @@ Whether you're a developer, photographer, or event planner, we'd love your input
 
 - Email: joel@arcanaconcept.com
 - GitHub: [Cloud Burst Repository](https://github.com/mrj0nesmtl/cloud-burst)
+- Demo: [Beta Platform](https://cb-beta.replit.app)
 
 ---
 

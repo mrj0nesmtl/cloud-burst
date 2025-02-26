@@ -15,6 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.13] - 2024-02-24
+### Added
+- Stable deployment at cb-beta.replit.app
+- Optimized toast notifications
+- Enhanced error handling
+- Improved documentation structure
+
+### Changed
+- Refined deployment configuration
+- Optimized memory usage
+- Enhanced build process
+- Updated project structure
+
+### Infrastructure
+- Successful Replit deployment
+- Stable replica system
+- Optimized build pipeline
+- Enhanced documentation generation
+
 ## [0.1.11] - 2024-02-24
 ### Changed
 - Rolled back to stable version for beta focus
