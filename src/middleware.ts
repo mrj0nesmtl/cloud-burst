@@ -20,17 +20,25 @@ const PROTECTED_ROUTES = new Set([
 export async function middleware(request: NextRequest) {
   try {
     const res = NextResponse.next()
-    const supabase = createMiddlewareClient({ req: request, res })
     
-    // Add security headers
+    // Always add security headers first
     res.headers.set('X-Frame-Options', 'DENY')
     res.headers.set('X-Content-Type-Options', 'nosniff')
     res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-
-    const { data: { session } } = await supabase.auth.getSession()
+    
     const path = request.nextUrl.pathname
 
-    // Check public routes
+    // Check if Supabase credentials are available
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.error('Supabase credentials missing - authentication disabled')
+      // Still allow public routes
+      return PUBLIC_ROUTES.has(path) ? res : NextResponse.redirect(new URL('/auth/signin', request.url))
+    }
+
+    const supabase = createMiddlewareClient({ req: request, res })
+    const { data: { session } } = await supabase.auth.getSession()
+
+    // Allow public routes and event viewing
     if (PUBLIC_ROUTES.has(path) || path.startsWith('/event/')) {
       return res
     }
@@ -47,8 +55,9 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(loginUrl)
       }
 
-      if (path.startsWith('/admin') && 
-          session.user.user_metadata.role !== 'ADMIN') {
+      // Admin route protection
+      if (path.startsWith('/admin') && session.user.user_metadata.role !== 'ADMIN') {
+        console.warn(`Unauthorized admin access attempt by ${session.user.id}`)
         return NextResponse.redirect(new URL('/dashboard', request.url))
       }
     }
@@ -56,7 +65,10 @@ export async function middleware(request: NextRequest) {
     return res
   } catch (error) {
     console.error('Middleware error:', error)
-    return NextResponse.redirect(new URL('/auth/signin', request.url))
+    // On error, redirect to signin but preserve the intended destination
+    const loginUrl = new URL('/auth/signin', request.url)
+    loginUrl.searchParams.set('error', 'auth_error')
+    return NextResponse.redirect(loginUrl)
   }
 }
 
