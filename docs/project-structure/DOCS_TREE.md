@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-02-25T01:34:12.829Z
+Generated: 2025-02-26T20:56:49.929Z
 
 ```
 ./docs/
@@ -30,6 +30,7 @@ Generated: 2025-02-25T01:34:12.829Z
 │   │   ├── session_13_kickoff.md
 │   │   ├── session_14_checklist.md
 │   │   ├── session_14_kickoff.md
+│   │   ├── session_15_kickoff.md
 │   │   ├── session_1_prompt.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
@@ -42,6 +43,7 @@ Generated: 2025-02-25T01:34:12.829Z
 │   ├── VERSION_CONTROL.md
 │   └── version-sync.plan
 ├── planning/
+│   ├── auth-cleanup.md
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
 │   ├── payment_subscription_design_document.md
@@ -72,10 +74,9 @@ Generated: 2025-02-25T01:34:12.829Z
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store
-├── README.md
-└── auth-cleanup.md
+└── README.md
 
-9 directories, 63 files
+9 directories, 64 files
 
 ```
 

@@ -1,8 +1,9 @@
 # planning Directory Structure
-Generated: 2025-02-25T01:34:12.976Z
+Generated: 2025-02-26T20:56:50.070Z
 
 ```
 ./docs/planning/
+├── auth-cleanup.md
 ├── business_proposition.md
 ├── ca-en-merchant-fees-15-oct-2024.pdf
 ├── payment_subscription_design_document.md
@@ -12,7 +13,7 @@ Generated: 2025-02-25T01:34:12.976Z
 ├── roadmap.md
 └── statement_or_work.md
 
-1 directory, 8 files
+1 directory, 9 files
 
 ```
 

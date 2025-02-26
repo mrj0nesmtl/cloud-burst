@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-02-25T01:34:12.799Z
+Generated: 2025-02-26T20:56:49.888Z
 
 ```
 ./
@@ -50,6 +50,7 @@ Generated: 2025-02-25T01:34:12.799Z
 │   │   │   ├── session_13_kickoff.md
 │   │   │   ├── session_14_checklist.md
 │   │   │   ├── session_14_kickoff.md
+│   │   │   ├── session_15_kickoff.md
 │   │   │   ├── session_1_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
@@ -62,6 +63,7 @@ Generated: 2025-02-25T01:34:12.799Z
 │   │   ├── VERSION_CONTROL.md
 │   │   └── version-sync.plan
 │   ├── planning/
+│   │   ├── auth-cleanup.md
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
 │   │   ├── payment_subscription_design_document.md
@@ -92,8 +94,7 @@ Generated: 2025-02-25T01:34:12.799Z
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   ├── README.md
-│   └── auth-cleanup.md
+│   └── README.md
 ├── public/
 │   ├── images/
 │   │   └── pexels-themo1-bg.jpg
@@ -254,7 +255,6 @@ Generated: 2025-02-25T01:34:12.799Z
 ├── eslint.config.mjs
 ├── next-env.d.ts
 ├── next.config.js
-├── next.config.ts
 ├── package-lock.json
 ├── package.json
 ├── postcss.config.mjs
