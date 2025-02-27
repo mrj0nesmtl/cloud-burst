@@ -17,7 +17,7 @@ import Link from "next/link"
 
 export const metadata = {
   title: 'About | Cloud Burst',
-  description: 'Learn about Cloud Burst - AI-powered event photography platform',
+  description: 'Learn about Cloud Burst - Crowd-powered event photography platform',
 }
 
 export default function AboutPage() {

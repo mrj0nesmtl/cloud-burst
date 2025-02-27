@@ -14,17 +14,68 @@ The **Cloud Burst** subscription and payment system enables event planners, wedd
 
 ## 💰 Subscription Plans  
 
-### 🎟️ **Starter Package**  
-✔️ **Ideal for small events**.  
-✔️ Lower monthly fee with essential features.  
+```mermaid
+graph TD
+    A[Cloud Burst Plans] --> B[Free Tier]
+    A --> C[Basic Plan]
+    A --> D[Pro Plan]
+    A --> E[Enterprise]
+    
+    B --> F[Limited Features]
+    C --> G[Essential Features]
+    D --> H[Advanced Features]
+    E --> I[Custom Solutions]
+    
+    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style B fill:#dfd,stroke:#333
+    style C fill:#dfd,stroke:#333
+    style D fill:#dfd,stroke:#333
+    style E fill:#dfd,stroke:#333
+```
 
-### 🎉 **Professional Package**  
-✔️ **Perfect for weddings & corporate events**.  
-✔️ AI-enhanced processing & extended storage.  
+### 🎟️ **Free Tier**
+- **Price**: $0/month
+- **Features**:
+  - 1 event/month
+  - Up to 100 photos/event
+  - Basic AI enhancement
+  - 7-day gallery access
+  - Standard support
+- **Ideal for**: Personal events, small gatherings
 
-### 🏆 **Enterprise Package**  
-✔️ **Custom pricing for large-scale events**.  
-✔️ Premium support & additional AI-powered features.  
+### 🌟 **Basic Plan**
+- **Price**: $29/month
+- **Features**:
+  - 5 events/month
+  - Up to 500 photos/event
+  - Advanced AI enhancement
+  - 30-day gallery access
+  - Email support
+  - Basic analytics
+- **Ideal for**: Small businesses, wedding photographers
+
+### 🚀 **Pro Plan**
+- **Price**: $99/month
+- **Features**:
+  - Unlimited events
+  - Up to 2000 photos/event
+  - Premium AI features
+  - 90-day gallery access
+  - Priority support
+  - Advanced analytics
+  - Custom branding
+- **Ideal for**: Professional photographers, medium events
+
+### 🏢 **Enterprise Plan**
+- **Price**: Custom pricing
+- **Features**:
+  - Unlimited everything
+  - Custom retention
+  - White-label solution
+  - Dedicated support
+  - API access
+  - Custom integrations
+- **Ideal for**: Large organizations, venues
 
 ---
 

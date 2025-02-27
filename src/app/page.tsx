@@ -25,7 +25,7 @@ export default function Home() {
             muted
             playsInline
             preload="auto"
-            className="object-cover w-full h-full opacity-[0.5]"
+            className="object-cover w-full h-full opacity-[0.9]"
             poster="/images/hero-poster.jpg"
           >
             <source src="/hero_bg.mp4" type="video/mp4" />
@@ -57,15 +57,12 @@ export default function Home() {
             AI-powered platform for seamless photo capture, enhancement, and sharing.
             Perfect for weddings, corporate events, and celebrations.
           </p>
-          <div className="flex gap-4 items-center justify-center">
+          <div className="flex justify-center">
             <Button asChild size="lg" className="text-lg">
               <Link href="/auth/register">
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild className="text-lg">
-              <Link href="/marketing/pricing">View Pricing</Link>
             </Button>
           </div>
         </div>

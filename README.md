@@ -3,7 +3,7 @@
 
 # Cloud Burst
 
-*Reimagining Event Photography with AI*
+*Elevating Event Photography*
 
 [![Version](https://img.shields.io/badge/version-0.1.13-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
@@ -18,6 +18,45 @@ Remember the charm of disposable cameras at wedding tables? We're bringing that 
 
 </div>
 
+## 📊 System Architecture
+
+```mermaid
+graph TD
+    A[Client] --> B[Next.js App]
+    B --> C[Authentication]
+    B --> D[Photo Upload]
+    B --> E[Gallery View]
+    
+    C --> F[Supabase Auth]
+    D --> G[Image Processing]
+    G --> H[AI Enhancement]
+    G --> I[Storage]
+    
+    E --> J[Real-time Updates]
+    J --> K[Gallery DB]
+    
+    style A fill:#f9f,stroke:#333
+    style B fill:#dfd,stroke:#333
+    style F fill:#ddf,stroke:#333
+    style H fill:#fdd,stroke:#333
+```
+
+## 🔄 User Flow
+
+```mermaid
+flowchart LR
+    A[Event Guest] --> B{Has QR?}
+    B -->|Yes| C[Scan QR]
+    B -->|No| D[Request Access]
+    C --> E[Gallery Access]
+    D --> F[Receive QR]
+    F --> C
+    E --> G[Upload Photos]
+    E --> H[View Gallery]
+    G --> I[AI Processing]
+    I --> H
+```
+
 ## ✨ The Magic Behind Cloud Burst
 
 ### 📸 Capture Every Moment
@@ -29,30 +68,39 @@ No apps to download, no accounts to create. Just scan a QR code and start captur
 - **Universal Compatibility** - Works on any modern device
 
 ### 🤖 AI-Powered Excellence
-Our AI doesn't just store photos – it understands them.
 
-- **Intelligent Curation** - Automatically identifies and groups the best shots
-- **Smart Enhancement** - Professional-grade touch-ups without the wait
-- **Duplicate Detection** - Keep your gallery clean and organized
-- **Content Awareness** - Ensures appropriate content for your event
+```mermaid
+graph TD
+    A[Photo Upload] --> B{AI Processing}
+    B --> C[Enhancement]
+    B --> D[Face Detection]
+    B --> E[Duplicate Check]
+    C --> F[Final Image]
+    D --> F
+    E --> F
+    F --> G[Gallery]
+    
+    style A fill:#f9f,stroke:#333
+    style B fill:#ddf,stroke:#333
+    style F fill:#dfd,stroke:#333
+```
 
-### 🔐 Enterprise-Grade Security
-Your memories deserve the best protection.
+### 🔐 Security Flow
 
-- **End-to-End Security** - Bank-grade encryption for all photos
-- **Private Galleries** - Complete control over who sees what
-- **Secure Sharing** - Safe, controlled distribution options
-- **Data Protection** - Regular backups and disaster recovery
-
-## 🚀 Project Status
-
-Currently in beta (v0.1.13), with focus on:
-- ✅ Core platform stability
-- ✅ Authentication system
-- ✅ Deployment optimization
-- 🚧 Photo galleries
-- 🚧 QR code system
-- 🚧 Event management
+```mermaid
+sequenceDiagram
+    participant User
+    participant App
+    participant Auth
+    participant Storage
+    
+    User->>App: Access Request
+    App->>Auth: Verify Access
+    Auth-->>App: Token
+    App->>Storage: Fetch Photos
+    Storage-->>App: Gallery Data
+    App-->>User: Display Gallery
+```
 
 ## 🛠️ Built With Excellence
 
@@ -71,6 +119,16 @@ Currently in beta (v0.1.13), with focus on:
   }
 }
 ```
+
+## 🚀 Project Status
+
+Currently in beta (v0.1.13), with focus on:
+- ✅ Core platform stability
+- ✅ Authentication system
+- ✅ Deployment optimization
+- 🚧 Photo galleries
+- 🚧 QR code system
+- 🚧 Event management
 
 ## 🤝 Join Our Journey
 

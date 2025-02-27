@@ -18,8 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.13] - 2024-02-26
 ### Added
 - Stable deployment at cb-beta.replit.app
-- Optimized toast notifications
-- Enhanced error handling
+- Optimized video background
+- Enhanced landing page
 - Improved documentation structure
 
 ### Changed

@@ -1,12 +1,12 @@
 # 🎟️ **Invited Guest - User Flow Design Document**  
 
-## 📸 Cloud ☁️ Capture  
-📅 *Updated: Feb 21, 2024*  
+## Cloud Burst  
+📅 *Updated: Feb 27, 2025*  
 
 ---
 
 ## 🔍 Introduction  
-Cloud Capture is an **event photography platform** that enables guests to capture, upload, and share photos at **live events** such as weddings, parties, and corporate gatherings.  
+Cloud Burst is an **event photography platform** that enables guests to Burst, upload, and share photos at **live events** such as weddings, parties, and corporate gatherings.  
 
 📸 *This document details the guest user flow, authentication options, and the event gallery's temporary nature.*  
 
@@ -169,6 +169,6 @@ Cloud Capture is an **event photography platform** that enables guests to captur
 
 ## 🎯 Conclusion  
 
-The **Cloud Capture Invited Guest Flow** ensures an **engaging, seamless** photo-sharing experience. By combining **instant access, AI-powered enhancements, and interactive social features**, Cloud Capture redefines how guests **capture and relive their event memories**.  
+The **Cloud Burst Invited Guest Flow** ensures an **engaging, seamless** photo-sharing experience. By combining **instant access, AI-powered enhancements, and interactive social features**, Cloud Burst redefines how guests **capture and relive their event memories**.  
 
 ---
