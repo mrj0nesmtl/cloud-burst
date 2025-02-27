@@ -1,5 +1,5 @@
 # hooks Directory Structure
-Generated: 2025-02-26T20:56:50.032Z
+Generated: 2025-02-27T01:09:57.988Z
 
 ```
 ./src/hooks/

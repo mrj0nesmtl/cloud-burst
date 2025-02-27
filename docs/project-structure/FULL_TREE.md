@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-02-26T20:56:49.888Z
+Generated: 2025-02-27T01:09:57.806Z
 
 ```
 ./
@@ -50,7 +50,6 @@ Generated: 2025-02-26T20:56:49.888Z
 │   │   │   ├── session_13_kickoff.md
 │   │   │   ├── session_14_checklist.md
 │   │   │   ├── session_14_kickoff.md
-│   │   │   ├── session_15_kickoff.md
 │   │   │   ├── session_1_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
@@ -61,6 +60,8 @@ Generated: 2025-02-26T20:56:49.888Z
 │   │   ├── .DS_Store
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
+│   │   ├── session_15_checklist.md
+│   │   ├── session_15_kickoff.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
@@ -98,16 +99,19 @@ Generated: 2025-02-26T20:56:49.888Z
 ├── public/
 │   ├── images/
 │   │   └── pexels-themo1-bg.jpg
+│   ├── .DS_Store
 │   ├── android-chrome-192x192.png
 │   ├── android-chrome-512x512.png
 │   ├── apple-touch-icon.png
 │   ├── cloud-lightning.png
 │   ├── cloud-lightning.svg
+│   ├── cloudburst_event.MP4
 │   ├── favicon-16x16.png
 │   ├── favicon-32x32.png
 │   ├── favicon.ico
 │   ├── file.svg
 │   ├── globe.svg
+│   ├── hero_bg.mp4
 │   ├── manifest.json
 │   ├── next.svg
 │   ├── pexels-themo-bg.jpg
@@ -262,7 +266,7 @@ Generated: 2025-02-26T20:56:49.888Z
 ├── tailwind.config.ts
 └── tsconfig.json
 
-51 directories, 208 files
+51 directories, 212 files
 
 ```
 

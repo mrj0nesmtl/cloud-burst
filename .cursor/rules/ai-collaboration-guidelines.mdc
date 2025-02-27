@@ -2,7 +2,7 @@
 description: AI Collaboration Guidelines for Cloud Burst
 globs: **/*
 ---
-# AI Collaboration Guidelines (Beta)
+# AI Collaboration Guidelines (v0.1.13)
 
 ## Core Standards
 ```typescript
@@ -14,16 +14,23 @@ globs: **/*
         "type": "Event Photography Platform",
         "stack": {
           "frontend": "Next.js 14 + TypeScript",
-          "backend": "Supabase"
+          "backend": "Supabase",
+          "ui": "shadcn/ui",
+          "styling": "tailwindcss"
         },
-        "version": "0.1.9"
+        "version": "0.1.13"
       }
     },
     "patterns": {
       "preferred": {
         "state": "zustand",
         "forms": "react-hook-form + zod",
-        "auth": "@supabase/auth-helpers-nextjs"
+        "auth": "@supabase/auth-helpers-nextjs",
+        "components": "shadcn/ui",
+        "media": {
+          "video": "static-optimized",
+          "images": "next/image"
+        }
       }
     },
     "deployment": {
@@ -33,7 +40,11 @@ globs: **/*
           "NEXT_PUBLIC_SUPABASE_URL",
           "NEXT_PUBLIC_SUPABASE_ANON_KEY",
           "NEXT_PUBLIC_SITE_URL"
-        ]
+        ],
+        "limits": {
+          "memory": "512MB",
+          "storage": "1GB"
+        }
       }
     }
   }

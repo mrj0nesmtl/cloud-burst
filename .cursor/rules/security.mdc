@@ -2,22 +2,15 @@
 description: Security Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}, middleware.ts
 ---
-# Security Standards (Beta)
+# Security Standards (v0.1.13)
 
 ## Core Standards
-- Basic Supabase RLS policies
-- Simple role-based auth (User/Admin)
-- Default Next.js security headers
-- Basic input validation
-- Remove: Complex CSP, rate limiting, advanced RBAC
-
-## Security Configuration
 ```typescript
 {
   "securityStandards": {
     "authentication": {
       "supabase": {
-        "providers": ["email"],  // Removed google auth
+        "providers": ["email", "magic-link"],
         "session": {
           "persistence": true,
           "storage": "cookieSession",
@@ -26,23 +19,24 @@ globs: src/**/*.{ts,tsx}, middleware.ts
         "flows": {
           "emailAuth": {
             "verification": true,
-            "passwordReset": true
+            "passwordReset": true,
+            "magicLink": true
           }
         }
       },
       "routes": {
         "protected": [
-          "/dashboard",
-          "/events/[id]",
-          "/admin",
-          "/settings",
-          "/profile"
+          "/dashboard/**",
+          "/events/**",
+          "/admin/**",
+          "/settings/**",
+          "/profile/**",
+          "/gallery/**"
         ],
         "public": [
           "/",
-          "/auth/signin",
-          "/auth/register",
-          "/auth/reset-password",
+          "/auth/**",
+          "/marketing/**",
           "/event/[code]"
         ]
       }
@@ -50,26 +44,28 @@ globs: src/**/*.{ts,tsx}, middleware.ts
     "authorization": {
       "roles": {
         "ADMIN": "Full system access",
+        "EVENT_MANAGER": "Event creation and management",
         "USER": "Basic authenticated access",
         "GUEST": "Limited event access"
       },
       "permissions": {
         "photos": {
-          "upload": ["USER"],
-          "moderate": ["ADMIN"],
-          "delete": ["ADMIN"]
+          "upload": ["USER", "EVENT_MANAGER"],
+          "moderate": ["ADMIN", "EVENT_MANAGER"],
+          "delete": ["ADMIN", "EVENT_MANAGER"]
         },
         "events": {
-          "create": ["ADMIN"],
+          "create": ["EVENT_MANAGER", "ADMIN"],
+          "manage": ["EVENT_MANAGER", "ADMIN"],
           "view": ["USER", "GUEST"]
         }
       }
     },
-    "headers": {
-      "security": {
-        "X-Frame-Options": "DENY",
-        "X-Content-Type-Options": "nosniff",
-        "Referrer-Policy": "strict-origin-when-cross-origin"
+    "rls": {
+      "tables": {
+        "photos": "row level security enabled",
+        "events": "row level security enabled",
+        "profiles": "row level security enabled"
       }
     }
   }

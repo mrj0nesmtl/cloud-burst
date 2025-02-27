@@ -2,7 +2,7 @@
 description: React Component Standards for Cloud Burst
 globs: src/**/*.tsx", "src/**/*.ts
 ---
-# React Component Rules (Beta)
+# React Component Rules (v0.1.13)
 
 ## Component Architecture
 ```typescript
@@ -12,6 +12,8 @@ globs: src/**/*.tsx", "src/**/*.ts
       "atomic": {
         "atoms": "src/components/ui",
         "molecules": "src/components/common",
+        "organisms": "src/components/features",
+        "templates": "src/components/layouts",
         "pages": "src/app"
       }
     },
@@ -21,22 +23,38 @@ globs: src/**/*.tsx", "src/**/*.ts
         "styling": "tailwind",
         "forms": "react-hook-form",
         "validation": "zod",
-        "auth": "@supabase/auth-helpers-nextjs"
+        "auth": "@supabase/auth-helpers-nextjs",
+        "media": {
+          "images": "next/image",
+          "video": "static-optimized"
+        }
       }
     },
     "shadcn": {
       "location": "src/components/ui",
       "themes": {
-        "default": "zinc"
+        "default": "zinc",
+        "dark": "true"
+      },
+      "customComponents": {
+        "location": "src/components/ui/custom",
+        "naming": "[ComponentName].tsx"
+      }
+    },
+    "performance": {
+      "suspense": true,
+      "lazyLoading": {
+        "images": true,
+        "components": ["GalleryGrid", "EventMap"]
       }
     }
   }
 }
 ```
 
-## Removed Features
-- Complex component hierarchies
-- Advanced error boundaries
-- Complex suspense patterns
-- Advanced HOC patterns
-- Complex theming
+## Features Added
+- Atomic Design structure
+- Performance optimizations
+- Media handling patterns
+- Custom component standards
+- Dark mode support

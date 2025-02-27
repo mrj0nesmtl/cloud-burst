@@ -15,7 +15,7 @@ export default function MarketingLayout({
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          opacity: '0.25' // Changed to 75% transparent (0.25 opacity)
+          opacity: '0.50' // Changed to 75% transparent (0.25 opacity)
         }}
       />
       

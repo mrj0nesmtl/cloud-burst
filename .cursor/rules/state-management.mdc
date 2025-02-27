@@ -2,7 +2,7 @@
 description: State Management Standards for Cloud Burst
 globs: src/store/**/*.ts", "src/hooks/**/*.ts
 ---
-# State Management Rules (Beta)
+# State Management Rules (v0.1.13)
 
 ## Zustand Store Standards
 ```typescript
@@ -11,35 +11,37 @@ globs: src/store/**/*.ts", "src/hooks/**/*.ts
     "zustand": {
       "structure": {
         "baseLocation": "src/store",
-        "slicePattern": "{feature}.slice.ts"
+        "slicePattern": "{feature}.slice.ts",
+        "types": "src/types/store.ts"
       },
       "patterns": {
         "persistence": {
-          "required": ["auth", "theme"],
-          "storage": "localStorage"
+          "required": ["auth", "theme", "userPreferences"],
+          "storage": "localStorage",
+          "key": "cloud-burst-store"
         }
       }
     },
     "storeSlices": {
       "auth": {
-        "required": ["user", "session", "loading", "error"]
+        "required": ["user", "session", "loading", "error", "isAuthenticated"]
       },
       "ui": {
-        "required": ["theme", "modal", "toast"]
+        "required": ["theme", "modal", "toast", "navigation"]
+      },
+      "gallery": {
+        "required": ["photos", "uploadProgress", "filters"]
+      },
+      "event": {
+        "required": ["currentEvent", "participants", "settings"]
       }
     },
     "reactQuery": {
       "location": "src/lib/query",
       "staleTime": 5 * 60 * 1000,
-      "retries": 3
+      "retries": 3,
+      "prefetch": ["events", "gallery"]
     }
   }
 }
 ```
-
-## Removed Features
-- Complex store patterns
-- Advanced persistence
-- Complex devtools
-- Multiple store slices
-- Advanced query configurations

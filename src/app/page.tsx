@@ -17,7 +17,23 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <div className="relative min-h-[80vh] flex items-center justify-center">
-        <div 
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="object-cover w-full h-full opacity-[0.5]"
+            poster="/images/hero-poster.jpg"
+          >
+            <source src="/hero_bg.mp4" type="video/mp4" />
+          </video>
+        </div>
+        
+        {/* Remove or comment out the old background image */}
+        {/* <div 
           className="absolute inset-0 z-0"
           style={{
             backgroundImage: 'url(/images/pexels-themo1-bg.jpg)',
@@ -26,7 +42,8 @@ export default function Home() {
             backgroundRepeat: 'no-repeat',
             opacity: '0.15'
           }}
-        />
+        /> */}
+        
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background z-0" />
         
         <div className="relative z-10 container mx-auto px-4 py-32 text-center">
@@ -58,30 +75,30 @@ export default function Home() {
       <section className="py-20 bg-muted/50">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <Brain className="h-10 w-10 text-blue-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">AI-Powered</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Brain className="h-10 w-10 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-500 transition-colors">AI-Powered</h3>
               <p className="text-muted-foreground">
                 Smart curation and enhancement of your event photos.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <Shield className="h-10 w-10 text-blue-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Secure Sharing</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Shield className="h-10 w-10 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-500 transition-colors">Secure Sharing</h3>
               <p className="text-muted-foreground">
                 Private, controlled access to your event galleries.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <Share2 className="h-10 w-10 text-blue-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Instant Access</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Share2 className="h-10 w-10 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-500 transition-colors">Instant Access</h3>
               <p className="text-muted-foreground">
                 No app needed—just scan and capture moments.
               </p>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <Sparkles className="h-10 w-10 text-blue-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Auto-Enhancement</h3>
+            <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <Sparkles className="h-10 w-10 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-500 transition-colors">Auto-Enhancement</h3>
               <p className="text-muted-foreground">
                 Professional-looking photos with AI magic.
               </p>

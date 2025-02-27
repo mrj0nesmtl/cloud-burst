@@ -2,7 +2,7 @@
 description: API Standards for Cloud Burst
 globs: src/services/**/*.ts", "src/lib/api/**/*.ts
 ---
-# API Standards (Beta)
+# API Standards (v0.1.13)
 
 ## Core Structure
 ```typescript
@@ -12,11 +12,15 @@ globs: src/services/**/*.ts", "src/lib/api/**/*.ts
       "auth": "/api/auth",
       "events": "/api/events",
       "photos": "/api/photos",
-      "users": "/api/users"
+      "users": "/api/users",
+      "gallery": "/api/gallery",
+      "qr": "/api/qr"
     },
     "supabase": {
       "client": "src/lib/supabase/client.ts",
-      "types": "src/types/supabase.ts"
+      "types": "src/types/supabase.ts",
+      "auth": "src/lib/supabase/auth.ts",
+      "storage": "src/lib/supabase/storage.ts"
     },
     "error": {
       "responses": {
@@ -24,16 +28,22 @@ globs: src/services/**/*.ts", "src/lib/api/**/*.ts
         "401": "Unauthorized",
         "403": "Forbidden",
         "404": "Not Found",
+        "429": "Too Many Requests",
         "500": "Internal Server Error"
-      }
+      },
+      "handling": "src/lib/error-handling.ts"
+    },
+    "rateLimit": {
+      "basic": true,
+      "photo-upload": "10/minute"
     }
   }
 }
 ```
 
-## Removed Features
-- Complex rate limiting
-- Advanced monitoring
-- AI integrations
-- Real-time features
-- Complex middleware chains
+## Beta Focus
+- Basic REST endpoints
+- Essential error handling
+- Simple rate limiting
+- Supabase integration
+- File upload limits

@@ -2,13 +2,14 @@
 description: Accessibility Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}
 ---
-# Accessibility Standards (Beta)
+# Accessibility Standards (v0.1.13)
 
 ## Core Requirements
-- Basic WCAG 2.1 compliance
-- Essential keyboard navigation
-- Basic screen reader support
-- Simple focus management
+- WCAG 2.1 Level AA compliance
+- Full keyboard navigation
+- Screen reader optimization
+- Focus management with Next.js App Router
+- Video/media accessibility
 
 ## Component Standards
 ```typescript
@@ -16,18 +17,35 @@ globs: src/**/*.{ts,tsx}
   "accessibilityStandards": {
     "components": {
       "basic": {
-        "images": { "alt": "required" },
-        "forms": { "labels": "required" },
-        "buttons": { "role": "required" }
+        "images": { 
+          "alt": "required",
+          "loading": "lazy" 
+        },
+        "forms": { 
+          "labels": "required",
+          "aria": "required" 
+        },
+        "buttons": { 
+          "role": "required",
+          "ariaLabel": "required" 
+        },
+        "video": {
+          "controls": "optional",
+          "autoplay": "allowed",
+          "loop": "allowed",
+          "muted": "required",
+          "playsInline": "required"
+        }
       },
       "navigation": {
         "keyboard": true,
-        "skipLinks": false
+        "skipLinks": true,
+        "landmarks": true
       }
     },
     "testing": {
-      "tools": ["axe-core"],
-      "frequency": "pre-release"
+      "tools": ["axe-core", "jest-axe"],
+      "frequency": "continuous"
     }
   }
 }
