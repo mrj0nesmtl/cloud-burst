@@ -1,12 +1,14 @@
 # components Directory Structure
-Generated: 2025-02-27T01:09:57.930Z
+Generated: 2025-02-27T22:05:50.317Z
 
 ```
 ./src/components/
 ├── auth/
 │   ├── auth-debug.tsx
 │   ├── auth-form.tsx
+│   ├── auth-guard.tsx
 │   ├── debug-panel.tsx
+│   ├── role-guard.tsx
 │   └── social-auth-buttons.tsx
 ├── forms/
 │   ├── avatar-upload.tsx
@@ -15,12 +17,14 @@ Generated: 2025-02-27T01:09:57.930Z
 │   └── profile-form.tsx
 ├── nav/
 │   ├── main-nav.tsx
+│   ├── side-nav.tsx
 │   └── user-nav.tsx
 ├── providers/
 │   └── toast-provider.tsx
 ├── ui/
 │   ├── contact/
 │   │   └── page.tsx
+│   ├── accordion.tsx
 │   ├── alert.tsx
 │   ├── aspect-ratio.tsx
 │   ├── avatar.tsx
@@ -53,7 +57,7 @@ Generated: 2025-02-27T01:09:57.930Z
 ├── error-boundary.tsx
 └── theme-provider.tsx
 
-7 directories, 43 files
+7 directories, 47 files
 
 ```
 

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useAuthStore } from "@/lib/auth/auth-store"
+import { useAuthStore } from '@/lib/supabase/auth-store'
 import Link from "next/link"
 
 interface UserNavProps {

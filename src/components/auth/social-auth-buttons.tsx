@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
-import { useAuthStore } from "@/lib/auth/auth-store"
+import { useAuthStore } from "@/lib/supabase/auth-store"
 import { Provider } from "@supabase/supabase-js"
 import { FcGoogle } from "react-icons/fc"
 import { useToast } from "@/hooks/use-toast"

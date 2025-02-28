@@ -1,5 +1,19 @@
-# Cloud Burst Documentation [Beta v0.1.12]
-📅 *Updated: Feb 24, 2024*
+# Cloud Burst Documentation [Beta v0.1.13]
+📅 *Updated: Feb 27, 2024*
+
+## 🔄 Recent Updates
+- Auth system refactored and centralized
+- Import paths standardized
+- Documentation structure updated
+- Project trees regenerated
+- Beta documentation refined
+
+### 🔐 Auth System Changes
+- Centralized auth store in `src/lib/supabase`
+- Enhanced type safety with Zod schemas
+- Improved role-based access control
+- Updated component import paths
+- Standardized auth patterns
 
 ## 📚 Documentation Structure
 
@@ -63,13 +77,6 @@
 - [User Flow Chart](user-flows/user_flow_chart.md)
 - [Invited User Flow](user-flows/invited_user_flow_design_document.md)
 - [Photo Upload Sequence](user-flows/photo_upload_sequence_diagram.md)
-
-## 🔄 Recent Updates
-- Auth system stabilized at v0.1.12
-- Deployment configuration optimized
-- Documentation structure updated
-- Project trees regenerated
-- Beta documentation refined
 
 ## 🤝 Contributing
 Before contributing:

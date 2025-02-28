@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-02-27T01:09:57.910Z
+Generated: 2025-02-27T22:05:50.306Z
 
 ```
 ./src/app/
@@ -11,6 +11,9 @@ Generated: 2025-02-27T01:09:57.910Z
 │   ├── signin/
 │   │   └── page.tsx
 │   └── layout.tsx
+├── dev/
+│   └── setup/
+│       └── route.ts
 ├── legal/
 │   ├── cookies/
 │   │   └── page.tsx
@@ -30,21 +33,62 @@ Generated: 2025-02-27T01:09:57.910Z
 │   └── page.tsx
 ├── protected/
 │   ├── admin/
+│   │   ├── audit-logs/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
 │   │   ├── components/
 │   │   │   ├── audit-log-columns.tsx
 │   │   │   └── audit-log-viewer.tsx
+│   │   ├── events/
+│   │   │   └── page.tsx
+│   │   ├── photos/
+│   │   │   └── page.tsx
+│   │   ├── roles/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── settings/
+│   │   │   └── page.tsx
+│   │   ├── users/
+│   │   │   ├── [id]/
+│   │   │   │   └── page.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
 │   │   ├── layout.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
 │   ├── dashboard/
+│   │   ├── overview/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
 │   ├── events/
+│   │   ├── [id]/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── create/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── manage/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
 │   ├── profile/
+│   │   ├── settings/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
 │   │   └── page.tsx
 │   ├── settings/
+│   │   ├── account/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── billing/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── notifications/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
 │   └── layout.tsx
@@ -53,7 +97,7 @@ Generated: 2025-02-27T01:09:57.910Z
 ├── metadata.ts
 └── page.tsx
 
-20 directories, 30 files
+37 directories, 57 files
 
 ```
 

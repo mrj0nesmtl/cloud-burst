@@ -1,6 +1,6 @@
-## Cloud Burst Project Structure Documentation
+# Project Structure Documentation
 
-Generated on: 2025-02-27T01:09:58.052Z
+Generated on: 2025-02-27T22:05:50.414Z
 
 ## Directory Trees
 - [full](full_tree.md)

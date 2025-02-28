@@ -1,14 +1,18 @@
 # lib Directory Structure
-Generated: 2025-02-27T01:09:57.953Z
+Generated: 2025-02-27T22:05:50.328Z
 
 ```
 ./src/lib/
 ├── supabase/
+│   ├── __tests__/
+│   │   └── auth-store.test.ts
+│   ├── auth-store.ts
 │   ├── client.ts
-│   └── debug-queries.ts
+│   ├── debug-queries.ts
+│   └── test-utils.ts
 └── utils.ts
 
-2 directories, 3 files
+3 directories, 6 files
 
 ```
 

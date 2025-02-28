@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server-config'
+import { createServerClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { UserRole } from '@/types/auth'
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 }
 
 export default async function DashboardPage() {
-  const supabase = createClient()
+  const supabase = createServerClient()
   
   const { data: { session }, error } = await supabase.auth.getSession()
   

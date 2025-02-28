@@ -26,9 +26,14 @@ export default function Home() {
             playsInline
             preload="auto"
             className="object-cover w-full h-full opacity-[0.9]"
-            poster="/images/hero-poster.jpg"
+            poster="/images/fallback-hero.jpg"
           >
             <source src="/hero_bg.mp4" type="video/mp4" />
+            <img 
+              src="/images/fallback-hero.jpg" 
+              alt="Event Photography" 
+              className="object-cover w-full h-full"
+            />
           </video>
         </div>
         

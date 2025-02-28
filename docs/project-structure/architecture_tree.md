@@ -1,5 +1,5 @@
 # architecture Directory Structure
-Generated: 2025-02-27T01:09:58.033Z
+Generated: 2025-02-27T22:05:50.396Z
 
 ```
 ./docs/architecture/

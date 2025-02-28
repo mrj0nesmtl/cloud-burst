@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@/lib/supabase/auth-store'
 
 const authSchema = z.object({
   email: z.string().email('Invalid email'),

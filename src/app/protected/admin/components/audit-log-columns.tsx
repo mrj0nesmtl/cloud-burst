@@ -1,37 +1,36 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { formatDistanceToNow } from "date-fns"
 
-type AuditLog = {
+export type AuditLog = {
   id: string
   action: string
-  table_name: string
-  created_at: string
-  user_profiles: {
-    full_name: string
-    email: string
-  }
+  entity: string
+  entityId: string
+  userId: string
+  metadata: Record<string, any>
+  createdAt: string
 }
 
-export const columns: ColumnDef<AuditLog>[] = [
+export const auditLogColumns: ColumnDef<AuditLog>[] = [
   {
     accessorKey: "action",
-    header: "Action"
+    header: "Action",
   },
   {
-    accessorKey: "table_name",
-    header: "Resource"
+    accessorKey: "entity",
+    header: "Resource",
   },
   {
-    accessorKey: "user_profiles.full_name",
-    header: "User"
+    accessorKey: "userId",
+    header: "User",
   },
   {
-    accessorKey: "created_at",
-    header: "When",
+    accessorKey: "createdAt",
+    header: "Time",
     cell: ({ row }) => {
-      return formatDistanceToNow(new Date(row.original.created_at), { 
-        addSuffix: true 
+      return formatDistanceToNow(new Date(row.original.createdAt), {
+        addSuffix: true,
       })
-    }
-  }
+    },
+  },
 ] 

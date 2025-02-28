@@ -249,3 +249,48 @@ src/
    - ⏸️ Complex metrics [Post-Beta]
 
 ---
+
+## 🎯 Implementation Priority (v0.1.13)
+
+### Phase 1: Protected Routes & Dashboard
+1. **Route Protection System**
+   - Middleware implementation
+   - Role-based access control
+   - Session validation
+   - Error boundaries
+
+2. **Dashboard Layout**
+   - Navigation structure
+   - Role-specific views
+   - Responsive design
+   - Loading states
+
+### Phase 2: Gallery System
+1. **Upload Pipeline**
+   - Supabase Storage integration
+   - Image optimization
+   - Progress tracking
+   - Error handling
+
+2. **Gallery Components**
+   - Grid layout
+   - Lightbox viewer
+   - Lazy loading
+   - Filter system
+
+### Phase 3: QR System
+1. **Code Generation**
+   - Unique identifiers
+   - Access validation
+   - Expiry handling
+   - Security measures
+
+## 📊 Current Sprint (v0.1.13)
+| Feature | Status | Timeline | Priority |
+|---------|--------|----------|-----------|
+| Route Protection | 🟡 Active | Week 1 | P0 |
+| Dashboard Layout | 🟡 Active | Week 1-2 | P0 |
+| Gallery System | 🟡 Starting | Week 2-3 | P1 |
+| QR Integration | ⚪ Planned | Week 3-4 | P1 |
+
+---

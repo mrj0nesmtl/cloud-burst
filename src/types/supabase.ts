@@ -15,20 +15,26 @@ export interface Database {
         Row: {
           id: string
           username: string | null
+          email: string
           full_name: string | null
           avatar_url: string | null
           role: UserRole
           updated_at: string
+          created_at: string
         }
         Insert: {
           id: string
           username?: string | null
+          email: string
           full_name?: string | null
           avatar_url?: string | null
           role?: UserRole
+          updated_at?: string
+          created_at?: string
         }
         Update: {
           username?: string | null
+          email?: string
           full_name?: string | null
           avatar_url?: string | null
           role?: UserRole
@@ -37,15 +43,19 @@ export interface Database {
       }
       role_capabilities: {
         Row: {
-          role: string
+          id: string
+          role: UserRole
           capability: string
+          created_at: string
         }
         Insert: {
-          role: string
+          id?: string
+          role: UserRole
           capability: string
+          created_at?: string
         }
         Update: {
-          role?: string
+          role?: UserRole
           capability?: string
         }
       }
@@ -57,7 +67,7 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: UserRole
     }
   }
 } 
