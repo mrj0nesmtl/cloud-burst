@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-02-27T01:09:57.832Z
+Generated: 2025-02-28T01:00:25.736Z
 
 ```
 ./src/
@@ -12,6 +12,9 @@ Generated: 2025-02-27T01:09:57.832Z
 │   │   ├── signin/
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
+│   ├── dev/
+│   │   └── setup/
+│   │       └── route.ts
 │   ├── legal/
 │   │   ├── cookies/
 │   │   │   └── page.tsx
@@ -31,21 +34,62 @@ Generated: 2025-02-27T01:09:57.832Z
 │   │   └── page.tsx
 │   ├── protected/
 │   │   ├── admin/
+│   │   │   ├── audit-logs/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── components/
 │   │   │   │   ├── audit-log-columns.tsx
 │   │   │   │   └── audit-log-viewer.tsx
+│   │   │   ├── events/
+│   │   │   │   └── page.tsx
+│   │   │   ├── photos/
+│   │   │   │   └── page.tsx
+│   │   │   ├── roles/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── settings/
+│   │   │   │   └── page.tsx
+│   │   │   ├── users/
+│   │   │   │   ├── [id]/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── dashboard/
+│   │   │   ├── overview/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── events/
+│   │   │   ├── [id]/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── create/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── manage/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── profile/
+│   │   │   ├── settings/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── settings/
+│   │   │   ├── account/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── billing/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── notifications/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
@@ -57,7 +101,9 @@ Generated: 2025-02-27T01:09:57.832Z
 │   ├── auth/
 │   │   ├── auth-debug.tsx
 │   │   ├── auth-form.tsx
+│   │   ├── auth-guard.tsx
 │   │   ├── debug-panel.tsx
+│   │   ├── role-guard.tsx
 │   │   └── social-auth-buttons.tsx
 │   ├── forms/
 │   │   ├── avatar-upload.tsx
@@ -66,12 +112,14 @@ Generated: 2025-02-27T01:09:57.832Z
 │   │   └── profile-form.tsx
 │   ├── nav/
 │   │   ├── main-nav.tsx
+│   │   ├── side-nav.tsx
 │   │   └── user-nav.tsx
 │   ├── providers/
 │   │   └── toast-provider.tsx
 │   ├── ui/
 │   │   ├── contact/
 │   │   │   └── page.tsx
+│   │   ├── accordion.tsx
 │   │   ├── alert.tsx
 │   │   ├── aspect-ratio.tsx
 │   │   ├── avatar.tsx
@@ -104,6 +152,8 @@ Generated: 2025-02-27T01:09:57.832Z
 │   ├── error-boundary.tsx
 │   └── theme-provider.tsx
 ├── hooks/
+│   ├── __tests__/
+│   │   └── use-permissions.test.ts
 │   ├── use-analytics.ts
 │   ├── use-permissions.ts
 │   ├── use-profile.ts
@@ -111,16 +161,21 @@ Generated: 2025-02-27T01:09:57.832Z
 │   └── use-update-profile.ts
 ├── lib/
 │   ├── supabase/
+│   │   ├── __tests__/
+│   │   │   └── auth-store.test.ts
+│   │   ├── auth-store.ts
 │   │   ├── client.ts
-│   │   └── debug-queries.ts
+│   │   ├── debug-queries.ts
+│   │   └── test-utils.ts
 │   └── utils.ts
 ├── types/
 │   ├── auth.ts
 │   └── supabase.ts
 ├── .DS_Store
+├── middleware.test.ts
 └── middleware.ts
 
-32 directories, 85 files
+51 directories, 121 files
 
 ```
 

@@ -1,6 +1,6 @@
 # UI Components Documentation (Beta)
 
-## 🎨 Cloud Burst Component Library
+## Cloud Burst Component Library
 📅 *Updated: Feb 24, 2024*
 
 ## 📚 Core Components [Beta Priority]

@@ -1,5 +1,5 @@
 # planning Directory Structure
-Generated: 2025-02-27T22:05:50.410Z
+Generated: 2025-02-28T01:00:25.902Z
 
 ```
 ./docs/planning/
@@ -11,10 +11,9 @@ Generated: 2025-02-27T22:05:50.410Z
 ├── project_budget_overview.md
 ├── request_for_product_RFP.md
 ├── roadmap.md
-├── statement_of_work.md
 └── statement_or_work.md
 
-1 directory, 10 files
+1 directory, 9 files
 
 ```
 

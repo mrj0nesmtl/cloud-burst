@@ -1,6 +1,6 @@
 # 🌐 **Website Overview**  
 
-## 📡 Cloud Burst [Beta]
+## Cloud Burst [Beta]
 📅 *Updated: Feb 24, 2024*  
 
 ---

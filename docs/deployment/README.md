@@ -1,5 +1,5 @@
 # Cloud Burst Deployment Guide (Beta)
-Version: 0.1.9 | Updated: February 24, 2024
+Updated: February 27, 2024
 
 ## 📚 Documentation Structure [Beta]
 

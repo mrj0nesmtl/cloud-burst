@@ -1,6 +1,6 @@
 # 🏛️ **System Architecture Flowchart (Beta)**  
 
-## 📡 Cloud Burst  
+## Cloud Burst  
 📅 *Feb 24, 2024*  
 
 ---

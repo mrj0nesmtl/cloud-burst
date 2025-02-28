@@ -1,9 +1,6 @@
-Current: 0.1.12 (Latest in CHANGELOG)
-Files to update:
-- README.md: 0.1.9 -> 0.1.12
-- package.json: 0.1.9 -> 0.1.12
+Current: 0.1.14 (Latest in CHANGELOG)
 
 Upcoming versions:
-0.1.13: Session 12 (Dashboard & Upload Setup)
-0.1.14: Session 13 (Auth Flow Completion)
+0.1.15: Session 15 (Dashboard & Upload Setup)
+0.1.16: Session 16 (Auth Flow Completion)
 0.2.0: Milestone Release (Complete Auth System) 

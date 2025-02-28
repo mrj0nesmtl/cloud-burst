@@ -1,6 +1,6 @@
 # 🎨 **Application Design Document**  
 
-## 📸 Cloud Burst
+## Cloud Burst
 📅 *Updated: Feb 24, 2024*  
 
 ## 📊 Implementation Status

@@ -1,5 +1,4 @@
 # 🚀 Replit Deployment Guide (Beta)
-Version: 0.1.9 (Updated: Feb 24, 2024)
 
 ## 📚 Related Documentation
 - [Environment Setup Guide](./ENVIRONMENT_SETUP.md)
