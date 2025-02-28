@@ -34,32 +34,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
       - name: Check version consistency
         run: |
           # Extract versions
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          CHANGELOG_VERSION=$(grep -o '\[0\.1\.[0-9]*\]' CHANGELOG.md | head -1 | tr -d '[]')
           README_VERSION=$(grep -o 'version-[0-9.]*-blue' README.md | cut -d'-' -f2)
-          AI_GUIDELINES_VERSION=$(grep -o '"version": "[0-9.]*"' docs/ai-collaboration-guidelines.mdc | cut -d'"' -f4)
           
           echo "Found versions:"
-          echo "package.json: $PACKAGE_VERSION"
+          echo "CHANGELOG.md: $CHANGELOG_VERSION"
           echo "README.md: $README_VERSION"
-          echo "ai-collaboration-guidelines.mdc: $AI_GUIDELINES_VERSION"
           
           # Compare versions
-          if [ "$PACKAGE_VERSION" != "$README_VERSION" ] || [ "$PACKAGE_VERSION" != "$AI_GUIDELINES_VERSION" ]; then
+          if [ "$CHANGELOG_VERSION" != "$README_VERSION" ]; then
             echo "❌ Version mismatch found!"
-            echo "All versions must match package.json version: $PACKAGE_VERSION"
+            echo "All versions must match CHANGELOG.md version: $CHANGELOG_VERSION"
             exit 1
           fi
           
-          echo "✅ All versions match: $PACKAGE_VERSION"
+          echo "✅ All versions match: $CHANGELOG_VERSION"
 
       - name: Verify changelog
         run: |
@@ -84,37 +76,43 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
       - name: Configure Git
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: Update version
         id: bump_version
         run: |
           VERSION_TYPE=${{ github.event.inputs.version_type }}
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          CURRENT_VERSION=$(grep -o '\[0\.1\.[0-9]*\]' CHANGELOG.md | head -1 | tr -d '[]')
           
-          # Bump version
-          npm version $VERSION_TYPE -m "chore(release): bump version to %s"
+          # Calculate new version
+          IFS='.' read -r -a version_parts <<< "$CURRENT_VERSION"
+          major="${version_parts[0]}"
+          minor="${version_parts[1]}"
+          patch="${version_parts[2]}"
           
-          NEW_VERSION=$(node -p "require('./package.json').version")
+          case $VERSION_TYPE in
+            major)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            minor)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            patch)
+              patch=$((patch + 1))
+              ;;
+          esac
+          
+          NEW_VERSION="$major.$minor.$patch"
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
           
           # Update README.md version badge
           sed -i "s/version-[0-9.]*-blue/version-${NEW_VERSION}-blue/" README.md
-          
-          # Update AI guidelines version
-          sed -i "s/\"version\": \"[0-9.]*\"/\"version\": \"${NEW_VERSION}\"/" docs/ai-collaboration-guidelines.mdc
           
           # Update CHANGELOG.md
           DATE=$(date +%Y-%m-%d)
@@ -133,10 +131,8 @@ jobs:
             # 🚀 Release Preparation v${{ steps.bump_version.outputs.new_version }}
             
             ## 📝 Changes
-            - Version bump in package.json
+            - Version bump in CHANGELOG.md
             - Updated version badge in README.md
-            - Updated version in AI guidelines
-            - Updated CHANGELOG.md
             - Updated version links
             
             ## ✅ Checklist
@@ -157,20 +153,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get version
-        id: get_version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: 🎉 Release v${{ steps.get_version.outputs.version }}
-          body_path: CHANGELOG.md
+          tag_name: v${{ needs.version-bump.outputs.new_version }}
+          release_name: Release v${{ needs.version-bump.outputs.new_version }}
+          body: |
+            See [CHANGELOG.md](CHANGELOG.md) for details.
           draft: false
           prerelease: false 
