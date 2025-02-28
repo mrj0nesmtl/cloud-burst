@@ -74,7 +74,7 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <section className="py-20 bg-muted/50">
+      <section className="py-20 bg-muted/0">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-card rounded-lg p-6 shadow-sm border group hover:border-blue-500 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
