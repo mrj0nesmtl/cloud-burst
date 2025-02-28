@@ -2,7 +2,7 @@
 description: State Management Standards for Cloud Burst
 globs: src/store/**/*.ts", "src/hooks/**/*.ts
 ---
-# State Management Rules (v0.1.13)
+# State Management Rules
 
 ## Zustand Store Standards
 ```typescript

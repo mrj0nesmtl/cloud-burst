@@ -2,7 +2,7 @@
 description: API Standards for Cloud Burst
 globs: src/services/**/*.ts", "src/lib/api/**/*.ts
 ---
-# API Standards (v0.1.13)
+# API Standards
 
 ## Core Structure
 ```typescript

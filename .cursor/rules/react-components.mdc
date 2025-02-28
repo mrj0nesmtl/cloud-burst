@@ -2,7 +2,7 @@
 description: React Component Standards for Cloud Burst
 globs: src/**/*.tsx", "src/**/*.ts
 ---
-# React Component Rules (v0.1.13)
+# React Component Rules
 
 ## Component Architecture
 ```typescript

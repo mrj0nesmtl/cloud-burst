@@ -2,7 +2,7 @@
 description: Security Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}, middleware.ts
 ---
-# Security Standards (v0.1.13)
+# Security Standards
 
 ## Core Standards
 ```typescript

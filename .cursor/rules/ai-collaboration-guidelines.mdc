@@ -2,7 +2,7 @@
 description: AI Collaboration Guidelines for Cloud Burst
 globs: **/*
 ---
-# AI Collaboration Guidelines (v0.1.13)
+# AI Collaboration Guidelines
 
 ## Core Standards
 ```typescript

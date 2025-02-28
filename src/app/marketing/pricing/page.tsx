@@ -147,7 +147,7 @@ export default function PricingPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <div className="relative bg-muted/50 py-24">
+      <div className="relative bg-muted/0 py-24">
         <div className="container mx-auto max-w-4xl px-4">
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center mb-6">

@@ -2,7 +2,7 @@
 description: Accessibility Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}
 ---
-# Accessibility Standards (v0.1.13)
+# Accessibility Standards
 
 ## Core Requirements
 - WCAG 2.1 Level AA compliance
