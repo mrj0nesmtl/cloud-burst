@@ -15,6 +15,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.15] - 2024-02-28
+### Added
+- Dashboard layout foundation
+- Protected route implementation
+- Upload component structure
+- Gallery grid foundation
+- Enhanced auth state management
+
+### Changed
+- Updated version synchronization
+- Enhanced documentation structure
+- Improved session planning
+- Refined implementation timeline
+
+### Infrastructure
+- Standardized version tracking
+- Updated deployment configurations
+- Enhanced build process
+- Improved documentation flow
+
+## [0.1.14] - 2024-02-27
+### Changed
+- Unified Supabase client configuration
+- Standardized server component imports
+- Enhanced type safety across protected routes
+- Optimized authentication flow
+- Improved code organization
+
+### Fixed
+- Resolved Supabase client import issues
+- Standardized server-side data fetching
+- Fixed type inconsistencies
+- Corrected import paths
+- Enhanced error handling
+
+### Infrastructure
+- Centralized Supabase configuration
+- Improved server component architecture
+- Enhanced type definitions
+- Optimized protected routes
+- Updated documentation
+
 ## [0.1.13] - 2024-02-26
 ### Added
 - Stable deployment at cb-beta.replit.app
