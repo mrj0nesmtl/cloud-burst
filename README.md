@@ -12,7 +12,12 @@
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-Styling-38B2AC)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Remember the charm of disposable cameras at wedding tables? We're bringing that magic into the digital age. Cloud Burst transforms every event into a collaborative photo story, powered by AI and created by everyone who matters – your guests.
+## 📌 Abstract
+Cloud Burst represents the evolution of event photography, bridging the gap between traditional charm and modern technology. Following successful implementation of Super Admin features and enhanced authentication, our platform now offers a robust, role-based system with improved state management through Zustand and optimized data fetching via TanStack Query. Deployed at cb-beta.replit.app, Cloud Burst maintains exceptional performance within memory constraints while delivering a seamless user experience.
+
+## 🎯 Pitch
+Remember the magic of disposable cameras at wedding tables? We've reimagined that collaborative spirit for the digital age. Cloud Burst transforms every event into a living photo story, powered by AI and created by everyone who matters – your guests. No apps to download, no accounts to create – just scan, snap, and share. With enterprise-grade security, AI-enhanced photos, and real-time galleries, we're not just capturing moments; we're revolutionizing how memories are made.
+
 ### [Live Demo](https://cb-beta.replit.app) • [Documentation](docs/) • [Contributing](CONTRIBUTING.md)
 
 <div align="left">
