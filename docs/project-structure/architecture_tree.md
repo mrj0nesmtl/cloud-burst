@@ -1,12 +1,13 @@
 # architecture Directory Structure
-Generated: 2025-03-01T16:29:00.770Z
+Generated: 2025-03-02T04:54:00.517Z
 
 ```
 ./docs/architecture/
 ├── application_design_document.md
+├── security.md
 └── system_architecture_flowchart.md
 
-1 directory, 2 files
+1 directory, 3 files
 
 ```
 

@@ -1,10 +1,11 @@
 # docs Directory Structure
-Generated: 2025-03-01T16:29:00.497Z
+Generated: 2025-03-02T04:54:00.323Z
 
 ```
 ./docs/
 ├── architecture/
 │   ├── application_design_document.md
+│   ├── security.md
 │   └── system_architecture_flowchart.md
 ├── deployment/
 │   ├── BUILD_CONFIGURATION.md
@@ -14,6 +15,8 @@ Generated: 2025-03-01T16:29:00.497Z
 │   └── quick_start.md
 ├── design/
 │   ├── UI_components.md
+│   ├── dashboard_components.md
+│   ├── style.md
 │   └── website_overview.md
 ├── development/
 │   ├── prompt_archive/
@@ -42,6 +45,7 @@ Generated: 2025-03-01T16:29:00.497Z
 │   ├── .DS_Store
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
+│   ├── contributing.md
 │   ├── session_16_checklist.md
 │   ├── session_16_kickoff.md
 │   └── version-sync.plan
@@ -54,8 +58,7 @@ Generated: 2025-03-01T16:29:00.497Z
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
 │   ├── roadmap.md
-│   ├── statement_of_work.md
-│   └── statement_or_work(old).md
+│   └── statement_of_work.md
 ├── project-structure/
 │   ├── README.md
 │   ├── app_tree.md
@@ -75,12 +78,13 @@ Generated: 2025-03-01T16:29:00.497Z
 ├── user-flows/
 │   ├── invited_user_flow_design_document.md
 │   ├── photo_upload_sequence_diagram.md
+│   ├── role_based_access.md
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store
 └── README.md
 
-9 directories, 68 files
+9 directories, 72 files
 
 ```
 

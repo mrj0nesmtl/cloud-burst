@@ -1,8 +1,23 @@
 # app Directory Structure
-Generated: 2025-03-01T16:29:00.576Z
+Generated: 2025-03-02T04:54:00.398Z
 
 ```
 ./src/app/
+├── api/
+│   ├── cron/
+│   │   └── sync-templates/
+│   │       └── route.ts
+│   ├── db/
+│   │   ├── functions/
+│   │   │   └── route.ts
+│   │   └── setup/
+│   │       └── route.ts
+│   └── templates/
+│       ├── [templateId]/
+│       │   └── html/
+│       │       └── route.ts
+│       └── sync/
+│           └── route.ts
 ├── auth/
 │   ├── callback/
 │   │   └── route.ts
@@ -41,7 +56,14 @@ Generated: 2025-03-01T16:29:00.576Z
 │   │   ├── components/
 │   │   │   ├── audit-log-columns.tsx
 │   │   │   └── audit-log-viewer.tsx
+│   │   ├── contacts/
+│   │   │   └── page.tsx
+│   │   ├── dashboard/
+│   │   │   └── page.tsx
 │   │   ├── events/
+│   │   │   └── page.tsx
+│   │   ├── newsletter/
+│   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── photos/
 │   │   │   └── page.tsx
@@ -69,11 +91,14 @@ Generated: 2025-03-01T16:29:00.576Z
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── create/
+│   │   │   ├── .page.tsx.swp
 │   │   │   ├── loading.tsx
-│   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── page_tsx.swp
 │   │   ├── manage/
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── layout.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
 │   ├── profile/
@@ -89,6 +114,13 @@ Generated: 2025-03-01T16:29:00.576Z
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── notifications/
+│   │   │   ├── templates/
+│   │   │   │   ├── change-email.html
+│   │   │   │   ├── confirm-signup.html
+│   │   │   │   ├── invite.html
+│   │   │   │   ├── magic-link.html
+│   │   │   │   └── reset-password.html
+│   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── loading.tsx
@@ -99,7 +131,7 @@ Generated: 2025-03-01T16:29:00.576Z
 ├── metadata.ts
 └── page.tsx
 
-38 directories, 58 files
+52 directories, 76 files
 
 ```
 

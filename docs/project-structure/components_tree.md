@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-01T16:29:00.595Z
+Generated: 2025-03-02T04:54:00.417Z
 
 ```
 ./src/components/
@@ -10,17 +10,38 @@ Generated: 2025-03-01T16:29:00.595Z
 │   ├── debug-panel.tsx
 │   ├── role-guard.tsx
 │   └── social-auth-buttons.tsx
+├── dashboard/
+│   ├── analytics-overview.tsx
+│   ├── contact-stats.tsx
+│   ├── contact-submissions.tsx
+│   ├── newsletter-stats.tsx
+│   ├── newsletter-subscribers.tsx
+│   └── recent-activity.tsx
+├── events/
+│   └── event-actions.tsx
 ├── forms/
 │   ├── avatar-upload.tsx
+│   ├── event-customization-form.tsx
+│   ├── event-form.tsx
 │   ├── notifications-form.tsx
 │   ├── preferences-form.tsx
-│   └── profile-form.tsx
+│   ├── profile-form.tsx
+│   └── security-form.tsx
 ├── layout/
 │   └── dashboard-layout.tsx
+├── marketing/
+│   ├── contact-form.tsx
+│   └── newsletter-form.tsx
 ├── nav/
 │   ├── main-nav.tsx
 │   ├── side-nav.tsx
 │   └── user-nav.tsx
+├── notifications/
+│   ├── create-template.tsx
+│   ├── full-preview.tsx
+│   ├── notifications-content.tsx
+│   ├── template-editor.tsx
+│   └── template-preview.tsx
 ├── providers/
 │   ├── query-provider.tsx
 │   ├── react-query-devtools.tsx
@@ -32,12 +53,14 @@ Generated: 2025-03-01T16:29:00.595Z
 │   ├── alert.tsx
 │   ├── aspect-ratio.tsx
 │   ├── avatar.tsx
+│   ├── badge.tsx
 │   ├── button.tsx
 │   ├── card.tsx
 │   ├── checkbox.tsx
 │   ├── dialog.tsx
 │   ├── dropdown-menu.tsx
 │   ├── form.tsx
+│   ├── icons.tsx
 │   ├── input.tsx
 │   ├── label.tsx
 │   ├── loading-spinner.tsx
@@ -53,15 +76,20 @@ Generated: 2025-03-01T16:29:00.595Z
 │   ├── site-footer.tsx
 │   ├── site-header.tsx
 │   ├── skeleton.tsx
+│   ├── slider.tsx
+│   ├── sonner.tsx
 │   ├── switch.tsx
+│   ├── table.tsx
+│   ├── tabs.tsx
 │   ├── textarea.tsx
 │   ├── toast.tsx
-│   └── toaster.tsx
+│   ├── toaster.tsx
+│   └── use-toast.ts
 ├── cookie-consent.tsx
 ├── error-boundary.tsx
 └── theme-provider.tsx
 
-8 directories, 50 files
+12 directories, 74 files
 
 ```
 

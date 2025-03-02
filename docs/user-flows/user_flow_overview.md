@@ -1,10 +1,10 @@
 # 📖 **User Flow Overview**  
 
-## Cloud Burst  
-📅 *Updated: March 1, 2025*  
+## Cloud Burst [Beta v0.1.17]
+📅 *Updated: March 15, 2025*  
 
 ## 📌 Situational Abstract
-Following the successful implementation of Super Admin authentication and enhanced dashboard functionality, Cloud Burst's user flows have been streamlined and secured. With Zustand for state management and TanStack Query for data fetching, the platform now offers a more robust and performant experience while maintaining our beta focus on essential features.
+Following the successful implementation of the Email Template Management System, Super Admin authentication, and enhanced dashboard functionality, Cloud Burst's user flows have been streamlined and secured. With Zustand for state management and TanStack Query for data fetching, the platform now offers a more robust and performant experience while maintaining our beta focus on essential features.
 
 ## 🔄 **Core User Flows** [Updated]
 
@@ -23,12 +23,17 @@ flowchart TD
     D --> H[Basic User]
     
     F --> I[Admin Dashboard]
+    F --> O[Template Management]
     G --> J[Event Management]
     H --> K[Gallery Access]
     
     I --> L[User Management]
+    O --> P[Template Editor]
     J --> M[Photo Upload]
     K --> N[View & Share]
+    
+    P --> Q[Template Preview]
+    P --> R[Template Sync]
 ```
 
 ## 🔐 **Security Flow** [Enhanced]
@@ -52,10 +57,11 @@ flowchart LR
 ```mermaid
 pie
     title "User Interaction Distribution"
-    "Photo Upload" : 40
-    "Gallery Browsing" : 30
-    "Social Sharing" : 20
-    "Profile Management" : 10
+    "Photo Upload" : 35
+    "Gallery Browsing" : 25
+    "Template Management" : 20
+    "Social Sharing" : 15
+    "Profile Management" : 5
 ```
 
 ## 🔒 **Security-Enhanced Flow**  
@@ -66,6 +72,7 @@ pie
 - Dynamic pattern matching
 - Session management
 - Cookie security
+- Role-based access control
 
 ### 🔐 **Authentication Layer**
 - Secure session handling
@@ -73,6 +80,7 @@ pie
 - Rate limited endpoints
 - Error boundaries
 - Loading states
+- Role verification
 
 ## 📝 **Introduction**  
 Cloud Burst is an **AI-powered event photography platform** designed to **seamlessly collect, filter, and organize event photos**.  
@@ -85,18 +93,21 @@ Cloud Burst is an **AI-powered event photography platform** designed to **seamle
 graph LR
     A[Features] --> B[Photo Upload]
     A --> C[Gallery View]
-    A --> D[Social Sharing]
-    A --> E[AI Enhancement]
+    A --> D[Template Management]
+    A --> E[Social Sharing]
+    A --> F[Profile Settings]
     
-    B --> F[40% Usage]
-    C --> G[30% Usage]
-    D --> H[20% Usage]
-    E --> I[10% Usage]
+    B --> G[35% Usage]
+    C --> H[25% Usage]
+    D --> I[20% Usage]
+    E --> J[15% Usage]
+    F --> K[5% Usage]
 
-    style F fill:#90EE90
-    style G fill:#ADD8E6
-    style H fill:#FFB6C1
-    style I fill:#DDA0DD
+    style G fill:#90EE90
+    style H fill:#ADD8E6
+    style I fill:#FFB6C1
+    style J fill:#DDA0DD
+    style K fill:#FFDAB9
 ```
 
 ## 🏷️ **Pre-Event: Ticket Confirmation & QR Code**  
@@ -105,6 +116,7 @@ graph LR
 - `<AspectRatio>` for QR code display
 - `<Card>` for email template
 - `<Button>` for direct access
+- `<TemplatePreview>` for email rendering
 ✔️ Upon purchasing a ticket, users **receive an email** with:
   - Event details
   - Unique QR code
@@ -146,6 +158,20 @@ graph LR
   - Like and share
   - Download favorites
 
+## 📧 **Email Template Management**
+
+### 📝 **Template Components**
+- `<TemplateList>` for template selection
+- `<TemplateEditor>` for HTML editing
+- `<TemplatePreview>` for visualization
+- `<Button>` for synchronization
+✔️ Super Admins can:
+  - Edit email templates
+  - Preview with sample data
+  - Synchronize with Supabase Auth
+  - Manage template variables
+  - Track delivery analytics
+
 ## 📩 **Post-Event Access**  
 
 ### 📊 **Download Components**
@@ -159,6 +185,6 @@ graph LR
   - Access expiration
 
 ## 🎯 **Conclusion**  
-Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly**. By integrating **AI-powered organization and real-time access**, Cloud Burst creates an **engaging and seamless user experience**. 🚀  
+Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly**. By integrating **AI-powered organization, email template management, and real-time access**, Cloud Burst creates an **engaging and seamless user experience**. 🚀  
 
 ---

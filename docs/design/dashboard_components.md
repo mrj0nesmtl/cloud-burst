@@ -1,4 +1,4 @@
-# 📊 Dashboard Components [Beta v0.1.16]
+# 📊 Dashboard Components [Beta v0.1.17]
 📅 *Updated: March 1, 2025*
 
 ## 📌 Overview
@@ -51,4 +51,47 @@ type DashboardNavProps = {
 - Sidebar navigation
 - Header actions
 - Content area
-- Card layouts 
+- Card layouts
+
+## 📧 Template Management Components
+
+### TemplateList
+```typescript
+import { TemplateList } from "@/components/notifications/template-list"
+
+type TemplateListProps = {
+  templates: Template[]
+  onSelect: (template: Template) => void
+  isLoading?: boolean
+}
+```
+
+### TemplateEditor
+```typescript
+import { TemplateEditor } from "@/components/notifications/template-editor"
+
+type TemplateEditorProps = {
+  template: Template
+  onSave: (template: Template) => Promise<void>
+  onPreview: (template: Template) => void
+  isLoading?: boolean
+}
+```
+
+### TemplatePreview
+```typescript
+import { TemplatePreview } from "@/components/notifications/template-preview"
+
+type TemplatePreviewProps = {
+  template: Template
+  sampleData?: Record<string, any>
+  onClose: () => void
+}
+```
+
+## 📊 Analytics Components
+- Usage statistics
+- Performance metrics
+- User engagement
+- Template delivery tracking
+- Event participation 

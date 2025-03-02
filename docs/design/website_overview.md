@@ -1,6 +1,6 @@
 # 🌐 **Website Overview**  
 
-## Cloud Burst [Beta]
+## Cloud Burst [Beta v0.1.17]
 📅 *Updated: March 1, 2025*  
 
 ---
@@ -88,12 +88,13 @@
 ✅ Role-based access control
 ✅ Protected route system
 ✅ Session management
-🟡 Enhanced security headers
+✅ Enhanced security headers
 
 ### Protected Routes [Implemented]
 ✅ /dashboard/* (with roles)
 ✅ /api/* (with validation)
 ✅ /admin/* (super admin)
+✅ /protected/settings/* (with roles)
 🟡 /events/* (in progress)
 
 ## 🎯 **User Dashboard** [New Section]
@@ -102,12 +103,14 @@
 - ✅ **Admin Dashboard** – Core management
 - ✅ **User Management** – Basic controls
 - ✅ **Role Assignment** – Access control
+- ✅ **Template Management** – Email templates
 - 🟡 **Analytics** – Basic metrics
 
 ### ⚙️ **Dashboard Components** [Active]
 - ✅ **Layout**: Responsive design
 - ✅ **Navigation**: Role-based menu
 - ✅ **Auth**: Session management
+- ✅ **Templates**: Email management
 - 🟡 **Profile**: User settings
 
 ## 🎯 **User Settings & Profile** [Beta Priority]
@@ -124,22 +127,48 @@
 - 🟡 **Display Options** – Basic layout choices
 - ⏸️ **Advanced Options** [Post-Beta]
 
-### 🔔 **Notification Management** [Post-Beta]
-⏸️ All notification features on hold:
-- Email preferences
-- Push notifications
-- Digest settings
-- Event alerts
+### 🔔 **Notification Management** [Implemented]
+- ✅ **Email Templates** – Management interface
+- ✅ **Template Preview** – Visual testing
+- ✅ **Template Sync** – Supabase Auth integration
+- 🟡 **Delivery Analytics** – Basic tracking
+- ⏸️ **Push Notifications** [Post-Beta]
+- ⏸️ **SMS Notifications** [Post-Beta]
 
 ### 🎯 Settings Components [Beta Tested]
 - **Forms**: 
   - ✅ `<ProfileForm>` – Basic details
   - ✅ `<PreferencesForm>` – Essential settings
-  - ⏸️ `<NotificationsForm>` [Post-Beta]
+  - ✅ `<NotificationsForm>` – Template management
 - **Layout**: 
   - ✅ `<Tabs>` – Section navigation
   - ✅ `<Card>` – Content grouping
   - ✅ `<Form>` – With validation
+
+## 📧 **Email Template System** [New]
+
+### Template Management
+- ✅ **Template List** – View all templates
+- ✅ **Template Editor** – HTML/subject editing
+- ✅ **Template Preview** – Visual testing
+- ✅ **Template Sync** – Supabase Auth integration
+- 🟡 **Analytics** – Delivery tracking
+
+### Template Types
+- ✅ **Confirmation** – Account verification
+- ✅ **Reset Password** – Password recovery
+- ✅ **Magic Link** – Passwordless login
+- ✅ **Invitation** – User invitations
+- 🟡 **Event** – Event notifications
+- 🟡 **Digest** – Summary emails
+
+### Template Components
+- ✅ **Header** – Brand identity
+- ✅ **Content** – Message body
+- ✅ **Footer** – Legal information
+- ✅ **Button** – Call to action
+- 🟡 **Image** – Visual elements
+- 🟡 **Social** – Social media links
 
 ## 📱 **Mobile Experience** [Beta Priority]
 
@@ -147,13 +176,13 @@
 - ✅ Mobile-first approach
 - ✅ Essential breakpoints
 - 🟡 Touch optimization
-- ⏸️ Advanced interactions [Post-Beta]
+- 🟡 Advanced interactions
 
 ### Performance
 - ✅ Image optimization
 - ✅ Lazy loading
-- 🟡 Bundle optimization
-- ⏸️ Advanced caching [Post-Beta]
+- ✅ Bundle optimization
+- 🟡 Advanced caching
 
 ## 🎯 **Conclusion**  
 
@@ -162,9 +191,10 @@ Cloud Burst's beta release prioritizes:
 - ✅ Essential photography features
 - ✅ Core user experience
 - ✅ Basic customization
+- ✅ Email template management
 - 🟡 Fundamental analytics
 
 ### Vision
-While maintaining our ambitious vision for advanced features [Post-Beta], we're focusing on delivering a solid, reliable foundation for event photography management.
+While maintaining our ambitious vision for advanced features [Post-Beta], we're focusing on delivering a solid, reliable foundation for event photography management with enhanced communication capabilities.
 
 ---

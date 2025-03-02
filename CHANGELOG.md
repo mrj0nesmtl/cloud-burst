@@ -15,6 +15,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.17] - 2024-03-01
+### Added
+- Email template management system
+- Template configurations database table
+- API routes for template management
+- Template preview and editor components
+- Notifications settings page
+- Event management foundation
+- Template synchronization with Supabase Auth
+
+### Changed
+- Enhanced dashboard layout structure
+- Improved component organization
+- Fixed metadata export in client components
+- Optimized server/client component separation
+- Enhanced error handling in API routes
+
+### Infrastructure
+- Created SQL scripts for template database setup
+- Implemented Supabase RLS policies for templates
+- Added API routes for template management
+- Enhanced build process with proper component separation
+- Fixed React key warnings in audit log viewer
+
 ## [0.1.16] - 2024-02-28
 ### Added
 - Super Admin authentication flow

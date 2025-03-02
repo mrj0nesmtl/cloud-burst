@@ -181,17 +181,25 @@ import { PreferencesForm } from "@/components/forms/preferences-form"
 
 #### NotificationsForm
 ```typescript
-// Usage: Notification settings [Post-Beta]
+// Usage: Notification settings [Implemented]
 import { NotificationsForm } from "@/components/forms/notifications-form"
 
 // Features:
-⏸️ All features on hold for post-beta:
-- Email preferences
-- Push notifications
-- Event alerts
-- Digest frequency
-- Quiet hours
-- Marketing opt-in
+- ✅ Email template selection
+- ✅ Template preview
+- ✅ Template synchronization
+- 🟡 Delivery preferences
+- 🟡 Analytics integration
+- ⏸️ Push notifications [Post-Beta]
+- ⏸️ SMS configuration [Post-Beta]
+
+// Props:
+type NotificationsFormProps = {
+  user: User
+  templates: Template[]
+  onSave: (preferences: NotificationPreferences) => Promise<void>
+  isLoading?: boolean
+}
 ```
 
 #### Input
@@ -614,5 +622,88 @@ type AuthFormProps = {
   type: "signin" | "signup" | "reset"
   onSubmit: (data: AuthFormData) => Promise<void>
   error?: string
+}
+```
+
+### 📧 Email Template Components [New]
+
+#### TemplateList
+```typescript
+// Usage: Email template management [Implemented]
+import { TemplateList } from "@/components/notifications/template-list"
+
+// Features:
+- ✅ Template listing
+- ✅ Status indicators
+- ✅ Sync status
+- ✅ Template selection
+- 🟡 Filtering options
+
+// Props:
+type TemplateListProps = {
+  templates: Template[]
+  onSelect: (template: Template) => void
+  isLoading?: boolean
+}
+```
+
+#### TemplateEditor
+```typescript
+// Usage: Email template editing [Implemented]
+import { TemplateEditor } from "@/components/notifications/template-editor"
+
+// Features:
+- ✅ HTML editing
+- ✅ Subject editing
+- ✅ Variable insertion
+- ✅ Save functionality
+- 🟡 Syntax highlighting
+- 🟡 Variable validation
+
+// Props:
+type TemplateEditorProps = {
+  template: Template
+  onSave: (template: Template) => Promise<void>
+  onPreview: (template: Template) => void
+  isLoading?: boolean
+}
+```
+
+#### TemplatePreview
+```typescript
+// Usage: Email template preview [Implemented]
+import { TemplatePreview } from "@/components/notifications/template-preview"
+
+// Features:
+- ✅ HTML rendering
+- ✅ Variable substitution
+- ✅ Mobile/desktop toggle
+- ✅ Full-screen mode
+- 🟡 Sample data selection
+
+// Props:
+type TemplatePreviewProps = {
+  template: Template
+  sampleData?: Record<string, any>
+  onClose: () => void
+  viewMode?: "mobile" | "desktop"
+}
+```
+
+#### NotificationsContent
+```typescript
+// Usage: Notifications settings page [Implemented]
+import { NotificationsContent } from "@/components/notifications/notifications-content"
+
+// Features:
+- ✅ Template management
+- ✅ Template synchronization
+- ✅ Template preview
+- ✅ Template editing
+- 🟡 Analytics display
+
+// Props:
+type NotificationsContentProps = {
+  user: User
 }
 ```

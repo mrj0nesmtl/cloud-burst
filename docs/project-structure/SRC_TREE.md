@@ -1,9 +1,24 @@
 # src Directory Structure
-Generated: 2025-03-01T16:29:00.475Z
+Generated: 2025-03-02T04:54:00.306Z
 
 ```
 ./src/
 ├── app/
+│   ├── api/
+│   │   ├── cron/
+│   │   │   └── sync-templates/
+│   │   │       └── route.ts
+│   │   ├── db/
+│   │   │   ├── functions/
+│   │   │   │   └── route.ts
+│   │   │   └── setup/
+│   │   │       └── route.ts
+│   │   └── templates/
+│   │       ├── [templateId]/
+│   │       │   └── html/
+│   │       │       └── route.ts
+│   │       └── sync/
+│   │           └── route.ts
 │   ├── auth/
 │   │   ├── callback/
 │   │   │   └── route.ts
@@ -42,7 +57,14 @@ Generated: 2025-03-01T16:29:00.475Z
 │   │   │   ├── components/
 │   │   │   │   ├── audit-log-columns.tsx
 │   │   │   │   └── audit-log-viewer.tsx
+│   │   │   ├── contacts/
+│   │   │   │   └── page.tsx
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx
 │   │   │   ├── events/
+│   │   │   │   └── page.tsx
+│   │   │   ├── newsletter/
+│   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── photos/
 │   │   │   │   └── page.tsx
@@ -70,11 +92,14 @@ Generated: 2025-03-01T16:29:00.475Z
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── create/
+│   │   │   │   ├── .page.tsx.swp
 │   │   │   │   ├── loading.tsx
-│   │   │   │   └── page.tsx
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── page_tsx.swp
 │   │   │   ├── manage/
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── profile/
@@ -90,6 +115,13 @@ Generated: 2025-03-01T16:29:00.475Z
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── notifications/
+│   │   │   │   ├── templates/
+│   │   │   │   │   ├── change-email.html
+│   │   │   │   │   ├── confirm-signup.html
+│   │   │   │   │   ├── invite.html
+│   │   │   │   │   ├── magic-link.html
+│   │   │   │   │   └── reset-password.html
+│   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
@@ -107,17 +139,38 @@ Generated: 2025-03-01T16:29:00.475Z
 │   │   ├── debug-panel.tsx
 │   │   ├── role-guard.tsx
 │   │   └── social-auth-buttons.tsx
+│   ├── dashboard/
+│   │   ├── analytics-overview.tsx
+│   │   ├── contact-stats.tsx
+│   │   ├── contact-submissions.tsx
+│   │   ├── newsletter-stats.tsx
+│   │   ├── newsletter-subscribers.tsx
+│   │   └── recent-activity.tsx
+│   ├── events/
+│   │   └── event-actions.tsx
 │   ├── forms/
 │   │   ├── avatar-upload.tsx
+│   │   ├── event-customization-form.tsx
+│   │   ├── event-form.tsx
 │   │   ├── notifications-form.tsx
 │   │   ├── preferences-form.tsx
-│   │   └── profile-form.tsx
+│   │   ├── profile-form.tsx
+│   │   └── security-form.tsx
 │   ├── layout/
 │   │   └── dashboard-layout.tsx
+│   ├── marketing/
+│   │   ├── contact-form.tsx
+│   │   └── newsletter-form.tsx
 │   ├── nav/
 │   │   ├── main-nav.tsx
 │   │   ├── side-nav.tsx
 │   │   └── user-nav.tsx
+│   ├── notifications/
+│   │   ├── create-template.tsx
+│   │   ├── full-preview.tsx
+│   │   ├── notifications-content.tsx
+│   │   ├── template-editor.tsx
+│   │   └── template-preview.tsx
 │   ├── providers/
 │   │   ├── query-provider.tsx
 │   │   ├── react-query-devtools.tsx
@@ -129,12 +182,14 @@ Generated: 2025-03-01T16:29:00.475Z
 │   │   ├── alert.tsx
 │   │   ├── aspect-ratio.tsx
 │   │   ├── avatar.tsx
+│   │   ├── badge.tsx
 │   │   ├── button.tsx
 │   │   ├── card.tsx
 │   │   ├── checkbox.tsx
 │   │   ├── dialog.tsx
 │   │   ├── dropdown-menu.tsx
 │   │   ├── form.tsx
+│   │   ├── icons.tsx
 │   │   ├── input.tsx
 │   │   ├── label.tsx
 │   │   ├── loading-spinner.tsx
@@ -150,10 +205,15 @@ Generated: 2025-03-01T16:29:00.475Z
 │   │   ├── site-footer.tsx
 │   │   ├── site-header.tsx
 │   │   ├── skeleton.tsx
+│   │   ├── slider.tsx
+│   │   ├── sonner.tsx
 │   │   ├── switch.tsx
+│   │   ├── table.tsx
+│   │   ├── tabs.tsx
 │   │   ├── textarea.tsx
 │   │   ├── toast.tsx
-│   │   └── toaster.tsx
+│   │   ├── toaster.tsx
+│   │   └── use-toast.ts
 │   ├── cookie-consent.tsx
 │   ├── error-boundary.tsx
 │   └── theme-provider.tsx
@@ -170,10 +230,18 @@ Generated: 2025-03-01T16:29:00.475Z
 │   ├── supabase/
 │   │   ├── __tests__/
 │   │   │   └── auth-store.test.ts
+│   │   ├── migrations/
+│   │   │   ├── 01_forms_and_newsletter.sql
+│   │   │   └── 02_analytics_functions.sql
 │   │   ├── auth-store.ts
 │   │   ├── client.ts
 │   │   ├── debug-queries.ts
+│   │   ├── templates.ts
 │   │   └── test-utils.ts
+│   ├── event-customization-server.ts
+│   ├── event-customization.ts
+│   ├── security-settings.ts
+│   ├── user-sessions.ts
 │   └── utils.ts
 ├── types/
 │   ├── auth.ts
@@ -182,7 +250,7 @@ Generated: 2025-03-01T16:29:00.475Z
 ├── middleware.test.ts
 └── middleware.ts
 
-53 directories, 126 files
+72 directories, 175 files
 
 ```
 
