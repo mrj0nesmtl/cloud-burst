@@ -2,47 +2,38 @@ import React from 'react'
 import { cn } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
 
-interface SpinnerProps {
-  size?: 'sm' | 'md' | 'lg'
+interface LoadingSpinnerProps {
+  size?: "sm" | "md" | "lg"
   className?: string
-  label?: string
-  centered?: boolean
 }
 
-export function LoadingSpinner({ 
-  size = 'md', 
-  className,
-  label = 'Loading...',
-  centered = false
-}: SpinnerProps) {
+export function LoadingSpinner({ size = "md", className }: LoadingSpinnerProps) {
   const sizeClasses = {
-    'sm': 'h-4 w-4',
-    'md': 'h-6 w-6',
-    'lg': 'h-8 w-8'
+    sm: "h-4 w-4 border-2",
+    md: "h-8 w-8 border-3",
+    lg: "h-12 w-12 border-4"
   }
 
   return (
     <div
       className={cn(
-        'flex items-center gap-2',
-        centered && 'justify-center w-full h-full min-h-[100px]',
+        "animate-spin rounded-full border-solid border-primary border-t-transparent",
+        sizeClasses[size],
         className
       )}
       role="status"
-      aria-label={label}
+      aria-label="Loading"
     >
-      <Loader2 
-        className={cn(
-          'animate-spin',
-          sizeClasses[size]
-        )} 
-      />
-      <span className="sr-only">{label}</span>
+      <span className="sr-only">Loading...</span>
     </div>
   )
 }
 
 // Export a centered version for convenience
-export function CenteredSpinner(props: Omit<SpinnerProps, 'centered'>) {
-  return <LoadingSpinner {...props} centered />
-} 
+export function CenteredSpinner(props: LoadingSpinnerProps) {
+  return (
+    <div className="flex justify-center items-center h-full w-full">
+      <LoadingSpinner {...props} />
+    </div>
+  )
+}

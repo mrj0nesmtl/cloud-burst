@@ -1,23 +1,34 @@
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export default function AuditLogsLoading() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <Skeleton className="h-8 w-[200px]" />
+        <h1 className="text-3xl font-bold">Audit Logs</h1>
       </div>
-      <div className="rounded-lg border p-6">
-        <div className="space-y-4">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4">
-              <Skeleton className="h-4 w-[100px]" />
-              <Skeleton className="h-4 w-[150px]" />
-              <Skeleton className="h-4 w-[100px]" />
-              <Skeleton className="h-4 w-[80px]" />
-            </div>
-          ))}
-        </div>
-      </div>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>System Activity</CardTitle>
+          <CardDescription>
+            View system activity and user actions.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center items-center py-8">
+            <LoadingSpinner size="lg" />
+            <span className="ml-2 text-muted-foreground">Loading audit logs...</span>
+          </div>
+          
+          <div className="space-y-2">
+            {Array(8).fill(0).map((_, i) => (
+              <Skeleton key={i} className="h-10 w-full" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -1,3 +1,5 @@
+'use client'
+
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { User } from '@supabase/auth-helpers-nextjs'
@@ -13,8 +15,8 @@ interface Profile {
 }
 
 interface SideNavProps {
-  user: User
-  profile: Profile
+  user: any // Temporarily use any to understand the expected type
+  profile: any // Temporarily use any to understand the expected type
 }
 
 export function SideNav({ user, profile }: SideNavProps) {
@@ -46,6 +48,16 @@ export function SideNav({ user, profile }: SideNavProps) {
           <h4 className="mb-1 px-2 text-sm font-semibold">Administration</h4>
           <div className="grid gap-1">
             <Link
+              href="/protected/admin/dashboard"
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                pathname === "/protected/admin/dashboard" && "bg-muted",
+                "justify-start w-full"
+              )}
+            >
+              Admin Dashboard
+            </Link>
+            <Link
               href="/protected/admin/users"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
@@ -64,6 +76,26 @@ export function SideNav({ user, profile }: SideNavProps) {
               )}
             >
               Roles
+            </Link>
+            <Link
+              href="/protected/admin/newsletter"
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                pathname === "/protected/admin/newsletter" && "bg-muted",
+                "justify-start w-full"
+              )}
+            >
+              Newsletter
+            </Link>
+            <Link
+              href="/protected/admin/contacts"
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                pathname === "/protected/admin/contacts" && "bg-muted",
+                "justify-start w-full"
+              )}
+            >
+              Contact Submissions
             </Link>
             <Link
               href="/protected/admin/audit-logs"

@@ -8,14 +8,14 @@ export const metadata: Metadata = {
 
 export default function SignIn() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold text-center">Welcome back</h2>
-        <p className="text-sm text-center text-muted-foreground">
-          Sign in to your account
-        </p>
-      </div>
+    <>
+      <h1 className="text-2xl font-semibold tracking-tight">
+        Welcome back
+      </h1>
+      <p className="text-sm text-muted-foreground">
+        Enter your email to sign in to your account
+      </p>
       <AuthForm mode="signin" />
-    </div>
+    </>
   )
 } 

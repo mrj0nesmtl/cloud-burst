@@ -1,4 +1,5 @@
-import { NavigationMenu } from "@/components/ui/navigation-menu"
+import { SiteHeader } from "@/components/ui/site-header"
+import Image from "next/image"
 
 export default function MarketingLayout({
   children,
@@ -6,24 +7,22 @@ export default function MarketingLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen flex flex-col">
       {/* Background Image */}
-      <div 
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: 'url(/images/pexels-themo1-bg.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          opacity: '0.20' // Changed to 75% transparent (0.25 opacity)
-        }}
-      />
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/pexels-themo1-bg.jpg"
+          alt="Background"
+          fill
+          className="object-cover opacity-[0.15]"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background z-0" />
+      </div>
       
-      {/* Content without blur */}
-      <div className="relative z-10">
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <NavigationMenu />
-        </header>
+      {/* Content */}
+      <div className="relative z-10 flex flex-col flex-1">
+        {/* We don't need the header here as it's already in the root layout */}
         <main className="flex-1">
           {children}
         </main>

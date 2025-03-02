@@ -1,4 +1,5 @@
-import { createServerClient } from '@/lib/supabase/client'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { AuditLogViewer } from '../components/audit-log-viewer'
 import {
   Card,
@@ -9,7 +10,7 @@ import {
 } from "@/components/ui/card"
 
 export default async function AuditLogsPage() {
-  const supabase = createServerClient()
+  const supabase = createServerComponentClient({ cookies })
   
   const { data: logs } = await supabase
     .from('audit_logs')
@@ -19,9 +20,13 @@ export default async function AuditLogsPage() {
 
   return (
     <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Audit Logs</h1>
+      </div>
+      
       <Card>
         <CardHeader>
-          <CardTitle>Audit Logs</CardTitle>
+          <CardTitle>System Activity</CardTitle>
           <CardDescription>
             View system activity and user actions.
           </CardDescription>

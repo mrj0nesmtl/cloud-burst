@@ -1,40 +1,50 @@
 # 📖 **User Flow Overview**  
 
 ## Cloud Burst  
-📅 *Updated: Feb 27, 2025*  
+📅 *Updated: March 1, 2025*  
 
----
+## 📌 Situational Abstract
+Following the successful implementation of Super Admin authentication and enhanced dashboard functionality, Cloud Burst's user flows have been streamlined and secured. With Zustand for state management and TanStack Query for data fetching, the platform now offers a more robust and performant experience while maintaining our beta focus on essential features.
 
-## 🔄 **Core User Flows**
+## 🔄 **Core User Flows** [Updated]
 
 ```mermaid
 flowchart TD
-    A[Event Attendee] --> B{Has Ticket?}
-    B -->|Yes| C[Scan QR Code]
-    B -->|No| D[Purchase Ticket]
-    D --> E[Receive Email]
-    E --> C
-    C --> F[Access Gallery]
-    F --> G{Upload Photo?}
-    G -->|Yes| H[Photo Processing]
-    H --> I[AI Enhancement]
-    I --> F
-    G -->|No| J[Browse & Share]
-    J --> F
+    A[User] --> B{Auth Check}
+    B -->|No Auth| C[Landing Page]
+    B -->|Has Auth| D[Dashboard]
+    
+    C --> |Sign Up| E[Auth Form]
+    C --> |Sign In| E
+    E --> |Success| D
+    
+    D --> F[Super Admin]
+    D --> G[Event Manager]
+    D --> H[Basic User]
+    
+    F --> I[Admin Dashboard]
+    G --> J[Event Management]
+    H --> K[Gallery Access]
+    
+    I --> L[User Management]
+    J --> M[Photo Upload]
+    K --> N[View & Share]
 ```
 
-## 🔐 **Security Flow**
+## 🔐 **Security Flow** [Enhanced]
 
 ```mermaid
 flowchart LR
     A[Request] --> B{Rate Limit}
     B -->|Passed| C{Auth Check}
     B -->|Failed| D[429 Error]
-    C -->|Valid| E[Protected Route]
+    C -->|Valid| E[Role Check]
     C -->|Invalid| F[Auth Page]
-    E --> G{Session Valid}
-    G -->|Yes| H[Resource]
-    G -->|No| F
+    E -->|Authorized| G[Protected Route]
+    E -->|Unauthorized| H[403 Error]
+    G --> I{Session Valid}
+    I -->|Yes| J[Resource]
+    I -->|No| F
 ```
 
 ## 📊 **User Engagement Metrics**

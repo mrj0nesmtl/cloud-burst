@@ -1,17 +1,18 @@
 # hooks Directory Structure
-Generated: 2025-02-28T01:00:25.849Z
+Generated: 2025-03-01T16:29:00.680Z
 
 ```
 ./src/hooks/
 ├── __tests__/
 │   └── use-permissions.test.ts
 ├── use-analytics.ts
+├── use-auth.ts
 ├── use-permissions.ts
 ├── use-profile.ts
 ├── use-toast.ts
 └── use-update-profile.ts
 
-2 directories, 6 files
+2 directories, 7 files
 
 ```
 

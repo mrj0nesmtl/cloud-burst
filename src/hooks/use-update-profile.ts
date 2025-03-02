@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createClient } from '@/lib/supabase/client-config'
+import { createClient } from '@/lib/supabase/client'
 import type { Database } from '@/types/supabase'
 
 type ProfileUpdate = Database['public']['Tables']['profiles']['Update']

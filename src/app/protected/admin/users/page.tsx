@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
-import { createServerClient } from '@/lib/supabase/client'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import {
   Table,
@@ -23,7 +24,7 @@ import { formatDistanceToNow } from 'date-fns'
 
 // User List Component with Server Actions
 async function UserList() {
-  const supabase = createServerClient()
+  const supabase = createServerComponentClient({ cookies })
   
   const { data: users } = await supabase
     .from('profiles')
@@ -102,10 +103,12 @@ function UserFilters() {
 }
 
 export default async function UsersPage() {
-  const supabase = createServerClient()
-
   return (
     <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Users</h1>
+      </div>
+      
       <Card>
         <CardHeader>
           <CardTitle>User Management</CardTitle>

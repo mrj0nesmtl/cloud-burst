@@ -15,6 +15,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.16] - 2024-02-28
+### Added
+- Super Admin authentication flow
+- Basic Super Admin dashboard implementation
+- Enhanced auth state management with Zustand
+- Query Provider implementation
+- React Query DevTools integration
+
+### Changed
+- Restructured dashboard layout components
+- Enhanced protected route handling
+- Improved auth store implementation
+- Updated middleware with role-based routing
+
+### Infrastructure
+- Implemented TanStack Query integration
+- Enhanced type safety across auth flow
+- Improved error handling in protected routes
+- Updated development documentation
+
 ## [0.1.15] - 2024-02-28
 ### Added
 - Dashboard layout foundation

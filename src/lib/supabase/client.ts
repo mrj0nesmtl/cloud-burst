@@ -1,35 +1,45 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import type { Database } from '@/types/supabase'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
 
+/**
+ * Supabase Client Configuration
+ * 
+ * We use Next.js Auth Helpers which automatically:
+ * - Use NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+ * - Handle cookie-based session management
+ * - Manage authentication state
+ */
+
+// Client-side Supabase instance (use in 'use client' components)
 export const createClient = () => {
-  const client = createClientComponentClient<Database>({
+  return createClientComponentClient<Database>({
     options: {
-      db: {
-        schema: 'public'
-      },
       auth: {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true
-      },
-      global: {
-        headers: {
-          'x-application-name': 'cloud-burst'
-        }
       }
     }
   })
-  return client
 }
 
-// Export a singleton instance for direct use
+// Server-side Supabase instance (use in Server Components)
+export const createServerClient = async () => {
+  // Dynamically import server-only modules
+  const { cookies } = await import('next/headers')
+  const { createServerComponentClient } = await import('@supabase/auth-helpers-nextjs')
+  
+  const cookieStore = cookies()
+  return createServerComponentClient<Database>({
+    cookies: () => cookieStore
+  })
+}
+
+// Singleton instance for simple client-side use
 export const supabase = createClient()
 
 // Helper function to get typed tables
-export const getTables = () => {
-  const client = createClient()
+export const getTables = (client = supabase) => {
   return {
     profiles: () => client.from('profiles'),
     roles: () => client.from('roles'),
@@ -60,12 +70,4 @@ export const createQuery = <T extends keyof Database['public']['Tables']>(
   table: T
 ) => {
   return supabase.from(table)
-}
-
-// Add server client creation
-export const createServerClient = () => {
-  const cookieStore = cookies()
-  return createServerComponentClient<Database>({
-    cookies: () => cookieStore,
-  })
 } 

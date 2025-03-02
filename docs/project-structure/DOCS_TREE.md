@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-02-28T01:00:25.749Z
+Generated: 2025-03-01T16:29:00.497Z
 
 ```
 ./docs/
@@ -30,6 +30,8 @@ Generated: 2025-02-28T01:00:25.749Z
 │   │   ├── session_13_kickoff.md
 │   │   ├── session_14_checklist.md
 │   │   ├── session_14_kickoff.md
+│   │   ├── session_15_checklist.md
+│   │   ├── session_15_kickoff.md
 │   │   ├── session_1_prompt.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
@@ -40,8 +42,8 @@ Generated: 2025-02-28T01:00:25.749Z
 │   ├── .DS_Store
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
-│   ├── session_15_checklist.md
-│   ├── session_15_kickoff.md
+│   ├── session_16_checklist.md
+│   ├── session_16_kickoff.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
@@ -52,7 +54,8 @@ Generated: 2025-02-28T01:00:25.749Z
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
 │   ├── roadmap.md
-│   └── statement_or_work.md
+│   ├── statement_of_work.md
+│   └── statement_or_work(old).md
 ├── project-structure/
 │   ├── README.md
 │   ├── app_tree.md
@@ -77,7 +80,7 @@ Generated: 2025-02-28T01:00:25.749Z
 ├── .DS_Store
 └── README.md
 
-9 directories, 65 files
+9 directories, 68 files
 
 ```
 

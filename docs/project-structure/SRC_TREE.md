@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-02-28T01:00:25.736Z
+Generated: 2025-03-01T16:29:00.475Z
 
 ```
 ./src/
@@ -12,6 +12,8 @@ Generated: 2025-02-28T01:00:25.736Z
 │   │   ├── signin/
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
+│   ├── dashboard/
+│   │   └── page.tsx
 │   ├── dev/
 │   │   └── setup/
 │   │       └── route.ts
@@ -110,11 +112,15 @@ Generated: 2025-02-28T01:00:25.736Z
 │   │   ├── notifications-form.tsx
 │   │   ├── preferences-form.tsx
 │   │   └── profile-form.tsx
+│   ├── layout/
+│   │   └── dashboard-layout.tsx
 │   ├── nav/
 │   │   ├── main-nav.tsx
 │   │   ├── side-nav.tsx
 │   │   └── user-nav.tsx
 │   ├── providers/
+│   │   ├── query-provider.tsx
+│   │   ├── react-query-devtools.tsx
 │   │   └── toast-provider.tsx
 │   ├── ui/
 │   │   ├── contact/
@@ -155,6 +161,7 @@ Generated: 2025-02-28T01:00:25.736Z
 │   ├── __tests__/
 │   │   └── use-permissions.test.ts
 │   ├── use-analytics.ts
+│   ├── use-auth.ts
 │   ├── use-permissions.ts
 │   ├── use-profile.ts
 │   ├── use-toast.ts
@@ -175,7 +182,7 @@ Generated: 2025-02-28T01:00:25.736Z
 ├── middleware.test.ts
 └── middleware.ts
 
-51 directories, 121 files
+53 directories, 126 files
 
 ```
 

@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-02-28T01:00:25.809Z
+Generated: 2025-03-01T16:29:00.595Z
 
 ```
 ./src/components/
@@ -15,11 +15,15 @@ Generated: 2025-02-28T01:00:25.809Z
 │   ├── notifications-form.tsx
 │   ├── preferences-form.tsx
 │   └── profile-form.tsx
+├── layout/
+│   └── dashboard-layout.tsx
 ├── nav/
 │   ├── main-nav.tsx
 │   ├── side-nav.tsx
 │   └── user-nav.tsx
 ├── providers/
+│   ├── query-provider.tsx
+│   ├── react-query-devtools.tsx
 │   └── toast-provider.tsx
 ├── ui/
 │   ├── contact/
@@ -57,7 +61,7 @@ Generated: 2025-02-28T01:00:25.809Z
 ├── error-boundary.tsx
 └── theme-provider.tsx
 
-7 directories, 47 files
+8 directories, 50 files
 
 ```
 

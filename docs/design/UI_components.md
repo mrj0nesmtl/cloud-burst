@@ -1,27 +1,48 @@
 # UI Components Documentation (Beta)
 
 ## Cloud Burst Component Library
-📅 *Updated: Feb 24, 2024*
+📅 *Updated: March 1, 2025*
 
-## 📚 Core Components [Beta Priority]
+## 📚 Core Components [Beta Implementation]
 
 ### 🎯 Navigation Components
 
 #### NavigationMenu
 ```typescript
-// Usage: Main navigation [Beta Tested]
+// Usage: Main navigation [Implemented]
 import { NavigationMenu } from "@/components/ui/navigation-menu"
 
 // Variants:
 - ✅ Default: Main header navigation
-- 🟡 Mobile: Condensed for small screens
-- ⏸️ Dashboard: Admin navigation [Post-Beta]
+- ✅ Mobile: Condensed for small screens
+- ✅ Dashboard: Admin navigation
+- 🟡 Role-based: Dynamic items
 
 // Props:
 type NavigationMenuProps = {
   items: NavItem[]
   className?: string
   orientation?: "horizontal" | "vertical"
+  role?: UserRole // New
+}
+```
+
+#### DashboardNav [New]
+```typescript
+// Usage: Dashboard navigation [Implemented]
+import { DashboardNav } from "@/components/nav/dashboard-nav"
+
+// Features:
+- ✅ Role-based items
+- ✅ Collapsible sections
+- ✅ Active state
+- 🟡 Notifications
+
+// Props:
+type DashboardNavProps = {
+  user: User
+  profile: Profile
+  collapsed?: boolean
 }
 ```
 
@@ -366,6 +387,46 @@ type ToastProps = {
 }
 ```
 
+### 📊 Dashboard Components [New Section]
+
+#### DashboardHeader
+```typescript
+// Usage: Dashboard top bar [Active]
+import { DashboardHeader } from "@/components/dashboard/header"
+
+// Features:
+- ✅ User profile
+- ✅ Quick actions
+- 🟡 Notifications
+- 🟡 Search
+
+// Props:
+type DashboardHeaderProps = {
+  user: User
+  profile: Profile
+  notifications?: Notification[]
+}
+```
+
+#### DashboardShell
+```typescript
+// Usage: Dashboard layout wrapper [Implemented]
+import { DashboardShell } from "@/components/dashboard/shell"
+
+// Features:
+- ✅ Responsive layout
+- ✅ Sidebar integration
+- ✅ Header placement
+- 🟡 Loading states
+
+// Props:
+type DashboardShellProps = {
+  children: React.ReactNode
+  sidebar?: React.ReactNode
+  header?: React.ReactNode
+}
+```
+
 ## 🎨 Theme Configuration
 
 ### Color Tokens
@@ -534,16 +595,24 @@ import { PayPalQRCode } from "@/components/payment/paypal-qr"
 - Success/failure handling
 ```
 
-### 🔐 Authentication Components
+### 🔐 Authentication Components [Updated]
 
 #### AuthForm
 ```typescript
-// Usage: User authentication
+// Usage: Enhanced authentication [Implemented]
 import { AuthForm } from "@/components/auth/auth-form"
 
-// Implementations:
-- Login
-- Registration
-- Password recovery
-- Social auth
+// Features:
+- ✅ Email/Password
+- ✅ Form validation
+- ✅ Error handling
+- ✅ Loading states
+- 🟡 Social auth
+
+// Props:
+type AuthFormProps = {
+  type: "signin" | "signup" | "reset"
+  onSubmit: (data: AuthFormData) => Promise<void>
+  error?: string
+}
 ```

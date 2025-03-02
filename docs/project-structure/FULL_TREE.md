@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-02-28T01:00:25.714Z
+Generated: 2025-03-01T16:29:00.435Z
 
 ```
 ./
@@ -50,6 +50,8 @@ Generated: 2025-02-28T01:00:25.714Z
 │   │   │   ├── session_13_kickoff.md
 │   │   │   ├── session_14_checklist.md
 │   │   │   ├── session_14_kickoff.md
+│   │   │   ├── session_15_checklist.md
+│   │   │   ├── session_15_kickoff.md
 │   │   │   ├── session_1_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
@@ -60,8 +62,8 @@ Generated: 2025-02-28T01:00:25.714Z
 │   │   ├── .DS_Store
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
-│   │   ├── session_15_checklist.md
-│   │   ├── session_15_kickoff.md
+│   │   ├── session_16_checklist.md
+│   │   ├── session_16_kickoff.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
@@ -72,7 +74,8 @@ Generated: 2025-02-28T01:00:25.714Z
 │   │   ├── project_budget_overview.md
 │   │   ├── request_for_product_RFP.md
 │   │   ├── roadmap.md
-│   │   └── statement_or_work.md
+│   │   ├── statement_of_work.md
+│   │   └── statement_or_work(old).md
 │   ├── project-structure/
 │   │   ├── README.md
 │   │   ├── app_tree.md
@@ -98,6 +101,7 @@ Generated: 2025-02-28T01:00:25.714Z
 │   └── README.md
 ├── public/
 │   ├── images/
+│   │   ├── fallback-hero.jpg
 │   │   └── pexels-themo1-bg.jpg
 │   ├── .DS_Store
 │   ├── android-chrome-192x192.png
@@ -137,6 +141,8 @@ Generated: 2025-02-28T01:00:25.714Z
 │   │   │   ├── signin/
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
+│   │   ├── dashboard/
+│   │   │   └── page.tsx
 │   │   ├── dev/
 │   │   │   └── setup/
 │   │   │       └── route.ts
@@ -235,11 +241,15 @@ Generated: 2025-02-28T01:00:25.714Z
 │   │   │   ├── notifications-form.tsx
 │   │   │   ├── preferences-form.tsx
 │   │   │   └── profile-form.tsx
+│   │   ├── layout/
+│   │   │   └── dashboard-layout.tsx
 │   │   ├── nav/
 │   │   │   ├── main-nav.tsx
 │   │   │   ├── side-nav.tsx
 │   │   │   └── user-nav.tsx
 │   │   ├── providers/
+│   │   │   ├── query-provider.tsx
+│   │   │   ├── react-query-devtools.tsx
 │   │   │   └── toast-provider.tsx
 │   │   ├── ui/
 │   │   │   ├── contact/
@@ -280,6 +290,7 @@ Generated: 2025-02-28T01:00:25.714Z
 │   │   ├── __tests__/
 │   │   │   └── use-permissions.test.ts
 │   │   ├── use-analytics.ts
+│   │   ├── use-auth.ts
 │   │   ├── use-permissions.ts
 │   │   ├── use-profile.ts
 │   │   ├── use-toast.ts
@@ -301,6 +312,7 @@ Generated: 2025-02-28T01:00:25.714Z
 │   └── middleware.ts
 ├── supabase-exports/
 │   ├── .DS_Store
+│   ├── Policy Overview for Public Schema.csv
 │   ├── profiles_rows.csv
 │   ├── supabase-auth-schema-bxvbovzqzjfomnqidzzx (1).png
 │   ├── supabase-public-schema-bxvbovzqzjfomnqidzzx.png
@@ -323,7 +335,7 @@ Generated: 2025-02-28T01:00:25.714Z
 ├── tailwind.config.ts
 └── tsconfig.json
 
-70 directories, 250 files
+72 directories, 260 files
 
 ```
 

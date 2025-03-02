@@ -1,25 +1,35 @@
 # 🔄 User Flow Chart
-📅 *Updated: Feb 26, 2024*
+📅 *Updated: March 1, 2025*
+
+## 📌 Situational Abstract
+Following the successful implementation of Super Admin features and enhanced authentication, Cloud Burst's user flows have been updated to reflect our role-based access control and improved security measures. The platform maintains its streamlined beta approach while providing robust user management.
 
 ```mermaid
 flowchart TD
     A[User Arrives] --> B[Auth Check]
     B --> |No Auth| C[Landing Page]
-    B --> |Has Auth| D[Dashboard]
+    B --> |Has Auth| D[Role Check]
     
-    C --> |Sign In| E[Auth Page]
-    C --> |Guest Access| F[Event QR Scan]
+    C --> |Sign Up| E[Auth Form]
+    C --> |Sign In| E
     
     E --> |Success| D
-    F --> |Valid QR| G[Event Gallery]
     
-    D --> H[Profile Settings]
-    D --> I[Event Management]
-    D --> J[Photo Gallery]
+    D --> |Super Admin| F[Admin Dashboard]
+    D --> |Event Manager| G[Event Management]
+    D --> |Basic User| H[Gallery Access]
     
-    G --> |Upload| K[Photo Processing]
-    K --> |Success| G
+    F --> I[User Management]
+    F --> J[System Settings]
+    
+    G --> K[Event Creation]
+    G --> L[Photo Management]
+    
+    H --> M[View Gallery]
+    H --> N[Upload Photos]
 ```
+
+[... continue updating with enhanced role-based flows and security measures ...]
 
 ## 🎯 **Key Components**  
 

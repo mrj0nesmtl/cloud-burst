@@ -1,4 +1,5 @@
-import { createServerClient } from '@/lib/supabase/client'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import {
   Card,
   CardContent,
@@ -17,7 +18,7 @@ import {
 import { Button } from '@/components/ui/button'
 
 export default async function RolesPage() {
-  const supabase = createServerClient()
+  const supabase = createServerComponentClient({ cookies })
   
   const { data: roles } = await supabase
     .from('roles')
@@ -26,6 +27,11 @@ export default async function RolesPage() {
 
   return (
     <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Roles</h1>
+        <Button>Add Role</Button>
+      </div>
+      
       <Card>
         <CardHeader>
           <CardTitle>Role Management</CardTitle>
@@ -48,12 +54,19 @@ export default async function RolesPage() {
                 <TableRow key={role.id}>
                   <TableCell className="font-medium">{role.name}</TableCell>
                   <TableCell>{role.description}</TableCell>
-                  <TableCell>{role.user_count}</TableCell>
+                  <TableCell>{role.user_count || 0}</TableCell>
                   <TableCell>
                     <Button variant="ghost" size="sm">Edit</Button>
                   </TableCell>
                 </TableRow>
               ))}
+              {!roles?.length && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-4 text-muted-foreground">
+                    No roles found
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>

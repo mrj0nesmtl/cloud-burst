@@ -1,9 +1,10 @@
 # 🎟️ **Invited Guest - User Flow Design Document**  
 
 ## Cloud Burst  
-📅 *Updated: Feb 27, 2025*  
+📅 *Updated: March 1, 2025*  
 
----
+## 📌 Situational Abstract
+With the implementation of enhanced authentication and role-based access control, Cloud Burst's invited guest flow has been refined to provide a secure yet seamless experience. The platform now features improved state management and data fetching while maintaining our streamlined beta approach.
 
 ## 🔍 Introduction  
 Cloud Burst is an **event photography platform** that enables guests to Burst, upload, and share photos at **live events** such as weddings, parties, and corporate gatherings.  
@@ -12,22 +13,21 @@ Cloud Burst is an **event photography platform** that enables guests to Burst, u
 
 ---
 
-## 🔒 **Security Implementation**
+## 🔒 **Security Implementation** [Enhanced]
 
-### 🛡️ **Enhanced Protection**
-- Rate limiting on all routes
-- Method validation
-- Pattern matching
-- Session management
-- Cookie security
-- Error handling
+### 🛡️ **Protected Routes**
+- ✅ Rate limiting on all routes
+- ✅ Role-based middleware
+- ✅ Enhanced session management
+- ✅ Secure cookie handling
+- ✅ Comprehensive error boundaries
 
-### 🔐 **Guest Authentication**
-- Secure session handling
-- Protected routes
-- Rate limited endpoints
-- Cookie cleanup
-- Loading states
+### 🔐 **Guest Authentication** [Beta Focus]
+- ✅ Secure session handling
+- ✅ Protected route system
+- ✅ Rate limited endpoints
+- ✅ Cookie security
+- 🟡 Social authentication [Post-Beta]
 
 ### ⚙️ **User Settings**
 - Profile customization
@@ -135,7 +135,7 @@ Cloud Burst is an **event photography platform** that enables guests to Burst, u
 
 ---
 
-## �� User Benefits  
+## 🎯 User Benefits  
 
 ✔️ **Frictionless Access** – No app installation needed
 ✔️ **AI-Enhanced Images** – Automatic quality improvements

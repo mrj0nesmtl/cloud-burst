@@ -6,9 +6,13 @@ import { SiteHeader } from "@/components/ui/site-header"
 import { SiteFooter } from "@/components/ui/site-footer"
 import { ToastProvider } from "@/components/providers/toast-provider"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster as UIToaster } from "@/components/ui/toaster"
+import { Toaster as SonnerToaster } from "@/components/ui/sonner"
+import { Inter } from 'next/font/google'
+import { QueryProvider } from '@/components/providers/query-provider'
 
 const geist = GeistSans
+const inter = Inter({ subsets: ['latin'] })
 
 // Comprehensive hydration error suppression for production
 if (process.env.NODE_ENV === 'production') {
@@ -59,27 +63,32 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geist.variable} antialiased min-h-screen flex flex-col`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Suspense fallback={
-            <div className="flex min-h-screen items-center justify-center">
-              <LoadingSpinner size="lg" />
-            </div>
-          }>
-            <SiteHeader />
-            <main className="flex-1">
-              {children}
-            </main>
-            <SiteFooter />
-            <ToastProvider />
-          </Suspense>
-        </ThemeProvider>
-        <Toaster />
+      <body className={`${geist.variable} antialiased min-h-screen flex flex-col ${inter.className}`}>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Suspense fallback={
+              <div className="flex min-h-screen items-center justify-center">
+                <LoadingSpinner size="lg" />
+              </div>
+            }>
+              <div className="flex flex-col min-h-screen relative">
+                <SiteHeader />
+                <main className="flex-1 relative z-10">
+                  {children}
+                </main>
+                <SiteFooter />
+              </div>
+              <ToastProvider />
+            </Suspense>
+          </ThemeProvider>
+          <UIToaster />
+          <SonnerToaster />
+        </QueryProvider>
       </body>
     </html>
   )

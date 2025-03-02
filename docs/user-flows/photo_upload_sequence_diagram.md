@@ -1,7 +1,10 @@
 # 📸 **Photo Upload Sequence Diagram**  
 
 ## Cloud Burst  
-📅 *Updated: Feb 27, 2025*  
+📅 *Updated: March 1, 2025*  
+
+## 📌 Situational Abstract
+With enhanced authentication and role-based access control in place, Cloud Burst's photo upload process has been refined to ensure secure and efficient handling of media assets. The implementation leverages Zustand for state management and TanStack Query for optimized data fetching while maintaining our beta focus on essential features.
 
 ---
 
@@ -13,41 +16,36 @@ This sequence diagram illustrates the **photo upload process** within Cloud Burs
 
 ```mermaid
 sequenceDiagram
-    participant U as 📱 User
+    participant U as 👤 User
     participant W as 🌐 Web App
+    participant R as 🔐 Role Check
     participant A as 🔒 Auth Service
     participant AI as 🤖 AI Service
     participant S as ☁️ Storage
     participant DB as 📊 Database
 
-    U->>W: Scans QR Code & Opens Web App
-    W->>A: Verify Session/Access
-    A-->>W: Session Validated
+    U->>W: Initiates Upload
+    W->>A: Verify Session
+    A->>R: Check Permissions
+    R-->>W: Authorization Status
     
-    U->>W: Initiates Photo Upload
-    W->>W: Client-side Validation
-    Note over W: Size & Format Check
-    
-    W->>A: Request Upload URL
-    A-->>W: Signed Upload URL
-    
-    W->>S: Upload Photo
-    
-    par AI Processing
-        S->>AI: Trigger Processing
-        AI->>AI: Enhancement
-        AI->>AI: Face Detection
-        AI->>AI: Object Recognition
-        AI->>AI: Duplicate Check
-        AI-->>S: Store Processed Image
-        AI->>DB: Store Metadata
+    alt Is Authorized
+        W->>W: Client Validation
+        W->>A: Request Upload URL
+        A-->>W: Signed URL
+        
+        par Upload & Processing
+            W->>S: Upload Photo
+            S->>AI: Process Image
+            AI->>S: Store Processed
+            AI->>DB: Update Metadata
+        end
+        
+        S-->>W: Upload Complete
+        W-->>U: Show Success
+    else Unauthorized
+        W-->>U: Show Error
     end
-    
-    S-->>W: Upload Complete
-    DB-->>W: Metadata Updated
-    W-->>U: Show Success & Preview
-    
-    Note over U,DB: Real-time Gallery Update
 ```
 
 ---

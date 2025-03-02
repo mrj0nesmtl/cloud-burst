@@ -1,13 +1,17 @@
 import { Metadata } from 'next'
 import { RoleGuard } from '@/components/auth/role-guard'
-import { getSession } from '@/lib/auth/session'
+import { createServerClient } from '@/lib/supabase/client'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AuditLogViewer } from './components/audit-log-viewer'
 import { Suspense } from 'react'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { createClient } from '@/lib/supabase/server-config'
-import { Users, Camera, Calendar, Settings } from 'lucide-react'
+import { Users, Camera, Calendar, Settings, Bell, FileText, Mail } from 'lucide-react'
+import { AnalyticsOverview } from '@/components/dashboard/analytics-overview'
+import { RecentActivity } from '@/components/dashboard/recent-activity'
+import { NewsletterStats } from '@/components/dashboard/newsletter-stats'
+import { ContactStats } from '@/components/dashboard/contact-stats'
+import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard | Cloud Burst',
@@ -16,7 +20,8 @@ export const metadata: Metadata = {
 
 // Stats component with loading state
 async function StatsCards() {
-  const supabase = createClient()
+  // Server-side auth check - await the client creation
+  const supabase = await createServerClient()
 
   // Fetch stats
   const [
@@ -74,6 +79,28 @@ async function StatsCards() {
   )
 }
 
+// Dashboard Header with Actions
+function DashboardHeader() {
+  return (
+    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 className="text-3xl font-bold">Platform Administration</h1>
+        <p className="text-muted-foreground">Manage your platform, users, and content</p>
+      </div>
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="sm">
+          <Bell className="mr-2 h-4 w-4" />
+          Notifications
+        </Button>
+        <Button variant="default" size="sm">
+          <Settings className="mr-2 h-4 w-4" />
+          Settings
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 // Quick Actions Section
 function QuickActions() {
   return (
@@ -90,28 +117,28 @@ function QuickActions() {
           <p className="text-sm text-muted-foreground">View and manage user accounts</p>
         </a>
 
+        <a href="/protected/admin/newsletter" className="group block space-y-2 rounded-lg border p-4 hover:bg-accent">
+          <div className="flex items-center gap-2">
+            <Mail className="h-5 w-5" />
+            <h3 className="font-semibold">Newsletter</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">Manage newsletter subscribers</p>
+        </a>
+
+        <a href="/protected/admin/contacts" className="group block space-y-2 rounded-lg border p-4 hover:bg-accent">
+          <div className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            <h3 className="font-semibold">Contact Forms</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">View contact form submissions</p>
+        </a>
+
         <a href="/protected/admin/events" className="group block space-y-2 rounded-lg border p-4 hover:bg-accent">
           <div className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            <h3 className="font-semibold">Manage Events</h3>
+            <h3 className="font-semibold">Events</h3>
           </div>
-          <p className="text-sm text-muted-foreground">Create and manage events</p>
-        </a>
-
-        <a href="/protected/admin/photos" className="group block space-y-2 rounded-lg border p-4 hover:bg-accent">
-          <div className="flex items-center gap-2">
-            <Camera className="h-5 w-5" />
-            <h3 className="font-semibold">Photo Library</h3>
-          </div>
-          <p className="text-sm text-muted-foreground">Manage uploaded photos</p>
-        </a>
-
-        <a href="/protected/admin/settings" className="group block space-y-2 rounded-lg border p-4 hover:bg-accent">
-          <div className="flex items-center gap-2">
-            <Settings className="h-5 w-5" />
-            <h3 className="font-semibold">Settings</h3>
-          </div>
-          <p className="text-sm text-muted-foreground">Configure system settings</p>
+          <p className="text-sm text-muted-foreground">Manage platform events</p>
         </a>
       </CardContent>
     </Card>
@@ -119,18 +146,20 @@ function QuickActions() {
 }
 
 export default async function AdminDashboardPage() {
-  const session = await getSession()
+  // Server-side auth check - await the client creation
+  const supabase = await createServerClient()
   
-  if (!session) {
+  // Get and validate session
+  const { data, error } = await supabase.auth.getSession()
+  
+  if (error || !data.session) {
     redirect('/auth/signin')
   }
 
   return (
-    <RoleGuard allowedRoles={['SUPER_ADMIN', 'ADMIN']}>
+    <RoleGuard allowedRoles={['super_admin', 'admin']}>
       <div className="space-y-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Platform Administration</h1>
-        </div>
+        <DashboardHeader />
         
         <Suspense fallback={<LoadingSpinner />}>
           <StatsCards />
@@ -138,7 +167,21 @@ export default async function AdminDashboardPage() {
         
         <QuickActions />
 
-        <AuditLogViewer />
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+          <div className="md:col-span-2 lg:col-span-5">
+            <AnalyticsOverview />
+          </div>
+          <div className="md:col-span-2 lg:col-span-2">
+            <RecentActivity />
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <NewsletterStats />
+          <ContactStats />
+        </div>
+
+        <AuditLogViewer logs={[]} />
       </div>
     </RoleGuard>
   )

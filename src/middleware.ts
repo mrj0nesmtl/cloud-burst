@@ -14,71 +14,60 @@ const PUBLIC_ROUTES = new Set([
   '/event/[code]'
 ])
 
-const PROTECTED_ROUTES = {
-  ADMIN: ['/protected/admin'],
-  EVENT_MANAGER: [
-    '/protected/events/manage',
-    '/protected/events/create',
-    '/protected/events/moderate'
-  ],
-  USER: [
-    '/protected/dashboard',
-    '/protected/profile',
-    '/protected/settings',
-    '/protected/gallery'
-  ],
-  ALL: ['/protected']
-}
-
-export async function middleware(req: NextRequest) {
+export async function middleware(request: NextRequest) {
   const res = NextResponse.next()
-  const supabase = createMiddlewareClient<Database>({ req, res })
-  
-  // Check session and get profile in one go
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const supabase = createMiddlewareClient<Database>({ req: request, res })
+  const pathname = request.nextUrl.pathname
 
-  const pathname = req.nextUrl.pathname
-
-  // Allow public routes
+  // Allow public routes without any checks
   if (PUBLIC_ROUTES.has(pathname)) {
     return res
   }
 
-  // Require auth for protected routes
-  if (pathname.startsWith('/protected')) {
-    if (!session) {
-      const redirectUrl = new URL('/auth/signin', req.url)
-      redirectUrl.searchParams.set('returnTo', pathname)
-      return NextResponse.redirect(redirectUrl)
+  // Await the getUser call to verify authentication
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  // Handle authentication
+  if (request.nextUrl.pathname.startsWith('/protected')) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/auth/signin', request.url))
     }
+  }
 
-    // Get user profile with role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', session.user.id)
-      .single()
-
-    const userRole = profile?.role || 'USER'
-
-    // Admin routes protection
-    if (pathname.startsWith('/protected/admin') && userRole !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/protected/dashboard', req.url))
+  // Handle auth pages when already logged in
+  if (request.nextUrl.pathname.startsWith('/auth')) {
+    if (user) {
+      return NextResponse.redirect(new URL('/protected/dashboard', request.url))
     }
+  }
 
-    // Event manager routes protection
-    if (
-      pathname.startsWith('/protected/events/manage') && 
-      !['ADMIN', 'EVENT_MANAGER'].includes(userRole)
-    ) {
-      return NextResponse.redirect(new URL('/protected/dashboard', req.url))
-    }
+  // If we have a session, allow access to protected routes
+  if (user && pathname.startsWith('/protected')) {
+    try {
+      // Get user profile with role
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
 
-    // Ensure basic user access
-    if (!PROTECTED_ROUTES[userRole]?.some(route => pathname.startsWith(route))) {
-      return NextResponse.redirect(new URL('/protected/dashboard', req.url))
+      // Add user context to headers
+      const response = NextResponse.next()
+      response.headers.set('x-user-id', user.id)
+      response.headers.set('x-user-role', profile?.role || 'USER')
+
+      // Super admin specific redirect
+      if (profile?.role === 'SUPER_ADMIN' && pathname === '/protected/dashboard') {
+        return NextResponse.redirect(new URL('/protected/admin/dashboard', request.url))
+      }
+
+      return response
+    } catch (error) {
+      // On error, still allow access with basic user role
+      const response = NextResponse.next()
+      response.headers.set('x-user-id', user.id)
+      response.headers.set('x-user-role', 'USER')
+      return response
     }
   }
 
@@ -95,5 +84,5 @@ export const config = {
      * - public folder
      */
     '/((?!_next/static|_next/image|favicon.ico|public/).*)',
-  ]
+  ],
 } 

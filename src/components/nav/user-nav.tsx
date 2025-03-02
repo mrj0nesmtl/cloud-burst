@@ -13,18 +13,32 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuthStore } from '@/lib/supabase/auth-store'
 import Link from "next/link"
 
-interface UserNavProps {
-  user: User
+interface Profile {
+  id: string
+  role: string
+  avatar_url?: string | null
+  full_name?: string | null
+  [key: string]: any
 }
 
-export function UserNav({ user }: UserNavProps) {
+interface UserNavProps {
+  user: any // Temporarily use any to fix type issues
+  profile?: any // Temporarily use any to fix type issues
+}
+
+export function UserNav({ user, profile }: UserNavProps) {
   const { signOut } = useAuthStore()
+  
+  // Use profile data if available, otherwise fallback to user metadata
+  const displayName = profile?.full_name || user.user_metadata?.full_name || user.email
+  const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url
+  const userRole = profile?.role || user.user_metadata?.role || 'user'
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={user.user_metadata.avatar_url} />
+          <AvatarImage src={avatarUrl} />
           <AvatarFallback>
             {user.email?.charAt(0).toUpperCase()}
           </AvatarFallback>
@@ -34,10 +48,13 @@ export function UserNav({ user }: UserNavProps) {
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {user.user_metadata.full_name || user.email}
+              {displayName}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
+            </p>
+            <p className="text-xs leading-none text-muted-foreground mt-1">
+              Role: {userRole}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -48,6 +65,11 @@ export function UserNav({ user }: UserNavProps) {
         <DropdownMenuItem asChild>
           <Link href="/protected/settings">Settings</Link>
         </DropdownMenuItem>
+        {(userRole === 'super_admin' || userRole === 'admin') && (
+          <DropdownMenuItem asChild>
+            <Link href="/protected/admin">Admin Dashboard</Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="text-red-600 focus:text-red-600"

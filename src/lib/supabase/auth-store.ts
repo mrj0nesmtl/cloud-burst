@@ -1,86 +1,215 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import type { AuthState, Capability, UserRole } from '@/types/auth'
+import type { AuthState, Capability, UserRole, AuthError } from '@/types/auth'
 import { roleCapabilities } from '@/types/auth'
 import { createClient, handleError } from './client'
 
 interface AuthStore extends AuthState {
+  // Enhanced state
+  error: AuthError | null
+  isAuthenticated: boolean
+  lastActivity: string | null
+  
   // Auth actions
   signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string) => Promise<void>
+  signUp: (email: string, password: string, userData?: Partial<AuthState['user']>) => Promise<void>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
+  updatePassword: (newPassword: string) => Promise<void>
   
   // State management
   setUser: (user: AuthState['user']) => void
   setSession: (session: AuthState['session']) => void
   setLoading: (loading: boolean) => void
+  setError: (error: AuthError | null) => void
   setCapabilities: (capabilities: Capability[]) => void
+  clearError: () => void
   
   // Permission checks
-  hasCapability: (capability: Capability) => boolean
-  hasRole: (role: UserRole) => boolean
+  hasCapability: (capability: Capability | Capability[]) => boolean
+  hasRole: (role: UserRole | UserRole[]) => boolean
   
-  // New methods
+  // Session management
   initialize: () => Promise<void>
   refreshSession: () => Promise<void>
+  validateSession: () => Promise<boolean>
+  
+  // Profile management
+  updateProfile: (data: Partial<AuthState['user']>) => Promise<void>
+  uploadAvatar: (file: File) => Promise<string>
 }
 
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
+      // Enhanced initial state
       user: null,
       session: null,
       loading: true,
+      error: null,
       capabilities: [],
+      isAuthenticated: false,
+      lastActivity: null,
 
-      setUser: (user) => set({ user }),
-      setSession: (session) => set({ session }),
+      // Improved state setters
+      setUser: (user) => set({ 
+        user,
+        isAuthenticated: !!user,
+        lastActivity: new Date().toISOString()
+      }),
+      
+      setSession: (session) => set({ 
+        session,
+        isAuthenticated: !!session,
+        lastActivity: new Date().toISOString()
+      }),
+      
       setLoading: (loading) => set({ loading }),
+      setError: (error) => set({ error }),
+      clearError: () => set({ error: null }),
       setCapabilities: (capabilities) => set({ capabilities }),
 
+      // Enhanced permission checks
       hasCapability: (capability) => {
         const { capabilities } = get()
+        if (Array.isArray(capability)) {
+          return capability.some(cap => 
+            capabilities.includes(cap) || capabilities.includes('manage:all')
+          )
+        }
         return capabilities.includes(capability) || capabilities.includes('manage:all')
       },
 
       hasRole: (role) => {
-        return get().user?.role === role
+        const userRole = get().user?.role
+        if (Array.isArray(role)) {
+          return role.includes(userRole!)
+        }
+        return userRole === role
       },
 
+      // Improved sign in with error handling
       signIn: async (email, password) => {
         const supabase = createClientComponentClient()
         try {
-          set({ loading: true })
+          set({ loading: true, error: null })
           const session = await handleError(
             supabase.auth.signInWithPassword({ email, password })
           )
           
-          // Fetch user profile
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single()
-          
-          // Fetch role capabilities
-          const { data: rolePerms } = await supabase
-            .from('role_capabilities')
-            .select('capability')
-            .eq('role', profile?.role)
+          const [profileResult, rolePermsResult] = await Promise.all([
+            supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', session.user.id)
+              .single(),
+            supabase
+              .from('role_capabilities')
+              .select('capability')
+              .eq('role', session.user.user_metadata.role)
+          ])
+
+          if (profileResult.error) throw profileResult.error
+          if (rolePermsResult.error) throw rolePermsResult.error
 
           set({ 
-            user: profile,
-            session: session,
-            capabilities: rolePerms?.map(p => p.capability as Capability) ?? []
+            user: profileResult.data,
+            session,
+            capabilities: rolePermsResult.data?.map(p => p.capability as Capability) ?? [],
+            isAuthenticated: true,
+            lastActivity: new Date().toISOString(),
+            error: null
           })
         } catch (error) {
-          console.error('Sign in error:', error)
+          set({ 
+            error: error as AuthError,
+            isAuthenticated: false,
+            user: null,
+            session: null,
+            capabilities: []
+          })
           throw error
         } finally {
           set({ loading: false })
         }
+      },
+
+      // New profile management methods
+      updateProfile: async (data) => {
+        const supabase = createClientComponentClient()
+        const { user } = get()
+        
+        try {
+          set({ loading: true, error: null })
+          const { error, data: updatedProfile } = await supabase
+            .from('profiles')
+            .update(data)
+            .eq('id', user?.id)
+            .select()
+            .single()
+
+          if (error) throw error
+
+          set({ 
+            user: { ...user!, ...updatedProfile },
+            lastActivity: new Date().toISOString()
+          })
+        } catch (error) {
+          set({ error: error as AuthError })
+          throw error
+        } finally {
+          set({ loading: false })
+        }
+      },
+
+      uploadAvatar: async (file) => {
+        const supabase = createClientComponentClient()
+        const { user } = get()
+        
+        try {
+          set({ loading: true, error: null })
+          const fileExt = file.name.split('.').pop()
+          const filePath = `avatars/${user?.id}/${Date.now()}.${fileExt}`
+
+          const { error: uploadError } = await supabase
+            .storage
+            .from('avatars')
+            .upload(filePath, file)
+
+          if (uploadError) throw uploadError
+
+          const { data: { publicUrl } } = supabase
+            .storage
+            .from('avatars')
+            .getPublicUrl(filePath)
+
+          await get().updateProfile({ avatar_url: publicUrl })
+
+          return publicUrl
+        } catch (error) {
+          set({ error: error as AuthError })
+          throw error
+        } finally {
+          set({ loading: false })
+        }
+      },
+
+      // Enhanced session validation
+      validateSession: async () => {
+        const { session, lastActivity } = get()
+        if (!session || !lastActivity) return false
+
+        const inactiveTime = Date.now() - new Date(lastActivity).getTime()
+        const maxInactiveTime = 24 * 60 * 60 * 1000 // 24 hours
+
+        if (inactiveTime > maxInactiveTime) {
+          await get().signOut()
+          return false
+        }
+
+        set({ lastActivity: new Date().toISOString() })
+        return true
       },
 
       signUp: async (email, password) => {
@@ -234,7 +363,8 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({ 
         user: state.user,
         session: state.session,
-        capabilities: state.capabilities
+        capabilities: state.capabilities,
+        lastActivity: state.lastActivity
       }),
     }
   )

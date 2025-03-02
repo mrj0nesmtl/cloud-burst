@@ -1,7 +1,7 @@
 # 🏛️ **System Architecture Flowchart (Beta)**  
 
 ## Cloud Burst  
-📅 *Feb 24, 2024*  
+📅 *Mar 1, 2025*  
 
 ---
 
@@ -11,18 +11,20 @@ flowchart TD
         WebApp[🌐 Next.js 14 App]
         AuthForms[🔐 Auth Forms]
         Protected[🛡️ Protected Routes]
+        TanStack[📊 TanStack Query]
     end
 
     subgraph Auth[🔑 Authentication Layer]
         SupaAuth[Supabase Auth]
         Session[📝 Session Management]
-        Roles[👥 Basic Roles]
+        Roles[👥 Role System]
+        Zustand[🔄 Auth Store]
     end
 
     subgraph Data[💾 Data Layer]
         Database[🗄️ Supabase PostgreSQL]
         Storage[📦 Supabase Storage]
-        RLS[🔒 Basic RLS]
+        RLS[🔒 Enhanced RLS]
     end
 
     WebApp -->|1. Auth Request| AuthForms
@@ -31,6 +33,8 @@ flowchart TD
     Session -->|4. Create| Roles
     Roles -->|5. Access| Database
     Roles -->|5. Access| Storage
+    TanStack -->|6. Cache| Data
+    Zustand -->|7. State| Protected
 ```
 
 ## 🛠️ **Beta Components**  
@@ -39,17 +43,19 @@ flowchart TD
 - Next.js 14 App Router
 - TypeScript + React
 - Shadcn/ui Components
-- Basic Protected Routes
+- TanStack Query Integration
+- Protected Route System
 
 ### 🔑 **Authentication Layer**
 - Supabase Auth
-- Basic Session Management
-- Simple User/Admin Roles
+- Enhanced Session Management
+- Role-based Access Control
+- Zustand Auth Store
 
 ### 💾 **Data Layer**
 - PostgreSQL Database
-- Basic Storage
-- Simple RLS Policies
+- Storage Integration
+- Enhanced RLS Policies
 
 ---
 
