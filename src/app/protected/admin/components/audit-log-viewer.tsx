@@ -28,7 +28,7 @@ export function AuditLogViewer({ logs }: AuditLogViewerProps) {
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow key="header-row">
               {auditLogColumns.map((column) => (
                 <TableHead key={column.id}>
                   {typeof column.header === "string"
@@ -36,33 +36,41 @@ export function AuditLogViewer({ logs }: AuditLogViewerProps) {
                     : column.id}
                 </TableHead>
               ))}
-              <TableHead>Actions</TableHead>
+              <TableHead key="actions">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {logs.map((log) => (
-              <TableRow key={log.id}>
-                {auditLogColumns.map((column) => (
-                  <TableCell key={column.id}>
-                    {column.cell
-                      ? column.cell({ row: { original: log } })
-                      : log[column.accessorKey as keyof AuditLog]}
+            {logs.length > 0 ? (
+              logs.map((log) => (
+                <TableRow key={log.id}>
+                  {auditLogColumns.map((column) => (
+                    <TableCell key={column.id}>
+                      {column.cell
+                        ? column.cell({ row: { original: log } })
+                        : log[column.accessorKey as keyof AuditLog]}
+                    </TableCell>
+                  ))}
+                  <TableCell key="actions-cell">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>View Details</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
-                ))}
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View Details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow key="no-data-row">
+                <TableCell colSpan={auditLogColumns.length + 1} className="text-center py-6">
+                  No audit logs found
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>

@@ -1,6 +1,7 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+// Remove the server component imports that use cookies from next/headers
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+// import { cookies } from 'next/headers'
 
 export type EventCustomizationSettings = {
   id: string
@@ -29,24 +30,27 @@ export type EventCustomizationSettings = {
   updated_at: string
 }
 
-export async function getEventCustomizationSettings(userId: string, eventId?: string) {
-  const supabase = createServerComponentClient({ cookies })
-  
-  const { data, error } = await supabase
-    .rpc('get_or_create_event_customization', {
-      p_user_id: userId,
-      p_event_id: eventId || null
-    })
-    .single()
-  
-  if (error) {
-    console.error('Error fetching event customization settings:', error)
-    throw error
-  }
-  
-  return data as EventCustomizationSettings
-}
+// Move the server component function to a separate file
+// We'll create a new file called event-customization-server.ts for this
+// export async function getEventCustomizationSettings(userId: string, eventId?: string) {
+//   const supabase = createServerComponentClient({ cookies })
+//   
+//   const { data, error } = await supabase
+//     .rpc('get_or_create_event_customization', {
+//       p_user_id: userId,
+//       p_event_id: eventId || null
+//     })
+//     .single()
+//   
+//   if (error) {
+//     console.error('Error fetching event customization settings:', error)
+//     throw error
+//   }
+//   
+//   return data as EventCustomizationSettings
+// }
 
+// This function is used by client components and can stay here
 export async function updateEventCustomizationSettings(
   settings: Partial<EventCustomizationSettings>,
   eventId?: string

@@ -17,13 +17,22 @@ interface Profile {
 interface SideNavProps {
   user: any // Temporarily use any to understand the expected type
   profile: any // Temporarily use any to understand the expected type
+  setIsOpen?: (open: boolean) => void // Add prop to control mobile menu state
 }
 
-export function SideNav({ user, profile }: SideNavProps) {
+export function SideNav({ user, profile, setIsOpen }: SideNavProps) {
   const pathname = usePathname()
   
   const isAdmin = profile?.role === 'super_admin' || profile?.role === 'admin'
   const isEventHost = profile?.role === 'event_host'
+
+  // Function to handle navigation item clicks
+  const handleNavClick = () => {
+    // Close the mobile menu if setIsOpen is provided
+    if (setIsOpen) {
+      setIsOpen(false)
+    }
+  }
 
   return (
     <nav className="grid items-start gap-2 p-4">
@@ -37,6 +46,7 @@ export function SideNav({ user, profile }: SideNavProps) {
             pathname === "/protected/dashboard" && "bg-muted",
             "justify-start w-full"
           )}
+          onClick={handleNavClick}
         >
           Overview
         </Link>
@@ -54,6 +64,7 @@ export function SideNav({ user, profile }: SideNavProps) {
                 pathname === "/protected/admin/dashboard" && "bg-muted",
                 "justify-start w-full"
               )}
+              onClick={handleNavClick}
             >
               Admin Dashboard
             </Link>
@@ -64,6 +75,7 @@ export function SideNav({ user, profile }: SideNavProps) {
                 pathname === "/protected/admin/users" && "bg-muted",
                 "justify-start w-full"
               )}
+              onClick={handleNavClick}
             >
               Users
             </Link>
@@ -74,6 +86,7 @@ export function SideNav({ user, profile }: SideNavProps) {
                 pathname === "/protected/admin/roles" && "bg-muted",
                 "justify-start w-full"
               )}
+              onClick={handleNavClick}
             >
               Roles
             </Link>
@@ -84,6 +97,7 @@ export function SideNav({ user, profile }: SideNavProps) {
                 pathname === "/protected/admin/newsletter" && "bg-muted",
                 "justify-start w-full"
               )}
+              onClick={handleNavClick}
             >
               Newsletter
             </Link>
@@ -94,6 +108,7 @@ export function SideNav({ user, profile }: SideNavProps) {
                 pathname === "/protected/admin/contacts" && "bg-muted",
                 "justify-start w-full"
               )}
+              onClick={handleNavClick}
             >
               Contact Submissions
             </Link>
@@ -104,6 +119,7 @@ export function SideNav({ user, profile }: SideNavProps) {
                 pathname === "/protected/admin/audit-logs" && "bg-muted",
                 "justify-start w-full"
               )}
+              onClick={handleNavClick}
             >
               Audit Logs
             </Link>
@@ -123,6 +139,7 @@ export function SideNav({ user, profile }: SideNavProps) {
                 pathname === "/protected/events/create" && "bg-muted",
                 "justify-start w-full"
               )}
+              onClick={handleNavClick}
             >
               Create Event
             </Link>
@@ -133,6 +150,7 @@ export function SideNav({ user, profile }: SideNavProps) {
                 pathname === "/protected/events/manage" && "bg-muted",
                 "justify-start w-full"
               )}
+              onClick={handleNavClick}
             >
               Manage Events
             </Link>
@@ -151,8 +169,9 @@ export function SideNav({ user, profile }: SideNavProps) {
               pathname === "/protected/settings/account" && "bg-muted",
               "justify-start w-full"
             )}
+            onClick={handleNavClick}
           >
-            Account
+            Accounts
           </Link>
           <Link
             href="/protected/settings/billing"
@@ -161,8 +180,9 @@ export function SideNav({ user, profile }: SideNavProps) {
               pathname === "/protected/settings/billing" && "bg-muted",
               "justify-start w-full"
             )}
+            onClick={handleNavClick}
           >
-            Billing
+            Billings
           </Link>
           <Link
             href="/protected/settings/notifications"
@@ -171,6 +191,7 @@ export function SideNav({ user, profile }: SideNavProps) {
               pathname === "/protected/settings/notifications" && "bg-muted",
               "justify-start w-full"
             )}
+            onClick={handleNavClick}
           >
             Notifications
           </Link>

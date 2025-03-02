@@ -72,7 +72,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <X className="h-6 w-6" />
           </Button>
         </div>
-        <SideNav user={user} profile={profile} />
+        <SideNav user={user} profile={profile} setIsOpen={setSidebarOpen} />
       </div>
 
       {/* Main content */}

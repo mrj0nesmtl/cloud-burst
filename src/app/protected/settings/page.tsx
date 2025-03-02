@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { redirect } from 'next/navigation'
 import { getSecuritySettings } from '@/lib/security-settings'
-import { getEventCustomizationSettings } from '@/lib/event-customization'
+import { getEventCustomizationSettings } from '@/lib/event-customization-server'
 
 export const metadata: Metadata = {
   title: 'Settings | Cloud Burst',

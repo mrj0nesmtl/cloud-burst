@@ -29,7 +29,10 @@ export const createServerClient = async () => {
   const { cookies } = await import('next/headers')
   const { createServerComponentClient } = await import('@supabase/auth-helpers-nextjs')
   
+  // Get the cookie store and ensure it's properly awaited
   const cookieStore = cookies()
+  
+  // Create the server component client with the cookie store
   return createServerComponentClient<Database>({
     cookies: () => cookieStore
   })
