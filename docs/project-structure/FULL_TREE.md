@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-02T04:54:00.278Z
+Generated: 2025-03-03T18:02:32.865Z
 
 ```
 ./
@@ -55,6 +55,8 @@ Generated: 2025-03-02T04:54:00.278Z
 │   │   │   ├── session_14_kickoff.md
 │   │   │   ├── session_15_checklist.md
 │   │   │   ├── session_15_kickoff.md
+│   │   │   ├── session_16_checklist.md
+│   │   │   ├── session_16_kickoff.md
 │   │   │   ├── session_1_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
@@ -66,8 +68,9 @@ Generated: 2025-03-02T04:54:00.278Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_16_checklist.md
-│   │   ├── session_16_kickoff.md
+│   │   ├── session17_checklist.md
+│   │   ├── session17_kickoff.md
+│   │   ├── session_17_checklist.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
@@ -94,15 +97,23 @@ Generated: 2025-03-02T04:54:00.278Z
 │   │   ├── planning_tree.md
 │   │   ├── public_tree.md
 │   │   ├── src_tree.md
+│   │   ├── store_tree.md
 │   │   └── types_tree.md
+│   ├── rbac/
+│   │   ├── README.md
+│   │   ├── role-based-access-control.md
+│   │   ├── role_based_access_updated.md
+│   │   ├── role_permissions.md
+│   │   └── role_permissions_updated.md
+│   ├── sessions/
 │   ├── user-flows/
 │   │   ├── invited_user_flow_design_document.md
 │   │   ├── photo_upload_sequence_diagram.md
-│   │   ├── role_based_access.md
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   └── README.md
+│   ├── README.md
+│   └── create_test_users_ui.md
 ├── public/
 │   ├── images/
 │   │   ├── fallback-hero.jpg
@@ -133,8 +144,24 @@ Generated: 2025-03-02T04:54:00.278Z
 │   ├── types/
 │   │   └── tree-cli.d.ts
 │   ├── .DS_Store
+│   ├── check_profiles_schema.sql
+│   ├── check_roles_alternative.sql
+│   ├── create_complete_profiles.sql
+│   ├── create_profiles.sql
+│   ├── create_test_users.sql
+│   ├── create_test_users_fixed.sql
+│   ├── fix_organizer_profile.sql
+│   ├── fix_organizer_simple.sql
 │   ├── generate-favicons.sh*
-│   └── generate-structure.mjs
+│   ├── generate-structure.mjs
+│   ├── match_users_to_profiles.sql
+│   ├── set_user_passwords.sql
+│   ├── test_rbac.js
+│   ├── try_different_roles.sql
+│   ├── update_existing_profiles.sql
+│   └── verify_profiles.sql
+├── sql/
+│   └── rbac_setup.sql
 ├── src/
 │   ├── app/
 │   │   ├── api/
@@ -165,6 +192,14 @@ Generated: 2025-03-02T04:54:00.278Z
 │   │   ├── dev/
 │   │   │   └── setup/
 │   │   │       └── route.ts
+│   │   ├── events/
+│   │   │   ├── [id]/
+│   │   │   │   ├── gallery/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── not-found.tsx
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
 │   │   ├── legal/
 │   │   │   ├── cookies/
 │   │   │   │   └── page.tsx
@@ -263,6 +298,7 @@ Generated: 2025-03-02T04:54:00.278Z
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   ├── metadata.ts
+│   │   ├── not-found.tsx
 │   │   └── page.tsx
 │   ├── components/
 │   │   ├── auth/
@@ -270,6 +306,7 @@ Generated: 2025-03-02T04:54:00.278Z
 │   │   │   ├── auth-form.tsx
 │   │   │   ├── auth-guard.tsx
 │   │   │   ├── debug-panel.tsx
+│   │   │   ├── permission-gate.tsx
 │   │   │   ├── role-guard.tsx
 │   │   │   └── social-auth-buttons.tsx
 │   │   ├── dashboard/
@@ -280,7 +317,9 @@ Generated: 2025-03-02T04:54:00.278Z
 │   │   │   ├── newsletter-subscribers.tsx
 │   │   │   └── recent-activity.tsx
 │   │   ├── events/
-│   │   │   └── event-actions.tsx
+│   │   │   ├── attendee-management.tsx
+│   │   │   ├── event-actions.tsx
+│   │   │   └── qr-code-display.tsx
 │   │   ├── forms/
 │   │   │   ├── avatar-upload.tsx
 │   │   │   ├── event-customization-form.tsx
@@ -289,8 +328,13 @@ Generated: 2025-03-02T04:54:00.278Z
 │   │   │   ├── preferences-form.tsx
 │   │   │   ├── profile-form.tsx
 │   │   │   └── security-form.tsx
+│   │   ├── gallery/
+│   │   │   ├── gallery-grid.tsx
+│   │   │   ├── photo-lightbox.tsx
+│   │   │   └── upload-dropzone.tsx
 │   │   ├── layout/
-│   │   │   └── dashboard-layout.tsx
+│   │   │   ├── dashboard-layout.tsx
+│   │   │   └── main-nav.tsx
 │   │   ├── marketing/
 │   │   │   ├── contact-form.tsx
 │   │   │   └── newsletter-form.tsx
@@ -364,28 +408,58 @@ Generated: 2025-03-02T04:54:00.278Z
 │   │   │   ├── __tests__/
 │   │   │   │   └── auth-store.test.ts
 │   │   │   ├── migrations/
-│   │   │   │   ├── 01_forms_and_newsletter.sql
-│   │   │   │   └── 02_analytics_functions.sql
 │   │   │   ├── auth-store.ts
 │   │   │   ├── client.ts
 │   │   │   ├── debug-queries.ts
+│   │   │   ├── events.ts
+│   │   │   ├── photos.ts
+│   │   │   ├── run-migration.js
 │   │   │   ├── templates.ts
-│   │   │   └── test-utils.ts
+│   │   │   ├── test-utils.ts
+│   │   │   ├── verify-schema.html
+│   │   │   └── verify-schema.js
 │   │   ├── event-customization-server.ts
 │   │   ├── event-customization.ts
+│   │   ├── qr-code.ts
 │   │   ├── security-settings.ts
 │   │   ├── user-sessions.ts
 │   │   └── utils.ts
+│   ├── store/
+│   │   ├── events-store.ts
+│   │   └── photos-store.ts
 │   ├── types/
 │   │   ├── auth.ts
+│   │   ├── events.ts
 │   │   └── supabase.ts
 │   ├── .DS_Store
 │   ├── middleware.test.ts
 │   └── middleware.ts
+├── supabase/
+│   ├── .gitignore
+│   └── config.toml
 ├── supabase-exports/
 │   ├── .DS_Store
+│   ├── 3 - Check Profile Role Column Definition.csv
+│   ├── Check Events Table Structure.csv
+│   ├── Check Profile Role Column Definition.csv
+│   ├── Check RLS Policies for Event Attendees.csv
+│   ├── Check RLS Policies for Events Table.csv
+│   ├── Check RLS Policies for Photos.csv
+│   ├── Check RLS Status for Tables.csv
+│   ├── Check for Custom Role Types.csv
+│   ├── Event Attendees Table Structure.csv
+│   ├── Index Check for Specific Tables.csv
+│   ├── Photos Table Structure.csv
 │   ├── Policy Overview for Public Schema.csv
+│   ├── Profile Table Structure.csv
+│   ├── Retrieve User Roles.csv
+│   ├── User Role Verification Query.csv
+│   ├── Verify User Update.csv
+│   ├── profiles_rows (1).csv
+│   ├── profiles_rows (2).csv
 │   ├── profiles_rows.csv
+│   ├── role_capabilities_rows.csv
+│   ├── roles_rows.csv
 │   ├── supabase-auth-schema-bxvbovzqzjfomnqidzzx (1).png
 │   ├── supabase-public-schema-bxvbovzqzjfomnqidzzx.png
 │   └── table_structures_and_relationships.csv
@@ -397,10 +471,7 @@ Generated: 2025-03-02T04:54:00.278Z
 ├── README.md
 ├── cloud-burst.code-workspace
 ├── components.json
-├── create_template_table.sql
 ├── eslint.config.mjs
-├── event_customization_fix.sql
-├── fix_template_table.sql
 ├── next-env.d.ts
 ├── next.config.js
 ├── package-lock.json
@@ -410,7 +481,7 @@ Generated: 2025-03-02T04:54:00.278Z
 ├── tailwind.config.ts
 └── tsconfig.json
 
-91 directories, 316 files
+100 directories, 378 files
 
 ```
 

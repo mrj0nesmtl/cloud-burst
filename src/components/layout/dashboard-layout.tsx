@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { SideNav } from '@/components/nav/side-nav'
-import { MainNav } from '@/components/nav/main-nav'
+import { MainNav } from '@/components/layout/main-nav'
 import { UserNav } from '@/components/nav/user-nav'
 import { Button } from '@/components/ui/button'
 import { Menu, X, LogOut } from 'lucide-react'

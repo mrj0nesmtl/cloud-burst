@@ -15,6 +15,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [0.1.18] - 2024-03-03
+### Added
+- Comprehensive role-based access control (RBAC) system
+- Permission hooks for checking user capabilities
+- Permission gate components for conditional rendering
+- Role gate components for role-based UI elements
+- Subscription gate components for paid features
+- Middleware for route protection based on roles
+- Database RLS policies for data access control
+- Event detail page with tabs for different sections
+- Attendee management component with permission checks
+- QR code display component for event sharing
+- Event actions with permission-based rendering
+- Enhanced gallery grid component for event photos
+- Upload dropzone component for photo uploads
+- Basic photo lightbox implementation
+- Zustand stores for events and photos
+
+### Changed
+- Updated navigation to show/hide items based on roles
+- Enhanced middleware with role-based route protection
+- Improved event management with permission checks
+- Updated documentation to reflect RBAC implementation
+- Enhanced gallery components with better UX
+- Optimized event detail page with responsive layout
+
+### Infrastructure
+- Created SQL scripts for RBAC setup
+- Implemented role capabilities table
+- Added role-based RLS policies for events
+- Enhanced permission checking in components
+- Updated project structure documentation
+- Fixed TypeScript errors in permission hooks
+
 ## [0.1.17] - 2024-03-01
 ### Added
 - Email template management system

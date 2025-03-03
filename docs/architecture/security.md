@@ -1,8 +1,8 @@
-# 🔐 Security Guidelines [Beta v0.1.17]
-📅 *Updated: March 1, 2025*
+# 🔐 Security Guidelines [Beta v0.1.18]
+📅 *Updated: March 3, 2025, 12:40 PM*
 
 ## 📌 Overview
-Cloud Burst's security framework ensures data protection, user privacy, and system integrity.
+Cloud Burst's security framework ensures data protection, user privacy, and system integrity through a comprehensive role-based access control system.
 
 ## 🛡️ Security Architecture
 1. **Authentication**
@@ -11,6 +11,7 @@ Cloud Burst's security framework ensures data protection, user privacy, and syst
    - Session handling
    - Rate limiting
    - CSRF protection
+   - Role-based authentication
 
 2. **Authorization**
    - Role-based access control
@@ -18,6 +19,7 @@ Cloud Burst's security framework ensures data protection, user privacy, and syst
    - Route protection
    - Resource validation
    - Access boundaries
+   - Conditional UI rendering
 
 3. **Data Protection**
    - End-to-end encryption
@@ -25,6 +27,7 @@ Cloud Burst's security framework ensures data protection, user privacy, and syst
    - Data validation
    - Input sanitization
    - Output encoding
+   - Row Level Security policies
 
 4. **API Security**
    - Rate limiting
@@ -32,6 +35,7 @@ Cloud Burst's security framework ensures data protection, user privacy, and syst
    - Error handling
    - Logging
    - Monitoring
+   - Role-based access
 
 5. **File Security**
    - Upload validation
@@ -39,6 +43,7 @@ Cloud Burst's security framework ensures data protection, user privacy, and syst
    - Format verification
    - Size limitations
    - Storage encryption
+   - Permission-based access
 
 6. **Template Security**
    - Row Level Security policies
@@ -46,6 +51,15 @@ Cloud Burst's security framework ensures data protection, user privacy, and syst
    - Input validation
    - HTML sanitization
    - Secure synchronization
+   - Permission checking
+
+7. **Event Security**
+   - Owner-based access control
+   - Role-based permissions
+   - Attendee management security
+   - QR code validation
+   - Gallery access control
+   - Photo moderation
 
 ## 🔍 Security Practices
 1. **Development**
@@ -54,6 +68,7 @@ Cloud Burst's security framework ensures data protection, user privacy, and syst
    - Code review process
    - Security testing
    - Vulnerability management
+   - Permission-based development
 
 2. **Deployment**
    - Environment separation
@@ -61,6 +76,7 @@ Cloud Burst's security framework ensures data protection, user privacy, and syst
    - Access control
    - Monitoring
    - Incident response
+   - Role verification
 
 3. **Maintenance**
    - Regular updates
@@ -68,6 +84,70 @@ Cloud Burst's security framework ensures data protection, user privacy, and syst
    - Dependency updates
    - Security audits
    - Compliance checks
+   - Permission system updates
+
+## 🔒 Role-Based Access Control
+1. **Role Hierarchy**
+   - Super Admin: Full system access (internal use only)
+   - Admin: Administrative access (internal use only)
+   - Organizer: Event management access (paid tier only)
+   - Event Host: Create and manage own events (cannot delete)
+   - User: Standard user with basic platform access
+   - Guest: Public access to view public events and galleries
+
+2. **Permission System**
+   - Action-based permissions (create, read, update, delete)
+   - Resource-based permissions (event, photo, attendee, user)
+   - Ownership verification
+   - Role verification
+   - Subscription tier checking
+   - Conditional UI rendering
+
+3. **Implementation**
+   - Permission hooks for checking user capabilities
+   - Permission gate components for conditional rendering
+   - Role gate components for role-based UI elements
+   - Subscription gate components for paid features
+   - Middleware for route protection
+   - Database RLS policies for data access
+
+## 🔐 Implementation Status
+| Security Feature | Status | Priority |
+|------------------|--------|----------|
+| Authentication | ✅ Complete | P0 |
+| Authorization | ✅ Complete | P0 |
+| Route Protection | ✅ Complete | P0 |
+| API Security | ✅ Complete | P0 |
+| Database RLS | ✅ Complete | P0 |
+| Template Security | ✅ Complete | P1 |
+| Role-Based Access | ✅ Complete | P0 |
+| Event Security | 🟢 Active | P1 |
+| File Security | 🟢 Active | P1 |
+| QR Security | 🟢 Active | P2 |
+
+## 🔑 Role Capabilities Matrix
+
+| Capability | super_admin | admin | organizer | event_host | user | guest |
+|------------|-------------|-------|-----------|------------|------|-------|
+| View public events | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Create events | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Edit own events | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Delete own events | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Edit any event | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Delete any event | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Access admin area | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Manage users | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Assign roles | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Upload photos | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Moderate photos | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Access analytics | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+
+## 🔒 Next Steps
+1. Implement invited user role
+2. Enhance event security with additional RLS policies
+3. Complete file security implementation
+4. Implement QR code validation security
+5. Add subscription tier verification
 
 ## 🔒 Template Management Security
 1. **Database Security**

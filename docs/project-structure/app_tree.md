@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-03-02T04:54:00.398Z
+Generated: 2025-03-03T18:02:32.950Z
 
 ```
 ./src/app/
@@ -31,6 +31,14 @@ Generated: 2025-03-02T04:54:00.398Z
 ├── dev/
 │   └── setup/
 │       └── route.ts
+├── events/
+│   ├── [id]/
+│   │   ├── gallery/
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   └── not-found.tsx
+│   ├── layout.tsx
+│   └── page.tsx
 ├── legal/
 │   ├── cookies/
 │   │   └── page.tsx
@@ -129,9 +137,10 @@ Generated: 2025-03-02T04:54:00.398Z
 ├── globals.css
 ├── layout.tsx
 ├── metadata.ts
+├── not-found.tsx
 └── page.tsx
 
-52 directories, 76 files
+55 directories, 82 files
 
 ```
 

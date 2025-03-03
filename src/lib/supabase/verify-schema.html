@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Burst - Schema Verification</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #2563eb;
+    }
+    h2 {
+      color: #4b5563;
+      margin-top: 30px;
+    }
+    pre {
+      background-color: #f3f4f6;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .success {
+      color: #10b981;
+      font-weight: bold;
+    }
+    .error {
+      color: #ef4444;
+      font-weight: bold;
+    }
+    .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #1d4ed8;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f9fafb;
+    }
+    .config-form {
+      margin-bottom: 20px;
+    }
+    .config-form input {
+      padding: 8px;
+      width: 100%;
+      margin-bottom: 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cloud Burst - Database Schema Verification</h1>
+  
+  <div class="config-form card">
+    <h2>Supabase Configuration</h2>
+    <div>
+      <label for="supabase-url">Supabase URL:</label>
+      <input type="text" id="supabase-url" placeholder="https://your-project.supabase.co">
+    </div>
+    <div>
+      <label for="supabase-key">Supabase Anon Key:</label>
+      <input type="text" id="supabase-key" placeholder="your-anon-key">
+    </div>
+    <button id="verify-btn">Verify Schema</button>
+  </div>
+  
+  <div id="results"></div>
+  
+  <script>
+    document.getElementById('verify-btn').addEventListener('click', verifySchema);
+    
+    async function verifySchema() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<h2>Verifying schema...</h2>';
+      
+      const supabaseUrl = document.getElementById('supabase-url').value;
+      const supabaseKey = document.getElementById('supabase-key').value;
+      
+      if (!supabaseUrl || !supabaseKey) {
+        resultsDiv.innerHTML = '<p class="error">Please enter Supabase URL and Anon Key</p>';
+        return;
+      }
+      
+      try {
+        // Create Supabase client
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        
+        let output = '<h2>Verification Results</h2>';
+        
+        // 1. Check tables structure
+        output += '<div class="card"><h3>1. Table Structures</h3>';
+        
+        // Events table
+        output += '<h4>Events Table</h4>';
+        try {
+          const { data: eventsData, error: eventsError } = await supabase
+            .from('events')
+            .select('*')
+            .limit(1);
+          
+          if (eventsError) {
+            output += `<p class="error">Error querying events table: ${eventsError.message}</p>`;
+          } else {
+            const eventColumns = eventsData.length > 0 ? Object.keys(eventsData[0]) : [];
+            output += '<p>Columns found:</p>';
+            output += `<pre>${JSON.stringify(eventColumns, null, 2)}</pre>`;
+            
+            // Check for required columns
+            const requiredEventColumns = [
+              'id', 'name', 'description', 'date', 'location', 
+              'status', 'organizer_id', 'max_attendees', 'is_public', 
+              'cover_image_url', 'qr_code_url', 'created_at', 'updated_at'
+            ];
+            
+            const missingEventColumns = requiredEventColumns.filter(col => !eventColumns.includes(col));
+            
+            if (missingEventColumns.length === 0) {
+              output += '<p class="success">✅ Events table has all required columns</p>';
+            } else {
+              output += `<p class="error">❌ Events table is missing columns: ${missingEventColumns.join(', ')}</p>`;
+            }
+          }
+        } catch (err) {
+          output += `<p class="error">Error: ${err.message}</p>`;
+        }
+        
+        // Photos table
+        output += '<h4>Photos Table</h4>';
+        try {
+          const { data: photosData, error: photosError } = await supabase
+            .from('photos')
+            .select('*')
+            .limit(1);
+          
+          if (photosError) {
+            output += `<p class="error">Error querying photos table: ${photosError.message}</p>`;
+          } else {
+            const photoColumns = photosData.length > 0 ? Object.keys(photosData[0]) : [];
+            output += '<p>Columns found:</p>';
+            output += `<pre>${JSON.stringify(photoColumns, null, 2)}</pre>`;
+            
+            // Check for required columns
+            const requiredPhotoColumns = [
+              'id', 'event_id', 'storage_path', 'uploaded_by', 'filename', 
+              'size', 'mime_type', 'width', 'height', 'is_approved', 
+              'metadata', 'created_at', 'updated_at'
+            ];
+            
+            const missingPhotoColumns = requiredPhotoColumns.filter(col => !photoColumns.includes(col));
+            
+            if (missingPhotoColumns.length === 0) {
+              output += '<p class="success">✅ Photos table has all required columns</p>';
+            } else {
+              output += `<p class="error">❌ Photos table is missing columns: ${missingPhotoColumns.join(', ')}</p>`;
+            }
+          }
+        } catch (err) {
+          output += `<p class="error">Error: ${err.message}</p>`;
+        }
+        
+        // Event Attendees table
+        output += '<h4>Event Attendees Table</h4>';
+        try {
+          const { data: attendeesData, error: attendeesError } = await supabase
+            .from('event_attendees')
+            .select('*')
+            .limit(1);
+          
+          if (attendeesError) {
+            output += `<p class="error">Error querying event_attendees table: ${attendeesError.message}</p>`;
+          } else {
+            const attendeeColumns = attendeesData.length > 0 ? Object.keys(attendeesData[0]) : [];
+            output += '<p>Columns found:</p>';
+            output += `<pre>${JSON.stringify(attendeeColumns, null, 2)}</pre>`;
+            
+            // Check for required columns
+            const requiredAttendeeColumns = [
+              'id', 'event_id', 'email', 'name', 'status', 
+              'access_code', 'user_id', 'created_at', 'updated_at'
+            ];
+            
+            const missingAttendeeColumns = requiredAttendeeColumns.filter(col => !attendeeColumns.includes(col));
+            
+            if (missingAttendeeColumns.length === 0) {
+              output += '<p class="success">✅ Event Attendees table has all required columns</p>';
+            } else {
+              output += `<p class="error">❌ Event Attendees table is missing columns: ${missingAttendeeColumns.join(', ')}</p>`;
+            }
+          }
+        } catch (err) {
+          output += `<p class="error">Error: ${err.message}</p>`;
+        }
+        
+        output += '</div>';
+        
+        // 2. Check RLS policies
+        output += '<div class="card"><h3>2. RLS Policies</h3>';
+        output += '<p>Testing RLS policies by attempting operations:</p>';
+        
+        // Test events RLS - try to select public events
+        try {
+          const { data: publicEvents, error: publicEventsError } = await supabase
+            .from('events')
+            .select('*')
+            .eq('is_public', true)
+            .limit(5);
+          
+          if (publicEventsError) {
+            output += `<p class="error">❌ Cannot select public events: ${publicEventsError.message}</p>`;
+          } else {
+            output += `<p class="success">✅ Successfully queried public events (${publicEvents.length} found)</p>`;
+          }
+        } catch (err) {
+          output += `<p class="error">Error testing events RLS: ${err.message}</p>`;
+        }
+        
+        // Test photos RLS - try to select photos
+        try {
+          const { data: publicPhotos, error: publicPhotosError } = await supabase
+            .from('photos')
+            .select('*')
+            .limit(5);
+          
+          if (publicPhotosError) {
+            output += `<p class="error">❌ Cannot select photos: ${publicPhotosError.message}</p>`;
+          } else {
+            output += `<p class="success">✅ Successfully queried photos (${publicPhotos.length} found)</p>`;
+          }
+        } catch (err) {
+          output += `<p class="error">Error testing photos RLS: ${err.message}</p>`;
+        }
+        
+        output += '</div>';
+        
+        // Summary
+        output += '<div class="card"><h3>Verification Summary</h3>';
+        output += '<p>The database schema verification is complete. Review the results above to ensure all tables have the expected structure and RLS policies are working correctly.</p>';
+        output += '</div>';
+        
+        resultsDiv.innerHTML = output;
+        
+      } catch (error) {
+        resultsDiv.innerHTML = `<p class="error">Unexpected error: ${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html> 

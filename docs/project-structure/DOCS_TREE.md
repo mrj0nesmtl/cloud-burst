@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-02T04:54:00.323Z
+Generated: 2025-03-03T18:02:32.900Z
 
 ```
 ./docs/
@@ -35,6 +35,8 @@ Generated: 2025-03-02T04:54:00.323Z
 │   │   ├── session_14_kickoff.md
 │   │   ├── session_15_checklist.md
 │   │   ├── session_15_kickoff.md
+│   │   ├── session_16_checklist.md
+│   │   ├── session_16_kickoff.md
 │   │   ├── session_1_prompt.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
@@ -46,8 +48,9 @@ Generated: 2025-03-02T04:54:00.323Z
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_16_checklist.md
-│   ├── session_16_kickoff.md
+│   ├── session17_checklist.md
+│   ├── session17_kickoff.md
+│   ├── session_17_checklist.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
@@ -74,17 +77,25 @@ Generated: 2025-03-02T04:54:00.323Z
 │   ├── planning_tree.md
 │   ├── public_tree.md
 │   ├── src_tree.md
+│   ├── store_tree.md
 │   └── types_tree.md
+├── rbac/
+│   ├── README.md
+│   ├── role-based-access-control.md
+│   ├── role_based_access_updated.md
+│   ├── role_permissions.md
+│   └── role_permissions_updated.md
+├── sessions/
 ├── user-flows/
 │   ├── invited_user_flow_design_document.md
 │   ├── photo_upload_sequence_diagram.md
-│   ├── role_based_access.md
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store
-└── README.md
+├── README.md
+└── create_test_users_ui.md
 
-9 directories, 72 files
+11 directories, 81 files
 
 ```
 

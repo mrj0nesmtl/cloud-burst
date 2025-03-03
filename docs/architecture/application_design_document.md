@@ -1,7 +1,7 @@
 # 🎨 **Application Design Document**  
 
 ## Cloud Burst
-📅 *Updated: Mar 1, 2025*  
+📅 *Updated: March 3, 2025, 12:40 PM*  
 
 ## 📊 Implementation Status
 
@@ -9,18 +9,19 @@
 |-----------|---------|-----------|--------------|-----------|
 | 🏗️ Core Architecture | ✅ Done | P0 | None | 100% |
 | 🎨 Project Structure | ✅ Done | P0 | None | 100% |
-| 📚 Documentation | 🟢 Active | P0 | None | 90% |
+| 📚 Documentation | 🟢 Active | P0 | None | 95% |
 | 🔐 Authentication | ✅ Done | P0 | Supabase | 100% |
 | 📱 Public Pages | ✅ Done | P0 | Shadcn UI | 100% |
 | 🎨 Brand Identity | ✅ Done | P0 | None | 100% |
 | 📜 Legal Framework | ⏸️ On Hold | P2 | None | 100% |
 | 💰 Pricing System | ⏸️ On Hold | P2 | None | 100% |
-| 🖼️ Photo Upload | 🟡 Starting | P1 | Storage | 20% |
+| 🖼️ Photo Upload | 🟢 Active | P1 | Storage | 40% |
 | 🤖 AI Processing | ⏸️ On Hold | P3 | TensorFlow | 0% |
-| ⚙️ User Settings | 🟢 Active | P0 | Auth | 75% |
-| 👤 Profile Management | 🟡 Active | P0 | Auth | 65% |
-| 🔔 Notifications | 🟢 Active | P1 | Settings | 75% |
-| 📅 Event Management | 🟡 Starting | P1 | Auth | 15% |
+| ⚙️ User Settings | 🟢 Active | P0 | Auth | 80% |
+| 👤 Profile Management | 🟢 Active | P0 | Auth | 70% |
+| 🔔 Notifications | 🟢 Active | P1 | Settings | 80% |
+| 📅 Event Management | 🟢 Active | P1 | Auth | 45% |
+| 🔒 Role-Based Access | ✅ Done | P0 | Auth | 100% |
 
 ### 🎯 Sprint Progress
 
@@ -30,10 +31,11 @@
 | 2 | 🎨 UI & Branding | ✅ Done | Feb 2024 | 100% |
 | 3 | 🔐 Auth Reset | ✅ Done | Feb 2024 | 100% |
 | 4 | ⚙️ Super Admin | ✅ Done | Feb 2024 | 100% |
-| 5 | 📧 Notifications | 🟢 Active | Mar 2024 | 75% |
-| 6 | 🖼️ Photo Features | 🟡 Starting | Mar 2024 | 20% |
-| 7 | 📅 Event Management | 🟡 Starting | Mar 2024 | 15% |
-| 8 | 🤖 AI Integration | ⏸️ On Hold | TBD | 0% |
+| 5 | 📧 Notifications | 🟢 Active | Mar 2024 | 80% |
+| 6 | 🖼️ Photo Features | 🟢 Active | Mar 2024 | 40% |
+| 7 | 📅 Event Management | 🟢 Active | Mar 2024 | 45% |
+| 8 | 🔒 RBAC System | ✅ Done | Mar 2024 | 100% |
+| 9 | 🤖 AI Integration | ⏸️ On Hold | TBD | 0% |
 
 ---
 
@@ -56,24 +58,46 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 - **Storage**: ☁️ Supabase Storage  
 - **Authentication**: 🟢 Supabase Auth with JWT, Role-Based Access  
 - **Deployment**: 🚀 Replit (production)  
+- **State Management**: 🔄 Zustand for global state
 
 ---
 
 ## 👥 User Roles & Access Levels  
-### 🎟️ **Event Organizer**  
-- 🔹 Full dashboard access  
-- 🔹 Manage events & settings  
-- 🔹 Moderate and approve uploaded content  
+### 🔑 **Super Admin**
+- 🔹 Full system access (internal use only)
+- 🔹 User management and role assignment
+- 🔹 System configuration and security controls
+- 🔹 Analytics access and template management
 
-### 📷 **Event Participant/Guest**  
-- 🔹 Upload and share photos  
-- 🔹 Browse the event gallery  
-- 🔹 Download images  
+### 🛡️ **Admin**
+- 🔹 Administrative access (internal use only)
+- 🔹 User management (cannot assign roles)
+- 🔹 Event management and photo moderation
+- 🔹 Analytics access and template viewing
 
-### 🛠️ **Administrator**  
-- 🔹 Manage all users  
-- 🔹 Oversee platform operations  
-- 🔹 Configure system templates and notifications
+### 🎟️ **Organizer**  
+- 🔹 Event management access (paid tier only)
+- 🔹 Create and manage multiple events
+- 🔹 Moderate and approve uploaded content
+- 🔹 Analytics view and attendee management
+
+### 📷 **Event Host**  
+- 🔹 Create and manage own events (cannot delete)
+- 🔹 Attendee management for own events
+- 🔹 Photo moderation for own events
+- 🔹 Limited analytics
+
+### 👤 **User**
+- 🔹 Standard user with basic platform access
+- 🔹 Gallery access and photo upload
+- 🔹 Profile management and settings control
+- 🔹 View public events and galleries
+
+### 👻 **Guest**
+- 🔹 Public access to view public events and galleries
+- 🔹 Limited upload capabilities
+- 🔹 Basic interaction with platform
+- 🔹 No account required
 
 ---
 
@@ -95,20 +119,21 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 ### 🎛️ **Dashboard**  
 📍 *Status: In Progress*
 - ✅ Basic Layout
-- 🟡 Event Management [In Progress]
+- 🟢 Event Management [Active]
 - ⏸️ Photo Moderation [Post-Beta]
 - ⏸️ Analytics [Post-Beta]
 
 ### 🎛️ **Event Pages**  
-📍 *Status: Starting*
-- 🟡 Photo Upload
-- 🟡 Gallery View
-- ⚪ QR Access
+📍 *Status: Active*
+- 🟢 Photo Upload
+- 🟢 Gallery View
+- 🟢 QR Access
+- 🟢 Attendee Management
 
 ### ⚙️ User Settings
 📍 *Status: In Progress*
-- 🟡 Profile Management
-- 🟡 Basic Preferences
+- 🟢 Profile Management
+- 🟢 Basic Preferences
 - 🟢 Notifications Management
 - ⏸️ Advanced Features [Post-Beta]
 
@@ -117,9 +142,17 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 - ✅ Email Template Management
 - ✅ Template Preview & Editing
 - ✅ Supabase Auth Integration
-- 🟡 Template Analytics
+- 🟢 Template Analytics
 - ⏸️ Push Notifications [Post-Beta]
 - ⏸️ SMS Notifications [Post-Beta]
+
+### 🔒 **Role-Based Access Control**
+📍 *Status: Complete*
+- ✅ Role definitions and hierarchy
+- ✅ Permission hooks and components
+- ✅ Conditional UI rendering
+- ✅ Route protection middleware
+- ✅ Database RLS policies
 
 ---
 
@@ -147,32 +180,63 @@ src/
 │   │   ├── settings/
 │   │   │   └── notifications/
 │   │   └── events/
+│   │       ├── [id]/
+│   │       │   ├── page.tsx
+│   │       │   ├── edit/
+│   │       │   ├── qr/
+│   │       │   └── attendees/
+│   │       ├── create/
+│   │       └── page.tsx
 │   └── middleware.ts
 ├── components/
 │   ├── ui/
 │   ├── auth/
 │   │   ├── auth-form.tsx
-│   │   └── auth-provider.tsx
+│   │   ├── auth-provider.tsx
+│   │   └── permission-gate.tsx
+│   ├── events/
+│   │   ├── event-actions.tsx
+│   │   ├── attendee-management.tsx
+│   │   └── qr-code-display.tsx
+│   ├── gallery/
+│   │   ├── gallery-grid.tsx
+│   │   ├── upload-dropzone.tsx
+│   │   └── photo-lightbox.tsx
 │   ├── forms/
 │   │   ├── profile-form.tsx
 │   │   ├── preferences-form.tsx
-│   │   └── notifications-form.tsx
+│   │   ├── notifications-form.tsx
+│   │   └── event-form.tsx
+│   ├── layout/
+│   │   ├── main-nav.tsx
+│   │   └── site-header.tsx
 │   ├── notifications/
 │   │   ├── template-preview.tsx
 │   │   ├── template-editor.tsx
 │   │   ├── full-preview.tsx
 │   │   └── create-template.tsx
 │   └── marketing/
+├── hooks/
+│   ├── use-auth.ts
+│   ├── use-permissions.ts
+│   ├── use-toast.ts
+│   └── use-profile.ts
 ├── lib/
 │   ├── supabase/
 │   │   ├── client.ts
 │   │   ├── server.ts
 │   │   ├── auth-store.ts
 │   │   ├── templates.ts
+│   │   ├── events.ts
+│   │   ├── photos.ts
 │   │   └── types.ts
 │   └── utils/
+├── store/
+│   ├── events-store.ts
+│   └── photos-store.ts
 └── types/
-    └── supabase.ts
+    ├── supabase.ts
+    └── events.ts
 ```
 
 ---
@@ -184,41 +248,47 @@ src/
 - ✅ Supabase Auth
 - ✅ Session management
 - ✅ Role-based access
+- ✅ Permission hooks
 - ⏸️ Advanced features [Post-Beta]
 
-### Database Security [In Progress]
+### Database Security [Complete]
 ✔️ **Row Level Security (RLS)**:
 - ✅ Basic RLS policies
 - ✅ Template access rules
-- 🟡 Enhanced access rules
+- ✅ Event access policies
+- ✅ Role-based policies
 - ⏸️ Advanced policies [Post-Beta]
 
 ### Session Management [Complete]
 - ✅ Session validation
 - ✅ Cookie handling
 - ✅ Role verification
+- ✅ Permission checking
 - ⏸️ Advanced features [Post-Beta]
 
-### Access Control
+### Access Control [Complete]
 ✔️ **Role-Based Access Control (RBAC)**:
 - ✅ Permission system
 - ✅ Role hierarchy
 - ✅ Protected route middleware
 - ✅ API route protection
+- ✅ Conditional UI rendering
 
 ## 🎯 Next Steps [v0.1.18 Focus] 
-1. 🖼️ Enhance gallery components
-2. 📅 Complete event management system
+1. 🖼️ Complete gallery components and lightbox
+2. 📅 Enhance event management system
 3. 👤 Implement profile management
 4. 📊 Add analytics for templates
-5. 🎫 Design QR code system
+5. 🎫 Enhance QR code system
+6. 🔒 Implement invited user role
 
 ## 📝 Notes  
-- Email template system now functional
-- Server/client component separation optimized
-- React key warnings fixed in components
-- Enhanced error handling in API routes
-- Documentation aligned with v0.1.17
+- Role-based access control system now fully implemented
+- Event management system foundation in place
+- Gallery components started
+- QR code display implemented
+- Permission gates for conditional UI rendering
+- Documentation updated to reflect v0.1.18
 
 ## 🔒 Security Implementation
 
@@ -230,6 +300,7 @@ src/
 - ✅ Method validation
 - ✅ Role-based middleware
 - ✅ Error boundary implementation
+- ✅ Permission-based route protection
 
 ### Authentication Flow
 - ✅ Secure auth flow
@@ -238,6 +309,7 @@ src/
 - ✅ Protected routes
 - ✅ Role-based access
 - ✅ Error handling
+- ✅ Permission checking
 
 ---
 
@@ -265,6 +337,7 @@ src/
 2. **Basic Security**
    - ✅ Essential headers
    - ✅ Basic CORS
+   - ✅ Role-based access control
    - ⏸️ Advanced features [Post-Beta]
 
 3. **Simple Monitoring**
@@ -274,74 +347,66 @@ src/
 
 ---
 
-## 🎯 Implementation Priority (v0.1.17)
+## 🎯 Implementation Priority (v0.1.18)
 
-### Phase 1: Protected Routes & Dashboard [Complete]
-1. **Route Protection System**
-   - ✅ Middleware implementation
-   - ✅ Role-based access control
-   - ✅ Session validation
-   - ✅ Error boundaries
+### Phase 1: Role-Based Access Control [Complete]
+1. **RBAC System**
+   - ✅ Role definitions and hierarchy
+   - ✅ Permission hooks and components
+   - ✅ Conditional UI rendering
+   - ✅ Route protection middleware
+   - ✅ Database RLS policies
 
-2. **Dashboard Layout**
-   - ✅ Navigation structure
-   - ✅ Role-specific views
-   - ✅ Responsive design
-   - ✅ Loading states
+2. **Permission Components**
+   - ✅ Permission gate component
+   - ✅ Role gate component
+   - ✅ Subscription gate component
+   - ✅ Conditional navigation
+   - ✅ Protected actions
 
-### Phase 2: Notifications & Templates [Active]
-1. **Email Template System**
-   - ✅ Template configurations database
-   - ✅ Template preview and editor
-   - ✅ Supabase Auth synchronization
-   - ✅ API routes for management
+### Phase 2: Event Management [Active]
+1. **Event Creation and Editing**
+   - ✅ Event form component
+   - ✅ Event detail page
+   - ✅ Event actions with permissions
+   - 🟢 Event settings
+   - 🟢 Advanced options
 
-2. **Notifications Interface**
-   - ✅ Email template management
-   - 🟡 Template analytics
-   - ⏸️ Push notifications [Post-Beta]
-   - ⏸️ SMS notifications [Post-Beta]
+2. **Event Features**
+   - ✅ Attendee management
+   - ✅ QR code display
+   - 🟢 Gallery integration
+   - 🟢 Event sharing
+   - 🟢 Event analytics
 
-### Phase 3: Gallery System [Starting]
+### Phase 3: Gallery System [Active]
 1. **Upload Pipeline**
-   - 🟡 Supabase Storage integration
-   - 🟡 Image optimization
-   - ⚪ Progress tracking
-   - ⚪ Error handling
+   - 🟢 Supabase Storage integration
+   - 🟢 Image optimization
+   - 🟢 Progress tracking
+   - 🟢 Error handling
 
 2. **Gallery Components**
-   - 🟡 Grid layout
-   - ⚪ Lightbox viewer
-   - ⚪ Lazy loading
-   - ⚪ Filter system
+   - 🟢 Grid layout
+   - 🟢 Lightbox viewer
+   - 🟢 Lazy loading
+   - 🟢 Filter system
 
-### Phase 4: Event Management [Starting]
-1. **Event Creation**
-   - 🟡 Basic form
-   - 🟡 Event settings
-   - ⚪ Advanced options
-   - ⚪ Scheduling
+### Phase 4: Profile Management [Planned]
+1. **Profile Features**
+   - 🟡 Profile editing
+   - 🟡 Avatar management
+   - 🟡 Subscription management
+   - 🟡 Notification preferences
 
-2. **Event Management**
-   - 🟡 Listing page
-   - ⚪ Detail view
-   - ⚪ Status management
-   - ⚪ Guest management
-
-### Phase 5: QR System [Planned]
-1. **Code Generation**
-   - ⚪ Unique identifiers
-   - ⚪ Access validation
-   - ⚪ Expiry handling
-   - ⚪ Security measures
-
-## 📊 Current Sprint (v0.1.17)
+## 📊 Current Sprint (v0.1.18)
 | Feature | Status | Timeline | Priority |
 |---------|--------|----------|-----------|
-| Email Templates | ✅ Complete | Week 1 | P0 |
-| Gallery System | 🟡 Active | Week 1-2 | P0 |
-| Event Management | 🟡 Active | Week 2-3 | P1 |
+| Role-Based Access Control | ✅ Complete | Week 1 | P0 |
+| Event Management | 🟢 Active | Week 1-2 | P0 |
+| Gallery System | 🟢 Active | Week 2 | P1 |
 | Profile Management | 🟡 Planned | Week 3 | P1 |
-| QR Integration | ⚪ Planned | Week 4 | P2 |
+| QR Enhancement | 🟡 Planned | Week 3 | P2 |
+| Invited User Role | 🟡 Planned | Week 4 | P2 |
 
 ---

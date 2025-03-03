@@ -39,7 +39,7 @@ export function usePermissions() {
       }
 
       // Organizer permissions
-      if (hasRole('organizer')) {
+      if (hasRole('organizer' as UserRole)) {
         // Organizers can manage their own events and related resources
         if (resource === 'event') {
           if (action === 'create') return true;
@@ -122,7 +122,7 @@ export function usePermissions() {
         // Event management routes
         if (route.startsWith('/protected/events/')) {
           return hasRole('super_admin') || hasRole('admin') || 
-                 hasRole('organizer') || hasRole('event_host');
+                 hasRole('organizer' as UserRole) || hasRole('event_host');
         }
 
         // Dashboard and profile routes
@@ -135,24 +135,42 @@ export function usePermissions() {
   );
 
   /**
+   * Check if user has a specific role
+   * @param roles - The roles to check
+   * @returns Whether the user has any of the specified roles
+   */
+  const hasAnyRole = useCallback(
+    (roles: UserRole | UserRole[]): boolean => {
+      if (!user) return false;
+      
+      const rolesToCheck = Array.isArray(roles) ? roles : [roles];
+      
+      return rolesToCheck.some(role => hasRole(role as UserRole));
+    },
+    [user, hasRole]
+  );
+
+  /**
    * Check if user has a paid subscription
    * @returns Whether the user has a paid subscription
    */
   const hasPaidSubscription = useCallback((): boolean => {
     if (!user) return false;
     
-    return user.subscription_tier === 'pro';
+    // Check if subscription_tier exists on user before accessing it
+    return user.hasOwnProperty('subscription_tier') && 
+           (user as any).subscription_tier === 'pro';
   }, [user]);
 
   return {
     // Original functions
     checkPermission: (capability: Capability): boolean => hasCapability(capability),
-    hasAnyRole: (roles: UserRole[]): boolean => roles.some(role => hasRole(role)),
+    hasAnyRole,
     isAdmin: (): boolean => hasRole('admin') || hasRole('super_admin'),
     isEventHost: (): boolean => hasRole('event_host'),
     canManageEvents: (): boolean => hasCapability('manage:events') || hasCapability('manage:own_events'),
     canUploadPhotos: (): boolean => hasCapability('upload:photos') || hasCapability('upload:event_photos'),
-    getCurrentRole: (): UserRole => user?.role || 'guest',
+    getCurrentRole: (): UserRole => user?.role as UserRole || 'guest',
     canAccessRoute: (route: string): boolean => {
       if (route.startsWith('/protected/admin')) {
         return hasRole('admin') || hasRole('super_admin');

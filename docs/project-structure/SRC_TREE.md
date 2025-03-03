@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-02T04:54:00.306Z
+Generated: 2025-03-03T18:02:32.887Z
 
 ```
 ./src/
@@ -32,6 +32,14 @@ Generated: 2025-03-02T04:54:00.306Z
 │   ├── dev/
 │   │   └── setup/
 │   │       └── route.ts
+│   ├── events/
+│   │   ├── [id]/
+│   │   │   ├── gallery/
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   └── not-found.tsx
+│   │   ├── layout.tsx
+│   │   └── page.tsx
 │   ├── legal/
 │   │   ├── cookies/
 │   │   │   └── page.tsx
@@ -130,6 +138,7 @@ Generated: 2025-03-02T04:54:00.306Z
 │   ├── globals.css
 │   ├── layout.tsx
 │   ├── metadata.ts
+│   ├── not-found.tsx
 │   └── page.tsx
 ├── components/
 │   ├── auth/
@@ -137,6 +146,7 @@ Generated: 2025-03-02T04:54:00.306Z
 │   │   ├── auth-form.tsx
 │   │   ├── auth-guard.tsx
 │   │   ├── debug-panel.tsx
+│   │   ├── permission-gate.tsx
 │   │   ├── role-guard.tsx
 │   │   └── social-auth-buttons.tsx
 │   ├── dashboard/
@@ -147,7 +157,9 @@ Generated: 2025-03-02T04:54:00.306Z
 │   │   ├── newsletter-subscribers.tsx
 │   │   └── recent-activity.tsx
 │   ├── events/
-│   │   └── event-actions.tsx
+│   │   ├── attendee-management.tsx
+│   │   ├── event-actions.tsx
+│   │   └── qr-code-display.tsx
 │   ├── forms/
 │   │   ├── avatar-upload.tsx
 │   │   ├── event-customization-form.tsx
@@ -156,8 +168,13 @@ Generated: 2025-03-02T04:54:00.306Z
 │   │   ├── preferences-form.tsx
 │   │   ├── profile-form.tsx
 │   │   └── security-form.tsx
+│   ├── gallery/
+│   │   ├── gallery-grid.tsx
+│   │   ├── photo-lightbox.tsx
+│   │   └── upload-dropzone.tsx
 │   ├── layout/
-│   │   └── dashboard-layout.tsx
+│   │   ├── dashboard-layout.tsx
+│   │   └── main-nav.tsx
 │   ├── marketing/
 │   │   ├── contact-form.tsx
 │   │   └── newsletter-form.tsx
@@ -231,26 +248,34 @@ Generated: 2025-03-02T04:54:00.306Z
 │   │   ├── __tests__/
 │   │   │   └── auth-store.test.ts
 │   │   ├── migrations/
-│   │   │   ├── 01_forms_and_newsletter.sql
-│   │   │   └── 02_analytics_functions.sql
 │   │   ├── auth-store.ts
 │   │   ├── client.ts
 │   │   ├── debug-queries.ts
+│   │   ├── events.ts
+│   │   ├── photos.ts
+│   │   ├── run-migration.js
 │   │   ├── templates.ts
-│   │   └── test-utils.ts
+│   │   ├── test-utils.ts
+│   │   ├── verify-schema.html
+│   │   └── verify-schema.js
 │   ├── event-customization-server.ts
 │   ├── event-customization.ts
+│   ├── qr-code.ts
 │   ├── security-settings.ts
 │   ├── user-sessions.ts
 │   └── utils.ts
+├── store/
+│   ├── events-store.ts
+│   └── photos-store.ts
 ├── types/
 │   ├── auth.ts
+│   ├── events.ts
 │   └── supabase.ts
 ├── .DS_Store
 ├── middleware.test.ts
 └── middleware.ts
 
-72 directories, 175 files
+77 directories, 195 files
 
 ```
 

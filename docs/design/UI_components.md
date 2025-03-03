@@ -1,7 +1,7 @@
-# UI Components Documentation (Beta)
+# UI Components Documentation (Beta v0.1.18)
 
 ## Cloud Burst Component Library
-📅 *Updated: March 1, 2025*
+📅 *Updated: March 3, 2025, 12:40 PM*
 
 ## 📚 Core Components [Beta Implementation]
 
@@ -16,18 +16,18 @@ import { NavigationMenu } from "@/components/ui/navigation-menu"
 - ✅ Default: Main header navigation
 - ✅ Mobile: Condensed for small screens
 - ✅ Dashboard: Admin navigation
-- 🟡 Role-based: Dynamic items
+- ✅ Role-based: Dynamic items based on user role
 
 // Props:
 type NavigationMenuProps = {
   items: NavItem[]
   className?: string
   orientation?: "horizontal" | "vertical"
-  role?: UserRole // New
+  role?: UserRole
 }
 ```
 
-#### DashboardNav [New]
+#### DashboardNav [Implemented]
 ```typescript
 // Usage: Dashboard navigation [Implemented]
 import { DashboardNav } from "@/components/nav/dashboard-nav"
@@ -43,6 +43,23 @@ type DashboardNavProps = {
   user: User
   profile: Profile
   collapsed?: boolean
+}
+```
+
+#### MainNav [Updated]
+```typescript
+// Usage: Main navigation with role-based items [Implemented]
+import { MainNav } from "@/components/layout/main-nav"
+
+// Features:
+- ✅ Role-based items
+- ✅ Active state
+- ✅ Responsive design
+- ✅ Conditional rendering
+
+// Props:
+type MainNavProps = {
+  className?: string
 }
 ```
 
@@ -295,6 +312,7 @@ import { Tabs } from "@/components/ui/tabs"
 - Dashboard views
 - Settings panels
 - Gallery layouts
+- Event detail tabs
 
 // Props:
 type TabsProps = {
@@ -395,11 +413,11 @@ type ToastProps = {
 }
 ```
 
-### 📊 Dashboard Components [New Section]
+### 📊 Dashboard Components [Updated]
 
 #### DashboardHeader
 ```typescript
-// Usage: Dashboard top bar [Active]
+// Usage: Dashboard top bar [Implemented]
 import { DashboardHeader } from "@/components/dashboard/header"
 
 // Features:
@@ -432,6 +450,182 @@ type DashboardShellProps = {
   children: React.ReactNode
   sidebar?: React.ReactNode
   header?: React.ReactNode
+}
+```
+
+### 🔒 Permission Components [New]
+
+#### PermissionGate
+```typescript
+// Usage: Conditional rendering based on permissions [Implemented]
+import { PermissionGate } from "@/components/auth/permission-gate"
+
+// Features:
+- ✅ Action-based permissions
+- ✅ Resource-based permissions
+- ✅ Ownership verification
+- ✅ Fallback content
+
+// Props:
+type PermissionGateProps = {
+  action: "create" | "read" | "update" | "delete" | "manage" | "access"
+  resource: "event" | "photo" | "attendee" | "user" | "admin" | "analytics"
+  ownerId?: string
+  children: ReactNode
+  fallback?: ReactNode
+}
+```
+
+#### RoleGate
+```typescript
+// Usage: Role-based UI elements [Implemented]
+import { RoleGate } from "@/components/auth/permission-gate"
+
+// Features:
+- ✅ Role-based rendering
+- ✅ Multiple role support
+- ✅ Fallback content
+
+// Props:
+type RoleGateProps = {
+  roles: string | string[]
+  children: ReactNode
+  fallback?: ReactNode
+}
+```
+
+#### SubscriptionGate
+```typescript
+// Usage: Paid features [Implemented]
+import { SubscriptionGate } from "@/components/auth/permission-gate"
+
+// Features:
+- ✅ Subscription tier verification
+- ✅ Fallback content
+
+// Props:
+type SubscriptionGateProps = {
+  children: ReactNode
+  fallback?: ReactNode
+}
+```
+
+### 📅 Event Components [New]
+
+#### EventActions
+```typescript
+// Usage: Event management actions [Implemented]
+import { EventActions } from "@/components/events/event-actions"
+
+// Features:
+- ✅ Permission-based actions
+- ✅ Edit button
+- ✅ Delete button with confirmation
+- ✅ QR code button
+- ✅ Share button
+
+// Props:
+type EventActionsProps = {
+  eventId: string
+  organizerId: string
+}
+```
+
+#### AttendeeManagement
+```typescript
+// Usage: Event attendee management [Implemented]
+import { AttendeeManagement } from "@/components/events/attendee-management"
+
+// Features:
+- ✅ Attendee list
+- ✅ Add attendee
+- ✅ Remove attendee
+- ✅ Edit attendee
+- 🟡 Import/export
+
+// Props:
+type AttendeeManagementProps = {
+  eventId: string
+  initialAttendees: Attendee[]
+  organizerId: string
+}
+```
+
+#### QRCodeDisplay
+```typescript
+// Usage: Event QR code display [Implemented]
+import { QRCodeDisplay } from "@/components/events/qr-code-display"
+
+// Features:
+- ✅ QR code generation
+- ✅ Download option
+- ✅ Share option
+- 🟡 Customization
+
+// Props:
+type QRCodeDisplayProps = {
+  eventId: string
+  eventCode: string
+  eventName: string
+}
+```
+
+### 🖼️ Gallery Components [New]
+
+#### GalleryGrid
+```typescript
+// Usage: Photo gallery display [Implemented]
+import { GalleryGrid } from "@/components/gallery/gallery-grid"
+
+// Features:
+- ✅ Responsive grid
+- ✅ Lazy loading
+- ✅ Click to view
+- 🟡 Filtering options
+
+// Props:
+type GalleryGridProps = {
+  photos: Photo[]
+  emptyMessage?: string
+}
+```
+
+#### UploadDropzone
+```typescript
+// Usage: Photo upload [Implemented]
+import { UploadDropzone } from "@/components/gallery/upload-dropzone"
+
+// Features:
+- ✅ Drag and drop
+- ✅ File selection
+- ✅ Upload progress
+- ✅ Error handling
+- 🟡 File validation
+
+// Props:
+type UploadDropzoneProps = {
+  eventId: string
+  onUploadComplete?: () => void
+}
+```
+
+#### PhotoLightbox
+```typescript
+// Usage: Enhanced photo viewing [In Progress]
+import { PhotoLightbox } from "@/components/gallery/photo-lightbox"
+
+// Features:
+- 🟡 Full-screen view
+- 🟡 Navigation controls
+- 🟡 Download option
+- 🟡 Share option
+- 🟡 Information display
+
+// Props:
+type PhotoLightboxProps = {
+  photos: Photo[]
+  initialIndex?: number
+  onClose: () => void
 }
 ```
 
@@ -481,6 +675,12 @@ textXl: "1.25rem"
    - Lazy loading
    - Code splitting
    - Bundle optimization
+
+4. **Permission-Based UI**
+   - Use PermissionGate for conditional rendering
+   - Use RoleGate for role-based UI elements
+   - Use SubscriptionGate for paid features
+   - Check ownership for resource-specific actions
 
 ### Error Handling
 ```typescript
@@ -543,6 +743,12 @@ lg: "@media (min-width: 1024px)"
    - CSRF protection
    - Rate limiting
    - Validation schemas
+
+3. **Permission-Based Access**
+   - Use permission hooks for capability checking
+   - Implement conditional UI rendering
+   - Check ownership for resource-specific actions
+   - Apply proper database RLS policies
 
 ## 📚 Documentation Standards
 

@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-02T04:54:00.417Z
+Generated: 2025-03-03T18:02:32.963Z
 
 ```
 ./src/components/
@@ -8,6 +8,7 @@ Generated: 2025-03-02T04:54:00.417Z
 │   ├── auth-form.tsx
 │   ├── auth-guard.tsx
 │   ├── debug-panel.tsx
+│   ├── permission-gate.tsx
 │   ├── role-guard.tsx
 │   └── social-auth-buttons.tsx
 ├── dashboard/
@@ -18,7 +19,9 @@ Generated: 2025-03-02T04:54:00.417Z
 │   ├── newsletter-subscribers.tsx
 │   └── recent-activity.tsx
 ├── events/
-│   └── event-actions.tsx
+│   ├── attendee-management.tsx
+│   ├── event-actions.tsx
+│   └── qr-code-display.tsx
 ├── forms/
 │   ├── avatar-upload.tsx
 │   ├── event-customization-form.tsx
@@ -27,8 +30,13 @@ Generated: 2025-03-02T04:54:00.417Z
 │   ├── preferences-form.tsx
 │   ├── profile-form.tsx
 │   └── security-form.tsx
+├── gallery/
+│   ├── gallery-grid.tsx
+│   ├── photo-lightbox.tsx
+│   └── upload-dropzone.tsx
 ├── layout/
-│   └── dashboard-layout.tsx
+│   ├── dashboard-layout.tsx
+│   └── main-nav.tsx
 ├── marketing/
 │   ├── contact-form.tsx
 │   └── newsletter-form.tsx
@@ -89,7 +97,7 @@ Generated: 2025-03-02T04:54:00.417Z
 ├── error-boundary.tsx
 └── theme-provider.tsx
 
-12 directories, 74 files
+13 directories, 81 files
 
 ```
 

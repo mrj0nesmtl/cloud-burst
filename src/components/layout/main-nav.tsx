@@ -5,18 +5,28 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { RoleGate } from '@/components/auth/permission-gate';
-import { useUser } from '@/hooks/use-user';
+import { usePermissions } from '@/hooks/use-permissions';
+import type { UserRole } from '@/types/auth';
 
 interface MainNavProps {
   className?: string;
 }
 
+interface NavItem {
+  name: string;
+  href: string;
+  active: boolean;
+  public?: boolean;
+  roles?: UserRole[];
+}
+
 export function MainNav({ className }: MainNavProps) {
   const pathname = usePathname();
-  const { isAuthenticated } = useUser();
+  const { user, hasAnyRole } = usePermissions();
+  const isAuthenticated = !!user;
 
   // Navigation items with role-based access
-  const navItems = [
+  const navItems: NavItem[] = [
     {
       name: 'Home',
       href: '/',
@@ -33,7 +43,7 @@ export function MainNav({ className }: MainNavProps) {
       name: 'Events',
       href: '/protected/events',
       active: pathname.startsWith('/protected/events'),
-      roles: ['super_admin', 'admin', 'organizer', 'event_host'],
+      roles: ['super_admin', 'admin', 'organizer', 'event_host'] as UserRole[],
     },
     {
       name: 'Gallery',
@@ -45,15 +55,15 @@ export function MainNav({ className }: MainNavProps) {
       name: 'Admin',
       href: '/protected/admin',
       active: pathname.startsWith('/protected/admin'),
-      roles: ['super_admin', 'admin'],
+      roles: ['super_admin', 'admin'] as UserRole[],
     },
   ];
 
   return (
     <nav className={cn('flex items-center space-x-4 lg:space-x-6', className)}>
       {navItems.map((item) => {
-        // Public items or items that require authentication but no specific role
-        if (item.public || (item.public === false && !item.roles)) {
+        // Public items
+        if (item.public) {
           return (
             <Button
               key={item.name}
@@ -66,15 +76,33 @@ export function MainNav({ className }: MainNavProps) {
                   : 'text-muted-foreground'
               )}
             >
-              {isAuthenticated || item.public ? (
-                <Link href={item.href}>{item.name}</Link>
-              ) : null}
+              <Link href={item.href}>{item.name}</Link>
             </Button>
           );
         }
 
+        // Items that require authentication but no specific role
+        if (item.public === false && !item.roles) {
+          return isAuthenticated ? (
+            <Button
+              key={item.name}
+              asChild
+              variant="ghost"
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary',
+                item.active
+                  ? 'text-black dark:text-white'
+                  : 'text-muted-foreground'
+              )}
+            >
+              <Link href={item.href}>{item.name}</Link>
+            </Button>
+          ) : null;
+        }
+
         // Role-specific items
         if (item.roles) {
+          // Option 1: Using RoleGate component
           return (
             <RoleGate key={item.name} roles={item.roles}>
               <Button
@@ -91,6 +119,25 @@ export function MainNav({ className }: MainNavProps) {
               </Button>
             </RoleGate>
           );
+          
+          // Option 2: Using hasAnyRole function (alternative approach)
+          /*
+          return hasAnyRole(item.roles) ? (
+            <Button
+              key={item.name}
+              asChild
+              variant="ghost"
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary',
+                item.active
+                  ? 'text-black dark:text-white'
+                  : 'text-muted-foreground'
+              )}
+            >
+              <Link href={item.href}>{item.name}</Link>
+            </Button>
+          ) : null;
+          */
         }
 
         return null;

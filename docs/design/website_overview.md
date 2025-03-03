@@ -1,7 +1,7 @@
 # 🌐 **Website Overview**  
 
-## Cloud Burst [Beta v0.1.17]
-📅 *Updated: March 1, 2025*  
+## Cloud Burst [Beta v0.1.18]
+📅 *Updated: March 3, 2025, 12:40 PM*  
 
 ---
 
@@ -28,7 +28,7 @@
   - `<Menubar>` for dashboard actions ✅
 - **CTA Button**: `<Button variant="default" size="lg">` ✅
 - **Theme Toggle**: `<Button variant="ghost">` ✅
-- **Auth Status**: `<UserNav>` 🟡
+- **Auth Status**: `<UserNav>` ✅
 
 ### 🖼️ Visual Elements [Beta Priority]
 - **Image Gallery**: `<Carousel>` ✅
@@ -50,6 +50,7 @@
 ✅ **Guest Photo Upload** – Simple, direct uploads
 ✅ **Basic Gallery** – Clean, organized display
 ✅ **Essential Branding** – Event customization
+✅ **Role-Based Access** – Comprehensive permission system
 🟡 **Basic Analytics** – View counts & engagement
 
 ### Post-Beta Features
@@ -58,28 +59,28 @@
 ⏸️ Advanced Analytics
 ⏸️ Social Integration
 
-[Continue with similar pattern through sections, marking features as:]
-✅ Beta Ready
-🟡 In Progress
-⏸️ Post-Beta
-
-[For example, in the Features section:]
-
 ## 🚀 **Features – Beta Release**  
 
 ### ⚡ **Event Setup** [Beta Priority] 
 ✅ Basic event pages
 ✅ Simple QR code generation
+✅ Role-based event management
 🟡 Basic branding options
 ⏸️ Advanced customization [Post-Beta]
 
 ### 📷 **Photo Management** [Beta Focus]
 ✅ Direct photo uploads
 ✅ Basic gallery view
+✅ Permission-based actions
 🟡 Simple moderation tools
 ⏸️ AI enhancements [Post-Beta]
 
-[Continue through remaining sections...]
+### 👥 **User Management** [Beta Priority]
+✅ Role-based access control
+✅ Permission system
+✅ Conditional UI rendering
+✅ Protected routes
+🟡 Subscription tiers
 
 ## 🔐 Security Architecture [Updated]
 
@@ -89,15 +90,25 @@
 ✅ Protected route system
 ✅ Session management
 ✅ Enhanced security headers
+✅ Permission hooks
 
 ### Protected Routes [Implemented]
 ✅ /dashboard/* (with roles)
 ✅ /api/* (with validation)
 ✅ /admin/* (super admin)
 ✅ /protected/settings/* (with roles)
+✅ /protected/events/* (with roles)
 🟡 /events/* (in progress)
 
-## 🎯 **User Dashboard** [New Section]
+### Role-Based Access Control [New]
+✅ Role definitions and hierarchy
+✅ Permission hooks for capability checking
+✅ Permission gates for conditional rendering
+✅ Role gates for role-based UI elements
+✅ Subscription gates for paid features
+✅ Database RLS policies
+
+## 🎯 **User Dashboard** [Updated]
 
 ### 👤 **Super Admin Features** [Implemented]
 - ✅ **Admin Dashboard** – Core management
@@ -106,11 +117,33 @@
 - ✅ **Template Management** – Email templates
 - 🟡 **Analytics** – Basic metrics
 
+### 👤 **Admin Features** [Implemented]
+- ✅ **User Management** – Basic controls
+- ✅ **Event Management** – Full access
+- ✅ **Photo Moderation** – All events
+- ✅ **Template Management** – Email templates
+- 🟡 **Analytics** – Basic metrics
+
+### 👤 **Organizer Features** [New]
+- ✅ **Event Creation** – Multiple events
+- ✅ **Event Management** – Full control
+- ✅ **Attendee Management** – Guest lists
+- ✅ **Photo Moderation** – Own events
+- 🟡 **Analytics** – Basic metrics
+
+### 👤 **Event Host Features** [New]
+- ✅ **Event Creation** – Own events
+- ✅ **Event Management** – Basic control
+- ✅ **Attendee Management** – Guest lists
+- ✅ **Photo Moderation** – Own events
+- 🟡 **Analytics** – Limited metrics
+
 ### ⚙️ **Dashboard Components** [Active]
 - ✅ **Layout**: Responsive design
 - ✅ **Navigation**: Role-based menu
 - ✅ **Auth**: Session management
 - ✅ **Templates**: Email management
+- ✅ **Events**: Event management
 - 🟡 **Profile**: User settings
 
 ## 🎯 **User Settings & Profile** [Beta Priority]
@@ -145,7 +178,7 @@
   - ✅ `<Card>` – Content grouping
   - ✅ `<Form>` – With validation
 
-## 📧 **Email Template System** [New]
+## 📧 **Email Template System** [Implemented]
 
 ### Template Management
 - ✅ **Template List** – View all templates
@@ -170,11 +203,56 @@
 - 🟡 **Image** – Visual elements
 - 🟡 **Social** – Social media links
 
+## 📅 **Event Management System** [New]
+
+### Event Features
+- ✅ **Event Creation** – Form with validation
+- ✅ **Event Detail** – Comprehensive view with tabs
+- ✅ **Attendee Management** – Add, edit, remove attendees
+- ✅ **QR Code Display** – Generate and share event QR codes
+- ✅ **Gallery Integration** – View and upload event photos
+- 🟡 **Event Settings** – Advanced configuration options
+
+### Event Components
+- ✅ **EventForm** – Creation and editing
+- ✅ **EventList** – Overview of events
+- ✅ **EventDetail** – Comprehensive view
+- ✅ **EventActions** – Permission-based actions
+- ✅ **AttendeeManagement** – Guest list control
+- ✅ **QRCodeDisplay** – Event sharing
+- 🟡 **EventSettings** – Advanced options
+
+### Permission-Based Features
+- ✅ **Role-Based Access** – Different capabilities for different roles
+- ✅ **Owner Verification** – Resource-based permission checks
+- ✅ **Conditional Actions** – Show/hide based on permissions
+- ✅ **Row Level Security** – Database-level access control
+- 🟡 **Invited User Access** – QR code-based authentication
+
+## 🖼️ **Gallery System** [Updated]
+
+### Gallery Features
+- ✅ **Gallery Grid** – Responsive layout for photos
+- ✅ **Upload Dropzone** – Drag-and-drop file uploads
+- 🟡 **Photo Lightbox** – Enhanced viewing experience
+- 🟡 **Photo Actions** – Share, download, favorite
+- 🟡 **Lazy Loading** – Optimized performance
+- ⏸️ **AI Enhancement** – Automatic photo improvement [Post-Beta]
+
+### Gallery Components
+- ✅ **GalleryGrid** – Photo display
+- ✅ **UploadDropzone** – File uploads
+- 🟡 **PhotoLightbox** – Enhanced viewing
+- 🟡 **PhotoActions** – Permission-based actions
+- 🟡 **PhotoFilters** – Sorting and filtering
+- ⏸️ **AIEnhancement** – Automatic improvements [Post-Beta]
+
 ## 📱 **Mobile Experience** [Beta Priority]
 
 ### Responsive Design
 - ✅ Mobile-first approach
 - ✅ Essential breakpoints
+- ✅ Role-based navigation
 - 🟡 Touch optimization
 - 🟡 Advanced interactions
 
@@ -192,9 +270,11 @@ Cloud Burst's beta release prioritizes:
 - ✅ Core user experience
 - ✅ Basic customization
 - ✅ Email template management
+- ✅ Role-based access control
+- ✅ Event management system
 - 🟡 Fundamental analytics
 
 ### Vision
-While maintaining our ambitious vision for advanced features [Post-Beta], we're focusing on delivering a solid, reliable foundation for event photography management with enhanced communication capabilities.
+While maintaining our ambitious vision for advanced features [Post-Beta], we're focusing on delivering a solid, reliable foundation for event photography management with enhanced communication capabilities and comprehensive role-based access control.
 
 ---
