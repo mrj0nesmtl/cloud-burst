@@ -34,6 +34,13 @@ export function SiteHeader() {
           <NavigationMenu>
             <NavigationMenuList className="space-x-2">
               <NavigationMenuItem>
+                <Link href="/events" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Events
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
                 <Link href="/marketing/about" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     About

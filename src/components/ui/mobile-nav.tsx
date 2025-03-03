@@ -19,7 +19,8 @@ import {
   Mail,
   Github,
   Twitter,
-  CloudLightning
+  CloudLightning,
+  Camera
 } from "lucide-react"
 
 const routes = [
@@ -27,6 +28,11 @@ const routes = [
     href: "/",
     label: "Home",
     icon: Home
+  },
+  {
+    href: "/events",
+    label: "Events",
+    icon: Camera
   },
   {
     href: "/marketing/about",

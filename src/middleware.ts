@@ -1,79 +1,72 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import type { Database } from '@/types/supabase'
 
-// Define routes based on security standards
-const PUBLIC_ROUTES = new Set([
-  '/',
-  '/auth/signin',
-  '/auth/signup',
-  '/auth/reset-password',
-  '/auth/verify',
-  '/marketing',
-  '/event/[code]'
-])
-
-export async function middleware(request: NextRequest) {
+export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
-  const supabase = createMiddlewareClient<Database>({ req: request, res })
-  const pathname = request.nextUrl.pathname
-
-  // Allow public routes without any checks
-  if (PUBLIC_ROUTES.has(pathname)) {
-    return res
+  const supabase = createMiddlewareClient({ req, res })
+  
+  // Check if user is authenticated
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+  
+  // Get URL information
+  const url = req.nextUrl.clone()
+  const path = url.pathname
+  
+  // Public routes that don't require authentication
+  const isPublicRoute = 
+    path === '/' || 
+    path.startsWith('/auth/') || 
+    path.startsWith('/public/') ||
+    path.startsWith('/_next/') ||
+    path.startsWith('/api/public/')
+  
+  // Protected routes that require authentication
+  const isProtectedRoute = path.startsWith('/protected/')
+  
+  // Admin routes that require admin privileges
+  const isAdminRoute = path.startsWith('/protected/admin/')
+  
+  // Event management routes
+  const isEventRoute = path.startsWith('/protected/events/')
+  
+  // If user is not authenticated and trying to access protected route
+  if (isProtectedRoute && !session) {
+    url.pathname = '/auth/signin'
+    url.searchParams.set('redirectTo', path)
+    return NextResponse.redirect(url)
   }
-
-  // Await the getUser call to verify authentication
-  const { data: { user }, error } = await supabase.auth.getUser()
-
-  // Handle authentication
-  if (request.nextUrl.pathname.startsWith('/protected')) {
-    if (!user) {
-      return NextResponse.redirect(new URL('/auth/signin', request.url))
+  
+  // If user is authenticated, check role-based access
+  if (session && (isAdminRoute || isEventRoute)) {
+    // Get user profile with role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', session.user.id)
+      .single()
+    
+    const role = profile?.role || 'guest'
+    
+    // Admin routes are only accessible by super_admin and admin
+    if (isAdminRoute && !['super_admin', 'admin'].includes(role)) {
+      url.pathname = '/protected/dashboard'
+      return NextResponse.redirect(url)
+    }
+    
+    // Event management routes are only accessible by super_admin, admin, organizer, and event_host
+    if (isEventRoute && !['super_admin', 'admin', 'organizer', 'event_host'].includes(role)) {
+      url.pathname = '/protected/dashboard'
+      return NextResponse.redirect(url)
     }
   }
-
-  // Handle auth pages when already logged in
-  if (request.nextUrl.pathname.startsWith('/auth')) {
-    if (user) {
-      return NextResponse.redirect(new URL('/protected/dashboard', request.url))
-    }
-  }
-
-  // If we have a session, allow access to protected routes
-  if (user && pathname.startsWith('/protected')) {
-    try {
-      // Get user profile with role
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
-
-      // Add user context to headers
-      const response = NextResponse.next()
-      response.headers.set('x-user-id', user.id)
-      response.headers.set('x-user-role', profile?.role || 'USER')
-
-      // Super admin specific redirect
-      if (profile?.role === 'SUPER_ADMIN' && pathname === '/protected/dashboard') {
-        return NextResponse.redirect(new URL('/protected/admin/dashboard', request.url))
-      }
-
-      return response
-    } catch (error) {
-      // On error, still allow access with basic user role
-      const response = NextResponse.next()
-      response.headers.set('x-user-id', user.id)
-      response.headers.set('x-user-role', 'USER')
-      return response
-    }
-  }
-
+  
   return res
 }
 
+// Specify which routes this middleware should run on
 export const config = {
   matcher: [
     /*
@@ -82,7 +75,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
+     * - public files
      */
-    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 } 
