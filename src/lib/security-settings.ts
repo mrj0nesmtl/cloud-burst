@@ -1,6 +1,4 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
 
 export type SecuritySettings = {
   id: string
@@ -13,23 +11,7 @@ export type SecuritySettings = {
   updated_at: string
 }
 
-export async function getSecuritySettings(userId: string) {
-  const supabase = createServerComponentClient({ cookies })
-  
-  const { data, error } = await supabase
-    .rpc('get_or_create_security_settings', {
-      p_user_id: userId
-    })
-    .single()
-  
-  if (error) {
-    console.error('Error fetching security settings:', error)
-    throw error
-  }
-  
-  return data as SecuritySettings
-}
-
+// Client-side function that works in both pages and app directory
 export async function updateSecuritySettings(settings: Partial<SecuritySettings>) {
   const supabase = createClientComponentClient()
   
@@ -86,4 +68,22 @@ export async function updateSecuritySettings(settings: Partial<SecuritySettings>
   }
   
   return true
+}
+
+// Client-side version of getSecuritySettings
+export async function getSecuritySettingsClient(userId: string) {
+  const supabase = createClientComponentClient()
+  
+  const { data, error } = await supabase
+    .rpc('get_or_create_security_settings', {
+      p_user_id: userId
+    })
+    .single()
+  
+  if (error) {
+    console.error('Error fetching security settings:', error)
+    throw error
+  }
+  
+  return data as SecuritySettings
 }

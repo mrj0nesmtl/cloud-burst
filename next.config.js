@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable server actions which are stable in Next.js 14
-  experimental: {
-    serverActions: true
-  },
+  // Server Actions are stable in Next.js 14, no need for experimental flag
+  experimental: {},
   // Disable error overlay completely
   devIndicators: {
     position: 'bottom-right',
