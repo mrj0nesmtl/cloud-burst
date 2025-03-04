@@ -62,7 +62,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.19] - 2025-02-28
 
 ### Added
-- Initial project setup with Next.js 14
 - Basic authentication flow
 - Simple event creation
 - Minimal gallery view

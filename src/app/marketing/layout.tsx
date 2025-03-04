@@ -1,4 +1,3 @@
-import { SiteHeader } from "@/components/ui/site-header"
 import Image from "next/image"
 
 export default function MarketingLayout({
@@ -22,7 +21,6 @@ export default function MarketingLayout({
       
       {/* Content */}
       <div className="relative z-10 flex flex-col flex-1">
-        {/* We don't need the header here as it's already in the root layout */}
         <main className="flex-1">
           {children}
         </main>

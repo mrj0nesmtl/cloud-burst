@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Configure error handling and development indicators
   // Server Actions are stable in Next.js 14, no need for experimental flag
   experimental: {},
   // Disable error overlay completely
@@ -7,15 +8,18 @@ const nextConfig = {
     position: 'bottom-right',
     buildError: false,
   },
-  // Disable React DevTools in production
+  // Use strict mode for better development experience
   reactStrictMode: true,
-  // Disable error overlay in production
+  // Configure on-demand entries for better development
   onDemandEntries: {
     // Period (in ms) where the server will keep pages in the buffer
     maxInactiveAge: 25 * 1000,
     // Number of pages that should be kept simultaneously without being disposed
     pagesBufferLength: 2,
   },
+  // Configure output for better production builds
+  output: 'standalone',
+  // Configure image domains
   // Add webpack config for sharp
   webpack: (config) => {
     config.externals = [...(config.externals || []), 'sharp']
@@ -40,11 +44,31 @@ const nextConfig = {
         hostname: 'cb-beta.replit.app',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.replit.app',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
-  // Add output configuration for better production builds
-  output: 'standalone',
+  // Remove experimental features
+  // webpack: (config, { isServer }) => {
+  //   // Optimize CSS loading
+  //   if (!isServer) {
+  //     config.optimization.splitChunks.cacheGroups = {
+  //       ...config.optimization.splitChunks.cacheGroups,
+  //       styles: {
+  //         name: 'styles',
+  //         test: /\.(css|scss)$/,
+  //         chunks: 'all',
+  //         enforce: true,
+  //       },
+  //     };
+  //   }
+  //   return config;
+  // },
 }
 
 module.exports = nextConfig 

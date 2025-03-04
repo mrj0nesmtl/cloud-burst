@@ -220,13 +220,14 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-full">
       {/* Hero Section */}
-      <div className="relative bg-muted/0 py-24">
-        <div className="container mx-auto max-w-4xl px-4">
+      <div className="relative bg-muted/20 py-24">
+        <div className="hexagon-pattern opacity-15"></div>
+        <div className="container mx-auto max-w-4xl px-4 relative z-10">
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center mb-6">
-              <CloudLightning className="h-12 w-12 text-blue-500" />
+              <CloudLightning className="h-12 w-12 text-primary animate-pulse" />
             </div>
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
               What is Cloud Burst?
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -238,8 +239,8 @@ export default function AboutPage() {
 
       <div className="container mx-auto max-w-4xl py-16 px-4 space-y-16">
         {/* Vision Section */}
-        <section className="space-y-4">
-          <h2 className="text-3xl font-bold">The Vision</h2>
+        <section className="space-y-4 card p-8 rounded-lg shadow-md hover:shadow-lg transition-all">
+          <h2 className="text-3xl font-bold text-primary">The Vision</h2>
           <p className="text-lg text-muted-foreground">
             Inspired by the nostalgia of disposable cameras on event tables, Cloud Burst 
             modernizes the experience using guests' smartphones and a seamless cloud-based 
@@ -248,24 +249,33 @@ export default function AboutPage() {
         </section>
 
         {/* How It Works Section */}
-        <section className="space-y-6">
-          <h2 className="text-3xl font-bold">How It Works</h2>
-          <div className="grid gap-6 sm:grid-cols-2">
+        <section className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-3xl font-bold text-primary">How It Works</h2>
+            <p className="text-lg text-muted-foreground">
+              Cloud Burst simplifies and enhances event photography through a seamless four-step process.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {howItWorksCards.map((card, index) => (
               <Dialog key={index}>
                 <DialogTrigger asChild>
-                  <div className="bg-card rounded-lg p-6 shadow-sm border hover:border-blue-500/50 hover:shadow-md transition-all duration-300 cursor-pointer">
-                    {card.icon}
-                    <h3 className="text-xl font-semibold mb-2">{card.title}</h3>
-                    <p className="text-muted-foreground">
-                      {card.description}
-                    </p>
+                  <div className="card p-6 rounded-lg border border-border hover:border-primary/50 shadow-sm hover:shadow-md transition-all duration-300 group">
+                    <div className="flex flex-col h-full">
+                      {card.icon}
+                      <h3 className="text-xl font-semibold mb-2">{card.title}</h3>
+                      <p className="text-muted-foreground">{card.description}</p>
+                      <div className="mt-4 text-primary text-sm flex items-center opacity-80 hover:opacity-100 transition-opacity">
+                        Learn more <ArrowRight className="ml-1 h-4 w-4" />
+                      </div>
+                    </div>
                   </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent className="sm:max-w-md">
                   <DialogHeader>
                     <DialogTitle>{card.modalContent.title}</DialogTitle>
-                    <DialogDescription className="whitespace-pre-line">
+                    <DialogDescription>
                       {card.modalContent.description}
                     </DialogDescription>
                   </DialogHeader>
@@ -276,24 +286,33 @@ export default function AboutPage() {
         </section>
 
         {/* Perfect For Section */}
-        <section className="space-y-6">
-          <h2 className="text-3xl font-bold">Perfect For</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-3xl font-bold text-primary">Perfect For</h2>
+            <p className="text-lg text-muted-foreground">
+              Cloud Burst enhances photography across a wide range of events and industries.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {perfectForCards.map((card, index) => (
               <Dialog key={index}>
                 <DialogTrigger asChild>
-                  <div className="bg-card rounded-lg p-6 shadow-sm border hover:border-blue-500/50 hover:shadow-md transition-all duration-300 cursor-pointer">
-                    {card.icon}
-                    <h3 className="font-semibold mb-2">{card.title}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {card.description}
-                    </p>
+                  <div className="card p-6 rounded-lg border border-border hover:border-primary/50 shadow-sm hover:shadow-md transition-all duration-300 group">
+                    <div className="flex flex-col h-full">
+                      {card.icon}
+                      <h3 className="text-xl font-semibold mb-2">{card.title}</h3>
+                      <p className="text-muted-foreground">{card.description}</p>
+                      <div className="mt-4 text-primary text-sm flex items-center opacity-80 hover:opacity-100 transition-opacity">
+                        Learn more <ArrowRight className="ml-1 h-4 w-4" />
+                      </div>
+                    </div>
                   </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent className="sm:max-w-md">
                   <DialogHeader>
                     <DialogTitle>{card.modalContent.title}</DialogTitle>
-                    <DialogDescription className="whitespace-pre-line">
+                    <DialogDescription>
                       {card.modalContent.description}
                     </DialogDescription>
                   </DialogHeader>
@@ -314,24 +333,19 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* CTA Section */}
-        <section className="text-center py-16">
-          <div className="max-w-2xl mx-auto space-y-6">
-            <h2 className="text-3xl font-bold">Ready to Transform Your Events?</h2>
-            <p className="text-lg text-muted-foreground">
-              Join Cloud Burst today and experience the future of event photography.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg">
-                <Link href="/auth/register">
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/marketing/pricing">View Pricing</Link>
-              </Button>
-            </div>
+        {/* Join Us Section */}
+        <section className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 space-y-6 border border-primary/20 shadow-lg">
+          <h2 className="text-3xl font-bold text-primary">Join Us Today</h2>
+          <p className="text-lg">
+            Ready to transform your event photography experience?
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <Button className="btn-primary" asChild>
+              <Link href="/auth/register">Get Started</Link>
+            </Button>
+            <Button variant="outline" className="bg-background hover:bg-muted" asChild>
+              <Link href="/pricing">View Pricing</Link>
+            </Button>
           </div>
         </section>
       </div>

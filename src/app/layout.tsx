@@ -1,16 +1,22 @@
 import { GeistSans } from "geist/font/sans"
+import { Metadata, Viewport } from "next"
 import { Suspense } from "react"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/ui/site-header"
 import { SiteFooter } from "@/components/ui/site-footer"
-import { ToastProvider } from "@/components/providers/toast-provider"
+import { QueryProvider } from "@/components/providers/query-provider"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Toaster as UIToaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
-import { QueryProvider } from '@/components/providers/query-provider'
+import { Inter } from 'next/font/google'
 
 const geist = GeistSans
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 // Comprehensive hydration error suppression for production
 if (process.env.NODE_ENV === 'production') {
@@ -43,14 +49,16 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-export const metadata = {
+// Metadata
+export const metadata: Metadata = {
   title: 'Cloud Burst',
   description: 'Elevate Your Event Photography',
   applicationName: 'Cloud Burst',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cb-beta.replit.app'),
 }
 
-export const viewport = {
+// Viewport
+export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
 }
@@ -61,32 +69,33 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geist.variable} antialiased min-h-screen flex flex-col`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable}`}>
+      <body className={`${geist.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <QueryProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
+            storageKey="cloud-burst-theme"
           >
-            <Suspense fallback={
-              <div className="flex min-h-screen items-center justify-center">
-                <LoadingSpinner size="lg" />
-              </div>
-            }>
-              <div className="flex flex-col min-h-screen relative">
-                <SiteHeader />
-                <main className="flex-1 relative z-10">
+            {/* Simplified structure to prevent Suspense hydration issues */}
+            <div className="flex flex-col min-h-screen relative">
+              <SiteHeader />
+              <main className="flex-1 relative z-10 flex flex-col">
+                <Suspense fallback={
+                  <div className="flex min-h-screen items-center justify-center">
+                    <LoadingSpinner size="lg" />
+                  </div>
+                }>
                   {children}
-                </main>
-                <SiteFooter />
-              </div>
-              <ToastProvider />
-            </Suspense>
+                </Suspense>
+              </main>
+              <SiteFooter />
+            </div>
+            <UIToaster />
+            <SonnerToaster />
           </ThemeProvider>
-          <UIToaster />
-          <SonnerToaster />
         </QueryProvider>
       </body>
     </html>

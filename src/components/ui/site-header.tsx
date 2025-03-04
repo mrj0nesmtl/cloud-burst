@@ -19,13 +19,13 @@ export function SiteHeader() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
         {/* Logo Section - Always Visible */}
         <div className="flex shrink-0 items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            <CloudLightning className="h-6 w-6 text-blue-500" />
-            <span className="font-semibold text-lg whitespace-nowrap">Cloud Burst</span>
+          <Link href="/" className="flex items-center space-x-2 group">
+            <CloudLightning className="h-6 w-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+            <span className="font-semibold text-lg whitespace-nowrap group-hover:text-primary transition-colors">Cloud Burst</span>
           </Link>
         </div>
 
@@ -35,28 +35,28 @@ export function SiteHeader() {
             <NavigationMenuList className="space-x-2">
               <NavigationMenuItem>
                 <Link href="/events" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} ${pathname === '/events' ? 'text-primary font-medium' : ''}`}>
                     Events
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/marketing/about" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} ${pathname === '/marketing/about' ? 'text-primary font-medium' : ''}`}>
                     About
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/marketing/pricing" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} ${pathname === '/marketing/pricing' ? 'text-primary font-medium' : ''}`}>
                     Pricing
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/marketing/contact" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} ${pathname === '/marketing/contact' ? 'text-primary font-medium' : ''}`}>
                     Contact
                   </NavigationMenuLink>
                 </Link>
@@ -69,13 +69,13 @@ export function SiteHeader() {
             <nav className="flex items-center space-x-2">
               <Link
                 href="/auth/signin"
-                className={buttonVariants({ variant: "ghost", size: "sm" })}
+                className={buttonVariants({ variant: "ghost", size: "sm" }) + " hover:text-primary"}
               >
                 Sign in
               </Link>
               <Link
                 href="/auth/register"
-                className={buttonVariants({ size: "sm" })}
+                className={buttonVariants({ size: "sm" }) + " btn-primary"}
               >
                 Get Started
               </Link>
