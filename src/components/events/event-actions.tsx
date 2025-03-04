@@ -15,12 +15,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 import { PermissionGate } from '@/components/auth/permission-gate'
 import { createClient } from '@/lib/supabase/client'
 
 interface EventActionsProps {
   eventId: string
-  organizerId: string
+  organizerId?: string
 }
 
 export function EventActions({ eventId, organizerId }: EventActionsProps) {

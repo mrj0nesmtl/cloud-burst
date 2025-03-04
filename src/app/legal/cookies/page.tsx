@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { InfoCircle } from "lucide-react"
+import { Info } from "lucide-react"
 import { CookieConsent } from "@/components/cookie-consent"
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function CookiesPage() {
         <Separator />
         
         <Alert className="mb-6">
-          <InfoCircle className="h-4 w-4" />
+          <Info className="h-4 w-4" />
           <AlertTitle>Cookie Consent</AlertTitle>
           <AlertDescription>
             By continuing to use our site, you consent to our use of cookies in accordance with this policy.

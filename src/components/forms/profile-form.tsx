@@ -16,7 +16,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useUpdateProfile } from '@/hooks/use-update-profile'
-import type { Profile } from '@/types/supabase'
+import { Database } from '@/types/supabase'
+
+// Define Profile type based on the Database type
+type Profile = Database['public']['Tables']['profiles']['Row']
 
 const profileFormSchema = z.object({
   username: z.string()

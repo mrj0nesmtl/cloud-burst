@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { createServerClient } from '@/lib/supabase/client';
+import { getServerSupabase } from '@/lib/supabase/server';
 import { Event } from '@/types/events';
 import { formatDate } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ type Props = {
 
 // Generate metadata for the page
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const supabase = createServerClient();
+  const supabase = await getServerSupabase();
   const { data: event } = await supabase
     .from('events')
     .select('*')
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function EventByCustomUrlPage({ params }: Props) {
-  const supabase = createServerClient();
+  const supabase = await getServerSupabase();
   
   // Fetch event by custom_url
   const { data: event } = await supabase

@@ -2,6 +2,7 @@
 
 import { usePermissions } from '@/hooks/use-permissions';
 import { ReactNode } from 'react';
+import { UserRole } from '@/types/auth';
 
 type Resource = 'event' | 'photo' | 'attendee' | 'user' | 'admin' | 'analytics';
 type Action = 'create' | 'read' | 'update' | 'delete' | 'manage' | 'access';
@@ -43,10 +44,7 @@ export function PermissionGate({
   children,
   fallback = null,
 }: PermissionGateProps) {
-  const { can, isLoading } = usePermissions();
-  
-  // While loading, don't render anything to prevent flashing
-  if (isLoading) return null;
+  const { can } = usePermissions();
   
   // Check if user has permission
   const hasPermission = can(action, resource, ownerId);
@@ -63,24 +61,21 @@ export function RoleGate({
   children,
   fallback = null,
 }: {
-  roles: string | string[];
+  roles: UserRole | UserRole[];
   children: ReactNode;
   fallback?: ReactNode;
 }) {
-  const { hasRole, isLoading } = usePermissions();
-  
-  // While loading, don't render anything to prevent flashing
-  if (isLoading) return null;
+  const { hasAnyRole } = usePermissions();
   
   // Check if user has any of the specified roles
-  const hasRequiredRole = hasRole(roles);
+  const hasRequiredRole = hasAnyRole(roles);
   
   // Render children if user has required role, otherwise render fallback
   return hasRequiredRole ? <>{children}</> : <>{fallback}</>;
 }
 
 /**
- * Component that renders content only for users with paid subscription
+ * Component that renders content only for users with paid subscriptions
  */
 export function SubscriptionGate({
   children,
@@ -89,14 +84,11 @@ export function SubscriptionGate({
   children: ReactNode;
   fallback?: ReactNode;
 }) {
-  const { hasPaidSubscription, isLoading } = usePermissions();
+  const { hasPaidSubscription } = usePermissions();
   
-  // While loading, don't render anything to prevent flashing
-  if (isLoading) return null;
-  
-  // Check if user has paid subscription
+  // Check if user has a paid subscription
   const isPaidUser = hasPaidSubscription();
   
-  // Render children if user has paid subscription, otherwise render fallback
+  // Render children if user has a paid subscription, otherwise render fallback
   return isPaidUser ? <>{children}</> : <>{fallback}</>;
 } 

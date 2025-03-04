@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { redirect } from 'next/navigation'
-import { getSecuritySettings } from '@/lib/security-settings'
+import { SecuritySettings } from '@/lib/security-settings'
 import { getEventCustomizationSettings } from '@/lib/event-customization-server'
 
 export const metadata: Metadata = {

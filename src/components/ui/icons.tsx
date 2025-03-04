@@ -23,10 +23,12 @@ import {
   Twitter,
   User,
   X,
-  type Icon as LucideIcon,
 } from "lucide-react"
 
-export type Icon = LucideIcon
+// Define the Icon type based on the LucideProps
+export type Icon = React.ForwardRefExoticComponent<
+  LucideProps & React.RefAttributes<SVGSVGElement>
+>
 
 export const Icons = {
   logo: Command,

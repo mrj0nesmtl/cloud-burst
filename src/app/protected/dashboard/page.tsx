@@ -38,10 +38,10 @@ export default async function DashboardPage() {
     if (profileError) throw profileError
     if (!profile) throw new Error('Profile not found')
 
-    const userRole = (profile?.role || 'USER') as UserRole
+    const userRole = (profile?.role || 'user') as UserRole
 
     // Only redirect super admins and admins if they specifically need to be in their admin dashboard
-    if ((userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') && 
+    if ((userRole === 'super_admin' || userRole === 'admin') && 
         profile?.preferences?.defaultView === 'admin') {
       redirect('/protected/admin')
     }
@@ -72,7 +72,7 @@ export default async function DashboardPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {userRole === 'EVENT_HOST' ? 'Your Events' : 'Events Joined'}
+                {userRole === 'event_host' ? 'Your Events' : 'Events Joined'}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -82,7 +82,11 @@ export default async function DashboardPage() {
           
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Photos</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                {userRole === 'super_admin' || userRole === 'admin' 
+                  ? 'Total Users' 
+                  : 'Your Photos'}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.photos}</div>
@@ -91,14 +95,18 @@ export default async function DashboardPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Events</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                {userRole === 'super_admin' || userRole === 'admin'
+                  ? 'Total Events'
+                  : 'Recent Activity'}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.activeEvents}</div>
             </CardContent>
           </Card>
 
-          {userRole === 'EVENT_HOST' && (
+          {userRole === 'event_host' && (
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Guests</CardTitle>
@@ -146,17 +154,17 @@ async function getDashboardStats(
       supabase
         .from('events')
         .select('*', { count: 'exact', head: true })
-        .eq(userRole === 'USER' ? 'created_by' : 'id', userId),
+        .eq(userRole === 'user' ? 'created_by' : 'id', userId),
       supabase
         .from('events')
         .select('*', { count: 'exact', head: true })
-        .eq(userRole === 'USER' ? 'created_by' : 'id', userId)
+        .eq(userRole === 'user' ? 'created_by' : 'id', userId)
         .eq('status', 'active'),
       supabase
         .from('photos')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId),
-      userRole === 'EVENT_HOST' 
+      userRole === 'event_host' 
         ? supabase
             .from('event_guests')
             .select('*', { count: 'exact', head: true })

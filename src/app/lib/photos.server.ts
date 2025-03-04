@@ -11,6 +11,9 @@ type PhotoRow = Database['public']['Tables']['photos']['Row'];
  * Convert a database photo row to the Photo type used in the application
  */
 export function mapDbPhotoToPhoto(photo: PhotoRow): Photo {
+  // Extract metadata for size, mime_type, etc.
+  const metadata = photo.metadata as PhotoMetadata || {};
+  
   return {
     id: photo.id,
     event_id: photo.event_id,
@@ -18,11 +21,17 @@ export function mapDbPhotoToPhoto(photo: PhotoRow): Photo {
     storage_path: photo.storage_path,
     url: photo.url,
     thumbnail_url: photo.thumbnail_url || undefined,
+    // These fields are in the Photo interface but not in the database schema
+    // We'll extract them from metadata or use defaults
+    size: metadata.size || 0,
+    mime_type: metadata.mime_type || 'image/jpeg',
+    width: metadata.width || null,
+    height: metadata.height || null,
     uploaded_by: photo.uploaded_by,
     created_at: photo.created_at,
-    updated_at: photo.updated_at || undefined,
+    updated_at: photo.updated_at || photo.created_at,
     is_approved: photo.is_approved,
-    metadata: (photo.metadata as PhotoMetadata) || {},
+    metadata: metadata || {},
   };
 }
 

@@ -45,7 +45,7 @@ export function ContactStats() {
         if (error) throw error
         
         // Calculate total submissions
-        const total = data?.reduce((sum, item) => sum + item.count, 0) || 0
+        const total = data?.reduce((sum: number, item: SubmissionStats) => sum + item.count, 0) || 0
         
         setStats(data || [])
         setTotalSubmissions(total)

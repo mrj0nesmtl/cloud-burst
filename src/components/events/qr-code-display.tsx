@@ -11,7 +11,9 @@ import { QRCodeParams } from '@/types/events'
 
 interface QRCodeDisplayProps {
   eventId: string
-  type: 'event' | 'attendee'
+  eventCode?: string
+  eventName?: string
+  type?: 'event' | 'attendee'
   attendeeId?: string
   title?: string
   description?: string
@@ -20,9 +22,11 @@ interface QRCodeDisplayProps {
 
 export function QRCodeDisplay({
   eventId,
-  type,
+  eventCode,
+  eventName,
+  type = 'event',
   attendeeId,
-  title = 'Event QR Code',
+  title = eventName ? `${eventName} QR Code` : 'Event QR Code',
   description = 'Scan this code to access the event gallery',
   size = 300
 }: QRCodeDisplayProps) {

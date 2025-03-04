@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation';
-import { createServerClient } from '@/lib/supabase/client';
+import { getServerSupabase } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import EventDetails from '@/components/events/event-details';
 
 export default async function EventPage({ params }: { params: { id: string } }) {
-  const supabase = createServerClient();
+  const supabase = await getServerSupabase();
   
   // Fetch event by ID
   const { data: event } = await supabase

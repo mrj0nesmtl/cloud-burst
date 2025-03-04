@@ -39,7 +39,7 @@ export function NewsletterStats() {
         if (error) throw error
         
         // Calculate total subscribers
-        const total = data?.reduce((sum, item) => sum + item.count, 0) || 0
+        const total = data?.reduce((sum: number, item: SubscriberStats) => sum + item.count, 0) || 0
         
         setStats(data || [])
         setTotalSubscribers(total)

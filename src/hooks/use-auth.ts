@@ -23,7 +23,7 @@ export function useAuth() {
 
   // Profile management
   const { data: profile, isLoading: profileLoading } = useProfile(user?.id)
-  const { mutate: updateProfile, isLoading: updateLoading } = useUpdateProfile(user?.id)
+  const { mutate: updateProfile } = useUpdateProfile(user?.id)
 
   // Permissions
   const {
@@ -32,12 +32,15 @@ export function useAuth() {
     canManageEvents,
     canUploadPhotos,
     canAccessRoute,
-    userRole,
+    getCurrentRole,
     capabilities
   } = usePermissions()
+  
+  // Get the current user role
+  const userRole = getCurrentRole()
 
   // Combined loading state
-  const isLoading = loading || profileLoading || updateLoading
+  const isLoading = loading || profileLoading
 
   // Enhanced error handling
   const handleAuthError = useCallback((error: AuthError) => {

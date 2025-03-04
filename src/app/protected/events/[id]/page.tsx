@@ -11,7 +11,7 @@ import { AttendeeManagement } from '@/components/events/attendee-management'
 import { GalleryGrid } from '@/components/gallery/gallery-grid'
 import { UploadDropzone } from '@/components/gallery/upload-dropzone'
 import { QRCodeDisplay } from '@/components/events/qr-code-display'
-import { createClient } from '@/lib/supabase/server'
+import { getServerSupabase } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -23,7 +23,7 @@ interface EventPageProps {
 }
 
 export async function generateMetadata({ params }: EventPageProps): Promise<Metadata> {
-  const supabase = createClient()
+  const supabase = await getServerSupabase()
   
   const { data: event } = await supabase
     .from('events')
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
 }
 
 export default async function EventPage({ params }: EventPageProps) {
-  const supabase = createClient()
+  const supabase = await getServerSupabase()
   
   // Fetch event details
   const { data: event, error } = await supabase

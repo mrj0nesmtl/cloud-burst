@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { createEvent } from '@/lib/supabase/events'
 import { toast } from 'sonner'
 import { CalendarDays, MapPin, Users, Image, Lock, Globe, Info } from 'lucide-react'
+import { EventStatus } from '@/types/events'
 
 export function EventForm() {
   const router = useRouter()
@@ -49,7 +50,8 @@ export function EventForm() {
       // Format the data for the API
       const eventData = {
         ...formData,
-        max_attendees: formData.max_attendees ? parseInt(formData.max_attendees) : null
+        status: formData.status as EventStatus,
+        max_attendees: formData.max_attendees ? parseInt(formData.max_attendees) : undefined
       }
       
       await createEvent(eventData)

@@ -1,4 +1,4 @@
-import { createServerClient } from '@/lib/supabase/client'
+import { getServerSupabase } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
@@ -17,7 +17,7 @@ export default async function UserEditPage({
 }: {
   params: { id: string }
 }) {
-  const supabase = createServerClient()
+  const supabase = await getServerSupabase()
   
   const { data: user } = await supabase
     .from('profiles')

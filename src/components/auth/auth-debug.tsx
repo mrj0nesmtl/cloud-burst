@@ -8,7 +8,8 @@ export function AuthDebug() {
   if (process.env.NODE_ENV === 'production') return null
   
   const supabase = createClientComponentClient()
-  const { role, capabilities } = usePermissions()
+  const { getCurrentRole, capabilities } = usePermissions()
+  const role = getCurrentRole()
 
   return (
     <div className="fixed bottom-4 right-4 p-4 bg-black/80 text-white rounded-lg text-xs">

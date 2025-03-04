@@ -10,9 +10,9 @@ interface RoleGuardProps {
 }
 
 export function RoleGuard({ children, allowedRoles }: RoleGuardProps) {
-  const { user, role } = useAuthStore()
+  const { user } = useAuthStore()
 
-  if (!user || !role || !allowedRoles.includes(role)) {
+  if (!user || !user.role || !allowedRoles.includes(user.role as UserRole)) {
     redirect('/protected/dashboard')
   }
 

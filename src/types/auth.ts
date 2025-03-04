@@ -1,6 +1,13 @@
 import { Session } from '@supabase/supabase-js'
 import * as z from 'zod'
 
+// Define AuthError type
+export interface AuthError {
+  message: string;
+  status?: number;
+  code?: string;
+}
+
 // Align with Database types
 export const UserRole = z.enum([
   'SUPER_ADMIN',

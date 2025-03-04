@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AnalyticsDashboard() {
-  const analytics = await getEventAnalytics();
+  const analytics = await getEventAnalytics('all');
   
   return (
     <div className="container mx-auto py-8">

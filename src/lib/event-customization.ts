@@ -102,8 +102,8 @@ export async function updateEventCustomizationSettings(
   
   // Remove undefined values
   Object.keys(updateData).forEach(key => {
-    if (updateData[key] === undefined) {
-      delete updateData[key]
+    if ((updateData as Record<string, any>)[key] === undefined) {
+      delete (updateData as Record<string, any>)[key]
     }
   })
   

@@ -54,14 +54,18 @@ import { isValidEmail } from '@/lib/utils'
 
 interface AttendeeManagementProps {
   eventId: string
-  attendees: EventAttendee[]
-  onAttendeeChange: () => void
+  initialAttendees?: any[]
+  organizerId?: string
+  attendees?: EventAttendee[]
+  onAttendeeChange?: () => void
 }
 
 export function AttendeeManagement({ 
   eventId, 
-  attendees, 
-  onAttendeeChange 
+  initialAttendees = [], 
+  organizerId,
+  attendees = initialAttendees, 
+  onAttendeeChange = () => {} 
 }: AttendeeManagementProps) {
   const router = useRouter()
   const { toast } = useToast()

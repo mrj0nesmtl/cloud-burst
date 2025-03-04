@@ -10,7 +10,8 @@ export function DebugPanel() {
 
   const [isOpen, setIsOpen] = useState(false)
   const supabase = createClientComponentClient()
-  const { role, capabilities } = usePermissions()
+  const { getCurrentRole, capabilities } = usePermissions()
+  const role = getCurrentRole()
 
   return (
     <div className="fixed top-4 right-4">

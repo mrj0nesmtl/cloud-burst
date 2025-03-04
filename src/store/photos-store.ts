@@ -1,12 +1,9 @@
 import { create } from 'zustand'
 import { Photo } from '@/types/events'
 import { 
-  getEventPhotos,
-  getApprovedEventPhotos,
-  getPendingEventPhotos,
-  getUserPhotos,
-  getPhotoUrl
-} from '@/app/lib/photos'
+  getPhotoUrl,
+  uploadAndCreatePhotoWithTags
+} from '@/app/lib/photos-client'
 
 interface PhotosState {
   // Photos data
@@ -39,7 +36,7 @@ interface PhotosState {
   fetchPendingEventPhotos: (eventId: string) => Promise<void>
   fetchUserPhotos: () => Promise<void>
   setCurrentPhoto: (photo: Photo | null) => void
-  getPhotoPublicUrl: (storagePath: string) => string
+  getPhotoPublicUrl: (photo: Photo) => string
   setUploadProgress: (progress: number) => void
   setIsUploading: (isUploading: boolean) => void
   setUploadError: (error: Error | null) => void
@@ -73,7 +70,14 @@ export const usePhotosStore = create<PhotosState>((set, get) => ({
     set({ isLoadingEventPhotos: true, eventPhotosError: null })
     
     try {
-      const photos = await getEventPhotos(eventId)
+      // Use fetch API instead of server function
+      const response = await fetch(`/api/events/${eventId}/photos`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch event photos: ${response.statusText}`)
+      }
+      
+      const photos = await response.json()
       set({ eventPhotos: photos, isLoadingEventPhotos: false })
     } catch (error) {
       console.error('Error fetching event photos:', error)
@@ -89,7 +93,14 @@ export const usePhotosStore = create<PhotosState>((set, get) => ({
     set({ isLoadingApprovedPhotos: true, approvedPhotosError: null })
     
     try {
-      const photos = await getApprovedEventPhotos(eventId)
+      // Use fetch API instead of server function
+      const response = await fetch(`/api/events/${eventId}/photos/approved`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch approved photos: ${response.statusText}`)
+      }
+      
+      const photos = await response.json()
       set({ approvedPhotos: photos, isLoadingApprovedPhotos: false })
     } catch (error) {
       console.error('Error fetching approved photos:', error)
@@ -105,7 +116,14 @@ export const usePhotosStore = create<PhotosState>((set, get) => ({
     set({ isLoadingPendingPhotos: true, pendingPhotosError: null })
     
     try {
-      const photos = await getPendingEventPhotos(eventId)
+      // Use fetch API instead of server function
+      const response = await fetch(`/api/events/${eventId}/photos/pending`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch pending photos: ${response.statusText}`)
+      }
+      
+      const photos = await response.json()
       set({ pendingPhotos: photos, isLoadingPendingPhotos: false })
     } catch (error) {
       console.error('Error fetching pending photos:', error)
@@ -121,7 +139,14 @@ export const usePhotosStore = create<PhotosState>((set, get) => ({
     set({ isLoadingUserPhotos: true, userPhotosError: null })
     
     try {
-      const photos = await getUserPhotos()
+      // Use fetch API instead of server function
+      const response = await fetch(`/api/user/photos`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user photos: ${response.statusText}`)
+      }
+      
+      const photos = await response.json()
       set({ userPhotos: photos, isLoadingUserPhotos: false })
     } catch (error) {
       console.error('Error fetching user photos:', error)
@@ -138,8 +163,8 @@ export const usePhotosStore = create<PhotosState>((set, get) => ({
   },
   
   // Get the public URL for a photo
-  getPhotoPublicUrl: (storagePath: string) => {
-    return getPhotoUrl(storagePath)
+  getPhotoPublicUrl: (photo: Photo) => {
+    return getPhotoUrl(photo)
   },
   
   // Set upload progress
