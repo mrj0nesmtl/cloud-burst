@@ -22,12 +22,23 @@ on:
           - major
           - minor
           - patch
+      force_version:
+        description: 'Force specific version (leave empty to auto-increment)'
+        required: false
+        type: string
+      skip_version_check:
+        description: 'Skip version consistency check'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   version-check:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    # Skip this job if skip_version_check is true
+    if: ${{ github.event.inputs.skip_version_check != 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,18 +48,49 @@ jobs:
       - name: Check version consistency
         run: |
           # Extract versions
-          CHANGELOG_VERSION=$(grep -o '\[0\.1\.[0-9]*\]' CHANGELOG.md | head -1 | tr -d '[]')
+          CHANGELOG_VERSION=$(grep -o '\[[0-9]\+\.[0-9]\+\.[0-9]\+\]' CHANGELOG.md | head -1 | tr -d '[]')
           README_VERSION=$(grep -o 'version-[0-9.]*-blue' README.md | cut -d'-' -f2)
           
           echo "Found versions:"
           echo "CHANGELOG.md: $CHANGELOG_VERSION"
           echo "README.md: $README_VERSION"
           
+          # Check if versions are valid semver
+          if [[ ! $CHANGELOG_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ CHANGELOG.md version is not a valid semver: $CHANGELOG_VERSION"
+            exit 1
+          fi
+          
+          if [[ ! $README_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ README.md version is not a valid semver: $README_VERSION"
+            exit 1
+          fi
+          
+          # Compare major versions - allow different versions if major version is different
+          CHANGELOG_MAJOR=$(echo $CHANGELOG_VERSION | cut -d. -f1)
+          README_MAJOR=$(echo $README_VERSION | cut -d. -f1)
+          
           # Compare versions
           if [ "$CHANGELOG_VERSION" != "$README_VERSION" ]; then
-            echo "❌ Version mismatch found!"
-            echo "All versions must match CHANGELOG.md version: $CHANGELOG_VERSION"
-            exit 1
+            # If major versions are different, this might be an intentional version jump
+            if [ "$CHANGELOG_MAJOR" != "$README_MAJOR" ]; then
+              echo "⚠️ Major version difference detected ($CHANGELOG_VERSION vs $README_VERSION)"
+              echo "This may be an intentional version jump. Proceeding with caution."
+              
+              # Check if README version is in CHANGELOG.md at all
+              if grep -q "\[$README_VERSION\]" CHANGELOG.md; then
+                echo "✅ README version $README_VERSION found in CHANGELOG.md"
+                exit 0
+              else
+                echo "⚠️ README version $README_VERSION not found in CHANGELOG.md"
+                echo "This might be a mistake. Please ensure the version exists in CHANGELOG.md"
+                exit 1
+              fi
+            else
+              echo "❌ Version mismatch found!"
+              echo "All versions must match CHANGELOG.md version: $CHANGELOG_VERSION"
+              exit 1
+            fi
           fi
           
           echo "✅ All versions match: $CHANGELOG_VERSION"
@@ -85,30 +127,47 @@ jobs:
         id: bump_version
         run: |
           VERSION_TYPE=${{ github.event.inputs.version_type }}
-          CURRENT_VERSION=$(grep -o '\[0\.1\.[0-9]*\]' CHANGELOG.md | head -1 | tr -d '[]')
+          FORCE_VERSION="${{ github.event.inputs.force_version }}"
           
-          # Calculate new version
-          IFS='.' read -r -a version_parts <<< "$CURRENT_VERSION"
-          major="${version_parts[0]}"
-          minor="${version_parts[1]}"
-          patch="${version_parts[2]}"
+          # Get current version from CHANGELOG.md
+          CURRENT_VERSION=$(grep -o '\[[0-9]\+\.[0-9]\+\.[0-9]\+\]' CHANGELOG.md | head -1 | tr -d '[]')
+          echo "Current version: $CURRENT_VERSION"
           
-          case $VERSION_TYPE in
-            major)
-              major=$((major + 1))
-              minor=0
-              patch=0
-              ;;
-            minor)
-              minor=$((minor + 1))
-              patch=0
-              ;;
-            patch)
-              patch=$((patch + 1))
-              ;;
-          esac
+          # Use forced version if provided
+          if [ -n "$FORCE_VERSION" ]; then
+            # Validate forced version is semver
+            if [[ ! $FORCE_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "❌ Forced version is not a valid semver: $FORCE_VERSION"
+              exit 1
+            fi
+            NEW_VERSION="$FORCE_VERSION"
+            echo "Using forced version: $NEW_VERSION"
+          else
+            # Calculate new version
+            IFS='.' read -r -a version_parts <<< "$CURRENT_VERSION"
+            major="${version_parts[0]}"
+            minor="${version_parts[1]}"
+            patch="${version_parts[2]}"
+            
+            case $VERSION_TYPE in
+              major)
+                major=$((major + 1))
+                minor=0
+                patch=0
+                ;;
+              minor)
+                minor=$((minor + 1))
+                patch=0
+                ;;
+              patch)
+                patch=$((patch + 1))
+                ;;
+            esac
+            
+            NEW_VERSION="$major.$minor.$patch"
+            echo "Calculated new version: $NEW_VERSION"
+          fi
           
-          NEW_VERSION="$major.$minor.$patch"
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
           
           # Update README.md version badge
@@ -119,9 +178,27 @@ jobs:
           sed -i "s/## \[Unreleased\]/## [Unreleased]\n\n## [$NEW_VERSION] - $DATE/" CHANGELOG.md
           
           # Update version links in CHANGELOG.md
-          echo "" >> CHANGELOG.md
-          echo "[Unreleased]: https://github.com/${{ github.repository }}/compare/v$NEW_VERSION...HEAD" >> CHANGELOG.md
-          echo "[$NEW_VERSION]: https://github.com/${{ github.repository }}/releases/tag/v$NEW_VERSION" >> CHANGELOG.md
+          # First, check if we already have a link for the new version
+          if ! grep -q "\[$NEW_VERSION\]:" CHANGELOG.md; then
+            # Add new version link
+            if grep -q "\[Unreleased\]:" CHANGELOG.md; then
+              # Update existing links
+              sed -i "/\[Unreleased\]:/c\[Unreleased\]: https://github.com/${{ github.repository }}/compare/v$NEW_VERSION...HEAD" CHANGELOG.md
+              
+              # Find the previous version link
+              PREV_VERSION_LINE=$(grep -n "\[[0-9]\+\.[0-9]\+\.[0-9]\+\]:" CHANGELOG.md | head -1)
+              PREV_VERSION_NUM=$(echo $PREV_VERSION_LINE | cut -d: -f1)
+              PREV_VERSION=$(echo $PREV_VERSION_LINE | grep -o "\[[0-9]\+\.[0-9]\+\.[0-9]\+\]:" | tr -d '[]' | tr -d ':')
+              
+              # Insert new version link after Unreleased link
+              sed -i "/\[Unreleased\]:/a\[$NEW_VERSION\]: https://github.com/${{ github.repository }}/compare/v$PREV_VERSION...v$NEW_VERSION" CHANGELOG.md
+            else
+              # Add links if they don't exist
+              echo "" >> CHANGELOG.md
+              echo "[Unreleased]: https://github.com/${{ github.repository }}/compare/v$NEW_VERSION...HEAD" >> CHANGELOG.md
+              echo "[$NEW_VERSION]: https://github.com/${{ github.repository }}/releases/tag/v$NEW_VERSION" >> CHANGELOG.md
+            fi
+          fi
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5

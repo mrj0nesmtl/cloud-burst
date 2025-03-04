@@ -10,4 +10,8 @@ NEXT_TELEMETRY_DISABLED = "1"
 
 [deployment]
 run = ["sh", "-c", "npm run build && npm run start"]
-deploymentTarget = "cloudrun" 
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 3000
+externalPort = 80

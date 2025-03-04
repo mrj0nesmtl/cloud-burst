@@ -6,7 +6,7 @@ import { Upload, X, Check, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/components/ui/use-toast'
-import { uploadAndCreatePhoto } from '@/lib/supabase/photos'
+import { uploadAndCreatePhoto } from '@/app/lib/photos'
 import { formatFileSize } from '@/lib/utils'
 import { usePhotosStore } from '@/store/photos-store'
 

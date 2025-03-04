@@ -7,7 +7,8 @@ import { SiteHeader } from "@/components/ui/site-header"
 import { SiteFooter } from "@/components/ui/site-footer"
 import { QueryProvider } from "@/components/providers/query-provider"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster as UIToaster } from "@/components/ui/toaster"
+import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { Inter } from 'next/font/google'
 
 const geist = GeistSans
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
   title: 'Cloud Burst',
   description: 'Elevate Your Event Photography',
   applicationName: 'Cloud Burst',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cb-beta.replit.app'),
 }
 
 // Viewport
@@ -92,7 +93,8 @@ export default function RootLayout({
               </main>
               <SiteFooter />
             </div>
-            <Toaster />
+            <UIToaster />
+            <SonnerToaster />
           </ThemeProvider>
         </QueryProvider>
       </body>

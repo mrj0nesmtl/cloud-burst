@@ -1,13 +1,9 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development'
-})
-
 const nextConfig = {
   // Configure error handling and development indicators
+  // Server Actions are stable in Next.js 14, no need for experimental flag
+  experimental: {},
+  // Disable error overlay completely
   devIndicators: {
     position: 'bottom-right',
     buildError: false,
@@ -24,6 +20,11 @@ const nextConfig = {
   // Configure output for better production builds
   output: 'standalone',
   // Configure image domains
+  // Add webpack config for sharp
+  webpack: (config) => {
+    config.externals = [...(config.externals || []), 'sharp']
+    return config
+  },
   images: {
     remotePatterns: [
       {
@@ -70,4 +71,4 @@ const nextConfig = {
   // },
 }
 
-module.exports = withPWA(nextConfig) 
+module.exports = nextConfig 
