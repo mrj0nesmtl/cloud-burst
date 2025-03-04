@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-03T18:02:32.865Z
+Generated: 2025-03-03T23:44:48.261Z
 
 ```
 ./
@@ -68,9 +68,10 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session17_checklist.md
-│   │   ├── session17_kickoff.md
 │   │   ├── session_17_checklist.md
+│   │   ├── session_17_kickoff.md
+│   │   ├── session_18_checklist.md
+│   │   ├── session_18_kickoff.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
@@ -173,6 +174,8 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   │   │   │   └── route.ts
 │   │   │   │   └── setup/
 │   │   │   │       └── route.ts
+│   │   │   ├── extract-colors/
+│   │   │   │   └── route.ts
 │   │   │   └── templates/
 │   │   │       ├── [templateId]/
 │   │   │       │   └── html/
@@ -188,16 +191,27 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
 │   │   ├── dashboard/
+│   │   │   ├── analytics/
+│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── dev/
 │   │   │   └── setup/
 │   │   │       └── route.ts
+│   │   ├── e/
+│   │   │   └── [customUrl]/
+│   │   │       ├── layout.tsx
+│   │   │       └── page.tsx
 │   │   ├── events/
 │   │   │   ├── [id]/
 │   │   │   │   ├── gallery/
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── upload/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── layout.tsx
-│   │   │   │   └── not-found.tsx
+│   │   │   │   ├── not-found.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── create/
+│   │   │   │   └── page.tsx
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
 │   │   ├── legal/
@@ -313,12 +327,17 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   │   ├── analytics-overview.tsx
 │   │   │   ├── contact-stats.tsx
 │   │   │   ├── contact-submissions.tsx
+│   │   │   ├── event-summary.tsx
 │   │   │   ├── newsletter-stats.tsx
 │   │   │   ├── newsletter-subscribers.tsx
 │   │   │   └── recent-activity.tsx
 │   │   ├── events/
 │   │   │   ├── attendee-management.tsx
 │   │   │   ├── event-actions.tsx
+│   │   │   ├── event-card.tsx
+│   │   │   ├── event-details.tsx
+│   │   │   ├── event-list.tsx
+│   │   │   ├── image-upload.tsx
 │   │   │   └── qr-code-display.tsx
 │   │   ├── forms/
 │   │   │   ├── avatar-upload.tsx
@@ -330,8 +349,10 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   │   └── security-form.tsx
 │   │   ├── gallery/
 │   │   │   ├── gallery-grid.tsx
+│   │   │   ├── optimized-image.tsx
 │   │   │   ├── photo-lightbox.tsx
-│   │   │   └── upload-dropzone.tsx
+│   │   │   ├── upload-dropzone.tsx
+│   │   │   └── upload-with-tags.tsx
 │   │   ├── layout/
 │   │   │   ├── dashboard-layout.tsx
 │   │   │   └── main-nav.tsx
@@ -339,12 +360,12 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   │   ├── contact-form.tsx
 │   │   │   └── newsletter-form.tsx
 │   │   ├── nav/
-│   │   │   ├── main-nav.tsx
 │   │   │   ├── side-nav.tsx
 │   │   │   └── user-nav.tsx
 │   │   ├── notifications/
 │   │   │   ├── create-template.tsx
 │   │   │   ├── full-preview.tsx
+│   │   │   ├── notification-item.tsx
 │   │   │   ├── notifications-content.tsx
 │   │   │   ├── template-editor.tsx
 │   │   │   └── template-preview.tsx
@@ -361,6 +382,7 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   │   ├── avatar.tsx
 │   │   │   ├── badge.tsx
 │   │   │   ├── button.tsx
+│   │   │   ├── calendar.tsx
 │   │   │   ├── card.tsx
 │   │   │   ├── checkbox.tsx
 │   │   │   ├── dialog.tsx
@@ -374,6 +396,7 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   │   ├── mode-toggle.tsx
 │   │   │   ├── navigation-menu.tsx
 │   │   │   ├── newsletter-form.tsx
+│   │   │   ├── popover.tsx
 │   │   │   ├── radio-group.tsx
 │   │   │   ├── scroll-area.tsx
 │   │   │   ├── select.tsx
@@ -404,9 +427,15 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   ├── use-toast.ts
 │   │   └── use-update-profile.ts
 │   ├── lib/
+│   │   ├── ai/
+│   │   │   ├── color-extraction.ts
+│   │   │   └── photo-enhancement.ts
+│   │   ├── realtime/
+│   │   │   └── event-collaboration.ts
 │   │   ├── supabase/
 │   │   │   ├── __tests__/
-│   │   │   │   └── auth-store.test.ts
+│   │   │   │   ├── auth-store.test.ts
+│   │   │   │   └── events.test.ts
 │   │   │   ├── migrations/
 │   │   │   ├── auth-store.ts
 │   │   │   ├── client.ts
@@ -414,6 +443,7 @@ Generated: 2025-03-03T18:02:32.865Z
 │   │   │   ├── events.ts
 │   │   │   ├── photos.ts
 │   │   │   ├── run-migration.js
+│   │   │   ├── search.ts
 │   │   │   ├── templates.ts
 │   │   │   ├── test-utils.ts
 │   │   │   ├── verify-schema.html
@@ -453,6 +483,9 @@ Generated: 2025-03-03T18:02:32.865Z
 │   ├── Policy Overview for Public Schema.csv
 │   ├── Profile Table Structure.csv
 │   ├── Retrieve User Roles.csv
+│   ├── Supabase Snippet View Event Indexes.csv
+│   ├── Supabase Snippet View Events Table Structure.csv
+│   ├── Supabase Snippet View constraints for events table.csv
 │   ├── User Role Verification Query.csv
 │   ├── Verify User Update.csv
 │   ├── profiles_rows (1).csv
@@ -479,9 +512,11 @@ Generated: 2025-03-03T18:02:32.865Z
 ├── postcss.config.mjs
 ├── replit.nix
 ├── tailwind.config.ts
-└── tsconfig.json
+├── tsconfig.json
+├── tsconfig.tsbuildinfo
+└── tsconfigbackup.json
 
-100 directories, 378 files
+108 directories, 405 files
 
 ```
 

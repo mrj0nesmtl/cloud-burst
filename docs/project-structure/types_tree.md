@@ -1,5 +1,5 @@
 # types Directory Structure
-Generated: 2025-03-03T18:02:32.999Z
+Generated: 2025-03-03T23:44:48.389Z
 
 ```
 ./src/types/

@@ -84,3 +84,15 @@ export function isValidEmail(email: string): boolean {
 export function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+/**
+ * Get the URL for an event, using custom URL if available
+ * @param event An object containing id and optional custom_url
+ * @returns The URL path for the event
+ */
+export function getEventUrl(event: { id: string; custom_url?: string | null }): string {
+  if (event.custom_url) {
+    return `/e/${event.custom_url}`;
+  }
+  return `/events/${event.id}`;
+}

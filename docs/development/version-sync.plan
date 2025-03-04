@@ -1,6 +1,29 @@
-Current: 0.1.14 (Latest in CHANGELOG)
+# Version Synchronization Plan
 
-Upcoming versions:
-0.1.15: Session 15 (Dashboard & Upload Setup)
-0.1.16: Session 16 (Auth Flow Completion)
-0.2.0: Milestone Release (Complete Auth System) 
+## Files to Update When Changing Versions
+
+When bumping the Cloud Burst version (currently 0.7.0), update the following files:
+
+1. `package.json`: Update the "version" field
+2. `CHANGELOG.md`: Add a new version section with changes
+3. `next.config.js`: Update any version-specific configurations
+4. `src/app/layout.tsx`: Update metadata version
+5. `docs/development/STATUS_NOTES.md`: Update current version
+6. `docs/development/VERSION_CONTROL.md`: Update current phase if needed
+7. `docs/planning/roadmap.md`: Update progress indicators
+
+## Automation
+
+Consider implementing a version bump script that:
+- Takes a new version number as input
+- Updates all necessary files
+- Creates a commit with the version bump
+- Creates a git tag
+
+## Version Display
+
+Ensure the version is visible in:
+- Footer of the application
+- About page
+- API responses (x-app-version header)
+- Console logs during startup 

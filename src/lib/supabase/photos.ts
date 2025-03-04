@@ -1,293 +1,298 @@
-import { createClient } from './client'
-import { 
-  CreatePhotoParams, 
-  UpdatePhotoParams, 
-  Photo 
-} from '@/types/events'
+import { createClientComponentClient, createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/types/supabase';
+import { Photo, PhotoMetadata } from '@/types/events';
+import { cookies } from 'next/headers';
+
+type PhotoInsert = Database['public']['Tables']['photos']['Insert'];
+type PhotoUpdate = Database['public']['Tables']['photos']['Update'];
+type PhotoRow = Database['public']['Tables']['photos']['Row'];
 
 /**
- * Upload a photo to Supabase Storage
+ * Convert a database photo row to the Photo type used in the application
  */
-export async function uploadPhoto(
-  eventId: string, 
-  file: File
-): Promise<{ path: string; url: string }> {
-  const supabase = createClient()
-  const { data: userData } = await supabase.auth.getUser()
-  
-  if (!userData?.user) {
-    throw new Error('User not authenticated')
-  }
-  
-  // Create a unique filename
-  const fileExt = file.name.split('.').pop()
-  const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`
-  const filePath = `events/${eventId}/${fileName}`
-  
-  // Upload the file
-  const { data, error } = await supabase.storage
-    .from('photos')
-    .upload(filePath, file, {
-      cacheControl: '3600',
-      upsert: false
-    })
-    
-  if (error) {
-    console.error('Error uploading photo:', error)
-    throw new Error(`Failed to upload photo: ${error.message}`)
-  }
-  
-  // Get the public URL
-  const { data: { publicUrl } } = supabase.storage
-    .from('photos')
-    .getPublicUrl(data.path)
-    
+export function mapDbPhotoToPhoto(photo: PhotoRow): Photo {
   return {
-    path: data.path,
-    url: publicUrl
-  }
+    id: photo.id,
+    event_id: photo.event_id,
+    filename: photo.filename,
+    storage_path: photo.storage_path,
+    url: photo.url,
+    thumbnail_url: photo.thumbnail_url || undefined,
+    uploaded_by: photo.uploaded_by,
+    created_at: photo.created_at,
+    updated_at: photo.updated_at || undefined,
+    is_approved: photo.is_approved,
+    metadata: (photo.metadata as PhotoMetadata) || {},
+  };
 }
 
 /**
- * Create a photo record in the database
- */
-export async function createPhotoRecord(params: CreatePhotoParams): Promise<Photo> {
-  const supabase = createClient()
-  const { data: userData } = await supabase.auth.getUser()
-  
-  if (!userData?.user) {
-    throw new Error('User not authenticated')
-  }
-  
-  const { data, error } = await supabase
-    .from('photos')
-    .insert({
-      ...params,
-      uploaded_by: userData.user.id
-    })
-    .select('*')
-    .single()
-    
-  if (error) {
-    console.error('Error creating photo record:', error)
-    throw new Error(`Failed to create photo record: ${error.message}`)
-  }
-  
-  return data as Photo
-}
-
-/**
- * Upload a photo and create a database record
+ * Upload a photo to Supabase Storage and create a record in the photos table
  */
 export async function uploadAndCreatePhoto(
-  eventId: string, 
-  file: File
-): Promise<Photo> {
-  // Upload the file to storage
-  const { path } = await uploadPhoto(eventId, file)
+  file: File,
+  eventId: string,
+  userId: string,
+  metadata: PhotoMetadata = {}
+): Promise<Photo | null> {
+  const supabase = createClientComponentClient<Database>();
   
-  // Create a record in the database
-  return createPhotoRecord({
+  // Generate a unique filename
+  const timestamp = new Date().getTime();
+  const fileExt = file.name.split('.').pop();
+  const safeFileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
+  const storagePath = `events/${eventId}/${safeFileName}`;
+  
+  // Upload the file to Supabase Storage
+  const { data: uploadData, error: uploadError } = await supabase
+    .storage
+    .from('photos')
+    .upload(storagePath, file);
+  
+  if (uploadError) {
+    console.error('Error uploading photo:', uploadError);
+    return null;
+  }
+  
+  // Get the public URL for the uploaded file
+  const { data: { publicUrl } } = supabase
+    .storage
+    .from('photos')
+    .getPublicUrl(storagePath);
+  
+  // Create a record in the photos table
+  const photoRecord: PhotoInsert = {
     event_id: eventId,
-    storage_path: path,
     filename: file.name,
-    size: file.size,
-    mime_type: file.type,
-    is_approved: false // Default to not approved
-  })
+    storage_path: storagePath,
+    url: publicUrl,
+    uploaded_by: userId,
+    is_approved: false,
+    metadata: metadata,
+  };
+  
+  const { data: photoData, error: photoError } = await supabase
+    .from('photos')
+    .insert(photoRecord)
+    .select()
+    .single();
+  
+  if (photoError) {
+    console.error('Error creating photo record:', photoError);
+    return null;
+  }
+  
+  return mapDbPhotoToPhoto(photoData);
 }
 
 /**
- * Update a photo record
+ * Upload a photo with tags to Supabase Storage and create a record in the photos table
  */
-export async function updatePhoto(id: string, params: UpdatePhotoParams): Promise<Photo> {
-  const supabase = createClient()
+export async function uploadAndCreatePhotoWithTags(
+  file: File,
+  eventId: string,
+  userId: string,
+  tags: string[] = []
+): Promise<Photo | null> {
+  const metadata: PhotoMetadata = {
+    tags: tags,
+  };
   
-  const { data, error } = await supabase
-    .from('photos')
-    .update(params)
-    .eq('id', id)
-    .select('*')
-    .single()
-    
-  if (error) {
-    console.error('Error updating photo:', error)
-    throw new Error(`Failed to update photo: ${error.message}`)
-  }
-  
-  return data as Photo
-}
-
-/**
- * Delete a photo and its storage file
- */
-export async function deletePhoto(id: string): Promise<void> {
-  const supabase = createClient()
-  
-  // First get the photo to get the storage path
-  const { data: photo, error: fetchError } = await supabase
-    .from('photos')
-    .select('storage_path')
-    .eq('id', id)
-    .single()
-    
-  if (fetchError) {
-    console.error('Error fetching photo:', fetchError)
-    throw new Error(`Failed to fetch photo: ${fetchError.message}`)
-  }
-  
-  // Delete the file from storage
-  const { error: storageError } = await supabase.storage
-    .from('photos')
-    .remove([photo.storage_path])
-    
-  if (storageError) {
-    console.error('Error deleting photo from storage:', storageError)
-    // Continue to delete the database record even if storage deletion fails
-  }
-  
-  // Delete the database record
-  const { error: dbError } = await supabase
-    .from('photos')
-    .delete()
-    .eq('id', id)
-    
-  if (dbError) {
-    console.error('Error deleting photo record:', dbError)
-    throw new Error(`Failed to delete photo record: ${dbError.message}`)
-  }
-}
-
-/**
- * Get a photo by ID
- */
-export async function getPhoto(id: string): Promise<Photo> {
-  const supabase = createClient()
-  
-  const { data, error } = await supabase
-    .from('photos')
-    .select('*')
-    .eq('id', id)
-    .single()
-    
-  if (error) {
-    console.error('Error fetching photo:', error)
-    throw new Error(`Failed to fetch photo: ${error.message}`)
-  }
-  
-  return data as Photo
+  return uploadAndCreatePhoto(file, eventId, userId, metadata);
 }
 
 /**
  * Get all photos for an event
  */
 export async function getEventPhotos(eventId: string): Promise<Photo[]> {
-  const supabase = createClient()
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
   const { data, error } = await supabase
     .from('photos')
     .select('*')
     .eq('event_id', eventId)
-    .order('created_at', { ascending: false })
-    
+    .order('created_at', { ascending: false });
+  
   if (error) {
-    console.error('Error fetching event photos:', error)
-    throw new Error(`Failed to fetch event photos: ${error.message}`)
+    console.error('Error fetching event photos:', error);
+    return [];
   }
   
-  return data as Photo[]
+  return data.map(mapDbPhotoToPhoto);
 }
 
 /**
- * Get approved photos for an event
+ * Get a single photo by ID
  */
-export async function getApprovedEventPhotos(eventId: string): Promise<Photo[]> {
-  const supabase = createClient()
+export async function getPhotoById(photoId: string): Promise<Photo | null> {
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
   const { data, error } = await supabase
     .from('photos')
     .select('*')
-    .eq('event_id', eventId)
-    .eq('is_approved', true)
-    .order('created_at', { ascending: false })
-    
+    .eq('id', photoId)
+    .single();
+  
   if (error) {
-    console.error('Error fetching approved event photos:', error)
-    throw new Error(`Failed to fetch approved event photos: ${error.message}`)
+    console.error('Error fetching photo:', error);
+    return null;
   }
   
-  return data as Photo[]
+  return mapDbPhotoToPhoto(data);
 }
 
 /**
- * Get pending approval photos for an event
+ * Update a photo's approval status
  */
-export async function getPendingEventPhotos(eventId: string): Promise<Photo[]> {
-  const supabase = createClient()
+export async function updatePhotoApproval(photoId: string, isApproved: boolean): Promise<boolean> {
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('photos')
-    .select('*')
-    .eq('event_id', eventId)
-    .eq('is_approved', false)
-    .order('created_at', { ascending: false })
-    
+    .update({ is_approved: isApproved } as PhotoUpdate)
+    .eq('id', photoId);
+  
   if (error) {
-    console.error('Error fetching pending event photos:', error)
-    throw new Error(`Failed to fetch pending event photos: ${error.message}`)
+    console.error('Error updating photo approval:', error);
+    return false;
   }
   
-  return data as Photo[]
+  return true;
 }
 
 /**
- * Approve a photo
+ * Delete a photo from storage and the database
  */
-export async function approvePhoto(id: string): Promise<Photo> {
-  return updatePhoto(id, { is_approved: true })
-}
-
-/**
- * Reject a photo
- */
-export async function rejectPhoto(id: string): Promise<void> {
-  return deletePhoto(id)
-}
-
-/**
- * Get the public URL for a photo
- */
-export function getPhotoUrl(storagePath: string): string {
-  const supabase = createClient()
+export async function deletePhoto(photoId: string): Promise<boolean> {
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
-  const { data: { publicUrl } } = supabase.storage
+  // First, get the photo to find its storage path
+  const { data: photo, error: fetchError } = await supabase
     .from('photos')
-    .getPublicUrl(storagePath)
-    
-  return publicUrl
+    .select('storage_path')
+    .eq('id', photoId)
+    .single();
+  
+  if (fetchError) {
+    console.error('Error fetching photo for deletion:', fetchError);
+    return false;
+  }
+  
+  // Delete from storage
+  const { error: storageError } = await supabase
+    .storage
+    .from('photos')
+    .remove([photo.storage_path]);
+  
+  if (storageError) {
+    console.error('Error deleting photo from storage:', storageError);
+    return false;
+  }
+  
+  // Delete from database
+  const { error: dbError } = await supabase
+    .from('photos')
+    .delete()
+    .eq('id', photoId);
+  
+  if (dbError) {
+    console.error('Error deleting photo from database:', dbError);
+    return false;
+  }
+  
+  return true;
 }
 
 /**
- * Get photos uploaded by the current user
+ * Add a tag to a photo
  */
-export async function getUserPhotos(): Promise<Photo[]> {
-  const supabase = createClient()
-  const { data: userData } = await supabase.auth.getUser()
+export async function addTagToPhoto(photoId: string, tag: string): Promise<boolean> {
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
-  if (!userData?.user) {
-    throw new Error('User not authenticated')
-  }
-  
-  const { data, error } = await supabase
+  // First, get the current photo metadata
+  const { data: photo, error: fetchError } = await supabase
     .from('photos')
-    .select('*')
-    .eq('uploaded_by', userData.user.id)
-    .order('created_at', { ascending: false })
-    
-  if (error) {
-    console.error('Error fetching user photos:', error)
-    throw new Error(`Failed to fetch user photos: ${error.message}`)
+    .select('metadata')
+    .eq('id', photoId)
+    .single();
+  
+  if (fetchError) {
+    console.error('Error fetching photo metadata:', fetchError);
+    return false;
   }
   
-  return data as Photo[]
+  // Update the metadata with the new tag
+  const metadata = photo.metadata as PhotoMetadata || {};
+  const tags = metadata.tags || [];
+  
+  if (!tags.includes(tag)) {
+    tags.push(tag);
+  }
+  
+  const updatedMetadata: PhotoMetadata = {
+    ...metadata,
+    tags,
+  };
+  
+  // Update the photo record
+  const { error: updateError } = await supabase
+    .from('photos')
+    .update({ metadata: updatedMetadata } as PhotoUpdate)
+    .eq('id', photoId);
+  
+  if (updateError) {
+    console.error('Error updating photo tags:', updateError);
+    return false;
+  }
+  
+  return true;
+}
+
+/**
+ * Remove a tag from a photo
+ */
+export async function removeTagFromPhoto(photoId: string, tag: string): Promise<boolean> {
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
+  
+  // First, get the current photo metadata
+  const { data: photo, error: fetchError } = await supabase
+    .from('photos')
+    .select('metadata')
+    .eq('id', photoId)
+    .single();
+  
+  if (fetchError) {
+    console.error('Error fetching photo metadata:', fetchError);
+    return false;
+  }
+  
+  // Update the metadata by removing the tag
+  const metadata = photo.metadata as PhotoMetadata || {};
+  const tags = metadata.tags || [];
+  
+  const updatedTags = tags.filter(t => t !== tag);
+  
+  const updatedMetadata: PhotoMetadata = {
+    ...metadata,
+    tags: updatedTags,
+  };
+  
+  // Update the photo record
+  const { error: updateError } = await supabase
+    .from('photos')
+    .update({ metadata: updatedMetadata } as PhotoUpdate)
+    .eq('id', photoId);
+  
+  if (updateError) {
+    console.error('Error updating photo tags:', updateError);
+    return false;
+  }
+  
+  return true;
 } 

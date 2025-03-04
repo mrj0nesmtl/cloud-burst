@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-03-03T18:02:32.950Z
+Generated: 2025-03-03T23:44:48.343Z
 
 ```
 ./src/app/
@@ -12,6 +12,8 @@ Generated: 2025-03-03T18:02:32.950Z
 │   │   │   └── route.ts
 │   │   └── setup/
 │   │       └── route.ts
+│   ├── extract-colors/
+│   │   └── route.ts
 │   └── templates/
 │       ├── [templateId]/
 │       │   └── html/
@@ -27,16 +29,27 @@ Generated: 2025-03-03T18:02:32.950Z
 │   │   └── page.tsx
 │   └── layout.tsx
 ├── dashboard/
+│   ├── analytics/
+│   │   └── page.tsx
 │   └── page.tsx
 ├── dev/
 │   └── setup/
 │       └── route.ts
+├── e/
+│   └── [customUrl]/
+│       ├── layout.tsx
+│       └── page.tsx
 ├── events/
 │   ├── [id]/
 │   │   ├── gallery/
 │   │   │   └── page.tsx
+│   │   ├── upload/
+│   │   │   └── page.tsx
 │   │   ├── layout.tsx
-│   │   └── not-found.tsx
+│   │   ├── not-found.tsx
+│   │   └── page.tsx
+│   ├── create/
+│   │   └── page.tsx
 │   ├── layout.tsx
 │   └── page.tsx
 ├── legal/
@@ -140,7 +153,7 @@ Generated: 2025-03-03T18:02:32.950Z
 ├── not-found.tsx
 └── page.tsx
 
-55 directories, 82 files
+61 directories, 89 files
 
 ```
 

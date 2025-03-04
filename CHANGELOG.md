@@ -15,15 +15,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
-## [0.1.19] - 2024-03-03
+## [Unreleased]
+### Planned
+- **Enhanced Gallery Experience**: Masonry layout, filtering, sorting, and slideshow view
+- **Intuitive User Flows**: Step-by-step wizards, contextual help, and progress indicators
+- **Advanced QR Code System**: Improved styling, scanning functionality, and analytics
+- **Refined Event Management**: Templates, cloning, and series management
+- **Performance Optimization**: Improved image loading and caching for gallery components
+- **Accessibility Enhancements**: Ensuring WCAG 2.1 AA compliance across new features
+
+## [0.7.0] - 2023-07-15
+
 ### Added
-- **AI-Powered Photo Enhancement**: Foundation for TensorFlow.js integration for intelligent photo processing
-- **Real-time Collaboration Features**: WebSocket-based updates for collaborative event management
-- **Advanced Analytics Dashboard**: Comprehensive metrics for event organizers
-- **Mobile-Optimized Experience**: Enhanced responsive design with PWA capabilities
-- **Enhanced Search Capabilities**: PostgreSQL full-text search integration
-- **Automated Testing Suite**: Expanded test coverage with Vitest
-- **Performance Optimization**: Improved image loading and processing with optimized components
+- Custom event URLs for improved sharing and branding
+- Enhanced gallery implementation with multiple view options:
+  - Masonry layout for visual appeal
+  - Grid layout for organized viewing
+  - Slideshow view for focused browsing
+- Tag-based filtering for photos in galleries
+- Gallery sorting options (date, popularity)
+- Gallery sharing functionality
+- Role-based access control system
+- Event management dashboard for organizers
+- User profile management
+- Supabase integration for authentication and storage
+- Responsive design across all pages
+
+### Fixed
+- TypeScript errors in Supabase integration
+- Navigation bar duplication in public events page
+- PWA configuration issues
+- Form validation in event creation
+
+### Changed
+- Improved dashboard UI for event organizers
+- Enhanced photo upload process
+- Optimized database queries for better performance
+- Updated Next.js configuration for better build performance
+
+### Pending
+- Download options for gallery images
+- Advanced analytics for event organizers
+- AI-powered image enhancement features
+- Bulk upload capabilities
+
+## [0.1.19] - 2023-06-30
+
+### Added
+- Initial project setup with Next.js 14
+- Basic authentication flow
+- Simple event creation
+- Minimal gallery view
+- Basic styling with Tailwind CSS
 
 ### Changed
 - **Enhanced Gallery Experience**: Optimized image loading with progressive enhancement
@@ -395,13 +438,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dialog system integration
 - Contact form validation
 - Documentation updates
-
-## [Unreleased]
-### Planned
-- Complete authentication system
-- User dashboard implementation
-- Protected routes
-- Role-based access control
 
 ## [0.1.2] - 2024-02-14
 ### Added

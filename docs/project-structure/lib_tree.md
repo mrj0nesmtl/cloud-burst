@@ -1,11 +1,17 @@
 # lib Directory Structure
-Generated: 2025-03-03T18:02:32.975Z
+Generated: 2025-03-03T23:44:48.368Z
 
 ```
 ./src/lib/
+├── ai/
+│   ├── color-extraction.ts
+│   └── photo-enhancement.ts
+├── realtime/
+│   └── event-collaboration.ts
 ├── supabase/
 │   ├── __tests__/
-│   │   └── auth-store.test.ts
+│   │   ├── auth-store.test.ts
+│   │   └── events.test.ts
 │   ├── migrations/
 │   ├── auth-store.ts
 │   ├── client.ts
@@ -13,6 +19,7 @@ Generated: 2025-03-03T18:02:32.975Z
 │   ├── events.ts
 │   ├── photos.ts
 │   ├── run-migration.js
+│   ├── search.ts
 │   ├── templates.ts
 │   ├── test-utils.ts
 │   ├── verify-schema.html
@@ -24,7 +31,7 @@ Generated: 2025-03-03T18:02:32.975Z
 ├── user-sessions.ts
 └── utils.ts
 
-4 directories, 17 files
+6 directories, 22 files
 
 ```
 

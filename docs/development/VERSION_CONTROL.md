@@ -1,141 +1,42 @@
-# Version Control Guidelines
+# Version Control Strategy
 
-## Version Strategy
-- 0.1.x: Foundation Phase
-  - 0.1.12: Current (Mobile & Responsive)
-  - 0.1.13: Dashboard & Upload Setup
-  - 0.1.14: Auth Flow Completion
-- 0.2.0: Authentication Milestone
-  - Complete auth system
-  - Protected routes
-  - User sessions
-  - Role-based access
+## Version Numbering
 
-## Semantic Versioning
-Cloud Burst follows [Semantic Versioning 2.0.0](https://semver.org/):
+Cloud Burst follows semantic versioning with the format `MAJOR.MINOR.PATCH`:
 
-- **MAJOR** version (X.0.0) - incompatible API changes
-- **MINOR** version (0.X.0) - backwards-compatible functionality
-- **PATCH** version (0.0.X) - backwards-compatible bug fixes
+- **MAJOR**: Significant architectural changes or complete redesigns (still 0 during pre-release)
+- **MINOR**: Feature additions and substantial improvements
+- **PATCH**: Bug fixes and minor enhancements
+
+## Current Development Phase
+
+As of version 0.7.0, Cloud Burst is in the Feature Implementation phase:
+
+- **0.1.x - 0.5.x**: Initial Development (completed)
+- **0.6.x - 0.8.x**: Feature Implementation (current)
+- **0.9.x**: Beta Testing
+- **1.0.0**: Initial Release
 
 ## Branch Strategy
 
-### Main Branches
-- `main` - Production-ready code
-- `develop` - Development integration branch
-- `staging` - Pre-production testing
-
-### Feature Branches
-Format: `feature/CC-{issue-number}-{brief-description}`
-Example: `feature/CC-123-photo-upload`
-
-### Bug Fix Branches
-Format: `fix/CC-{issue-number}-{brief-description}`
-Example: `fix/CC-456-auth-token`
-
-### Release Branches
-Format: `release/v{major}.{minor}.{patch}`
-Example: `release/v1.2.0`
-
-## Commit Guidelines
-
-### Commit Message Format
-```
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-```
-
-### Types
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes
-- `refactor`: Code refactoring
-- `perf`: Performance improvements
-- `test`: Adding/updating tests
-- `chore`: Maintenance tasks
-
-### Scopes
-- `core`: Core functionality
-- `auth`: Authentication
-- `ui`: User interface
-- `api`: API changes
-- `db`: Database
-- `ai`: AI/ML features
-- `docs`: Documentation
-- `test`: Testing
-- `deps`: Dependencies
-
-### Examples
-```
-feat(photo): add AI-powered image enhancement
-
-- Implemented TensorFlow.js for real-time processing
-- Added quality adjustment controls
-- Integrated with existing upload flow
-
-Closes #123
-```
-
-### Recent Commit Examples
-```
-feat(ui): integrate Shadcn UI component library
-
-- Initialized Shadcn UI with project defaults
-- Added essential UI components
-- Set up component directory structure
-- Configured Tailwind for Shadcn
-
-Closes #<issue-number>
-```
+- `main`: Production-ready code
+- `develop`: Integration branch for features
+- `feature/*`: Individual feature development
+- `bugfix/*`: Bug fixes
+- `release/*`: Release preparation
 
 ## Release Process
 
-1. **Version Bump**
-   ```bash
-   npm version <major|minor|patch>
-   ```
+1. Feature branches are merged into `develop`
+2. When ready for release, create a `release/vX.Y.Z` branch
+3. Test and finalize on the release branch
+4. Merge to `main` and tag with version number
+5. Update CHANGELOG.md with release notes
 
-2. **Update Changelog**
-   - Move "Unreleased" changes to new version
-   - Add release date
-   - Update version links
+## Version Synchronization
 
-3. **Create Release Branch**
-   ```bash
-   git checkout -b release/v1.2.0
-   ```
-
-4. **Release Checklist**
-   - [ ] Version bumped
-   - [ ] Changelog updated
-   - [ ] Tests passing
-   - [ ] Documentation updated
-   - [ ] Dependencies updated
-   - [ ] Performance verified
-   - [ ] Security checked
-
-5. **Merge Process**
-   ```bash
-   git checkout main
-   git merge --no-ff release/v1.2.0
-   git tag -a v1.2.0 -m "Version 1.2.0"
-   git push origin main --tags
-   ```
-
-## Git Hooks
-Pre-commit hooks enforce:
-- Code formatting
-- Lint checks
-- Type checking
-- Test execution
-- Commit message format
-
-## CI/CD Integration
-- GitHub Actions runs on every push
-- Automated version bumping
-- Changelog verification
-- Release automation 
+All version references should be updated simultaneously:
+- package.json
+- CHANGELOG.md
+- Documentation files
+- Application metadata

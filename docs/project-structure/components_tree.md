@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-03T18:02:32.963Z
+Generated: 2025-03-03T23:44:48.356Z
 
 ```
 ./src/components/
@@ -15,12 +15,17 @@ Generated: 2025-03-03T18:02:32.963Z
 │   ├── analytics-overview.tsx
 │   ├── contact-stats.tsx
 │   ├── contact-submissions.tsx
+│   ├── event-summary.tsx
 │   ├── newsletter-stats.tsx
 │   ├── newsletter-subscribers.tsx
 │   └── recent-activity.tsx
 ├── events/
 │   ├── attendee-management.tsx
 │   ├── event-actions.tsx
+│   ├── event-card.tsx
+│   ├── event-details.tsx
+│   ├── event-list.tsx
+│   ├── image-upload.tsx
 │   └── qr-code-display.tsx
 ├── forms/
 │   ├── avatar-upload.tsx
@@ -32,8 +37,10 @@ Generated: 2025-03-03T18:02:32.963Z
 │   └── security-form.tsx
 ├── gallery/
 │   ├── gallery-grid.tsx
+│   ├── optimized-image.tsx
 │   ├── photo-lightbox.tsx
-│   └── upload-dropzone.tsx
+│   ├── upload-dropzone.tsx
+│   └── upload-with-tags.tsx
 ├── layout/
 │   ├── dashboard-layout.tsx
 │   └── main-nav.tsx
@@ -41,12 +48,12 @@ Generated: 2025-03-03T18:02:32.963Z
 │   ├── contact-form.tsx
 │   └── newsletter-form.tsx
 ├── nav/
-│   ├── main-nav.tsx
 │   ├── side-nav.tsx
 │   └── user-nav.tsx
 ├── notifications/
 │   ├── create-template.tsx
 │   ├── full-preview.tsx
+│   ├── notification-item.tsx
 │   ├── notifications-content.tsx
 │   ├── template-editor.tsx
 │   └── template-preview.tsx
@@ -63,6 +70,7 @@ Generated: 2025-03-03T18:02:32.963Z
 │   ├── avatar.tsx
 │   ├── badge.tsx
 │   ├── button.tsx
+│   ├── calendar.tsx
 │   ├── card.tsx
 │   ├── checkbox.tsx
 │   ├── dialog.tsx
@@ -76,6 +84,7 @@ Generated: 2025-03-03T18:02:32.963Z
 │   ├── mode-toggle.tsx
 │   ├── navigation-menu.tsx
 │   ├── newsletter-form.tsx
+│   ├── popover.tsx
 │   ├── radio-group.tsx
 │   ├── scroll-area.tsx
 │   ├── select.tsx
@@ -97,7 +106,7 @@ Generated: 2025-03-03T18:02:32.963Z
 ├── error-boundary.tsx
 └── theme-provider.tsx
 
-13 directories, 81 files
+13 directories, 90 files
 
 ```
 

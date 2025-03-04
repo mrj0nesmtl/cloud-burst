@@ -1,8 +1,15 @@
 /** @type {import('next').NextConfig} */
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development'
+})
+
 const nextConfig = {
   // Disable error overlay completely
   devIndicators: {
-    buildActivityPosition: 'bottom-right',
+    position: 'bottom-right',
     buildError: false,
   },
   // Disable React DevTools in production
@@ -15,15 +22,21 @@ const nextConfig = {
     pagesBufferLength: 2,
   },
   images: {
-    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '',
+        pathname: '/**',
+      }
+    ],
   },
 }
-
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development'
-});
 
 module.exports = withPWA(nextConfig) 

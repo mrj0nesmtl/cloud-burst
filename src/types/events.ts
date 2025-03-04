@@ -1,5 +1,5 @@
 import { Database } from './supabase'
-import { User } from './auth'
+import { User } from '@/types/auth'
 
 export type EventStatus = 'draft' | 'published' | 'completed' | 'cancelled'
 export type AttendeeStatus = 'invited' | 'confirmed' | 'attended' | 'declined'
@@ -18,6 +18,12 @@ export interface Event {
   qr_code_url: string | null
   created_at: string
   updated_at: string
+  custom_url?: string | null
+  title: string
+  start_date: string
+  end_date?: string
+  cover_image?: string
+  user_id: string
 }
 
 export interface EventWithOrganizer extends Event {
@@ -123,8 +129,9 @@ export interface CreatePhotoParams {
   filename: string
   size: number
   mime_type: string
-  width?: number
-  height?: number
+  width?: number | null
+  height?: number | null
+  uploaded_by?: string | null
   is_approved?: boolean
   metadata?: Record<string, any>
 }
@@ -159,4 +166,45 @@ export interface QRCodeParams {
 // Database types
 export type DbEvent = Database['public']['Tables']['events']['Row']
 export type DbEventAttendee = Database['public']['Tables']['event_attendees']['Row']
-export type DbPhoto = Database['public']['Tables']['photos']['Row'] 
+export type DbPhoto = Database['public']['Tables']['photos']['Row']
+
+export interface PhotoMetadata {
+  tags?: string[];
+  caption?: string;
+  location?: {
+    latitude?: number;
+    longitude?: number;
+    name?: string;
+  };
+  camera?: {
+    make?: string;
+    model?: string;
+  };
+  [key: string]: any;
+}
+
+export type SortOption = 'newest' | 'oldest' | 'popular';
+
+export type GalleryLayout = 'grid' | 'masonry' | 'slideshow';
+
+export interface EventParticipant {
+  id: string;
+  event_id: string;
+  user_id: string;
+  role: 'organizer' | 'photographer' | 'guest';
+  created_at: string;
+  user?: {
+    id: string;
+    email: string;
+    full_name?: string;
+    avatar_url?: string;
+  };
+}
+
+export interface User {
+  id: string;
+  email: string;
+  full_name?: string | null;
+  avatar_url?: string | null;
+  // Add other user properties as needed
+} 
