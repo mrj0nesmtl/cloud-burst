@@ -1,6 +1,7 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClientComponentClient, createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types/supabase';
 import { Photo, PhotoMetadata } from '@/types/events';
+import { cookies } from 'next/headers';
 
 type PhotoInsert = Database['public']['Tables']['photos']['Insert'];
 type PhotoUpdate = Database['public']['Tables']['photos']['Update'];
@@ -101,10 +102,11 @@ export async function uploadAndCreatePhotoWithTags(
 }
 
 /**
- * Get all photos for an event - CLIENT VERSION
+ * Get all photos for an event
  */
 export async function getEventPhotos(eventId: string): Promise<Photo[]> {
-  const supabase = createClientComponentClient<Database>();
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
   const { data, error } = await supabase
     .from('photos')
@@ -121,10 +123,11 @@ export async function getEventPhotos(eventId: string): Promise<Photo[]> {
 }
 
 /**
- * Get a single photo by ID - CLIENT VERSION
+ * Get a single photo by ID
  */
 export async function getPhotoById(photoId: string): Promise<Photo | null> {
-  const supabase = createClientComponentClient<Database>();
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
   const { data, error } = await supabase
     .from('photos')
@@ -141,10 +144,11 @@ export async function getPhotoById(photoId: string): Promise<Photo | null> {
 }
 
 /**
- * Update a photo's approval status - CLIENT VERSION
+ * Update a photo's approval status
  */
 export async function updatePhotoApproval(photoId: string, isApproved: boolean): Promise<boolean> {
-  const supabase = createClientComponentClient<Database>();
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
   const { error } = await supabase
     .from('photos')
@@ -160,10 +164,11 @@ export async function updatePhotoApproval(photoId: string, isApproved: boolean):
 }
 
 /**
- * Delete a photo from storage and the database - CLIENT VERSION
+ * Delete a photo from storage and the database
  */
 export async function deletePhoto(photoId: string): Promise<boolean> {
-  const supabase = createClientComponentClient<Database>();
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
   // First, get the photo to find its storage path
   const { data: photo, error: fetchError } = await supabase
@@ -203,10 +208,11 @@ export async function deletePhoto(photoId: string): Promise<boolean> {
 }
 
 /**
- * Add a tag to a photo - CLIENT VERSION
+ * Add a tag to a photo
  */
 export async function addTagToPhoto(photoId: string, tag: string): Promise<boolean> {
-  const supabase = createClientComponentClient<Database>();
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
   // First, get the current photo metadata
   const { data: photo, error: fetchError } = await supabase
@@ -248,10 +254,11 @@ export async function addTagToPhoto(photoId: string, tag: string): Promise<boole
 }
 
 /**
- * Remove a tag from a photo - CLIENT VERSION
+ * Remove a tag from a photo
  */
 export async function removeTagFromPhoto(photoId: string, tag: string): Promise<boolean> {
-  const supabase = createClientComponentClient<Database>();
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
   // First, get the current photo metadata
   const { data: photo, error: fetchError } = await supabase
@@ -288,4 +295,4 @@ export async function removeTagFromPhoto(photoId: string, tag: string): Promise<
   }
   
   return true;
-}
+} 

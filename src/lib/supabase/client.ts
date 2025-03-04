@@ -12,15 +12,7 @@ import type { Database } from '@/types/supabase'
 
 // Client-side Supabase instance (use in 'use client' components)
 export const createClient = () => {
-  return createClientComponentClient<Database>({
-    options: {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    }
-  })
+  return createClientComponentClient<Database>()
 }
 
 // Server-side Supabase instance (use in Server Components)
@@ -55,7 +47,9 @@ export const getTables = (client = supabase) => {
 // Type helper for database responses
 export type DbResult<T> = T extends PromiseLike<infer U> ? U : never
 export type DbResultOk<T> = T extends PromiseLike<{ data: infer U }> ? Exclude<U, null> : never
-export type TablesResult<T extends keyof Database['public']['Tables']> = DbResultOk<ReturnType<ReturnType<typeof getTables>[T]>['select']>
+
+// Fix the TablesResult type to avoid TypeScript errors
+export type TablesResult<T extends keyof Database['public']['Tables']> = Awaited<ReturnType<ReturnType<typeof supabase.from<T>>['select']>>['data']
 
 // Add error handling wrapper
 export const handleError = <T>(
