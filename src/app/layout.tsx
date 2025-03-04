@@ -5,7 +5,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/ui/site-header"
 import { SiteFooter } from "@/components/ui/site-footer"
-import { QueryProvider } from "@/components/providers/query-provider"
+import QueryProvider from '@/components/providers/query-provider'
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Toaster as UIToaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
