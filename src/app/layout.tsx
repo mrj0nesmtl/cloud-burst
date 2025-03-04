@@ -1,15 +1,14 @@
 import { GeistSans } from "geist/font/sans"
 import { Metadata, Viewport } from "next"
+import { Suspense } from "react"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/ui/site-header"
 import { SiteFooter } from "@/components/ui/site-footer"
-import { ToastProvider } from "@/components/providers/toast-provider"
+import { QueryProvider } from "@/components/providers/query-provider"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { Toaster as UIToaster } from "@/components/ui/toaster"
-import { Toaster as SonnerToaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/toaster"
 import { Inter } from 'next/font/google'
-import { QueryProvider } from '@/components/providers/query-provider'
 
 const geist = GeistSans
 const inter = Inter({ subsets: ['latin'] })
@@ -86,11 +85,9 @@ export default function RootLayout({
                 </main>
                 <SiteFooter />
               </div>
-              <ToastProvider />
             </Suspense>
           </ThemeProvider>
-          <UIToaster />
-          <SonnerToaster />
+          <Toaster />
         </QueryProvider>
       </body>
     </html>
