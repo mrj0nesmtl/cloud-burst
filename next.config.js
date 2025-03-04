@@ -1,13 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable App Directory
-  experimental: {
-    appDir: true
-  },
-  // Configure Node.js memory limit
-  env: {
-    NODE_OPTIONS: '--max-old-space-size=512'
-  },
   // Disable error overlay completely
   devIndicators: {
     position: 'bottom-right',
