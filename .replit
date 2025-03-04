@@ -7,8 +7,6 @@ channel = "stable-24_05"
 [deployment]
 run = ["sh", "-c", "npm run build && npm run start"]
 deploymentTarget = "cloudrun"
-publicDir = "public"
-ignorePorts = false
 
 [env]
 NODE_ENV = "production"
