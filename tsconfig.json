@@ -29,7 +29,9 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@scripts/*": ["./scripts/*"]
+      "@/components/*": ["./src/components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/store/*": ["./src/store/*"]
     }
   },
   "include": [
