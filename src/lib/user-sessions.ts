@@ -1,5 +1,4 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
 import { UAParser } from 'ua-parser-js'
 
 export type UserSession = {
@@ -29,9 +28,8 @@ export type UserSession = {
 
 // This function should only be called from app directory server components
 export async function getUserSessions() {
-  // Import dynamically to avoid issues in pages directory
-  const { createServerComponentClient } = await import('@supabase/auth-helpers-nextjs')
-  const supabase = createServerComponentClient({ cookies })
+  // Use a different approach for server-side authentication
+  const supabase = createClientComponentClient()
   
   const { data: session } = await supabase.auth.getSession()
   if (!session?.session?.user) {

@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable server actions which are stable in Next.js 14
+  experimental: {
+    serverActions: true
+  },
   // Disable error overlay completely
   devIndicators: {
     position: 'bottom-right',
@@ -13,6 +17,11 @@ const nextConfig = {
     maxInactiveAge: 25 * 1000,
     // Number of pages that should be kept simultaneously without being disposed
     pagesBufferLength: 2,
+  },
+  // Add webpack config for sharp
+  webpack: (config) => {
+    config.externals = [...(config.externals || []), 'sharp']
+    return config
   },
   images: {
     remotePatterns: [
