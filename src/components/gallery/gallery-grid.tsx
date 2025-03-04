@@ -64,7 +64,7 @@ export function GalleryGrid({
 }: GalleryGridProps) {
   // State
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null)
-  const [currentLayout, setCurrentLayout] = useState<string>(layout)
+  const [currentLayout, setCurrentLayout] = useState<GalleryLayout>(layout)
   const [sortOption, setSortOption] = useState<SortOption>(defaultSort)
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>(photos)
@@ -154,9 +154,9 @@ export function GalleryGrid({
       case 'name_desc':
         return sorted.sort((a, b) => b.filename.localeCompare(a.filename))
       case 'size_asc':
-        return sorted.sort((a, b) => a.size - b.size)
+        return sorted.sort((a, b) => (a.size || 0) - (b.size || 0))
       case 'size_desc':
-        return sorted.sort((a, b) => b.size - a.size)
+        return sorted.sort((a, b) => (b.size || 0) - (a.size || 0))
       default:
         return sorted
     }
@@ -229,6 +229,11 @@ export function GalleryGrid({
   // Clear all selected tags
   const clearTags = () => {
     setSelectedTags([])
+  }
+  
+  // Helper functions to determine button variants
+  const getButtonVariant = (layoutType: GalleryLayout): 'secondary' | 'ghost' => {
+    return currentLayout === layoutType ? 'secondary' : 'ghost'
   }
   
   // Render loading skeletons
@@ -354,7 +359,7 @@ export function GalleryGrid({
             
             <div className="flex border rounded-md">
               <Button
-                variant={currentLayout === 'grid' ? 'secondary' : 'ghost'}
+                variant={getButtonVariant('grid')}
                 size="icon"
                 className="h-9 w-9 rounded-none rounded-l-md"
                 onClick={() => handleLayoutChange('grid')}
@@ -362,7 +367,7 @@ export function GalleryGrid({
                 <Grid className="h-4 w-4" />
               </Button>
               <Button
-                variant={currentLayout === 'masonry' ? 'secondary' : 'ghost'}
+                variant={getButtonVariant('masonry')}
                 size="icon"
                 className="h-9 w-9 rounded-none"
                 onClick={() => handleLayoutChange('masonry')}
@@ -370,7 +375,7 @@ export function GalleryGrid({
                 <LayoutGrid className="h-4 w-4" />
               </Button>
               <Button
-                variant={currentLayout === 'slideshow' ? 'secondary' : 'ghost'}
+                variant={getButtonVariant('slideshow')}
                 size="icon"
                 className="h-9 w-9 rounded-none rounded-r-md"
                 onClick={() => handleLayoutChange('slideshow')}
@@ -490,7 +495,7 @@ export function GalleryGrid({
             
             <div className="flex border rounded-md">
               <Button
-                variant={currentLayout === 'grid' ? 'secondary' : 'ghost'}
+                variant={getButtonVariant('grid')}
                 size="icon"
                 className="h-9 w-9 rounded-none rounded-l-md"
                 onClick={() => handleLayoutChange('grid')}
@@ -498,7 +503,7 @@ export function GalleryGrid({
                 <Grid className="h-4 w-4" />
               </Button>
               <Button
-                variant={currentLayout === 'masonry' ? 'secondary' : 'ghost'}
+                variant={getButtonVariant('masonry')}
                 size="icon"
                 className="h-9 w-9 rounded-none"
                 onClick={() => handleLayoutChange('masonry')}
@@ -506,7 +511,7 @@ export function GalleryGrid({
                 <LayoutGrid className="h-4 w-4" />
               </Button>
               <Button
-                variant={currentLayout === 'slideshow' ? 'secondary' : 'ghost'}
+                variant={getButtonVariant('slideshow')}
                 size="icon"
                 className="h-9 w-9 rounded-none rounded-r-md"
                 onClick={() => handleLayoutChange('slideshow')}
@@ -521,7 +526,7 @@ export function GalleryGrid({
         <div className="relative aspect-video bg-black/10 rounded-lg overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
             <Image
-              src={getPhotoPublicUrl(currentPhoto.storage_path)}
+              src={getPhotoPublicUrl(currentPhoto)}
               alt={currentPhoto.filename}
               fill
               sizes="(max-width: 1280px) 100vw, 1280px"
@@ -572,7 +577,7 @@ export function GalleryGrid({
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
             <p className="text-sm text-white truncate">{currentPhoto.filename}</p>
             <div className="flex items-center gap-2 mt-1">
-              <p className="text-xs text-white/80">{formatFileSize(currentPhoto.size)}</p>
+              <p className="text-xs text-white/80">{formatFileSize(currentPhoto.size || 0)}</p>
               <span className="text-white/50">•</span>
               <p className="text-xs text-white/80">{formatDateTime(currentPhoto.created_at)}</p>
             </div>
@@ -590,7 +595,7 @@ export function GalleryGrid({
               onClick={() => setSlideIndex(index)}
             >
               <Image
-                src={getPhotoPublicUrl(photo.storage_path)}
+                src={getPhotoPublicUrl(photo)}
                 alt={photo.filename}
                 fill
                 sizes="(max-width: 640px) 16vw, (max-width: 768px) 12vw, (max-width: 1024px) 10vw, 8vw"
@@ -699,7 +704,7 @@ export function GalleryGrid({
           
           <div className="flex border rounded-md">
             <Button
-              variant={currentLayout === 'grid' ? 'secondary' : 'ghost'}
+              variant={getButtonVariant('grid')}
               size="icon"
               className="h-9 w-9 rounded-none rounded-l-md"
               onClick={() => handleLayoutChange('grid')}
@@ -707,7 +712,7 @@ export function GalleryGrid({
               <Grid className="h-4 w-4" />
             </Button>
             <Button
-              variant={currentLayout === 'masonry' ? 'secondary' : 'ghost'}
+              variant={getButtonVariant('masonry')}
               size="icon"
               className="h-9 w-9 rounded-none"
               onClick={() => handleLayoutChange('masonry')}
@@ -715,7 +720,7 @@ export function GalleryGrid({
               <LayoutGrid className="h-4 w-4" />
             </Button>
             <Button
-              variant={currentLayout === 'slideshow' ? 'secondary' : 'ghost'}
+              variant={getButtonVariant('slideshow')}
               size="icon"
               className="h-9 w-9 rounded-none rounded-r-md"
               onClick={() => handleLayoutChange('slideshow')}
@@ -777,7 +782,7 @@ export function GalleryGrid({
                 <CardContent className="p-0">
                   <div className="relative aspect-square">
                     <Image
-                      src={getPhotoPublicUrl(photo.storage_path)}
+                      src={getPhotoPublicUrl(photo)}
                       alt={photo.filename}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -786,7 +791,7 @@ export function GalleryGrid({
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
                       <p className="text-xs text-white truncate">{photo.filename}</p>
-                      <p className="text-xs text-white/80">{formatFileSize(photo.size)}</p>
+                      <p className="text-xs text-white/80">{formatFileSize(photo.size || 0)}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -814,7 +819,7 @@ export function GalleryGrid({
                   <CardContent className="p-0 h-full">
                     <div className="relative h-full">
                       <Image
-                        src={getPhotoPublicUrl(photo.storage_path)}
+                        src={getPhotoPublicUrl(photo)}
                         alt={photo.filename}
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -823,7 +828,7 @@ export function GalleryGrid({
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
                         <p className="text-xs text-white truncate">{photo.filename}</p>
-                        <p className="text-xs text-white/80">{formatFileSize(photo.size)}</p>
+                        <p className="text-xs text-white/80">{formatFileSize(photo.size || 0)}</p>
                       </div>
                     </div>
                   </CardContent>

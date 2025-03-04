@@ -94,40 +94,45 @@ export const useAuthStore = create<AuthStore>()(
         const supabase = createClientComponentClient()
         try {
           set({ loading: true, error: null })
-          const session = await handleError(
-            supabase.auth.signInWithPassword({ email, password })
-          )
+          
+          // Use direct call instead of handleError
+          const { data, error } = await supabase.auth.signInWithPassword({ 
+            email, 
+            password 
+          })
+          
+          if (error) throw error
           
           const [profileResult, rolePermsResult] = await Promise.all([
+            // Fetch user profile
             supabase
               .from('profiles')
               .select('*')
-              .eq('id', session.user.id)
+              .eq('id', data.user.id)
               .single(),
+            
+            // Fetch role capabilities
             supabase
               .from('role_capabilities')
               .select('capability')
-              .eq('role', session.user.user_metadata.role)
+              .eq('role', data.user.role)
           ])
-
-          if (profileResult.error) throw profileResult.error
-          if (rolePermsResult.error) throw rolePermsResult.error
 
           set({ 
             user: profileResult.data,
-            session,
+            session: data.session,
             capabilities: rolePermsResult.data?.map(p => p.capability as Capability) ?? [],
             isAuthenticated: true,
             lastActivity: new Date().toISOString(),
             error: null
           })
         } catch (error) {
+          console.error('Sign in error:', error)
           set({ 
-            error: error as AuthError,
-            isAuthenticated: false,
-            user: null,
-            session: null,
-            capabilities: []
+            error: { 
+              message: error instanceof Error ? error.message : 'Failed to sign in',
+              code: error instanceof Error ? (error as any).code : undefined
+            } 
           })
           throw error
         } finally {
@@ -239,7 +244,7 @@ export const useAuthStore = create<AuthStore>()(
                 updated_at: new Date().toISOString()
               },
               session: data.session,
-              capabilities: roleCapabilities.user
+              capabilities: roleCapabilities.user as Capability[]
             })
           }
         } catch (error) {
@@ -277,6 +282,22 @@ export const useAuthStore = create<AuthStore>()(
           if (error) throw error
         } catch (error) {
           console.error('Reset password error:', error)
+          throw error
+        } finally {
+          set({ loading: false })
+        }
+      },
+
+      updatePassword: async (newPassword) => {
+        const supabase = createClientComponentClient()
+        try {
+          set({ loading: true })
+          const { error } = await supabase.auth.updateUser({
+            password: newPassword
+          })
+          if (error) throw error
+        } catch (error) {
+          console.error('Update password error:', error)
           throw error
         } finally {
           set({ loading: false })

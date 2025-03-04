@@ -49,7 +49,8 @@ export type DbResult<T> = T extends PromiseLike<infer U> ? U : never
 export type DbResultOk<T> = T extends PromiseLike<{ data: infer U }> ? Exclude<U, null> : never
 
 // Fix the TablesResult type to avoid TypeScript errors
-export type TablesResult<T extends keyof Database['public']['Tables']> = Awaited<ReturnType<ReturnType<typeof supabase.from<T>>['select']>>['data']
+export type TablesResult<T extends keyof Database['public']['Tables']> = 
+  Database['public']['Tables'][T]['Row'][]
 
 // Add error handling wrapper
 export const handleError = <T>(

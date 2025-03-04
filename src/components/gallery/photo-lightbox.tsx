@@ -10,7 +10,7 @@ import {
   ChevronRight, 
   X, 
   Download, 
-  Share2, 
+  Share, 
   Info 
 } from 'lucide-react'
 import { formatFileSize, formatDateTime } from '@/lib/utils'
@@ -22,6 +22,7 @@ import {
   DialogDescription,
   DialogFooter
 } from '@/components/ui/dialog'
+import { toast } from 'sonner'
 
 interface PhotoLightboxProps {
   photos: Photo[]
@@ -61,7 +62,7 @@ export function PhotoLightbox({
   // Handle download
   const handleDownload = async () => {
     try {
-      const url = getPhotoPublicUrl(currentPhoto.storage_path)
+      const url = getPhotoPublicUrl(currentPhoto)
       const response = await fetch(url)
       const blob = await response.blob()
       
@@ -82,20 +83,23 @@ export function PhotoLightbox({
   // Handle share
   const handleShare = async () => {
     try {
-      const url = getPhotoPublicUrl(currentPhoto.storage_path)
+      const url = getPhotoPublicUrl(currentPhoto)
       
       if (navigator.share) {
         await navigator.share({
           title: currentPhoto.filename,
+          text: 'Check out this photo!',
           url: url
         })
+        toast.success('Photo shared successfully!')
       } else {
-        // Fallback to copying to clipboard
+        // Fallback for browsers that don't support the Web Share API
         await navigator.clipboard.writeText(url)
-        alert('Link copied to clipboard')
+        toast.success('Photo URL copied to clipboard!')
       }
     } catch (error) {
       console.error('Error sharing photo:', error)
+      toast.error('Failed to share photo')
     }
   }
   
@@ -139,7 +143,7 @@ export function PhotoLightbox({
       {/* Photo */}
       <div className="relative w-full h-full max-w-5xl max-h-[80vh] flex items-center justify-center">
         <Image
-          src={getPhotoPublicUrl(currentPhoto.storage_path)}
+          src={getPhotoPublicUrl(currentPhoto)}
           alt={currentPhoto.filename}
           fill
           sizes="(max-width: 1280px) 100vw, 1280px"
@@ -166,7 +170,7 @@ export function PhotoLightbox({
           className="flex items-center gap-1"
           onClick={handleShare}
         >
-          <Share2 className="h-4 w-4" />
+          <Share className="h-4 w-4" />
           <span className="hidden sm:inline">Share</span>
         </Button>
         
@@ -199,7 +203,7 @@ export function PhotoLightbox({
             
             <div className="grid grid-cols-3 items-center gap-4">
               <span className="text-sm font-medium">Size:</span>
-              <span className="col-span-2 text-sm">{formatFileSize(currentPhoto.size)}</span>
+              <span className="col-span-2 text-sm">{formatFileSize(currentPhoto.size || 0)}</span>
             </div>
             
             <div className="grid grid-cols-3 items-center gap-4">

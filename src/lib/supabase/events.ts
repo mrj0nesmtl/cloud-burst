@@ -402,5 +402,12 @@ export async function getAttendingEvents(): Promise<Event[]> {
   }
   
   // Extract events from the nested structure
-  return data.map(item => item.event) as Event[]
+  if (!data) return []
+  
+  // Transform and filter the data to ensure we have valid Event objects
+  const events = data
+    .map(item => item.event)
+    .filter((event): event is any => !!event && typeof event === 'object')
+    
+  return events as Event[]
 } 

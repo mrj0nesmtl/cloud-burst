@@ -1,5 +1,5 @@
 import { Database } from './supabase'
-import { User } from '@/types/auth'
+import { UserProfile } from '@/types/auth'
 
 export type EventStatus = 'draft' | 'published' | 'completed' | 'cancelled'
 export type AttendeeStatus = 'invited' | 'confirmed' | 'attended' | 'declined'
@@ -27,7 +27,7 @@ export interface Event {
 }
 
 export interface EventWithOrganizer extends Event {
-  organizer: User
+  organizer: UserProfile
 }
 
 export interface EventWithAttendeesCount extends Event {
@@ -64,10 +64,12 @@ export interface Photo {
   event_id: string
   storage_path: string
   filename: string
-  size: number
-  mime_type: string
-  width: number | null
-  height: number | null
+  url?: string
+  thumbnail_url?: string
+  size?: number
+  mime_type?: string
+  width?: number | null
+  height?: number | null
   uploaded_by: string | null
   is_approved: boolean
   metadata: Record<string, any>
@@ -80,7 +82,7 @@ export interface PhotoWithEvent extends Photo {
 }
 
 export interface PhotoWithUploader extends Photo {
-  uploader: User | null
+  uploader: UserProfile | null
 }
 
 export interface CreateEventParams {
@@ -165,7 +167,6 @@ export interface QRCodeParams {
 
 // Database types
 export type DbEvent = Database['public']['Tables']['events']['Row']
-export type DbEventAttendee = Database['public']['Tables']['event_attendees']['Row']
 export type DbPhoto = Database['public']['Tables']['photos']['Row']
 
 export interface PhotoMetadata {
@@ -199,12 +200,4 @@ export interface EventParticipant {
     full_name?: string;
     avatar_url?: string;
   };
-}
-
-export interface User {
-  id: string;
-  email: string;
-  full_name?: string | null;
-  avatar_url?: string | null;
-  // Add other user properties as needed
 } 
