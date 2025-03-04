@@ -1,25 +1,9 @@
-modules = ["nodejs-20", "web", "bash"]
 run = "npm run start"
+modules = ["nodejs-20"]
 
 [nix]
 channel = "stable-24_05"
 
 [deployment]
-build = ["npm", "run", "build"]
-run = ["npm", "run", "start"]
+run = "npm run build && npm run start"
 deploymentTarget = "cloudrun"
-
-[env]
-NODE_ENV = "production"
-NEXT_TELEMETRY_DISABLED = "1"
-
-[ports]
-5173 = { publish = true, description = "Local development port" }
-3000 = { publish = true, description = "Replit deployment port" }
-
-[packager]
-language = "nodejs"
-  [packager.features]
-  packageSearch = true
-  guessImports = true
-  enabledForHosting = true
