@@ -25,9 +25,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Replit (now ignoring these)
-.replit
-replit.nix
+# TEMPORARILY ALLOWING: # Replit (now ignoring these)
+# .replit
+# replit.nix
 
 # env files
 .env

@@ -8,11 +8,9 @@ import { ToastProvider } from "@/components/providers/toast-provider"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Toaster as UIToaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
-import { Inter } from 'next/font/google'
 import { QueryProvider } from '@/components/providers/query-provider'
 
 const geist = GeistSans
-const inter = Inter({ subsets: ['latin'] })
 
 // Comprehensive hydration error suppression for production
 if (process.env.NODE_ENV === 'production') {
@@ -49,6 +47,7 @@ export const metadata = {
   title: 'Cloud Burst',
   description: 'Elevate Your Event Photography',
   applicationName: 'Cloud Burst',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cb-beta.replit.app'),
 }
 
 export const viewport = {
@@ -63,7 +62,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geist.variable} antialiased min-h-screen flex flex-col ${inter.className}`}>
+      <body className={`${geist.variable} antialiased min-h-screen flex flex-col`}>
         <QueryProvider>
           <ThemeProvider
             attribute="class"

@@ -34,9 +34,17 @@ const nextConfig = {
         hostname: 'localhost',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cb-beta.replit.app',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
+  // Add output configuration for better production builds
+  output: 'standalone',
 }
 
 module.exports = withPWA(nextConfig) 
