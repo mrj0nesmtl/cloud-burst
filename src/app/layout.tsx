@@ -1,5 +1,5 @@
 import { GeistSans } from "geist/font/sans"
-import { Suspense } from "react"
+import { Metadata, Viewport } from "next"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/ui/site-header"
@@ -45,13 +45,16 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-export const metadata = {
+// Metadata
+export const metadata: Metadata = {
   title: 'Cloud Burst',
   description: 'Elevate Your Event Photography',
   applicationName: 'Cloud Burst',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
 }
 
-export const viewport = {
+// Viewport
+export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
 }
@@ -63,7 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geist.variable} antialiased min-h-screen flex flex-col ${inter.className}`}>
+      <body className={`${geist.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <QueryProvider>
           <ThemeProvider
             attribute="class"

@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react'
 import { cn } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
@@ -15,16 +17,13 @@ export function LoadingSpinner({ size = "md", className }: LoadingSpinnerProps) 
   }
 
   return (
-    <div
-      className={cn(
-        "animate-spin rounded-full border-solid border-primary border-t-transparent",
-        sizeClasses[size],
-        className
-      )}
-      role="status"
-      aria-label="Loading"
-    >
-      <span className="sr-only">Loading...</span>
+    <div className={cn("flex items-center justify-center", className)}>
+      <div
+        className={cn(
+          "animate-spin rounded-full border-t-transparent border-primary",
+          sizeClasses[size]
+        )}
+      />
     </div>
   )
 }

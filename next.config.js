@@ -21,6 +21,8 @@ const nextConfig = {
     // Number of pages that should be kept simultaneously without being disposed
     pagesBufferLength: 2,
   },
+  // Configure output for better production builds
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
@@ -32,6 +34,12 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cb-beta.replit.app',
         port: '',
         pathname: '/**',
       }
