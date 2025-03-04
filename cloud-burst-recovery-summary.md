@@ -39,4 +39,4 @@ We've made partial progress with our recovery plan for the Cloud Burst applicati
    - Gallery slideshow view option
    - Gallery sharing functionality
 
-Please help us continue implementing the recovery plan, focusing first on fixing the CSS and styling issues to ensure consistent rendering across all pages. 
+Please help us continue implementing the recovery plan, focusing first on fixing the CSS and styling issues to ensure consistent rendering across all pages.

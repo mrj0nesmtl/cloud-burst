@@ -7,14 +7,14 @@ const withPWA = require('next-pwa')({
 })
 
 const nextConfig = {
-  // Disable error overlay completely
+  // Configure error handling and development indicators
   devIndicators: {
     position: 'bottom-right',
     buildError: false,
   },
-  // Disable React DevTools in production
+  // Use strict mode for better development experience
   reactStrictMode: true,
-  // Disable error overlay in production
+  // Configure on-demand entries for better development
   onDemandEntries: {
     // Period (in ms) where the server will keep pages in the buffer
     maxInactiveAge: 25 * 1000,
@@ -23,6 +23,7 @@ const nextConfig = {
   },
   // Configure output for better production builds
   output: 'standalone',
+  // Configure image domains
   images: {
     remotePatterns: [
       {
@@ -42,9 +43,31 @@ const nextConfig = {
         hostname: 'cb-beta.replit.app',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.replit.app',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
+  // Remove experimental features
+  // webpack: (config, { isServer }) => {
+  //   // Optimize CSS loading
+  //   if (!isServer) {
+  //     config.optimization.splitChunks.cacheGroups = {
+  //       ...config.optimization.splitChunks.cacheGroups,
+  //       styles: {
+  //         name: 'styles',
+  //         test: /\.(css|scss)$/,
+  //         chunks: 'all',
+  //         enforce: true,
+  //       },
+  //     };
+  //   }
+  //   return config;
+  // },
 }
 
 module.exports = withPWA(nextConfig) 

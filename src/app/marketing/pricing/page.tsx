@@ -8,7 +8,8 @@ import {
   Crown,
   Building2,
   ArrowRight,
-  Info
+  Info,
+  CloudLightning
 } from "lucide-react"
 import {
   Dialog,
@@ -229,13 +230,14 @@ export default function PricingPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <div className="relative bg-muted/0 py-24">
-        <div className="container mx-auto max-w-4xl px-4">
+      <div className="relative bg-muted/20 py-24">
+        <div className="hexagon-pattern opacity-15"></div>
+        <div className="container mx-auto max-w-4xl px-4 relative z-10">
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center mb-6">
-              <Zap className="h-12 w-12 text-yellow-500" />
+              <CloudLightning className="h-12 w-12 text-primary" />
             </div>
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
               Simple, Transparent Pricing
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -248,351 +250,128 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <div className="container mx-auto max-w-7xl py-16 px-4">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {plans.map((plan) => (
+          {plans.map((plan, index) => (
             <Card 
-              key={plan.name} 
-              className={`p-8 relative group hover:border-blue-500/50 hover:shadow-md transition-all duration-300 ${
-                plan.popular ? 'border-blue-500 shadow-lg' : ''
-              }`}
+              key={index} 
+              className={`
+                relative flex flex-col p-6 shadow-md hover:shadow-lg transition-all duration-300 border 
+                ${plan.popular ? 'border-primary shadow-primary/10' : 'border-border'}
+                group
+              `}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                <div className="absolute -top-3 left-0 right-0 mx-auto w-fit px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full shadow-lg">
                   Most Popular
                 </div>
               )}
+              
               <div className="flex flex-col items-center text-center">
-                {plan.icon}
-                <h3 className="mt-6 text-xl font-bold">{plan.name}</h3>
-                <div className="mt-4 font-bold">
-                  <span className="text-3xl">{plan.price}</span>
-                  {plan.price !== "Free" && plan.price !== "Custom" && <span className="text-muted-foreground">/month</span>}
+                <div className="mb-4">
+                  {plan.icon}
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground">{plan.description}</p>
+                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold">{plan.price}</span>
+                  {plan.price !== "Free" && plan.price !== "Custom" && <span className="text-muted-foreground">/event</span>}
+                </div>
+                <p className="text-muted-foreground mb-6">
+                  {plan.description}
+                </p>
               </div>
-
-              <ul className="mt-8 space-y-4 mb-8">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center">
-                    <CheckCircle2 className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="flex flex-col gap-3">
-                {plan.name === "Free Tier" ? (
-                  <Link href={plan.route}>
-                    <Button 
-                      className="w-full" 
-                      variant="outline"
-                      size="lg"
-                    >
+              
+              <div className="flex flex-col flex-grow">
+                <ul className="space-y-3 mb-8 flex-grow">
+                  {plan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start">
+                      <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mr-2" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <div className="flex flex-col mt-auto space-y-3">
+                  <Button 
+                    asChild 
+                    className={`w-full ${plan.popular ? 'btn-primary' : ''}`}
+                  >
+                    <Link href={plan.route}>
                       Get Started
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                ) : plan.name === "Enterprise" ? (
-                  <>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button 
-                          className="w-full" 
-                          variant="outline"
-                          size="lg"
-                        >
-                          Contact Sales
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[600px]">
-                        <DialogHeader>
-                          <DialogTitle>Enterprise Solutions</DialogTitle>
-                          <DialogDescription>
-                            Fill out the form below and our enterprise team will get in touch with you shortly.
-                          </DialogDescription>
-                        </DialogHeader>
-                        
-                        {/* Enterprise Contact Form */}
-                        <form className="grid gap-6 mt-4">
-                          {/* Company Details */}
-                          <div className="grid gap-4 sm:grid-cols-2">
-                            <div className="grid gap-2">
-                              <Label htmlFor="company-name">Company Name *</Label>
-                              <Input id="company-name" required placeholder="Your company" />
-                            </div>
-                            <div className="grid gap-2">
-                              <Label htmlFor="industry">Industry *</Label>
-                              <Select>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select industry" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="weddings">Weddings & Celebrations</SelectItem>
-                                  <SelectItem value="corporate">Corporate Events</SelectItem>
-                                  <SelectItem value="entertainment">Entertainment & Festivals</SelectItem>
-                                  <SelectItem value="education">Education & Conferences</SelectItem>
-                                  <SelectItem value="sports">Sports & Recreation</SelectItem>
-                                  <SelectItem value="other">Other</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-
-                          {/* Contact Person */}
-                          <div className="grid gap-4 sm:grid-cols-2">
-                            <div className="grid gap-2">
-                              <Label htmlFor="name">Contact Name *</Label>
-                              <Input id="name" required placeholder="Your name" />
-                            </div>
-                            <div className="grid gap-2">
-                              <Label htmlFor="position">Position *</Label>
-                              <Input id="position" required placeholder="Your position" />
-                            </div>
-                          </div>
-
-                          {/* Contact Details */}
-                          <div className="grid gap-4 sm:grid-cols-2">
-                            <div className="grid gap-2">
-                              <Label htmlFor="email">Email *</Label>
-                              <Input id="email" type="email" required placeholder="your@email.com" />
-                            </div>
-                            <div className="grid gap-2">
-                              <Label htmlFor="phone">Phone *</Label>
-                              <Input id="phone" type="tel" required placeholder="Your phone number" />
-                            </div>
-                          </div>
-
-                          {/* Enterprise Requirements */}
-                          <div className="grid gap-2">
-                            <Label htmlFor="requirements">Enterprise Requirements *</Label>
-                            <Textarea 
-                              id="requirements" 
-                              required
-                              placeholder="Please describe your organization's specific needs, expected event volume, and any custom requirements."
-                              className="min-h-[120px]"
-                            />
-                          </div>
-
-                          <div className="flex justify-end gap-4">
-                            <DialogTrigger asChild>
-                              <Button variant="outline">Cancel</Button>
-                            </DialogTrigger>
-                            <Button type="submit">Submit Request</Button>
-                          </div>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
-                    
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          className="w-full"
-                          size="sm"
-                        >
-                          Learn More
-                          <Info className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[500px]">
-                        <DialogHeader>
-                          <DialogTitle>{plan.modalContent.title}</DialogTitle>
-                          <DialogDescription className="whitespace-pre-line mt-4">
-                            {plan.modalContent.description}
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-                  </>
-                ) : (
-                  <>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button 
-                          className="w-full" 
-                          variant={plan.popular ? "default" : "outline"}
-                          size="lg"
-                        >
-                          Get Started
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[600px]">
-                        <DialogHeader>
-                          <DialogTitle>Get Started with {plan.name}</DialogTitle>
-                          <DialogDescription>
-                            Fill out this quick questionnaire to help us customize your experience.
-                          </DialogDescription>
-                        </DialogHeader>
-                        
-                        {/* Paid Plan Questionnaire */}
-                        <form className="grid gap-6 mt-4">
-                          {/* Account Type Selection */}
-                          <div className="space-y-3">
-                            <Label>I am a(n):</Label>
-                            <RadioGroup defaultValue="individual" className="flex gap-4">
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="individual" id="individual" />
-                                <Label htmlFor="individual">Individual</Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="company" id="company" />
-                                <Label htmlFor="company">Company</Label>
-                              </div>
-                            </RadioGroup>
-                          </div>
-
-                          {/* Basic Info */}
-                          <div className="grid gap-4 sm:grid-cols-2">
-                            <div className="grid gap-2">
-                              <Label htmlFor="name">Name *</Label>
-                              <Input id="name" required placeholder="Your name" />
-                            </div>
-                            <div className="grid gap-2">
-                              <Label htmlFor="email">Email *</Label>
-                              <Input id="email" type="email" required placeholder="your@email.com" />
-                            </div>
-                          </div>
-
-                          {/* Company Details (Optional) */}
-                          <div className="grid gap-4 sm:grid-cols-2">
-                            <div className="grid gap-2">
-                              <Label htmlFor="company-name">Company Name (Optional)</Label>
-                              <Input id="company-name" placeholder="Your company" />
-                            </div>
-                            <div className="grid gap-2">
-                              <Label htmlFor="industry">Industry (Optional)</Label>
-                              <Select>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select industry" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="weddings">Weddings & Celebrations</SelectItem>
-                                  <SelectItem value="corporate">Corporate Events</SelectItem>
-                                  <SelectItem value="entertainment">Entertainment & Festivals</SelectItem>
-                                  <SelectItem value="education">Education & Conferences</SelectItem>
-                                  <SelectItem value="sports">Sports & Recreation</SelectItem>
-                                  <SelectItem value="other">Other</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-
-                          {/* Event Details (Optional) */}
-                          <div className="grid gap-4 sm:grid-cols-2">
-                            <div className="grid gap-2">
-                              <Label htmlFor="event-size">Average Event Size (Optional)</Label>
-                              <Select>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select size" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="small">Small (Up to 50 people)</SelectItem>
-                                  <SelectItem value="medium">Medium (51-150 people)</SelectItem>
-                                  <SelectItem value="large">Large (151-500 people)</SelectItem>
-                                  <SelectItem value="xlarge">Extra Large (500+ people)</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div className="grid gap-2">
-                              <Label htmlFor="events-per-year">Events per Year (Optional)</Label>
-                              <Select>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select frequency" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="1-2">1-2 events</SelectItem>
-                                  <SelectItem value="3-5">3-5 events</SelectItem>
-                                  <SelectItem value="6-12">6-12 events</SelectItem>
-                                  <SelectItem value="12+">12+ events</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-
-                          {/* Message */}
-                          <div className="grid gap-2">
-                            <Label htmlFor="message">Additional Details (Optional)</Label>
-                            <Textarea 
-                              id="message" 
-                              placeholder="Tell us about your specific needs, event types, or any questions you have."
-                              className="min-h-[100px]"
-                            />
-                          </div>
-
-                          <DialogFooter>
-                            <DialogTrigger asChild>
-                              <Button variant="outline">Cancel</Button>
-                            </DialogTrigger>
-                            <Link href={plan.route}>
-                              <Button type="submit">Continue to Registration</Button>
-                            </Link>
-                          </DialogFooter>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
-                    
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          className="w-full"
-                          size="sm"
-                        >
-                          Learn More
-                          <Info className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[500px]">
-                        <DialogHeader>
-                          <DialogTitle>{plan.modalContent.title}</DialogTitle>
-                          <DialogDescription className="whitespace-pre-line mt-4">
-                            {plan.modalContent.description}
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-                  </>
-                )}
+                    </Link>
+                  </Button>
+                  
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
+                        <span className="flex items-center">
+                          Learn more <ArrowRight className="ml-1 h-4 w-4" />
+                        </span>
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>{plan.modalContent.title}</DialogTitle>
+                        <DialogDescription className="whitespace-pre-line pt-2">
+                          {plan.modalContent.description}
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
             </Card>
           ))}
         </div>
 
-        {/* FAQ Section */}
-        <div className="mt-24 max-w-3xl mx-auto px-4">
+        {/* FAQs */}
+        <div className="container mx-auto max-w-4xl py-16 px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
-            <p className="text-muted-foreground mt-2">
-              Everything you need to know about Cloud Burst
+            <h2 className="text-3xl font-bold mb-4 text-primary">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Get answers to common questions about Cloud Burst.
             </p>
           </div>
           
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-left">
+              <AccordionItem key={index} value={`faq-${index}`} className="border border-border rounded-lg mb-4 shadow-sm hover:shadow-md transition-all">
+                <AccordionTrigger className="py-4 px-6 text-lg font-medium text-left hover:text-primary">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
+                <AccordionContent className="py-4 px-6 text-muted-foreground">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
+        </div>
 
-          {/* Support CTA */}
-          <div className="mt-12 text-center p-6 bg-card rounded-lg border hover:border-blue-500/50 transition-colors">
-            <h3 className="text-xl font-semibold mb-2">Still have questions?</h3>
-            <p className="text-muted-foreground mb-4">
-              Our team is here to help you find the perfect solution for your events.
-            </p>
-            <Link href="/marketing/contact">
-              <Button variant="default">
-                Contact Support
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+        {/* Call to Action */}
+        <div className="bg-muted/30 py-16 relative">
+          <div className="hexagon-pattern opacity-10"></div>
+          <div className="container mx-auto max-w-4xl px-4 relative z-10">
+            <div className="rounded-xl p-8 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-primary/20 shadow-lg text-center">
+              <h2 className="text-3xl font-bold mb-4">
+                Ready to Get Started?
+              </h2>
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Join Cloud Burst today and transform your event photography experience.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Button asChild size="lg" className="btn-primary">
+                  <Link href="/auth/register">
+                    Create Your Account
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="bg-background/80 backdrop-blur hover:bg-background/60">
+                  <Link href="/marketing/contact">
+                    Contact Sales
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

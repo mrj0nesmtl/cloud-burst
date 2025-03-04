@@ -1,0 +1,127 @@
+/* Component Styles for shadcn/ui */
+
+/* Button Styles */
+.btn, 
+.button,
+[class*="btn-"] {
+  @apply inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+}
+
+/* Card Styles */
+.card {
+  @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+}
+
+.card-header {
+  @apply flex flex-col space-y-1.5 p-6;
+}
+
+.card-title {
+  @apply text-2xl font-semibold leading-none tracking-tight;
+}
+
+.card-description {
+  @apply text-sm text-muted-foreground;
+}
+
+.card-content {
+  @apply p-6 pt-0;
+}
+
+.card-footer {
+  @apply flex items-center p-6 pt-0;
+}
+
+/* Navigation Styles */
+.nav-link {
+  @apply text-foreground/70 transition-colors hover:text-foreground;
+}
+
+.nav-link-active {
+  @apply font-medium text-foreground;
+}
+
+/* Input Styles */
+.input {
+  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+}
+
+/* Background Pattern */
+.hexagon-pattern {
+  background-color: hsla(var(--background));
+  background-image:
+    radial-gradient(at 27% 37%, hsla(var(--chart-1) / 0.15) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, hsla(var(--chart-2) / 0.15) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, hsla(var(--chart-3) / 0.15) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, hsla(var(--chart-4) / 0.15) 0px, transparent 50%),
+    radial-gradient(at 97% 96%, hsla(var(--chart-5) / 0.15) 0px, transparent 50%),
+    radial-gradient(at 33% 50%, hsla(var(--chart-1) / 0.15) 0px, transparent 50%),
+    radial-gradient(at 79% 53%, hsla(var(--chart-2) / 0.15) 0px, transparent 50%);
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  filter: blur(100px) saturate(150%);
+  top: 0px;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+/* Pricing Tiers */
+.pricing-tier {
+  @apply relative overflow-hidden rounded-lg border bg-card p-6 shadow-md transition-all hover:-translate-y-1 hover:shadow-lg;
+}
+
+.pricing-popular {
+  @apply before:absolute before:top-0 before:right-0 before:border-t-[3rem] before:border-r-[3rem] before:border-t-primary before:border-r-transparent before:content-[''];
+}
+
+/* Feature List */
+.feature-list {
+  @apply space-y-2;
+}
+
+.feature-item {
+  @apply flex items-start;
+}
+
+.feature-icon {
+  @apply mr-2 h-5 w-5 text-primary;
+}
+
+/* Marketing Pages */
+.marketing-section {
+  @apply relative py-16 px-4 md:py-24;
+}
+
+.section-header {
+  @apply mb-12 text-center;
+}
+
+.section-title {
+  @apply text-3xl font-bold md:text-4xl;
+}
+
+.section-description {
+  @apply mt-4 max-w-3xl mx-auto text-muted-foreground;
+}
+
+/* Hexagon specific background for pages */
+.hexagon-background {
+  background-color: hsla(var(--background));
+  background-image: 
+    linear-gradient(to bottom right, 
+      hsla(var(--primary) / 0.05), 
+      hsla(var(--secondary) / 0.05)
+    ),
+    radial-gradient(at 50% 0%, hsla(var(--primary) / 0.1) 0%, transparent 75%),
+    radial-gradient(at 100% 0%, hsla(var(--secondary) / 0.1) 0%, transparent 50%);
+  background-attachment: fixed;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+} 

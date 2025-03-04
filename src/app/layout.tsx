@@ -11,7 +11,11 @@ import { Toaster } from "@/components/ui/toaster"
 import { Inter } from 'next/font/google'
 
 const geist = GeistSans
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 // Comprehensive hydration error suppression for production
 if (process.env.NODE_ENV === 'production') {
@@ -64,7 +68,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable}`}>
       <body className={`${geist.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <QueryProvider>
           <ThemeProvider
@@ -72,22 +76,24 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
+            storageKey="cloud-burst-theme"
           >
-            <Suspense fallback={
-              <div className="flex min-h-screen items-center justify-center">
-                <LoadingSpinner size="lg" />
-              </div>
-            }>
-              <div className="flex flex-col min-h-screen relative">
-                <SiteHeader />
-                <main className="flex-1 relative z-10">
+            {/* Simplified structure to prevent Suspense hydration issues */}
+            <div className="flex flex-col min-h-screen relative">
+              <SiteHeader />
+              <main className="flex-1 relative z-10 flex flex-col">
+                <Suspense fallback={
+                  <div className="flex min-h-screen items-center justify-center">
+                    <LoadingSpinner size="lg" />
+                  </div>
+                }>
                   {children}
-                </main>
-                <SiteFooter />
-              </div>
-            </Suspense>
+                </Suspense>
+              </main>
+              <SiteFooter />
+            </div>
+            <Toaster />
           </ThemeProvider>
-          <Toaster />
         </QueryProvider>
       </body>
     </html>
