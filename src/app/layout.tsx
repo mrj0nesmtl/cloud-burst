@@ -11,7 +11,7 @@ import { Toaster as UIToaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { Inter } from 'next/font/google'
 
-const geist = GeistSans
+// Configure fonts
 const inter = Inter({ 
   subsets: ['latin'],
   display: 'swap',
@@ -69,8 +69,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable}`}>
-      <body className={`${geist.variable} font-sans antialiased min-h-screen flex flex-col`}>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
+      <body className="font-sans antialiased min-h-screen flex flex-col">
         <QueryProvider>
           <ThemeProvider
             attribute="class"

@@ -1,5 +1,5 @@
 modules = ["nodejs-20", "web", "bash"]
-run = "npm run start"
+run = "npm run dev"
 
 [nix]
 channel = "stable-24_05"
@@ -9,8 +9,9 @@ NODE_ENV = "production"
 NEXT_TELEMETRY_DISABLED = "1"
 
 [deployment]
-run = ["sh", "-c", "npm run build && npm run start"]
+run = ["sh", "-c", "npm run start"]
 deploymentTarget = "cloudrun"
+ignorePorts = false
 
 [[ports]]
 localPort = 3000

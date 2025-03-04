@@ -192,7 +192,8 @@ export function UploadWithTags({
         await uploadAndCreatePhotoWithTags(
           eventId, 
           fileObj.file, 
-          { tags: fileObj.tags }
+          undefined, // userId parameter (optional)
+          fileObj.tags // tags array
         )
         
         // Clear interval and set to 100%
