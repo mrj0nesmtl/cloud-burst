@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator'
 import { GalleryGrid } from '@/components/gallery/gallery-grid'
 import { UploadDropzone } from '@/components/gallery/upload-dropzone'
 import { getEvent } from '@/lib/supabase/events'
-import { getApprovedEventPhotos } from '@/lib/supabase/photos'
+import { getApprovedEventPhotos } from '@/app/lib/photos'
 import { formatDate } from '@/lib/utils'
 import { CalendarDays, MapPin, ArrowLeft, Upload, Camera, Share2 } from 'lucide-react'
 

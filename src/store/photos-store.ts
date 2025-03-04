@@ -6,7 +6,7 @@ import {
   getPendingEventPhotos,
   getUserPhotos,
   getPhotoUrl
-} from '@/lib/supabase/photos'
+} from '@/app/lib/photos'
 
 interface PhotosState {
   // Photos data

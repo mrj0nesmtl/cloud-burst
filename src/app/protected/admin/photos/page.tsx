@@ -10,7 +10,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Search, Filter, User, Check, X, Eye } from 'lucide-react'
 import { redirect } from 'next/navigation'
-import { getPhotoUrl } from '@/lib/supabase/photos'
+import { getPhotoUrl } from '@/app/lib/photos'
 
 export const metadata: Metadata = {
   title: 'All Photos | Admin | Cloud Burst',

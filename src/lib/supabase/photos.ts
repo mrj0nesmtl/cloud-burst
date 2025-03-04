@@ -289,3 +289,79 @@ export async function removeTagFromPhoto(photoId: string, tag: string): Promise<
   
   return true;
 }
+
+/**
+ * Get approved photos for an event - CLIENT VERSION
+ */
+export const getApprovedEventPhotos = async (eventId: string): Promise<Photo[]> => {
+  const supabase = createClientComponentClient<Database>();
+  
+  const { data, error } = await supabase
+    .from('photos')
+    .select('*')
+    .eq('event_id', eventId)
+    .eq('is_approved', true)
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching approved event photos:', error);
+    return [];
+  }
+  
+  return data.map(mapDbPhotoToPhoto);
+};
+
+/**
+ * Get pending photos for an event - CLIENT VERSION
+ */
+export const getPendingEventPhotos = async (eventId: string): Promise<Photo[]> => {
+  const supabase = createClientComponentClient<Database>();
+  
+  const { data, error } = await supabase
+    .from('photos')
+    .select('*')
+    .eq('event_id', eventId)
+    .eq('is_approved', false)
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching pending event photos:', error);
+    return [];
+  }
+  
+  return data.map(mapDbPhotoToPhoto);
+};
+
+/**
+ * Get photos uploaded by a specific user - CLIENT VERSION
+ */
+export const getUserPhotos = async (userId: string): Promise<Photo[]> => {
+  const supabase = createClientComponentClient<Database>();
+  
+  const { data, error } = await supabase
+    .from('photos')
+    .select('*')
+    .eq('uploaded_by', userId)
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching user photos:', error);
+    return [];
+  }
+  
+  return data.map(mapDbPhotoToPhoto);
+};
+
+/**
+ * Get a public URL for a photo - CLIENT VERSION
+ */
+export const getPhotoUrl = async (storagePath: string): Promise<string | null> => {
+  const supabase = createClientComponentClient<Database>();
+  
+  const { data } = supabase
+    .storage
+    .from('photos')
+    .getPublicUrl(storagePath);
+  
+  return data.publicUrl || null;
+};
