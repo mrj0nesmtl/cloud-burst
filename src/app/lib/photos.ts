@@ -1,105 +1,16 @@
-import { createClientComponentClient, createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types/supabase';
 import { Photo, PhotoMetadata } from '@/types/events';
 import { cookies } from 'next/headers';
 
-type PhotoInsert = Database['public']['Tables']['photos']['Insert'];
+// Re-export client-side functions and types
+export { 
+  mapDbPhotoToPhoto, 
+  uploadAndCreatePhoto, 
+  uploadAndCreatePhotoWithTags 
+} from './photos-client';
+
 type PhotoUpdate = Database['public']['Tables']['photos']['Update'];
-type PhotoRow = Database['public']['Tables']['photos']['Row'];
-
-/**
- * Convert a database photo row to the Photo type used in the application
- */
-export function mapDbPhotoToPhoto(photo: PhotoRow): Photo {
-  return {
-    id: photo.id,
-    event_id: photo.event_id,
-    filename: photo.filename,
-    storage_path: photo.storage_path,
-    url: photo.url,
-    thumbnail_url: photo.thumbnail_url || undefined,
-    uploaded_by: photo.uploaded_by,
-    created_at: photo.created_at,
-    updated_at: photo.updated_at || undefined,
-    is_approved: photo.is_approved,
-    metadata: (photo.metadata as PhotoMetadata) || {},
-  };
-}
-
-/**
- * Upload a photo to Supabase Storage and create a record in the photos table
- */
-export async function uploadAndCreatePhoto(
-  file: File,
-  eventId: string,
-  userId: string,
-  metadata: PhotoMetadata = {}
-): Promise<Photo | null> {
-  const supabase = createClientComponentClient<Database>();
-  
-  // Generate a unique filename
-  const timestamp = new Date().getTime();
-  const fileExt = file.name.split('.').pop();
-  const safeFileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
-  const storagePath = `events/${eventId}/${safeFileName}`;
-  
-  // Upload the file to Supabase Storage
-  const { data: uploadData, error: uploadError } = await supabase
-    .storage
-    .from('photos')
-    .upload(storagePath, file);
-  
-  if (uploadError) {
-    console.error('Error uploading photo:', uploadError);
-    return null;
-  }
-  
-  // Get the public URL for the uploaded file
-  const { data: { publicUrl } } = supabase
-    .storage
-    .from('photos')
-    .getPublicUrl(storagePath);
-  
-  // Create a record in the photos table
-  const photoRecord: PhotoInsert = {
-    event_id: eventId,
-    filename: file.name,
-    storage_path: storagePath,
-    url: publicUrl,
-    uploaded_by: userId,
-    is_approved: false,
-    metadata: metadata,
-  };
-  
-  const { data: photoData, error: photoError } = await supabase
-    .from('photos')
-    .insert(photoRecord)
-    .select()
-    .single();
-  
-  if (photoError) {
-    console.error('Error creating photo record:', photoError);
-    return null;
-  }
-  
-  return mapDbPhotoToPhoto(photoData);
-}
-
-/**
- * Upload a photo with tags to Supabase Storage and create a record in the photos table
- */
-export async function uploadAndCreatePhotoWithTags(
-  file: File,
-  eventId: string,
-  userId: string,
-  tags: string[] = []
-): Promise<Photo | null> {
-  const metadata: PhotoMetadata = {
-    tags: tags,
-  };
-  
-  return uploadAndCreatePhoto(file, eventId, userId, metadata);
-}
 
 /**
  * Get all photos for an event
@@ -119,6 +30,32 @@ export async function getEventPhotos(eventId: string): Promise<Photo[]> {
     return [];
   }
   
+  // Import the function dynamically to avoid circular dependencies
+  const { mapDbPhotoToPhoto } = await import('./photos-client');
+  return data.map(mapDbPhotoToPhoto);
+}
+
+/**
+ * Get approved photos for an event
+ */
+export async function getApprovedEventPhotos(eventId: string): Promise<Photo[]> {
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
+  
+  const { data, error } = await supabase
+    .from('photos')
+    .select('*')
+    .eq('event_id', eventId)
+    .eq('is_approved', true)
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching approved event photos:', error);
+    return [];
+  }
+  
+  // Import the function dynamically to avoid circular dependencies
+  const { mapDbPhotoToPhoto } = await import('./photos-client');
   return data.map(mapDbPhotoToPhoto);
 }
 
@@ -140,7 +77,29 @@ export async function getPhotoById(photoId: string): Promise<Photo | null> {
     return null;
   }
   
+  // Import the function dynamically to avoid circular dependencies
+  const { mapDbPhotoToPhoto } = await import('./photos-client');
   return mapDbPhotoToPhoto(data);
+}
+
+/**
+ * Get the URL for a photo
+ */
+export function getPhotoUrl(photo: Photo): string {
+  // If the photo has a URL property from the database, use that
+  if ('url' in photo && typeof photo.url === 'string') {
+    return photo.url;
+  }
+  
+  // Otherwise, construct a URL from the storage path
+  // This is a fallback and might need to be adjusted based on your Supabase configuration
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!SUPABASE_URL) {
+    console.error('NEXT_PUBLIC_SUPABASE_URL is not defined');
+    return '';
+  }
+  
+  return `${SUPABASE_URL}/storage/v1/object/public/photos/${photo.storage_path}`;
 }
 
 /**
