@@ -1,13 +1,15 @@
 # types Directory Structure
-Generated: 2025-03-03T23:44:48.389Z
+Generated: 2025-03-05T17:55:30.223Z
 
 ```
 ./src/types/
 ├── auth.ts
 ├── events.ts
+├── notifications.ts
+├── search.ts
 └── supabase.ts
 
-1 directory, 3 files
+1 directory, 5 files
 
 ```
 

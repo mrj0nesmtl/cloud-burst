@@ -1,11 +1,142 @@
 ---
 description: AI Collaboration Guidelines for Cloud Burst
 globs: **/*
+alwaysApply: false
 ---
 # AI Collaboration Guidelines
 
-## Core Standards
+> **Version:** 0.7.0  
+> **Last Updated:** March 2024
+
+```json
+{
+  "description": "AI collaboration guidelines for Cloud Burst, including pair programming standards and AI feature implementation",
+  "globs": ["**/*"],
+  "rules": {
+    "pairProgramming": {
+      "communication": {
+        "useConciseResponses": true,
+        "useContextAwareness": true,
+        "useProgressiveDisclosure": true,
+        "useExplanations": true,
+        "useCodeComments": true
+      },
+      "codeGeneration": {
+        "useTypeScript": true,
+        "useNextJsBestPractices": true,
+        "useConsistentStyle": true,
+        "useTestableCode": true,
+        "useAccessibleCode": true,
+        "useSecureCode": true
+      },
+      "workflow": {
+        "useIncrementalDevelopment": true,
+        "useCodeReview": true,
+        "useRefactoring": true,
+        "useDebugging": true,
+        "useDocumentation": true
+      },
+      "learning": {
+        "useExplanations": true,
+        "useReferences": true,
+        "useAlternatives": true,
+        "usePatterns": true,
+        "useBestPractices": true
+      }
+    },
+    "aiFeatures": {
+      "implementation": {
+        "useTensorFlowJS": true,
+        "useOpenCV": true,
+        "useDeepSeek": true,
+        "useOpenAI": true
+      },
+      "patterns": {
+        "useClientSideInference": true,
+        "useServerSideInference": true,
+        "useHybridApproach": true,
+        "useStreamingResponses": true,
+        "useBatchProcessing": true
+      },
+      "optimization": {
+        "useModelQuantization": true,
+        "useModelPruning": true,
+        "useModelCaching": true,
+        "useProgressiveLoading": true,
+        "useAdaptiveComputing": true
+      },
+      "ethics": {
+        "usePrivacyPreservation": true,
+        "useFairness": true,
+        "useTransparency": true,
+        "useHumanOversight": true,
+        "useDataMinimization": true
+      }
+    }
+  }
+}
+```
+
+## AI Pair Programming Standards
+
+Cloud Burst uses AI pair programming to accelerate development while maintaining code quality and consistency.
+
+### Communication Guidelines
+
+When collaborating with AI assistants:
+
+- **Be specific**: Provide clear requirements and context
+- **Use incremental steps**: Break down complex tasks
+- **Review generated code**: Verify correctness and style
+- **Ask for explanations**: Understand the implementation
+- **Provide feedback**: Help the AI improve
+
+### Code Generation Standards
+
+AI-generated code should follow these standards:
+
+- Use TypeScript with strict type checking
+- Follow Next.js 14 App Router best practices
+- Maintain consistent code style
+- Include proper error handling
+- Ensure accessibility compliance
+- Follow security best practices
+
 ```typescript
+// Example of good AI-generated code
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { useToast } from '@/hooks/useToast';
+import { validateEmail } from '@/lib/validation';
+
+interface NewsletterFormProps {
+  onSubscribe: (email: string) => Promise<void>;
+}
+
+/**
+ * Newsletter subscription form component
+ * @param onSubscribe - Callback function when user subscribes
+ */
+export function NewsletterForm({ onSubscribe }: NewsletterFormProps): JSX.Element {
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  // Reset error when email changes
+  useEffect(() => {
+    if (error) setError(null);
+  }, [email, error]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate email
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
 {
   "aiCollaboration": {
     "context": {

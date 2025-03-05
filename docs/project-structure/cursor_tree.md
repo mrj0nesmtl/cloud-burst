@@ -1,24 +1,21 @@
 # cursor Directory Structure
-Generated: 2025-03-03T23:44:48.317Z
+Generated: 2025-03-05T17:55:30.146Z
 
 ```
 ./.cursor/
 └── rules/
-    ├── README.md
-    ├── accessibility.mdc
     ├── ai-collaboration-guidelines.mdc
-    ├── api.mdc
-    ├── code-style.mdc
-    ├── deployment.mdc
-    ├── documentation-standards.mdc
-    ├── performance-standards.mdc
+    ├── backend-integration.mdc
+    ├── core-standards.mdc
+    ├── deployment-operations.mdc
+    ├── frontend-architecture.mdc
+    ├── quality-assurance.mdc
     ├── react-components.mdc
     ├── security.mdc
     ├── state-management.mdc
-    ├── testing.mdc
     └── typescript.mdc
 
-2 directories, 13 files
+2 directories, 10 files
 
 ```
 

@@ -1,12 +1,13 @@
 # store Directory Structure
-Generated: 2025-03-03T23:44:48.378Z
+Generated: 2025-03-05T17:55:30.213Z
 
 ```
 ./src/store/
 ├── events-store.ts
+├── index.ts
 └── photos-store.ts
 
-1 directory, 2 files
+1 directory, 3 files
 
 ```
 

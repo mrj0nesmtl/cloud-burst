@@ -1,0 +1,572 @@
+---
+description: Core Development Standards
+globs: **/*.ts, **/*.tsx, **/*.js, **/*.jsx, **/*.md
+alwaysApply: false
+---
+# Core development standards for Cloud Burst, including TypeScript, code style, and documentation
+
+> **Version:** 0.7.0  
+> **Last Updated:** March 2024
+
+```json
+{
+  "description": "Core development standards for Cloud Burst, including TypeScript, code style, and documentation",
+  "globs": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.md"],
+  "rules": {
+    "typescript": {
+      "strictMode": true,
+      "version": "5.0",
+      "typeChecking": {
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "useUnknownInCatchVariables": true,
+        "alwaysStrict": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": true
+      },
+      "typeDefinitions": {
+        "useZodForValidation": true,
+        "exportTypeDefinitions": true,
+        "useTypeAliasesForComplexTypes": true,
+        "useInterfacesForObjectTypes": true,
+        "useEnumsForConstantSets": true,
+        "useGenericsForReusableComponents": true
+      },
+      "imports": {
+        "useAbsoluteImports": true,
+        "useNamedExports": true,
+        "avoidDefaultExports": true,
+        "groupImports": true,
+        "sortImports": true,
+        "importOrder": [
+          "react",
+          "next",
+          "external",
+          "components",
+          "hooks",
+          "stores",
+          "utils",
+          "types",
+          "styles"
+        ]
+      }
+    },
+    "codeStyle": {
+      "formatting": {
+        "usePrettier": true,
+        "indentation": 2,
+        "maxLineLength": 100,
+        "quoteStyle": "single",
+        "semicolons": true,
+        "trailingComma": "es5",
+        "bracketSpacing": true,
+        "arrowParens": "always",
+        "endOfLine": "lf"
+      },
+      "naming": {
+        "components": "PascalCase",
+        "functions": "camelCase",
+        "variables": "camelCase",
+        "constants": "UPPER_CASE",
+        "types": "PascalCase",
+        "interfaces": "PascalCase",
+        "enums": "PascalCase",
+        "hooks": "usePrefix",
+        "stores": "camelCase",
+        "routes": "kebab-case",
+        "files": {
+          "components": "PascalCase",
+          "utilities": "kebab-case",
+          "pages": "kebab-case",
+          "hooks": "camelCase",
+          "contexts": "kebab-case",
+          "types": "kebab-case",
+          "stores": "{storeName}.store.ts",
+          "routes": "page.tsx",
+          "layouts": "layout.tsx",
+          "loading": "loading.tsx",
+          "error": "error.tsx",
+          "notFound": "not-found.tsx",
+          "middleware": "middleware.ts"
+        }
+      },
+      "structure": {
+        "componentOrder": [
+          "imports",
+          "types",
+          "constants",
+          "helpers",
+          "hooks",
+          "store",
+          "component",
+          "exports"
+        ],
+        "functionOrder": [
+          "imports",
+          "types",
+          "constants",
+          "function",
+          "exports"
+        ],
+        "maxFunctionLength": 50,
+        "maxComponentLength": 250,
+        "maxFileLength": 500,
+        "directories": {
+          "src": {
+            "app": {
+              "auth": "Authentication routes",
+              "dashboard": "Protected dashboard routes",
+              "events": "Event management routes",
+              "settings": "User settings routes"
+            },
+            "components": {
+              "auth": "Authentication components",
+              "profile": "Profile management components",
+              "ui": "Shadcn UI components",
+              "shared": "Shared components",
+              "forms": "Form components"
+            },
+            "lib": {
+              "utils": "Utility functions",
+              "supabase": "Supabase client",
+              "validation": "Zod schemas"
+            },
+            "hooks": "Custom hooks",
+            "types": "TypeScript types",
+            "styles": "CSS/Tailwind styles",
+            "services": "API services",
+            "store": "Zustand stores",
+            "middleware": "Route middleware"
+          }
+        }
+      }
+    },
+    "documentation": {
+      "comments": {
+        "useJSDoc": true,
+        "requireFunctionComments": true,
+        "requireComponentComments": true,
+        "requireTypeComments": true,
+        "requireComplexLogicComments": true,
+        "required": {
+          "components": "TSDoc for props interface",
+          "hooks": "TSDoc for parameters and return",
+          "utils": "TSDoc for functions",
+          "types": "TSDoc for type definitions"
+        }
+      },
+      "markdown": {
+        "useHeadings": true,
+        "useCodeBlocks": true,
+        "useLinks": true,
+        "useTables": true,
+        "useImages": true
+      },
+      "required": {
+        "README": true,
+        "CHANGELOG": true,
+        "CONTRIBUTING": true,
+        "LICENSE": true,
+        "componentDocumentation": true,
+        "apiDocumentation": true,
+        "deploymentDocumentation": true
+      },
+      "format": {
+        "useMarkdown": true,
+        "useTSDoc": true,
+        "useJSDoc": true
+      }
+    }
+  }
+}
+```
+
+## TypeScript Standards
+
+### Strict Mode Configuration
+
+All TypeScript files must use strict mode with the following configuration:
+
+```typescript
+// tsconfig.json excerpt
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true
+  }
+}
+```
+
+### Type Definitions
+
+- Use Zod for runtime type validation
+- Export type definitions for reusable types
+- Use type aliases for complex types
+- Use interfaces for object types
+- Use enums for constant sets
+- Use generics for reusable components
+
+> **Note:** For detailed TypeScript naming conventions, organization, and Supabase/Zod integration, refer to the specialized [TypeScript Standards](mdc:typescript.mdc) rule file.
+
+#### TypeScript Naming Conventions (Specialized)
+
+The specialized TypeScript rules define the following naming conventions:
+
+- Interfaces: `I{Name}` (e.g., `IUser`)
+- Types: `T{Name}` (e.g., `TUser`)
+- Generics: `{T}Props` (e.g., `TComponentProps`)
+
+#### TypeScript Organization (Specialized)
+
+- Shared types: `src/types`
+- Component types: alongside component files
+- API types: `src/types/api`
+- Supabase types: `src/types/supabase.ts` (automatically generated)
+- Zod schemas: `src/lib/validations/{name}.schema.ts`
+
+### Import Standards
+
+- Use absolute imports with `@/` prefix
+- Prefer named exports over default exports
+- Group and sort imports by category
+- Follow the import order:
+  1. React imports
+  2. Next.js imports
+  3. External libraries
+  4. Components
+  5. Hooks
+  6. Stores
+  7. Utilities
+  8. Types
+  9. Styles
+
+```typescript
+// Good import order example
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
+import { Button } from '@/components/ui/Button';
+import { useAuth } from '@/hooks/useAuth';
+import { useEventStore } from '@/store/eventStore';
+import { formatDate } from '@/lib/utils';
+import type { Event } from '@/types';
+import '@/styles/events.css';
+```
+
+## Code Style Standards
+
+### Formatting
+
+- Use Prettier for consistent formatting
+- 2-space indentation
+- 100 character line length limit
+- Single quotes for strings
+- Semicolons required
+- ES5 trailing commas
+- Spaces inside brackets
+- Always use parentheses with arrow functions
+- LF line endings
+
+### Naming Conventions
+
+- Components: PascalCase (e.g., `UserProfile`)
+- Functions: camelCase (e.g., `getUserData`)
+- Variables: camelCase (e.g., `userData`)
+- Constants: UPPER_CASE (e.g., `MAX_USERS`)
+- Types/Interfaces: PascalCase (e.g., `UserData`)
+- Hooks: usePrefix (e.g., `useAuth`)
+- Stores: camelCase (e.g., `userStore`)
+- Routes: kebab-case (e.g., `user-profile`)
+
+#### File Naming
+
+- Components: PascalCase (e.g., `UserProfile.tsx`)
+- Utilities: kebab-case (e.g., `date-utils.ts`)
+- Pages: kebab-case (e.g., `user-profile.tsx`)
+- Hooks: camelCase (e.g., `useAuth.ts`)
+- Contexts: kebab-case (e.g., `auth-context.tsx`)
+- Types: kebab-case (e.g., `user-types.ts`)
+- Stores: `{storeName}.store.ts` (e.g., `user.store.ts`)
+
+#### Next.js App Router Files
+
+- Route pages: `page.tsx`
+- Layouts: `layout.tsx`
+- Loading states: `loading.tsx`
+- Error boundaries: `error.tsx`
+- Not found pages: `not-found.tsx`
+- Middleware: `middleware.ts`
+
+### Code Structure
+
+#### Component Structure
+
+Organize components in the following order:
+
+1. Imports
+2. Types (interfaces, types)
+3. Constants
+4. Helper functions
+5. Hooks
+6. Store connections
+7. Component definition
+8. Exports
+
+```typescript
+// Example of good component structure
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/Button';
+import { formatDate } from '@/lib/utils';
+
+// Types
+interface EventCardProps {
+  event: Event;
+  onSelect?: (eventId: string) => void;
+}
+
+// Constants
+const MAX_DESCRIPTION_LENGTH = 100;
+
+// Helpers
+const truncateDescription = (description: string) => {
+  if (description.length <= MAX_DESCRIPTION_LENGTH) return description;
+  return `${description.slice(0, MAX_DESCRIPTION_LENGTH)}...`;
+};
+
+// Component
+export function EventCard({ event, onSelect }: EventCardProps) {
+  // Hooks
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Store connections
+  const { addFavorite } = useEventStore();
+  
+  // Component logic
+  const handleSelect = () => {
+    if (onSelect) onSelect(event.id);
+  };
+  
+  return (
+    <div className="card">
+      {/* Component JSX */}
+    </div>
+  );
+}
+```
+
+#### Function Structure
+
+Organize functions in the following order:
+
+1. Imports
+2. Types
+3. Constants
+4. Function definition
+5. Exports
+
+#### Length Limits
+
+- Function length: Maximum 50 lines
+- Component length: Maximum 250 lines
+- File length: Maximum 500 lines
+
+### Directory Structure
+
+The Cloud Burst project follows this directory structure:
+
+```
+src/
+├── app/                  # Next.js App Router routes
+│   ├── auth/             # Authentication routes
+│   ├── dashboard/        # Protected dashboard routes
+│   ├── events/           # Event management routes
+│   └── settings/         # User settings routes
+├── components/           # React components
+│   ├── auth/             # Authentication components
+│   ├── profile/          # Profile management components
+│   ├── ui/               # Shadcn UI components
+│   ├── shared/           # Shared components
+│   └── forms/            # Form components
+├── lib/                  # Utility libraries
+│   ├── utils/            # Utility functions
+│   ├── supabase/         # Supabase client
+│   └── validation/       # Zod schemas
+├── hooks/                # Custom React hooks
+├── types/                # TypeScript type definitions
+├── styles/               # CSS/Tailwind styles
+├── services/             # API services
+├── store/                # Zustand stores
+└── middleware/           # Route middleware
+```
+
+## State Management Standards
+
+Cloud Burst uses Zustand for global state management and TanStack Query for server state.
+
+> **Note:** For detailed state management configuration, organization, and patterns, refer to the specialized [State Management Standards](mdc:state-management.mdc) rule file.
+
+### Zustand Store Organization (Specialized)
+
+- Base location: `src/store`
+- Slice pattern: `{feature}.slice.ts`
+- Types location: `src/types/store.ts`
+
+### Persistence Configuration (Specialized)
+
+- Required persistent stores: `auth`, `theme`, `userPreferences`
+- Storage method: `localStorage`
+- Storage key: `cloud-burst-store`
+
+### Store Slice Requirements (Specialized)
+
+- Auth slice: `user`, `session`, `loading`, `error`, `isAuthenticated`
+- UI slice: `theme`, `modal`, `toast`, `navigation`
+- Gallery slice: `photos`, `uploadProgress`, `filters`
+- Event slice: `currentEvent`, `participants`, `settings`
+
+### React Query Configuration (Specialized)
+
+- Location: `src/lib/query`
+- Stale time: 5 minutes (300,000ms)
+- Retries: 3
+- Prefetch: `events`, `gallery`
+
+## Documentation Standards
+
+### Code Comments
+
+- Use JSDoc for function and component documentation
+- Document all functions, components, and complex types
+- Explain complex logic with inline comments
+- Required documentation:
+  - Components: TSDoc for props interface
+  - Hooks: TSDoc for parameters and return values
+  - Utils: TSDoc for functions
+  - Types: TSDoc for type definitions
+
+```typescript
+/**
+ * User profile component that displays user information and allows editing
+ * @param props - Component props
+ * @param props.userId - The ID of the user to display
+ * @param props.editable - Whether the profile is editable
+ * @returns User profile component
+ */
+export function UserProfile({ 
+  userId, 
+  editable = false 
+}: UserProfileProps): JSX.Element {
+  // Implementation
+}
+```
+
+### Markdown Documentation
+
+- Use proper heading hierarchy
+- Include code blocks with language specification
+- Use links for references
+- Use tables for structured data
+- Include images where helpful
+
+### Required Documentation
+
+- README.md for each major directory
+- CHANGELOG.md for tracking changes
+- Component documentation
+- API documentation
+- Deployment documentation
+
+### Documentation Format
+
+- Use Markdown for general documentation
+- Use TSDoc for TypeScript documentation
+- Use JSDoc for JavaScript documentation
+
+## Examples
+
+### TypeScript Example
+
+```typescript
+/**
+ * User profile data interface
+ */
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * User role enum
+ */
+export enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+  GUEST = 'guest',
+}
+
+/**
+ * Fetches user profile data
+ * @param userId - The user ID to fetch
+ * @returns The user profile data
+ */
+export async function fetchUserProfile(userId: string): Promise<UserProfile> {
+  // Implementation
+}
+```
+
+### Component Example
+
+```tsx
+/**
+ * User profile component
+ * @param props - Component props
+ * @returns User profile component
+ */
+export function UserProfile({ userId }: { userId: string }): JSX.Element {
+  // Implementation
+}
+```
+
+### Documentation Example
+
+```markdown
+# User Module
+
+This module handles user management functionality.
+
+## Components
+
+- `UserProfile` - Displays user profile information
+- `UserSettings` - Allows users to update their settings
+
+## API
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/users/:id` | GET | Get user by ID |
+| `/api/users/:id` | PUT | Update user |
+| `/api/users/:id` | DELETE | Delete user |
+``` 

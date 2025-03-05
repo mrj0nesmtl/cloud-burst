@@ -1,0 +1,578 @@
+---
+description: Deployment and Operations
+globs: **/deployment/**, **/.github/**, **/scripts/**, **/.replit, **/next.config.js
+alwaysApply: false
+---
+# Deployment and Operations
+
+> **Version:** 0.7.0  
+> **Last Updated:** March 2024
+
+```json
+{
+  "description": "Deployment and operations standards for Cloud Burst, including deployment, CI/CD, and monitoring",
+  "globs": ["**/deployment/**", "**/.github/**", "**/scripts/**", "**/.replit", "**/next.config.js"],
+  "rules": {
+    "deployment": {
+      "platforms": {
+        "useReplit": true,
+        "useVercel": false,
+        "useNetlify": false,
+        "useAWS": false,
+        "useGCP": false,
+        "useAzure": false
+      },
+      "configuration": {
+        "useEnvironmentVariables": true,
+        "useSecrets": true,
+        "useNextConfig": true,
+        "useReplitConfig": true,
+        "useDockerfile": false,
+        "useNginx": false
+      },
+      "process": {
+        "useContinuousDeployment": true,
+        "useManualDeployment": true,
+        "useStaging": true,
+        "useProduction": true,
+        "useRollback": true
+      },
+      "optimization": {
+        "useStaticGeneration": true,
+        "useServerSideRendering": true,
+        "useEdgeRuntime": false,
+        "useCDN": true,
+        "useCompression": true
+      }
+    },
+    "cicd": {
+      "providers": {
+        "useGitHubActions": true,
+        "useCircleCI": false,
+        "useJenkins": false,
+        "useTravisCI": false,
+        "useGitLabCI": false
+      },
+      "workflows": {
+        "useBuild": true,
+        "useTest": true,
+        "useLint": true,
+        "useTypeCheck": true,
+        "useDeploy": true
+      },
+      "automation": {
+        "useDependencyUpdates": true,
+        "useCodeQuality": true,
+        "useSecurityScans": true,
+        "usePerformanceTests": true
+      },
+      "artifacts": {
+        "useBuildArtifacts": true,
+        "useTestReports": true,
+        "useCoverageReports": true,
+        "useDocumentation": true
+      }
+    },
+    "monitoring": {
+      "services": {
+        "useSentry": true,
+        "useDatadog": false,
+        "useNewRelic": false,
+        "useCloudwatch": false,
+        "useStackdriver": false
+      },
+      "metrics": {
+        "usePerformance": true,
+        "useErrors": true,
+        "useUsage": true,
+        "useSystem": true,
+        "useCustom": true
+      },
+      "alerting": {
+        "useEmail": true,
+        "useSlack": true,
+        "usePagerDuty": false,
+        "useWebhooks": true
+      },
+      "logging": {
+        "useStructuredLogs": true,
+        "useLogLevels": true,
+        "useLogRotation": true,
+        "useLogShipping": true
+      }
+    }
+  }
+}
+```
+
+## Deployment Standards
+
+Cloud Burst is deployed on Replit, with a focus on reliability, performance, and security.
+
+### Deployment Platform
+
+Cloud Burst uses Replit as the primary deployment platform:
+
+#### Replit Configuration
+
+The `.replit` file configures the deployment environment:
+
+```
+modules = ["nodejs-20", "web", "bash"]
+run = "npm run dev"
+
+[nix]
+channel = "stable-24_05"
+
+[env]
+NODE_ENV = "production"
+NEXT_TELEMETRY_DISABLED = "1"
+
+[deployment]
+run = ["sh", "-c", "npm run start"]
+deploymentTarget = "cloudrun"
+ignorePorts = false
+build = ["sh", "-c", "npm run build"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+```
+
+#### Next.js Configuration
+
+The `next.config.js` file configures the Next.js build:
+
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  images: {
+    domains: ['bxvbovzqzjfomqtdzzx.supabase.co'],
+  },
+  experimental: {
+    serverActions: true,
+  },
+  output: 'standalone',
+};
+
+module.exports = nextConfig;
+```
+
+### Environment Variables
+
+Cloud Burst requires the following environment variables:
+
+```
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://bxvbovzqzjfomqtdzzx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6...
+
+# Site
+NEXT_PUBLIC_SITE_URL=https://cloud-burst.replit.app
+
+# Next.js
+NODE_ENV=production
+NEXT_TELEMETRY_DISABLED=1
+```
+
+### Deployment Process
+
+#### Automated Deployment
+
+Cloud Burst uses GitHub Actions for automated deployment:
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to Replit
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Deploy to Replit
+        uses: replit/replit-deploy@v1
+        with:
+          token: ${{ secrets.REPLIT_TOKEN }}
+```
+
+#### Manual Deployment
+
+For manual deployment, follow these steps:
+
+1. Push changes to GitHub
+2. Log in to Replit
+3. Pull changes from GitHub
+4. Run build process
+5. Verify deployment
+
+### Deployment Fixes
+
+For common deployment issues, refer to the deployment fixes documentation:
+
+```markdown
+# Deployment Fixes
+
+## Dynamic Server Usage Errors
+
+Add to affected files:
+
+```typescript
+export const dynamic = 'force-dynamic';
+```
+
+## Protected Routes Issues
+
+Update middleware to handle build-time execution:
+
+```typescript
+// middleware.ts
+export async function middleware(req: NextRequest) {
+  // Skip middleware during static generation
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return NextResponse.next();
+  }
+  
+  // Rest of middleware...
+}
+```
+```
+
+## CI/CD Standards
+
+Cloud Burst uses GitHub Actions for CI/CD pipelines:
+
+### GitHub Actions Workflows
+
+#### Build and Test Workflow
+
+```yaml
+# .github/workflows/build-test.yml
+name: Build and Test
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Lint
+        run: npm run lint
+        
+      - name: Type check
+        run: npm run type-check
+        
+      - name: Test
+        run: npm run test
+        
+      - name: Build
+        run: npm run build
+```
+
+#### Dependency Updates
+
+```yaml
+# .github/workflows/dependencies.yml
+name: Update Dependencies
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Every Monday at midnight
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          
+      - name: Update dependencies
+        run: npx npm-check-updates -u
+        
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Test
+        run: npm run test
+        
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: 'chore: update dependencies'
+          branch: 'chore/update-dependencies'
+          commit-message: 'chore: update dependencies'
+```
+
+### CI/CD Best Practices
+
+- Run tests on every pull request
+- Enforce code quality with linting and type checking
+- Automate dependency updates
+- Use semantic versioning
+- Implement branch protection rules
+
+## Monitoring Standards
+
+Cloud Burst uses Sentry for error monitoring and custom solutions for performance monitoring:
+
+### Error Monitoring
+
+```typescript
+// app/sentry.ts
+import * as Sentry from '@sentry/nextjs';
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: 1.0,
+  environment: process.env.NODE_ENV,
+  integrations: [
+    new Sentry.BrowserTracing({
+      tracePropagationTargets: ['localhost', /^https:\/\/cloud-burst\.replit\.app/],
+    }),
+  ],
+});
+```
+
+### Performance Monitoring
+
+```typescript
+// lib/monitoring.ts
+import { NextWebVitalsMetric } from 'next/app';
+
+export function reportWebVitals(metric: NextWebVitalsMetric) {
+  // Log to console in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log(metric);
+  }
+  
+  // Send to analytics in production
+  if (process.env.NODE_ENV === 'production') {
+    const body = JSON.stringify(metric);
+    
+    // Use `navigator.sendBeacon()` if available
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/metrics', body);
+    } else {
+      // Fall back to fetch
+      fetch('/api/metrics', {
+        body,
+        method: 'POST',
+        keepalive: true,
+      });
+    }
+  }
+}
+```
+
+### Logging
+
+Cloud Burst uses structured logging for server-side logs:
+
+```typescript
+// lib/logger.ts
+type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+interface LogEntry {
+  level: LogLevel;
+  message: string;
+  timestamp: string;
+  context?: Record<string, any>;
+}
+
+export function log(
+  level: LogLevel,
+  message: string,
+  context?: Record<string, any>
+) {
+  const entry: LogEntry = {
+    level,
+    message,
+    timestamp: new Date().toISOString(),
+    context,
+  };
+  
+  // Log to console in development
+  if (process.env.NODE_ENV === 'development') {
+    console[level](mdc:JSON.stringify(entry, null, 2));
+  }
+  
+  // Send to logging service in production
+  if (process.env.NODE_ENV === 'production') {
+    // Implementation depends on logging service
+    fetch('/api/logs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(entry),
+    }).catch((error) => {
+      console.error('Failed to send log:', error);
+    });
+  }
+}
+
+export const logger = {
+  debug: (message: string, context?: Record<string, any>) => log('debug', message, context),
+  info: (message: string, context?: Record<string, any>) => log('info', message, context),
+  warn: (message: string, context?: Record<string, any>) => log('warn', message, context),
+  error: (message: string, context?: Record<string, any>) => log('error', message, context),
+};
+```
+
+## Examples
+
+### Deployment Script Example
+
+```bash
+#!/bin/bash
+# scripts/deploy.sh
+
+# Exit on error
+set -e
+
+# Load environment variables
+source .env.local
+
+# Build the application
+echo "Building application..."
+npm run build
+
+# Run tests
+echo "Running tests..."
+npm run test
+
+# Deploy to Replit
+echo "Deploying to Replit..."
+git push origin main
+
+echo "Deployment complete!"
+```
+
+### GitHub Actions Workflow Example
+
+```yaml
+# .github/workflows/preview.yml
+name: Preview Deployment
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Deploy Preview
+        uses: replit/replit-deploy@v1
+        with:
+          token: ${{ secrets.REPLIT_TOKEN }}
+          preview: true
+          
+      - name: Comment PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const previewUrl = process.env.PREVIEW_URL;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 Preview deployed to: ${previewUrl}`
+            });
+```
+
+### Monitoring Dashboard Example
+
+```typescript
+// app/admin/monitoring/page.tsx
+import { Suspense } from 'react';
+import { ErrorMetrics } from '@/components/monitoring/ErrorMetrics';
+import { PerformanceMetrics } from '@/components/monitoring/PerformanceMetrics';
+import { SystemMetrics } from '@/components/monitoring/SystemMetrics';
+import { UsageMetrics } from '@/components/monitoring/UsageMetrics';
+import { Spinner } from '@/components/ui/Spinner';
+
+export default function MonitoringPage() {
+  return (
+    <div className="container mx-auto py-8">
+      <h1 className="text-3xl font-bold mb-8">Monitoring Dashboard</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Error Metrics</h2>
+          <Suspense fallback={<Spinner />}>
+            <ErrorMetrics />
+          </Suspense>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Performance Metrics</h2>
+          <Suspense fallback={<Spinner />}>
+            <PerformanceMetrics />
+          </Suspense>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">System Metrics</h2>
+          <Suspense fallback={<Spinner />}>
+            <SystemMetrics />
+          </Suspense>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Usage Metrics</h2>
+          <Suspense fallback={<Spinner />}>
+            <UsageMetrics />
+          </Suspense>
+        </div>
+      </div>
+    </div>
+  );
+}
+``` 

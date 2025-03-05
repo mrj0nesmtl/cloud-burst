@@ -1,22 +1,19 @@
 # full Directory Structure
-Generated: 2025-03-03T23:44:48.261Z
+Generated: 2025-03-05T17:55:30.073Z
 
 ```
 ./
 ├── .cursor/
 │   └── rules/
-│       ├── README.md
-│       ├── accessibility.mdc
 │       ├── ai-collaboration-guidelines.mdc
-│       ├── api.mdc
-│       ├── code-style.mdc
-│       ├── deployment.mdc
-│       ├── documentation-standards.mdc
-│       ├── performance-standards.mdc
+│       ├── backend-integration.mdc
+│       ├── core-standards.mdc
+│       ├── deployment-operations.mdc
+│       ├── frontend-architecture.mdc
+│       ├── quality-assurance.mdc
 │       ├── react-components.mdc
 │       ├── security.mdc
 │       ├── state-management.mdc
-│       ├── testing.mdc
 │       └── typescript.mdc
 ├── .github/
 │   ├── workflows/
@@ -28,11 +25,10 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   ├── security.md
 │   │   └── system_architecture_flowchart.md
 │   ├── deployment/
-│   │   ├── BUILD_CONFIGURATION.md
-│   │   ├── ENVIRONMENT_SETUP.md
-│   │   ├── README.md
-│   │   ├── REPLIT_DEPLOYMENT.md
-│   │   └── quick_start.md
+│   │   ├── deployment_fixes.md
+│   │   ├── deployment_guides.md
+│   │   ├── replit-quick-reference.md
+│   │   └── replit_deployment.md
 │   ├── design/
 │   │   ├── UI_components.md
 │   │   ├── dashboard_components.md
@@ -57,6 +53,11 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   ├── session_15_kickoff.md
 │   │   │   ├── session_16_checklist.md
 │   │   │   ├── session_16_kickoff.md
+│   │   │   ├── session_17_checklist.md
+│   │   │   ├── session_17_kickoff.md
+│   │   │   ├── session_18_checklist.md
+│   │   │   ├── session_18_kickoff.md
+│   │   │   ├── session_19_emergency.md
 │   │   │   ├── session_1_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
@@ -65,13 +66,12 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
+│   │   ├── DEPLOYMENT_FIX_PLAN.md
+│   │   ├── SESSION_19_KICKOFF.md
+│   │   ├── SESSION_19_NARRATIVE.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_17_checklist.md
-│   │   ├── session_17_kickoff.md
-│   │   ├── session_18_checklist.md
-│   │   ├── session_18_kickoff.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
@@ -84,37 +84,33 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   ├── roadmap.md
 │   │   └── statement_of_work.md
 │   ├── project-structure/
+│   │   ├── DOCS_TREE.md
+│   │   ├── FULL_TREE.md
+│   │   ├── GITHUB_TREE.md
 │   │   ├── README.md
+│   │   ├── SRC_TREE.md
 │   │   ├── app_tree.md
 │   │   ├── architecture_tree.md
 │   │   ├── components_tree.md
 │   │   ├── cursor_tree.md
 │   │   ├── development_tree.md
-│   │   ├── docs_tree.md
-│   │   ├── full_tree.md
-│   │   ├── github_tree.md
 │   │   ├── hooks_tree.md
 │   │   ├── lib_tree.md
 │   │   ├── planning_tree.md
 │   │   ├── public_tree.md
-│   │   ├── src_tree.md
 │   │   ├── store_tree.md
 │   │   └── types_tree.md
 │   ├── rbac/
 │   │   ├── README.md
-│   │   ├── role-based-access-control.md
-│   │   ├── role_based_access_updated.md
-│   │   ├── role_permissions.md
-│   │   └── role_permissions_updated.md
-│   ├── sessions/
+│   │   └── role_based_access_control.md
 │   ├── user-flows/
+│   │   ├── create_test_users_ui.md
 │   │   ├── invited_user_flow_design_document.md
 │   │   ├── photo_upload_sequence_diagram.md
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   ├── README.md
-│   └── create_test_users_ui.md
+│   └── README.md
 ├── public/
 │   ├── images/
 │   │   ├── fallback-hero.jpg
@@ -222,6 +218,11 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   ├── terms/
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
+│   │   ├── lib/
+│   │   │   ├── photos-client.ts
+│   │   │   ├── photos.server.ts
+│   │   │   ├── photos.ts
+│   │   │   └── security-settings-server.ts
 │   │   ├── marketing/
 │   │   │   ├── about/
 │   │   │   │   └── page.tsx
@@ -309,8 +310,11 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
+│   │   ├── components.css
+│   │   ├── error.tsx
 │   │   ├── globals.css
 │   │   ├── layout.tsx
+│   │   ├── loading.tsx
 │   │   ├── metadata.ts
 │   │   ├── not-found.tsx
 │   │   └── page.tsx
@@ -349,6 +353,7 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   └── security-form.tsx
 │   │   ├── gallery/
 │   │   │   ├── gallery-grid.tsx
+│   │   │   ├── index.ts
 │   │   │   ├── optimized-image.tsx
 │   │   │   ├── photo-lightbox.tsx
 │   │   │   ├── upload-dropzone.tsx
@@ -371,12 +376,12 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   └── template-preview.tsx
 │   │   ├── providers/
 │   │   │   ├── query-provider.tsx
-│   │   │   ├── react-query-devtools.tsx
 │   │   │   └── toast-provider.tsx
 │   │   ├── ui/
 │   │   │   ├── contact/
 │   │   │   │   └── page.tsx
 │   │   │   ├── accordion.tsx
+│   │   │   ├── alert-dialog.tsx
 │   │   │   ├── alert.tsx
 │   │   │   ├── aspect-ratio.tsx
 │   │   │   ├── avatar.tsx
@@ -384,11 +389,13 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   ├── button.tsx
 │   │   │   ├── calendar.tsx
 │   │   │   ├── card.tsx
+│   │   │   ├── charts.tsx
 │   │   │   ├── checkbox.tsx
 │   │   │   ├── dialog.tsx
 │   │   │   ├── dropdown-menu.tsx
 │   │   │   ├── form.tsx
 │   │   │   ├── icons.tsx
+│   │   │   ├── index.ts
 │   │   │   ├── input.tsx
 │   │   │   ├── label.tsx
 │   │   │   ├── loading-spinner.tsx
@@ -397,6 +404,7 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   ├── navigation-menu.tsx
 │   │   │   ├── newsletter-form.tsx
 │   │   │   ├── popover.tsx
+│   │   │   ├── progress.tsx
 │   │   │   ├── radio-group.tsx
 │   │   │   ├── scroll-area.tsx
 │   │   │   ├── select.tsx
@@ -415,7 +423,9 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   ├── toaster.tsx
 │   │   │   └── use-toast.ts
 │   │   ├── cookie-consent.tsx
+│   │   ├── debug-info.tsx
 │   │   ├── error-boundary.tsx
+│   │   ├── query-provider.tsx
 │   │   └── theme-provider.tsx
 │   ├── hooks/
 │   │   ├── __tests__/
@@ -444,10 +454,12 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   │   ├── photos.ts
 │   │   │   ├── run-migration.js
 │   │   │   ├── search.ts
+│   │   │   ├── server.ts
 │   │   │   ├── templates.ts
 │   │   │   ├── test-utils.ts
 │   │   │   ├── verify-schema.html
 │   │   │   └── verify-schema.js
+│   │   ├── analytics.ts
 │   │   ├── event-customization-server.ts
 │   │   ├── event-customization.ts
 │   │   ├── qr-code.ts
@@ -456,10 +468,13 @@ Generated: 2025-03-03T23:44:48.261Z
 │   │   └── utils.ts
 │   ├── store/
 │   │   ├── events-store.ts
+│   │   ├── index.ts
 │   │   └── photos-store.ts
 │   ├── types/
 │   │   ├── auth.ts
 │   │   ├── events.ts
+│   │   ├── notifications.ts
+│   │   ├── search.ts
 │   │   └── supabase.ts
 │   ├── .DS_Store
 │   ├── middleware.test.ts
@@ -502,21 +517,23 @@ Generated: 2025-03-03T23:44:48.261Z
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
+├── cloud-burst-recovery-summary.md
 ├── cloud-burst.code-workspace
 ├── components.json
 ├── eslint.config.mjs
+├── jsconfig.json
 ├── next-env.d.ts
 ├── next.config.js
 ├── package-lock.json
 ├── package.json
+├── postcss.config.js
 ├── postcss.config.mjs
-├── replit.nix
 ├── tailwind.config.ts
 ├── tsconfig.json
 ├── tsconfig.tsbuildinfo
 └── tsconfigbackup.json
 
-108 directories, 405 files
+108 directories, 422 files
 
 ```
 

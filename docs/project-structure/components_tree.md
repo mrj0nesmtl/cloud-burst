@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-03T23:44:48.356Z
+Generated: 2025-03-05T17:55:30.190Z
 
 ```
 ./src/components/
@@ -37,6 +37,7 @@ Generated: 2025-03-03T23:44:48.356Z
 │   └── security-form.tsx
 ├── gallery/
 │   ├── gallery-grid.tsx
+│   ├── index.ts
 │   ├── optimized-image.tsx
 │   ├── photo-lightbox.tsx
 │   ├── upload-dropzone.tsx
@@ -59,12 +60,12 @@ Generated: 2025-03-03T23:44:48.356Z
 │   └── template-preview.tsx
 ├── providers/
 │   ├── query-provider.tsx
-│   ├── react-query-devtools.tsx
 │   └── toast-provider.tsx
 ├── ui/
 │   ├── contact/
 │   │   └── page.tsx
 │   ├── accordion.tsx
+│   ├── alert-dialog.tsx
 │   ├── alert.tsx
 │   ├── aspect-ratio.tsx
 │   ├── avatar.tsx
@@ -72,11 +73,13 @@ Generated: 2025-03-03T23:44:48.356Z
 │   ├── button.tsx
 │   ├── calendar.tsx
 │   ├── card.tsx
+│   ├── charts.tsx
 │   ├── checkbox.tsx
 │   ├── dialog.tsx
 │   ├── dropdown-menu.tsx
 │   ├── form.tsx
 │   ├── icons.tsx
+│   ├── index.ts
 │   ├── input.tsx
 │   ├── label.tsx
 │   ├── loading-spinner.tsx
@@ -85,6 +88,7 @@ Generated: 2025-03-03T23:44:48.356Z
 │   ├── navigation-menu.tsx
 │   ├── newsletter-form.tsx
 │   ├── popover.tsx
+│   ├── progress.tsx
 │   ├── radio-group.tsx
 │   ├── scroll-area.tsx
 │   ├── select.tsx
@@ -103,10 +107,12 @@ Generated: 2025-03-03T23:44:48.356Z
 │   ├── toaster.tsx
 │   └── use-toast.ts
 ├── cookie-consent.tsx
+├── debug-info.tsx
 ├── error-boundary.tsx
+├── query-provider.tsx
 └── theme-provider.tsx
 
-13 directories, 90 files
+13 directories, 96 files
 
 ```
 

@@ -1,0 +1,697 @@
+---
+description: Backend Integration Patterns
+globs: **/api/**, **/lib/**, **/server/**, **/middleware.ts
+alwaysApply: false
+---
+# Backend Integration Patterns
+
+> **Version:** 0.7.0  
+> **Last Updated:** March 2024
+
+```json
+{
+  "description": "Backend integration patterns for Cloud Burst, including API, Security, and Supabase integration",
+  "globs": ["**/api/**", "**/lib/**", "**/server/**", "**/middleware.ts"],
+  "rules": {
+    "api": {
+      "architecture": {
+        "useRouteHandlers": true,
+        "useServerActions": true,
+        "useMiddleware": true,
+        "useSupabase": true
+      },
+      "patterns": {
+        "useRESTful": true,
+        "useTypedResponses": true,
+        "useErrorHandling": true,
+        "useValidation": true,
+        "usePagination": true,
+        "useFiltering": true,
+        "useSorting": true
+      },
+      "security": {
+        "useAuthentication": true,
+        "useAuthorization": true,
+        "useRateLimiting": true,
+        "useCORS": true,
+        "useCSRF": true,
+        "useHTTPS": true
+      },
+      "performance": {
+        "useCaching": true,
+        "useCompression": true,
+        "useETagging": true,
+        "useConditionalRequests": true
+      }
+    },
+    "security": {
+      "authentication": {
+        "useSupabaseAuth": true,
+        "useJWT": true,
+        "useSessionCookies": true,
+        "useOAuth": true,
+        "useMFA": true
+      },
+      "authorization": {
+        "useRBAC": true,
+        "useRLS": true,
+        "useMiddleware": true,
+        "useServerComponents": true
+      },
+      "dataProtection": {
+        "useEncryption": true,
+        "useSanitization": true,
+        "useValidation": true,
+        "usePreparedStatements": true
+      },
+      "webSecurity": {
+        "useCSP": true,
+        "useXSS": true,
+        "useCSRF": true,
+        "useSameSite": true,
+        "useSecureCookies": true,
+        "useHTTPSOnly": true
+      }
+    },
+    "supabase": {
+      "auth": {
+        "useSupabaseAuth": true,
+        "useServerComponentClient": true,
+        "useClientComponentClient": true,
+        "useMiddlewareClient": true
+      },
+      "database": {
+        "useTypedQueries": true,
+        "useRLS": true,
+        "useFunctions": true,
+        "useTriggers": true,
+        "useIndexes": true
+      },
+      "storage": {
+        "useBuckets": true,
+        "usePublicBuckets": true,
+        "usePrivateBuckets": true,
+        "useRLS": true
+      },
+      "realtime": {
+        "useSubscriptions": true,
+        "useChannels": true,
+        "useBroadcast": true,
+        "usePresence": true
+      }
+    }
+  }
+}
+```
+
+## API Standards
+
+### API Architecture
+
+Cloud Burst uses a hybrid API architecture combining Next.js App Router route handlers, Server Actions, and direct Supabase integration:
+
+#### Route Handlers
+
+Use route handlers for RESTful API endpoints:
+
+```typescript
+// app/api/events/route.ts
+import { NextResponse } from 'next/server';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { z } from 'zod';
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const page = parseInt(searchParams.get('page') || '1');
+  const limit = parseInt(searchParams.get('limit') || '10');
+  
+  const supabase = createRouteHandlerClient({ cookies });
+  
+  const { data, error, count } = await supabase
+    .from('events')
+    .select('*', { count: 'exact' })
+    .range((page - 1) * limit, page * limit - 1);
+    
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+  
+  return NextResponse.json({ 
+    data, 
+    pagination: {
+      page,
+      limit,
+      total: count,
+      pages: Math.ceil((count || 0) / limit)
+    }
+  });
+}
+```
+
+#### Server Actions
+
+Use Server Actions for form submissions and mutations:
+
+```typescript
+// app/actions/events.ts
+'use server'
+
+import { revalidatePath } from 'next/cache';
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { z } from 'zod';
+
+const EventSchema = z.object({
+  title: z.string().min(3).max(100),
+  description: z.string().optional(),
+  date: z.string().datetime(),
+  location: z.string().min(3).max(100),
+});
+
+export async function createEvent(formData: FormData) {
+  const supabase = createServerActionClient({ cookies });
+  
+  // Validate input
+  const result = EventSchema.safeParse({
+    title: formData.get('title'),
+    description: formData.get('description'),
+    date: formData.get('date'),
+    location: formData.get('location'),
+  });
+  
+  if (!result.success) {
+    return { error: result.error.format() };
+  }
+  
+  // Insert data
+  const { data, error } = await supabase
+    .from('events')
+    .insert(result.data)
+    .select()
+    .single();
+    
+  if (error) {
+    return { error: error.message };
+  }
+  
+  // Revalidate cache
+  revalidatePath('/events');
+  
+  return { data };
+}
+```
+
+### API Patterns
+
+#### RESTful Design
+
+- Use standard HTTP methods (GET, POST, PUT, DELETE)
+- Use appropriate status codes
+- Use consistent URL patterns
+- Use query parameters for filtering, sorting, and pagination
+
+#### Error Handling
+
+- Use consistent error response format
+- Include error codes and messages
+- Handle expected and unexpected errors
+- Log errors for debugging
+
+```typescript
+// Example error response
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid input data",
+    "details": {
+      "title": ["Title is required", "Title must be at least 3 characters"]
+    }
+  }
+}
+```
+
+#### Validation
+
+- Use Zod for input validation
+- Validate all user inputs
+- Return descriptive validation errors
+- Use consistent validation patterns
+
+## Security Standards
+
+### Authentication
+
+Cloud Burst uses Supabase Auth for authentication:
+
+#### Server-Side Authentication
+
+```typescript
+// Server Component
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+export default async function ProtectedPage() {
+  const supabase = createServerComponentClient({ cookies });
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session) {
+    redirect('/login');
+  }
+  
+  // Protected content
+}
+```
+
+#### Client-Side Authentication
+
+```typescript
+// Client Component
+'use client'
+
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useState } from 'react';
+
+export function LoginForm() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  
+  const supabase = createClientComponentClient();
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    
+    if (error) {
+      setError(error.message);
+    }
+  };
+  
+  // Form implementation
+}
+```
+
+#### Middleware Authentication
+
+```typescript
+// middleware.ts
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
+  const supabase = createMiddlewareClient({ req, res });
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  // Protected routes
+  if (req.nextUrl.pathname.startsWith('/protected') && !session) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+  
+  // Admin routes
+  if (req.nextUrl.pathname.startsWith('/admin')) {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    // Check if user has admin role
+    if (!user || user.user_metadata.role !== 'admin') {
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
+    }
+  }
+  
+  return res;
+}
+
+export const config = {
+  matcher: ['/protected/:path*', '/admin/:path*'],
+};
+```
+
+### Authorization
+
+Cloud Burst uses a combination of RBAC and Supabase RLS for authorization:
+
+#### Role-Based Access Control
+
+```typescript
+// Types
+export enum UserRole {
+  ADMIN = 'admin',
+  ORGANIZER = 'organizer',
+  PHOTOGRAPHER = 'photographer',
+  USER = 'user',
+}
+
+// Check user role
+export function hasRole(user: User, role: UserRole): boolean {
+  return user?.user_metadata?.role === role;
+}
+
+// Component with role check
+export function AdminOnly({ children }: { children: React.ReactNode }) {
+  const { user } = useUser();
+  
+  if (!user || !hasRole(user, UserRole.ADMIN)) {
+    return <AccessDenied />;
+  }
+  
+  return <>{children}</>;
+}
+```
+
+#### Row-Level Security
+
+```sql
+-- Example RLS policy for events table
+CREATE POLICY "Users can view their own events"
+  ON events
+  FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can create their own events"
+  ON events
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own events"
+  ON events
+  FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own events"
+  ON events
+  FOR DELETE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Admins can do everything"
+  ON events
+  USING (
+    EXISTS (
+      SELECT 1 FROM users
+      WHERE users.id = auth.uid()
+      AND users.role = 'admin'
+    )
+  );
+```
+
+### Data Protection
+
+- Use HTTPS for all communications
+- Use prepared statements for database queries
+- Sanitize user inputs
+- Validate data with Zod
+- Use encryption for sensitive data
+
+### Web Security
+
+- Implement Content Security Policy
+- Prevent XSS attacks
+- Use CSRF protection
+- Set SameSite cookies
+- Use secure cookies
+- Implement rate limiting
+
+## Supabase Integration
+
+### Supabase Auth
+
+Cloud Burst uses Supabase Auth for authentication:
+
+```typescript
+// Auth hooks
+export function useAuth() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClientComponentClient();
+  
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
+    );
+    
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
+  
+  return { user, loading };
+}
+```
+
+### Supabase Database
+
+Cloud Burst uses Supabase Database with typed queries:
+
+```typescript
+// Typed database queries
+import { Database } from '@/types/supabase';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+
+export function useEvents() {
+  const supabase = createClientComponentClient<Database>();
+  
+  const fetchEvents = async () => {
+    const { data, error } = await supabase
+      .from('events')
+      .select('*')
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      throw error;
+    }
+    
+    return data;
+  };
+  
+  return { fetchEvents };
+}
+```
+
+### Supabase Storage
+
+Cloud Burst uses Supabase Storage for file uploads:
+
+```typescript
+// File upload
+export async function uploadEventImage(
+  eventId: string,
+  file: File
+): Promise<string> {
+  const supabase = createClientComponentClient();
+  
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${eventId}/${Date.now()}.${fileExt}`;
+  
+  const { error } = await supabase.storage
+    .from('event-images')
+    .upload(fileName, file);
+    
+  if (error) {
+    throw error;
+  }
+  
+  const { data } = supabase.storage
+    .from('event-images')
+    .getPublicUrl(fileName);
+    
+  return data.publicUrl;
+}
+```
+
+### Supabase Realtime
+
+Cloud Burst uses Supabase Realtime for live updates:
+
+```typescript
+// Realtime subscriptions
+export function useEventComments(eventId: string) {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const supabase = createClientComponentClient();
+  
+  useEffect(() => {
+    // Initial fetch
+    const fetchComments = async () => {
+      const { data, error } = await supabase
+        .from('comments')
+        .select('*')
+        .eq('event_id', eventId)
+        .order('created_at', { ascending: true });
+        
+      if (!error && data) {
+        setComments(data);
+      }
+    };
+    
+    fetchComments();
+    
+    // Realtime subscription
+    const channel = supabase
+      .channel(`comments:event_id=eq.${eventId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'comments',
+          filter: `event_id=eq.${eventId}`,
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            setComments((prev) => [...prev, payload.new as Comment]);
+          } else if (payload.eventType === 'UPDATE') {
+            setComments((prev) =>
+              prev.map((comment) =>
+                comment.id === payload.new.id
+                  ? (payload.new as Comment)
+                  : comment
+              )
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setComments((prev) =>
+              prev.filter((comment) => comment.id !== payload.old.id)
+            );
+          }
+        }
+      )
+      .subscribe();
+      
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [eventId, supabase]);
+  
+  return comments;
+}
+```
+
+## Examples
+
+### API Route Handler Example
+
+```typescript
+// app/api/photos/[id]/route.ts
+import { NextResponse } from 'next/server';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const supabase = createRouteHandlerClient({ cookies });
+  
+  const { data, error } = await supabase
+    .from('photos')
+    .select('*')
+    .eq('id', params.id)
+    .single();
+    
+  if (error) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: error.code === 'PGRST116' ? 404 : 500 }
+    );
+  }
+  
+  return NextResponse.json({ data });
+}
+```
+
+### Server Action Example
+
+```typescript
+// app/actions/photos.ts
+'use server'
+
+import { revalidatePath } from 'next/cache';
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { z } from 'zod';
+
+const PhotoSchema = z.object({
+  event_id: z.string().uuid(),
+  title: z.string().min(3).max(100),
+  description: z.string().optional(),
+  url: z.string().url(),
+});
+
+export async function createPhoto(formData: FormData) {
+  const supabase = createServerActionClient({ cookies });
+  
+  // Get current user
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session) {
+    return { error: 'Unauthorized' };
+  }
+  
+  // Validate input
+  const result = PhotoSchema.safeParse({
+    event_id: formData.get('event_id'),
+    title: formData.get('title'),
+    description: formData.get('description'),
+    url: formData.get('url'),
+  });
+  
+  if (!result.success) {
+    return { error: result.error.format() };
+  }
+  
+  // Insert data
+  const { data, error } = await supabase
+    .from('photos')
+    .insert({
+      ...result.data,
+      user_id: session.user.id,
+    })
+    .select()
+    .single();
+    
+  if (error) {
+    return { error: error.message };
+  }
+  
+  // Revalidate cache
+  revalidatePath(`/events/${result.data.event_id}`);
+  
+  return { data };
+}
+```
+
+### Protected Route Example
+
+```typescript
+// app/protected/layout.tsx
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+export const dynamic = 'force-dynamic';
+
+export default async function ProtectedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = createServerComponentClient({ cookies });
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session) {
+    redirect('/login');
+  }
+  
+  return <div className="protected-layout">{children}</div>;
+} 

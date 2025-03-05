@@ -1,6 +1,7 @@
 ---
 description: React Component Standards for Cloud Burst
 globs: src/**/*.tsx", "src/**/*.ts
+alwaysApply: false
 ---
 # React Component Rules
 

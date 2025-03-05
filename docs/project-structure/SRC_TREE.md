@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-03T23:44:48.283Z
+Generated: 2025-03-05T17:55:30.109Z
 
 ```
 ./src/
@@ -61,6 +61,11 @@ Generated: 2025-03-03T23:44:48.283Z
 │   │   ├── terms/
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
+│   ├── lib/
+│   │   ├── photos-client.ts
+│   │   ├── photos.server.ts
+│   │   ├── photos.ts
+│   │   └── security-settings-server.ts
 │   ├── marketing/
 │   │   ├── about/
 │   │   │   └── page.tsx
@@ -148,8 +153,11 @@ Generated: 2025-03-03T23:44:48.283Z
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
+│   ├── components.css
+│   ├── error.tsx
 │   ├── globals.css
 │   ├── layout.tsx
+│   ├── loading.tsx
 │   ├── metadata.ts
 │   ├── not-found.tsx
 │   └── page.tsx
@@ -188,6 +196,7 @@ Generated: 2025-03-03T23:44:48.283Z
 │   │   └── security-form.tsx
 │   ├── gallery/
 │   │   ├── gallery-grid.tsx
+│   │   ├── index.ts
 │   │   ├── optimized-image.tsx
 │   │   ├── photo-lightbox.tsx
 │   │   ├── upload-dropzone.tsx
@@ -210,12 +219,12 @@ Generated: 2025-03-03T23:44:48.283Z
 │   │   └── template-preview.tsx
 │   ├── providers/
 │   │   ├── query-provider.tsx
-│   │   ├── react-query-devtools.tsx
 │   │   └── toast-provider.tsx
 │   ├── ui/
 │   │   ├── contact/
 │   │   │   └── page.tsx
 │   │   ├── accordion.tsx
+│   │   ├── alert-dialog.tsx
 │   │   ├── alert.tsx
 │   │   ├── aspect-ratio.tsx
 │   │   ├── avatar.tsx
@@ -223,11 +232,13 @@ Generated: 2025-03-03T23:44:48.283Z
 │   │   ├── button.tsx
 │   │   ├── calendar.tsx
 │   │   ├── card.tsx
+│   │   ├── charts.tsx
 │   │   ├── checkbox.tsx
 │   │   ├── dialog.tsx
 │   │   ├── dropdown-menu.tsx
 │   │   ├── form.tsx
 │   │   ├── icons.tsx
+│   │   ├── index.ts
 │   │   ├── input.tsx
 │   │   ├── label.tsx
 │   │   ├── loading-spinner.tsx
@@ -236,6 +247,7 @@ Generated: 2025-03-03T23:44:48.283Z
 │   │   ├── navigation-menu.tsx
 │   │   ├── newsletter-form.tsx
 │   │   ├── popover.tsx
+│   │   ├── progress.tsx
 │   │   ├── radio-group.tsx
 │   │   ├── scroll-area.tsx
 │   │   ├── select.tsx
@@ -254,7 +266,9 @@ Generated: 2025-03-03T23:44:48.283Z
 │   │   ├── toaster.tsx
 │   │   └── use-toast.ts
 │   ├── cookie-consent.tsx
+│   ├── debug-info.tsx
 │   ├── error-boundary.tsx
+│   ├── query-provider.tsx
 │   └── theme-provider.tsx
 ├── hooks/
 │   ├── __tests__/
@@ -283,10 +297,12 @@ Generated: 2025-03-03T23:44:48.283Z
 │   │   ├── photos.ts
 │   │   ├── run-migration.js
 │   │   ├── search.ts
+│   │   ├── server.ts
 │   │   ├── templates.ts
 │   │   ├── test-utils.ts
 │   │   ├── verify-schema.html
 │   │   └── verify-schema.js
+│   ├── analytics.ts
 │   ├── event-customization-server.ts
 │   ├── event-customization.ts
 │   ├── qr-code.ts
@@ -295,16 +311,19 @@ Generated: 2025-03-03T23:44:48.283Z
 │   └── utils.ts
 ├── store/
 │   ├── events-store.ts
+│   ├── index.ts
 │   └── photos-store.ts
 ├── types/
 │   ├── auth.ts
 │   ├── events.ts
+│   ├── notifications.ts
+│   ├── search.ts
 │   └── supabase.ts
 ├── .DS_Store
 ├── middleware.test.ts
 └── middleware.ts
 
-85 directories, 216 files
+86 directories, 234 files
 
 ```
 

@@ -16,7 +16,7 @@
 # Required Configuration [Beta]
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_SITE_URL=https://cloudburst-beta.replit.app
+NEXT_PUBLIC_SITE_URL=https://cb--beta.replit.app
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 # System Configuration

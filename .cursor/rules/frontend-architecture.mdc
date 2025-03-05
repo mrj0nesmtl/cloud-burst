@@ -1,0 +1,856 @@
+---
+description: Frontend Architecture Guidelines for Cloud Burst
+globs: **/*.tsx, **/*.jsx, **/components/**, **/hooks/**, **/store/**, **/styles/**
+alwaysApply: false
+---
+# Frontend Architecture Guidelines
+
+> **Version:** 0.7.0  
+> **Last Updated:** March 2024
+
+```json
+{
+  "description": "Frontend architecture guidelines for Cloud Burst, including React Components, State Management, and Accessibility",
+  "globs": ["**/*.tsx", "**/*.jsx", "**/components/**", "**/hooks/**", "**/store/**", "**/styles/**"],
+  "rules": {
+    "reactComponents": {
+      "architecture": {
+        "useAtomicDesign": true,
+        "componentTypes": ["atoms", "molecules", "organisms", "templates", "pages"],
+        "separateClientServer": true,
+        "useServerComponents": true,
+        "useClientComponents": true
+      },
+      "structure": {
+        "useDirectoryStructure": true,
+        "colocateTests": true,
+        "colocateStyles": true,
+        "colocateTypes": true,
+        "useIndexExports": true
+      },
+      "patterns": {
+        "useComposition": true,
+        "useRenderProps": true,
+        "useHooks": true,
+        "useContextAPI": true,
+        "useMemo": true,
+        "useCallback": true
+      },
+      "styling": {
+        "useTailwind": true,
+        "useShadcn": true,
+        "useCSS": false,
+        "useSass": false,
+        "useStyledComponents": false,
+        "useEmotionCSS": false
+      }
+    },
+    "stateManagement": {
+      "global": {
+        "useZustand": true,
+        "useContext": true,
+        "useRedux": false,
+        "useRecoil": false,
+        "useJotai": false
+      },
+      "local": {
+        "useState": true,
+        "useReducer": true
+      },
+      "server": {
+        "useTanStackQuery": true,
+        "useSupabase": true,
+        "useServerActions": true
+      },
+      "patterns": {
+        "useSlices": true,
+        "useSelectors": true,
+        "useImmer": false,
+        "useAtoms": false
+      },
+      "persistence": {
+        "useLocalStorage": true,
+        "useSessionStorage": true,
+        "useCookies": true,
+        "useSupabaseStorage": true
+      }
+    },
+    "accessibility": {
+      "standards": {
+        "wcag": "2.1 AA",
+        "aria": true,
+        "semanticHTML": true,
+        "keyboardNavigation": true,
+        "screenReaders": true,
+        "colorContrast": true,
+        "reducedMotion": true,
+        "focusManagement": true,
+        "formLabels": true,
+        "imageAlts": true,
+        "tableHeaders": true
+      },
+      "testing": {
+        "useAxe": true,
+        "useJest": true,
+        "useCypress": true,
+        "usePlaywright": true,
+        "useManualTesting": true,
+        "useScreenReaderTesting": true
+      },
+      "components": {
+        "useAccessibleForms": true,
+        "useAccessibleNavigation": true,
+        "useAccessibleModals": true,
+        "useAccessibleTables": true,
+        "useAccessibleImages": true,
+        "useAccessibleButtons": true,
+        "useAccessibleLinks": true,
+        "useAccessibleTooltips": true,
+        "useAccessibleDialogs": true,
+        "useAccessibleMenus": true
+      },
+      "patterns": {
+        "useSkipLinks": true,
+        "useFocusTrap": true,
+        "useAnnouncements": true,
+        "useKeyboardShortcuts": true,
+        "useResponsiveDesign": true,
+        "useHighContrastMode": true,
+        "useDarkMode": true
+      }
+    }
+  }
+}
+```
+
+## React Component Standards
+
+> **Note:** For detailed React component standards, refer to the [React Component Standards](mdc:react-components.mdc) rule file.
+
+### Component Architecture
+
+Cloud Burst follows the Atomic Design methodology for component organization:
+
+#### Atomic Design Structure
+
+- **Atoms**: Basic UI components (buttons, inputs, icons) in `src/components/ui`
+- **Molecules**: Simple combinations of atoms (form fields, cards) in `src/components/common`
+- **Organisms**: Complex UI sections (navigation, forms) in `src/components/features`
+- **Templates**: Page layouts in `src/components/layouts`
+- **Pages**: Complete pages with data fetching in `src/app`
+
+#### Server vs Client Components
+
+- Use Server Components by default
+- Add `'use client'` directive only when necessary for:
+  - Interactive components that use React hooks
+  - Components that use browser-only APIs
+  - Components that use event handlers
+
+```tsx
+// Server Component (default)
+export default async function ProductList() {
+  const products = await fetchProducts();
+  return <ProductGrid products={products} />;
+}
+
+// Client Component
+'use client'
+import { useState } from 'react';
+
+export function ProductFilter({ onChange }) {
+  const [filter, setFilter] = useState('');
+  // Implementation
+}
+```
+
+### Component Structure
+
+- Organize components in directories with related files
+- Co-locate tests, types, and utilities with components
+- Use index files for clean exports
+
+```
+components/
+  Button/
+    Button.tsx
+    Button.test.tsx
+    Button.types.ts
+    index.ts
+```
+
+### Component Patterns
+
+- Use composition over inheritance
+- Use render props for flexible components
+- Extract logic to custom hooks
+- Use Context API for shared state
+- Use `useMemo` and `useCallback` for performance optimization
+
+### Component Styling
+
+- Use Tailwind CSS for styling
+- Use Shadcn/ui for component library
+- Follow utility-first approach
+- Use CSS variables for theming
+
+## State Management Standards
+
+### Global State
+
+Cloud Burst uses Zustand as the primary global state management solution:
+
+```typescript
+// Store definition
+import { create } from 'zustand';
+
+interface UserStore {
+  user: User | null;
+  isLoading: boolean;
+  setUser: (user: User | null) => void;
+  clearUser: () => void;
+}
+
+export const useUserStore = create<UserStore>((set) => ({
+  user: null,
+  isLoading: true,
+  setUser: (user) => set({ user, isLoading: false }),
+  clearUser: () => set({ user: null, isLoading: false }),
+}));
+```
+
+### Local State
+
+- Use `useState` for simple component state
+- Use `useReducer` for complex component state
+- Extract state logic to custom hooks
+
+### Server State
+
+- Use TanStack Query for server state management
+- Configure with proper caching and revalidation
+- Use Supabase for real-time data
+
+```typescript
+// TanStack Query example
+import { useQuery } from '@tanstack/react-query';
+
+export function useUserData(userId: string) {
+  return useQuery({
+    queryKey: ['user', userId],
+    queryFn: () => fetchUser(userId),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+```
+
+### State Persistence
+
+- Use local storage for persistent user preferences
+- Use cookies for authentication state
+- Use Supabase for server-side persistence
+
+## Accessibility Standards
+
+Cloud Burst follows WCAG 2.1 AA standards for accessibility:
+
+### Core Requirements
+
+- Semantic HTML structure
+- Proper ARIA attributes
+- Keyboard navigation support
+- Screen reader compatibility
+- Color contrast compliance
+- Reduced motion support
+- Focus management
+- Form labels and descriptions
+- Image alt text
+- Table headers and captions
+
+### Implementation Guidelines
+
+#### Semantic HTML
+
+Use semantic HTML elements to provide meaning and structure:
+
+```html
+<!-- Good: Semantic HTML -->
+<header>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <section>
+    <h1>Welcome to Cloud Burst</h1>
+    <p>Event photography made simple.</p>
+  </section>
+</main>
+<footer>
+  <p>&copy; 2024 Cloud Burst</p>
+</footer>
+
+<!-- Bad: Non-semantic HTML -->
+<div class="header">
+  <div class="nav">
+    <div class="nav-items">
+      <div><a href="/">Home</a></div>
+      <div><a href="/about">About</a></div>
+    </div>
+  </div>
+</div>
+```
+
+#### ARIA Attributes
+
+Use ARIA attributes to enhance accessibility when HTML semantics are not sufficient:
+
+```tsx
+// Good: ARIA attributes
+<button
+  aria-expanded={isOpen}
+  aria-controls="dropdown-menu"
+  onClick={toggleMenu}
+>
+  Menu
+</button>
+<div
+  id="dropdown-menu"
+  role="menu"
+  hidden={!isOpen}
+>
+  {/* Menu items */}
+</div>
+```
+
+#### Keyboard Navigation
+
+Ensure all interactive elements are keyboard accessible:
+
+```tsx
+// Good: Keyboard navigation
+function KeyboardNavExample() {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const items = ['Item 1', 'Item 2', 'Item 3'];
+  
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      setSelectedIndex((prev) => Math.min(prev + 1, items.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      setSelectedIndex((prev) => Math.max(prev - 1, 0));
+    }
+  };
+  
+  return (
+    <ul
+      role="listbox"
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      aria-activedescendant={`item-${selectedIndex}`}
+    >
+      {items.map((item, index) => (
+        <li
+          key={index}
+          id={`item-${index}`}
+          role="option"
+          aria-selected={index === selectedIndex}
+          tabIndex={-1}
+        >
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+#### Forms
+
+Ensure forms are accessible:
+
+```tsx
+// Good: Accessible form
+function AccessibleForm() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          aria-required="true"
+          aria-invalid={!name}
+        />
+      </div>
+      
+      <div>
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          aria-required="true"
+          aria-invalid={error ? true : false}
+          aria-describedby={error ? "email-error" : undefined}
+        />
+        {error && (
+          <p id="email-error" className="error" aria-live="polite">
+            {error}
+          </p>
+        )}
+      </div>
+      
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+#### Images
+
+Provide alt text for images:
+
+```tsx
+// Good: Accessible images
+<img src="/logo.png" alt="Cloud Burst Logo" />
+
+// Decorative image
+<img src="/decorative.png" alt="" role="presentation" />
+
+// Complex image with longer description
+<figure>
+  <img 
+    src="/chart.png" 
+    alt="User growth chart" 
+    aria-describedby="chart-description" 
+  />
+  <figcaption id="chart-description">
+    Chart showing user growth from January to December 2023, 
+    with a 200% increase in Q3.
+  </figcaption>
+</figure>
+```
+
+#### Focus Management
+
+Manage focus for interactive components:
+
+```tsx
+// Good: Focus management
+function Modal({ isOpen, onClose, title, children }) {
+  const modalRef = useRef(null);
+  
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      // Save previous focus
+      const previousFocus = document.activeElement;
+      
+      // Focus the modal
+      modalRef.current.focus();
+      
+      return () => {
+        // Restore focus when modal closes
+        if (previousFocus) {
+          (previousFocus as HTMLElement).focus();
+        }
+      };
+    }
+  }, [isOpen]);
+  
+  if (!isOpen) return null;
+  
+  return (
+    <div
+      ref={modalRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      tabIndex={-1}
+    >
+      <h2 id="modal-title">{title}</h2>
+      <div>{children}</div>
+      <button onClick={onClose}>Close</button>
+    </div>
+  );
+}
+```
+
+#### Motion and Animation
+
+Respect user preferences for reduced motion:
+
+```css
+/* CSS for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+```tsx
+// React component respecting reduced motion
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+
+function AnimatedComponent() {
+  const prefersReducedMotion = useReducedMotion();
+  
+  const animationStyle = prefersReducedMotion
+    ? { transition: 'none' }
+    : { transition: 'transform 0.3s ease-in-out' };
+  
+  return (
+    <div style={animationStyle}>
+      {/* Component content */}
+    </div>
+  );
+}
+```
+
+### Accessibility Testing
+
+Cloud Burst uses a combination of automated and manual testing for accessibility:
+
+#### Automated Testing
+
+- **Axe**: Integrated into component tests
+- **Jest**: Unit tests for accessibility features
+- **Cypress**: Integration tests for accessibility
+- **Lighthouse**: Performance and accessibility audits
+
+```typescript
+// Example of accessibility testing with Jest and Axe
+import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
+import { Button } from './Button';
+
+describe('Button', () => {
+  it('should not have accessibility violations', async () => {
+    const { container } = render(<Button>Click me</Button>);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+});
+```
+
+#### Manual Testing
+
+- Keyboard navigation testing
+- Screen reader testing
+- High contrast mode testing
+- Zoom testing
+- Mobile accessibility testing
+
+### Accessibility Patterns
+
+#### Skip Links
+
+Provide skip links for keyboard users:
+
+```tsx
+function SkipLink() {
+  return (
+    <a
+      href="#main-content"
+      className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:p-4 focus:bg-white focus:text-black"
+    >
+      Skip to main content
+    </a>
+  );
+}
+```
+
+#### Focus Trap
+
+Trap focus within modals and dialogs:
+
+```tsx
+import { useEffect } from 'react';
+import FocusTrap from 'focus-trap-react';
+
+function AccessibleModal({ isOpen, onClose, children }) {
+  useEffect(() => {
+    if (isOpen) {
+      // Disable scrolling on body
+      document.body.style.overflow = 'hidden';
+      
+      // Handle escape key
+      const handleEscape = (e) => {
+        if (e.key === 'Escape') onClose();
+      };
+      
+      document.addEventListener('keydown', handleEscape);
+      
+      return () => {
+        // Re-enable scrolling
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', handleEscape);
+      };
+    }
+  }, [isOpen, onClose]);
+  
+  if (!isOpen) return null;
+  
+  return (
+    <FocusTrap>
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="fixed inset-0 z-50 flex items-center justify-center"
+      >
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50"
+          onClick={onClose}
+        />
+        <div className="bg-white p-6 rounded-lg z-10">
+          {children}
+          <button
+            onClick={onClose}
+            className="mt-4 px-4 py-2 bg-gray-200 rounded"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </FocusTrap>
+  );
+}
+```
+
+#### Live Regions
+
+Use live regions for dynamic content:
+
+```tsx
+function Notification({ message, type }) {
+  return (
+    <div
+      role="status"
+      aria-live={type === 'error' ? 'assertive' : 'polite'}
+      className={`notification ${type}`}
+    >
+      {message}
+    </div>
+  );
+}
+```
+
+## Examples
+
+### Server Component Example
+
+```tsx
+// app/products/page.tsx
+import { ProductGrid } from '@/components/products/ProductGrid';
+import { fetchProducts } from '@/lib/products';
+
+export default async function ProductsPage() {
+  const products = await fetchProducts();
+  return (
+    <main>
+      <h1>Products</h1>
+      <ProductGrid products={products} />
+    </main>
+  );
+}
+```
+
+### Client Component Example
+
+```tsx
+// components/products/ProductFilter.tsx
+'use client'
+
+import { useState, useCallback } from 'react';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+
+interface ProductFilterProps {
+  onFilterChange: (filter: string) => void;
+}
+
+export function ProductFilter({ onFilterChange }: ProductFilterProps) {
+  const [filter, setFilter] = useState('');
+  
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    onFilterChange(filter);
+  }, [filter, onFilterChange]);
+  
+  return (
+    <form onSubmit={handleSubmit} className="flex gap-2">
+      <Input
+        type="text"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        placeholder="Search products..."
+        aria-label="Search products"
+      />
+      <Button type="submit">Search</Button>
+    </form>
+  );
+}
+```
+
+### Zustand Store Example
+
+```typescript
+// store/cart.ts
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+interface CartStore {
+  items: CartItem[];
+  addItem: (item: CartItem) => void;
+  removeItem: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
+  total: number;
+}
+
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      addItem: (item) => set((state) => {
+        const existingItem = state.items.find((i) => i.id === item.id);
+        if (existingItem) {
+          return {
+            items: state.items.map((i) => 
+              i.id === item.id 
+                ? { ...i, quantity: i.quantity + 1 }
+                : i
+            ),
+          };
+        }
+        return { items: [...state.items, { ...item, quantity: 1 }] };
+      }),
+      removeItem: (id) => set((state) => ({
+        items: state.items.filter((i) => i.id !== id),
+      })),
+      updateQuantity: (id, quantity) => set((state) => ({
+        items: state.items.map((i) => 
+          i.id === id ? { ...i, quantity } : i
+        ),
+      })),
+      clearCart: () => set({ items: [] }),
+      get total() {
+        return get().items.reduce(
+          (sum, item) => sum + item.price * item.quantity, 
+          0
+        );
+      },
+    }),
+    {
+      name: 'cart-storage',
+    }
+  )
+);
+```
+
+### Accessible Component Example
+
+```tsx
+// components/ui/Modal.tsx
+'use client'
+
+import { useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { XIcon } from 'lucide-react';
+import { Button } from './Button';
+import FocusTrap from 'focus-trap-react';
+
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+}
+
+export function Modal({ isOpen, onClose, title, children }: ModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  
+  useEffect(() => {
+    if (isOpen) {
+      // Save current focus
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      
+      // Handle escape key
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      
+      document.addEventListener('keydown', handleEscape);
+      
+      // Disable body scroll
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        document.removeEventListener('keydown', handleEscape);
+        document.body.style.overflow = '';
+        
+        // Restore focus
+        if (previousFocusRef.current) {
+          previousFocusRef.current.focus();
+        }
+      };
+    }
+  }, [isOpen, onClose]);
+  
+  if (!isOpen) return null;
+  
+  return createPortal(
+    <FocusTrap>
+      <div
+        className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+        onClick={onClose}
+        role="presentation"
+      >
+        <div
+          ref={modalRef}
+          className="bg-white rounded-lg p-6 max-w-md w-full"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex justify-between items-center mb-4">
+            <h2 id="modal-title" className="text-xl font-bold">{title}</h2>
+            <Button
+              onClick={onClose}
+              aria-label="Close modal"
+              variant="ghost"
+              size="icon"
+            >
+              <XIcon />
+            </Button>
+          </div>
+          <div>{children}</div>
+        </div>
+      </div>
+    </FocusTrap>,
+    document.body
+  );
+}
+``` 

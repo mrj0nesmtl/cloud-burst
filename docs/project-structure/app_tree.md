@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-03-03T23:44:48.343Z
+Generated: 2025-03-05T17:55:30.174Z
 
 ```
 ./src/app/
@@ -60,6 +60,11 @@ Generated: 2025-03-03T23:44:48.343Z
 │   ├── terms/
 │   │   └── page.tsx
 │   └── layout.tsx
+├── lib/
+│   ├── photos-client.ts
+│   ├── photos.server.ts
+│   ├── photos.ts
+│   └── security-settings-server.ts
 ├── marketing/
 │   ├── about/
 │   │   └── page.tsx
@@ -147,13 +152,16 @@ Generated: 2025-03-03T23:44:48.343Z
 │   │   ├── loading.tsx
 │   │   └── page.tsx
 │   └── layout.tsx
+├── components.css
+├── error.tsx
 ├── globals.css
 ├── layout.tsx
+├── loading.tsx
 ├── metadata.ts
 ├── not-found.tsx
 └── page.tsx
 
-61 directories, 89 files
+62 directories, 96 files
 
 ```
 

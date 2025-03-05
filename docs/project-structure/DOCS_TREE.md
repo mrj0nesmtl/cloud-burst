@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-03T23:44:48.296Z
+Generated: 2025-03-05T17:55:30.123Z
 
 ```
 ./docs/
@@ -8,11 +8,10 @@ Generated: 2025-03-03T23:44:48.296Z
 │   ├── security.md
 │   └── system_architecture_flowchart.md
 ├── deployment/
-│   ├── BUILD_CONFIGURATION.md
-│   ├── ENVIRONMENT_SETUP.md
-│   ├── README.md
-│   ├── REPLIT_DEPLOYMENT.md
-│   └── quick_start.md
+│   ├── deployment_fixes.md
+│   ├── deployment_guides.md
+│   ├── replit-quick-reference.md
+│   └── replit_deployment.md
 ├── design/
 │   ├── UI_components.md
 │   ├── dashboard_components.md
@@ -37,6 +36,11 @@ Generated: 2025-03-03T23:44:48.296Z
 │   │   ├── session_15_kickoff.md
 │   │   ├── session_16_checklist.md
 │   │   ├── session_16_kickoff.md
+│   │   ├── session_17_checklist.md
+│   │   ├── session_17_kickoff.md
+│   │   ├── session_18_checklist.md
+│   │   ├── session_18_kickoff.md
+│   │   ├── session_19_emergency.md
 │   │   ├── session_1_prompt.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
@@ -45,13 +49,12 @@ Generated: 2025-03-03T23:44:48.296Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
+│   ├── DEPLOYMENT_FIX_PLAN.md
+│   ├── SESSION_19_KICKOFF.md
+│   ├── SESSION_19_NARRATIVE.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_17_checklist.md
-│   ├── session_17_kickoff.md
-│   ├── session_18_checklist.md
-│   ├── session_18_kickoff.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
@@ -64,39 +67,35 @@ Generated: 2025-03-03T23:44:48.296Z
 │   ├── roadmap.md
 │   └── statement_of_work.md
 ├── project-structure/
+│   ├── DOCS_TREE.md
+│   ├── FULL_TREE.md
+│   ├── GITHUB_TREE.md
 │   ├── README.md
+│   ├── SRC_TREE.md
 │   ├── app_tree.md
 │   ├── architecture_tree.md
 │   ├── components_tree.md
 │   ├── cursor_tree.md
 │   ├── development_tree.md
-│   ├── docs_tree.md
-│   ├── full_tree.md
-│   ├── github_tree.md
 │   ├── hooks_tree.md
 │   ├── lib_tree.md
 │   ├── planning_tree.md
 │   ├── public_tree.md
-│   ├── src_tree.md
 │   ├── store_tree.md
 │   └── types_tree.md
 ├── rbac/
 │   ├── README.md
-│   ├── role-based-access-control.md
-│   ├── role_based_access_updated.md
-│   ├── role_permissions.md
-│   └── role_permissions_updated.md
-├── sessions/
+│   └── role_based_access_control.md
 ├── user-flows/
+│   ├── create_test_users_ui.md
 │   ├── invited_user_flow_design_document.md
 │   ├── photo_upload_sequence_diagram.md
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store
-├── README.md
-└── create_test_users_ui.md
+└── README.md
 
-11 directories, 82 files
+10 directories, 82 files
 
 ```
 
