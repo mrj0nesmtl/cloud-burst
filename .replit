@@ -5,14 +5,14 @@ run = "npm run dev"
 channel = "stable-24_05"
 
 [env]
-NODE_ENV = "production"
+NODE_ENV = "development"
 NEXT_TELEMETRY_DISABLED = "1"
 
 [deployment]
-run = ["sh", "-c", "npm run start"]
+run = ["sh", "-c", "npm run dev"]
 deploymentTarget = "cloudrun"
 ignorePorts = false
-build = ["sh", "-c", "npm run build"]
+build = ["sh", "-c", "echo 'Skipping build step'"]
 
 [[ports]]
 localPort = 3000

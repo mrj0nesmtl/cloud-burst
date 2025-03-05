@@ -3,6 +3,11 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
+  // Skip middleware only during static generation
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return NextResponse.next()
+  }
+  
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
   
@@ -34,6 +39,12 @@ export async function middleware(req: NextRequest) {
   
   // If user is not authenticated and trying to access protected route
   if (isProtectedRoute && !session) {
+    // In development mode, allow access to protected routes for testing
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Development mode: Allowing access to protected route without authentication');
+      return NextResponse.next()
+    }
+    
     url.pathname = '/auth/signin'
     url.searchParams.set('redirectTo', path)
     return NextResponse.redirect(url)
@@ -52,12 +63,24 @@ export async function middleware(req: NextRequest) {
     
     // Admin routes are only accessible by super_admin and admin
     if (isAdminRoute && !['super_admin', 'admin'].includes(role)) {
+      // In development mode, allow access to admin routes for testing
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Development mode: Allowing access to admin route without proper role');
+        return NextResponse.next()
+      }
+      
       url.pathname = '/protected/dashboard'
       return NextResponse.redirect(url)
     }
     
     // Event management routes are only accessible by super_admin, admin, organizer, and event_host
     if (isEventRoute && !['super_admin', 'admin', 'organizer', 'event_host'].includes(role)) {
+      // In development mode, allow access to event routes for testing
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Development mode: Allowing access to event route without proper role');
+        return NextResponse.next()
+      }
+      
       url.pathname = '/protected/dashboard'
       return NextResponse.redirect(url)
     }

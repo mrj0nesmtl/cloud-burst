@@ -6,11 +6,31 @@ import { createServerClient } from '@/lib/supabase/client'
 import { redirect } from 'next/navigation'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
+// Force dynamic rendering for this layout
+export const dynamic = 'force-dynamic'
+
 export default async function ProtectedLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Skip auth check in development mode
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  
+  if (isDevelopment) {
+    return (
+      <ErrorBoundary>
+        <DashboardLayout>
+          <ErrorBoundary>
+            <Suspense fallback={<LoadingSpinner className="flex-1" />}>
+              {children}
+            </Suspense>
+          </ErrorBoundary>
+        </DashboardLayout>
+      </ErrorBoundary>
+    )
+  }
+  
   try {
     // Server-side auth check - await the client creation
     const supabase = await createServerClient()

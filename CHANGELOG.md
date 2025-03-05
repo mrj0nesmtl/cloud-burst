@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance Optimization**: Improved image loading and caching for gallery components
 - **Accessibility Enhancements**: Ensuring WCAG 2.1 AA compliance across new features
 
-### Fixing
+### Now Fixing
 - Deployment issues with dynamic server usage in pages using cookies and request.url
 - Prerendering failures for protected routes
 - Server Component type errors in production builds
