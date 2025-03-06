@@ -150,33 +150,30 @@ async function getDashboardStats(
     }
 
     // Fetch counts in parallel for better performance
-    const [eventsCount, activeCount, photosCount, guestsCount] = await Promise.all([
+    const [eventsCount, photosCount, participantsCount] = await Promise.all([
       supabase
         .from('events')
         .select('*', { count: 'exact', head: true })
-        .eq(userRole === 'user' ? 'created_by' : 'id', userId),
-      supabase
-        .from('events')
-        .select('*', { count: 'exact', head: true })
-        .eq(userRole === 'user' ? 'created_by' : 'id', userId)
-        .eq('status', 'active'),
+        .eq('user_id', userId),
       supabase
         .from('photos')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', userId),
+        .eq('uploaded_by', userId),
       userRole === 'event_host' 
         ? supabase
-            .from('event_guests')
+            .from('event_participants')
             .select('*', { count: 'exact', head: true })
-            .eq('event_creator_id', userId)
+            .eq('user_id', userId)
         : { count: 0 }
     ])
 
+    // Set the stats based on the query results
     stats.events = eventsCount.count ?? 0
-    stats.activeEvents = activeCount.count ?? 0
+    stats.activeEvents = eventsCount.count ?? 0 // Since we don't have a status field, use the same count
     stats.photos = photosCount.count ?? 0
-    stats.guests = guestsCount.count ?? 0
+    stats.guests = participantsCount.count ?? 0
 
+    console.log('Dashboard stats:', stats)
     return stats
   } catch (error) {
     console.error('Error fetching stats:', error)

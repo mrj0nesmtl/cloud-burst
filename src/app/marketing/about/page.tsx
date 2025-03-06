@@ -26,6 +26,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import Link from "next/link"
+import "@/styles/layout.css"
 
 export const metadata = {
   title: 'About | Cloud Burst',
@@ -220,28 +221,26 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-full">
       {/* Hero Section */}
-      <div className="relative bg-muted/20 py-24">
+      <section className="hero-section">
         <div className="hexagon-pattern opacity-15"></div>
-        <div className="container mx-auto max-w-4xl px-4 relative z-10">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center mb-6">
-              <CloudLightning className="h-12 w-12 text-primary animate-pulse" />
-            </div>
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-              What is Cloud Burst?
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Elevating event photography by blending nostalgia with modern technology.
-            </p>
+        <div className="container mx-auto">
+          <div className="hero-logo">
+            <CloudLightning className="h-12 w-12 text-primary" />
           </div>
+          <h1 className="hero-title">
+            What is Cloud Burst?
+          </h1>
+          <p className="hero-subtitle">
+            Elevating event photography by blending nostalgia with modern technology.
+          </p>
         </div>
-      </div>
+      </section>
 
-      <div className="container mx-auto max-w-4xl py-16 px-4 space-y-16">
+      <div className="container mx-auto py-12 px-4 space-y-14">
         {/* Vision Section */}
-        <section className="space-y-4 card p-8 rounded-lg shadow-md hover:shadow-lg transition-all">
-          <h2 className="text-3xl font-bold text-primary">The Vision</h2>
-          <p className="text-lg text-muted-foreground">
+        <section className="section py-0">
+          <h2 className="section-title">The Vision</h2>
+          <p className="section-subtitle">
             Inspired by the nostalgia of disposable cameras on event tables, Cloud Burst 
             modernizes the experience using guests' smartphones and a seamless cloud-based 
             infrastructure. We're transforming event photography for a digital-first audience.
@@ -249,26 +248,24 @@ export default function AboutPage() {
         </section>
 
         {/* How It Works Section */}
-        <section className="space-y-8">
-          <div className="space-y-4">
-            <h2 className="text-3xl font-bold text-primary">How It Works</h2>
-            <p className="text-lg text-muted-foreground">
-              Cloud Burst simplifies and enhances event photography through a seamless four-step process.
-            </p>
-          </div>
+        <section className="section py-0">
+          <h2 className="section-title">How It Works</h2>
+          <p className="section-subtitle">
+            Cloud Burst simplifies and enhances event photography through a seamless four-step process.
+          </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="card-grid md-grid-cols-2 lg-grid-cols-2">
             {howItWorksCards.map((card, index) => (
               <Dialog key={index}>
                 <DialogTrigger asChild>
-                  <div className="card p-6 rounded-lg border border-border hover:border-primary/50 shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div className="flex flex-col h-full">
+                  <div className="feature-card cursor-pointer">
+                    <div className="feature-icon group">
                       {card.icon}
-                      <h3 className="text-xl font-semibold mb-2">{card.title}</h3>
-                      <p className="text-muted-foreground">{card.description}</p>
-                      <div className="mt-4 text-primary text-sm flex items-center opacity-80 hover:opacity-100 transition-opacity">
-                        Learn more <ArrowRight className="ml-1 h-4 w-4" />
-                      </div>
+                    </div>
+                    <h3 className="feature-title">{card.title}</h3>
+                    <p className="feature-description">{card.description}</p>
+                    <div className="mt-4 text-primary text-sm flex items-center opacity-80 hover:opacity-100 transition-opacity">
+                      Learn more <ArrowRight className="ml-1 h-4 w-4" />
                     </div>
                   </div>
                 </DialogTrigger>
@@ -286,26 +283,24 @@ export default function AboutPage() {
         </section>
 
         {/* Perfect For Section */}
-        <section className="space-y-8">
-          <div className="space-y-4">
-            <h2 className="text-3xl font-bold text-primary">Perfect For</h2>
-            <p className="text-lg text-muted-foreground">
-              Cloud Burst enhances photography across a wide range of events and industries.
-            </p>
-          </div>
+        <section className="section py-0">
+          <h2 className="section-title">Perfect For</h2>
+          <p className="section-subtitle">
+            Cloud Burst enhances photography across a wide range of events and industries.
+          </p>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="card-grid sm-grid-cols-2 lg-grid-cols-3">
             {perfectForCards.map((card, index) => (
               <Dialog key={index}>
                 <DialogTrigger asChild>
-                  <div className="card p-6 rounded-lg border border-border hover:border-primary/50 shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div className="flex flex-col h-full">
+                  <div className="feature-card cursor-pointer">
+                    <div className="feature-icon group">
                       {card.icon}
-                      <h3 className="text-xl font-semibold mb-2">{card.title}</h3>
-                      <p className="text-muted-foreground">{card.description}</p>
-                      <div className="mt-4 text-primary text-sm flex items-center opacity-80 hover:opacity-100 transition-opacity">
-                        Learn more <ArrowRight className="ml-1 h-4 w-4" />
-                      </div>
+                    </div>
+                    <h3 className="feature-title">{card.title}</h3>
+                    <p className="feature-description">{card.description}</p>
+                    <div className="mt-4 text-primary text-sm flex items-center opacity-80 hover:opacity-100 transition-opacity">
+                      Learn more <ArrowRight className="ml-1 h-4 w-4" />
                     </div>
                   </div>
                 </DialogTrigger>
@@ -323,9 +318,9 @@ export default function AboutPage() {
         </section>
 
         {/* Why Choose Section */}
-        <section className="space-y-4">
-          <h2 className="text-3xl font-bold">Why Choose Cloud Burst?</h2>
-          <p className="text-lg text-muted-foreground">
+        <section className="section py-0">
+          <h2 className="section-title">Why Choose Cloud Burst?</h2>
+          <p className="section-subtitle">
             Unlike traditional solutions that rely on expensive photographers or 
             disorganized social media hashtags, Cloud Burst provides a private, 
             AI-powered ecosystem that ensures high-quality photos while being more 

@@ -1,11 +1,12 @@
 # public Directory Structure
-Generated: 2025-03-05T17:55:30.158Z
+Generated: 2025-03-06T19:30:41.044Z
 
 ```
 ./public/
 ├── images/
 │   ├── fallback-hero.jpg
 │   └── pexels-themo1-bg.jpg
+├── scripts/
 ├── .DS_Store
 ├── android-chrome-192x192.png
 ├── android-chrome-512x512.png
@@ -29,7 +30,7 @@ Generated: 2025-03-05T17:55:30.158Z
 ├── vercel.svg
 └── window.svg
 
-2 directories, 24 files
+3 directories, 24 files
 
 ```
 

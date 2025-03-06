@@ -10,6 +10,9 @@ import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useRouter } from 'next/navigation'
+import { toast } from '@/components/ui/use-toast'
+import Link from 'next/link'
+import { Logo } from '@/components/nav/logo'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -21,91 +24,105 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const router = useRouter()
 
   const handleSignOut = async () => {
-    await signOut()
-    router.push('/auth/signin')
+    try {
+      await signOut()
+      // Use router.push instead of relying on the middleware redirect
+      router.push('/auth/signin')
+    } catch (error) {
+      console.error('Error signing out:', error)
+      toast({
+        title: 'Sign out failed',
+        description: 'Please try again',
+        variant: 'destructive'
+      })
+    }
   }
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex h-screen items-center justify-center">
         <LoadingSpinner size="lg" />
+        <span className="ml-2 text-muted-foreground">Loading your dashboard...</span>
       </div>
     )
   }
 
-  if (!user || !profile) {
+  if (!user && process.env.NODE_ENV !== 'development') {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
-          <p className="text-muted-foreground">Please sign in to access this page.</p>
+      <div className="flex h-screen items-center justify-center p-6">
+        <div className="w-full max-w-md rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center">
+          <h2 className="mb-4 text-xl font-bold text-destructive">Authentication Error</h2>
+          <p className="mb-4 text-muted-foreground">
+            You are not authenticated or your session has expired.
+          </p>
+          <Button asChild variant="default">
+            <Link href="/auth/signin">Sign In</Link>
+          </Button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Mobile sidebar backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
+    <div className="flex min-h-screen flex-col">
+      {/* Mobile sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 transform bg-background transition-transform duration-200 ease-in-out lg:static lg:translate-x-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden",
+          sidebarOpen ? "block" : "hidden"
         )}
       >
-        <div className="flex h-16 items-center justify-between px-4 lg:px-6">
-          <h1 className="text-lg font-semibold">Cloud Burst</h1>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <X className="h-6 w-6" />
-          </Button>
+        <div className="fixed inset-y-0 left-0 z-50 h-full w-3/4 max-w-xs border-r bg-background shadow-lg sm:max-w-sm">
+          <div className="flex h-16 items-center px-6">
+            <Logo />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <X className="h-5 w-5" />
+              <span className="sr-only">Close sidebar</span>
+            </Button>
+          </div>
+          <SideNav />
         </div>
-        <SideNav user={user} profile={profile} setIsOpen={setSidebarOpen} />
       </div>
-
-      {/* Main content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Top navigation */}
-        <header className="flex h-16 items-center justify-between border-b px-4 lg:px-6">
+      
+      {/* Top navigation */}
+      <div className="sticky top-0 z-40 border-b bg-background">
+        <header className="flex h-16 items-center gap-4 px-6">
           <Button
             variant="ghost"
             size="icon"
             className="lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle menu</span>
           </Button>
-          <div className="flex-1">
-            <MainNav />
+          <div className="hidden lg:block">
+            <Logo />
           </div>
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleSignOut}
-              className="hidden md:flex items-center gap-1"
-            >
-              <LogOut className="h-4 w-4 mr-1" />
-              Sign Out
-            </Button>
-            <UserNav user={user} profile={profile} />
+          <div className="ml-auto flex items-center gap-2">
+            <MainNav />
+            <UserNav
+              user={user}
+              profile={profile}
+              onSignOut={handleSignOut}
+            />
           </div>
         </header>
-
-        {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+      </div>
+      
+      {/* Main content */}
+      <div className="flex flex-1">
+        <div className="hidden border-r lg:block">
+          <div className="sticky top-16 h-[calc(100vh-4rem)] w-56 overflow-y-auto py-6">
+            <SideNav />
+          </div>
+        </div>
+        <main className="flex-1 overflow-y-auto p-6">
           {children}
         </main>
       </div>

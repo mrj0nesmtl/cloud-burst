@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-05T17:55:30.109Z
+Generated: 2025-03-06T19:30:40.984Z
 
 ```
 ./src/
@@ -208,6 +208,8 @@ Generated: 2025-03-05T17:55:30.109Z
 │   │   ├── contact-form.tsx
 │   │   └── newsletter-form.tsx
 │   ├── nav/
+│   │   ├── logo.tsx
+│   │   ├── main-nav.tsx
 │   │   ├── side-nav.tsx
 │   │   └── user-nav.tsx
 │   ├── notifications/
@@ -309,10 +311,14 @@ Generated: 2025-03-05T17:55:30.109Z
 │   ├── security-settings.ts
 │   ├── user-sessions.ts
 │   └── utils.ts
+├── scripts/
+│   └── mobile-menu.js
 ├── store/
 │   ├── events-store.ts
 │   ├── index.ts
 │   └── photos-store.ts
+├── styles/
+│   └── layout.css
 ├── types/
 │   ├── auth.ts
 │   ├── events.ts
@@ -323,7 +329,7 @@ Generated: 2025-03-05T17:55:30.109Z
 ├── middleware.test.ts
 └── middleware.ts
 
-86 directories, 234 files
+88 directories, 238 files
 
 ```
 

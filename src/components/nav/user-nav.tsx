@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useAuthStore } from '@/lib/supabase/auth-store'
 import Link from "next/link"
 
 interface Profile {
@@ -24,15 +23,23 @@ interface Profile {
 interface UserNavProps {
   user: any // Temporarily use any to fix type issues
   profile?: any // Temporarily use any to fix type issues
+  onSignOut?: () => Promise<void>
 }
 
-export function UserNav({ user, profile }: UserNavProps) {
-  const { signOut } = useAuthStore()
-  
+export function UserNav({ user, profile, onSignOut }: UserNavProps) {
   // Use profile data if available, otherwise fallback to user metadata
-  const displayName = profile?.full_name || user.user_metadata?.full_name || user.email
-  const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url
-  const userRole = profile?.role || user.user_metadata?.role || 'user'
+  const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email
+  const avatarUrl = profile?.avatar_url || user?.user_metadata?.avatar_url
+  const userRole = profile?.role || user?.user_metadata?.role || 'user'
+  
+  // Handle null user in development mode
+  if (!user && process.env.NODE_ENV === 'development') {
+    return (
+      <Avatar>
+        <AvatarFallback>DEV</AvatarFallback>
+      </Avatar>
+    )
+  }
 
   return (
     <DropdownMenu>
@@ -40,7 +47,7 @@ export function UserNav({ user, profile }: UserNavProps) {
         <Avatar>
           <AvatarImage src={avatarUrl} />
           <AvatarFallback>
-            {user.email?.charAt(0).toUpperCase()}
+            {user?.email?.charAt(0).toUpperCase() || 'U'}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
@@ -48,10 +55,10 @@ export function UserNav({ user, profile }: UserNavProps) {
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {displayName}
+              {displayName || 'User'}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user.email}
+              {user?.email || 'No email'}
             </p>
             <p className="text-xs leading-none text-muted-foreground mt-1">
               Role: {userRole}
@@ -70,10 +77,23 @@ export function UserNav({ user, profile }: UserNavProps) {
             <Link href="/protected/admin">Admin Dashboard</Link>
           </DropdownMenuItem>
         )}
+        {(userRole === 'organizer') && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/protected/events/create">Create Event</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/protected/events/manage">Manage Events</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/protected/events/invitations">Invitations</Link>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="text-red-600 focus:text-red-600"
-          onClick={() => signOut()}
+          onClick={onSignOut}
         >
           Sign Out
         </DropdownMenuItem>

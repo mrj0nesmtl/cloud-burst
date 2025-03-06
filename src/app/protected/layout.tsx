@@ -1,9 +1,10 @@
 import { Suspense } from 'react'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { AuthGuard } from '@/components/auth/auth-guard'
 import { ErrorBoundary } from '@/components/error-boundary'
-import { createServerClient } from '@/lib/supabase/client'
-import { redirect } from 'next/navigation'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 // Force dynamic rendering for this layout
@@ -14,63 +15,56 @@ export default async function ProtectedLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Skip auth check in development mode
-  const isDevelopment = process.env.NODE_ENV === 'development'
-  
-  if (isDevelopment) {
-    return (
-      <ErrorBoundary>
-        <DashboardLayout>
-          <ErrorBoundary>
-            <Suspense fallback={<LoadingSpinner className="flex-1" />}>
-              {children}
-            </Suspense>
-          </ErrorBoundary>
-        </DashboardLayout>
-      </ErrorBoundary>
-    )
-  }
-  
+  // Check authentication for all environments
   try {
-    // Server-side auth check - await the client creation
-    const supabase = await createServerClient()
+    const cookieStore = cookies()
+    const supabase = createServerComponentClient({ cookies: () => cookieStore })
     
-    // Get and validate session
-    const { data, error } = await supabase.auth.getUser()
-    if (error || !data.user) {
-      const returnUrl = new URL('/auth/signin', process.env.NEXT_PUBLIC_SITE_URL)
-      returnUrl.searchParams.set('returnTo', '/protected/dashboard')
-      redirect(returnUrl.toString())
+    // Use getUser instead of getSession for better security
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    
+    if (userError) {
+      console.error('Authentication error:', userError)
+      redirect('/auth/signin?error=session_error')
     }
-
-    // Fetch user profile with role
+    
+    if (!user) {
+      console.log('No authenticated user, redirecting to sign in')
+      redirect('/auth/signin?returnTo=/protected/dashboard')
+    }
+    
+    // Get user profile with role
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('*')
-      .eq('id', data.user.id)
+      .eq('id', user.id)
       .single()
-
+    
     if (profileError) {
-      console.error('Error fetching profile:', profileError)
-      throw profileError
+      console.error('Profile fetch error:', profileError)
+      redirect('/auth/signin?error=profile_error')
     }
-
+    
+    if (!profile) {
+      console.error('Profile not found for user:', user.id)
+      redirect('/auth/signin?error=profile_not_found')
+    }
+    
+    console.log('User authenticated:', profile.email, 'Role:', profile.role)
+    
     return (
       <ErrorBoundary>
         <AuthGuard>
           <DashboardLayout>
-            {/* Main Content */}
-            <ErrorBoundary>
-              <Suspense fallback={<LoadingSpinner className="flex-1" />}>
-                {children}
-              </Suspense>
-            </ErrorBoundary>
+            <Suspense fallback={<LoadingSpinner size="lg" className="mx-auto my-12" />}>
+              {children}
+            </Suspense>
           </DashboardLayout>
         </AuthGuard>
       </ErrorBoundary>
     )
   } catch (error) {
     console.error('Protected layout error:', error)
-    redirect('/auth/signin')
+    redirect('/auth/signin?error=unknown')
   }
 }

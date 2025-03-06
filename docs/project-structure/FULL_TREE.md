@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-05T17:55:30.073Z
+Generated: 2025-03-06T19:30:40.957Z
 
 ```
 ./
@@ -59,6 +59,9 @@ Generated: 2025-03-05T17:55:30.073Z
 │   │   │   ├── session_18_kickoff.md
 │   │   │   ├── session_19_emergency.md
 │   │   │   ├── session_1_prompt.md
+│   │   │   ├── session_20_checklist.md
+│   │   │   ├── session_20_kickoff.md
+│   │   │   ├── session_20_summary.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -99,6 +102,7 @@ Generated: 2025-03-05T17:55:30.073Z
 │   │   ├── planning_tree.md
 │   │   ├── public_tree.md
 │   │   ├── store_tree.md
+│   │   ├── styles_tree.md
 │   │   └── types_tree.md
 │   ├── rbac/
 │   │   ├── README.md
@@ -115,6 +119,7 @@ Generated: 2025-03-05T17:55:30.073Z
 │   ├── images/
 │   │   ├── fallback-hero.jpg
 │   │   └── pexels-themo1-bg.jpg
+│   ├── scripts/
 │   ├── .DS_Store
 │   ├── android-chrome-192x192.png
 │   ├── android-chrome-512x512.png
@@ -141,6 +146,7 @@ Generated: 2025-03-05T17:55:30.073Z
 │   ├── types/
 │   │   └── tree-cli.d.ts
 │   ├── .DS_Store
+│   ├── check-policies.js
 │   ├── check_profiles_schema.sql
 │   ├── check_roles_alternative.sql
 │   ├── create_complete_profiles.sql
@@ -365,6 +371,8 @@ Generated: 2025-03-05T17:55:30.073Z
 │   │   │   ├── contact-form.tsx
 │   │   │   └── newsletter-form.tsx
 │   │   ├── nav/
+│   │   │   ├── logo.tsx
+│   │   │   ├── main-nav.tsx
 │   │   │   ├── side-nav.tsx
 │   │   │   └── user-nav.tsx
 │   │   ├── notifications/
@@ -466,10 +474,14 @@ Generated: 2025-03-05T17:55:30.073Z
 │   │   ├── security-settings.ts
 │   │   ├── user-sessions.ts
 │   │   └── utils.ts
+│   ├── scripts/
+│   │   └── mobile-menu.js
 │   ├── store/
 │   │   ├── events-store.ts
 │   │   ├── index.ts
 │   │   └── photos-store.ts
+│   ├── styles/
+│   │   └── layout.css
 │   ├── types/
 │   │   ├── auth.ts
 │   │   ├── events.ts
@@ -485,23 +497,32 @@ Generated: 2025-03-05T17:55:30.073Z
 ├── supabase-exports/
 │   ├── .DS_Store
 │   ├── 3 - Check Profile Role Column Definition.csv
+│   ├── Check Current Values in Roles.csv
 │   ├── Check Events Table Structure.csv
 │   ├── Check Profile Role Column Definition.csv
+│   ├── Check Profiles Table Constraint.csv
 │   ├── Check RLS Policies for Event Attendees.csv
 │   ├── Check RLS Policies for Events Table.csv
 │   ├── Check RLS Policies for Photos.csv
 │   ├── Check RLS Status for Tables.csv
 │   ├── Check for Custom Role Types.csv
+│   ├── Check roles table structure.csv
 │   ├── Event Attendees Table Structure.csv
 │   ├── Index Check for Specific Tables.csv
 │   ├── Photos Table Structure.csv
 │   ├── Policy Overview for Public Schema.csv
 │   ├── Profile Table Structure.csv
+│   ├── Retrieve RLS Policies.csv
+│   ├── Retrieve Role Capabilities Policies.csv
 │   ├── Retrieve User Roles.csv
+│   ├── Role Capabilities Table Structure.csv
+│   ├── Supabase Snippet Check RLS Status on Role Capabilities.csv
 │   ├── Supabase Snippet View Event Indexes.csv
 │   ├── Supabase Snippet View Events Table Structure.csv
 │   ├── Supabase Snippet View constraints for events table.csv
+│   ├── Update Role Constraint in Profiles Table.csv
 │   ├── User Role Verification Query.csv
+│   ├── Verify Role Capabilities Policies.csv
 │   ├── Verify User Update.csv
 │   ├── profiles_rows (1).csv
 │   ├── profiles_rows (2).csv
@@ -520,8 +541,10 @@ Generated: 2025-03-05T17:55:30.073Z
 ├── cloud-burst-recovery-summary.md
 ├── cloud-burst.code-workspace
 ├── components.json
+├── deploy-dev.sh*
 ├── eslint.config.mjs
 ├── jsconfig.json
+├── network-dev.sh
 ├── next-env.d.ts
 ├── next.config.js
 ├── package-lock.json
@@ -533,7 +556,7 @@ Generated: 2025-03-05T17:55:30.073Z
 ├── tsconfig.tsbuildinfo
 └── tsconfigbackup.json
 
-108 directories, 422 files
+111 directories, 442 files
 
 ```
 
