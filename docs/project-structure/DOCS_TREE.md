@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-05T17:55:30.123Z
+Generated: 2025-03-06T19:30:40.999Z
 
 ```
 ./docs/
@@ -42,6 +42,9 @@ Generated: 2025-03-05T17:55:30.123Z
 │   │   ├── session_18_kickoff.md
 │   │   ├── session_19_emergency.md
 │   │   ├── session_1_prompt.md
+│   │   ├── session_20_checklist.md
+│   │   ├── session_20_kickoff.md
+│   │   ├── session_20_summary.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -82,6 +85,7 @@ Generated: 2025-03-05T17:55:30.123Z
 │   ├── planning_tree.md
 │   ├── public_tree.md
 │   ├── store_tree.md
+│   ├── styles_tree.md
 │   └── types_tree.md
 ├── rbac/
 │   ├── README.md
@@ -95,7 +99,7 @@ Generated: 2025-03-05T17:55:30.123Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 82 files
+10 directories, 86 files
 
 ```
 

@@ -10,7 +10,9 @@ import {
   Instagram,
   Linkedin,
   ExternalLink,
+  CloudLightning
 } from "lucide-react"
+import "@/styles/layout.css"
 
 export const metadata = {
   title: 'Contact | Cloud Burst',
@@ -21,106 +23,117 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <div className="relative bg-muted/0 py-24">
-        <div className="container mx-auto max-w-4xl px-4">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center mb-6">
-              <MessageSquare className="h-12 w-12 text-blue-500" />
-            </div>
-            <h1 className="text-5xl font-bold tracking-tighter sm:text-6xl">
-              Get in Touch
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-            </p>
+      <section className="hero-section py-8">
+        <div className="hexagon-pattern opacity-15"></div>
+        <div className="container-md mx-auto px-4">
+          <div className="hero-logo mb-4">
+            <CloudLightning className="h-12 w-12 text-primary" />
           </div>
+          <h1 className="hero-title mb-4">
+            Get in Touch
+          </h1>
+          <p className="hero-subtitle mb-6">
+            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+          </p>
         </div>
-      </div>
+      </section>
 
-      <div className="container mx-auto max-w-5xl py-16 px-4">
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Contact Information */}
-          <div className="md:col-span-1 space-y-8">
-            <Card className="p-6">
-              <div className="space-y-6">
-                <div className="flex items-center space-x-3">
-                  <Mail className="h-5 w-5 text-blue-500" />
-                  <div>
-                    <h3 className="font-medium">Email Us</h3>
-                    <p className="text-sm text-muted-foreground">support@arcanaconcept.com</p>
+      <section className="section py-10">
+        <div className="container-lg mx-auto px-4">
+          <div className="card-grid md-grid-cols-3 gap-8">
+            {/* Contact Information */}
+            <div className="md:col-span-1 space-y-8">
+              <Card className="p-6 hover:shadow-md transition-all">
+                <div className="space-y-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="feature-icon">
+                      <Mail className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Email Us</h3>
+                      <p className="text-sm text-muted-foreground">support@arcanaconcept.com</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <div className="feature-icon">
+                      <Facebook className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Facebook</h3>
+                      <span className="text-sm text-muted-foreground">Coming Soon</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <div className="feature-icon">
+                      <Instagram className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Instagram</h3>
+                      <span className="text-sm text-muted-foreground">Coming Soon</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <div className="feature-icon">
+                      <ExternalLink className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">BlueSky</h3>
+                      <span className="text-sm text-muted-foreground">Coming Soon</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <div className="feature-icon">
+                      <Linkedin className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">LinkedIn</h3>
+                      <span className="text-sm text-muted-foreground">Coming Soon</span>
+                    </div>
                   </div>
                 </div>
+              </Card>
+            </div>
 
-                <div className="flex items-center space-x-3">
-                  <Facebook className="h-5 w-5 text-blue-500" />
-                  <div>
-                    <h3 className="font-medium">Facebook</h3>
-                    <span className="text-sm text-muted-foreground">Coming Soon</span>
+            {/* Contact Form */}
+            <Card className="p-8 md:col-span-2 hover:shadow-md transition-all">
+              <form className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">First Name</label>
+                    <Input placeholder="John" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Last Name</label>
+                    <Input placeholder="Doe" />
                   </div>
                 </div>
-
-                <div className="flex items-center space-x-3">
-                  <Instagram className="h-5 w-5 text-blue-500" />
-                  <div>
-                    <h3 className="font-medium">Instagram</h3>
-                    <span className="text-sm text-muted-foreground">Coming Soon</span>
-                  </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Email</label>
+                  <Input type="email" placeholder="you@example.com" />
                 </div>
 
-                <div className="flex items-center space-x-3">
-                  <ExternalLink className="h-5 w-5 text-blue-500" />
-                  <div>
-                    <h3 className="font-medium">BlueSky</h3>
-                    <span className="text-sm text-muted-foreground">Coming Soon</span>
-                  </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Message</label>
+                  <Textarea 
+                    placeholder="How can we help you?"
+                    className="min-h-[150px]"
+                  />
                 </div>
 
-                <div className="flex items-center space-x-3">
-                  <Linkedin className="h-5 w-5 text-blue-500" />
-                  <div>
-                    <h3 className="font-medium">LinkedIn</h3>
-                    <span className="text-sm text-muted-foreground">Coming Soon</span>
-                  </div>
-                </div>
-              </div>
+                <Button className="w-full" size="lg">
+                  Send Message
+                  <Send className="ml-2 h-4 w-4" />
+                </Button>
+              </form>
             </Card>
           </div>
-
-          {/* Contact Form */}
-          <Card className="p-8 md:col-span-2">
-            <form className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">First Name</label>
-                  <Input placeholder="John" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Last Name</label>
-                  <Input placeholder="Doe" />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Email</label>
-                <Input type="email" placeholder="you@example.com" />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Message</label>
-                <Textarea 
-                  placeholder="How can we help you?"
-                  className="min-h-[150px]"
-                />
-              </div>
-
-              <Button className="w-full" size="lg">
-                Send Message
-                <Send className="ml-2 h-4 w-4" />
-              </Button>
-            </form>
-          </Card>
         </div>
-      </div>
+      </section>
     </div>
   )
 } 

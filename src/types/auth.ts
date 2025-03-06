@@ -12,6 +12,7 @@ export interface AuthError {
 export const UserRole = z.enum([
   'SUPER_ADMIN',
   'ADMIN',
+  'ORGANIZER',
   'EVENT_HOST',
   'USER',
   'GUEST'
@@ -112,6 +113,16 @@ export const roleCapabilities: Record<Lowercase<UserRole>, string[]> = {
     'manage:users',
     'manage:events',
     'view:analytics'
+  ],
+  organizer: [
+    'create:events',
+    'manage:own_events',
+    'manage:events',
+    'invite:guests',
+    'view:event_analytics',
+    'generate:qr_codes',
+    'manage:gallery',
+    'customize:event_page'
   ],
   event_host: [
     'create:events',

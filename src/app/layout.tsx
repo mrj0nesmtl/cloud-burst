@@ -2,6 +2,7 @@ import { GeistSans } from "geist/font/sans"
 import { Metadata, Viewport } from "next"
 import { Suspense } from "react"
 import "./globals.css"
+import "@/styles/layout.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/ui/site-header"
 import { SiteFooter } from "@/components/ui/site-footer"
@@ -70,7 +71,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
-      <body className="font-sans antialiased min-h-screen flex flex-col">
+      <body className="font-sans antialiased">
         <QueryProvider>
           <ThemeProvider
             attribute="class"
@@ -79,10 +80,9 @@ export default function RootLayout({
             disableTransitionOnChange
             storageKey="cloud-burst-theme"
           >
-            {/* Simplified structure to prevent Suspense hydration issues */}
-            <div className="flex flex-col min-h-screen relative">
+            <div className="flex flex-col min-h-screen w-full">
               <SiteHeader />
-              <main className="flex-1 relative z-10 flex flex-col">
+              <main className="flex-1 w-full">
                 <Suspense fallback={
                   <div className="flex min-h-screen items-center justify-center">
                     <LoadingSpinner size="lg" />
@@ -92,9 +92,9 @@ export default function RootLayout({
                 </Suspense>
               </main>
               <SiteFooter />
+              <UIToaster />
+              <SonnerToaster />
             </div>
-            <UIToaster />
-            <SonnerToaster />
           </ThemeProvider>
         </QueryProvider>
       </body>

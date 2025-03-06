@@ -1,115 +1,212 @@
-import Link from "next/link"
-import { CloudLightning, Github, Instagram, Facebook } from "lucide-react"
-import { Separator } from "@/components/ui/separator"
-import { NewsletterForm } from "@/components/ui/newsletter-form"
+'use client';
+
+import Link from "next/link";
+import { CloudLightning, ExternalLink, Instagram, Facebook, Github, Linkedin, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
 export function SiteFooter() {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    try {
+      setIsSubmitting(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast({
+        title: "Subscribed!",
+        description: "You've been added to our newsletter.",
+      });
+      setEmail("");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to subscribe. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <footer className="relative border-t border-border mt-auto bg-muted/30">
-      <div className="hexagon-pattern opacity-5"></div>
-      <div className="container flex flex-col py-10 md:py-16 px-4 sm:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="w-full bg-background border-t border-border/40">
+      <div className="mx-auto max-w-[1400px] w-full p-8">
+        {/* Using the custom footer-layout class from layout.css to avoid grid conflicts */}
+        <div className="footer-layout">
           {/* Company Info */}
-          <div className="space-y-3 relative z-10">
-            <div className="flex items-center space-x-2 group">
-              <CloudLightning className="h-6 w-6 text-primary group-hover:scale-110 transition-transform duration-300" />
-              <span className="font-semibold">Cloud Burst</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              AI-Powered Event Photography Platform
+          <div>
+            <Link href="/" className="flex items-center space-x-2 mb-4">
+              <CloudLightning className="h-6 w-6 text-primary" />
+              <span className="text-xl font-bold">Cloud Burst</span>
+            </Link>
+            <p className="text-muted-foreground text-sm">
+              Capture, store, and share your event memories with our professional photography platform.
             </p>
           </div>
 
           {/* Product Links */}
-          <div className="space-y-4 relative z-10">
-            <h4 className="font-semibold text-primary">Product</h4>
-            <nav className="flex flex-col space-y-3">
-              <Link 
-                href="/marketing/about" 
-                className="text-sm text-muted-foreground hover:text-primary transition-colors inline-block"
-              >
-                About
-              </Link>
-              <Link 
-                href="/marketing/pricing" 
-                className="text-sm text-muted-foreground hover:text-primary transition-colors inline-block"
-              >
-                Pricing
-              </Link>
-              <Link 
-                href="/marketing/contact" 
-                className="text-sm text-muted-foreground hover:text-primary transition-colors inline-block"
-              >
-                Contact
-              </Link>
-            </nav>
+          <div>
+            <h3 className="font-medium mb-4">Product</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link 
+                  href="/marketing/about" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/events" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center"
+                >
+                  Events <ExternalLink className="ml-1 h-3 w-3" />
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/marketing/pricing" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Pricing
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/marketing/contact" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Legal Links */}
-          <div className="space-y-4 relative z-10">
-            <h4 className="font-semibold text-primary">Legal</h4>
-            <nav className="flex flex-col space-y-3">
-              <Link 
-                href="/legal/privacy" 
-                className="text-sm text-muted-foreground hover:text-primary transition-colors inline-block"
-              >
-                Privacy Policy
-              </Link>
-              <Link 
-                href="/legal/terms" 
-                className="text-sm text-muted-foreground hover:text-primary transition-colors inline-block"
-              >
-                Terms of Service
-              </Link>
-              <Link 
-                href="/legal/cookies" 
-                className="text-sm text-muted-foreground hover:text-primary transition-colors inline-block"
-              >
-                Cookie Policy
-              </Link>
-            </nav>
+          <div>
+            <h3 className="font-medium mb-4">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link 
+                  href="/legal/privacy" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Privacy
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/legal/terms" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Terms
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/legal/cookies" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Cookies
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/legal/licenses" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Licenses
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Newsletter */}
-          <div className="space-y-4 relative z-10">
-            <h4 className="font-semibold text-primary">Stay Updated</h4>
-            <p className="text-sm text-muted-foreground">
-              Subscribe to our newsletter for updates and tips.
+          <div>
+            <h3 className="font-medium mb-4">Stay Updated</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Subscribe to our newsletter for the latest updates.
             </p>
-            <NewsletterForm />
+            <form onSubmit={handleSubmit} className="flex gap-2">
+              <Input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-9"
+              />
+              <Button 
+                type="submit" 
+                size="sm" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <div className="h-4 w-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+                <span className="sr-only">Subscribe</span>
+              </Button>
+            </form>
           </div>
         </div>
 
-        <Separator className="my-10" />
-
-        {/* Bottom Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 relative z-10">
-          <span className="text-sm text-muted-foreground">
-            © 2025 Cloud Burst. All rights reserved.
-          </span>
-          <div className="flex items-center space-x-4">
-            {/* Instagram icon without link */}
-            <span className="text-muted-foreground cursor-not-allowed opacity-50 transition-opacity hover:opacity-70">
-              <Instagram className="h-5 w-5" />
-            </span>
-            
-            {/* Facebook icon without link */}
-            <span className="text-muted-foreground cursor-not-allowed opacity-50 transition-opacity hover:opacity-70">
-              <Facebook className="h-5 w-5" />
-            </span>
-            
-            {/* Updated GitHub link */}
+        {/* Bottom section */}
+        <div className="border-t border-border/30 pt-6 flex flex-col md:flex-row justify-between items-center">
+          {/* Social links */}
+          <div className="flex space-x-4 mb-4 md:mb-0">
             <a 
-              href="https://github.com/mrj0nesmtl/cloud-burst" 
+              href="https://instagram.com" 
               target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-muted-foreground hover:text-primary transition-colors"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="text-muted-foreground hover:text-primary"
+            >
+              <Instagram className="h-5 w-5" />
+            </a>
+            <a 
+              href="https://facebook.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="text-muted-foreground hover:text-primary"
+            >
+              <Facebook className="h-5 w-5" />
+            </a>
+            <a 
+              href="https://github.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="text-muted-foreground hover:text-primary"
             >
               <Github className="h-5 w-5" />
             </a>
+            <a 
+              href="https://linkedin.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="text-muted-foreground hover:text-primary"
+            >
+              <Linkedin className="h-5 w-5" />
+            </a>
+          </div>
+
+          {/* Copyright */}
+          <div className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Cloud Burst. All rights reserved.
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 } 

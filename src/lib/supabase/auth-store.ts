@@ -264,8 +264,11 @@ export const useAuthStore = create<AuthStore>()(
           set({ 
             user: null,
             session: null,
-            capabilities: []
+            capabilities: [],
+            isAuthenticated: false
           })
+          
+          // Remove the redirect - we'll handle this in the component
         } catch (error) {
           console.error('Sign out error:', error)
           throw error
@@ -308,27 +311,46 @@ export const useAuthStore = create<AuthStore>()(
         const supabase = createClientComponentClient()
         try {
           set({ loading: true })
-          const { data: { session } } = await supabase.auth.getSession()
+          // Use getUser instead of getSession for better security
+          const { data: { user } } = await supabase.auth.getUser()
           
-          if (session) {
+          if (user) {
             // Fetch user profile
             const { data: profile } = await supabase
               .from('profiles')
               .select('*')
-              .eq('id', session.user.id)
+              .eq('id', user.id)
               .single()
 
-            // Fetch role capabilities
-            const { data: rolePerms } = await supabase
-              .from('role_capabilities')
-              .select('capability')
-              .eq('role', profile?.role)
+            // Get session for token information
+            const { data: { session } } = await supabase.auth.getSession()
 
-            set({ 
-              user: profile,
-              session: session,
-              capabilities: rolePerms?.map(p => p.capability as Capability) ?? []
-            })
+            // Try to fetch role capabilities
+            try {
+              const { data: rolePerms } = await supabase
+                .from('role_capabilities')
+                .select('capability')
+                .eq('role', profile?.role)
+
+              set({ 
+                user: profile,
+                session: session,
+                capabilities: rolePerms?.map(p => p.capability as Capability) ?? [],
+                isAuthenticated: true
+              })
+            } catch (error) {
+              console.warn('Error fetching capabilities, using fallback')
+              // Use hardcoded capabilities as fallback
+              const fallbackCapabilities = profile?.role ? 
+                (roleCapabilities[profile.role as keyof typeof roleCapabilities] || []) : []
+              
+              set({ 
+                user: profile,
+                session: session,
+                capabilities: fallbackCapabilities as Capability[],
+                isAuthenticated: true
+              })
+            }
           }
         } catch (error) {
           console.error('Initialize error:', error)
@@ -342,32 +364,52 @@ export const useAuthStore = create<AuthStore>()(
         const supabase = createClientComponentClient()
         try {
           set({ loading: true })
-          const { data: { session } } = await supabase.auth.getSession()
+          // Use getUser instead of getSession for better security
+          const { data: { user } } = await supabase.auth.getUser()
           
-          if (session) {
+          if (user) {
             // Fetch user profile
             const { data: profile } = await supabase
               .from('profiles')
               .select('*')
-              .eq('id', session.user.id)
+              .eq('id', user.id)
               .single()
 
-            // Fetch role capabilities
-            const { data: rolePerms } = await supabase
-              .from('role_capabilities')
-              .select('capability')
-              .eq('role', profile?.role)
+            // Get session for token information
+            const { data: { session } } = await supabase.auth.getSession()
 
-            set({ 
-              user: profile,
-              session: session,
-              capabilities: rolePerms?.map(p => p.capability as Capability) ?? []
-            })
+            // Try to fetch role capabilities
+            try {
+              const { data: rolePerms } = await supabase
+                .from('role_capabilities')
+                .select('capability')
+                .eq('role', profile?.role)
+
+              set({ 
+                user: profile,
+                session: session,
+                capabilities: rolePerms?.map(p => p.capability as Capability) ?? [],
+                isAuthenticated: true
+              })
+            } catch (error) {
+              console.warn('Error fetching capabilities, using fallback')
+              // Use hardcoded capabilities as fallback
+              const fallbackCapabilities = profile?.role ? 
+                (roleCapabilities[profile.role as keyof typeof roleCapabilities] || []) : []
+              
+              set({ 
+                user: profile,
+                session: session,
+                capabilities: fallbackCapabilities as Capability[],
+                isAuthenticated: true
+              })
+            }
           } else {
             set({ 
               user: null, 
               session: null, 
-              capabilities: []
+              capabilities: [],
+              isAuthenticated: false
             })
           }
         } catch (error) {

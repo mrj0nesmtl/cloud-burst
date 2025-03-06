@@ -3,6 +3,7 @@ import { CloudLightning, ArrowRight, CameraIcon, Share2, Users, Sparkles } from 
 import Link from "next/link"
 import { Metadata } from 'next'
 import Image from "next/image"
+import "@/styles/layout.css"
 
 export const metadata: Metadata = {
   title: 'Cloud Burst - Elevate Your Event Photography',
@@ -20,15 +21,15 @@ export default function Home() {
       <div className="hexagon-pattern"></div>
       
       {/* Hero Section */}
-      <div className="relative min-h-[70vh] flex items-center justify-center">
-        <div className="relative z-10 container mx-auto px-4 py-16 text-center">
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <CloudLightning className="h-12 w-12 text-primary animate-pulse" />
+      <section className="hero-section">
+        <div className="container mx-auto">
+          <div className="hero-logo">
+            <CloudLightning className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-4 md:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
+          <h1 className="hero-title">
             Elevate Your Event Photography
           </h1>
-          <p className="text-base md:text-xl text-muted-foreground max-w-[700px] mx-auto mb-8 md:mb-10">
+          <p className="hero-subtitle">
             AI-powered platform for seamless photo capture, enhancement, and sharing.
             Perfect for weddings, corporate events, and celebrations.
           </p>
@@ -47,55 +48,59 @@ export default function Home() {
             </Button>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-muted/30 relative z-10">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-primary">
-              Why Choose Cloud Burst?
-            </h2>
-            <p className="text-lg max-w-[700px] mx-auto text-muted-foreground">
-              Experience the future of event photography with our innovative platform.
-            </p>
-          </div>
+      {/* Why Choose Cloud Burst Section */}
+      <section className="section">
+        <div className="container mx-auto">
+          <h2 className="section-title">Why Choose Cloud Burst?</h2>
+          <p className="section-subtitle">
+            Experience the future of event photography with our innovative platform.
+          </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="card-grid md-grid-cols-2 lg-grid-cols-4">
             {/* Feature 1 */}
-            <div className="card p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-center group">
-              <div className="flex justify-center mb-4">
-                <CameraIcon className="h-10 w-10 text-primary group-hover:scale-110 transition-transform" />
+            <div className="feature-card">
+              <div className="feature-icon">
+                <CameraIcon className="h-10 w-10" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Effortless Capture</h3>
-              <p className="text-muted-foreground">No app downloads required. Just scan, capture, and share instantly.</p>
+              <h3 className="feature-title">Instant Capture</h3>
+              <p className="feature-description">
+                Seamlessly capture moments with our intuitive interface and AI-powered tools.
+              </p>
             </div>
             
             {/* Feature 2 */}
-            <div className="card p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-center group">
-              <div className="flex justify-center mb-4">
-                <Sparkles className="h-10 w-10 text-primary group-hover:scale-110 transition-transform" />
+            <div className="feature-card">
+              <div className="feature-icon">
+                <Sparkles className="h-10 w-10" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">AI Enhancement</h3>
-              <p className="text-muted-foreground">Smart filters and automatic improvements for professional-quality photos.</p>
+              <h3 className="feature-title">AI Enhancement</h3>
+              <p className="feature-description">
+                Automatically enhance photos with our advanced AI algorithms for perfect results.
+              </p>
             </div>
             
             {/* Feature 3 */}
-            <div className="card p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-center group">
-              <div className="flex justify-center mb-4">
-                <Share2 className="h-10 w-10 text-primary group-hover:scale-110 transition-transform" />
+            <div className="feature-card">
+              <div className="feature-icon">
+                <Share2 className="h-10 w-10" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Seamless Sharing</h3>
-              <p className="text-muted-foreground">Centralized galleries for easy access, downloading and sharing with guests.</p>
+              <h3 className="feature-title">Easy Sharing</h3>
+              <p className="feature-description">
+                Share your event photos instantly with guests through our cloud platform.
+              </p>
             </div>
             
             {/* Feature 4 */}
-            <div className="card p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-center group">
-              <div className="flex justify-center mb-4">
-                <Users className="h-10 w-10 text-primary group-hover:scale-110 transition-transform" />
+            <div className="feature-card">
+              <div className="feature-icon">
+                <Users className="h-10 w-10" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Privacy Controls</h3>
-              <p className="text-muted-foreground">Full control over who can view, share, and download your event photos.</p>
+              <h3 className="feature-title">Collaborative</h3>
+              <p className="feature-description">
+                Allow guests to contribute their photos to create a comprehensive event gallery.
+              </p>
             </div>
           </div>
         </div>

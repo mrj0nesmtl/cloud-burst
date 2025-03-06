@@ -38,6 +38,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import Link from "next/link"
+import "@/styles/layout.css"
 
 export const metadata = {
   title: 'Pricing | Cloud Burst',
@@ -230,151 +231,139 @@ export default function PricingPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <div className="relative bg-muted/20 py-24">
+      <section className="hero-section py-8">
         <div className="hexagon-pattern opacity-15"></div>
-        <div className="container mx-auto max-w-4xl px-4 relative z-10">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center mb-6">
-              <CloudLightning className="h-12 w-12 text-primary" />
-            </div>
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
-              Simple, Transparent Pricing
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Choose the perfect plan for your event photography needs. Scale as you grow.
-            </p>
+        <div className="container-md mx-auto px-4">
+          <div className="hero-logo mb-4">
+            <CloudLightning className="h-12 w-12 text-primary" />
           </div>
+          <h1 className="hero-title mb-4">
+            Simple, Transparent Pricing
+          </h1>
+          <p className="hero-subtitle mb-6">
+            Choose the perfect plan for your event photography needs. Scale as you grow.
+          </p>
         </div>
-      </div>
+      </section>
 
       {/* Pricing Cards */}
-      <div className="container mx-auto max-w-7xl py-16 px-4">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {plans.map((plan, index) => (
-            <Card 
-              key={index} 
-              className={`
-                relative flex flex-col p-6 shadow-md hover:shadow-lg transition-all duration-300 border 
-                ${plan.popular ? 'border-primary shadow-primary/10' : 'border-border'}
-                group
-              `}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-0 right-0 mx-auto w-fit px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full shadow-lg">
-                  Most Popular
-                </div>
-              )}
-              
-              <div className="flex flex-col items-center text-center">
-                <div className="mb-4">
-                  {plan.icon}
-                </div>
-                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-bold">{plan.price}</span>
-                  {plan.price !== "Free" && plan.price !== "Custom" && <span className="text-muted-foreground">/event</span>}
-                </div>
-                <p className="text-muted-foreground mb-6">
-                  {plan.description}
-                </p>
-              </div>
-              
-              <div className="flex flex-col flex-grow">
-                <ul className="space-y-3 mb-8 flex-grow">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start">
-                      <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mr-2" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+      <section className="section py-10">
+        <div className="container-lg mx-auto px-4">
+          <div className="card-grid md-grid-cols-2 lg-grid-cols-4 gap-8">
+            {plans.map((plan, index) => (
+              <Card 
+                key={index} 
+                className={`
+                  relative flex flex-col p-6 shadow-md hover:shadow-lg transition-all border 
+                  ${plan.popular ? 'border-primary shadow-primary/10' : 'border-border'}
+                `}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-3 left-0 right-0 mx-auto w-fit px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full shadow-lg">
+                    Most Popular
+                  </div>
+                )}
                 
-                <div className="flex flex-col mt-auto space-y-3">
-                  <Button 
-                    asChild 
-                    className={`w-full ${plan.popular ? 'btn-primary' : ''}`}
-                  >
-                    <Link href={plan.route}>
-                      Get Started
-                    </Link>
-                  </Button>
-                  
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
-                        <span className="flex items-center">
-                          Learn more <ArrowRight className="ml-1 h-4 w-4" />
-                        </span>
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
-                      <DialogHeader>
-                        <DialogTitle>{plan.modalContent.title}</DialogTitle>
-                        <DialogDescription className="whitespace-pre-line pt-2">
-                          {plan.modalContent.description}
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
+                <div className="flex flex-col items-center text-center">
+                  <div className="feature-icon mb-4">
+                    {plan.icon}
+                  </div>
+                  <h3 className="feature-title mb-2">{plan.name}</h3>
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold">{plan.price}</span>
+                    {plan.price !== "Free" && plan.price !== "Custom" && <span className="text-muted-foreground">/event</span>}
+                  </div>
+                  <p className="feature-description mb-6">
+                    {plan.description}
+                  </p>
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {/* FAQs */}
-        <div className="container mx-auto max-w-4xl py-16 px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-primary">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Get answers to common questions about Cloud Burst.
-            </p>
-          </div>
-          
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`faq-${index}`} className="border border-border rounded-lg mb-4 shadow-sm hover:shadow-md transition-all">
-                <AccordionTrigger className="py-4 px-6 text-lg font-medium text-left hover:text-primary">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="py-4 px-6 text-muted-foreground">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
+                
+                <div className="flex flex-col flex-grow">
+                  <ul className="space-y-3 mb-8 flex-grow">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start">
+                        <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mr-2" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <div className="flex flex-col mt-auto space-y-3">
+                    <Button 
+                      asChild 
+                      className={`w-full ${plan.popular ? 'btn-primary' : ''}`}
+                    >
+                      <Link href={plan.route}>
+                        Get Started
+                      </Link>
+                    </Button>
+                    
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
+                          <span className="flex items-center">
+                            Learn more <ArrowRight className="ml-1 h-4 w-4" />
+                          </span>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>{plan.modalContent.title}</DialogTitle>
+                          <DialogDescription className="whitespace-pre-line pt-2">
+                            {plan.modalContent.description}
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+              </Card>
             ))}
-          </Accordion>
-        </div>
+          </div>
 
-        {/* Call to Action */}
-        <div className="bg-muted/30 py-16 relative">
-          <div className="hexagon-pattern opacity-10"></div>
-          <div className="container mx-auto max-w-4xl px-4 relative z-10">
-            <div className="rounded-xl p-8 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-primary/20 shadow-lg text-center">
-              <h2 className="text-3xl font-bold mb-4">
-                Ready to Get Started?
+          {/* FAQs */}
+          <div className="container-md mx-auto max-w-4xl py-16">
+            <div className="text-center mb-12">
+              <h2 className="section-title mb-4 text-primary">
+                Frequently Asked Questions
               </h2>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Join Cloud Burst today and transform your event photography experience.
+              <p className="section-subtitle max-w-2xl mx-auto">
+                Find answers to common questions about our pricing, features, and services.
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Button asChild size="lg" className="btn-primary">
-                  <Link href="/auth/register">
-                    Create Your Account
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="bg-background/80 backdrop-blur hover:bg-background/60">
-                  <Link href="/marketing/contact">
-                    Contact Sales
-                  </Link>
-                </Button>
-              </div>
             </div>
+            
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq, index) => (
+                <AccordionItem key={index} value={`item-${index}`}>
+                  <AccordionTrigger className="text-left">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Enterprise Section */}
+      <section className="section py-10 bg-muted/50">
+        <div className="container-md mx-auto px-4 text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="section-title mb-4">Need a Custom Solution?</h2>
+            <p className="section-subtitle mb-8">
+              Our enterprise plans are tailored to your specific needs. Contact our sales team to discuss your requirements.
+            </p>
+            <Button size="lg" asChild>
+              <Link href="/marketing/contact">
+                Contact Sales
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   )
 } 

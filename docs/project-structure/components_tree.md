@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-05T17:55:30.190Z
+Generated: 2025-03-06T19:30:41.080Z
 
 ```
 ./src/components/
@@ -49,6 +49,8 @@ Generated: 2025-03-05T17:55:30.190Z
 │   ├── contact-form.tsx
 │   └── newsletter-form.tsx
 ├── nav/
+│   ├── logo.tsx
+│   ├── main-nav.tsx
 │   ├── side-nav.tsx
 │   └── user-nav.tsx
 ├── notifications/
@@ -112,7 +114,7 @@ Generated: 2025-03-05T17:55:30.190Z
 ├── query-provider.tsx
 └── theme-provider.tsx
 
-13 directories, 96 files
+13 directories, 98 files
 
 ```
 

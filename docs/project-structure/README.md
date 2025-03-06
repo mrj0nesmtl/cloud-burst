@@ -1,6 +1,6 @@
 # Project Structure Documentation
 
-Generated on: 2025-03-05T17:55:30.393Z
+Generated on: 2025-03-06T19:30:41.186Z
 
 ## Directory Trees
 - [full](full_tree.md)
@@ -14,6 +14,7 @@ Generated on: 2025-03-05T17:55:30.393Z
 - [lib](lib_tree.md)
 - [store](store_tree.md)
 - [types](types_tree.md)
+- [styles](styles_tree.md)
 - [hooks](hooks_tree.md)
 - [development](development_tree.md)
 - [architecture](architecture_tree.md)

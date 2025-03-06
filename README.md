@@ -5,7 +5,7 @@
 
 ## *Elevating Event Photography*
 
-[![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
+[![Version](https://img.shields.io/badge/version-0.7.3-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -13,7 +13,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 📌 Abstract
-Cloud Burst represents the evolution of event photography, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, and enhanced gallery functionality, our platform now offers a comprehensive solution for event photography management. Deployed at cb-beta.replit.app, Cloud Burst maintains exceptional performance within memory constraints while delivering a seamless user experience across devices as we approach our April 1, 2025 launch date.
+Cloud Burst represents the evolution of event photography, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, and enhanced gallery functionality, our platform now offers a comprehensive solution for event photography management. Deployed in beta at https://cb-beta.replit.app, Cloud Burst maintains exceptional performance within memory constraints while delivering a seamless user experience across devices as we approach our April 1, 2025 launch date.
 
 ## 🎯 Pitch
 Remember the magic of disposable cameras at wedding tables? We've reimagined that collaborative spirit for the digital age. Cloud Burst transforms every event into a living photo story, powered by AI and created by everyone who matters – your guests. No apps to download, no accounts to create – just scan, snap, and share. With enterprise-grade security, AI-enhanced photos, and real-time galleries, we're not just capturing moments; we're revolutionizing how memories are made.
@@ -34,7 +34,6 @@ Cloud Burst revolutionizes event photography by bringing the charm of disposable
 - **AI-Powered**: Automatic photo enhancement and organization
 - **Universal**: Works on any modern device
 - **Secure**: Enterprise-grade security and privacy
-
 
 
 ## 🏗️ System Architecture

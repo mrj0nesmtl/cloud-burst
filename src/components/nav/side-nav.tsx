@@ -2,29 +2,25 @@
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
-import { User } from '@supabase/auth-helpers-nextjs'
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-
-// Add proper Profile type
-interface Profile {
-  id: string
-  role: 'super_admin' | 'admin' | 'event_host' | 'user' | 'guest'
-  subscription_tier: 'free' | 'basic' | 'pro'
-  subscription_status: 'active' | 'inactive' | 'cancelled' | 'past_due'
-}
+import { useAuth } from "@/hooks/use-auth"
 
 interface SideNavProps {
-  user: any // Temporarily use any to understand the expected type
-  profile: any // Temporarily use any to understand the expected type
-  setIsOpen?: (open: boolean) => void // Add prop to control mobile menu state
+  setIsOpen?: (open: boolean) => void
 }
 
-export function SideNav({ user, profile, setIsOpen }: SideNavProps) {
+export function SideNav({ setIsOpen }: SideNavProps) {
   const pathname = usePathname()
+  const { profile, isLoading } = useAuth()
   
-  const isAdmin = profile?.role === 'super_admin' || profile?.role === 'admin'
-  const isEventHost = profile?.role === 'event_host'
+  // Default to user role in development mode if profile is not available
+  const userRole = profile?.role || (process.env.NODE_ENV === 'development' ? 'event_host' : 'user')
+  
+  const isAdmin = userRole === 'super_admin' || userRole === 'admin'
+  const isEventHost = userRole === 'event_host'
+  const isOrganizer = userRole === 'organizer'
+  const canManageEvents = isAdmin || isEventHost || isOrganizer
 
   // Function to handle navigation item clicks
   const handleNavClick = () => {
@@ -128,7 +124,7 @@ export function SideNav({ user, profile, setIsOpen }: SideNavProps) {
       )}
 
       {/* Events Section */}
-      {(isEventHost || isAdmin) && (
+      {canManageEvents && (
         <div className="pb-2">
           <h4 className="mb-1 px-2 text-sm font-semibold">Events</h4>
           <div className="grid gap-1">
@@ -154,6 +150,45 @@ export function SideNav({ user, profile, setIsOpen }: SideNavProps) {
             >
               Manage Events
             </Link>
+            {(isOrganizer || isAdmin) && (
+              <Link
+                href="/protected/events/qr-codes"
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  pathname === "/protected/events/qr-codes" && "bg-muted",
+                  "justify-start w-full"
+                )}
+                onClick={handleNavClick}
+              >
+                QR Codes
+              </Link>
+            )}
+            {(isOrganizer || isAdmin) && (
+              <Link
+                href="/protected/events/gallery-settings"
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  pathname === "/protected/events/gallery-settings" && "bg-muted",
+                  "justify-start w-full"
+                )}
+                onClick={handleNavClick}
+              >
+                Gallery Settings
+              </Link>
+            )}
+            {(isOrganizer || isAdmin) && (
+              <Link
+                href="/protected/events/invitations"
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  pathname === "/protected/events/invitations" && "bg-muted",
+                  "justify-start w-full"
+                )}
+                onClick={handleNavClick}
+              >
+                Invitations
+              </Link>
+            )}
           </div>
         </div>
       )}
@@ -171,7 +206,7 @@ export function SideNav({ user, profile, setIsOpen }: SideNavProps) {
             )}
             onClick={handleNavClick}
           >
-            Accounts
+            Account
           </Link>
           <Link
             href="/protected/settings/billing"
@@ -182,7 +217,7 @@ export function SideNav({ user, profile, setIsOpen }: SideNavProps) {
             )}
             onClick={handleNavClick}
           >
-            Billings
+            Billing
           </Link>
           <Link
             href="/protected/settings/notifications"
