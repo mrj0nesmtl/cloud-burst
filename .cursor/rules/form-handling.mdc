@@ -1,0 +1,1087 @@
+---
+description: Form Handling Standards for Cloud Burst
+globs: **/*.tsx, **/*.jsx, **/components/forms/**, **/components/auth/**
+alwaysApply: false
+---
+# Form Handling Standards for Cloud Burst
+
+> **Version:** 0.7.4  
+> **Last Updated:** March 2025  
+> **Related to:** Session 21 & 22 - Authentication Repair & Dashboard Implementation
+
+```json
+{
+  "description": "Form handling standards for Cloud Burst, including validation, error handling, and submission patterns",
+  "globs": ["**/*.tsx", "**/*.jsx", "**/components/forms/**", "**/components/auth/**"],
+  "rules": {
+    "formArchitecture": {
+      "library": {
+        "useReactHookForm": true,
+        "useZodValidator": true,
+        "useControlledInputs": false,
+        "useFormContext": true
+      },
+      "structure": {
+        "useFormWrapper": true,
+        "useFormSection": true,
+        "useFieldGroup": true,
+        "useInlineValidation": true,
+        "useValidationSummary": true,
+        "useSaveIndicator": true
+      },
+      "accessibility": {
+        "useLabelForInputs": true,
+        "useDescriptionForInputs": true,
+        "useAriaAttributes": true,
+        "useErrorAssociation": true,
+        "useFocusManagement": true
+      }
+    },
+    "validationPatterns": {
+      "timing": {
+        "validateOnBlur": true,
+        "validateOnChange": false,
+        "validateOnSubmit": true,
+        "validateOnMount": false
+      },
+      "messages": {
+        "useInlineErrors": true,
+        "useIconIndicators": true,
+        "useColorCoding": true,
+        "useSummaryErrors": true,
+        "useAccessibleAnnouncements": true
+      },
+      "fieldTypes": {
+        "text": {
+          "minLength": 2,
+          "maxLength": 255,
+          "pattern": "optional"
+        },
+        "email": {
+          "pattern": "required",
+          "normalization": "lowercase"
+        },
+        "password": {
+          "minLength": 8,
+          "requireMixedCase": true,
+          "requireNumbers": true,
+          "requireSpecialChars": true
+        },
+        "number": {
+          "allowDecimal": "depends-on-field",
+          "min": "depends-on-field",
+          "max": "depends-on-field"
+        },
+        "date": {
+          "format": "ISO",
+          "min": "depends-on-field",
+          "max": "depends-on-field",
+          "useDatePicker": true
+        },
+        "select": {
+          "allowEmpty": "depends-on-field",
+          "useEnum": true,
+          "useControlledOptions": true
+        },
+        "checkbox": {
+          "useToggle": true,
+          "useIndeterminate": "when-appropriate",
+          "useSwitchVariant": "when-appropriate"
+        },
+        "file": {
+          "validateSize": true,
+          "validateType": true,
+          "useDragDrop": true,
+          "usePreview": true
+        }
+      }
+    },
+    "submissionPatterns": {
+      "states": {
+        "idle": "default",
+        "validating": "during-validation",
+        "submitting": "during-submission",
+        "success": "after-success",
+        "error": "after-error"
+      },
+      "behaviors": {
+        "disableFormDuringSubmission": true,
+        "showLoadingIndicator": true,
+        "scrollToErrors": true,
+        "focusFirstError": true,
+        "resetAfterSuccess": "depends-on-form",
+        "redirectAfterSuccess": "depends-on-form"
+      },
+      "errorHandling": {
+        "displayApiErrors": true,
+        "retryOnNetworkError": true,
+        "logErrors": true,
+        "useToastNotifications": true,
+        "preserveUserInput": true
+      }
+    },
+    "complexFormPatterns": {
+      "multiStep": {
+        "useFormSteps": true,
+        "validateStepBeforeNext": true,
+        "allowPreviousStep": true,
+        "preserveStateAcrossSteps": true,
+        "showProgressIndicator": true
+      },
+      "dynamicFields": {
+        "useFieldArray": true,
+        "useConditionalFields": true,
+        "useNestedForms": true,
+        "useDependentValidation": true
+      },
+      "autoSave": {
+        "useDebouncedSave": true,
+        "saveInterval": 5000,
+        "saveOnBlur": true,
+        "showSaveIndicator": true,
+        "useOptimisticUpdates": true
+      }
+    },
+    "specializedForms": {
+      "auth": {
+        "login": {
+          "fields": ["email", "password", "remember"],
+          "validations": ["email", "required", "minLength"],
+          "securityFeatures": ["csrf", "rateLimit", "sessionManagement"]
+        },
+        "register": {
+          "fields": ["email", "password", "confirmPassword", "name", "terms"],
+          "validations": ["email", "password", "matching", "required", "terms"],
+          "securityFeatures": ["csrf", "rateLimit", "emailVerification"]
+        },
+        "passwordReset": {
+          "steps": ["request", "verify", "reset"],
+          "validations": ["email", "password", "matching"],
+          "securityFeatures": ["tokenBased", "expiry", "rateLimit"]
+        }
+      },
+      "eventForms": {
+        "creation": {
+          "sections": ["basicInfo", "schedule", "location", "settings"],
+          "requiredFields": ["title", "date", "time", "visibility"],
+          "validations": ["required", "dateInFuture", "validLocation"]
+        },
+        "invitations": {
+          "fields": ["recipients", "message", "rsvpOptions", "sendDate"],
+          "validations": ["emailList", "required", "dateInFuture"],
+          "features": ["bulkImport", "templates", "scheduling"]
+        },
+        "settings": {
+          "sections": ["personal", "notifications", "privacy", "billing"],
+          "validations": ["required", "email", "phoneNumber"],
+          "features": ["instantSave", "toggles", "permissionGroups"]
+        }
+      }
+    }
+  }
+}
+```
+
+## Form Handling Architecture
+
+Cloud Burst uses React Hook Form with Zod for form validation and submission handling. This architecture provides a consistent, type-safe, and accessible approach to form implementation across the platform.
+
+### Basic Form Structure
+
+Every form follows this pattern:
+
+```tsx
+// Example form structure
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+// 1. Define the schema
+const formSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+});
+
+// 2. Define the form types
+type FormValues = z.infer<typeof formSchema>;
+
+export function ExampleForm() {
+  // 3. Initialize the form
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+    },
+  });
+
+  // 4. Define the submission handler
+  const onSubmit = async (values: FormValues) => {
+    try {
+      // Handle form submission
+      console.log(values);
+    } catch (error) {
+      // Handle errors
+      console.error(error);
+    }
+  };
+
+  // 5. Render the form
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input {...field} type="email" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+        </Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+### Form State Management
+
+Forms should properly handle all states:
+
+#### Loading State
+
+```tsx
+// Example of a form with loading state
+<Button type="submit" disabled={form.formState.isSubmitting}>
+  {form.formState.isSubmitting ? (
+    <>
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      Submitting...
+    </>
+  ) : (
+    "Submit"
+  )}
+</Button>
+```
+
+#### Error State
+
+```tsx
+// Example of form error handling
+const [apiError, setApiError] = useState<string | null>(null);
+
+const onSubmit = async (values: FormValues) => {
+  try {
+    setApiError(null);
+    // API submission logic
+  } catch (error) {
+    // Handle API errors
+    setApiError("Failed to submit form. Please try again.");
+  }
+};
+
+// In the form component
+{apiError && (
+  <div className="bg-red-50 p-4 rounded-md border border-red-200 text-red-800 mb-4">
+    <AlertTriangle className="h-4 w-4 inline-block mr-2" />
+    {apiError}
+  </div>
+)}
+```
+
+#### Success State
+
+```tsx
+// Example of form success handling
+const [isSuccess, setIsSuccess] = useState(false);
+
+const onSubmit = async (values: FormValues) => {
+  try {
+    // API submission logic
+    setIsSuccess(true);
+    
+    // Optional: Reset form
+    form.reset();
+    
+    // Optional: Redirect user
+    // router.push("/success-page");
+  } catch (error) {
+    setIsSuccess(false);
+    // Error handling
+  }
+};
+
+// In the form component
+{isSuccess && (
+  <div className="bg-green-50 p-4 rounded-md border border-green-200 text-green-800 mb-4">
+    <CheckCircle className="h-4 w-4 inline-block mr-2" />
+    Form submitted successfully!
+  </div>
+)}
+```
+
+## Validation Patterns
+
+### Zod Schema Patterns
+
+```typescript
+// Example of common Zod validation schemas
+
+// Email validation
+const emailSchema = z.string().email("Please enter a valid email address");
+
+// Password validation
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+  .regex(/[0-9]/, "Password must contain at least one number")
+  .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character");
+
+// Matching fields validation (e.g., confirm password)
+const signupSchema = z
+  .object({
+    password: passwordSchema,
+    confirmPassword: z.string(),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+// Date validation
+const futureDate = z.date().refine(date => date > new Date(), {
+  message: "Date must be in the future",
+});
+
+// Number range validation
+const ageSchema = z
+  .number()
+  .min(18, "You must be at least 18 years old")
+  .max(120, "Please enter a valid age");
+
+// Optional fields with conditional validation
+const phoneSchema = z
+  .string()
+  .optional()
+  .refine(
+    phone => !phone || /^\+?[0-9]{10,15}$/.test(phone),
+    "Please enter a valid phone number"
+  );
+```
+
+### Error Display Patterns
+
+Forms should display errors in these ways:
+
+1. **Inline field errors**: Displayed below the input field
+2. **Form-level errors**: Displayed at the top of the form
+3. **Server errors**: Displayed at the top of the form
+4. **Visual indicators**: Red outline, error icon, etc.
+
+```tsx
+// Example of comprehensive error handling
+<Form {...form}>
+  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    {/* API/Form-level errors */}
+    {(apiError || Object.keys(form.formState.errors).length > 0) && (
+      <div className="bg-red-50 p-4 rounded-md border border-red-200 text-red-800">
+        <div className="flex items-start">
+          <AlertTriangle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+          <div>
+            <h3 className="font-medium">There were errors with your submission</h3>
+            {apiError && <p className="text-sm mt-1">{apiError}</p>}
+            {Object.keys(form.formState.errors).length > 0 && (
+              <ul className="text-sm mt-1 list-disc list-inside">
+                {Object.entries(form.formState.errors).map(([key, error]) => (
+                  <li key={key}>{error?.message as string}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* Individual field with error */}
+    <FormField
+      control={form.control}
+      name="email"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Email</FormLabel>
+          <FormControl>
+            <div className="relative">
+              <Input 
+                {...field} 
+                type="email" 
+                className={form.formState.errors.email ? "border-red-500 pr-10" : ""}
+              />
+              {form.formState.errors.email && (
+                <AlertCircle className="h-5 w-5 text-red-500 absolute right-3 top-1/2 transform -translate-y-1/2" />
+              )}
+            </div>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    
+    {/* Form actions */}
+    <Button type="submit" disabled={form.formState.isSubmitting}>
+      {form.formState.isSubmitting ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Submitting...
+        </>
+      ) : (
+        "Submit"
+      )}
+    </Button>
+  </form>
+</Form>
+```
+
+## Submission Handling
+
+### Loading States
+
+All forms should display a loading state during submission:
+
+```tsx
+// Example of form submission with loading state
+const [isSubmitting, setIsSubmitting] = useState(false);
+
+const onSubmit = async (values: FormValues) => {
+  setIsSubmitting(true);
+  try {
+    // Submit form data
+    await submitData(values);
+    // Handle success
+  } catch (error) {
+    // Handle error
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+// In the button
+<Button type="submit" disabled={isSubmitting}>
+  {isSubmitting ? (
+    <>
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      Submitting...
+    </>
+  ) : (
+    "Submit"
+  )}
+</Button>
+```
+
+### Error Handling
+
+Forms should implement comprehensive error handling:
+
+```tsx
+// Example of comprehensive error handling
+const onSubmit = async (values: FormValues) => {
+  setIsSubmitting(true);
+  setApiError(null);
+  
+  try {
+    const response = await fetch('/api/endpoint', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      // Handle API error
+      if (data.errors) {
+        // Set field errors from API
+        Object.entries(data.errors).forEach(([key, value]) => {
+          form.setError(key as any, {
+            type: 'server',
+            message: value as string,
+          });
+        });
+      } else if (data.message) {
+        // Set general API error
+        setApiError(data.message);
+      } else {
+        // Set fallback error
+        setApiError('An error occurred. Please try again.');
+      }
+      return;
+    }
+    
+    // Handle success
+    setIsSuccess(true);
+    
+    // Reset form if needed
+    if (shouldResetOnSuccess) {
+      form.reset();
+    }
+    
+    // Redirect if needed
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    }
+    
+  } catch (error) {
+    // Handle unexpected errors
+    console.error('Form submission error:', error);
+    setApiError('An unexpected error occurred. Please try again.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+```
+
+## Specialized Form Patterns
+
+### Authentication Forms
+
+```tsx
+// Example of an authentication form with Zod validation
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  remember: z.boolean().optional(),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+export function LoginForm() {
+  const router = useRouter();
+  const [apiError, setApiError] = useState<string | null>(null);
+  
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
+  });
+  
+  const onSubmit = async (values: LoginFormValues) => {
+    setApiError(null);
+    
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        if (data.message) {
+          setApiError(data.message);
+        } else {
+          setApiError('Failed to sign in. Please check your credentials.');
+        }
+        return;
+      }
+      
+      // Success - redirect to dashboard
+      router.push('/dashboard');
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      setApiError('An unexpected error occurred. Please try again.');
+    }
+  };
+  
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {apiError && (
+          <div className="bg-red-50 p-4 rounded-md border border-red-200 text-red-800">
+            <AlertTriangle className="h-4 w-4 inline-block mr-2" />
+            {apiError}
+          </div>
+        )}
+        
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input {...field} type="email" autoComplete="email" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input {...field} type="password" autoComplete="current-password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="remember"
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-2 space-y-0">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel className="text-sm font-normal">Remember me</FormLabel>
+            </FormItem>
+          )}
+        />
+        
+        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Signing in...
+            </>
+          ) : (
+            "Sign in"
+          )}
+        </Button>
+        
+        <div className="text-center text-sm">
+          <Link href="/auth/forgot-password" className="text-primary hover:underline">
+            Forgot password?
+          </Link>
+        </div>
+      </form>
+    </Form>
+  );
+}
+```
+
+### Multi-Step Forms
+
+```tsx
+// Example of a multi-step form
+import { useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+
+// Step 1: Basic Information Schema
+const basicInfoSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+});
+
+// Step 2: Address Schema
+const addressSchema = z.object({
+  street: z.string().min(3, "Street must be at least 3 characters"),
+  city: z.string().min(2, "City must be at least 2 characters"),
+  zip: z.string().min(5, "ZIP code must be at least 5 characters"),
+});
+
+// Step 3: Preferences Schema
+const preferencesSchema = z.object({
+  notifications: z.boolean(),
+  theme: z.enum(["light", "dark", "system"]),
+});
+
+// Combined schema
+const multiStepFormSchema = z.object({
+  ...basicInfoSchema.shape,
+  ...addressSchema.shape,
+  ...preferencesSchema.shape,
+});
+
+type MultiStepFormValues = z.infer<typeof multiStepFormSchema>;
+
+export function MultiStepForm() {
+  const [step, setStep] = useState(1);
+  const [apiError, setApiError] = useState<string | null>(null);
+  
+  const form = useForm<MultiStepFormValues>({
+    resolver: zodResolver(
+      step === 1 
+        ? basicInfoSchema 
+        : step === 2 
+          ? addressSchema 
+          : preferencesSchema
+    ),
+    defaultValues: {
+      name: "",
+      email: "",
+      street: "",
+      city: "",
+      zip: "",
+      notifications: false,
+      theme: "system",
+    },
+    mode: "onBlur",
+  });
+  
+  const validateCurrentStep = async () => {
+    let schemaToValidate;
+    
+    if (step === 1) {
+      schemaToValidate = basicInfoSchema;
+    } else if (step === 2) {
+      schemaToValidate = addressSchema;
+    } else {
+      schemaToValidate = preferencesSchema;
+    }
+    
+    const result = await form.trigger();
+    return result;
+  };
+  
+  const goToNextStep = async () => {
+    const isValid = await validateCurrentStep();
+    
+    if (isValid) {
+      setStep(prev => prev + 1);
+    }
+  };
+  
+  const goToPreviousStep = () => {
+    setStep(prev => prev - 1);
+  };
+  
+  const onSubmit = async (values: MultiStepFormValues) => {
+    setApiError(null);
+    
+    try {
+      // Submit form data
+      console.log("Form submitted:", values);
+      
+      // Handle success
+      // ...
+      
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setApiError("An error occurred. Please try again.");
+    }
+  };
+  
+  return (
+    <div className="space-y-8">
+      {/* Progress indicator */}
+      <div className="flex justify-between">
+        {[1, 2, 3].map(stepNumber => (
+          <div 
+            key={stepNumber}
+            className={`flex items-center justify-center h-8 w-8 rounded-full ${
+              stepNumber === step 
+                ? "bg-primary text-white" 
+                : stepNumber < step 
+                  ? "bg-green-500 text-white" 
+                  : "bg-gray-200 text-gray-500"
+            }`}
+          >
+            {stepNumber < step ? "✓" : stepNumber}
+          </div>
+        ))}
+      </div>
+      
+      {/* Form */}
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {apiError && (
+            <div className="bg-red-50 p-4 rounded-md border border-red-200 text-red-800">
+              <AlertTriangle className="h-4 w-4 inline-block mr-2" />
+              {apiError}
+            </div>
+          )}
+          
+          {/* Step 1: Basic Information */}
+          {step === 1 && (
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold">Step 1: Basic Information</h2>
+              
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="email" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
+          
+          {/* Step 2: Address */}
+          {step === 2 && (
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold">Step 2: Address</h2>
+              
+              <FormField
+                control={form.control}
+                name="street"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Street</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="zip"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ZIP Code</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
+          
+          {/* Step 3: Preferences */}
+          {step === 3 && (
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold">Step 3: Preferences</h2>
+              
+              <FormField
+                control={form.control}
+                name="notifications"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel>Receive notifications</FormLabel>
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="theme"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Theme</FormLabel>
+                    <Select 
+                      value={field.value} 
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="light">Light</SelectItem>
+                        <SelectItem value="dark">Dark</SelectItem>
+                        <SelectItem value="system">System</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
+          
+          {/* Navigation buttons */}
+          <div className="flex justify-between pt-4">
+            {step > 1 && (
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={goToPreviousStep}
+              >
+                Previous
+              </Button>
+            )}
+            
+            {step < 3 ? (
+              <Button 
+                type="button" 
+                onClick={goToNextStep}
+                className={step === 1 ? "ml-auto" : ""}
+              >
+                Next
+              </Button>
+            ) : (
+              <Button 
+                type="submit" 
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+              </Button>
+            )}
+          </div>
+        </form>
+      </FormProvider>
+    </div>
+  );
+}
+```
+
+## Accessibility Considerations
+
+Forms must be accessible:
+
+1. **Labels**: All inputs must have associated labels
+2. **Errors**: Error messages must be associated with inputs using `aria-describedby`
+3. **Required fields**: Use `aria-required="true"` for required fields
+4. **Button state**: Disable buttons during submission and use appropriate aria attributes
+5. **Focus management**: Manage focus properly, especially in multi-step forms
+6. **Keyboard navigation**: Ensure all form elements are accessible via keyboard
+7. **Screen readers**: Provide appropriate announcements for form actions
+
+```tsx
+// Example of accessible form elements
+<div className="mb-4">
+  <label 
+    htmlFor="email" 
+    className="block text-sm font-medium text-gray-700"
+  >
+    Email
+    <span aria-hidden="true" className="text-red-500">*</span>
+    <span className="sr-only"> (required)</span>
+  </label>
+  
+  <input
+    id="email"
+    type="email"
+    className={`mt-1 block w-full rounded-md ${
+      errors.email ? 'border-red-500' : 'border-gray-300'
+    }`}
+    aria-required="true"
+    aria-invalid={errors.email ? 'true' : 'false'}
+    aria-describedby={errors.email ? 'email-error' : undefined}
+  />
+  
+  {errors.email && (
+    <p 
+      id="email-error" 
+      className="mt-1 text-sm text-red-600"
+      role="alert"
+    >
+      {errors.email.message}
+    </p>
+  )}
+</div>
+```
+
+## Implementation Checklist
+
+When creating forms:
+
+- [ ] Use React Hook Form with Zod for validation
+- [ ] Handle all form states (idle, validating, submitting, success, error)
+- [ ] Implement proper error display (inline, form-level, server)
+- [ ] Ensure forms are fully accessible
+- [ ] Test form submission with actual API endpoints
+- [ ] Verify form behavior in edge cases (network errors, validation failures)
+- [ ] Implement appropriate feedback for user actions
+- [ ] Test forms across different devices and screen sizes
+
+## Best Practices
+
+1. **Type Safety**: Use TypeScript types derived from Zod schemas
+2. **Progressive Enhancement**: Ensure forms work without JavaScript
+3. **Server Validation**: Always validate on the server, even if client validation exists
+4. **Error Handling**: Provide clear error messages and guidance
+5. **User Experience**: Use appropriate loading states and success feedback
+6. **Accessibility**: Make forms usable by all users, including those with disabilities
+7. **Performance**: Optimize form rendering and validation for performance
+</rewritten_file> 

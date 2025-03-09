@@ -5,12 +5,32 @@ import { buttonVariants } from "@/components/ui/button"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
+import { 
+  LayoutDashboard, 
+  Calendar, 
+  Users, 
+  ImageIcon, 
+  BarChart, 
+  Settings,
+  QrCode,
+  Mail,
+  Upload,
+  Camera,
+  Image,
+  Award,
+  UserCog,
+  CreditCard,
+  BellRing,
+  PlusCircle
+} from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface SideNavProps {
   setIsOpen?: (open: boolean) => void
+  collapsed?: boolean
 }
 
-export function SideNav({ setIsOpen }: SideNavProps) {
+export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
   const pathname = usePathname()
   const { profile, isLoading } = useAuth()
   
@@ -30,207 +50,249 @@ export function SideNav({ setIsOpen }: SideNavProps) {
     }
   }
 
+  // Helper to render nav items with proper tooltips when collapsed
+  const NavItem = ({ 
+    href, 
+    icon, 
+    label, 
+    active = false 
+  }: { 
+    href: string; 
+    icon: React.ReactNode; 
+    label: string; 
+    active?: boolean;
+  }) => {
+    const content = (
+      <Link
+        href={href}
+        className={cn(
+          buttonVariants({ variant: "ghost" }),
+          active && "bg-muted",
+          "justify-start w-full",
+          collapsed && "justify-center p-2"
+        )}
+        onClick={handleNavClick}
+      >
+        {icon}
+        {!collapsed && <span className="ml-2">{label}</span>}
+      </Link>
+    )
+
+    if (collapsed) {
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {content}
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            {label}
+          </TooltipContent>
+        </Tooltip>
+      )
+    }
+
+    return content
+  }
+
   return (
-    <nav className="grid items-start gap-2 p-4">
+    <nav className={cn(
+      "flex flex-col p-2",
+      collapsed ? "items-center space-y-2" : "items-start space-y-4"
+    )}>
       {/* Dashboard Section */}
-      <div className="pb-2">
-        <h4 className="mb-1 px-2 text-sm font-semibold">Dashboard</h4>
-        <Link
+      <div className={cn(
+        "flex flex-col w-full",
+        collapsed ? "items-center space-y-1" : "items-start space-y-1"
+      )}>
+        {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Dashboard</h4>}
+        <NavItem
           href="/protected/dashboard"
-          className={cn(
-            buttonVariants({ variant: "ghost" }),
-            pathname === "/protected/dashboard" && "bg-muted",
-            "justify-start w-full"
-          )}
-          onClick={handleNavClick}
-        >
-          Overview
-        </Link>
+          icon={<LayoutDashboard className="h-4 w-4" />}
+          label="Overview"
+          active={pathname === "/protected/dashboard"}
+        />
       </div>
 
       {/* Admin Section */}
       {isAdmin && (
-        <div className="pb-2">
-          <h4 className="mb-1 px-2 text-sm font-semibold">Administration</h4>
-          <div className="grid gap-1">
-            <Link
-              href="/protected/admin/dashboard"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/protected/admin/dashboard" && "bg-muted",
-                "justify-start w-full"
-              )}
-              onClick={handleNavClick}
-            >
-              Admin Dashboard
-            </Link>
-            <Link
-              href="/protected/admin/users"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/protected/admin/users" && "bg-muted",
-                "justify-start w-full"
-              )}
-              onClick={handleNavClick}
-            >
-              Users
-            </Link>
-            <Link
-              href="/protected/admin/roles"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/protected/admin/roles" && "bg-muted",
-                "justify-start w-full"
-              )}
-              onClick={handleNavClick}
-            >
-              Roles
-            </Link>
-            <Link
-              href="/protected/admin/newsletter"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/protected/admin/newsletter" && "bg-muted",
-                "justify-start w-full"
-              )}
-              onClick={handleNavClick}
-            >
-              Newsletter
-            </Link>
-            <Link
-              href="/protected/admin/contacts"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/protected/admin/contacts" && "bg-muted",
-                "justify-start w-full"
-              )}
-              onClick={handleNavClick}
-            >
-              Contact Submissions
-            </Link>
-            <Link
-              href="/protected/admin/audit-logs"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/protected/admin/audit-logs" && "bg-muted",
-                "justify-start w-full"
-              )}
-              onClick={handleNavClick}
-            >
-              Audit Logs
-            </Link>
-          </div>
+        <div className={cn(
+          "flex flex-col w-full",
+          collapsed ? "items-center space-y-1" : "items-start space-y-1"
+        )}>
+          {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Administration</h4>}
+          <NavItem
+            href="/protected/admin/dashboard"
+            icon={<LayoutDashboard className="h-4 w-4" />}
+            label="Admin Dashboard"
+            active={pathname === "/protected/admin/dashboard"}
+          />
+          <NavItem
+            href="/protected/admin/users"
+            icon={<Users className="h-4 w-4" />}
+            label="Users"
+            active={pathname === "/protected/admin/users"}
+          />
+          <NavItem
+            href="/protected/admin/roles"
+            icon={<Users className="h-4 w-4" />}
+            label="Roles"
+            active={pathname === "/protected/admin/roles"}
+          />
+          {!collapsed && (
+            <>
+              <NavItem
+                href="/protected/admin/newsletter"
+                icon={<Mail className="h-4 w-4" />}
+                label="Newsletter"
+                active={pathname === "/protected/admin/newsletter"}
+              />
+              <NavItem
+                href="/protected/admin/contacts"
+                icon={<Mail className="h-4 w-4" />}
+                label="Contact Submissions"
+                active={pathname === "/protected/admin/contacts"}
+              />
+              <NavItem
+                href="/protected/admin/audit-logs"
+                icon={<BarChart className="h-4 w-4" />}
+                label="Audit Logs"
+                active={pathname === "/protected/admin/audit-logs"}
+              />
+            </>
+          )}
         </div>
       )}
 
       {/* Events Section */}
       {canManageEvents && (
-        <div className="pb-2">
-          <h4 className="mb-1 px-2 text-sm font-semibold">Events</h4>
-          <div className="grid gap-1">
-            <Link
-              href="/protected/events/create"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/protected/events/create" && "bg-muted",
-                "justify-start w-full"
-              )}
-              onClick={handleNavClick}
-            >
-              Create Event
-            </Link>
-            <Link
-              href="/protected/events/manage"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === "/protected/events/manage" && "bg-muted",
-                "justify-start w-full"
-              )}
-              onClick={handleNavClick}
-            >
-              Manage Events
-            </Link>
-            {(isOrganizer || isAdmin) && (
-              <Link
-                href="/protected/events/qr-codes"
-                className={cn(
-                  buttonVariants({ variant: "ghost" }),
-                  pathname === "/protected/events/qr-codes" && "bg-muted",
-                  "justify-start w-full"
-                )}
-                onClick={handleNavClick}
-              >
-                QR Codes
-              </Link>
-            )}
-            {(isOrganizer || isAdmin) && (
-              <Link
-                href="/protected/events/gallery-settings"
-                className={cn(
-                  buttonVariants({ variant: "ghost" }),
-                  pathname === "/protected/events/gallery-settings" && "bg-muted",
-                  "justify-start w-full"
-                )}
-                onClick={handleNavClick}
-              >
-                Gallery Settings
-              </Link>
-            )}
-            {(isOrganizer || isAdmin) && (
-              <Link
-                href="/protected/events/invitations"
-                className={cn(
-                  buttonVariants({ variant: "ghost" }),
-                  pathname === "/protected/events/invitations" && "bg-muted",
-                  "justify-start w-full"
-                )}
-                onClick={handleNavClick}
-              >
-                Invitations
-              </Link>
-            )}
-          </div>
+        <div className={cn(
+          "flex flex-col w-full",
+          collapsed ? "items-center space-y-1" : "items-start space-y-1"
+        )}>
+          {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Events</h4>}
+          <NavItem
+            href="/protected/events/manage"
+            icon={<Calendar className="h-4 w-4" />}
+            label="All Events"
+            active={pathname === "/protected/events/manage"}
+          />
+          <NavItem
+            href="/protected/events/create"
+            icon={<PlusCircle className="h-4 w-4" />}
+            label="Create New Event"
+            active={pathname === "/protected/events/create"}
+          />
+          {(isOrganizer || isAdmin) && (
+            <NavItem
+              href="/protected/events/templates"
+              icon={<Award className="h-4 w-4" />}
+              label="Templates"
+              active={pathname === "/protected/events/templates"}
+            />
+          )}
+        </div>
+      )}
+      
+      {/* Attendees Section */}
+      {canManageEvents && (
+        <div className={cn(
+          "flex flex-col w-full",
+          collapsed ? "items-center space-y-1" : "items-start space-y-1"
+        )}>
+          {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Attendees</h4>}
+          <NavItem
+            href="/protected/attendees/manage"
+            icon={<Users className="h-4 w-4" />}
+            label="Manage Invitations"
+            active={pathname === "/protected/attendees/manage"}
+          />
+          {(isOrganizer || isAdmin) && (
+            <NavItem
+              href="/protected/attendees/qr-codes"
+              icon={<QrCode className="h-4 w-4" />}
+              label="QR Codes"
+              active={pathname === "/protected/attendees/qr-codes"}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Gallery Section */}
+      <div className={cn(
+        "flex flex-col w-full",
+        collapsed ? "items-center space-y-1" : "items-start space-y-1"
+      )}>
+        {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Gallery</h4>}
+        <NavItem
+          href="/protected/gallery"
+          icon={<Image className="h-4 w-4" />}
+          label="All Photos"
+          active={pathname === "/protected/gallery"}
+        />
+        {canManageEvents && (
+          <>
+            <NavItem
+              href="/protected/gallery/moderate"
+              icon={<Camera className="h-4 w-4" />}
+              label="Photo Moderation"
+              active={pathname === "/protected/gallery/moderate"}
+            />
+            <NavItem
+              href="/protected/gallery/albums"
+              icon={<ImageIcon className="h-4 w-4" />}
+              label="Albums"
+              active={pathname === "/protected/gallery/albums"}
+            />
+          </>
+        )}
+      </div>
+
+      {/* Analytics Section - For organizers and admins */}
+      {(isOrganizer || isAdmin) && (
+        <div className={cn(
+          "flex flex-col w-full",
+          collapsed ? "items-center space-y-1" : "items-start space-y-1"
+        )}>
+          {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Analytics</h4>}
+          <NavItem
+            href="/protected/analytics/events"
+            icon={<BarChart className="h-4 w-4" />}
+            label="Event Performance"
+            active={pathname === "/protected/analytics/events"}
+          />
+          <NavItem
+            href="/protected/analytics/engagement"
+            icon={<Users className="h-4 w-4" />}
+            label="Engagement Metrics"
+            active={pathname === "/protected/analytics/engagement"}
+          />
         </div>
       )}
 
       {/* Settings Section */}
-      <div className="pb-2">
-        <h4 className="mb-1 px-2 text-sm font-semibold">Settings</h4>
-        <div className="grid gap-1">
-          <Link
-            href="/protected/settings/account"
-            className={cn(
-              buttonVariants({ variant: "ghost" }),
-              pathname === "/protected/settings/account" && "bg-muted",
-              "justify-start w-full"
-            )}
-            onClick={handleNavClick}
-          >
-            Account
-          </Link>
-          <Link
-            href="/protected/settings/billing"
-            className={cn(
-              buttonVariants({ variant: "ghost" }),
-              pathname === "/protected/settings/billing" && "bg-muted",
-              "justify-start w-full"
-            )}
-            onClick={handleNavClick}
-          >
-            Billing
-          </Link>
-          <Link
-            href="/protected/settings/notifications"
-            className={cn(
-              buttonVariants({ variant: "ghost" }),
-              pathname === "/protected/settings/notifications" && "bg-muted",
-              "justify-start w-full"
-            )}
-            onClick={handleNavClick}
-          >
-            Notifications
-          </Link>
-        </div>
+      <div className={cn(
+        "flex flex-col w-full",
+        collapsed ? "items-center space-y-1" : "items-start space-y-1"
+      )}>
+        {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Settings</h4>}
+        <NavItem
+          href="/protected/settings/profile"
+          icon={<UserCog className="h-4 w-4" />}
+          label="Profile"
+          active={pathname === "/protected/settings/profile"}
+        />
+        <NavItem
+          href="/protected/settings/notifications"
+          icon={<BellRing className="h-4 w-4" />}
+          label="Notifications"
+          active={pathname === "/protected/settings/notifications"}
+        />
+        <NavItem
+          href="/protected/settings/billing"
+          icon={<CreditCard className="h-4 w-4" />}
+          label="Subscription"
+          active={pathname === "/protected/settings/billing"}
+        />
       </div>
     </nav>
   )

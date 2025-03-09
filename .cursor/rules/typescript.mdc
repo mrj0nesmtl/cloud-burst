@@ -1,11 +1,8 @@
 ---
 description: TypeScript Standards for Cloud Burst
 globs: **/*.ts", "**/*.tsx
+alwaysApply: false
 ---
-# TypeScript Rules (Beta)
-
-## Type Standards
-```typescript
 {
   "typeScriptRules": {
     "strictness": {
@@ -35,11 +32,3 @@ globs: **/*.ts", "**/*.tsx
     }
   }
 }
-```
-
-## Removed Features
-- Complex type hierarchies
-- Advanced type patterns
-- Complex validation schemas
-- Custom type utilities
-- Advanced type checking

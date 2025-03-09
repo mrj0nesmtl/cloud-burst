@@ -9,29 +9,11 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   return (
-    <div style={{ 
-      display: 'flex', 
-      minHeight: '100vh', 
-      overflow: 'hidden' 
-    }}>
-      {/* Left Panel - always visible */}
-      <div style={{ 
-        width: '50%', 
-        background: 'linear-gradient(135deg, #111827 0%, #1f2937 100%)',
-        padding: '2rem',
-        color: 'white',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative'
-      }}>
-        <div style={{ marginBottom: 'auto' }}>
-          <h1 style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: 'bold',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
+    <div className="flex min-h-screen overflow-hidden">
+      {/* Left Panel - hidden on mobile */}
+      <div className="hidden md:flex md:w-1/2 flex-col bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-white relative">
+        <div className="mb-auto">
+          <h1 className="text-xl font-bold flex items-center gap-2">
             <img 
               src="/cloud-lightning.svg" 
               alt="Cloud Burst Logo" 
@@ -43,57 +25,37 @@ export default function AuthLayout({
         </div>
         
         <div>
-          <blockquote style={{ marginBottom: '1rem' }}>
-            <p style={{ fontSize: '1.125rem', lineHeight: '1.5' }}>
+          <blockquote className="mb-4">
+            <p className="text-lg leading-relaxed">
               "Capture moments, create memories, and share experiences with Cloud Burst - your AI-powered event photography platform."
             </p>
-            <footer style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+            <footer className="mt-2 text-sm">
               Cloud Burst Team
             </footer>
           </blockquote>
         </div>
       </div>
       
-      {/* Right Panel - content */}
-      <div style={{ 
-        width: '50%', 
-        padding: '2rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'var(--background)'
-      }}>
-        <div style={{ maxWidth: '400px', width: '100%' }}>
+      {/* Right Panel - full width on mobile, half width on desktop */}
+      <div className="w-full md:w-1/2 p-8 flex items-center justify-center bg-background">
+        <div className="max-w-[400px] w-full">
           {children}
           
-          <p style={{ 
-            textAlign: 'center', 
-            fontSize: '0.875rem',
-            marginTop: '1.5rem',
-            color: 'var(--muted-foreground)'
-          }}>
+          <p className="text-center text-sm mt-6 text-muted-foreground">
             By clicking continue, you agree to our{" "}
-            <a 
+            <Link 
               href="/legal/terms" 
-              style={{ 
-                textDecoration: 'underline', 
-                textUnderlineOffset: '4px',
-                color: 'var(--primary)'
-              }}
+              className="underline underline-offset-4 text-primary"
             >
               Terms of Service
-            </a>{" "}
+            </Link>{" "}
             and{" "}
-            <a 
+            <Link 
               href="/legal/privacy" 
-              style={{ 
-                textDecoration: 'underline', 
-                textUnderlineOffset: '4px',
-                color: 'var(--primary)'
-              }}
+              className="underline underline-offset-4 text-primary"
             >
               Privacy Policy
-            </a>
+            </Link>
             .
           </p>
         </div>

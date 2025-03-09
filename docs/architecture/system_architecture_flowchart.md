@@ -1,7 +1,7 @@
-# 🏛️ **System Architecture Flowchart (Beta v0.1.18)**  
+# 🏛️ **System Architecture Flowchart (Beta v0.7.4)**  
 
 ## Cloud Burst  
-📅 *Mar 3, 2025, 12:40 PM*  
+📅 *Mar 10, 2025, 09:30 AM*  
 
 ---
 
@@ -12,10 +12,12 @@ flowchart TD
         AuthForms[🔐 Auth Forms]
         Protected[🛡️ Protected Routes]
         TanStack[📊 TanStack Query]
+        Dashboard[📊 Dashboard Components]
         Templates[📧 Template Management]
         RBAC[🔒 Role-Based Access]
         Events[📅 Event Management]
         Gallery[🖼️ Gallery Components]
+        Forms[📝 Form System]
     end
 
     subgraph Auth[🔑 Authentication Layer]
@@ -33,6 +35,7 @@ flowchart TD
         TemplateDB[📋 Template Configurations]
         EventsDB[📅 Events Database]
         PhotosDB[📸 Photos Database]
+        AttendeeDB[👥 Attendees Database]
     end
 
     WebApp -->|1. Auth Request| AuthForms
@@ -42,17 +45,20 @@ flowchart TD
     Roles -->|5. Define| Permissions
     Permissions -->|6. Check| RBAC
     RBAC -->|7. Control| Protected
-    Roles -->|8. Access| Database
-    Roles -->|8. Access| Storage
-    TanStack -->|9. Cache| Data
-    Zustand -->|10. State| Protected
-    Templates -->|11. Manage| TemplateDB
-    Templates -->|12. Sync| SupaAuth
-    Events -->|13. Manage| EventsDB
-    Gallery -->|14. Display| PhotosDB
+    Protected -->|8. Load| Dashboard
+    Roles -->|9. Access| Database
+    Roles -->|9. Access| Storage
+    TanStack -->|10. Cache| Data
+    Zustand -->|11. State| Protected
+    Templates -->|12. Manage| TemplateDB
+    Templates -->|13. Sync| SupaAuth
+    Events -->|14. Manage| EventsDB
+    Events -->|15. Manage| AttendeeDB
+    Gallery -->|16. Display| PhotosDB
+    Forms -->|17. Validate| Data
 ```
 
-## 🛠️ **Beta Components (v0.1.18)**  
+## 🛠️ **Beta Components (v0.7.4)**  
 
 ### 📱 **Client Layer**
 - Next.js 14 App Router
@@ -60,10 +66,12 @@ flowchart TD
 - Shadcn/ui Components
 - TanStack Query Integration
 - Protected Route System
+- Dashboard Components
 - Template Management UI
 - Role-Based Access Control
 - Event Management System
 - Gallery Components
+- React Hook Form + Zod Validation
 
 ### 🔑 **Authentication Layer**
 - Supabase Auth
@@ -73,6 +81,7 @@ flowchart TD
 - Template Synchronization
 - Permission System
 - Conditional UI Rendering
+- Form Validation
 
 ### 💾 **Data Layer**
 - PostgreSQL Database
@@ -81,30 +90,37 @@ flowchart TD
 - Template Configurations Table
 - Events Database
 - Photos Database
+- Attendees Database
 - Role Capabilities Table
 
 ---
 
-## 📐 **Beta System Overview (v0.1.18)**  
+## 📐 **Beta System Overview (v0.7.4)**  
 
 ```mermaid
 flowchart TD
     Client[📱 Client Device] -->|🔗 HTTPS Request| WebApp[🌐 Web App (Next.js)]
     WebApp -->|🔌 API Calls| Supabase[🗄️ Supabase]
+    WebApp -->|📊 Dashboard| Dashboard[📊 Dashboard System]
     WebApp -->|📧 Template Management| Templates[📋 Template System]
     WebApp -->|📅 Event Management| Events[📅 Event System]
     WebApp -->|🖼️ Gallery Management| Gallery[🖼️ Gallery System]
+    WebApp -->|👥 Attendee Management| Attendees[👥 Attendee System]
+    WebApp -->|⚙️ User Settings| Settings[⚙️ Settings System]
     WebApp -->|🔒 Access Control| RBAC[🔒 RBAC System]
+    Dashboard -->|🔄 Load| Supabase
     Templates -->|🔄 Sync| Supabase
     Events -->|🔄 CRUD| Supabase
     Gallery -->|🔄 CRUD| Supabase
+    Attendees -->|🔄 CRUD| Supabase
+    Settings -->|🔄 CRUD| Supabase
     RBAC -->|🔐 Verify| Supabase
     Supabase --> Auth[🔑 Auth]
     Supabase --> Database[💾 Database]
     Supabase --> Storage[📦 Storage]
 ```
 
-## 🔒 **Security (v0.1.18)**  
+## 🔒 **Security (v0.7.4)**  
 ✔️ **Complete Auth** – Email/password & social login  
 ✔️ **Enhanced RLS** – Role-based data protection  
 ✔️ **Route Guards** – Protected routes with role verification  
@@ -113,14 +129,60 @@ flowchart TD
 ✔️ **RBAC System** – Comprehensive role-based access control  
 ✔️ **Permission Gates** – Conditional UI rendering based on permissions  
 ✔️ **Event Security** – Owner-based access control for events  
+✔️ **Form Validation** – Zod schema validation for all inputs  
+✔️ **Error Handling** – Comprehensive error states and recovery  
 
-## 🎯 **Next Steps**  
-1. Complete gallery components and lightbox
-2. Enhance event management system
-3. Implement profile management
-4. Add analytics for templates
-5. Enhance QR code system
-6. Implement invited user role
+## 🎯 **Next Steps (v0.7.5)**  
+1. 📊 Complete dashboard section implementations
+2. 📅 Build all event management pages
+3. 👥 Implement attendee management features
+4. 🖼️ Develop gallery section with photo organization
+5. ⚙️ Create settings pages for profile and preferences
+6. 🧪 Test role-based access under real scenarios
+
+## 📊 **Dashboard Architecture**
+
+```mermaid
+flowchart TD
+    subgraph UI[📱 User Interface]
+        ActivityFeed[📋 Activity Feed]
+        QuickActions[⚡ Quick Actions]
+        DashboardStats[📊 Dashboard Stats]
+        RecentEvents[🗓️ Recent Events]
+        Navigation[🧭 Navigation]
+    end
+
+    subgraph Components[🧩 Component Layer]
+        DashboardLayout[📐 Dashboard Layout]
+        SideNav[📑 Side Navigation]
+        TopNav[📌 Top Navigation]
+        UserNav[👤 User Navigation]
+        BreadcrumbNav[🧵 Breadcrumb Navigation]
+    end
+
+    subgraph Data[💾 Data Layer]
+        EventsData[📅 Events Data]
+        ProfileData[👤 Profile Data]
+        ActivityData[📋 Activity Data]
+        StatsData[📊 Stats Data]
+    end
+
+    Navigation -->|Structure| DashboardLayout
+    DashboardLayout -->|Contains| SideNav
+    DashboardLayout -->|Contains| TopNav
+    DashboardLayout -->|Contains| UserNav
+    DashboardLayout -->|Contains| BreadcrumbNav
+    
+    DashboardLayout -->|Displays| ActivityFeed
+    DashboardLayout -->|Displays| QuickActions
+    DashboardLayout -->|Displays| DashboardStats
+    DashboardLayout -->|Displays| RecentEvents
+    
+    ActivityFeed -->|Loads| ActivityData
+    DashboardStats -->|Loads| StatsData
+    RecentEvents -->|Loads| EventsData
+    UserNav -->|Loads| ProfileData
+```
 
 ## 📧 **Template System Architecture**
 
@@ -161,6 +223,8 @@ flowchart TD
         EventList[📋 Event List]
         EventDetail[📄 Event Detail]
         EventForm[📝 Event Form]
+        BasicTab[🔍 Basic Information]
+        AdvancedTab[⚙️ Advanced Settings]
         AttendeeManagement[👥 Attendee Management]
         QRCode[📱 QR Code Display]
     end
@@ -169,6 +233,7 @@ flowchart TD
         EventAPI[📡 Event API]
         AttendeeAPI[👥 Attendee API]
         PhotoAPI[📸 Photo API]
+        ValidationAPI[✅ Validation API]
     end
 
     subgraph Data[💾 Data Layer]
@@ -186,6 +251,9 @@ flowchart TD
 
     EventList -->|View| EventAPI
     EventDetail -->|View| EventAPI
+    EventForm -->|Contains| BasicTab
+    EventForm -->|Contains| AdvancedTab
+    EventForm -->|Validate| ValidationAPI
     EventForm -->|Create/Update| EventAPI
     AttendeeManagement -->|Manage| AttendeeAPI
     QRCode -->|Generate| EventAPI
@@ -198,6 +266,250 @@ flowchart TD
     Permissions -->|Control| Gates
     Gates -->|Protect| UI
     RLS -->|Secure| Data
+    ValidationAPI -->|Validate| EventAPI
+```
+
+## 👥 **Attendee Management Architecture**
+
+```mermaid
+flowchart TD
+    subgraph UI[📱 User Interface]
+        InvitationForm[📝 Invitation Form]
+        AttendeeList[👥 Attendee List]
+        RoleAssignment[👑 Role Assignment]
+        QRGenerator[📱 QR Generator]
+        CheckIn[✅ Check-in System]
+    end
+
+    subgraph API[🔌 API Layer]
+        AttendeeAPI[📡 Attendee API]
+        InvitationAPI[📧 Invitation API]
+        QrAPI[📱 QR API]
+        EventAccessAPI[🔑 Event Access API]
+    end
+
+    subgraph Data[💾 Data Layer]
+        AttendeesDB[👥 Attendees Table]
+        InvitationsDB[📧 Invitations Table]
+        EventsDB[📅 Events Table]
+        RLS[🔒 Row Level Security]
+    end
+
+    InvitationForm -->|Create| InvitationAPI
+    AttendeeList -->|Manage| AttendeeAPI
+    RoleAssignment -->|Update| AttendeeAPI
+    QRGenerator -->|Generate| QrAPI
+    CheckIn -->|Validate| EventAccessAPI
+    
+    InvitationAPI -->|CRUD| InvitationsDB
+    AttendeeAPI -->|CRUD| AttendeesDB
+    QrAPI -->|Read| EventsDB
+    EventAccessAPI -->|Validate| AttendeesDB
+    
+    RLS -->|Secure| AttendeesDB
+    RLS -->|Secure| InvitationsDB
+    RLS -->|Secure| EventsDB
+```
+
+## 🖼️ **Gallery System Architecture**
+
+```mermaid
+flowchart TD
+    subgraph UI[📱 User Interface]
+        UploadDropzone[📤 Upload Dropzone]
+        GalleryGrid[🖼️ Gallery Grid]
+        PhotoLightbox[🔍 Photo Lightbox]
+        ModerationQueue[✅ Moderation Queue]
+        AlbumManagement[📁 Album Management]
+    end
+
+    subgraph API[🔌 API Layer]
+        UploadAPI[📤 Upload API]
+        GalleryAPI[🖼️ Gallery API]
+        ModerationAPI[✅ Moderation API]
+        AlbumAPI[📁 Album API]
+    end
+
+    subgraph Data[💾 Data Layer]
+        PhotosDB[📸 Photos Table]
+        AlbumsDB[📁 Albums Table]
+        TagsDB[🏷️ Tags Table]
+        StorageBucket[📦 Storage Bucket]
+    end
+
+    subgraph Processing[⚙️ Processing Layer]
+        ImageOptimization[🔧 Image Optimization]
+        Thumbnails[🖼️ Thumbnail Generation]
+        MetadataExtraction[📋 Metadata Extraction]
+    end
+
+    UploadDropzone -->|Upload| UploadAPI
+    GalleryGrid -->|Fetch| GalleryAPI
+    PhotoLightbox -->|View| GalleryAPI
+    ModerationQueue -->|Review| ModerationAPI
+    AlbumManagement -->|Manage| AlbumAPI
+    
+    UploadAPI -->|Process| Processing
+    UploadAPI -->|Store| StorageBucket
+    GalleryAPI -->|Fetch| PhotosDB
+    GalleryAPI -->|Fetch| AlbumsDB
+    ModerationAPI -->|Update| PhotosDB
+    AlbumAPI -->|CRUD| AlbumsDB
+    
+    Processing -->|Optimize| ImageOptimization
+    Processing -->|Generate| Thumbnails
+    Processing -->|Extract| MetadataExtraction
+    Processing -->|Save| PhotosDB
+    
+    ImageOptimization -->|Save| StorageBucket
+    Thumbnails -->|Save| StorageBucket
+    MetadataExtraction -->|Save| PhotosDB
+    MetadataExtraction -->|Tag| TagsDB
+```
+
+## ⚙️ **Settings System Architecture**
+
+```mermaid
+flowchart TD
+    subgraph UI[📱 User Interface]
+        ProfileForm[👤 Profile Form]
+        NotificationPrefs[🔔 Notification Preferences]
+        SubscriptionManagement[💰 Subscription Management]
+        SecuritySettings[🔒 Security Settings]
+    end
+
+    subgraph API[🔌 API Layer]
+        ProfileAPI[👤 Profile API]
+        NotificationAPI[🔔 Notification API]
+        SubscriptionAPI[💰 Subscription API]
+        SecurityAPI[🔒 Security API]
+    end
+
+    subgraph Data[💾 Data Layer]
+        ProfilesDB[👤 Profiles Table]
+        NotificationSettingsDB[🔔 Notification Settings Table]
+        SubscriptionsDB[💰 Subscriptions Table]
+        AuthTable[🔑 Auth Table]
+    end
+
+    ProfileForm -->|Update| ProfileAPI
+    NotificationPrefs -->|Update| NotificationAPI
+    SubscriptionManagement -->|Manage| SubscriptionAPI
+    SecuritySettings -->|Update| SecurityAPI
+    
+    ProfileAPI -->|CRUD| ProfilesDB
+    NotificationAPI -->|CRUD| NotificationSettingsDB
+    SubscriptionAPI -->|CRUD| SubscriptionsDB
+    SecurityAPI -->|Update| AuthTable
+```
+
+## 📱 **Responsive Application Structure**
+
+```mermaid
+flowchart TD
+    subgraph Core[🧠 Core Application]
+        Routes[🛣️ App Router Routes]
+        Components[🧩 Shared Components]
+        Hooks[🪝 Custom Hooks]
+        Stores[🏪 Zustand Stores]
+    end
+
+    subgraph Layout[📐 Layout System]
+        DashboardLayout[📊 Dashboard Layout]
+        MarketingLayout[🏪 Marketing Layout]
+        AuthLayout[🔐 Auth Layout]
+        MobileNav[📱 Mobile Navigation]
+        SideNav[📊 Sidebar Navigation]
+    end
+
+    subgraph Form[📝 Form System]
+        ReactHookForm[📝 React Hook Form]
+        ZodValidation[✅ Zod Validation]
+        ErrorHandling[❌ Error Handling]
+        FormComponents[🧩 Form Components]
+    end
+
+    subgraph State[🔄 State Management]
+        AuthStore[🔐 Auth Store]
+        EventsStore[📅 Events Store]
+        UIStore[🎨 UI Store]
+        PhotosStore[📸 Photos Store]
+        NotificationStore[🔔 Notification Store]
+    end
+
+    Routes -->|Use| Components
+    Routes -->|Use| Hooks
+    Components -->|Use| Hooks
+    Hooks -->|Use| Stores
+    
+    Routes -->|Use| Layout
+    Layout -->|Responsive| MobileNav
+    Layout -->|Desktop| SideNav
+    
+    Components -->|Use| Form
+    Form -->|Validation| ZodValidation
+    Form -->|Management| ReactHookForm
+    Form -->|Handling| ErrorHandling
+    
+    Hooks -->|Access| State
+    State -->|Auth| AuthStore
+    State -->|Events| EventsStore
+    State -->|UI| UIStore
+    State -->|Photos| PhotosStore
+    State -->|Notifications| NotificationStore
+```
+
+## 💻 **Session 22 Implementation Focus**
+
+```mermaid
+flowchart TD
+    subgraph Dashboard[📊 Dashboard Implementation]
+        DashboardPage[📊 Overview Page]
+        EventsPages[📅 Events Pages]
+        AttendeesPages[👥 Attendees Pages]
+        GalleryPages[🖼️ Gallery Pages]
+        SettingsPages[⚙️ Settings Pages]
+    end
+
+    subgraph Components[🧩 Component Implementation]
+        EventComponents[📅 Event Components]
+        AttendeeComponents[👥 Attendee Components]
+        GalleryComponents[🖼️ Gallery Components]
+        SettingsComponents[⚙️ Settings Components]
+    end
+
+    subgraph Data[💾 Data Integration]
+        EventsData[📅 Events API Integration]
+        AttendeesData[👥 Attendees API Integration]
+        GalleryData[🖼️ Gallery API Integration]
+        SettingsData[⚙️ Settings API Integration]
+    end
+
+    subgraph Testing[🧪 Testing & Refinement]
+        ComponentTesting[🧩 Component Testing]
+        IntegrationTesting[🔄 Integration Testing]
+        AccessTesting[🔒 Access Control Testing]
+        ResponsiveTesting[📱 Responsive Testing]
+    end
+
+    Dashboard -->|Implement| EventsPages
+    Dashboard -->|Implement| AttendeesPages
+    Dashboard -->|Implement| GalleryPages
+    Dashboard -->|Implement| SettingsPages
+    
+    EventsPages -->|Use| EventComponents
+    AttendeesPages -->|Use| AttendeeComponents
+    GalleryPages -->|Use| GalleryComponents
+    SettingsPages -->|Use| SettingsComponents
+    
+    EventComponents -->|Connect To| EventsData
+    AttendeeComponents -->|Connect To| AttendeesData
+    GalleryComponents -->|Connect To| GalleryData
+    SettingsComponents -->|Connect To| SettingsData
+    
+    Dashboard -->|Verify| Testing
+    Components -->|Verify| Testing
+    Data -->|Verify| Testing
 ```
 
 ## 4. CHANGELOG Update

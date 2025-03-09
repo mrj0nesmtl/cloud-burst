@@ -1,11 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SideNav } from '@/components/nav/side-nav'
-import { MainNav } from '@/components/layout/main-nav'
 import { UserNav } from '@/components/nav/user-nav'
 import { Button } from '@/components/ui/button'
-import { Menu, X, LogOut } from 'lucide-react'
+import { Menu, X, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
@@ -13,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from '@/components/ui/use-toast'
 import Link from 'next/link'
 import { Logo } from '@/components/nav/logo'
+import { ModeToggle } from '@/components/ui/mode-toggle'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -20,8 +20,22 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const { user, profile, isLoading, signOut } = useAuth()
   const router = useRouter()
+
+  // Load sidebar collapsed state from localStorage on mount
+  useEffect(() => {
+    const savedState = localStorage.getItem('sidebarCollapsed')
+    if (savedState !== null) {
+      setSidebarCollapsed(savedState === 'true')
+    }
+  }, [])
+
+  // Save sidebar collapsed state to localStorage
+  useEffect(() => {
+    localStorage.setItem('sidebarCollapsed', String(sidebarCollapsed))
+  }, [sidebarCollapsed])
 
   const handleSignOut = async () => {
     try {
@@ -85,7 +99,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="sr-only">Close sidebar</span>
             </Button>
           </div>
-          <SideNav />
+          <SideNav collapsed={false} />
         </div>
       </div>
       
@@ -101,11 +115,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle menu</span>
           </Button>
-          <div className="hidden lg:block">
-            <Logo />
-          </div>
+          <Logo />
           <div className="ml-auto flex items-center gap-2">
-            <MainNav />
             <UserNav
               user={user}
               profile={profile}
@@ -117,12 +128,32 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       
       {/* Main content */}
       <div className="flex flex-1">
-        <div className="hidden border-r lg:block">
-          <div className="sticky top-16 h-[calc(100vh-4rem)] w-56 overflow-y-auto py-6">
-            <SideNav />
+        {/* Desktop sidebar */}
+        <div className={cn(
+          "hidden border-r transition-all duration-300 ease-in-out lg:block",
+          sidebarCollapsed ? "w-20" : "w-64"
+        )}>
+          <div className="relative sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto py-6">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-[-12px] top-6 z-20 h-6 w-6 rounded-full border bg-background shadow-md"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            >
+              {sidebarCollapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </Button>
+            <SideNav collapsed={sidebarCollapsed} />
           </div>
         </div>
-        <main className="flex-1 overflow-y-auto p-6">
+        
+        <main className={cn(
+          "flex-1 overflow-y-auto p-6",
+          sidebarCollapsed ? "lg:ml-20" : "lg:ml-0"
+        )}>
           {children}
         </main>
       </div>

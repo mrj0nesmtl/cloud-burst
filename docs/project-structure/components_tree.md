@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-06T19:30:41.080Z
+Generated: 2025-03-09T04:22:36.716Z
 
 ```
 ./src/components/
@@ -12,13 +12,17 @@ Generated: 2025-03-06T19:30:41.080Z
 │   ├── role-guard.tsx
 │   └── social-auth-buttons.tsx
 ├── dashboard/
+│   ├── activity-feed.tsx
 │   ├── analytics-overview.tsx
 │   ├── contact-stats.tsx
 │   ├── contact-submissions.tsx
+│   ├── dashboard-stats.tsx
 │   ├── event-summary.tsx
 │   ├── newsletter-stats.tsx
 │   ├── newsletter-subscribers.tsx
-│   └── recent-activity.tsx
+│   ├── quick-actions.tsx
+│   ├── recent-activity.tsx
+│   └── recent-events.tsx
 ├── events/
 │   ├── attendee-management.tsx
 │   ├── event-actions.tsx
@@ -62,7 +66,8 @@ Generated: 2025-03-06T19:30:41.080Z
 │   └── template-preview.tsx
 ├── providers/
 │   ├── query-provider.tsx
-│   └── toast-provider.tsx
+│   ├── toast-provider.tsx
+│   └── tooltip-provider.tsx
 ├── ui/
 │   ├── contact/
 │   │   └── page.tsx
@@ -107,6 +112,7 @@ Generated: 2025-03-06T19:30:41.080Z
 │   ├── textarea.tsx
 │   ├── toast.tsx
 │   ├── toaster.tsx
+│   ├── tooltip.tsx
 │   └── use-toast.ts
 ├── cookie-consent.tsx
 ├── debug-info.tsx
@@ -114,7 +120,7 @@ Generated: 2025-03-06T19:30:41.080Z
 ├── query-provider.tsx
 └── theme-provider.tsx
 
-13 directories, 98 files
+13 directories, 104 files
 
 ```
 
