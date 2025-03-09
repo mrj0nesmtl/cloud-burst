@@ -8,7 +8,7 @@ export async function GET(request: Request) {
 
     if (!code) {
       return NextResponse.redirect(
-        `${requestUrl.origin}/auth/login?error=no_code`
+        `${requestUrl.origin}/auth/signin?error=no_code`
       )
     }
 
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Auth callback error:', error)
     return NextResponse.redirect(
-      `${new URL(request.url).origin}/auth/login?error=auth_callback_failed`
+      `${new URL(request.url).origin}/auth/signin?error=auth_callback_failed`
     )
   }
 } 

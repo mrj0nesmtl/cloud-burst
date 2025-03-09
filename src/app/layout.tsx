@@ -1,7 +1,9 @@
 import { GeistSans } from "geist/font/sans"
 import { Metadata, Viewport } from "next"
 import { Suspense } from "react"
+// Import CSS files in the correct order
 import "./globals.css"
+import "./components.css"
 import "@/styles/layout.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/ui/site-header"
@@ -11,6 +13,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Toaster as UIToaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 
 // Configure fonts
 const inter = Inter({ 
@@ -71,11 +74,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
+      <head>
+        <Script id="theme-script" strategy="beforeInteractive">
+          {`
+            (function() {
+              try {
+                const storageKey = 'cloud-burst-theme';
+                const theme = localStorage.getItem(storageKey);
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                document.documentElement.classList.add(theme === 'system' ? systemTheme : theme || 'dark');
+              } catch (e) {
+                console.error('Error applying theme:', e);
+                document.documentElement.classList.add('dark');
+              }
+            })();
+          `}
+        </Script>
+      </head>
       <body className="font-sans antialiased">
         <QueryProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
             storageKey="cloud-burst-theme"

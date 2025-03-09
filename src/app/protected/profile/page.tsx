@@ -25,7 +25,7 @@ export default async function ProfilePage() {
   } = await supabase.auth.getSession()
 
   if (!session) {
-    redirect('/auth/login')
+    redirect('/auth/signin')
   }
 
   const { data: profile } = await supabase

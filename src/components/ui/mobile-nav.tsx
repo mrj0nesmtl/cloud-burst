@@ -143,7 +143,7 @@ export function MobileNav() {
           <div className="px-6 py-4 border-t">
             <div className="grid gap-3">
               <Button variant="outline" asChild className="w-full">
-                <Link href="/auth/login" className="mobile-menu-item">
+                <Link href="/auth/signin" className="mobile-menu-item">
                   Sign in
                 </Link>
               </Button>
