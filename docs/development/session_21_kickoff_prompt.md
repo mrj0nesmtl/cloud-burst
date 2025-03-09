@@ -13,16 +13,18 @@ Following our successful navigation system recovery in Session 20, we've discove
    - Form submission errors in authentication flows
    - Navigation conflicts between auth flows and main application
 
+3. **Protected Route Uncertainty:**
+   - Unable to properly test role-based access controls
+   - Dashboard access verification needed for different user roles
+   - Authentication state management requires validation
+   
 2. **Design Inconsistencies:**
    - Light mode theme is visually substandard compared to dark mode
    - Call-to-action elements have improper padding and layout
    - Contrast and readability issues in light mode
    - Visual inconsistencies across the platform
 
-3. **Protected Route Uncertainty:**
-   - Unable to properly test role-based access controls
-   - Dashboard access verification needed for different user roles
-   - Authentication state management requires validation
+
 
 ## 🎯 Session 21 Objectives
 
@@ -102,3 +104,20 @@ Following our successful navigation system recovery in Session 20, we've discove
    - Notification system
 2. Continue with performance optimization
 3. Prepare for comprehensive testing phase
+
+## 🛡️ Development Guidelines
+1. Branch Management:
+   - Create single session-21 branch from main
+   - No feature sub-branches
+   - Direct commits to session branch only
+
+2. Change Management:
+   - Maximum 25 lines changed per commit
+   - Mandatory testing between changes
+   - No simultaneous component modifications
+
+3. Testing Requirements:
+   - Local verification before each commit
+   - Browser testing in both light/dark modes
+   - Mobile responsive testing
+   - Documented test results

@@ -1,5 +1,27 @@
 # Session 21 Checklist: Authentication Repair & Design Refinement
 
+## Pre-Development Setup
+- [ ] Create single session-21 branch from main
+- [ ] Verify clean working directory
+- [ ] Document starting state
+
+## Development Workflow (For Each Change)
+- [ ] Identify single component to modify
+- [ ] Create backup of current state
+- [ ] Make minimal required changes
+- [ ] Test in isolation
+- [ ] Verify no regression
+- [ ] Document changes
+- [ ] Commit with detailed message
+
+## Testing Checkpoints
+- [ ] After each component change:
+  - [ ] Verify in light mode
+  - [ ] Verify in dark mode
+  - [ ] Test responsive behavior
+  - [ ] Check navigation flow
+  - [ ] Validate against main branch
+
 ## Priority 1: Authentication System Repair
 - [ ] Diagnose sign-in page issues
   - [ ] Identify layout problems
@@ -80,16 +102,3 @@
   - [ ] Update development roadmap
   - [ ] Revise timeline estimates
 
-## Priority 5: Additional Improvements (If Time Permits)
-- [ ] Begin download options implementation
-  - [ ] Design download UI components
-  - [ ] Create download service architecture
-  - [ ] Implement basic download functionality
-- [ ] Enhance sharing capabilities
-  - [ ] Design improved sharing UI
-  - [ ] Implement sharing service enhancements
-  - [ ] Create link generation system
-- [ ] Draft notification system
-  - [ ] Design notification components
-  - [ ] Create notification state management
-  - [ ] Plan real-time notification features
