@@ -1,0 +1,618 @@
+---
+description: Dashboard Component Standards for Cloud Burst
+globs: **/dashboard/**, **/protected/**
+alwaysApply: false
+---
+# Dashboard Component Standards for Cloud Burst
+
+> **Version:** 0.7.4  
+> **Last Updated:** March 2025  
+> **Related to:** Session 22 - Dashboard Completion & Event Organizer Experience
+
+```json
+{
+  "description": "Dashboard component standards for Cloud Burst, including section layouts, cards, data visualization, and specialized components for the event organizer dashboard",
+  "globs": ["**/dashboard/**", "**/protected/**"],
+  "rules": {
+    "dashboardStructure": {
+      "sectioning": {
+        "usePrimarySection": true,
+        "useSecondarySection": true,
+        "useFullWidthLayout": true,
+        "useResponsiveColumn": true,
+        "useDividers": true
+      },
+      "components": {
+        "useStatCard": true,
+        "useActivityFeed": true,
+        "useQuickActions": true,
+        "useEventList": true,
+        "useCalendarView": true,
+        "useDataTable": true,
+        "useFileGrid": true
+      },
+      "layout": {
+        "maxSections": 4,
+        "gridGap": "1.5rem",
+        "sectionPadding": "1.5rem",
+        "cardPadding": "1rem",
+        "breakpoints": {
+          "mobile": "640px",
+          "tablet": "768px",
+          "desktop": "1024px",
+          "wide": "1280px"
+        }
+      }
+    },
+    "cardComponents": {
+      "variants": {
+        "standard": "Default card with border and white background",
+        "highlight": "Card with accent border and subtle background color",
+        "metric": "Card for displaying a single key metric",
+        "action": "Interactive card with hover and press states"
+      },
+      "structure": {
+        "header": {
+          "required": true,
+          "includeIcon": true,
+          "includeTitle": true,
+          "includeActions": true
+        },
+        "body": {
+          "required": true,
+          "paddingTop": "0.5rem",
+          "paddingBottom": "0.5rem"
+        },
+        "footer": {
+          "required": false,
+          "includeAction": true,
+          "includeMetadata": true
+        }
+      },
+      "interactivity": {
+        "useHoverState": true,
+        "usePressState": true,
+        "useFocusRing": true,
+        "useContextMenu": true
+      }
+    },
+    "dataVisualization": {
+      "charts": {
+        "preferred": "recharts",
+        "types": ["bar", "line", "pie", "area"],
+        "accessibility": {
+          "useAltText": true,
+          "useAriaLabels": true,
+          "useDataTable": true
+        },
+        "theming": {
+          "useSystemColors": true,
+          "useLightDarkTokens": true,
+          "useColorBlindSafe": true
+        }
+      },
+      "dataDisplay": {
+        "emptyState": {
+          "required": true,
+          "includeIllustration": true,
+          "includeMessage": true,
+          "includeAction": true
+        },
+        "loading": {
+          "useSkeletonLoader": true,
+          "useProgressIndicator": true,
+          "retainLayout": true
+        },
+        "error": {
+          "includeMessage": true,
+          "includeRetry": true,
+          "preserveLayout": true
+        },
+        "pagination": {
+          "itemsPerPage": [10, 25, 50, 100],
+          "defaultItems": 25,
+          "useInfiniteScroll": true,
+          "usePageNavigation": true
+        }
+      }
+    },
+    "dashboardNavigation": {
+      "structure": {
+        "useSidebar": true,
+        "useTopBar": true,
+        "useBreadcrumbs": true,
+        "useContextualActions": true
+      },
+      "sidebarSections": [
+        "Overview",
+        "Events",
+        "Attendees",
+        "Gallery",
+        "Analytics",
+        "Settings"
+      ],
+      "breadcrumbs": {
+        "maxDepth": 3,
+        "includeHome": true,
+        "truncateMiddle": true
+      },
+      "contextualNavigation": {
+        "useTabNavigation": true,
+        "useSteppers": true,
+        "useWizard": true
+      }
+    },
+    "specializedDashboardComponents": {
+      "events": {
+        "eventCard": {
+          "displayTitle": true,
+          "displayDate": true,
+          "displayStatus": true,
+          "displayAttendeeCount": true,
+          "displayThumbnail": true,
+          "displayActions": true
+        },
+        "eventTable": {
+          "columns": [
+            "Title",
+            "Date",
+            "Location",
+            "Attendees",
+            "Status",
+            "Actions"
+          ],
+          "sortable": true,
+          "filterable": true,
+          "selectable": true
+        },
+        "eventTemplates": {
+          "displayCategory": true,
+          "displayPreview": true,
+          "displayDescription": true,
+          "displayUseCount": true
+        }
+      },
+      "attendees": {
+        "attendeeList": {
+          "displayName": true,
+          "displayEmail": true,
+          "displayStatus": true,
+          "displayRSVP": true,
+          "displayActions": true
+        },
+        "qrCodes": {
+          "displayName": true,
+          "displayType": true,
+          "displayEventInfo": true,
+          "displayDownload": true,
+          "displayShare": true
+        },
+        "invitationFlow": {
+          "steps": [
+            "selectTemplate",
+            "customizeMessage",
+            "selectRecipients",
+            "reviewSend"
+          ],
+          "supportBulkActions": true,
+          "supportScheduling": true
+        }
+      },
+      "gallery": {
+        "photoGrid": {
+          "viewOptions": ["grid", "masonry", "list"],
+          "selectableItems": true,
+          "dragAndDrop": true,
+          "supportFilters": true,
+          "supportSorting": true
+        },
+        "photoCard": {
+          "displayPreview": true,
+          "displayMetadata": true,
+          "displayLikes": true,
+          "displayDownload": true,
+          "displayActions": true
+        },
+        "albumsList": {
+          "displayTitle": true,
+          "displayCover": true,
+          "displayCount": true,
+          "displayDate": true,
+          "displayActions": true
+        }
+      },
+      "settings": {
+        "formSections": {
+          "useFormSection": true,
+          "useFieldGroup": true,
+          "useSaveIndicator": true,
+          "useValidationSummary": true
+        },
+        "profileSettings": {
+          "displayAvatar": true,
+          "displayPersonalInfo": true,
+          "displayNotifications": true,
+          "displayConnection": true,
+          "displayBilling": true
+        }
+      }
+    }
+  }
+}
+```
+
+## Dashboard Component Architecture
+
+Cloud Burst follows a structured approach to dashboard components to ensure consistency, maintainability, and a professional user experience. This document outlines the standards and patterns for building dashboard components for the event organizer experience.
+
+### Core Dashboard Layout
+
+The dashboard uses a responsive layout structure:
+
+1. **Top Navigation**: Contains branding, search, and user profile
+2. **Sidebar**: Contains navigation between dashboard sections
+3. **Content Area**: Contains the main dashboard content
+4. **Contextual Actions**: Contains actions relevant to the current view
+
+#### Layout Example
+
+```tsx
+// src/app/protected/dashboard/page.tsx
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { DashboardStats } from "@/components/dashboard/DashboardStats";
+import { RecentEvents } from "@/components/dashboard/RecentEvents";
+import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
+import { QuickActions } from "@/components/dashboard/QuickActions";
+
+export default function DashboardPage() {
+  return (
+    <div className="space-y-6 p-6">
+      <DashboardHeader
+        title="Dashboard"
+        description="Welcome back, Organizer User"
+        actions={<CreateEventButton />}
+      />
+      
+      <DashboardStats />
+      
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <RecentEvents />
+        <div className="space-y-6">
+          <ActivityFeed />
+          <QuickActions />
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### Card Components
+
+Dashboard cards are used to contain discrete sections of content. They follow a consistent structure:
+
+#### Card Structure
+
+1. **Header**: Title, icon, and optional actions
+2. **Content**: Main content of the card
+3. **Footer**: Optional metadata or actions
+
+#### Card Example
+
+```tsx
+// src/components/dashboard/StatCard.tsx
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  description?: string;
+  icon?: React.ReactNode;
+  trend?: {
+    value: number;
+    isPositive: boolean;
+  };
+}
+
+export function StatCard({ title, value, description, icon, trend }: StatCardProps) {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        {icon && <div className="h-4 w-4 text-muted-foreground">{icon}</div>}
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        {description && (
+          <CardDescription>{description}</CardDescription>
+        )}
+        {trend && (
+          <p className={`text-xs ${trend.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+            {trend.isPositive ? '+' : '-'}{Math.abs(trend.value)}%
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+### Data Visualization
+
+For visualizing data in the dashboard, we use consistent patterns:
+
+1. **Charts**: Using Recharts for data visualization
+2. **Metrics**: Using stat cards for key performance indicators
+3. **Tables**: Using data tables for structured information
+4. **Activity Feeds**: Using timeline components for chronological activities
+
+#### Chart Example
+
+```tsx
+// src/components/dashboard/EventsChart.tsx
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer 
+} from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+interface EventsChartProps {
+  data: {
+    date: string;
+    value: number;
+  }[];
+  title: string;
+}
+
+export function EventsChart({ data, title }: EventsChartProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={data}
+              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke="#8884d8"
+                fillOpacity={1}
+                fill="url(#colorValue)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+### Specialized Dashboard Components
+
+#### Activity Feed
+
+The Activity Feed component displays recent activities:
+
+```tsx
+// src/components/dashboard/ActivityFeed.tsx
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+interface Activity {
+  id: string;
+  type: 'photo' | 'comment' | 'rsvp' | 'system';
+  content: string;
+  timestamp: string;
+  meta?: {
+    eventId?: string;
+    eventName?: string;
+  };
+}
+
+interface ActivityFeedProps {
+  activities: Activity[];
+}
+
+export function ActivityFeed({ activities }: ActivityFeedProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Activity Feed</CardTitle>
+      </CardHeader>
+      <CardContent className="max-h-[400px] overflow-auto">
+        <div className="space-y-4">
+          {activities.map((activity) => (
+            <div key={activity.id} className="flex items-start gap-3">
+              <ActivityIcon type={activity.type} />
+              <div>
+                <p className="text-sm">{activity.content}</p>
+                {activity.meta?.eventName && (
+                  <p className="text-xs text-muted-foreground">
+                    in {activity.meta.eventName}
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  {formatTimestamp(activity.timestamp)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+#### Quick Actions
+
+The Quick Actions component provides easy access to common tasks:
+
+```tsx
+// src/components/dashboard/QuickActions.tsx
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+interface QuickAction {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  href: string;
+}
+
+export function QuickActions() {
+  const actions: QuickAction[] = [
+    {
+      title: "Create Event",
+      description: "Set up a new event",
+      icon: <CalendarIcon />,
+      href: "/protected/events/new",
+    },
+    {
+      title: "Invite Attendees",
+      description: "Send invitations to guests",
+      icon: <UserPlusIcon />,
+      href: "/protected/attendees/manage",
+    },
+    // Additional actions...
+  ];
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Quick Actions</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-4">
+          {actions.map((action) => (
+            <Button
+              key={action.title}
+              variant="outline"
+              className="justify-start h-auto p-4"
+              asChild
+            >
+              <Link href={action.href}>
+                <div className="flex items-center gap-4">
+                  <div className="rounded-full p-2 bg-muted">
+                    {action.icon}
+                  </div>
+                  <div>
+                    <div className="font-medium">{action.title}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {action.description}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </Button>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+### Data States
+
+All dashboard components should handle various data states:
+
+#### Empty State
+
+```tsx
+// Example of an empty state component
+export function EmptyState({ 
+  title = "No items found",
+  description = "Get started by creating your first item.",
+  action,
+  icon
+}: EmptyStateProps) {
+  return (
+    <div className="flex flex-col items-center justify-center p-8 text-center">
+      {icon && <div className="mb-4 text-muted-foreground">{icon}</div>}
+      <h3 className="text-lg font-medium">{title}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+      {action && <div className="mt-6">{action}</div>}
+    </div>
+  );
+}
+```
+
+#### Loading State
+
+```tsx
+// Example of a loading state component
+export function LoadingState() {
+  return (
+    <div className="space-y-4">
+      <div className="h-8 w-1/3 rounded-md bg-muted animate-pulse" />
+      <div className="h-20 rounded-md bg-muted animate-pulse" />
+      <div className="h-20 rounded-md bg-muted animate-pulse" />
+      <div className="h-20 rounded-md bg-muted animate-pulse" />
+    </div>
+  );
+}
+```
+
+#### Error State
+
+```tsx
+// Example of an error state component
+export function ErrorState({ 
+  title = "Something went wrong",
+  description = "There was an error loading this content.",
+  retryAction
+}: ErrorStateProps) {
+  return (
+    <div className="flex flex-col items-center justify-center p-8 text-center">
+      <AlertTriangleIcon className="h-8 w-8 text-red-500 mb-4" />
+      <h3 className="text-lg font-medium">{title}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+      {retryAction && <div className="mt-6">{retryAction}</div>}
+    </div>
+  );
+}
+```
+
+## Implementation Checklist
+
+When creating dashboard components:
+
+- [ ] Use the appropriate card structure
+- [ ] Implement all data states (loading, empty, error)
+- [ ] Ensure responsive behavior across devices
+- [ ] Implement proper accessibility attributes
+- [ ] Use consistent spacing and typography
+- [ ] Include appropriate actions and interactions
+- [ ] Test in both light and dark mode
+
+## Best Practices
+
+1. **Consistent Layout**: Maintain consistent spacing and layout across all dashboard components
+2. **Progressive Loading**: Implement skeleton loaders for a better user experience during data fetching
+3. **Actionable Insights**: Make data actionable by including relevant actions with each component
+4. **Responsive Design**: Ensure all components adapt appropriately to different screen sizes
+5. **Accessibility**: Implement proper ARIA attributes and ensure keyboard navigability
+6. **Performance**: Optimize rendering and data fetching to ensure a responsive dashboard
+7. **Dark Mode Support**: Ensure all components look good in both light and dark mode 

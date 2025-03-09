@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-03-06T19:30:41.094Z
+Generated: 2025-03-09T04:22:36.730Z
 
 ```
 ./src/lib/
@@ -12,7 +12,6 @@ Generated: 2025-03-06T19:30:41.094Z
 │   ├── __tests__/
 │   │   ├── auth-store.test.ts
 │   │   └── events.test.ts
-│   ├── migrations/
 │   ├── auth-store.ts
 │   ├── client.ts
 │   ├── debug-queries.ts
@@ -33,7 +32,7 @@ Generated: 2025-03-06T19:30:41.094Z
 ├── user-sessions.ts
 └── utils.ts
 
-6 directories, 24 files
+5 directories, 24 files
 
 ```
 

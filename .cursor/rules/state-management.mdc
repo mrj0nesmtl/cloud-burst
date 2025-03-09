@@ -1,11 +1,8 @@
 ---
 description: State Management Standards for Cloud Burst
 globs: src/store/**/*.ts", "src/hooks/**/*.ts
+alwaysApply: false
 ---
-# State Management Rules
-
-## Zustand Store Standards
-```typescript
 {
   "stateManagement": {
     "zustand": {
@@ -44,4 +41,3 @@ globs: src/store/**/*.ts", "src/hooks/**/*.ts
     }
   }
 }
-```

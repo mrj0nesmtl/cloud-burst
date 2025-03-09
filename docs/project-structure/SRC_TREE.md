@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-06T19:30:40.984Z
+Generated: 2025-03-09T04:22:36.616Z
 
 ```
 ./src/
@@ -27,6 +27,8 @@ Generated: 2025-03-06T19:30:40.984Z
 │   │   ├── register/
 │   │   │   └── page.tsx
 │   │   ├── signin/
+│   │   │   └── page.tsx
+│   │   ├── test-layout/
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
 │   ├── dashboard/
@@ -171,13 +173,17 @@ Generated: 2025-03-06T19:30:40.984Z
 │   │   ├── role-guard.tsx
 │   │   └── social-auth-buttons.tsx
 │   ├── dashboard/
+│   │   ├── activity-feed.tsx
 │   │   ├── analytics-overview.tsx
 │   │   ├── contact-stats.tsx
 │   │   ├── contact-submissions.tsx
+│   │   ├── dashboard-stats.tsx
 │   │   ├── event-summary.tsx
 │   │   ├── newsletter-stats.tsx
 │   │   ├── newsletter-subscribers.tsx
-│   │   └── recent-activity.tsx
+│   │   ├── quick-actions.tsx
+│   │   ├── recent-activity.tsx
+│   │   └── recent-events.tsx
 │   ├── events/
 │   │   ├── attendee-management.tsx
 │   │   ├── event-actions.tsx
@@ -221,7 +227,8 @@ Generated: 2025-03-06T19:30:40.984Z
 │   │   └── template-preview.tsx
 │   ├── providers/
 │   │   ├── query-provider.tsx
-│   │   └── toast-provider.tsx
+│   │   ├── toast-provider.tsx
+│   │   └── tooltip-provider.tsx
 │   ├── ui/
 │   │   ├── contact/
 │   │   │   └── page.tsx
@@ -266,6 +273,7 @@ Generated: 2025-03-06T19:30:40.984Z
 │   │   ├── textarea.tsx
 │   │   ├── toast.tsx
 │   │   ├── toaster.tsx
+│   │   ├── tooltip.tsx
 │   │   └── use-toast.ts
 │   ├── cookie-consent.tsx
 │   ├── debug-info.tsx
@@ -291,7 +299,6 @@ Generated: 2025-03-06T19:30:40.984Z
 │   │   ├── __tests__/
 │   │   │   ├── auth-store.test.ts
 │   │   │   └── events.test.ts
-│   │   ├── migrations/
 │   │   ├── auth-store.ts
 │   │   ├── client.ts
 │   │   ├── debug-queries.ts
@@ -329,7 +336,7 @@ Generated: 2025-03-06T19:30:40.984Z
 ├── middleware.test.ts
 └── middleware.ts
 
-88 directories, 238 files
+88 directories, 245 files
 
 ```
 

@@ -3,10 +3,6 @@ description: React Component Standards for Cloud Burst
 globs: src/**/*.tsx", "src/**/*.ts
 alwaysApply: false
 ---
-# React Component Rules
-
-## Component Architecture
-```typescript
 {
   "componentRules": {
     "structure": {
@@ -51,11 +47,3 @@ alwaysApply: false
     }
   }
 }
-```
-
-## Features Added
-- Atomic Design structure
-- Performance optimizations
-- Media handling patterns
-- Custom component standards
-- Dark mode support

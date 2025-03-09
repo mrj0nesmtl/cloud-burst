@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-06T19:30:40.999Z
+Generated: 2025-03-09T04:22:36.634Z
 
 ```
 ./docs/
@@ -19,9 +19,11 @@ Generated: 2025-03-06T19:30:40.999Z
 │   └── website_overview.md
 ├── development/
 │   ├── prompt_archive/
+│   │   ├── DEPLOYMENT_FIX_PLAN.md
 │   │   ├── additional_notes.md
 │   │   ├── auth-debug.md
-│   │   ├── session 3.md
+│   │   ├── cloud-burst-recovery-summary.md
+│   │   ├── session_1.md
 │   │   ├── session_10.md
 │   │   ├── session_11_checklist.md
 │   │   ├── session_11_kickoff.md
@@ -40,11 +42,13 @@ Generated: 2025-03-06T19:30:40.999Z
 │   │   ├── session_17_kickoff.md
 │   │   ├── session_18_checklist.md
 │   │   ├── session_18_kickoff.md
+│   │   ├── session_19_checklist.md
 │   │   ├── session_19_emergency.md
-│   │   ├── session_1_prompt.md
+│   │   ├── session_19_narrative.md
 │   │   ├── session_20_checklist.md
 │   │   ├── session_20_kickoff.md
 │   │   ├── session_20_summary.md
+│   │   ├── session_3.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -52,12 +56,14 @@ Generated: 2025-03-06T19:30:40.999Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
-│   ├── DEPLOYMENT_FIX_PLAN.md
-│   ├── SESSION_19_KICKOFF.md
-│   ├── SESSION_19_NARRATIVE.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
+│   ├── dashboard_notes.md
+│   ├── leadoff_prompt.md
+│   ├── session_21_checklist.md
+│   ├── session_21_kickoff_prompt.md
+│   ├── session_21_narrative.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
@@ -99,7 +105,7 @@ Generated: 2025-03-06T19:30:40.999Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 86 files
+10 directories, 92 files
 
 ```
 

@@ -10,7 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { UserCog, BellRing, CreditCard, LogOut } from "lucide-react"
 
 interface Profile {
   id: string
@@ -27,35 +29,45 @@ interface UserNavProps {
 }
 
 export function UserNav({ user, profile, onSignOut }: UserNavProps) {
-  // Use profile data if available, otherwise fallback to user metadata
-  const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email
-  const avatarUrl = profile?.avatar_url || user?.user_metadata?.avatar_url
-  const userRole = profile?.role || user?.user_metadata?.role || 'user'
-  
-  // Handle null user in development mode
-  if (!user && process.env.NODE_ENV === 'development') {
-    return (
-      <Avatar>
-        <AvatarFallback>DEV</AvatarFallback>
-      </Avatar>
-    )
+  // Get user initials for avatar fallback
+  const getInitials = () => {
+    if (profile?.full_name) {
+      return profile.full_name
+        .split(' ')
+        .map((n: string) => n[0])
+        .join('')
+        .toUpperCase()
+        .substring(0, 2)
+    }
+    
+    if (user?.email) {
+      return user.email.substring(0, 2).toUpperCase()
+    }
+    
+    return 'U'
   }
-
+  
+  // Format role for display
+  const userRole = profile?.role ? profile.role.replace('_', ' ') : 'User'
+  
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Avatar>
-          <AvatarImage src={avatarUrl} />
-          <AvatarFallback>
-            {user?.email?.charAt(0).toUpperCase() || 'U'}
-          </AvatarFallback>
-        </Avatar>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="ghost" 
+          className="relative h-8 w-8 rounded-full"
+        >
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={profile?.avatar_url || ""} alt={profile?.full_name || user?.email || "User"} />
+            <AvatarFallback>{getInitials()}</AvatarFallback>
+          </Avatar>
+        </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {displayName || 'User'}
+              {profile?.full_name || user?.email || 'User Account'}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
               {user?.email || 'No email'}
@@ -66,36 +78,36 @@ export function UserNav({ user, profile, onSignOut }: UserNavProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        
+        {/* User Settings */}
         <DropdownMenuItem asChild>
-          <Link href="/protected/profile">Profile</Link>
+          <Link href="/protected/settings/profile" className="flex items-center">
+            <UserCog className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/protected/settings">Settings</Link>
+          <Link href="/protected/settings/notifications" className="flex items-center">
+            <BellRing className="mr-2 h-4 w-4" />
+            <span>Notifications</span>
+          </Link>
         </DropdownMenuItem>
-        {(userRole === 'super_admin' || userRole === 'admin') && (
-          <DropdownMenuItem asChild>
-            <Link href="/protected/admin">Admin Dashboard</Link>
-          </DropdownMenuItem>
-        )}
-        {(userRole === 'organizer') && (
-          <>
-            <DropdownMenuItem asChild>
-              <Link href="/protected/events/create">Create Event</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/protected/events/manage">Manage Events</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/protected/events/invitations">Invitations</Link>
-            </DropdownMenuItem>
-          </>
-        )}
+        <DropdownMenuItem asChild>
+          <Link href="/protected/settings/billing" className="flex items-center">
+            <CreditCard className="mr-2 h-4 w-4" />
+            <span>Subscription</span>
+          </Link>
+        </DropdownMenuItem>
+        
         <DropdownMenuSeparator />
+        
+        {/* Sign Out */}
         <DropdownMenuItem
-          className="text-red-600 focus:text-red-600"
+          className="text-red-600 focus:text-red-600 flex items-center"
           onClick={onSignOut}
         >
-          Sign Out
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Sign Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

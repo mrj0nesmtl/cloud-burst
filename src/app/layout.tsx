@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/ui/site-header"
 import { SiteFooter } from "@/components/ui/site-footer"
 import QueryProvider from '@/components/providers/query-provider'
+import { TooltipProvider } from '@/components/providers/tooltip-provider'
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Toaster as UIToaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
@@ -91,7 +92,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased max-w-full">
         <QueryProvider>
           <ThemeProvider
             attribute="class"
@@ -100,21 +101,23 @@ export default function RootLayout({
             disableTransitionOnChange
             storageKey="cloud-burst-theme"
           >
-            <div className="flex flex-col min-h-screen w-full">
-              <SiteHeader />
-              <main className="flex-1 w-full">
-                <Suspense fallback={
-                  <div className="flex min-h-screen items-center justify-center">
-                    <LoadingSpinner size="lg" />
-                  </div>
-                }>
-                  {children}
-                </Suspense>
-              </main>
-              <SiteFooter />
-              <UIToaster />
-              <SonnerToaster />
-            </div>
+            <TooltipProvider>
+              <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
+                <SiteHeader />
+                <main className="flex-1 w-full">
+                  <Suspense fallback={
+                    <div className="flex min-h-screen items-center justify-center">
+                      <LoadingSpinner size="lg" />
+                    </div>
+                  }>
+                    {children}
+                  </Suspense>
+                </main>
+                <SiteFooter />
+                <UIToaster />
+                <SonnerToaster />
+              </div>
+            </TooltipProvider>
           </ThemeProvider>
         </QueryProvider>
       </body>

@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-03-06T19:30:41.064Z
+Generated: 2025-03-09T04:22:36.699Z
 
 ```
 ./src/app/
@@ -26,6 +26,8 @@ Generated: 2025-03-06T19:30:41.064Z
 │   ├── register/
 │   │   └── page.tsx
 │   ├── signin/
+│   │   └── page.tsx
+│   ├── test-layout/
 │   │   └── page.tsx
 │   └── layout.tsx
 ├── dashboard/
@@ -161,7 +163,7 @@ Generated: 2025-03-06T19:30:41.064Z
 ├── not-found.tsx
 └── page.tsx
 
-62 directories, 96 files
+63 directories, 97 files
 
 ```
 

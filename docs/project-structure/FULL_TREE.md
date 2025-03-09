@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-06T19:30:40.957Z
+Generated: 2025-03-09T04:22:36.582Z
 
 ```
 ./
@@ -36,9 +36,11 @@ Generated: 2025-03-06T19:30:40.957Z
 │   │   └── website_overview.md
 │   ├── development/
 │   │   ├── prompt_archive/
+│   │   │   ├── DEPLOYMENT_FIX_PLAN.md
 │   │   │   ├── additional_notes.md
 │   │   │   ├── auth-debug.md
-│   │   │   ├── session 3.md
+│   │   │   ├── cloud-burst-recovery-summary.md
+│   │   │   ├── session_1.md
 │   │   │   ├── session_10.md
 │   │   │   ├── session_11_checklist.md
 │   │   │   ├── session_11_kickoff.md
@@ -57,11 +59,13 @@ Generated: 2025-03-06T19:30:40.957Z
 │   │   │   ├── session_17_kickoff.md
 │   │   │   ├── session_18_checklist.md
 │   │   │   ├── session_18_kickoff.md
+│   │   │   ├── session_19_checklist.md
 │   │   │   ├── session_19_emergency.md
-│   │   │   ├── session_1_prompt.md
+│   │   │   ├── session_19_narrative.md
 │   │   │   ├── session_20_checklist.md
 │   │   │   ├── session_20_kickoff.md
 │   │   │   ├── session_20_summary.md
+│   │   │   ├── session_3.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -69,12 +73,14 @@ Generated: 2025-03-06T19:30:40.957Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
-│   │   ├── DEPLOYMENT_FIX_PLAN.md
-│   │   ├── SESSION_19_KICKOFF.md
-│   │   ├── SESSION_19_NARRATIVE.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
+│   │   ├── dashboard_notes.md
+│   │   ├── leadoff_prompt.md
+│   │   ├── session_21_checklist.md
+│   │   ├── session_21_kickoff_prompt.md
+│   │   ├── session_21_narrative.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
@@ -119,7 +125,6 @@ Generated: 2025-03-06T19:30:40.957Z
 │   ├── images/
 │   │   ├── fallback-hero.jpg
 │   │   └── pexels-themo1-bg.jpg
-│   ├── scripts/
 │   ├── .DS_Store
 │   ├── android-chrome-192x192.png
 │   ├── android-chrome-512x512.png
@@ -147,24 +152,11 @@ Generated: 2025-03-06T19:30:40.957Z
 │   │   └── tree-cli.d.ts
 │   ├── .DS_Store
 │   ├── check-policies.js
-│   ├── check_profiles_schema.sql
-│   ├── check_roles_alternative.sql
-│   ├── create_complete_profiles.sql
-│   ├── create_profiles.sql
-│   ├── create_test_users.sql
-│   ├── create_test_users_fixed.sql
-│   ├── fix_organizer_profile.sql
-│   ├── fix_organizer_simple.sql
+│   ├── deploy-dev.sh*
 │   ├── generate-favicons.sh*
 │   ├── generate-structure.mjs
-│   ├── match_users_to_profiles.sql
-│   ├── set_user_passwords.sql
-│   ├── test_rbac.js
-│   ├── try_different_roles.sql
-│   ├── update_existing_profiles.sql
-│   └── verify_profiles.sql
-├── sql/
-│   └── rbac_setup.sql
+│   ├── network-dev.sh
+│   └── test_rbac.js
 ├── src/
 │   ├── app/
 │   │   ├── api/
@@ -190,6 +182,8 @@ Generated: 2025-03-06T19:30:40.957Z
 │   │   │   ├── register/
 │   │   │   │   └── page.tsx
 │   │   │   ├── signin/
+│   │   │   │   └── page.tsx
+│   │   │   ├── test-layout/
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
 │   │   ├── dashboard/
@@ -334,13 +328,17 @@ Generated: 2025-03-06T19:30:40.957Z
 │   │   │   ├── role-guard.tsx
 │   │   │   └── social-auth-buttons.tsx
 │   │   ├── dashboard/
+│   │   │   ├── activity-feed.tsx
 │   │   │   ├── analytics-overview.tsx
 │   │   │   ├── contact-stats.tsx
 │   │   │   ├── contact-submissions.tsx
+│   │   │   ├── dashboard-stats.tsx
 │   │   │   ├── event-summary.tsx
 │   │   │   ├── newsletter-stats.tsx
 │   │   │   ├── newsletter-subscribers.tsx
-│   │   │   └── recent-activity.tsx
+│   │   │   ├── quick-actions.tsx
+│   │   │   ├── recent-activity.tsx
+│   │   │   └── recent-events.tsx
 │   │   ├── events/
 │   │   │   ├── attendee-management.tsx
 │   │   │   ├── event-actions.tsx
@@ -384,7 +382,8 @@ Generated: 2025-03-06T19:30:40.957Z
 │   │   │   └── template-preview.tsx
 │   │   ├── providers/
 │   │   │   ├── query-provider.tsx
-│   │   │   └── toast-provider.tsx
+│   │   │   ├── toast-provider.tsx
+│   │   │   └── tooltip-provider.tsx
 │   │   ├── ui/
 │   │   │   ├── contact/
 │   │   │   │   └── page.tsx
@@ -429,6 +428,7 @@ Generated: 2025-03-06T19:30:40.957Z
 │   │   │   ├── textarea.tsx
 │   │   │   ├── toast.tsx
 │   │   │   ├── toaster.tsx
+│   │   │   ├── tooltip.tsx
 │   │   │   └── use-toast.ts
 │   │   ├── cookie-consent.tsx
 │   │   ├── debug-info.tsx
@@ -454,7 +454,6 @@ Generated: 2025-03-06T19:30:40.957Z
 │   │   │   ├── __tests__/
 │   │   │   │   ├── auth-store.test.ts
 │   │   │   │   └── events.test.ts
-│   │   │   ├── migrations/
 │   │   │   ├── auth-store.ts
 │   │   │   ├── client.ts
 │   │   │   ├── debug-queries.ts
@@ -496,55 +495,17 @@ Generated: 2025-03-06T19:30:40.957Z
 │   └── config.toml
 ├── supabase-exports/
 │   ├── .DS_Store
-│   ├── 3 - Check Profile Role Column Definition.csv
-│   ├── Check Current Values in Roles.csv
-│   ├── Check Events Table Structure.csv
-│   ├── Check Profile Role Column Definition.csv
-│   ├── Check Profiles Table Constraint.csv
-│   ├── Check RLS Policies for Event Attendees.csv
-│   ├── Check RLS Policies for Events Table.csv
-│   ├── Check RLS Policies for Photos.csv
-│   ├── Check RLS Status for Tables.csv
-│   ├── Check for Custom Role Types.csv
-│   ├── Check roles table structure.csv
-│   ├── Event Attendees Table Structure.csv
-│   ├── Index Check for Specific Tables.csv
-│   ├── Photos Table Structure.csv
-│   ├── Policy Overview for Public Schema.csv
-│   ├── Profile Table Structure.csv
-│   ├── Retrieve RLS Policies.csv
-│   ├── Retrieve Role Capabilities Policies.csv
-│   ├── Retrieve User Roles.csv
-│   ├── Role Capabilities Table Structure.csv
-│   ├── Supabase Snippet Check RLS Status on Role Capabilities.csv
-│   ├── Supabase Snippet View Event Indexes.csv
-│   ├── Supabase Snippet View Events Table Structure.csv
-│   ├── Supabase Snippet View constraints for events table.csv
-│   ├── Update Role Constraint in Profiles Table.csv
-│   ├── User Role Verification Query.csv
-│   ├── Verify Role Capabilities Policies.csv
-│   ├── Verify User Update.csv
-│   ├── profiles_rows (1).csv
-│   ├── profiles_rows (2).csv
-│   ├── profiles_rows.csv
-│   ├── role_capabilities_rows.csv
-│   ├── roles_rows.csv
-│   ├── supabase-auth-schema-bxvbovzqzjfomnqidzzx (1).png
-│   ├── supabase-public-schema-bxvbovzqzjfomnqidzzx.png
-│   └── table_structures_and_relationships.csv
+│   └── Marc Reichel - IMDb.mhtml
 ├── .DS_Store
 ├── .gitignore
 ├── .replit
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
-├── cloud-burst-recovery-summary.md
 ├── cloud-burst.code-workspace
 ├── components.json
-├── deploy-dev.sh*
 ├── eslint.config.mjs
 ├── jsconfig.json
-├── network-dev.sh
 ├── next-env.d.ts
 ├── next.config.js
 ├── package-lock.json
@@ -553,10 +514,9 @@ Generated: 2025-03-06T19:30:40.957Z
 ├── postcss.config.mjs
 ├── tailwind.config.ts
 ├── tsconfig.json
-├── tsconfig.tsbuildinfo
-└── tsconfigbackup.json
+└── tsconfig.tsbuildinfo
 
-111 directories, 442 files
+109 directories, 404 files
 
 ```
 
