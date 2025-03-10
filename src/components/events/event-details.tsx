@@ -16,7 +16,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
         <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
           <img
             src={event.cover_image}
-            alt={event.title}
+            alt={event.name}
             className="object-cover w-full h-full"
           />
         </div>
@@ -24,7 +24,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
       
       {/* Event Header */}
       <div className="space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight">{event.title}</h1>
+        <h1 className="text-4xl font-bold tracking-tight">{event.name}</h1>
         
         <div className="flex flex-wrap gap-4 text-muted-foreground">
           <div className="flex items-center gap-2">

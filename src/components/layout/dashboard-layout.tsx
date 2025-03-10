@@ -131,7 +131,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Desktop sidebar */}
         <div className={cn(
           "hidden border-r transition-all duration-300 ease-in-out lg:block",
-          sidebarCollapsed ? "w-20" : "w-64"
+          sidebarCollapsed ? "w-[4.5rem]" : "w-[18rem]"
         )}>
           <div className="relative sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto py-6">
             <Button
@@ -151,10 +151,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
         
         <main className={cn(
-          "flex-1 overflow-y-auto p-6",
-          sidebarCollapsed ? "lg:ml-20" : "lg:ml-0"
+          "flex-1 overflow-y-auto p-8",
+          sidebarCollapsed ? "lg:ml-[4.5rem]" : "lg:ml-0"
         )}>
-          {children}
+          <div className="mx-auto w-full max-w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

@@ -3,7 +3,7 @@
 ## Pre-Development Setup
 - [ ] Create single session-22 branch from main
 - [ ] Verify clean working directory
-- [ ] Update version to 0.7.4 in package.json and appropriate files
+- [ ] Update version to 0.7.5 in package.json, changelog (pending), status.md and roadmap.md
 - [ ] Document starting state
 
 ## Development Workflow (For Each Component)

@@ -11,9 +11,13 @@ export function EventList({ events }: EventListProps) {
     <div className="space-y-4">
       {events.map((event) => (
         <div key={event.id} className="border p-4 rounded-md">
-          <Link href={getEventUrl(event)} className="font-medium hover:underline">
-            {event.title}
-          </Link>
+          <div className="space-y-1">
+            <h3 className="font-semibold text-lg">
+              <Link href={`/events/${event.id}`} className="hover:underline">
+                {event.name}
+              </Link>
+            </h3>
+          </div>
           {/* Other event details */}
         </div>
       ))}

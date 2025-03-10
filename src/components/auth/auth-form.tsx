@@ -34,6 +34,10 @@ const authSchema = z.object({
 
 type AuthFormData = z.infer<typeof authSchema>
 
+// Track auth attempts to prevent rate limiting
+const AUTH_ATTEMPT_KEY = 'auth_attempt_timestamp'
+const MIN_AUTH_INTERVAL_MS = 2000 // 2 seconds between attempts
+
 export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
   const [isLoading, setIsLoading] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
@@ -52,6 +56,7 @@ export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
         'session_error': 'Authentication session error. Please try again.',
         'profile_error': 'Could not retrieve your profile. Please try again.',
         'profile_not_found': 'Your profile was not found. Please contact support.',
+        'rate_limit': 'Too many authentication attempts. Please wait a moment and try again.',
         'unknown': 'An unknown error occurred. Please try again.'
       }
       
@@ -69,6 +74,28 @@ export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
 
   async function onSubmit(data: AuthFormData) {
     setFormError(null)
+    
+    // Check if we need to throttle auth attempts
+    const lastAttempt = localStorage.getItem(AUTH_ATTEMPT_KEY)
+    const now = Date.now()
+    
+    if (lastAttempt) {
+      const timeSinceLastAttempt = now - parseInt(lastAttempt)
+      if (timeSinceLastAttempt < MIN_AUTH_INTERVAL_MS) {
+        setFormError('Please wait a moment before trying again')
+        toast({
+          variant: 'destructive',
+          title: 'Rate limit protection',
+          description: 'Please wait a moment before trying again',
+          duration: 3000
+        })
+        return
+      }
+    }
+    
+    // Record this attempt
+    localStorage.setItem(AUTH_ATTEMPT_KEY, now.toString())
+    
     setIsLoading(true)
     
     try {
@@ -76,7 +103,14 @@ export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
         ? await supabase.auth.signInWithPassword(data)
         : await supabase.auth.signUp(data)
 
-      if (authResponse.error) throw authResponse.error
+      if (authResponse.error) {
+        // Check for rate limiting errors
+        if (authResponse.error.message.includes('rate limit') || 
+            authResponse.error.status === 429) {
+          throw new Error('Too many authentication attempts. Please wait a moment and try again.')
+        }
+        throw authResponse.error
+      }
 
       if (mode === 'signin') {
         const returnTo = searchParams.get('returnTo') || '/protected/dashboard'
@@ -208,6 +242,13 @@ export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
         type="button" 
         disabled={isLoading} 
         className="w-full h-11 flex items-center justify-center border-input"
+        onClick={() => {
+          toast({
+            title: "Google Sign In",
+            description: "Google authentication is not configured yet.",
+            duration: 3000
+          })
+        }}
       >
         <svg className="mr-2 h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
           <path

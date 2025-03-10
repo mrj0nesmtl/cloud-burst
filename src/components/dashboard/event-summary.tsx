@@ -9,12 +9,14 @@ interface EventSummaryProps {
 export function EventSummary({ event }: EventSummaryProps) {
   return (
     <div className="border p-4 rounded-md">
-      <h3 className="font-medium">
-        <Link href={getEventUrl(event)} className="hover:underline">
-          {event.title}
-        </Link>
-      </h3>
-      {/* Other event summary details */}
+      <div className="space-y-1">
+        <h3 className="font-semibold text-lg">
+          <Link href={`/events/${event.id}`} className="hover:underline">
+            {event.name}
+          </Link>
+        </h3>
+        {/* Other event summary details */}
+      </div>
     </div>
   );
 } 
