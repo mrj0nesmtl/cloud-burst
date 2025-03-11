@@ -1,8 +1,10 @@
 # components Directory Structure
-Generated: 2025-03-09T04:22:36.716Z
+Generated: 2025-03-10T19:58:47.186Z
 
 ```
 ./src/components/
+├── attendees/
+│   └── invitation-form.tsx
 ├── auth/
 │   ├── auth-debug.tsx
 │   ├── auth-form.tsx
@@ -25,10 +27,14 @@ Generated: 2025-03-09T04:22:36.716Z
 │   └── recent-events.tsx
 ├── events/
 │   ├── attendee-management.tsx
+│   ├── enhanced-event-card.tsx
 │   ├── event-actions.tsx
 │   ├── event-card.tsx
 │   ├── event-details.tsx
+│   ├── event-filters.tsx
+│   ├── event-list-client.tsx
 │   ├── event-list.tsx
+│   ├── event-search.tsx
 │   ├── image-upload.tsx
 │   └── qr-code-display.tsx
 ├── forms/
@@ -120,7 +126,7 @@ Generated: 2025-03-09T04:22:36.716Z
 ├── query-provider.tsx
 └── theme-provider.tsx
 
-13 directories, 104 files
+14 directories, 109 files
 
 ```
 

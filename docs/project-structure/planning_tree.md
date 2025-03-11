@@ -1,13 +1,13 @@
 # planning Directory Structure
-Generated: 2025-03-09T04:22:36.830Z
+Generated: 2025-03-10T19:58:47.287Z
 
 ```
 ./docs/planning/
 ├── auth-cleanup.md
 ├── business_proposition.md
 ├── ca-en-merchant-fees-15-oct-2024.pdf
+├── deck.md
 ├── payment_subscription_design_document.md
-├── pitch_deck_draft.md
 ├── project_budget_overview.md
 ├── request_for_product_RFP.md
 ├── roadmap.md

@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-09T04:22:36.616Z
+Generated: 2025-03-10T19:58:47.100Z
 
 ```
 ./src/
@@ -109,6 +109,9 @@ Generated: 2025-03-09T04:22:36.616Z
 │   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── attendees/
+│   │   │   └── invitations/
+│   │   │       └── page.tsx
 │   │   ├── dashboard/
 │   │   │   ├── overview/
 │   │   │   │   ├── loading.tsx
@@ -117,6 +120,8 @@ Generated: 2025-03-09T04:22:36.616Z
 │   │   │   └── page.tsx
 │   │   ├── events/
 │   │   │   ├── [id]/
+│   │   │   │   ├── attendees/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── create/
@@ -130,10 +135,14 @@ Generated: 2025-03-09T04:22:36.616Z
 │   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── overview/
+│   │   │   └── page.tsx
 │   │   ├── profile/
 │   │   │   ├── settings/
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   ├── qr-codes/
 │   │   │   └── page.tsx
 │   │   ├── settings/
 │   │   │   ├── account/
@@ -154,6 +163,8 @@ Generated: 2025-03-09T04:22:36.616Z
 │   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── templates/
+│   │   │   └── page.tsx
 │   │   └── layout.tsx
 │   ├── components.css
 │   ├── error.tsx
@@ -164,6 +175,8 @@ Generated: 2025-03-09T04:22:36.616Z
 │   ├── not-found.tsx
 │   └── page.tsx
 ├── components/
+│   ├── attendees/
+│   │   └── invitation-form.tsx
 │   ├── auth/
 │   │   ├── auth-debug.tsx
 │   │   ├── auth-form.tsx
@@ -186,10 +199,14 @@ Generated: 2025-03-09T04:22:36.616Z
 │   │   └── recent-events.tsx
 │   ├── events/
 │   │   ├── attendee-management.tsx
+│   │   ├── enhanced-event-card.tsx
 │   │   ├── event-actions.tsx
 │   │   ├── event-card.tsx
 │   │   ├── event-details.tsx
+│   │   ├── event-filters.tsx
+│   │   ├── event-list-client.tsx
 │   │   ├── event-list.tsx
+│   │   ├── event-search.tsx
 │   │   ├── image-upload.tsx
 │   │   └── qr-code-display.tsx
 │   ├── forms/
@@ -336,7 +353,7 @@ Generated: 2025-03-09T04:22:36.616Z
 ├── middleware.test.ts
 └── middleware.ts
 
-88 directories, 245 files
+95 directories, 255 files
 
 ```
 
