@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-09T04:22:36.582Z
+Generated: 2025-03-10T19:58:47.073Z
 
 ```
 ./
@@ -8,8 +8,11 @@ Generated: 2025-03-09T04:22:36.582Z
 │       ├── ai-collaboration-guidelines.mdc
 │       ├── backend-integration.mdc
 │       ├── core-standards.mdc
+│       ├── dashboard-components.mdc
 │       ├── deployment-operations.mdc
+│       ├── form-handling.mdc
 │       ├── frontend-architecture.mdc
+│       ├── navigation-patterns.mdc
 │       ├── quality-assurance.mdc
 │       ├── react-components.mdc
 │       ├── security.mdc
@@ -31,16 +34,14 @@ Generated: 2025-03-09T04:22:36.582Z
 │   │   └── replit_deployment.md
 │   ├── design/
 │   │   ├── UI_components.md
-│   │   ├── dashboard_components.md
 │   │   ├── style.md
 │   │   └── website_overview.md
 │   ├── development/
 │   │   ├── prompt_archive/
-│   │   │   ├── DEPLOYMENT_FIX_PLAN.md
+│   │   │   ├── .DS_Store
+│   │   │   ├── Archive.zip
 │   │   │   ├── additional_notes.md
 │   │   │   ├── auth-debug.md
-│   │   │   ├── cloud-burst-recovery-summary.md
-│   │   │   ├── session_1.md
 │   │   │   ├── session_10.md
 │   │   │   ├── session_11_checklist.md
 │   │   │   ├── session_11_kickoff.md
@@ -55,17 +56,10 @@ Generated: 2025-03-09T04:22:36.582Z
 │   │   │   ├── session_15_kickoff.md
 │   │   │   ├── session_16_checklist.md
 │   │   │   ├── session_16_kickoff.md
-│   │   │   ├── session_17_checklist.md
-│   │   │   ├── session_17_kickoff.md
-│   │   │   ├── session_18_checklist.md
-│   │   │   ├── session_18_kickoff.md
-│   │   │   ├── session_19_checklist.md
-│   │   │   ├── session_19_emergency.md
-│   │   │   ├── session_19_narrative.md
-│   │   │   ├── session_20_checklist.md
-│   │   │   ├── session_20_kickoff.md
-│   │   │   ├── session_20_summary.md
-│   │   │   ├── session_3.md
+│   │   │   ├── session_21_checklist.md
+│   │   │   ├── session_21_kickoff_prompt.md
+│   │   │   ├── session_21_narrative.md
+│   │   │   ├── session_21_summary.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -73,21 +67,20 @@ Generated: 2025-03-09T04:22:36.582Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
-│   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── dashboard_notes.md
-│   │   ├── leadoff_prompt.md
-│   │   ├── session_21_checklist.md
-│   │   ├── session_21_kickoff_prompt.md
-│   │   ├── session_21_narrative.md
+│   │   ├── session_22_README.md
+│   │   ├── session_22_checklist.md
+│   │   ├── session_22_kickoff_prompt.md
+│   │   ├── session_22_narrative.md
+│   │   ├── status_notes.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
+│   │   ├── deck.md
 │   │   ├── payment_subscription_design_document.md
-│   │   ├── pitch_deck_draft.md
 │   │   ├── project_budget_overview.md
 │   │   ├── request_for_product_RFP.md
 │   │   ├── roadmap.md
@@ -147,6 +140,7 @@ Generated: 2025-03-09T04:22:36.582Z
 │   ├── sitemap.xml
 │   ├── vercel.svg
 │   └── window.svg
+├── rules/
 ├── scripts/
 │   ├── types/
 │   │   └── tree-cli.d.ts
@@ -264,6 +258,9 @@ Generated: 2025-03-09T04:22:36.582Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── attendees/
+│   │   │   │   └── invitations/
+│   │   │   │       └── page.tsx
 │   │   │   ├── dashboard/
 │   │   │   │   ├── overview/
 │   │   │   │   │   ├── loading.tsx
@@ -272,6 +269,8 @@ Generated: 2025-03-09T04:22:36.582Z
 │   │   │   │   └── page.tsx
 │   │   │   ├── events/
 │   │   │   │   ├── [id]/
+│   │   │   │   │   ├── attendees/
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── create/
@@ -285,10 +284,14 @@ Generated: 2025-03-09T04:22:36.582Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── overview/
+│   │   │   │   └── page.tsx
 │   │   │   ├── profile/
 │   │   │   │   ├── settings/
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── qr-codes/
 │   │   │   │   └── page.tsx
 │   │   │   ├── settings/
 │   │   │   │   ├── account/
@@ -309,6 +312,8 @@ Generated: 2025-03-09T04:22:36.582Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── templates/
+│   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
 │   │   ├── components.css
 │   │   ├── error.tsx
@@ -319,6 +324,8 @@ Generated: 2025-03-09T04:22:36.582Z
 │   │   ├── not-found.tsx
 │   │   └── page.tsx
 │   ├── components/
+│   │   ├── attendees/
+│   │   │   └── invitation-form.tsx
 │   │   ├── auth/
 │   │   │   ├── auth-debug.tsx
 │   │   │   ├── auth-form.tsx
@@ -341,10 +348,14 @@ Generated: 2025-03-09T04:22:36.582Z
 │   │   │   └── recent-events.tsx
 │   │   ├── events/
 │   │   │   ├── attendee-management.tsx
+│   │   │   ├── enhanced-event-card.tsx
 │   │   │   ├── event-actions.tsx
 │   │   │   ├── event-card.tsx
 │   │   │   ├── event-details.tsx
+│   │   │   ├── event-filters.tsx
+│   │   │   ├── event-list-client.tsx
 │   │   │   ├── event-list.tsx
+│   │   │   ├── event-search.tsx
 │   │   │   ├── image-upload.tsx
 │   │   │   └── qr-code-display.tsx
 │   │   ├── forms/
@@ -495,7 +506,10 @@ Generated: 2025-03-09T04:22:36.582Z
 │   └── config.toml
 ├── supabase-exports/
 │   ├── .DS_Store
-│   └── Marc Reichel - IMDb.mhtml
+│   ├── Event Columns Information.csv
+│   ├── Marc Reichel - IMDb.mhtml
+│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx).csv
+│   └── supabase_logs.csv
 ├── .DS_Store
 ├── .gitignore
 ├── .replit
@@ -516,7 +530,7 @@ Generated: 2025-03-09T04:22:36.582Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-109 directories, 404 files
+117 directories, 410 files
 
 ```
 

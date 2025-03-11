@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-03-09T04:22:36.699Z
+Generated: 2025-03-10T19:58:47.170Z
 
 ```
 ./src/app/
@@ -108,6 +108,9 @@ Generated: 2025-03-09T04:22:36.699Z
 │   │   ├── layout.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
+│   ├── attendees/
+│   │   └── invitations/
+│   │       └── page.tsx
 │   ├── dashboard/
 │   │   ├── overview/
 │   │   │   ├── loading.tsx
@@ -116,6 +119,8 @@ Generated: 2025-03-09T04:22:36.699Z
 │   │   └── page.tsx
 │   ├── events/
 │   │   ├── [id]/
+│   │   │   ├── attendees/
+│   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── create/
@@ -129,10 +134,14 @@ Generated: 2025-03-09T04:22:36.699Z
 │   │   ├── layout.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
+│   ├── overview/
+│   │   └── page.tsx
 │   ├── profile/
 │   │   ├── settings/
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── qr-codes/
 │   │   └── page.tsx
 │   ├── settings/
 │   │   ├── account/
@@ -153,6 +162,8 @@ Generated: 2025-03-09T04:22:36.699Z
 │   │   │   └── page.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
+│   ├── templates/
+│   │   └── page.tsx
 │   └── layout.tsx
 ├── components.css
 ├── error.tsx
@@ -163,7 +174,7 @@ Generated: 2025-03-09T04:22:36.699Z
 ├── not-found.tsx
 └── page.tsx
 
-63 directories, 97 files
+69 directories, 102 files
 
 ```
 

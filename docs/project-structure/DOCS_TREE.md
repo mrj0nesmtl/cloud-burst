@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-09T04:22:36.634Z
+Generated: 2025-03-10T19:58:47.115Z
 
 ```
 ./docs/
@@ -14,16 +14,14 @@ Generated: 2025-03-09T04:22:36.634Z
 │   └── replit_deployment.md
 ├── design/
 │   ├── UI_components.md
-│   ├── dashboard_components.md
 │   ├── style.md
 │   └── website_overview.md
 ├── development/
 │   ├── prompt_archive/
-│   │   ├── DEPLOYMENT_FIX_PLAN.md
+│   │   ├── .DS_Store
+│   │   ├── Archive.zip
 │   │   ├── additional_notes.md
 │   │   ├── auth-debug.md
-│   │   ├── cloud-burst-recovery-summary.md
-│   │   ├── session_1.md
 │   │   ├── session_10.md
 │   │   ├── session_11_checklist.md
 │   │   ├── session_11_kickoff.md
@@ -38,17 +36,10 @@ Generated: 2025-03-09T04:22:36.634Z
 │   │   ├── session_15_kickoff.md
 │   │   ├── session_16_checklist.md
 │   │   ├── session_16_kickoff.md
-│   │   ├── session_17_checklist.md
-│   │   ├── session_17_kickoff.md
-│   │   ├── session_18_checklist.md
-│   │   ├── session_18_kickoff.md
-│   │   ├── session_19_checklist.md
-│   │   ├── session_19_emergency.md
-│   │   ├── session_19_narrative.md
-│   │   ├── session_20_checklist.md
-│   │   ├── session_20_kickoff.md
-│   │   ├── session_20_summary.md
-│   │   ├── session_3.md
+│   │   ├── session_21_checklist.md
+│   │   ├── session_21_kickoff_prompt.md
+│   │   ├── session_21_narrative.md
+│   │   ├── session_21_summary.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -56,21 +47,20 @@ Generated: 2025-03-09T04:22:36.634Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
-│   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── dashboard_notes.md
-│   ├── leadoff_prompt.md
-│   ├── session_21_checklist.md
-│   ├── session_21_kickoff_prompt.md
-│   ├── session_21_narrative.md
+│   ├── session_22_README.md
+│   ├── session_22_checklist.md
+│   ├── session_22_kickoff_prompt.md
+│   ├── session_22_narrative.md
+│   ├── status_notes.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
+│   ├── deck.md
 │   ├── payment_subscription_design_document.md
-│   ├── pitch_deck_draft.md
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
 │   ├── roadmap.md
@@ -105,7 +95,7 @@ Generated: 2025-03-09T04:22:36.634Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 92 files
+10 directories, 82 files
 
 ```
 
