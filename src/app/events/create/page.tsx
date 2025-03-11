@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 
 // Form schema with validation
 const formSchema = z.object({
-  title: z.string().min(3, {
+  name: z.string().min(3, {
     message: "Title must be at least 3 characters.",
   }),
   description: z.string().optional(),
@@ -63,7 +63,7 @@ export default function CreateEventPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
+      name: "",
       description: "",
       location: "",
       cover_image: "",
@@ -79,7 +79,7 @@ export default function CreateEventPage() {
     try {
       // Generate custom_url from title if not provided
       if (!values.custom_url) {
-        values.custom_url = values.title
+        values.custom_url = values.name
           .toLowerCase()
           .replace(/\s+/g, '-')
           .replace(/[^a-z0-9-]/g, '');
@@ -112,7 +112,7 @@ export default function CreateEventPage() {
         .from('events')
         .insert([
           {
-            title: values.title,
+            name: values.name,
             description: values.description,
             start_date: values.start_date.toISOString(),
             end_date: values.end_date ? values.end_date.toISOString() : null,
@@ -155,10 +155,10 @@ export default function CreateEventPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="title"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Event Title</FormLabel>
+                  <FormLabel>Event Name</FormLabel>
                   <FormControl>
                     <Input placeholder="My Amazing Event" {...field} />
                   </FormControl>

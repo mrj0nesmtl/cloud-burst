@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${event.title} | Cloud Burst`,
+    title: `${event.name} | Cloud Burst`,
     description: event.description || 'View event details and photos',
     openGraph: {
       images: event.cover_image ? [event.cover_image] : [],
@@ -59,7 +59,7 @@ export default async function EventByCustomUrlPage({ params }: Props) {
         <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
           <img
             src={event.cover_image}
-            alt={event.title}
+            alt={event.name}
             className="object-cover w-full h-full"
           />
         </div>
@@ -67,7 +67,7 @@ export default async function EventByCustomUrlPage({ params }: Props) {
       
       {/* Event Header */}
       <div className="space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight">{event.title}</h1>
+        <h1 className="text-4xl font-bold tracking-tight">{event.name}</h1>
         
         <div className="flex flex-wrap gap-4 text-muted-foreground">
           <div className="flex items-center gap-2">

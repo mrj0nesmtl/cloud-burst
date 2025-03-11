@@ -50,7 +50,7 @@ export function RecentEvents({ events }: RecentEventsProps) {
               className="flex items-center justify-between rounded-lg border p-4"
             >
               <div className="space-y-1">
-                <h4 className="font-semibold">{event.title}</h4>
+                <h4 className="font-semibold">{event.name}</h4>
                 <div className="flex gap-4 text-sm text-muted-foreground">
                   <p>{formatDate(event.date)}</p>
                   <p className="flex items-center gap-1">

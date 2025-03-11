@@ -103,25 +103,41 @@ export const useAuthStore = create<AuthStore>()(
           
           if (error) throw error
           
-          const [profileResult, rolePermsResult] = await Promise.all([
-            // Fetch user profile
-            supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', data.user.id)
-              .single(),
+          // Fetch user profile
+          const profileResult = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', data.user.id)
+            .single()
             
-            // Fetch role capabilities
-            supabase
+          if (profileResult.error) {
+            console.error('Error fetching profile:', profileResult.error)
+            throw profileResult.error
+          }
+          
+          let capabilities: Capability[] = []
+          
+          try {
+            // Try to fetch role capabilities from the database
+            const rolePermsResult = await supabase
               .from('role_capabilities')
               .select('capability')
-              .eq('role', data.user.role)
-          ])
+              .eq('role', profileResult.data.role)
+              
+            if (!rolePermsResult.error && rolePermsResult.data) {
+              capabilities = rolePermsResult.data.map(p => p.capability as Capability)
+            }
+          } catch (capError) {
+            console.warn('Error fetching role capabilities, using defaults:', capError)
+            // Fallback to hardcoded capabilities if API call fails
+            const userRole = profileResult.data.role.toLowerCase() as Lowercase<UserRole>
+            capabilities = (roleCapabilities[userRole] || []) as Capability[]
+          }
 
           set({ 
             user: profileResult.data,
             session: data.session,
-            capabilities: rolePermsResult.data?.map(p => p.capability as Capability) ?? [],
+            capabilities,
             isAuthenticated: true,
             lastActivity: new Date().toISOString(),
             error: null

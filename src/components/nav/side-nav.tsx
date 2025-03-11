@@ -96,7 +96,7 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
 
   return (
     <nav className={cn(
-      "flex flex-col p-2",
+      "flex flex-col p-4",
       collapsed ? "items-center space-y-2" : "items-start space-y-4"
     )}>
       {/* Dashboard Section */}
@@ -201,17 +201,17 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
         )}>
           {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Attendees</h4>}
           <NavItem
-            href="/protected/attendees/manage"
+            href="/protected/attendees/invitations"
             icon={<Users className="h-4 w-4" />}
             label="Manage Invitations"
-            active={pathname === "/protected/attendees/manage"}
+            active={pathname === "/protected/attendees/invitations"}
           />
           {(isOrganizer || isAdmin) && (
             <NavItem
-              href="/protected/attendees/qr-codes"
+              href="/protected/qr-codes"
               icon={<QrCode className="h-4 w-4" />}
               label="QR Codes"
-              active={pathname === "/protected/attendees/qr-codes"}
+              active={pathname === "/protected/qr-codes"}
             />
           )}
         </div>

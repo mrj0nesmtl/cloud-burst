@@ -19,7 +19,6 @@ export interface Event {
   created_at: string
   updated_at: string
   custom_url?: string | null
-  title: string
   start_date: string
   end_date?: string
   cover_image?: string

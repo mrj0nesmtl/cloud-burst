@@ -410,4 +410,55 @@ export async function getAttendingEvents(): Promise<Event[]> {
     .filter((event): event is any => !!event && typeof event === 'object')
     
   return events as Event[]
+}
+
+/**
+ * Duplicate an event
+ */
+export async function duplicateEvent(id: string): Promise<Event> {
+  const supabase = createClient()
+  
+  // Get the original event
+  const { data: originalEvent, error: getError } = await supabase
+    .from('events')
+    .select('*')
+    .eq('id', id)
+    .single()
+    
+  if (getError) {
+    console.error('Error fetching event to duplicate:', getError)
+    throw new Error(`Failed to fetch event to duplicate: ${getError.message}`)
+  }
+  
+  // Create a new event based on the original
+  const { data: userData } = await supabase.auth.getUser()
+  
+  if (!userData?.user) {
+    throw new Error('User not authenticated')
+  }
+  
+  const newEvent = {
+    name: `${originalEvent.name} (Copy)`,
+    description: originalEvent.description,
+    date: originalEvent.date,
+    location: originalEvent.location,
+    status: 'draft', // Always start as draft
+    max_attendees: originalEvent.max_attendees,
+    is_public: originalEvent.is_public,
+    cover_image_url: originalEvent.cover_image_url,
+    organizer_id: userData.user.id
+  }
+  
+  const { data: createdEvent, error: createError } = await supabase
+    .from('events')
+    .insert(newEvent)
+    .select('*')
+    .single()
+    
+  if (createError) {
+    console.error('Error duplicating event:', createError)
+    throw new Error(`Failed to duplicate event: ${createError.message}`)
+  }
+  
+  return createdEvent as Event
 } 
