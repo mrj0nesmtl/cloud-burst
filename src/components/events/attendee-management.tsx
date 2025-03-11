@@ -45,12 +45,12 @@ import {
   CreateAttendeeParams 
 } from '@/types/events'
 import { 
-  addEventAttendee, 
   updateEventAttendee, 
   deleteEventAttendee, 
   bulkImportAttendees 
 } from '@/lib/supabase/events'
 import { isValidEmail } from '@/lib/utils'
+import { AddAttendeeDialog } from './add-attendee-dialog'
 
 interface AttendeeManagementProps {
   eventId: string
@@ -77,67 +77,8 @@ export function AttendeeManagement({
   const [selectedAttendee, setSelectedAttendee] = useState<EventAttendee | null>(null)
   
   // State for forms
-  const [newAttendee, setNewAttendee] = useState({
-    name: '',
-    email: ''
-  })
   const [importText, setImportText] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
-  // Handle adding a new attendee
-  const handleAddAttendee = async () => {
-    if (!newAttendee.name || !newAttendee.email) {
-      toast({
-        title: 'Missing information',
-        description: 'Please provide both name and email.',
-        variant: 'destructive'
-      })
-      return
-    }
-    
-    if (!isValidEmail(newAttendee.email)) {
-      toast({
-        title: 'Invalid email',
-        description: 'Please provide a valid email address.',
-        variant: 'destructive'
-      })
-      return
-    }
-    
-    setIsSubmitting(true)
-    
-    try {
-      const params: CreateAttendeeParams = {
-        event_id: eventId,
-        name: newAttendee.name,
-        email: newAttendee.email
-      }
-      
-      await addEventAttendee(params)
-      
-      toast({
-        title: 'Attendee added',
-        description: `${newAttendee.name} has been added to the event.`
-      })
-      
-      // Reset form and close dialog
-      setNewAttendee({ name: '', email: '' })
-      setShowAddDialog(false)
-      
-      // Refresh attendees list
-      onAttendeeChange()
-      router.refresh()
-    } catch (error) {
-      console.error('Error adding attendee:', error)
-      toast({
-        title: 'Failed to add attendee',
-        description: error instanceof Error ? error.message : 'An unknown error occurred.',
-        variant: 'destructive'
-      })
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
   
   // Handle updating attendee status
   const handleUpdateStatus = async (attendee: EventAttendee, status: AttendeeStatus) => {
@@ -331,46 +272,41 @@ export function AttendeeManagement({
   }
   
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold">Attendees ({attendees.length})</h2>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Attendees ({attendees.length})</h2>
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
-            className="flex items-center gap-1"
             onClick={() => setShowImportDialog(true)}
           >
-            <Upload className="h-4 w-4" />
-            <span>Import</span>
+            <Upload className="h-4 w-4 mr-2" />
+            Import
           </Button>
-          
           <Button
-            variant="outline"
             size="sm"
-            className="flex items-center gap-1"
-            onClick={handleExportCsv}
-            disabled={attendees.length === 0}
-          >
-            <Download className="h-4 w-4" />
-            <span>Export</span>
-          </Button>
-          
-          <Button
-            variant="default"
-            size="sm"
-            className="flex items-center gap-1"
             onClick={() => setShowAddDialog(true)}
           >
-            <UserPlus className="h-4 w-4" />
-            <span>Add Attendee</span>
+            <UserPlus className="h-4 w-4 mr-2" />
+            Add Attendee
           </Button>
         </div>
       </div>
       
       {attendees.length === 0 ? (
-        <div className="text-center py-8 border rounded-lg">
-          <p className="text-muted-foreground">No attendees yet. Add some attendees to get started.</p>
+        <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
+          <UserPlus className="h-10 w-10 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-medium">No attendees yet</h3>
+          <p className="text-sm text-muted-foreground mt-1 mb-4">
+            Add some attendees to get started.
+          </p>
+          <Button
+            onClick={() => setShowAddDialog(true)}
+          >
+            <UserPlus className="h-4 w-4 mr-2" />
+            Add Attendee
+          </Button>
         </div>
       ) : (
         <div className="border rounded-lg overflow-hidden">
@@ -471,120 +407,131 @@ export function AttendeeManagement({
         </div>
       )}
       
-      {/* Add Attendee Dialog */}
-      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-        <DialogContent>
+      <AddAttendeeDialog
+        eventId={eventId}
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        onSuccess={onAttendeeChange}
+      />
+      
+      <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Add Attendee</DialogTitle>
-            <DialogDescription>
-              Add a new attendee to your event. They will receive an access code.
+            <DialogTitle className="text-xl flex items-center gap-2">
+              <Upload className="h-5 w-5 text-primary" />
+              Import Attendees
+            </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground mt-1.5">
+              Bulk import attendees from a list. Enter one attendee per line in any of these formats:
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                placeholder="Enter attendee name"
-                value={newAttendee.name}
-                onChange={e => setNewAttendee(prev => ({ ...prev, name: e.target.value }))}
-              />
-            </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter attendee email"
-                value={newAttendee.email}
-                onChange={e => setNewAttendee(prev => ({ ...prev, email: e.target.value }))}
-              />
-            </div>
+          <div className="mt-2 mb-4 bg-muted/50 rounded-lg p-3 border">
+            <ul className="space-y-1.5">
+              <li className="text-xs flex items-center">
+                <span className="inline-block w-2 h-2 bg-primary rounded-full mr-2"></span>
+                <code className="bg-muted px-1.5 py-0.5 rounded">Name, Email</code>
+                <span className="text-muted-foreground ml-2">e.g., John Doe, john@example.com</span>
+              </li>
+              <li className="text-xs flex items-center">
+                <span className="inline-block w-2 h-2 bg-primary rounded-full mr-2"></span>
+                <code className="bg-muted px-1.5 py-0.5 rounded">Name &lt;Email&gt;</code>
+                <span className="text-muted-foreground ml-2">e.g., Jane Smith &lt;jane@example.com&gt;</span>
+              </li>
+              <li className="text-xs flex items-center">
+                <span className="inline-block w-2 h-2 bg-primary rounded-full mr-2"></span>
+                <code className="bg-muted px-1.5 py-0.5 rounded">Email</code>
+                <span className="text-muted-foreground ml-2">e.g., guest@example.com</span>
+              </li>
+            </ul>
           </div>
           
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowAddDialog(false)}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleAddAttendee}
-              disabled={isSubmitting || !newAttendee.name || !newAttendee.email}
-            >
-              {isSubmitting ? 'Adding...' : 'Add Attendee'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Import Attendees Dialog */}
-      <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Import Attendees</DialogTitle>
-            <DialogDescription>
-              Bulk import attendees from a list. Enter one attendee per line in any of these formats:
-              <ul className="list-disc list-inside mt-2 space-y-1">
-                <li className="text-xs">Name, Email</li>
-                <li className="text-xs">Name &lt;Email&gt;</li>
-                <li className="text-xs">Email</li>
-              </ul>
-            </DialogDescription>
-          </DialogHeader>
-          
           <div className="grid gap-4 py-4">
+            <Label htmlFor="import-text" className="text-sm font-medium">
+              Attendee List
+            </Label>
             <Textarea
+              id="import-text"
               placeholder="John Doe, john@example.com
 Jane Smith <jane@example.com>
 guest@example.com"
-              rows={10}
+              rows={8}
               value={importText}
               onChange={e => setImportText(e.target.value)}
+              className="font-mono text-sm"
             />
           </div>
           
-          <DialogFooter>
+          <DialogFooter className="flex space-x-2 justify-end">
             <Button
               variant="outline"
-              onClick={() => setShowImportDialog(false)}
+              onClick={() => {
+                setImportText('');
+                setShowImportDialog(false);
+              }}
               disabled={isSubmitting}
+              className="h-10"
             >
               Cancel
             </Button>
             <Button
               onClick={handleBulkImport}
               disabled={isSubmitting || !importText.trim()}
+              className="h-10"
             >
-              {isSubmitting ? 'Importing...' : 'Import Attendees'}
+              {isSubmitting ? (
+                <>
+                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
+                  Importing...
+                </>
+              ) : (
+                'Import Attendees'
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       
-      {/* Delete Attendee Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Remove Attendee</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-xl flex items-center gap-2">
+              <Trash className="h-5 w-5 text-destructive" />
+              Remove Attendee
+            </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground mt-1.5">
               Are you sure you want to remove this attendee from the event?
               This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           
           {selectedAttendee && (
-            <div className="py-4">
-              <p><strong>Name:</strong> {selectedAttendee.name}</p>
-              <p><strong>Email:</strong> {selectedAttendee.email}</p>
+            <div className="my-6 p-4 border rounded-lg bg-muted/30">
+              <div className="space-y-3">
+                <div className="grid grid-cols-[100px_1fr] items-center">
+                  <span className="text-sm font-medium text-muted-foreground">Name:</span>
+                  <span className="font-medium">{selectedAttendee.name}</span>
+                </div>
+                <div className="grid grid-cols-[100px_1fr] items-center">
+                  <span className="text-sm font-medium text-muted-foreground">Email:</span>
+                  <span className="font-medium">{selectedAttendee.email}</span>
+                </div>
+                <div className="grid grid-cols-[100px_1fr] items-center">
+                  <span className="text-sm font-medium text-muted-foreground">Status:</span>
+                  <Badge variant={
+                    selectedAttendee.status === 'confirmed' ? 'success' :
+                    selectedAttendee.status === 'attended' ? 'success' :
+                    selectedAttendee.status === 'declined' ? 'destructive' :
+                    'secondary'
+                  } className="w-fit">
+                    {selectedAttendee.status.charAt(0).toUpperCase() + selectedAttendee.status.slice(1)}
+                  </Badge>
+                </div>
+              </div>
             </div>
           )}
           
-          <DialogFooter>
+          <DialogFooter className="flex space-x-2 justify-end">
             <Button
               variant="outline"
               onClick={() => {
@@ -592,6 +539,7 @@ guest@example.com"
                 setShowDeleteDialog(false)
               }}
               disabled={isSubmitting}
+              className="h-10"
             >
               Cancel
             </Button>
@@ -599,8 +547,16 @@ guest@example.com"
               variant="destructive"
               onClick={handleDeleteAttendee}
               disabled={isSubmitting}
+              className="h-10"
             >
-              {isSubmitting ? 'Removing...' : 'Remove Attendee'}
+              {isSubmitting ? (
+                <>
+                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
+                  Removing...
+                </>
+              ) : (
+                'Remove Attendee'
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
