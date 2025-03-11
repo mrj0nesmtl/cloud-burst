@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-10T19:58:47.115Z
+Generated: 2025-03-11T06:00:32.339Z
 
 ```
 ./docs/
@@ -40,6 +40,10 @@ Generated: 2025-03-10T19:58:47.115Z
 │   │   ├── session_21_kickoff_prompt.md
 │   │   ├── session_21_narrative.md
 │   │   ├── session_21_summary.md
+│   │   ├── session_22_README.md
+│   │   ├── session_22_checklist.md
+│   │   ├── session_22_kickoff_prompt.md
+│   │   ├── session_22_narrative.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -49,10 +53,8 @@ Generated: 2025-03-10T19:58:47.115Z
 │   ├── .DS_Store
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_22_README.md
-│   ├── session_22_checklist.md
-│   ├── session_22_kickoff_prompt.md
-│   ├── session_22_narrative.md
+│   ├── session_23_checklist.md
+│   ├── session_23_kickoff.md
 │   ├── status_notes.md
 │   └── version-sync.plan
 ├── planning/
@@ -88,6 +90,7 @@ Generated: 2025-03-10T19:58:47.115Z
 │   └── role_based_access_control.md
 ├── user-flows/
 │   ├── create_test_users_ui.md
+│   ├── event_management.md
 │   ├── invited_user_flow_design_document.md
 │   ├── photo_upload_sequence_diagram.md
 │   ├── user_flow_chart.md
@@ -95,7 +98,7 @@ Generated: 2025-03-10T19:58:47.115Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 82 files
+10 directories, 85 files
 
 ```
 

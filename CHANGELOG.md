@@ -24,6 +24,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance Optimization**: Improved image loading and caching for gallery components
 - **Accessibility Enhancements**: Ensuring WCAG 2.1 AA compliance across new features
 
+## [0.7.5] - 2025-03-15
+### Added
+- Event status management system with status selector component
+- QR code generation during event creation process
+- Event status update functionality with visual feedback
+- Enhanced QR code page with improved layout and instructions
+- New Add Attendee dialog with improved user experience
+- Function to update event status in the database
+
+### Fixed
+- QR code generation during event creation
+- QR codes not appearing in QR codes listing page
+- Event status not being properly tracked in the database
+- Add Attendee dialog layout and styling issues
+- Form validation and error handling in attendee management
+
+### Changed
+- Improved QR code page layout with responsive grid design
+- Enhanced event details page with status selector
+- Optimized event creation process to include QR code generation
+- Refined Add Attendee dialog with better visual hierarchy
+- Updated form validation patterns for better user feedback
+
+### Technical Debt
+- Identified styling inconsistencies in dialog components
+- Documented remaining issues with Add Attendee dialog
+- Created plan for enhancing QR code functionality
+- Noted areas for improvement in form validation feedback
+- Outlined responsive testing needs for new components
+
 ## [0.7.4] - 2025-03-10
 ### Added
 - Functional Create Event interface with Basic Information and Advanced Settings tabs

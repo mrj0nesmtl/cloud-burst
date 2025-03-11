@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/card"
 import { Calendar } from 'lucide-react'
 import { EventActions } from '@/components/events/event-actions'
+import { cookies } from 'next/headers'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export const metadata = {
   title: 'Manage Events | Cloud Burst',
@@ -17,12 +19,29 @@ export const metadata = {
 }
 
 export default async function ManageEventsPage() {
-  const supabase = await createServerClient()
+  const cookieStore = cookies()
+  const supabase = createServerComponentClient({ cookies: () => cookieStore })
   
-  const { data: events } = await supabase
-    .from('events')
-    .select('*')
-    .order('created_at', { ascending: false })
+  // Get the current user
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  // Get the user's profile to check their role
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user?.id)
+    .single()
+  
+  // Build the query based on user role
+  let query = supabase.from('events').select('*')
+  
+  if (profile?.role !== 'super_admin' && profile?.role !== 'admin') {
+    // Regular users, organizers, and event hosts only see their own events
+    query = query.eq('organizer_id', user?.id)
+  }
+  
+  // Execute the query
+  const { data: events } = await query.order('created_at', { ascending: false })
   
   return (
     <div className="space-y-6">
@@ -53,10 +72,12 @@ export default async function ManageEventsPage() {
                         <span>{new Date(event.date).toLocaleDateString()}</span>
                         <span className="mx-2">•</span>
                         <span>{event.location}</span>
+                        <span className="mx-2">•</span>
+                        <span className="capitalize">{event.status}</span>
                       </div>
                       <p className="text-sm mt-2 line-clamp-2">{event.description}</p>
                     </div>
-                    <EventActions eventId={event.id} />
+                    <EventActions eventId={event.id} organizerId={event.organizer_id} />
                   </div>
                 </div>
               ))}

@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-10T19:58:47.100Z
+Generated: 2025-03-11T06:00:32.322Z
 
 ```
 ./src/
@@ -122,6 +122,12 @@ Generated: 2025-03-10T19:58:47.100Z
 │   │   │   ├── [id]/
 │   │   │   │   ├── attendees/
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── edit/
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── qr/
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── create/
@@ -198,15 +204,18 @@ Generated: 2025-03-10T19:58:47.100Z
 │   │   ├── recent-activity.tsx
 │   │   └── recent-events.tsx
 │   ├── events/
+│   │   ├── add-attendee-dialog.tsx
 │   │   ├── attendee-management.tsx
 │   │   ├── enhanced-event-card.tsx
 │   │   ├── event-actions.tsx
 │   │   ├── event-card.tsx
 │   │   ├── event-details.tsx
 │   │   ├── event-filters.tsx
+│   │   ├── event-form.tsx
 │   │   ├── event-list-client.tsx
 │   │   ├── event-list.tsx
 │   │   ├── event-search.tsx
+│   │   ├── event-status-selector.tsx
 │   │   ├── image-upload.tsx
 │   │   └── qr-code-display.tsx
 │   ├── forms/
@@ -260,6 +269,7 @@ Generated: 2025-03-10T19:58:47.100Z
 │   │   ├── card.tsx
 │   │   ├── charts.tsx
 │   │   ├── checkbox.tsx
+│   │   ├── command.tsx
 │   │   ├── dialog.tsx
 │   │   ├── dropdown-menu.tsx
 │   │   ├── form.tsx
@@ -353,7 +363,7 @@ Generated: 2025-03-10T19:58:47.100Z
 ├── middleware.test.ts
 └── middleware.ts
 
-95 directories, 255 files
+97 directories, 263 files
 
 ```
 

@@ -107,6 +107,43 @@ export function usePermissions(role?: UserRole) {
     [userRole]
   );
   
+  /**
+   * Check if user can perform an action on a resource
+   */
+  const can = useCallback(
+    (action: string, resource: string, ownerId?: string): boolean => {
+      // Super admin can do everything
+      if (userRole === 'super_admin') return true;
+
+      // Check if user is the owner of the resource
+      if (ownerId && user?.id === ownerId) return true;
+
+      // Check specific role-based permissions
+      switch (userRole) {
+        case 'admin':
+          return true; // Admins can do everything except super admin actions
+        
+        case 'organizer':
+          // Organizers can manage their own events and related resources
+          return ['event', 'photo', 'attendee'].includes(resource) && 
+                 ['create', 'read', 'update', 'delete', 'manage'].includes(action);
+        
+        case 'event_host':
+          // Event hosts can manage events they're assigned to
+          return ['event', 'photo', 'attendee'].includes(resource) && 
+                 ['create', 'read', 'update'].includes(action);
+        
+        case 'user':
+          // Regular users can read public resources and manage their own content
+          return action === 'read' || (!!ownerId && !!user?.id && user.id === ownerId);
+        
+        default:
+          return false;
+      }
+    },
+    [userRole, user?.id]
+  );
+  
   return {
     capabilities,
     hasCapability,
@@ -117,6 +154,7 @@ export function usePermissions(role?: UserRole) {
     isOrganizer,
     canManageEvents,
     hasPaidSubscription,
+    can,
     userRole,
     user
   };
