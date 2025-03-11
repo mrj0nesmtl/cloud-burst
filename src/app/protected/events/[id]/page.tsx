@@ -12,6 +12,7 @@ import { GalleryGrid } from '@/components/gallery/gallery-grid'
 import { UploadDropzone } from '@/components/gallery/upload-dropzone'
 import { QRCodeDisplay } from '@/components/events/qr-code-display'
 import { getServerSupabase } from '@/lib/supabase/server'
+import { EventStatusSelector } from '@/components/events/event-status-selector'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -110,9 +111,7 @@ export default async function EventPage({ params }: EventPageProps) {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{event.name}</h1>
           <div className="flex items-center mt-2 space-x-4">
-            <Badge variant="outline" className={getStatusColor(eventStatus)}>
-              {eventStatus.charAt(0).toUpperCase() + eventStatus.slice(1)}
-            </Badge>
+            <EventStatusSelector eventId={event.id} currentStatus={event.status || 'draft'} />
             <p className="text-sm text-muted-foreground">{eventDate}</p>
             {event.location && (
               <p className="text-sm text-muted-foreground">{event.location}</p>
@@ -154,66 +153,62 @@ export default async function EventPage({ params }: EventPageProps) {
                 Complete information about this event
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="font-medium">Date & Time</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {eventDate}
-                    {event.time && ` at ${event.time}`}
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="font-medium">Location</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {event.location || 'No location set'}
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="font-medium">Attendees</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {attendees?.length || 0} registered
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="font-medium">Photos</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {photos?.length || 0} uploaded
-                  </p>
-                </div>
-                
-                {event.max_attendees && (
-                  <div>
-                    <h3 className="font-medium">Capacity</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {event.max_attendees} maximum attendees
-                    </p>
-                  </div>
-                )}
-                
-                {event.code && (
-                  <div>
-                    <h3 className="font-medium">Event Code</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {event.code}
-                    </p>
-                  </div>
-                )}
+            <CardContent>
+              <div className="overflow-hidden rounded-md border">
+                <table className="w-full">
+                  <tbody className="divide-y">
+                    <tr className="divide-x">
+                      <td className="p-4 bg-muted/50">
+                        <h3 className="font-medium">Date & Time</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {eventDate}
+                          {event.time && ` at ${event.time}`}
+                        </p>
+                      </td>
+                      <td className="p-4 bg-muted/50">
+                        <h3 className="font-medium">Location</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {event.location || 'No location set'}
+                        </p>
+                      </td>
+                      <td className="p-4 bg-muted/50">
+                        <h3 className="font-medium">Capacity</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {event.max_attendees ? `${event.max_attendees} maximum attendees` : 'Unlimited'}
+                        </p>
+                      </td>
+                    </tr>
+                    <tr className="divide-x">
+                      <td className="p-4">
+                        <h3 className="font-medium">Attendees</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {attendees?.length || 0} registered
+                        </p>
+                      </td>
+                      <td className="p-4">
+                        <h3 className="font-medium">Photos</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {photos?.length || 0} uploaded
+                        </p>
+                      </td>
+                      <td className="p-4">
+                        <h3 className="font-medium">Custom URL</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {event.custom_url || 'Not set'}
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               
               {event.additional_info && (
-                <>
-                  <Separator />
-                  <div>
-                    <h3 className="font-medium">Additional Information</h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {event.additional_info}
-                    </p>
-                  </div>
-                </>
+                <div className="mt-4">
+                  <h3 className="font-medium">Additional Information</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {event.additional_info}
+                  </p>
+                </div>
               )}
             </CardContent>
           </Card>

@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-10T19:58:47.186Z
+Generated: 2025-03-11T06:00:32.431Z
 
 ```
 ./src/components/
@@ -26,15 +26,18 @@ Generated: 2025-03-10T19:58:47.186Z
 │   ├── recent-activity.tsx
 │   └── recent-events.tsx
 ├── events/
+│   ├── add-attendee-dialog.tsx
 │   ├── attendee-management.tsx
 │   ├── enhanced-event-card.tsx
 │   ├── event-actions.tsx
 │   ├── event-card.tsx
 │   ├── event-details.tsx
 │   ├── event-filters.tsx
+│   ├── event-form.tsx
 │   ├── event-list-client.tsx
 │   ├── event-list.tsx
 │   ├── event-search.tsx
+│   ├── event-status-selector.tsx
 │   ├── image-upload.tsx
 │   └── qr-code-display.tsx
 ├── forms/
@@ -88,6 +91,7 @@ Generated: 2025-03-10T19:58:47.186Z
 │   ├── card.tsx
 │   ├── charts.tsx
 │   ├── checkbox.tsx
+│   ├── command.tsx
 │   ├── dialog.tsx
 │   ├── dropdown-menu.tsx
 │   ├── form.tsx
@@ -126,7 +130,7 @@ Generated: 2025-03-10T19:58:47.186Z
 ├── query-provider.tsx
 └── theme-provider.tsx
 
-14 directories, 109 files
+14 directories, 113 files
 
 ```
 

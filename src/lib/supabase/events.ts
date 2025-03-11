@@ -22,6 +22,9 @@ export async function createEvent(params: CreateEventParams): Promise<Event> {
     throw new Error('User not authenticated')
   }
   
+  // Import the QR code generation function
+  const { generateQRCodeUrl } = await import('@/lib/qr-code')
+  
   const { data, error } = await supabase
     .from('events')
     .insert({
@@ -36,7 +39,26 @@ export async function createEvent(params: CreateEventParams): Promise<Event> {
     throw new Error(`Failed to create event: ${error.message}`)
   }
   
-  return data as Event
+  // Generate QR code URL with the event ID
+  const qrCodeUrl = generateQRCodeUrl({
+    event_id: data.id,
+    type: 'event'
+  })
+  
+  // Update the event with the QR code URL
+  const { error: updateError } = await supabase
+    .from('events')
+    .update({ qr_code_url: qrCodeUrl })
+    .eq('id', data.id)
+  
+  if (updateError) {
+    console.error('Error updating QR code URL:', updateError)
+  }
+  
+  return {
+    ...data,
+    qr_code_url: qrCodeUrl
+  } as Event
 }
 
 /**
@@ -461,4 +483,25 @@ export async function duplicateEvent(id: string): Promise<Event> {
   }
   
   return createdEvent as Event
+}
+
+/**
+ * Update event status
+ */
+export async function updateEventStatus(id: string, status: 'draft' | 'published' | 'completed' | 'cancelled'): Promise<Event> {
+  const supabase = createClient()
+  
+  const { data, error } = await supabase
+    .from('events')
+    .update({ status })
+    .eq('id', id)
+    .select('*')
+    .single()
+    
+  if (error) {
+    console.error('Error updating event status:', error)
+    throw new Error(`Failed to update event status: ${error.message}`)
+  }
+  
+  return data as Event
 } 

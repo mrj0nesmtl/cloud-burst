@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-03-10T19:58:47.170Z
+Generated: 2025-03-11T06:00:32.410Z
 
 ```
 ./src/app/
@@ -121,6 +121,12 @@ Generated: 2025-03-10T19:58:47.170Z
 │   │   ├── [id]/
 │   │   │   ├── attendees/
 │   │   │   │   └── page.tsx
+│   │   │   ├── edit/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── qr/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── create/
@@ -174,7 +180,7 @@ Generated: 2025-03-10T19:58:47.170Z
 ├── not-found.tsx
 └── page.tsx
 
-69 directories, 102 files
+71 directories, 106 files
 
 ```
 

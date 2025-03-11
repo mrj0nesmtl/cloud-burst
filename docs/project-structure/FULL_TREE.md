@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-10T19:58:47.073Z
+Generated: 2025-03-11T06:00:32.294Z
 
 ```
 ./
@@ -60,6 +60,10 @@ Generated: 2025-03-10T19:58:47.073Z
 │   │   │   ├── session_21_kickoff_prompt.md
 │   │   │   ├── session_21_narrative.md
 │   │   │   ├── session_21_summary.md
+│   │   │   ├── session_22_README.md
+│   │   │   ├── session_22_checklist.md
+│   │   │   ├── session_22_kickoff_prompt.md
+│   │   │   ├── session_22_narrative.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -69,10 +73,8 @@ Generated: 2025-03-10T19:58:47.073Z
 │   │   ├── .DS_Store
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_22_README.md
-│   │   ├── session_22_checklist.md
-│   │   ├── session_22_kickoff_prompt.md
-│   │   ├── session_22_narrative.md
+│   │   ├── session_23_checklist.md
+│   │   ├── session_23_kickoff.md
 │   │   ├── status_notes.md
 │   │   └── version-sync.plan
 │   ├── planning/
@@ -108,6 +110,7 @@ Generated: 2025-03-10T19:58:47.073Z
 │   │   └── role_based_access_control.md
 │   ├── user-flows/
 │   │   ├── create_test_users_ui.md
+│   │   ├── event_management.md
 │   │   ├── invited_user_flow_design_document.md
 │   │   ├── photo_upload_sequence_diagram.md
 │   │   ├── user_flow_chart.md
@@ -271,6 +274,12 @@ Generated: 2025-03-10T19:58:47.073Z
 │   │   │   │   ├── [id]/
 │   │   │   │   │   ├── attendees/
 │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── edit/
+│   │   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── qr/
+│   │   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── create/
@@ -347,15 +356,18 @@ Generated: 2025-03-10T19:58:47.073Z
 │   │   │   ├── recent-activity.tsx
 │   │   │   └── recent-events.tsx
 │   │   ├── events/
+│   │   │   ├── add-attendee-dialog.tsx
 │   │   │   ├── attendee-management.tsx
 │   │   │   ├── enhanced-event-card.tsx
 │   │   │   ├── event-actions.tsx
 │   │   │   ├── event-card.tsx
 │   │   │   ├── event-details.tsx
 │   │   │   ├── event-filters.tsx
+│   │   │   ├── event-form.tsx
 │   │   │   ├── event-list-client.tsx
 │   │   │   ├── event-list.tsx
 │   │   │   ├── event-search.tsx
+│   │   │   ├── event-status-selector.tsx
 │   │   │   ├── image-upload.tsx
 │   │   │   └── qr-code-display.tsx
 │   │   ├── forms/
@@ -409,6 +421,7 @@ Generated: 2025-03-10T19:58:47.073Z
 │   │   │   ├── card.tsx
 │   │   │   ├── charts.tsx
 │   │   │   ├── checkbox.tsx
+│   │   │   ├── command.tsx
 │   │   │   ├── dialog.tsx
 │   │   │   ├── dropdown-menu.tsx
 │   │   │   ├── form.tsx
@@ -509,6 +522,9 @@ Generated: 2025-03-10T19:58:47.073Z
 │   ├── Event Columns Information.csv
 │   ├── Marc Reichel - IMDb.mhtml
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx).csv
+│   ├── events_rows (1).csv
+│   ├── events_rows.csv
+│   ├── profiles_rows.csv
 │   └── supabase_logs.csv
 ├── .DS_Store
 ├── .gitignore
@@ -530,7 +546,7 @@ Generated: 2025-03-10T19:58:47.073Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-117 directories, 410 files
+119 directories, 424 files
 
 ```
 

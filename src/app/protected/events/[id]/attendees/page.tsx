@@ -23,10 +23,14 @@ interface PageProps {
   params: {
     id: string
   }
+  searchParams: {
+    tab?: string
+  }
 }
 
-export default async function EventAttendeesPage({ params }: PageProps) {
+export default async function EventAttendeesPage({ params, searchParams }: PageProps) {
   const { id } = params
+  const defaultTab = searchParams.tab || 'attendees'
   
   // Get server-side supabase instance
   const cookieStore = cookies()
@@ -72,7 +76,7 @@ export default async function EventAttendeesPage({ params }: PageProps) {
           </p>
         </div>
         
-        <Tabs defaultValue="attendees" className="space-y-6">
+        <Tabs defaultValue={defaultTab} className="space-y-6">
           <TabsList>
             <TabsTrigger value="attendees">Attendees</TabsTrigger>
             <TabsTrigger value="invitations">Send Invitations</TabsTrigger>
