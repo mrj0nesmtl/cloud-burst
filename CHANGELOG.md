@@ -24,6 +24,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance Optimization**: Improved image loading and caching for gallery components
 - **Accessibility Enhancements**: Ensuring WCAG 2.1 AA compliance across new features
 
+## [0.7.6] - 2025-03-18
+### Added
+- Database security fixes for SQL functions with mutable search paths
+- Enhanced authentication system with reduced API calls
+- Gallery page foundation with 404 handling
+- Fixed RLS policies for role_capabilities table
+
+### Changed
+- Improved permissions caching to reduce Supabase API calls
+- Enhanced middleware error handling
+- Optimized dashboard loading performance
+- Updated documentation for Session 23
+
+### Technical Debt
+- Gallery creation workflow needs implementation
+- Photo upload mechanism pending completion
+- Sidebar navigation requires finalization
+- Album management features to be built
+
 ## [0.7.5] - 2025-03-15
 ### Added
 - Event status management system with status selector component

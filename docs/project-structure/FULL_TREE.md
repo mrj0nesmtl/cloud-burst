@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-11T06:00:32.294Z
+Generated: 2025-03-12T18:49:47.003Z
 
 ```
 ./
@@ -75,6 +75,7 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   ├── contributing.md
 │   │   ├── session_23_checklist.md
 │   │   ├── session_23_kickoff.md
+│   │   ├── session_23_narrative.md
 │   │   ├── status_notes.md
 │   │   └── version-sync.plan
 │   ├── planning/
@@ -464,10 +465,12 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   │   └── use-permissions.test.ts
 │   │   ├── use-analytics.ts
 │   │   ├── use-auth.ts
+│   │   ├── use-debounced-auth.ts
 │   │   ├── use-permissions.ts
 │   │   ├── use-profile.ts
 │   │   ├── use-toast.ts
-│   │   └── use-update-profile.ts
+│   │   ├── use-update-profile.ts
+│   │   └── use-user.ts
 │   ├── lib/
 │   │   ├── ai/
 │   │   │   ├── color-extraction.ts
@@ -479,6 +482,7 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   │   │   ├── auth-store.test.ts
 │   │   │   │   └── events.test.ts
 │   │   │   ├── auth-store.ts
+│   │   │   ├── auth-utils.ts
 │   │   │   ├── client.ts
 │   │   │   ├── debug-queries.ts
 │   │   │   ├── events.ts
@@ -521,11 +525,20 @@ Generated: 2025-03-11T06:00:32.294Z
 │   ├── .DS_Store
 │   ├── Event Columns Information.csv
 │   ├── Marc Reichel - IMDb.mhtml
+│   ├── Supabase  Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
+│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (1).csv
+│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
+│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (3).csv
+│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (4).csv
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx).csv
 │   ├── events_rows (1).csv
 │   ├── events_rows.csv
 │   ├── profiles_rows.csv
-│   └── supabase_logs.csv
+│   ├── supabase_logs (1).csv
+│   ├── supabase_logs (2).csv
+│   ├── supabase_logs (3).csv
+│   ├── supabase_logs.csv
+│   └── supabase_logs_for_one_login.csv
 ├── .DS_Store
 ├── .gitignore
 ├── .replit
@@ -546,7 +559,7 @@ Generated: 2025-03-11T06:00:32.294Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-119 directories, 424 files
+119 directories, 437 files
 
 ```
 

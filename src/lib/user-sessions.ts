@@ -1,55 +1,113 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { getAuthenticatedUser } from '@/lib/supabase/auth-utils'
 import { UAParser } from 'ua-parser-js'
 
-export type UserSession = {
+export interface UserSession {
   id: string
   user_id: string
-  session_id: string
   device_info: {
-    browser?: {
-      name?: string
-      version?: string
-    }
-    os?: {
-      name?: string
-      version?: string
-    }
-    device?: {
-      type?: string
-      model?: string
-      vendor?: string
-    }
+    browser: string
+    os: string
+    device: string
+    ip_address: string
   }
-  ip_address: string | null
-  last_active: string
-  is_current: boolean
   created_at: string
+  last_active: string
+  ended_at: string | null
+}
+
+// Track current session
+let currentSessionId: string | null = null
+
+// Register session on login
+export async function registerSession(deviceInfo: any) {
+  const supabase = createClientComponentClient()
+  const { user } = await getAuthenticatedUser()
+  
+  if (!user) return null
+  
+  const { data, error } = await supabase
+    .from('user_sessions')
+    .insert({
+      user_id: user.id,
+      device_info: deviceInfo,
+    })
+    .select()
+    .single()
+  
+  if (error) {
+    console.error('Error registering session:', error)
+    return null
+  }
+  
+  currentSessionId = data.id
+  return data as UserSession
 }
 
 // This function should only be called from app directory server components
 export async function getUserSessions() {
-  // Use a different approach for server-side authentication
-  const supabase = createClientComponentClient()
+  // Use the secure authentication method
+  const { user, error } = await getAuthenticatedUser()
   
-  const { data: session } = await supabase.auth.getSession()
-  if (!session?.session?.user) {
+  if (error || !user) {
     throw new Error('User not authenticated')
   }
   
-  const userId = session.session.user.id
+  const userId = user.id
+  const supabase = createClientComponentClient()
   
-  const { data, error } = await supabase
+  const { data, error: fetchError } = await supabase
     .from('user_sessions')
     .select('*')
     .eq('user_id', userId)
     .order('last_active', { ascending: false })
   
-  if (error) {
-    console.error('Error fetching user sessions:', error)
-    throw error
+  if (fetchError) {
+    console.error('Error fetching user sessions:', fetchError)
+    throw fetchError
   }
   
   return data as UserSession[]
+}
+
+// End a specific session
+export async function endSession(sessionId: string) {
+  const supabase = createClientComponentClient()
+  
+  const { error } = await supabase
+    .from('user_sessions')
+    .update({ ended_at: new Date().toISOString() })
+    .eq('id', sessionId)
+  
+  if (error) {
+    console.error('Error ending session:', error)
+    return false
+  }
+  
+  return true
+}
+
+// End all other sessions except current
+export async function endAllOtherSessions() {
+  if (!currentSessionId) return false
+  
+  const supabase = createClientComponentClient()
+  const { user } = await getAuthenticatedUser()
+  
+  if (!user) return false
+  
+  const { error } = await supabase
+    .rpc('end_all_other_user_sessions', {
+      user_id_param: user.id,
+      current_session_id_param: currentSessionId
+    })
+  
+  if (error) {
+    console.error('Error ending other sessions:', error)
+    return false
+  }
+  
+  return true
 }
 
 // Client-side function that works in both pages and app directory
@@ -69,19 +127,10 @@ export async function registerCurrentSession() {
   const result = parser.getResult()
   
   const deviceInfo = {
-    browser: {
-      name: result.browser.name,
-      version: result.browser.version
-    },
-    os: {
-      name: result.os.name,
-      version: result.os.version
-    },
-    device: {
-      type: result.device.type || 'desktop',
-      model: result.device.model,
-      vendor: result.device.vendor
-    }
+    browser: result.browser.name,
+    os: result.os.name,
+    device: result.device.type || 'desktop',
+    ip_address: null // We can't reliably get the IP address from the client
   }
   
   // Register the session
@@ -99,53 +148,4 @@ export async function registerCurrentSession() {
   }
   
   return data as UserSession
-}
-
-export async function endSession(sessionId: string) {
-  const supabase = createClientComponentClient()
-  
-  const { data: session } = await supabase.auth.getSession()
-  if (!session?.session?.user) {
-    throw new Error('User not authenticated')
-  }
-  
-  const userId = session.session.user.id
-  
-  const { error } = await supabase
-    .rpc('end_user_session', {
-      p_user_id: userId,
-      p_session_id: sessionId
-    })
-  
-  if (error) {
-    console.error('Error ending user session:', error)
-    throw error
-  }
-  
-  return true
-}
-
-export async function endAllOtherSessions() {
-  const supabase = createClientComponentClient()
-  
-  const { data: session } = await supabase.auth.getSession()
-  if (!session?.session?.user) {
-    throw new Error('User not authenticated')
-  }
-  
-  const userId = session.session.user.id
-  const sessionId = session.session.access_token
-  
-  const { error } = await supabase
-    .rpc('end_all_other_user_sessions', {
-      p_user_id: userId,
-      p_current_session_id: sessionId
-    })
-  
-  if (error) {
-    console.error('Error ending all other user sessions:', error)
-    throw error
-  }
-  
-  return true
 }

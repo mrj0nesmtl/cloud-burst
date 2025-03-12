@@ -1,5 +1,5 @@
 # development Directory Structure
-Generated: 2025-03-11T06:00:32.529Z
+Generated: 2025-03-12T18:49:47.316Z
 
 ```
 ./docs/development/
@@ -41,10 +41,11 @@ Generated: 2025-03-11T06:00:32.529Z
 ├── contributing.md
 ├── session_23_checklist.md
 ├── session_23_kickoff.md
+├── session_23_narrative.md
 ├── status_notes.md
 └── version-sync.plan
 
-2 directories, 39 files
+2 directories, 40 files
 
 ```
 

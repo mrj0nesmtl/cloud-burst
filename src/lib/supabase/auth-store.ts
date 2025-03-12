@@ -4,6 +4,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import type { AuthState, Capability, UserRole, AuthError } from '@/types/auth'
 import { roleCapabilities } from '@/types/auth'
 import { createClient, handleError } from './client'
+import { getAuthenticatedUser } from '@/lib/supabase/auth-utils'
 
 interface AuthStore extends AuthState {
   // Enhanced state
@@ -324,14 +325,16 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       initialize: async () => {
-        const supabase = createClientComponentClient()
         try {
           set({ loading: true })
-          // Use getUser instead of getSession for better security
-          const { data: { user } } = await supabase.auth.getUser()
+          // Use secure authentication method
+          const { user, error } = await getAuthenticatedUser()
+          
+          if (error) throw error
           
           if (user) {
             // Fetch user profile
+            const supabase = createClientComponentClient()
             const { data: profile } = await supabase
               .from('profiles')
               .select('*')
@@ -377,14 +380,16 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       refreshSession: async () => {
-        const supabase = createClientComponentClient()
         try {
           set({ loading: true })
-          // Use getUser instead of getSession for better security
-          const { data: { user } } = await supabase.auth.getUser()
+          // Use secure authentication method
+          const { user, error } = await getAuthenticatedUser()
+          
+          if (error) throw error
           
           if (user) {
             // Fetch user profile
+            const supabase = createClientComponentClient()
             const { data: profile } = await supabase
               .from('profiles')
               .select('*')

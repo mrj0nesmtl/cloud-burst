@@ -1,5 +1,5 @@
 # cursor Directory Structure
-Generated: 2025-03-11T06:00:32.371Z
+Generated: 2025-03-12T18:49:47.135Z
 
 ```
 ./.cursor/

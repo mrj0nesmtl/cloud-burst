@@ -1,9 +1,17 @@
 'use client'
 
-import { useAuthStore } from '@/lib/supabase/auth-store';
-import { useCallback, useMemo } from 'react';
-import type { UserRole, Capability } from '@/types/auth';
-import { roleCapabilities } from '@/types/auth';
+import { useEffect, useState, useCallback } from 'react'
+import { useUser } from '@/hooks/use-user'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+
+// Define types
+export type UserRole = 'super_admin' | 'admin' | 'organizer' | 'event_host' | 'user' | 'guest';
+export type Capability = string;
+
+// Cache for role capabilities to reduce API calls
+const capabilitiesCache: Record<string, {data: string[], timestamp: number}> = {}
+const CACHE_DURATION_MS = 3600000; // 1 hour cache
+const MAX_RETRY_ATTEMPTS = 1; // Only try once before using fallbacks
 
 /**
  * Hook for checking user permissions based on role
@@ -11,15 +19,133 @@ import { roleCapabilities } from '@/types/auth';
  * @returns Permission checking functions and capabilities
  */
 export function usePermissions(role?: UserRole) {
-  const { user, capabilities: storeCapabilities } = useAuthStore();
+  const { user, profile } = useUser()
+  const [capabilities, setCapabilities] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
   
-  // Use provided role or fall back to user's role from store
-  const userRole = role || user?.role || 'user';
-  
-  // Get capabilities for the role
-  const capabilities = storeCapabilities.length > 0 
-    ? storeCapabilities 
-    : (roleCapabilities[userRole as keyof typeof roleCapabilities] || []) as Capability[];
+  useEffect(() => {
+    const fetchCapabilities = async () => {
+      if (!user && !process.env.NEXT_PUBLIC_BYPASS_AUTH) {
+        setCapabilities([])
+        setLoading(false)
+        return
+      }
+      
+      const userRole = role || (profile?.role as UserRole) || 'guest'
+      
+      // Check cache first with timestamp validation
+      const cachedCapabilities = capabilitiesCache[userRole];
+      const now = Date.now();
+      if (cachedCapabilities && (now - cachedCapabilities.timestamp < CACHE_DURATION_MS)) {
+        console.log('Using cached capabilities for role:', userRole);
+        setCapabilities(cachedCapabilities.data);
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        let retryAttempts = 0;
+        let capabilitiesData: string[] = [];
+        let fetchSuccess = false;
+        
+        // Try to fetch from database with limited retries
+        while (!fetchSuccess && retryAttempts < MAX_RETRY_ATTEMPTS) {
+          retryAttempts++;
+          
+          try {
+            const supabase = createClientComponentClient()
+            
+            // In development mode with BYPASS_AUTH, use hardcoded capabilities
+            if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BYPASS_AUTH === 'true') {
+              console.log('Development mode: Using hardcoded capabilities for role:', userRole)
+              
+              // Provide default capabilities based on role
+              const defaultCapabilities: Record<string, string[]> = {
+                'super_admin': ['*', 'manage:all'],
+                'admin': ['manage_events', 'manage_users', 'manage_photos', 'view_dashboard', 'edit_settings'],
+                'organizer': ['manage_events', 'manage_photos', 'view_dashboard'],
+                'event_host': ['manage_own_events', 'upload_photos', 'view_dashboard'],
+                'user': ['view_events', 'upload_photos'],
+                'guest': ['view_public_events']
+              }
+              
+              const roleCapabilities = defaultCapabilities[userRole] || defaultCapabilities['guest']
+              setCapabilities(roleCapabilities)
+              capabilitiesCache[userRole] = {
+                data: roleCapabilities,
+                timestamp: now
+              }
+              setLoading(false)
+              return
+            }
+            
+            // Fetch capabilities from database
+            const { data, error } = await supabase
+              .from('role_capabilities')
+              .select('capability')
+              .eq('role', userRole)
+            
+            if (error) {
+              console.warn(`Attempt ${retryAttempts}: Error fetching capabilities:`, error)
+              throw error;
+            }
+            
+            // If successful, use the database capabilities
+            capabilitiesData = data?.map(p => p.capability) || [];
+            fetchSuccess = true;
+          } catch (error) {
+            // Last attempt failed, we'll use fallbacks
+            if (retryAttempts >= MAX_RETRY_ATTEMPTS) {
+              console.warn('Max retry attempts reached, using fallback capabilities');
+            }
+          }
+        }
+        
+        // If we successfully fetched capabilities, use them
+        if (fetchSuccess) {
+          setCapabilities(capabilitiesData);
+          capabilitiesCache[userRole] = {
+            data: capabilitiesData,
+            timestamp: now
+          };
+        } else {
+          // Use hardcoded fallback capabilities
+          console.log('Development mode: Using hardcoded capabilities for role:', userRole);
+          
+          // Provide default capabilities based on role
+          const defaultCapabilities: Record<string, string[]> = {
+            'super_admin': ['*', 'manage:all'],
+            'admin': ['manage_events', 'manage_users', 'manage_photos', 'view_dashboard', 'edit_settings'],
+            'organizer': ['manage_events', 'manage_photos', 'view_dashboard'],
+            'event_host': ['manage_own_events', 'upload_photos', 'view_dashboard'],
+            'user': ['view_events', 'upload_photos'],
+            'guest': ['view_public_events']
+          };
+          
+          const roleCapabilities = defaultCapabilities[userRole] || defaultCapabilities['guest'];
+          setCapabilities(roleCapabilities);
+          
+          // Cache even the fallback capabilities
+          capabilitiesCache[userRole] = {
+            data: roleCapabilities,
+            timestamp: now
+          };
+        }
+      } catch (err) {
+        // Final error handler
+        console.error('Unhandled error in usePermissions:', err);
+        setError(err instanceof Error ? err : new Error('Unknown error'));
+        
+        // Use empty capabilities as last resort
+        setCapabilities([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchCapabilities()
+  }, [user, profile, role])
   
   /**
    * Check if user has a specific capability
@@ -28,7 +154,7 @@ export function usePermissions(role?: UserRole) {
     (capability: Capability | Capability[]): boolean => {
       const capsToCheck = Array.isArray(capability) ? capability : [capability];
       return capsToCheck.some(cap => 
-        capabilities.includes(cap) || capabilities.includes('manage:all')
+        capabilities.includes(cap) || capabilities.includes('manage:all') || capabilities.includes('*')
       );
     },
     [capabilities]
@@ -39,10 +165,11 @@ export function usePermissions(role?: UserRole) {
    */
   const hasRole = useCallback(
     (roleToCheck: UserRole | UserRole[]): boolean => {
+      const userRole = role || (profile?.role as UserRole) || 'guest';
       const rolesToCheck = Array.isArray(roleToCheck) ? roleToCheck : [roleToCheck];
       return rolesToCheck.includes(userRole);
     },
-    [userRole]
+    [role, profile]
   );
   
   /**
@@ -50,10 +177,11 @@ export function usePermissions(role?: UserRole) {
    */
   const hasAnyRole = useCallback(
     (rolesToCheck: UserRole | UserRole[]): boolean => {
+      const userRole = role || (profile?.role as UserRole) || 'guest';
       const roles = Array.isArray(rolesToCheck) ? rolesToCheck : [rolesToCheck];
       return roles.includes(userRole) || (userRole === 'super_admin'); // super_admin has access to everything
     },
-    [userRole]
+    [role, profile]
   );
   
   /**
@@ -61,9 +189,10 @@ export function usePermissions(role?: UserRole) {
    */
   const isAdmin = useCallback(
     (): boolean => {
+      const userRole = role || (profile?.role as UserRole) || 'guest';
       return userRole === 'admin' || userRole === 'super_admin';
     },
-    [userRole]
+    [role, profile]
   );
   
   /**
@@ -71,9 +200,10 @@ export function usePermissions(role?: UserRole) {
    */
   const isEventHost = useCallback(
     (): boolean => {
+      const userRole = role || (profile?.role as UserRole) || 'guest';
       return userRole === 'event_host';
     },
-    [userRole]
+    [role, profile]
   );
   
   /**
@@ -81,9 +211,10 @@ export function usePermissions(role?: UserRole) {
    */
   const isOrganizer = useCallback(
     (): boolean => {
+      const userRole = role || (profile?.role as UserRole) || 'guest';
       return userRole === 'organizer';
     },
-    [userRole]
+    [role, profile]
   );
   
   /**
@@ -91,9 +222,10 @@ export function usePermissions(role?: UserRole) {
    */
   const canManageEvents = useCallback(
     (): boolean => {
+      const userRole = role || (profile?.role as UserRole) || 'guest';
       return ['super_admin', 'admin', 'organizer', 'event_host'].includes(userRole);
     },
-    [userRole]
+    [role, profile]
   );
   
   /**
@@ -102,9 +234,10 @@ export function usePermissions(role?: UserRole) {
   const hasPaidSubscription = useCallback(
     (): boolean => {
       // This is a placeholder - implement actual subscription check
+      const userRole = role || (profile?.role as UserRole) || 'guest';
       return ['super_admin', 'admin', 'organizer', 'event_host'].includes(userRole);
     },
-    [userRole]
+    [role, profile]
   );
   
   /**
@@ -112,6 +245,8 @@ export function usePermissions(role?: UserRole) {
    */
   const can = useCallback(
     (action: string, resource: string, ownerId?: string): boolean => {
+      const userRole = role || (profile?.role as UserRole) || 'guest';
+      
       // Super admin can do everything
       if (userRole === 'super_admin') return true;
 
@@ -141,8 +276,10 @@ export function usePermissions(role?: UserRole) {
           return false;
       }
     },
-    [userRole, user?.id]
+    [role, profile, user]
   );
+  
+  const currentRole = role || (profile?.role as UserRole) || 'guest';
   
   return {
     capabilities,
@@ -155,7 +292,9 @@ export function usePermissions(role?: UserRole) {
     canManageEvents,
     hasPaidSubscription,
     can,
-    userRole,
-    user
+    role: currentRole,
+    user,
+    loading,
+    error
   };
 } 

@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-11T06:00:32.322Z
+Generated: 2025-03-12T18:49:47.049Z
 
 ```
 ./src/
@@ -312,10 +312,12 @@ Generated: 2025-03-11T06:00:32.322Z
 │   │   └── use-permissions.test.ts
 │   ├── use-analytics.ts
 │   ├── use-auth.ts
+│   ├── use-debounced-auth.ts
 │   ├── use-permissions.ts
 │   ├── use-profile.ts
 │   ├── use-toast.ts
-│   └── use-update-profile.ts
+│   ├── use-update-profile.ts
+│   └── use-user.ts
 ├── lib/
 │   ├── ai/
 │   │   ├── color-extraction.ts
@@ -327,6 +329,7 @@ Generated: 2025-03-11T06:00:32.322Z
 │   │   │   ├── auth-store.test.ts
 │   │   │   └── events.test.ts
 │   │   ├── auth-store.ts
+│   │   ├── auth-utils.ts
 │   │   ├── client.ts
 │   │   ├── debug-queries.ts
 │   │   ├── events.ts
@@ -363,7 +366,7 @@ Generated: 2025-03-11T06:00:32.322Z
 ├── middleware.test.ts
 └── middleware.ts
 
-97 directories, 263 files
+97 directories, 266 files
 
 ```
 
