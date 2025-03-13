@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getEvent } from '@/lib/supabase/events'
+import { getEvent } from '@/lib/supabase/events.server'
 
 interface EventLayoutProps {
   children: React.ReactNode
@@ -19,9 +19,9 @@ export default async function EventLayout({ children, params }: EventLayoutProps
     }
     
     return (
-      <div>
+      <main className="w-full">
         {children}
-      </div>
+      </main>
     )
   } catch (error) {
     console.error('Error loading event:', error)

@@ -24,6 +24,7 @@ import {
   PlusCircle
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Badge } from "@/components/ui/badge"
 
 interface SideNavProps {
   setIsOpen?: (open: boolean) => void
@@ -69,7 +70,7 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
           buttonVariants({ variant: "ghost" }),
           active && "bg-muted",
           "justify-start w-full",
-          collapsed && "justify-center p-2"
+          collapsed ? "justify-center p-2" : "pr-4"
         )}
         onClick={handleNavClick}
       >
@@ -97,7 +98,7 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
   return (
     <nav className={cn(
       "flex flex-col p-4",
-      collapsed ? "items-center space-y-2" : "items-start space-y-4"
+      collapsed ? "items-center space-y-2 w-16" : "items-start space-y-4 w-72"
     )}>
       {/* Dashboard Section */}
       <div className={cn(
@@ -224,17 +225,23 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
       )}>
         {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Gallery</h4>}
         <NavItem
-          href="/protected/gallery"
+          href="/protected/gallery/all"
           icon={<Image className="h-4 w-4" />}
-          label="All Photos"
-          active={pathname === "/protected/gallery"}
+          label="All Media"
+          active={pathname === "/protected/gallery/all"}
         />
         {canManageEvents && (
           <>
             <NavItem
+              href="/protected/gallery/events"
+              icon={<Calendar className="h-4 w-4" />}
+              label="Events (Galleries)"
+              active={pathname === "/protected/gallery/events"}
+            />
+            <NavItem
               href="/protected/gallery/moderate"
               icon={<Camera className="h-4 w-4" />}
-              label="Photo Moderation"
+              label="Moderation"
               active={pathname === "/protected/gallery/moderate"}
             />
             <NavItem
@@ -255,17 +262,38 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
         )}>
           {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Analytics</h4>}
           <NavItem
-            href="/protected/analytics/events"
-            icon={<BarChart className="h-4 w-4" />}
-            label="Event Performance"
-            active={pathname === "/protected/analytics/events"}
-          />
-          <NavItem
             href="/protected/analytics/engagement"
             icon={<Users className="h-4 w-4" />}
             label="Engagement Metrics"
             active={pathname === "/protected/analytics/engagement"}
           />
+          {/* Disabled Event Performance with Coming Soon label */}
+          {collapsed ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  "justify-center p-2 w-full cursor-not-allowed opacity-70"
+                )}>
+                  <BarChart className="h-4 w-4" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                Event Performance (Coming Soon)
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <div className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "justify-start w-full cursor-not-allowed opacity-70 pr-2"
+            )}>
+              <BarChart className="h-4 w-4" />
+              <div className="ml-2 flex items-center">
+                <span>Event Performance</span>
+                <Badge variant="outline" className="ml-2 text-xs font-normal whitespace-nowrap">Coming Soon</Badge>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

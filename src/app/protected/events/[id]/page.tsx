@@ -244,7 +244,7 @@ export default async function EventPage({ params }: EventPageProps) {
               <UploadDropzone eventId={event.id} />
               
               {photos && photos.length > 0 ? (
-                <GalleryGrid photos={photos} />
+                <GalleryGrid photos={photos} showEventName={false} />
               ) : (
                 <div className="text-center py-12">
                   <p className="text-muted-foreground">

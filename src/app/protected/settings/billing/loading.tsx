@@ -1,12 +1,13 @@
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import React from "react"
 
 export default function BillingsLoading() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-10 w-[250px]" />
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <Skeleton className="h-8 w-[250px] mb-2" />
+        <Skeleton className="h-4 w-[300px]" />
       </div>
       
       <div className="grid gap-4 md:grid-cols-3">
@@ -24,34 +25,36 @@ export default function BillingsLoading() {
         ))}
       </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <Skeleton className="h-6 w-[180px]" />
-          </CardTitle>
-          <Skeleton className="h-4 w-[250px]" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="rounded-md border">
-              <div className="grid grid-cols-4 gap-4 p-4">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <Skeleton key={i} className="h-6 w-full" />
-                ))}
-              </div>
-              <div className="divide-y">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="grid grid-cols-4 gap-4 p-4">
-                    {Array.from({ length: 4 }).map((_, j) => (
-                      <Skeleton key={j} className="h-6 w-full" />
-                    ))}
-                  </div>
-                ))}
+      <div className="mt-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-6 w-[180px]" />
+            </CardTitle>
+            <Skeleton className="h-4 w-[250px]" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="rounded-md border">
+                <div className="grid grid-cols-4 gap-4 p-4">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <Skeleton key={i} className="h-6 w-full" />
+                  ))}
+                </div>
+                <div className="divide-y">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="grid grid-cols-4 gap-4 p-4">
+                      {Array.from({ length: 4 }).map((_, j) => (
+                        <Skeleton key={j} className="h-6 w-full" />
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

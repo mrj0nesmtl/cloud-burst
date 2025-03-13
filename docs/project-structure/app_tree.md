@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-03-12T18:49:47.191Z
+Generated: 2025-03-13T02:42:52.961Z
 
 ```
 ./src/app/
@@ -108,6 +108,13 @@ Generated: 2025-03-12T18:49:47.191Z
 │   │   ├── layout.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
+│   ├── analytics/
+│   │   ├── engagement/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   └── events/
+│   │       ├── loading.tsx
+│   │       └── page.tsx
 │   ├── attendees/
 │   │   └── invitations/
 │   │       └── page.tsx
@@ -140,7 +147,21 @@ Generated: 2025-03-12T18:49:47.191Z
 │   │   ├── layout.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
+│   ├── gallery/
+│   │   ├── albums/
+│   │   │   └── page.tsx
+│   │   ├── all/
+│   │   │   └── page.tsx
+│   │   ├── events/
+│   │   │   └── page.tsx
+│   │   ├── moderate/
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── notifications/
+│   │   └── page.tsx
 │   ├── overview/
+│   │   ├── loading.tsx
 │   │   └── page.tsx
 │   ├── profile/
 │   │   ├── settings/
@@ -148,6 +169,7 @@ Generated: 2025-03-12T18:49:47.191Z
 │   │   │   └── page.tsx
 │   │   └── page.tsx
 │   ├── qr-codes/
+│   │   ├── loading.tsx
 │   │   └── page.tsx
 │   ├── settings/
 │   │   ├── account/
@@ -166,7 +188,12 @@ Generated: 2025-03-12T18:49:47.191Z
 │   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── profile/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
 │   │   ├── loading.tsx
+│   │   └── page.tsx
+│   ├── subscription/
 │   │   └── page.tsx
 │   ├── templates/
 │   │   └── page.tsx
@@ -180,7 +207,7 @@ Generated: 2025-03-12T18:49:47.191Z
 ├── not-found.tsx
 └── page.tsx
 
-71 directories, 106 files
+82 directories, 122 files
 
 ```
 

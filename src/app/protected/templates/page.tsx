@@ -12,15 +12,15 @@ export const metadata: Metadata = {
 
 export default function TemplatesPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Event Templates</h1>
-          <p className="text-muted-foreground">
-            Create reusable templates for quick event setup
-          </p>
-        </div>
-        
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Event Templates</h1>
+        <p style={{ color: 'var(--muted-foreground)' }}>
+          Create reusable templates for quick event setup
+        </p>
+      </div>
+      
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
         <Button asChild>
           <Link href="/protected/templates/create">
             <Plus className="mr-2 h-4 w-4" />
@@ -108,7 +108,7 @@ function TemplatesList() {
   }
   
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div style={{ display: 'grid', gap: '24px', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
       {templates.map((template) => (
         <Card key={template.id} className="overflow-hidden">
           <CardHeader className="pb-3">
@@ -158,7 +158,7 @@ function TemplatesList() {
 // Skeleton loader for templates
 function TemplatesSkeleton() {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div style={{ display: 'grid', gap: '24px', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
       {[1, 2, 3, 4, 5, 6].map((i) => (
         <Card key={i} className="overflow-hidden">
           <CardHeader className="pb-3">

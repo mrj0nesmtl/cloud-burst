@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 
 export default function EventsLoading() {
   return (
-    <div className="space-y-6">
+    <div className="p-6 w-full space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Events</h1>
         <Button disabled>Create Event</Button>

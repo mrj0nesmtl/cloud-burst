@@ -3,9 +3,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { getPublicEvents } from '@/lib/supabase/events'
+import { getPublicEvents } from '@/lib/supabase/events.server'
 import { formatDate } from '@/lib/utils'
 import { CalendarDays, MapPin, Camera, ArrowRight } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const metadata: Metadata = {
   title: 'Public Events | Cloud Burst',
@@ -20,7 +21,7 @@ export default async function PublicEventsPage() {
   const events = await getPublicEvents()
   
   return (
-    <>
+    <main className="w-full">
       {/* Hero Section */}
       <div className="relative py-16 md:py-24 bg-gradient-to-b from-background to-background/80">
         <div className="absolute inset-0 z-0 opacity-10">
@@ -52,7 +53,7 @@ export default async function PublicEventsPage() {
       </div>
       
       {/* Events Grid */}
-      <div className="container mx-auto py-16 px-4">
+      <div className="container mx-auto py-16 px-4 max-w-7xl">
         {events.length === 0 ? (
           <div className="text-center py-12 bg-card rounded-lg border shadow-sm">
             <Camera className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -133,6 +134,6 @@ export default async function PublicEventsPage() {
           </>
         )}
       </div>
-    </>
+    </main>
   )
 } 

@@ -5,7 +5,7 @@ alwaysApply: false
 ---
 # Core development standards for Cloud Burst, including TypeScript, code style, and documentation
 
-> **Version:** 0.7.0  
+> **Version:** 0.7.1  
 > **Last Updated:** March 2024
 
 ```json
@@ -97,6 +97,24 @@ alwaysApply: false
           "middleware": "middleware.ts"
         }
       },
+      "layout": {
+        "containers": {
+          "mainContainer": "p-6 w-full space-y-6",
+          "contentSection": "space-y-4",
+          "cardGrid": "grid gap-4 md:grid-cols-2 lg:grid-cols-4"
+        },
+        "spacing": {
+          "sectionSpacing": "space-y-6",
+          "itemSpacing": "space-y-4",
+          "gridGap": "gap-4"
+        },
+        "patterns": {
+          "topLevelContainer": "Wrap all page content in a container with width and padding",
+          "explicitWidth": "Always include w-full on top-level containers",
+          "consistentPadding": "Use p-6 consistently across pages",
+          "troubleshootingGuide": "See docs/layout-troubleshooting.md for layout issues"
+        }
+      },
       "structure": {
         "componentOrder": [
           "imports",
@@ -176,7 +194,8 @@ alwaysApply: false
         "LICENSE": true,
         "componentDocumentation": true,
         "apiDocumentation": true,
-        "deploymentDocumentation": true
+        "deploymentDocumentation": true,
+        "layoutTroubleshooting": true
       },
       "format": {
         "useMarkdown": true,
@@ -225,7 +244,7 @@ All TypeScript files must use strict mode with the following configuration:
 - Use enums for constant sets
 - Use generics for reusable components
 
-> **Note:** For detailed TypeScript naming conventions, organization, and Supabase/Zod integration, refer to the specialized [TypeScript Standards](mdc:typescript.mdc) rule file.
+> **Note:** For detailed TypeScript naming conventions, organization, and Supabase/Zod integration, refer to the specialized @TypeScript Standards rule file.
 
 #### TypeScript Naming Conventions (Specialized)
 
@@ -315,6 +334,44 @@ import '@/styles/events.css';
 - Error boundaries: `error.tsx`
 - Not found pages: `not-found.tsx`
 - Middleware: `middleware.ts`
+
+### Layout Standards
+
+> **Note:** For detailed layout troubleshooting and patterns, refer to the @Layout Troubleshooting Guide.
+
+#### Container Structure
+
+- Use a consistent top-level container for all pages: `<div className="p-6 w-full space-y-6">`
+- Maintain consistent spacing between sections with `space-y-6`
+- Use grid layouts for card collections: `grid gap-4 md:grid-cols-2 lg:grid-cols-4`
+
+#### Layout Troubleshooting
+
+When facing layout issues:
+
+1. Verify the container structure follows the standard pattern
+2. Check for nested containers that might conflict with each other
+3. Ensure explicit width control with `w-full` on main containers
+4. Consider using inline styles as a fallback solution for complex layout issues
+5. Document successful patterns for reuse
+
+```tsx
+// Standard page container example
+export default function PageComponent() {
+  return (
+    <div className="p-6 w-full space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Page Title</h1>
+        <Button>Action</Button>
+      </div>
+      
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* Grid content */}
+      </div>
+    </div>
+  )
+}
+```
 
 ### Code Structure
 
@@ -422,7 +479,7 @@ src/
 
 Cloud Burst uses Zustand for global state management and TanStack Query for server state.
 
-> **Note:** For detailed state management configuration, organization, and patterns, refer to the specialized [State Management Standards](mdc:state-management.mdc) rule file.
+> **Note:** For detailed state management configuration, organization, and patterns, refer to the specialized @State Management Standards rule file.
 
 ### Zustand Store Organization (Specialized)
 
@@ -494,6 +551,7 @@ export function UserProfile({
 - Component documentation
 - API documentation
 - Deployment documentation
+- Layout troubleshooting guide
 
 ### Documentation Format
 
@@ -565,7 +623,7 @@ This module handles user management functionality.
 ## API
 
 | Endpoint | Method | Description |
-|----------|--------|-------------|
+|----|-----|----|
 | `/api/users/:id` | GET | Get user by ID |
 | `/api/users/:id` | PUT | Update user |
 | `/api/users/:id` | DELETE | Delete user |

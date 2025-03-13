@@ -27,6 +27,27 @@ alwaysApply: false
         }
       }
     },
+    "layout": {
+      "bestPractices": {
+        "useFullWidthWrapper": true,
+        "avoidNestedContainers": true,
+        "explicitDimensions": true,
+        "simplifyForConflicts": true,
+        "usePaddingConsistently": true
+      },
+      "troubleshooting": {
+        "layoutConflicts": "When experiencing layout conflicts, simplify the component hierarchy and eliminate nested containers",
+        "cssOverflow": "Use explicit width control with w-full on parent containers to prevent unexpected overflow",
+        "renderIssues": "For persistent layout issues, consider using inline styles with style={{}} temporarily to bypass CSS conflicts",
+        "responsiveBreakage": "Test layout fixes across all breakpoints to ensure responsiveness is maintained"
+      },
+      "fallbackPatterns": {
+        "inlineStylesFallback": "src/app/protected/dashboard/page.tsx, src/app/protected/qr-codes/page.tsx",
+        "directStyleControl": "Use direct style control with style={{}} when Tailwind classes cause conflicts",
+        "flattenHierarchy": "Remove unnecessary wrapper divs to reduce CSS inheritance conflicts",
+        "dimensionControl": "Always specify width: 100% on main content containers"
+      }
+    },
     "shadcn": {
       "location": "src/components/ui",
       "themes": {

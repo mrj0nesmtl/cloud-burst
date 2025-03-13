@@ -125,14 +125,12 @@ export default async function ManageInvitationsPage() {
     }
     
     return (
-      <div className="container px-0 py-0 max-w-full">
-        <div className="flex flex-col space-y-2 mb-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold tracking-tight">Manage Invitations</h1>
-            <p className="text-muted-foreground">
-              Track and manage invitations for all your events
-            </p>
-          </div>
+      <div style={{ width: '100%', padding: '24px' }}>
+        <div style={{ marginBottom: '24px' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Manage Invitations</h1>
+          <p style={{ color: 'var(--muted-foreground)' }}>
+            Track and manage invitations for all your events
+          </p>
         </div>
         
         {attendees.length === 0 ? (

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { getUserEventsWithCounts } from '@/lib/supabase/events'
+import { getUserEventsWithCounts } from '@/lib/supabase/events.server'
 import { CalendarDays, Users, Image, Calendar, BarChart3 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
@@ -43,15 +43,15 @@ export default async function OverviewPage() {
   }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Overview</h1>
-        <p className="text-muted-foreground">
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Overview</h1>
+        <p style={{ color: 'var(--muted-foreground)' }}>
           Dashboard overview and event statistics
         </p>
       </div>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px', marginBottom: '24px' }}>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Events</CardTitle>
@@ -107,23 +107,15 @@ export default async function OverviewPage() {
       
       <Tabs defaultValue="upcoming" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="upcoming">
-            Upcoming Events
-          </TabsTrigger>
-          <TabsTrigger value="status">
-            Status Breakdown
-          </TabsTrigger>
-          <TabsTrigger value="calendar">
-            Calendar View
-          </TabsTrigger>
+          <TabsTrigger value="upcoming">Upcoming Events</TabsTrigger>
+          <TabsTrigger value="status">Status Breakdown</TabsTrigger>
+          <TabsTrigger value="calendar">Calendar View</TabsTrigger>
         </TabsList>
-        
         <TabsContent value="upcoming" className="space-y-4">
           <Suspense fallback={<UpcomingEventsSkeleton />}>
             <UpcomingEvents events={upcomingEvents} />
           </Suspense>
         </TabsContent>
-        
         <TabsContent value="status" className="space-y-4">
           <Suspense fallback={<StatusBreakdownSkeleton />}>
             <StatusBreakdown 
@@ -134,7 +126,6 @@ export default async function OverviewPage() {
             />
           </Suspense>
         </TabsContent>
-        
         <TabsContent value="calendar" className="space-y-4">
           <Suspense fallback={<CalendarViewSkeleton />}>
             <CalendarView events={events} />

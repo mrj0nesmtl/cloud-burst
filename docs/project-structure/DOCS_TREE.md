@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-12T18:49:47.100Z
+Generated: 2025-03-13T02:42:52.907Z
 
 ```
 ./docs/
@@ -97,9 +97,11 @@ Generated: 2025-03-12T18:49:47.100Z
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store
-└── README.md
+├── README.md
+├── consistent-layout.md
+└── layout-troubleshooting.md
 
-10 directories, 86 files
+10 directories, 88 files
 
 ```
 

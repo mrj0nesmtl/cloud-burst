@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-12T18:49:47.003Z
+Generated: 2025-03-13T02:42:52.862Z
 
 ```
 ./
@@ -117,7 +117,9 @@ Generated: 2025-03-12T18:49:47.003Z
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   └── README.md
+│   ├── README.md
+│   ├── consistent-layout.md
+│   └── layout-troubleshooting.md
 ├── public/
 │   ├── images/
 │   │   ├── fallback-hero.jpg
@@ -138,6 +140,7 @@ Generated: 2025-03-12T18:49:47.003Z
 │   ├── manifest.json
 │   ├── next.svg
 │   ├── pexels-themo-bg.jpg
+│   ├── placeholder-qr.png
 │   ├── qrcode_paypal.png
 │   ├── robots.txt
 │   ├── site.webmanifest
@@ -262,6 +265,13 @@ Generated: 2025-03-12T18:49:47.003Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── analytics/
+│   │   │   │   ├── engagement/
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── events/
+│   │   │   │       ├── loading.tsx
+│   │   │   │       └── page.tsx
 │   │   │   ├── attendees/
 │   │   │   │   └── invitations/
 │   │   │   │       └── page.tsx
@@ -294,7 +304,21 @@ Generated: 2025-03-12T18:49:47.003Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── gallery/
+│   │   │   │   ├── albums/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── all/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── events/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── moderate/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── notifications/
+│   │   │   │   └── page.tsx
 │   │   │   ├── overview/
+│   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── profile/
 │   │   │   │   ├── settings/
@@ -302,6 +326,7 @@ Generated: 2025-03-12T18:49:47.003Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── qr-codes/
+│   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── settings/
 │   │   │   │   ├── account/
@@ -320,7 +345,12 @@ Generated: 2025-03-12T18:49:47.003Z
 │   │   │   │   │   ├── layout.tsx
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── profile/
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── subscription/
 │   │   │   │   └── page.tsx
 │   │   │   ├── templates/
 │   │   │   │   └── page.tsx
@@ -381,6 +411,7 @@ Generated: 2025-03-12T18:49:47.003Z
 │   │   │   └── security-form.tsx
 │   │   ├── gallery/
 │   │   │   ├── gallery-grid.tsx
+│   │   │   ├── gallery-tabs.tsx
 │   │   │   ├── index.ts
 │   │   │   ├── optimized-image.tsx
 │   │   │   ├── photo-lightbox.tsx
@@ -485,7 +516,10 @@ Generated: 2025-03-12T18:49:47.003Z
 │   │   │   ├── auth-utils.ts
 │   │   │   ├── client.ts
 │   │   │   ├── debug-queries.ts
+│   │   │   ├── events.server.ts
 │   │   │   ├── events.ts
+│   │   │   ├── galleries.ts
+│   │   │   ├── photos.server.ts
 │   │   │   ├── photos.ts
 │   │   │   ├── run-migration.js
 │   │   │   ├── search.ts
@@ -512,6 +546,7 @@ Generated: 2025-03-12T18:49:47.003Z
 │   ├── types/
 │   │   ├── auth.ts
 │   │   ├── events.ts
+│   │   ├── gallery.ts
 │   │   ├── notifications.ts
 │   │   ├── search.ts
 │   │   └── supabase.ts
@@ -524,7 +559,10 @@ Generated: 2025-03-12T18:49:47.003Z
 ├── supabase-exports/
 │   ├── .DS_Store
 │   ├── Event Columns Information.csv
+│   ├── Event Table Schema.csv
+│   ├── List of Public Tables.csv
 │   ├── Marc Reichel - IMDb.mhtml
+│   ├── Photo Metadata.csv
 │   ├── Supabase  Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (1).csv
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
@@ -547,7 +585,9 @@ Generated: 2025-03-12T18:49:47.003Z
 ├── README.md
 ├── cloud-burst.code-workspace
 ├── components.json
+├── core-standards.mdc
 ├── eslint.config.mjs
+├── frontend-architecture.mdc
 ├── jsconfig.json
 ├── next-env.d.ts
 ├── next.config.js
@@ -559,7 +599,7 @@ Generated: 2025-03-12T18:49:47.003Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-119 directories, 437 files
+130 directories, 466 files
 
 ```
 

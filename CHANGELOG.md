@@ -24,11 +24,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance Optimization**: Improved image loading and caching for gallery components
 - **Accessibility Enhancements**: Ensuring WCAG 2.1 AA compliance across new features
 
+## [0.7.7] - 2025-03-19
+### Added
+- New Analytics section with Engagement Metrics page
+- Events Analytics page (currently disabled with "Coming Soon" badge)
+- Gallery management system with tabs for All Media, Events, Moderation, and Albums
+- Enhanced organizer dashboard navigation structure
+- Top-level section headers in sidebar for better organization
+- Improved tooltip support for collapsed sidebar items
+
+### Changed
+- Increased sidebar width to properly accommodate badges and longer text
+- Reordered Analytics menu items with Engagement Metrics at the top
+- Enhanced responsive design for all new pages
+- Improved layout consistency across protected routes
+- Standardized page header padding for better visual hierarchy
+- Updated navigation patterns with improved disabled state handling
+
+### Fixed
+- Added proper top padding to Gallery layout pages
+- Fixed horizontal scrollbar in sidebar when using badges
+- Improved accessibility for disabled navigation items
+- Enhanced responsive behavior for analytics cards
+- Optimized loading states for analytics pages
+- Resolved padding inconsistencies across dashboard pages
+
+### Technical Debt
+- Event Analytics page requires completion in future sessions
+- Chart components need implementation for proper data visualization
+- Data fetching for analytics needs integration with actual database
+- Additional testing required for responsive behavior across devices
+
 ## [0.7.6] - 2025-03-18
 ### Added
 - Database security fixes for SQL functions with mutable search paths
 - Enhanced authentication system with reduced API calls
-- Gallery page foundation with 404 handling
+- Gallery page foundation with a 404 handling
 - Fixed RLS policies for role_capabilities table
 
 ### Changed
