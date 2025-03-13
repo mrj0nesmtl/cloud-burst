@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-11T06:00:32.294Z
+Generated: 2025-03-13T02:42:52.862Z
 
 ```
 ./
@@ -75,6 +75,7 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   ├── contributing.md
 │   │   ├── session_23_checklist.md
 │   │   ├── session_23_kickoff.md
+│   │   ├── session_23_narrative.md
 │   │   ├── status_notes.md
 │   │   └── version-sync.plan
 │   ├── planning/
@@ -116,7 +117,9 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   └── README.md
+│   ├── README.md
+│   ├── consistent-layout.md
+│   └── layout-troubleshooting.md
 ├── public/
 │   ├── images/
 │   │   ├── fallback-hero.jpg
@@ -137,6 +140,7 @@ Generated: 2025-03-11T06:00:32.294Z
 │   ├── manifest.json
 │   ├── next.svg
 │   ├── pexels-themo-bg.jpg
+│   ├── placeholder-qr.png
 │   ├── qrcode_paypal.png
 │   ├── robots.txt
 │   ├── site.webmanifest
@@ -261,6 +265,13 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── analytics/
+│   │   │   │   ├── engagement/
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── events/
+│   │   │   │       ├── loading.tsx
+│   │   │   │       └── page.tsx
 │   │   │   ├── attendees/
 │   │   │   │   └── invitations/
 │   │   │   │       └── page.tsx
@@ -293,7 +304,21 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── gallery/
+│   │   │   │   ├── albums/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── all/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── events/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── moderate/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── notifications/
+│   │   │   │   └── page.tsx
 │   │   │   ├── overview/
+│   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── profile/
 │   │   │   │   ├── settings/
@@ -301,6 +326,7 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── qr-codes/
+│   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── settings/
 │   │   │   │   ├── account/
@@ -319,7 +345,12 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   │   │   │   ├── layout.tsx
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── profile/
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── subscription/
 │   │   │   │   └── page.tsx
 │   │   │   ├── templates/
 │   │   │   │   └── page.tsx
@@ -380,6 +411,7 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   │   └── security-form.tsx
 │   │   ├── gallery/
 │   │   │   ├── gallery-grid.tsx
+│   │   │   ├── gallery-tabs.tsx
 │   │   │   ├── index.ts
 │   │   │   ├── optimized-image.tsx
 │   │   │   ├── photo-lightbox.tsx
@@ -464,10 +496,12 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   │   └── use-permissions.test.ts
 │   │   ├── use-analytics.ts
 │   │   ├── use-auth.ts
+│   │   ├── use-debounced-auth.ts
 │   │   ├── use-permissions.ts
 │   │   ├── use-profile.ts
 │   │   ├── use-toast.ts
-│   │   └── use-update-profile.ts
+│   │   ├── use-update-profile.ts
+│   │   └── use-user.ts
 │   ├── lib/
 │   │   ├── ai/
 │   │   │   ├── color-extraction.ts
@@ -479,9 +513,13 @@ Generated: 2025-03-11T06:00:32.294Z
 │   │   │   │   ├── auth-store.test.ts
 │   │   │   │   └── events.test.ts
 │   │   │   ├── auth-store.ts
+│   │   │   ├── auth-utils.ts
 │   │   │   ├── client.ts
 │   │   │   ├── debug-queries.ts
+│   │   │   ├── events.server.ts
 │   │   │   ├── events.ts
+│   │   │   ├── galleries.ts
+│   │   │   ├── photos.server.ts
 │   │   │   ├── photos.ts
 │   │   │   ├── run-migration.js
 │   │   │   ├── search.ts
@@ -508,6 +546,7 @@ Generated: 2025-03-11T06:00:32.294Z
 │   ├── types/
 │   │   ├── auth.ts
 │   │   ├── events.ts
+│   │   ├── gallery.ts
 │   │   ├── notifications.ts
 │   │   ├── search.ts
 │   │   └── supabase.ts
@@ -520,12 +559,24 @@ Generated: 2025-03-11T06:00:32.294Z
 ├── supabase-exports/
 │   ├── .DS_Store
 │   ├── Event Columns Information.csv
+│   ├── Event Table Schema.csv
+│   ├── List of Public Tables.csv
 │   ├── Marc Reichel - IMDb.mhtml
+│   ├── Photo Metadata.csv
+│   ├── Supabase  Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
+│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (1).csv
+│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
+│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (3).csv
+│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (4).csv
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx).csv
 │   ├── events_rows (1).csv
 │   ├── events_rows.csv
 │   ├── profiles_rows.csv
-│   └── supabase_logs.csv
+│   ├── supabase_logs (1).csv
+│   ├── supabase_logs (2).csv
+│   ├── supabase_logs (3).csv
+│   ├── supabase_logs.csv
+│   └── supabase_logs_for_one_login.csv
 ├── .DS_Store
 ├── .gitignore
 ├── .replit
@@ -534,7 +585,9 @@ Generated: 2025-03-11T06:00:32.294Z
 ├── README.md
 ├── cloud-burst.code-workspace
 ├── components.json
+├── core-standards.mdc
 ├── eslint.config.mjs
+├── frontend-architecture.mdc
 ├── jsconfig.json
 ├── next-env.d.ts
 ├── next.config.js
@@ -546,7 +599,7 @@ Generated: 2025-03-11T06:00:32.294Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-119 directories, 424 files
+130 directories, 466 files
 
 ```
 

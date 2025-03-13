@@ -43,10 +43,10 @@ export default async function ProfilePage() {
   const isEventHost = userRoles?.some(role => role.role_id === 2) || false
 
   return (
-    <div className="container max-w-6xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Profile</h1>
-        <p className="text-muted-foreground">
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Profile</h1>
+        <p style={{ color: 'var(--muted-foreground)' }}>
           Manage your profile, preferences, and account settings
         </p>
       </div>

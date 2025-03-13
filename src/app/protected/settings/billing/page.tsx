@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { CreditCard, DollarSign, Users } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Billings | Cloud Burst',
+  title: 'Subscription Management | Cloud Burst',
   description: 'Manage subscription plans and billing information',
 }
 
@@ -41,9 +41,12 @@ export default async function BillingsPage() {
   }, {} as Record<string, number>) || {}
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Billings Management</h1>
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Subscription Management</h1>
+        <p style={{ color: 'var(--muted-foreground)' }}>
+          Manage subscription plans and billing information
+        </p>
       </div>
       
       <div className="grid gap-4 md:grid-cols-3">

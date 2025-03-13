@@ -151,12 +151,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
         
         <main className={cn(
-          "flex-1 overflow-y-auto p-8",
+          "flex-1 w-full overflow-y-auto",
           sidebarCollapsed ? "lg:ml-[4.5rem]" : "lg:ml-0"
         )}>
-          <div className="mx-auto w-full max-w-full">
-            {children}
-          </div>
+          {children}
         </main>
       </div>
     </div>

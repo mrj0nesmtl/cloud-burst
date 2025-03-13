@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-11T06:00:32.431Z
+Generated: 2025-03-13T02:42:52.975Z
 
 ```
 ./src/components/
@@ -50,6 +50,7 @@ Generated: 2025-03-11T06:00:32.431Z
 │   └── security-form.tsx
 ├── gallery/
 │   ├── gallery-grid.tsx
+│   ├── gallery-tabs.tsx
 │   ├── index.ts
 │   ├── optimized-image.tsx
 │   ├── photo-lightbox.tsx
@@ -130,7 +131,7 @@ Generated: 2025-03-11T06:00:32.431Z
 ├── query-provider.tsx
 └── theme-provider.tsx
 
-14 directories, 113 files
+14 directories, 114 files
 
 ```
 

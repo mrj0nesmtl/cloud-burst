@@ -9,9 +9,12 @@ export const metadata: Metadata = {
 
 export default function CreateEventPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Create Event</h1>
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Create Event</h1>
+        <p style={{ color: 'var(--muted-foreground)' }}>
+          Enter the details for your new event
+        </p>
       </div>
       
       <Card>

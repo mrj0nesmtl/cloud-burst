@@ -1,7 +1,7 @@
-# 🏛️ **System Architecture Flowchart (Beta v0.7.4)**  
+# 🏛️ **System Architecture Flowchart (Beta v0.7.7)**  
 
 ## Cloud Burst  
-📅 *Mar 10, 2025, 09:30 AM*  
+📅 *Mar 19, 2025, 10:15 AM*  
 
 ---
 
@@ -17,6 +17,7 @@ flowchart TD
         RBAC[🔒 Role-Based Access]
         Events[📅 Event Management]
         Gallery[🖼️ Gallery Components]
+        Analytics[📈 Analytics System]
         Forms[📝 Form System]
     end
 
@@ -36,6 +37,7 @@ flowchart TD
         EventsDB[📅 Events Database]
         PhotosDB[📸 Photos Database]
         AttendeeDB[👥 Attendees Database]
+        AnalyticsDB[📊 Analytics Database]
     end
 
     WebApp -->|1. Auth Request| AuthForms
@@ -46,6 +48,8 @@ flowchart TD
     Permissions -->|6. Check| RBAC
     RBAC -->|7. Control| Protected
     Protected -->|8. Load| Dashboard
+    Protected -->|8. Load| Gallery
+    Protected -->|8. Load| Analytics
     Roles -->|9. Access| Database
     Roles -->|9. Access| Storage
     TanStack -->|10. Cache| Data
@@ -55,10 +59,11 @@ flowchart TD
     Events -->|14. Manage| EventsDB
     Events -->|15. Manage| AttendeeDB
     Gallery -->|16. Display| PhotosDB
-    Forms -->|17. Validate| Data
+    Analytics -->|17. Visualize| AnalyticsDB
+    Forms -->|18. Validate| Data
 ```
 
-## 🛠️ **Beta Components (v0.7.4)**  
+## 🛠️ **Beta Components (v0.7.7)**  
 
 ### 📱 **Client Layer**
 - Next.js 14 App Router
@@ -71,6 +76,7 @@ flowchart TD
 - Role-Based Access Control
 - Event Management System
 - Gallery Components
+- Analytics Components
 - React Hook Form + Zod Validation
 
 ### 🔑 **Authentication Layer**
@@ -91,36 +97,39 @@ flowchart TD
 - Events Database
 - Photos Database
 - Attendees Database
+- Analytics Database
 - Role Capabilities Table
 
 ---
 
-## 📐 **Beta System Overview (v0.7.4)**  
+## 📐 **Beta System Overview (v0.7.7)**  
 
 ```mermaid
-flowchart TD
-    Client[📱 Client Device] -->|🔗 HTTPS Request| WebApp[🌐 Web App (Next.js)]
-    WebApp -->|🔌 API Calls| Supabase[🗄️ Supabase]
-    WebApp -->|📊 Dashboard| Dashboard[📊 Dashboard System]
-    WebApp -->|📧 Template Management| Templates[📋 Template System]
-    WebApp -->|📅 Event Management| Events[📅 Event System]
-    WebApp -->|🖼️ Gallery Management| Gallery[🖼️ Gallery System]
-    WebApp -->|👥 Attendee Management| Attendees[👥 Attendee System]
-    WebApp -->|⚙️ User Settings| Settings[⚙️ Settings System]
-    WebApp -->|🔒 Access Control| RBAC[🔒 RBAC System]
-    Dashboard -->|🔄 Load| Supabase
-    Templates -->|🔄 Sync| Supabase
-    Events -->|🔄 CRUD| Supabase
-    Gallery -->|🔄 CRUD| Supabase
-    Attendees -->|🔄 CRUD| Supabase
-    Settings -->|🔄 CRUD| Supabase
-    RBAC -->|🔐 Verify| Supabase
-    Supabase --> Auth[🔑 Auth]
-    Supabase --> Database[💾 Database]
-    Supabase --> Storage[📦 Storage]
+graph TD
+    Client["📱 Client Device"] -->|"🔗 HTTPS Request"| WebApp["🌐 Web App (Next.js)"]
+    WebApp -->|"🔌 API Calls"| Supabase["🗄️ Supabase"]
+    WebApp -->|"📊 Dashboard"| Dashboard["📊 Dashboard System"]
+    WebApp -->|"📧 Template Management"| Templates["📋 Template System"]
+    WebApp -->|"📅 Event Management"| Events["📅 Event System"]
+    WebApp -->|"🖼️ Gallery Management"| Gallery["🖼️ Gallery System"]
+    WebApp -->|"👥 Attendee Management"| Attendees["👥 Attendee System"]
+    WebApp -->|"⚙️ User Settings"| Settings["⚙️ Settings System"]
+    WebApp -->|"📈 Analytics"| Analytics["📈 Analytics System"]
+    WebApp -->|"🔒 Access Control"| RBAC["🔒 RBAC System"]
+    Dashboard -->|"🔄 Load"| Supabase
+    Templates -->|"🔄 Sync"| Supabase
+    Events -->|"🔄 CRUD"| Supabase
+    Gallery -->|"🔄 CRUD"| Supabase
+    Attendees -->|"🔄 CRUD"| Supabase
+    Settings -->|"🔄 CRUD"| Supabase
+    Analytics -->|"🔄 Query"| Supabase
+    RBAC -->|"🔐 Verify"| Supabase
+    Supabase --> Auth["🔑 Auth"]
+    Supabase --> Database["💾 Database"]
+    Supabase --> Storage["📦 Storage"]
 ```
 
-## 🔒 **Security (v0.7.4)**  
+## 🔒 **Security (v0.7.7)**  
 ✔️ **Complete Auth** – Email/password & social login  
 ✔️ **Enhanced RLS** – Role-based data protection  
 ✔️ **Route Guards** – Protected routes with role verification  
@@ -129,16 +138,151 @@ flowchart TD
 ✔️ **RBAC System** – Comprehensive role-based access control  
 ✔️ **Permission Gates** – Conditional UI rendering based on permissions  
 ✔️ **Event Security** – Owner-based access control for events  
+✔️ **Gallery Security** – Content moderation and access controls  
+✔️ **Analytics Security** – Role-based access to metrics  
 ✔️ **Form Validation** – Zod schema validation for all inputs  
 ✔️ **Error Handling** – Comprehensive error states and recovery  
 
-## 🎯 **Next Steps (v0.7.5)**  
-1. 📊 Complete dashboard section implementations
-2. 📅 Build all event management pages
-3. 👥 Implement attendee management features
-4. 🖼️ Develop gallery section with photo organization
-5. ⚙️ Create settings pages for profile and preferences
-6. 🧪 Test role-based access under real scenarios
+## 🎯 **Next Steps (v0.7.8)**  
+1. 🖼️ Implement comprehensive Gallery system
+2. 📊 Complete Analytics data integration
+3. 📱 Optimize responsive design for all devices
+4. 🔍 Implement robust search functionality
+5. 🧪 Conduct thorough performance testing
+6. 📏 Finalize layout and design refinements
+
+## 📊 **Analytics Architecture**
+
+```mermaid
+flowchart TD
+    subgraph UI[📱 User Interface]
+        EngagementPage[📊 Engagement Metrics Page]
+        EventsAnalyticsPage[📈 Events Analytics Page]
+        MetricsCards[📊 Metrics Cards]
+        TrendsCharts[📈 Trends Charts]
+        OverviewDashboard[🔍 Overview Dashboard]
+        ComparisonViews[⚖️ Comparison Views]
+    end
+
+    subgraph API[🔌 API Layer]
+        AnalyticsAPI[📊 Analytics API]
+        DataAggregationAPI[📊 Data Aggregation API]
+        FilteringAPI[🔍 Filtering API]
+        ExportAPI[📤 Export API]
+    end
+
+    subgraph Data[💾 Data Layer]
+        EngagementDB[📊 Engagement Metrics]
+        EventsDB[📅 Events Data]
+        PhotosDB[📸 Photos Data]
+        UserInteractionsDB[👤 User Interactions]
+    end
+
+    subgraph Processing[⚙️ Processing Layer]
+        DataTransformation[🔄 Data Transformation]
+        MetricsCalculation[🧮 Metrics Calculation]
+        TrendAnalysis[📈 Trend Analysis]
+        AggregationEngine[📊 Aggregation Engine]
+    end
+
+    EngagementPage -->|Display| MetricsCards
+    EngagementPage -->|Display| TrendsCharts
+    EngagementPage -->|Display| OverviewDashboard
+    EventsAnalyticsPage -->|Display| MetricsCards
+    EventsAnalyticsPage -->|Display| TrendsCharts
+    EventsAnalyticsPage -->|Display| ComparisonViews
+    
+    MetricsCards -->|Fetch| AnalyticsAPI
+    TrendsCharts -->|Fetch| AnalyticsAPI
+    OverviewDashboard -->|Fetch| AnalyticsAPI
+    ComparisonViews -->|Fetch| AnalyticsAPI
+    
+    AnalyticsAPI -->|Request| DataAggregationAPI
+    AnalyticsAPI -->|Filter| FilteringAPI
+    AnalyticsAPI -->|Export| ExportAPI
+    
+    DataAggregationAPI -->|Process| Processing
+    FilteringAPI -->|Query| Data
+    ExportAPI -->|Retrieve| Data
+    
+    Processing -->|Transform| DataTransformation
+    Processing -->|Calculate| MetricsCalculation
+    Processing -->|Analyze| TrendAnalysis
+    Processing -->|Aggregate| AggregationEngine
+    
+    DataTransformation -->|Read| Data
+    MetricsCalculation -->|Read| Data
+    TrendAnalysis -->|Read| Data
+    AggregationEngine -->|Read| Data
+```
+
+## 🖼️ **Gallery System Architecture**
+
+```mermaid
+flowchart TD
+    subgraph UI[📱 User Interface]
+        UploadDropzone[📤 Upload Dropzone]
+        GalleryGrid[🖼️ Gallery Grid]
+        MasonryLayout[🧱 Masonry Layout]
+        SlideshowView[🔄 Slideshow View]
+        FilmstripView[🎞️ Filmstrip View]
+        PhotoLightbox[🔍 Photo Lightbox]
+        ModerationQueue[✅ Moderation Queue]
+        AlbumManagement[📁 Album Management]
+    end
+
+    subgraph API[🔌 API Layer]
+        UploadAPI[📤 Upload API]
+        GalleryAPI[🖼️ Gallery API]
+        ModerationAPI[✅ Moderation API]
+        AlbumAPI[📁 Album API]
+        PhotoTagAPI[🏷️ Photo Tag API]
+    end
+
+    subgraph Data[💾 Data Layer]
+        PhotosDB[📸 Photos Table]
+        AlbumsDB[📁 Albums Table]
+        TagsDB[🏷️ Tags Table]
+        ModerationLogsDB[📋 Moderation Logs]
+        StorageBucket[📦 Storage Bucket]
+    end
+
+    subgraph Processing[⚙️ Processing Layer]
+        ImageOptimization[🔧 Image Optimization]
+        Thumbnails[🖼️ Thumbnail Generation]
+        MetadataExtraction[📋 Metadata Extraction]
+        AITagging[🤖 AI Tagging]
+    end
+
+    UploadDropzone -->|Upload| UploadAPI
+    GalleryGrid -->|Fetch| GalleryAPI
+    MasonryLayout -->|Fetch| GalleryAPI
+    SlideshowView -->|Fetch| GalleryAPI
+    FilmstripView -->|Fetch| GalleryAPI
+    PhotoLightbox -->|View| GalleryAPI
+    ModerationQueue -->|Review| ModerationAPI
+    AlbumManagement -->|Manage| AlbumAPI
+    
+    UploadAPI -->|Process| Processing
+    UploadAPI -->|Store| StorageBucket
+    GalleryAPI -->|Fetch| PhotosDB
+    GalleryAPI -->|Fetch| AlbumsDB
+    GalleryAPI -->|Fetch| TagsDB
+    ModerationAPI -->|Update| PhotosDB
+    ModerationAPI -->|Log| ModerationLogsDB
+    AlbumAPI -->|CRUD| AlbumsDB
+    PhotoTagAPI -->|CRUD| TagsDB
+    
+    Processing -->|Optimize| ImageOptimization
+    Processing -->|Generate| Thumbnails
+    Processing -->|Extract| MetadataExtraction
+    Processing -->|Tag| AITagging
+    
+    ImageOptimization -->|Save| StorageBucket
+    Thumbnails -->|Save| StorageBucket
+    MetadataExtraction -->|Save| PhotosDB
+    AITagging -->|Save| TagsDB
+```
 
 ## 📊 **Dashboard Architecture**
 
@@ -227,6 +371,7 @@ flowchart TD
         AdvancedTab[⚙️ Advanced Settings]
         AttendeeManagement[👥 Attendee Management]
         QRCode[📱 QR Code Display]
+        StatusSelector[🚦 Status Selector]
     end
 
     subgraph API[🔌 API Layer]
@@ -234,19 +379,15 @@ flowchart TD
         AttendeeAPI[👥 Attendee API]
         PhotoAPI[📸 Photo API]
         ValidationAPI[✅ Validation API]
+        StatusAPI[🚦 Status API]
     end
 
     subgraph Data[💾 Data Layer]
         EventsDB[🗄️ Events Table]
         AttendeesDB[👥 Attendees Table]
         PhotosDB[📸 Photos Table]
+        EventStatusDB[🚦 Event Status]
         RLS[🔒 Row Level Security]
-    end
-
-    subgraph RBAC[🔒 Access Control]
-        Roles[👥 User Roles]
-        Permissions[🔐 Permissions]
-        Gates[🚪 Permission Gates]
     end
 
     EventList -->|View| EventAPI
@@ -257,15 +398,12 @@ flowchart TD
     EventForm -->|Create/Update| EventAPI
     AttendeeManagement -->|Manage| AttendeeAPI
     QRCode -->|Generate| EventAPI
+    StatusSelector -->|Update| StatusAPI
     
     EventAPI -->|CRUD| EventsDB
     AttendeeAPI -->|CRUD| AttendeesDB
     PhotoAPI -->|CRUD| PhotosDB
-    
-    Roles -->|Define| Permissions
-    Permissions -->|Control| Gates
-    Gates -->|Protect| UI
-    RLS -->|Secure| Data
+    StatusAPI -->|Update| EventStatusDB
     ValidationAPI -->|Validate| EventAPI
 ```
 
@@ -279,6 +417,7 @@ flowchart TD
         RoleAssignment[👑 Role Assignment]
         QRGenerator[📱 QR Generator]
         CheckIn[✅ Check-in System]
+        AddAttendeeDialog[➕ Add Attendee Dialog]
     end
 
     subgraph API[🔌 API Layer]
@@ -292,6 +431,7 @@ flowchart TD
         AttendeesDB[👥 Attendees Table]
         InvitationsDB[📧 Invitations Table]
         EventsDB[📅 Events Table]
+        AccessLogsDB[📋 Access Logs]
         RLS[🔒 Row Level Security]
     end
 
@@ -300,71 +440,18 @@ flowchart TD
     RoleAssignment -->|Update| AttendeeAPI
     QRGenerator -->|Generate| QrAPI
     CheckIn -->|Validate| EventAccessAPI
+    AddAttendeeDialog -->|Add| AttendeeAPI
     
     InvitationAPI -->|CRUD| InvitationsDB
     AttendeeAPI -->|CRUD| AttendeesDB
     QrAPI -->|Read| EventsDB
     EventAccessAPI -->|Validate| AttendeesDB
+    EventAccessAPI -->|Log| AccessLogsDB
     
     RLS -->|Secure| AttendeesDB
     RLS -->|Secure| InvitationsDB
     RLS -->|Secure| EventsDB
-```
-
-## 🖼️ **Gallery System Architecture**
-
-```mermaid
-flowchart TD
-    subgraph UI[📱 User Interface]
-        UploadDropzone[📤 Upload Dropzone]
-        GalleryGrid[🖼️ Gallery Grid]
-        PhotoLightbox[🔍 Photo Lightbox]
-        ModerationQueue[✅ Moderation Queue]
-        AlbumManagement[📁 Album Management]
-    end
-
-    subgraph API[🔌 API Layer]
-        UploadAPI[📤 Upload API]
-        GalleryAPI[🖼️ Gallery API]
-        ModerationAPI[✅ Moderation API]
-        AlbumAPI[📁 Album API]
-    end
-
-    subgraph Data[💾 Data Layer]
-        PhotosDB[📸 Photos Table]
-        AlbumsDB[📁 Albums Table]
-        TagsDB[🏷️ Tags Table]
-        StorageBucket[📦 Storage Bucket]
-    end
-
-    subgraph Processing[⚙️ Processing Layer]
-        ImageOptimization[🔧 Image Optimization]
-        Thumbnails[🖼️ Thumbnail Generation]
-        MetadataExtraction[📋 Metadata Extraction]
-    end
-
-    UploadDropzone -->|Upload| UploadAPI
-    GalleryGrid -->|Fetch| GalleryAPI
-    PhotoLightbox -->|View| GalleryAPI
-    ModerationQueue -->|Review| ModerationAPI
-    AlbumManagement -->|Manage| AlbumAPI
-    
-    UploadAPI -->|Process| Processing
-    UploadAPI -->|Store| StorageBucket
-    GalleryAPI -->|Fetch| PhotosDB
-    GalleryAPI -->|Fetch| AlbumsDB
-    ModerationAPI -->|Update| PhotosDB
-    AlbumAPI -->|CRUD| AlbumsDB
-    
-    Processing -->|Optimize| ImageOptimization
-    Processing -->|Generate| Thumbnails
-    Processing -->|Extract| MetadataExtraction
-    Processing -->|Save| PhotosDB
-    
-    ImageOptimization -->|Save| StorageBucket
-    Thumbnails -->|Save| StorageBucket
-    MetadataExtraction -->|Save| PhotosDB
-    MetadataExtraction -->|Tag| TagsDB
+    RLS -->|Secure| AccessLogsDB
 ```
 
 ## ⚙️ **Settings System Architecture**
@@ -435,6 +522,7 @@ flowchart TD
         UIStore[🎨 UI Store]
         PhotosStore[📸 Photos Store]
         NotificationStore[🔔 Notification Store]
+        AnalyticsStore[📊 Analytics Store]
     end
 
     Routes -->|Use| Components
@@ -457,59 +545,61 @@ flowchart TD
     State -->|UI| UIStore
     State -->|Photos| PhotosStore
     State -->|Notifications| NotificationStore
+    State -->|Analytics| AnalyticsStore
 ```
 
-## 💻 **Session 22 Implementation Focus**
+## 💻 **Session 24 Implementation Focus**
 
 ```mermaid
 flowchart TD
-    subgraph Dashboard[📊 Dashboard Implementation]
-        DashboardPage[📊 Overview Page]
-        EventsPages[📅 Events Pages]
-        AttendeesPages[👥 Attendees Pages]
-        GalleryPages[🖼️ Gallery Pages]
-        SettingsPages[⚙️ Settings Pages]
+    subgraph Gallery[🖼️ Gallery Implementation]
+        UploadSystem[📤 Photo Upload System]
+        AlbumManagement[📁 Album Management]
+        PhotoModeration[✅ Photo Moderation]
+        EnhancedViews[👁️ Enhanced Gallery Views]
     end
 
     subgraph Components[🧩 Component Implementation]
-        EventComponents[📅 Event Components]
-        AttendeeComponents[👥 Attendee Components]
-        GalleryComponents[🖼️ Gallery Components]
-        SettingsComponents[⚙️ Settings Components]
+        UploadComponents[📤 Upload Components]
+        AlbumComponents[📁 Album Components]
+        ModerationComponents[✅ Moderation Components]
+        ViewComponents[👁️ View Components]
     end
 
     subgraph Data[💾 Data Integration]
-        EventsData[📅 Events API Integration]
-        AttendeesData[👥 Attendees API Integration]
-        GalleryData[🖼️ Gallery API Integration]
-        SettingsData[⚙️ Settings API Integration]
+        PhotosDB[📸 Photos Database]
+        AlbumsDB[📁 Albums Database]
+        TagsDB[🏷️ Tags Database]
+        ModerationLogsDB[📋 Moderation Logs]
     end
 
-    subgraph Testing[🧪 Testing & Refinement]
-        ComponentTesting[🧩 Component Testing]
-        IntegrationTesting[🔄 Integration Testing]
-        AccessTesting[🔒 Access Control Testing]
-        ResponsiveTesting[📱 Responsive Testing]
+    subgraph Storage[📦 Storage Configuration]
+        StorageBuckets[📦 Storage Buckets]
+        RLSPolicies[🔒 RLS Policies]
+        LifecyclePolicies[⏱️ Lifecycle Policies]
+        CORSSettings[🌐 CORS Settings]
     end
 
-    Dashboard -->|Implement| EventsPages
-    Dashboard -->|Implement| AttendeesPages
-    Dashboard -->|Implement| GalleryPages
-    Dashboard -->|Implement| SettingsPages
+    Gallery -->|Implement| UploadSystem
+    Gallery -->|Implement| AlbumManagement
+    Gallery -->|Implement| PhotoModeration
+    Gallery -->|Implement| EnhancedViews
     
-    EventsPages -->|Use| EventComponents
-    AttendeesPages -->|Use| AttendeeComponents
-    GalleryPages -->|Use| GalleryComponents
-    SettingsPages -->|Use| SettingsComponents
+    UploadSystem -->|Use| UploadComponents
+    AlbumManagement -->|Use| AlbumComponents
+    PhotoModeration -->|Use| ModerationComponents
+    EnhancedViews -->|Use| ViewComponents
     
-    EventComponents -->|Connect To| EventsData
-    AttendeeComponents -->|Connect To| AttendeesData
-    GalleryComponents -->|Connect To| GalleryData
-    SettingsComponents -->|Connect To| SettingsData
+    UploadComponents -->|Connect to| PhotosDB
+    AlbumComponents -->|Connect to| AlbumsDB
+    ModerationComponents -->|Connect to| ModerationLogsDB
+    ViewComponents -->|Connect to| PhotosDB
     
-    Dashboard -->|Verify| Testing
-    Components -->|Verify| Testing
-    Data -->|Verify| Testing
+    PhotosDB -->|Store in| StorageBuckets
+    AlbumsDB -->|Reference| StorageBuckets
+    PhotosDB -->|Secure via| RLSPolicies
+    StorageBuckets -->|Manage via| LifecyclePolicies
+    StorageBuckets -->|Configure| CORSSettings
 ```
 
 ## 4. CHANGELOG Update
@@ -518,20 +608,33 @@ flowchart TD
 # Changelog
 All notable changes to Cloud Burst will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## Version Strategy
-- 0.x.y: Development Phase
-  - 0.1.x: Foundation Setup
-  - 0.2.x: Authentication System
-  - 0.3.x: User Dashboard & Profiles
-  - 0.4.x: Core Photo Features
-  - 0.5.x: Foundation Complete
-  - 0.6.x-0.8.x: Feature Implementation
-  - 0.9.x: Pre-release & Testing
-- 1.0.0: Production Launch
-
-## [0.1.18] - 2024-03-03
+## [0.7.7] - 2025-03-19
 ### Added
-- Comprehensive role-based access control (
+- New Analytics section with Engagement Metrics page
+- Events Analytics page (currently disabled with "Coming Soon" badge)
+- Gallery management system with tabs for All Media, Events, Moderation, and Albums
+- Enhanced organizer dashboard navigation structure
+- Top-level section headers in sidebar for better organization
+- Improved tooltip support for collapsed sidebar items
+
+### Changed
+- Increased sidebar width to properly accommodate badges and longer text
+- Reordered Analytics menu items with Engagement Metrics at the top
+- Enhanced responsive design for all new pages
+- Improved layout consistency across protected routes
+- Standardized page header padding for better visual hierarchy
+- Updated navigation patterns with improved disabled state handling
+
+### Fixed
+- Added proper top padding to Gallery layout pages
+- Fixed horizontal scrollbar in sidebar when using badges
+- Improved accessibility for disabled navigation items
+- Enhanced responsive behavior for analytics cards
+- Optimized loading states for analytics pages
+- Resolved padding inconsistencies across dashboard pages
+
+### Technical Debt
+- Event Analytics page requires completion in future sessions
+- Chart components need implementation for proper data visualization
+- Data fetching for analytics needs integration with actual database
+- Additional testing required for responsive behavior across devices

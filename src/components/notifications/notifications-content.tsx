@@ -84,11 +84,11 @@ const templates = [
 
 export function NotificationsContent() {
   return (
-    <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-6">
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }} className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Notifications</h1>
-          <p className="text-muted-foreground">
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Notifications</h1>
+          <p style={{ color: 'var(--muted-foreground)' }}>
             Manage your notification templates and settings
           </p>
         </div>

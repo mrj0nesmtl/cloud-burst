@@ -55,6 +55,15 @@ export async function createEvent(params: CreateEventParams): Promise<Event> {
     console.error('Error updating QR code URL:', updateError)
   }
   
+  // Create a gallery for the event
+  try {
+    const { createGalleryForEvent } = await import('./galleries')
+    await createGalleryForEvent(data.id)
+  } catch (galleryError) {
+    console.error('Error creating gallery for event:', galleryError)
+    // Don't throw here, as the event was created successfully
+  }
+  
   return {
     ...data,
     qr_code_url: qrCodeUrl
@@ -480,6 +489,33 @@ export async function duplicateEvent(id: string): Promise<Event> {
   if (createError) {
     console.error('Error duplicating event:', createError)
     throw new Error(`Failed to duplicate event: ${createError.message}`)
+  }
+  
+  // Generate QR code for the duplicated event
+  try {
+    const { generateQRCodeUrl } = await import('@/lib/qr-code')
+    const qrCodeUrl = generateQRCodeUrl({
+      event_id: createdEvent.id,
+      type: 'event'
+    })
+    
+    // Update the event with the QR code URL
+    await supabase
+      .from('events')
+      .update({ qr_code_url: qrCodeUrl })
+      .eq('id', createdEvent.id)
+      
+    createdEvent.qr_code_url = qrCodeUrl
+  } catch (qrError) {
+    console.error('Error generating QR code for duplicated event:', qrError)
+  }
+  
+  // Create a gallery for the duplicated event
+  try {
+    const { createGalleryForEvent } = await import('./galleries')
+    await createGalleryForEvent(createdEvent.id)
+  } catch (galleryError) {
+    console.error('Error creating gallery for duplicated event:', galleryError)
   }
   
   return createdEvent as Event

@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-11T06:00:32.322Z
+Generated: 2025-03-13T02:42:52.893Z
 
 ```
 ./src/
@@ -109,6 +109,13 @@ Generated: 2025-03-11T06:00:32.322Z
 │   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── analytics/
+│   │   │   ├── engagement/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   └── events/
+│   │   │       ├── loading.tsx
+│   │   │       └── page.tsx
 │   │   ├── attendees/
 │   │   │   └── invitations/
 │   │   │       └── page.tsx
@@ -141,7 +148,21 @@ Generated: 2025-03-11T06:00:32.322Z
 │   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── gallery/
+│   │   │   ├── albums/
+│   │   │   │   └── page.tsx
+│   │   │   ├── all/
+│   │   │   │   └── page.tsx
+│   │   │   ├── events/
+│   │   │   │   └── page.tsx
+│   │   │   ├── moderate/
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── notifications/
+│   │   │   └── page.tsx
 │   │   ├── overview/
+│   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── profile/
 │   │   │   ├── settings/
@@ -149,6 +170,7 @@ Generated: 2025-03-11T06:00:32.322Z
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── qr-codes/
+│   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── settings/
 │   │   │   ├── account/
@@ -167,7 +189,12 @@ Generated: 2025-03-11T06:00:32.322Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── profile/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── subscription/
 │   │   │   └── page.tsx
 │   │   ├── templates/
 │   │   │   └── page.tsx
@@ -228,6 +255,7 @@ Generated: 2025-03-11T06:00:32.322Z
 │   │   └── security-form.tsx
 │   ├── gallery/
 │   │   ├── gallery-grid.tsx
+│   │   ├── gallery-tabs.tsx
 │   │   ├── index.ts
 │   │   ├── optimized-image.tsx
 │   │   ├── photo-lightbox.tsx
@@ -312,10 +340,12 @@ Generated: 2025-03-11T06:00:32.322Z
 │   │   └── use-permissions.test.ts
 │   ├── use-analytics.ts
 │   ├── use-auth.ts
+│   ├── use-debounced-auth.ts
 │   ├── use-permissions.ts
 │   ├── use-profile.ts
 │   ├── use-toast.ts
-│   └── use-update-profile.ts
+│   ├── use-update-profile.ts
+│   └── use-user.ts
 ├── lib/
 │   ├── ai/
 │   │   ├── color-extraction.ts
@@ -327,9 +357,13 @@ Generated: 2025-03-11T06:00:32.322Z
 │   │   │   ├── auth-store.test.ts
 │   │   │   └── events.test.ts
 │   │   ├── auth-store.ts
+│   │   ├── auth-utils.ts
 │   │   ├── client.ts
 │   │   ├── debug-queries.ts
+│   │   ├── events.server.ts
 │   │   ├── events.ts
+│   │   ├── galleries.ts
+│   │   ├── photos.server.ts
 │   │   ├── photos.ts
 │   │   ├── run-migration.js
 │   │   ├── search.ts
@@ -356,6 +390,7 @@ Generated: 2025-03-11T06:00:32.322Z
 ├── types/
 │   ├── auth.ts
 │   ├── events.ts
+│   ├── gallery.ts
 │   ├── notifications.ts
 │   ├── search.ts
 │   └── supabase.ts
@@ -363,7 +398,7 @@ Generated: 2025-03-11T06:00:32.322Z
 ├── middleware.test.ts
 └── middleware.ts
 
-97 directories, 263 files
+108 directories, 287 files
 
 ```
 

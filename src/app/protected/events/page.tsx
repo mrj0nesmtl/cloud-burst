@@ -3,7 +3,7 @@ import { createServerClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { getUserEventsWithCounts } from '@/lib/supabase/events'
+import { getUserEventsWithCounts } from '@/lib/supabase/events.server'
 import Link from 'next/link'
 import { Plus, Filter } from 'lucide-react'
 import { Suspense } from 'react'
@@ -39,99 +39,95 @@ export default async function EventsPage() {
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
-    .eq('id', user?.id)
+    .eq('id', user?.id || '')
     .single()
   
   const isAdmin = profile?.role === 'super_admin' || profile?.role === 'admin'
   
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Events</h1>
-          <p className="text-muted-foreground">
-            Create and manage your photo events
-          </p>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          {isAdmin && (
-            <Button variant="outline" asChild>
-              <Link href="/protected/admin/events">
-                <Filter className="mr-2 h-4 w-4" />
-                All Events
-              </Link>
-            </Button>
-          )}
-          <Button asChild>
-            <Link href="/protected/events/create">
-              <Plus className="mr-2 h-4 w-4" />
-              Create Event
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Events</h1>
+        <p style={{ color: 'var(--muted-foreground)' }}>
+          Create and manage your photo events
+        </p>
+      </div>
+      
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+        {isAdmin && (
+          <Button variant="outline" asChild className="mr-2">
+            <Link href="/protected/admin/events">
+              <Filter className="mr-2 h-4 w-4" />
+              All Events
             </Link>
           </Button>
-        </div>
+        )}
+        <Button asChild>
+          <Link href="/protected/events/create">
+            <Plus className="mr-2 h-4 w-4" />
+            Create Event
+          </Link>
+        </Button>
       </div>
       
       <Tabs defaultValue="all" className="space-y-4">
-        <div className="flex flex-col sm:flex-row justify-between gap-4">
-          <TabsList>
-            <TabsTrigger value="all">
-              All
-              <Badge variant="secondary" className="ml-2">{events.length}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="published">
-              Published
-              <Badge variant="secondary" className="ml-2">{publishedEvents.length}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="draft">
-              Draft
-              <Badge variant="secondary" className="ml-2">{draftEvents.length}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="completed">
-              Completed
-              <Badge variant="secondary" className="ml-2">{completedEvents.length}</Badge>
-            </TabsTrigger>
-          </TabsList>
-          
-          <ClientSideFilters />
-        </div>
+        <TabsList>
+          <TabsTrigger value="all">
+            All
+            <Badge variant="secondary" className="ml-2">{events.length}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="published">
+            Published
+            <Badge variant="secondary" className="ml-2">{publishedEvents.length}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="draft">
+            Draft
+            <Badge variant="secondary" className="ml-2">{draftEvents.length}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="completed">
+            Completed
+            <Badge variant="secondary" className="ml-2">{completedEvents.length}</Badge>
+          </TabsTrigger>
+        </TabsList>
         
-        <TabsContent value="all" className="space-y-4">
-          <Suspense fallback={<EventListSkeleton />}>
-            <EventList 
-              events={events} 
-              emptyMessage="No events found. Create your first event to get started."
-            />
-          </Suspense>
-        </TabsContent>
-        
-        <TabsContent value="published" className="space-y-4">
-          <Suspense fallback={<EventListSkeleton />}>
-            <EventList 
-              events={publishedEvents} 
-              emptyMessage="No published events found."
-            />
-          </Suspense>
-        </TabsContent>
-        
-        <TabsContent value="draft" className="space-y-4">
-          <Suspense fallback={<EventListSkeleton />}>
-            <EventList 
-              events={draftEvents} 
-              emptyMessage="No draft events found."
-            />
-          </Suspense>
-        </TabsContent>
-        
-        <TabsContent value="completed" className="space-y-4">
-          <Suspense fallback={<EventListSkeleton />}>
-            <EventList 
-              events={completedEvents} 
-              emptyMessage="No completed events found."
-            />
-          </Suspense>
-        </TabsContent>
+        <ClientSideFilters />
       </Tabs>
+      
+      <TabsContent value="all" className="space-y-4">
+        <Suspense fallback={<EventListSkeleton />}>
+          <EventList 
+            events={events} 
+            emptyMessage="No events found. Create your first event to get started."
+          />
+        </Suspense>
+      </TabsContent>
+      
+      <TabsContent value="published" className="space-y-4">
+        <Suspense fallback={<EventListSkeleton />}>
+          <EventList 
+            events={publishedEvents} 
+            emptyMessage="No published events found."
+          />
+        </Suspense>
+      </TabsContent>
+      
+      <TabsContent value="draft" className="space-y-4">
+        <Suspense fallback={<EventListSkeleton />}>
+          <EventList 
+            events={draftEvents} 
+            emptyMessage="No draft events found."
+          />
+        </Suspense>
+      </TabsContent>
+      
+      <TabsContent value="completed" className="space-y-4">
+        <Suspense fallback={<EventListSkeleton />}>
+          <EventList 
+            events={completedEvents} 
+            emptyMessage="No completed events found."
+          />
+        </Suspense>
+      </TabsContent>
     </div>
   )
 }

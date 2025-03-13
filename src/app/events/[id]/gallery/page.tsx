@@ -7,8 +7,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '@/components/ui/separator'
 import { GalleryGrid } from '@/components/gallery/gallery-grid'
 import { UploadDropzone } from '@/components/gallery/upload-dropzone'
-import { getEvent } from '@/lib/supabase/events'
-import { getApprovedEventPhotos } from '@/app/lib/photos'
+import { getEvent } from '@/lib/supabase/events.server'
+import { getApprovedEventPhotos } from '@/lib/supabase/photos.server'
+import { getGalleryForEvent, createGalleryForEvent } from '@/lib/supabase/galleries'
 import { formatDate } from '@/lib/utils'
 import { CalendarDays, MapPin, ArrowLeft, Upload, Camera, Share2 } from 'lucide-react'
 
@@ -48,15 +49,27 @@ export default async function GalleryPage({ params }: GalleryPageProps) {
     const event = await getEvent(params.id)
     
     // Check if event is published and public
-    if (event.status !== 'published' || !event.is_public) {
+    if (event.status !== 'published' && !event.is_public) {
       notFound()
+    }
+    
+    // Fetch gallery for the event
+    let gallery = await getGalleryForEvent(params.id)
+    
+    // Create gallery on-the-fly if it doesn't exist
+    if (!gallery) {
+      gallery = await createGalleryForEvent(params.id)
     }
     
     // Fetch approved photos
     const photos = await getApprovedEventPhotos(params.id)
     
+    // Get gallery settings
+    const gallerySettings = gallery.settings || {}
+    const layout = gallerySettings.layout || 'grid'
+    
     return (
-      <div className="bg-background min-h-screen">
+      <main className="w-full bg-background min-h-screen">
         {/* Event Header */}
         <div className="relative">
           {event.cover_image_url && (
@@ -72,7 +85,7 @@ export default async function GalleryPage({ params }: GalleryPageProps) {
             </div>
           )}
           
-          <div className="container mx-auto px-4 pt-8 pb-12 relative">
+          <div className="container mx-auto px-4 pt-8 pb-12 relative max-w-7xl">
             <div className="mb-6">
               <Button variant="ghost" size="sm" className="group" asChild>
                 <Link href="/events">
@@ -139,7 +152,7 @@ export default async function GalleryPage({ params }: GalleryPageProps) {
         <Separator />
         
         {/* Gallery Section */}
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 py-12 max-w-7xl">
           <div className="mb-12">
             <h2 className="text-2xl font-bold mb-2">Event Gallery</h2>
             <p className="text-muted-foreground">
@@ -153,47 +166,55 @@ export default async function GalleryPage({ params }: GalleryPageProps) {
             <CardContent className="p-6">
               <GalleryGrid 
                 photos={photos}
+                layout={layout as any}
+                showEventName={false}
                 emptyMessage="No photos available yet. Check back later or contribute your own photos."
               />
             </CardContent>
           </Card>
           
           {/* Upload Section */}
-          <div id="upload" className="scroll-mt-16">
-            <Card className="border-border/60 shadow-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Upload className="mr-2 h-5 w-5 text-blue-500" />
-                  Contribute Your Photos
-                </CardTitle>
-                <CardDescription>
-                  Share your photos from this event with other attendees
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <UploadDropzone 
-                  eventId={params.id}
-                  onUploadComplete={() => {}}
-                />
-              </CardContent>
-              <CardFooter className="text-sm text-muted-foreground border-t px-6 py-4 bg-muted/30">
-                <div className="flex items-start gap-3">
-                  <div className="bg-blue-500/10 p-2 rounded-full">
-                    <Camera className="h-5 w-5 text-blue-500" />
+          {gallerySettings.allowUploads !== false && (
+            <div id="upload" className="scroll-mt-16">
+              <Card className="border-border/60 shadow-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Upload className="mr-2 h-5 w-5 text-blue-500" />
+                    Contribute Your Photos
+                  </CardTitle>
+                  <CardDescription>
+                    Share your photos from this event with other attendees
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <UploadDropzone 
+                    eventId={params.id}
+                    onUploadComplete={() => {}}
+                    maxSize={gallerySettings.maxUploadSize || 10 * 1024 * 1024}
+                    acceptedFileTypes={gallerySettings.allowedTypes || ['image/jpeg', 'image/png', 'image/gif', 'image/webp']}
+                  />
+                </CardContent>
+                <CardFooter className="text-sm text-muted-foreground border-t px-6 py-4 bg-muted/30">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-blue-500/10 p-2 rounded-full">
+                      <Camera className="h-5 w-5 text-blue-500" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm mb-1">Photo Submission Guidelines</p>
+                      <p className="text-xs">
+                        {gallerySettings.requireApproval !== false 
+                          ? 'Uploaded photos will be reviewed before appearing in the gallery.'
+                          : 'Uploaded photos will appear in the gallery immediately.'}
+                        {' '}By uploading, you agree to share these photos with other event attendees.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-sm mb-1">Photo Submission Guidelines</p>
-                    <p className="text-xs">
-                      Uploaded photos will be reviewed before appearing in the gallery.
-                      By uploading, you agree to share these photos with other event attendees.
-                    </p>
-                  </div>
-                </div>
-              </CardFooter>
-            </Card>
-          </div>
+                </CardFooter>
+              </Card>
+            </div>
+          )}
         </div>
-      </div>
+      </main>
     )
   } catch (error) {
     console.error('Error loading gallery:', error)

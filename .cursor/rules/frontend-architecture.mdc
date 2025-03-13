@@ -3,6 +3,8 @@ description: Frontend Architecture Guidelines for Cloud Burst
 globs: **/*.tsx, **/*.jsx, **/components/**, **/hooks/**, **/store/**, **/styles/**
 alwaysApply: false
 ---
+Frontend Architecture Guidelines for Cloud Burst
+
 {
   "description": "Frontend architecture guidelines for Cloud Burst, including React Components, State Management, and Accessibility",
   "globs": ["**/*.tsx", "**/*.jsx", "**/components/**", "**/hooks/**", "**/store/**", "**/styles/**"],
@@ -37,81 +39,23 @@ alwaysApply: false
         "useSass": false,
         "useStyledComponents": false,
         "useEmotionCSS": false
+      },
+      "layout": {
+        "useConsistentLayout": true,
+        "documentationPath": "docs/consistent-layout.md",
+        "layoutStructure": {
+          "outerContainer": "width: '100%', padding: '24px'",
+          "headerContainer": "marginBottom: '24px'",
+          "title": "fontSize: '24px', fontWeight: 'bold', marginBottom: '8px'",
+          "description": "color: 'var(--muted-foreground)'"
+        }
       }
     },
     "stateManagement": {
-      "global": {
-        "useZustand": true,
-        "useContext": true,
-        "useRedux": false,
-        "useRecoil": false,
-        "useJotai": false
-      },
-      "local": {
-        "useState": true,
-        "useReducer": true
-      },
-      "server": {
-        "useTanStackQuery": true,
-        "useSupabase": true,
-        "useServerActions": true
-      },
-      "patterns": {
-        "useSlices": true,
-        "useSelectors": true,
-        "useImmer": false,
-        "useAtoms": false
-      },
-      "persistence": {
-        "useLocalStorage": true,
-        "useSessionStorage": true,
-        "useCookies": true,
-        "useSupabaseStorage": true
-      }
+      // ... existing code ...
     },
     "accessibility": {
-      "standards": {
-        "wcag": "2.1 AA",
-        "aria": true,
-        "semanticHTML": true,
-        "keyboardNavigation": true,
-        "screenReaders": true,
-        "colorContrast": true,
-        "reducedMotion": true,
-        "focusManagement": true,
-        "formLabels": true,
-        "imageAlts": true,
-        "tableHeaders": true
-      },
-      "testing": {
-        "useAxe": true,
-        "useJest": true,
-        "useCypress": true,
-        "usePlaywright": true,
-        "useManualTesting": true,
-        "useScreenReaderTesting": true
-      },
-      "components": {
-        "useAccessibleForms": true,
-        "useAccessibleNavigation": true,
-        "useAccessibleModals": true,
-        "useAccessibleTables": true,
-        "useAccessibleImages": true,
-        "useAccessibleButtons": true,
-        "useAccessibleLinks": true,
-        "useAccessibleTooltips": true,
-        "useAccessibleDialogs": true,
-        "useAccessibleMenus": true
-      },
-      "patterns": {
-        "useSkipLinks": true,
-        "useFocusTrap": true,
-        "useAnnouncements": true,
-        "useKeyboardShortcuts": true,
-        "useResponsiveDesign": true,
-        "useHighContrastMode": true,
-        "useDarkMode": true
-      }
+      // ... existing code ...
     }
   }
-}
+} 

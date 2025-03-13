@@ -1,58 +1,23 @@
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import React from "react"
 
 export default function NotificationsLoading() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-10 w-[250px]" />
-        <Skeleton className="h-10 w-[120px]" />
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <Skeleton className="h-8 w-[200px] mb-2" />
+        <Skeleton className="h-4 w-[300px]" />
       </div>
       
-      <div className="grid gap-4 md:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Card key={i}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <Skeleton className="h-4 w-[120px]" />
-              <Skeleton className="h-4 w-4 rounded-full" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-8 w-[40px] mb-1" />
-              <Skeleton className="h-3 w-[150px]" />
-            </CardContent>
-          </Card>
-        ))}
+      <div className="space-y-4">
+        <Skeleton className="h-10 w-full" />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <Skeleton className="h-[100px] w-full" />
+          <Skeleton className="h-[100px] w-full" />
+          <Skeleton className="h-[100px] w-full" />
+        </div>
+        <Skeleton className="h-[400px] w-full" />
       </div>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <Skeleton className="h-6 w-[200px]" />
-          </CardTitle>
-          <Skeleton className="h-4 w-[300px]" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="rounded-md border">
-              <div className="grid grid-cols-5 gap-4 p-4">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Skeleton key={i} className="h-6 w-full" />
-                ))}
-              </div>
-              <div className="divide-y">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="grid grid-cols-5 gap-4 p-4">
-                    {Array.from({ length: 5 }).map((_, j) => (
-                      <Skeleton key={j} className="h-6 w-full" />
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }

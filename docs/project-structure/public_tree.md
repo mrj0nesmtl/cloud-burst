@@ -1,5 +1,5 @@
 # public Directory Structure
-Generated: 2025-03-11T06:00:32.387Z
+Generated: 2025-03-13T02:42:52.942Z
 
 ```
 ./public/
@@ -22,6 +22,7 @@ Generated: 2025-03-11T06:00:32.387Z
 ├── manifest.json
 ├── next.svg
 ├── pexels-themo-bg.jpg
+├── placeholder-qr.png
 ├── qrcode_paypal.png
 ├── robots.txt
 ├── site.webmanifest
@@ -29,7 +30,7 @@ Generated: 2025-03-11T06:00:32.387Z
 ├── vercel.svg
 └── window.svg
 
-2 directories, 24 files
+2 directories, 25 files
 
 ```
 

@@ -44,12 +44,12 @@ export default async function ManageEventsPage() {
   const { data: events } = await query.order('created_at', { ascending: false })
   
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Manage Events</h1>
-        <Button asChild>
-          <Link href="/protected/events/create">Create Event</Link>
-        </Button>
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Manage Events</h1>
+        <p style={{ color: 'var(--muted-foreground)' }}>
+          View and manage all your photography events
+        </p>
       </div>
       
       <Card>

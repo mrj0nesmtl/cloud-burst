@@ -42,6 +42,17 @@ export async function getApprovedEventPhotos(eventId: string): Promise<Photo[]> 
   const cookieStore = cookies();
   const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   
+  // First get the event information
+  const { data: event, error: eventError } = await supabase
+    .from('events')
+    .select('id, name, date')
+    .eq('id', eventId)
+    .single();
+    
+  if (eventError) {
+    console.error('Error fetching event:', eventError);
+  }
+  
   const { data, error } = await supabase
     .from('photos')
     .select('*')
@@ -56,7 +67,19 @@ export async function getApprovedEventPhotos(eventId: string): Promise<Photo[]> 
   
   // Import the function dynamically to avoid circular dependencies
   const { mapDbPhotoToPhoto } = await import('./photos-client');
-  return data.map(mapDbPhotoToPhoto);
+  
+  // Add event information to each photo
+  return data.map(photo => {
+    const mappedPhoto = mapDbPhotoToPhoto(photo);
+    if (event) {
+      mappedPhoto.event = {
+        id: event.id,
+        name: event.name,
+        date: event.date
+      };
+    }
+    return mappedPhoto;
+  });
 }
 
 /**

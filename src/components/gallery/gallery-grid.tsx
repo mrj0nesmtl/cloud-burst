@@ -52,6 +52,7 @@ interface GalleryGridProps {
   layout?: GalleryLayout
   defaultSort?: SortOption
   onLayoutChange?: (layout: GalleryLayout) => void
+  showEventName?: boolean
 }
 
 export function GalleryGrid({ 
@@ -60,7 +61,8 @@ export function GalleryGrid({
   emptyMessage = "No photos found",
   layout = 'grid',
   defaultSort = 'newest',
-  onLayoutChange
+  onLayoutChange,
+  showEventName = false
 }: GalleryGridProps) {
   // State
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null)
@@ -580,6 +582,15 @@ export function GalleryGrid({
               <p className="text-xs text-white/80">{formatFileSize(currentPhoto.size || 0)}</p>
               <span className="text-white/50">•</span>
               <p className="text-xs text-white/80">{formatDateTime(currentPhoto.created_at)}</p>
+              {showEventName && currentPhoto.event && (
+                <>
+                  <span className="text-white/50">•</span>
+                  <p className="text-xs text-white/80 flex items-center">
+                    <Calendar className="h-3 w-3 mr-1" />
+                    {currentPhoto.event.name || 'Unknown Event'}
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -792,6 +803,12 @@ export function GalleryGrid({
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
                       <p className="text-xs text-white truncate">{photo.filename}</p>
                       <p className="text-xs text-white/80">{formatFileSize(photo.size || 0)}</p>
+                      {showEventName && photo.event && (
+                        <p className="text-xs text-white/80 flex items-center mt-1">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {photo.event.name || 'Unknown Event'}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -829,6 +846,12 @@ export function GalleryGrid({
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
                         <p className="text-xs text-white truncate">{photo.filename}</p>
                         <p className="text-xs text-white/80">{formatFileSize(photo.size || 0)}</p>
+                        {showEventName && photo.event && (
+                          <p className="text-xs text-white/80 flex items-center mt-1">
+                            <Calendar className="h-3 w-3 mr-1" />
+                            {photo.event.name || 'Unknown Event'}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </CardContent>

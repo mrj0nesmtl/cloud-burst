@@ -1,20 +1,20 @@
 # 🎨 **Application Design Document**  
 
 ## Cloud Burst
-📅 *Updated: March 8, 2025, 11:53 PM*  
-📊 *Version: 0.7.4*
+📅 *Updated: March 19, 2025*  
+📊 *Version: 0.7.7*
 
 ## 📌 Situational Abstract
 
-Cloud Burst continues to make steady progress toward its target launch, despite encountering some technical setbacks in recent development cycles. As of early March 2025, we have successfully rebuilt our authentication system, enhanced the dashboard foundation, and implemented a comprehensive navigation structure that will serve as the roadmap for our feature implementation in the coming weeks.
+Cloud Burst has made significant progress in recent development cycles, reaching 85% completion of our Enhanced Features phase. As of mid-March 2025, we have successfully implemented the Analytics section with a fully functional Engagement Metrics page, created a placeholder for the Events Analytics feature, enhanced the navigation system with improved organization and responsive behavior, and resolved critical layout issues across the platform.
 
-The recent authentication system repair represents a critical recovery milestone, resolving issues with the sign-in and registration workflows that had temporarily impeded progress. With these core components now functioning properly, we've established a more reliable foundation for the platform's user experience.
+The Analytics implementation represents a major milestone, providing event organizers with valuable insights into engagement metrics and trends. The Engagement Metrics page delivers comprehensive visualizations and data points that help organizers understand attendee behavior and photo interactions. We've also created a foundation for the Events Analytics page, which will be fully implemented in future sessions.
 
-While our overall completion timeline has shifted slightly due to technical challenges, we've maintained approximately 65% completion of the Enhanced Features phase, keeping us on a trajectory to meet our April 15, 2025 revised launch deadline. The development team has demonstrated resilience in addressing unexpected issues, converting technical setbacks into opportunities for architectural improvement.
+Navigation improvements include an increased sidebar width for better readability, proper organization of menu items, and enhanced tooltip support for collapsed items. We've also fixed layout issues, particularly with the Gallery pages, adding appropriate top padding and ensuring consistent design patterns across the application.
 
-The platform's structure now features an enhanced dashboard foundation with Activity Feed and Quick Actions components, a comprehensive sidebar navigation framework, and a more intuitive event creation interface with Basic Information and Advanced Settings tabs. Our continued focus on TypeScript strict mode compliance and component architecture has improved code quality and maintainability.
+Our focus now shifts to the Gallery implementation, which represents the heart of the Cloud Burst platform. With our directory structure in place and technical specifications completed, we're ready to build the comprehensive photo management system that will enable photographers to upload, organize, and share their event photos with attendees.
 
-As we enter the next phase of development, our priorities include implementing the complete dashboard functionality for event organizers, building out the photo gallery components, enhancing attendee management features, and conducting comprehensive testing of our role-based access control system under real-world scenarios. The team remains confident in our ability to deliver a polished, professional-grade event photography platform that will transform collaboration between photographers and clients around their most treasured memories.
+The platform's architecture has proven resilient and adaptable, allowing us to overcome technical challenges while maintaining our progress toward our April 1, 2025 launch target. The team continues to demonstrate excellence in addressing complex requirements while maintaining high standards for code quality, performance, and user experience.
 
 ## 📊 Implementation Status
 
@@ -33,9 +33,11 @@ As we enter the next phase of development, our priorities include implementing t
 | ⚙️ User Settings | 🟢 Active | P0 | Auth | 80% |
 | 👤 Profile Management | 🟢 Active | P0 | Auth | 70% |
 | 🔔 Notifications | 🟢 Active | P1 | Settings | 80% |
-| 📅 Event Management | 🟢 Active | P1 | Auth | 50% |
+| 📅 Event Management | 🟢 Active | P1 | Auth | 85% |
 | 🔒 Role-Based Access | ✅ Done | P0 | Auth | 100% |
-| 📊 Dashboard | 🟢 Active | P0 | Auth | 55% |
+| 📊 Dashboard | 🟢 Active | P0 | Auth | 85% |
+| 📈 Analytics | 🟢 Active | P1 | Events | 60% |
+| 🖼️ Gallery System | 🟢 Active | P0 | Storage | 25% |
 
 ### 🎯 Sprint Progress
 
@@ -45,25 +47,29 @@ As we enter the next phase of development, our priorities include implementing t
 | 2 | 🎨 UI & Branding | ✅ Done | Feb 2024 | 100% |
 | 3 | 🔐 Auth Reset | ✅ Done | Feb 2024 | 100% |
 | 4 | ⚙️ Super Admin | ✅ Done | Feb 2024 | 100% |
-| 5 | 📧 Notifications | 🟢 Active | Mar 2024 | 80% |
-| 6 | 🖼️ Photo Features | 🟢 Active | Mar 2024 | 40% |
-| 7 | 📅 Event Management | 🟢 Active | Mar 2024 | 50% |
-| 8 | 🔒 RBAC System | ✅ Done | Mar 2024 | 100% |
-| 9 | 📊 Dashboard | 🟢 Active | Mar 2024 | 55% |
-| 10 | 🤖 AI Integration | ⏸️ On Hold | TBD | 0% |
+| 5 | 📧 Notifications | ✅ Done | Mar 2024 | 100% |
+| 6 | 📄 Templates | ✅ Done | Mar 2024 | 100% |
+| 7 | 📅 Events | ✅ Done | Mar 2024 | 100% |
+| 8 | 👥 Attendees | ✅ Done | Mar 2024 | 100% |
+| 9 | 📱 Dashboard | ✅ Done | Mar 2024 | 100% |
+| 10 | 📊 Analytics | 🟢 Active | Mar 2024 | 60% |
+| 11 | 🖼️ Gallery | 🟢 Active | Mar-Apr 2024 | 25% |
+| 12 | 🚀 Launch Prep | 🟡 Planned | Apr-May 2025 | 0% |
 
 ---
 
-## 🔍 Overview  
-The **Cloud Burst** is a web-based solution designed to provide event organizers and participants with an intuitive, AI-enhanced photography platform. This document details the **design and architecture** of the application, covering:  
-✔️ Specific pages  
-✔️ UI components  
-✔️ Role-based access control  
-✔️ Proposed project structure  
+## 🔐 Authentication & RBAC
+📍 *Status: Complete*
 
----
+The authentication system is complete and fully integrated with Supabase Auth, providing a secure and seamless experience for users. The role-based access control (RBAC) system ensures that users can only access features and data appropriate to their role.
 
-## 🏗️ Application Architecture & Tech Stack  
+### Architecture
+- ✅ Supabase Auth integration
+- ✅ Custom auth hooks
+- ✅ Auth state management with Zustand
+- ✅ RLS policies
+- ✅ Protected routes
+- ✅ Role-based UI rendering
 
 ### 🚀 Tech Stack  
 - **Frontend**: ⚛️ Next.js 14, TypeScript, Tailwind CSS, Shadcn UI  
@@ -79,20 +85,14 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 
 ---
 
-## 👥 User Roles & Access Levels  
-### 🔑 **Super Admin**
-- 🔹 Full system access (internal use only)
+## 👥 User Roles & Access Levels 
+### 🦸‍♂️ **Super Admin**  
+- 🔹 Full platform administrative access
 - 🔹 User management and role assignment
-- 🔹 System configuration and security controls
-- 🔹 Analytics access and template management
+- 🔹 Total system configuration control
+- 🔹 Template management and global settings
 
-### 🛡️ **Admin**
-- 🔹 Administrative access (internal use only)
-- 🔹 User management (cannot assign roles)
-- 🔹 Event management and photo moderation
-- 🔹 Analytics access and template viewing
-
-### 🎟️ **Organizer**  
+### 👨‍💼 **Organizer**  
 - 🔹 Event management access (paid tier only)
 - 🔹 Create and manage multiple events
 - 🔹 Moderate and approve uploaded content
@@ -139,380 +139,792 @@ The **Cloud Burst** is a web-based solution designed to provide event organizers
 - ✅ Activity Feed
 - ✅ Quick Actions
 - ✅ Dashboard Stats
-- 🟢 Event Management [Active]
-- 🟢 Attendee Management [Active]
+- ✅ Event Management
+- ✅ Attendee Management
 - 🟢 Gallery Management [Active]
-- 🟢 Settings Pages [Active]
-- ⏸️ Analytics [Post-Beta]
+- ✅ Settings Pages
+- 🟢 Analytics [Active]
 
-### 🎛️ **Event Pages**  
-📍 *Status: Active*
-- ✅ Event Creation (Basic)
-- ✅ Event Creation (Advanced)
-- 🟢 Event List View
-- 🟢 Event Detail View
-- 🟢 Photo Upload
-- 🟢 Gallery View
-- 🟢 QR Access
-- 🟢 Attendee Management
-
-### ⚙️ User Settings
-📍 *Status: In Progress*
-- 🟢 Profile Management
-- 🟢 Basic Preferences
-- 🟢 Notifications Management
-- ⏸️ Advanced Features [Post-Beta]
-
-### 📧 **Notifications System**
-📍 *Status: Active*
-- ✅ Email Template Management
-- ✅ Template Preview & Editing
-- ✅ Supabase Auth Integration
-- 🟢 Template Analytics
-- ⏸️ Push Notifications [Post-Beta]
-- ⏸️ SMS Notifications [Post-Beta]
-
-### 🔒 **Role-Based Access Control**
+### 📆 **Event Management**  
 📍 *Status: Complete*
-- ✅ Role definitions and hierarchy
-- ✅ Permission hooks and components
-- ✅ Conditional UI rendering
-- ✅ Route protection middleware
-- ✅ Database RLS policies
+- ✅ Event Listing
+- ✅ Event Creation
+- ✅ Event Details
+- ✅ Event Configuration
+- ✅ QR Code Management
+- ✅ Status Management
+
+### 👥 **Attendee Management**  
+📍 *Status: Complete*
+- ✅ Attendee List
+- ✅ Add Attendee
+- ✅ Attendee Roles
+- ✅ Invitation System
+- ✅ QR Code Integration
+
+### 🖼️ **Gallery**  
+📍 *Status: In Progress*
+- ✅ Basic Layout & Navigation
+- 🟢 Upload Interface [Active]
+- 🟢 Grid View [Active]
+- 🟢 Photo Details [Active]
+- 🟢 Masonry Layout [Active]
+- 🟢 Slideshow View [Active]
+- 🟢 Album Management [Active]
+- 🟢 Photo Moderation [Active]
+- 🟢 Photo Tagging [Active]
+- 🟢 Search & Filtering [Active]
+
+### 📊 **Analytics**  
+📍 *Status: Active*
+- ✅ Engagement Metrics Dashboard
+- 🟡 Events Analytics [Coming Soon]
+- 🟡 Photographer Performance [Planned]
+- 🟡 Export & Reporting [Planned]
 
 ---
 
 ## 📂 Project Structure  
 
 ```typescript
-src/
+./src/
 ├── app/
-│   ├── (marketing)/
-│   │   ├── page.tsx
-│   │   ├── about/
-│   │   ├── pricing/
-│   │   └── contact/
-│   ├── api/
-│   │   ├── templates/
-│   │   │   └── sync/
-│   │   └── cron/
-│   │       └── sync-templates/
-│   ├── auth/
-│   │   ├── login/
-│   │   ├── register/
-│   │   └── layout.tsx
-│   ├── protected/
-│   │   ├── dashboard/
-│   │   │   └── page.tsx
-│   │   ├── events/
-│   │   │   ├── page.tsx
-│   │   │   ├── [id]/
-│   │   │   │   ├── page.tsx
-│   │   │   │   ├── edit/
-│   │   │   │   ├── qr/
-│   │   │   │   └── attendees/
-│   │   │   ├── create/
-│   │   │   └── templates/
-│   │   ├── attendees/
-│   │   │   ├── manage/
-│   │   │   └── qr/
-│   │   ├── gallery/
-│   │   │   ├── page.tsx
-│   │   │   ├── moderate/
-│   │   │   └── albums/
-│   │   ├── analytics/
-│   │   │   ├── events/
-│   │   │   └── engagement/
-│   │   ├── admin/
-│   │   └── settings/
-│   │       ├── profile/
-│   │       ├── notifications/
-│   │       └── subscription/
-│   └── middleware.ts
+│   ├── api/
+│   │   ├── cron/
+│   │   │   └── sync-templates/
+│   │   │       └── route.ts
+│   │   ├── db/
+│   │   │   ├── functions/
+│   │   │   │   └── route.ts
+│   │   │   └── setup/
+│   │   │       └── route.ts
+│   │   ├── extract-colors/
+│   │   │   └── route.ts
+│   │   └── templates/
+│   │       ├── [templateId]/
+│   │       │   └── html/
+│   │       │       └── route.ts
+│   │       └── sync/
+│   │           └── route.ts
+│   ├── auth/
+│   │   ├── callback/
+│   │   │   └── route.ts
+│   │   ├── register/
+│   │   │   └── page.tsx
+│   │   ├── signin/
+│   │   │   └── page.tsx
+│   │   ├── test-layout/
+│   │   │   └── page.tsx
+│   │   └── layout.tsx
+│   ├── dashboard/
+│   │   ├── analytics/
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── dev/
+│   │   └── setup/
+│   │       └── route.ts
+│   ├── e/
+│   │   └── [customUrl]/
+│   │       ├── layout.tsx
+│   │       └── page.tsx
+│   ├── events/
+│   │   ├── [id]/
+│   │   │   ├── gallery/
+│   │   │   │   └── page.tsx
+│   │   │   ├── upload/
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   ├── not-found.tsx
+│   │   │   └── page.tsx
+│   │   ├── create/
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── legal/
+│   │   ├── cookies/
+│   │   │   └── page.tsx
+│   │   ├── privacy/
+│   │   │   └── page.tsx
+│   │   ├── terms/
+│   │   │   └── page.tsx
+│   │   └── layout.tsx
+│   ├── lib/
+│   │   ├── photos-client.ts
+│   │   ├── photos.server.ts
+│   │   ├── photos.ts
+│   │   └── security-settings-server.ts
+│   ├── marketing/
+│   │   ├── about/
+│   │   │   └── page.tsx
+│   │   ├── contact/
+│   │   │   └── page.tsx
+│   │   ├── pricing/
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── protected/
+│   │   ├── admin/
+│   │   │   ├── audit-logs/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── components/
+│   │   │   │   ├── audit-log-columns.tsx
+│   │   │   │   └── audit-log-viewer.tsx
+│   │   │   ├── contacts/
+│   │   │   │   └── page.tsx
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx
+│   │   │   ├── events/
+│   │   │   │   └── page.tsx
+│   │   │   ├── newsletter/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── photos/
+│   │   │   │   └── page.tsx
+│   │   │   ├── roles/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── settings/
+│   │   │   │   └── page.tsx
+│   │   │   ├── users/
+│   │   │   │   ├── [id]/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── analytics/
+│   │   │   ├── engagement/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   └── events/
+│   │   │       ├── loading.tsx
+│   │   │       └── page.tsx
+│   │   ├── attendees/
+│   │   │   └── invitations/
+│   │   │       └── page.tsx
+│   │   ├── dashboard/
+│   │   │   ├── overview/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── events/
+│   │   │   ├── [id]/
+│   │   │   │   ├── attendees/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── edit/
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── qr/
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── create/
+│   │   │   │   ├── .page.tsx.swp
+│   │   │   │   ├── loading.tsx
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── page_tsx.swp
+│   │   │   ├── manage/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── gallery/
+│   │   │   ├── albums/
+│   │   │   │   └── page.tsx
+│   │   │   ├── all/
+│   │   │   │   └── page.tsx
+│   │   │   ├── events/
+│   │   │   │   └── page.tsx
+│   │   │   ├── moderate/
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── notifications/
+│   │   │   └── page.tsx
+│   │   ├── overview/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── profile/
+│   │   │   ├── settings/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   ├── qr-codes/
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── settings/
+│   │   │   ├── account/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── billing/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── notifications/
+│   │   │   │   ├── templates/
+│   │   │   │   │   ├── change-email.html
+│   │   │   │   │   ├── confirm-signup.html
+│   │   │   │   │   ├── invite.html
+│   │   │   │   │   ├── magic-link.html
+│   │   │   │   │   └── reset-password.html
+│   │   │   │   ├── layout.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── profile/
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── subscription/
+│   │   │   └── page.tsx
+│   │   ├── templates/
+│   │   │   └── page.tsx
+│   │   └── layout.tsx
+│   ├── components.css
+│   ├── error.tsx
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── loading.tsx
+│   ├── metadata.ts
+│   ├── not-found.tsx
+│   └── page.tsx
 ├── components/
-│   ├── ui/
-│   ├── auth/
-│   │   ├── auth-form.tsx
-│   │   ├── auth-provider.tsx
-│   │   └── permission-gate.tsx
-│   ├── dashboard/
-│   │   ├── activity-feed.tsx
-│   │   ├── quick-actions.tsx
-│   │   ├── dashboard-stats.tsx
-│   │   └── recent-events.tsx
-│   ├── events/
-│   │   ├── event-actions.tsx
-│   │   ├── event-card.tsx
-│   │   ├── event-filters.tsx
-│   │   ├── event-list.tsx
-│   │   ├── attendee-management.tsx
-│   │   ├── qr-code-display.tsx
-│   │   └── template-card.tsx
-│   ├── gallery/
-│   │   ├── gallery-grid.tsx
-│   │   ├── upload-dropzone.tsx
-│   │   ├── photo-lightbox.tsx
-│   │   ├── moderation-queue.tsx
-│   │   └── album-card.tsx
-│   ├── forms/
-│   │   ├── profile-form.tsx
-│   │   ├── preferences-form.tsx
-│   │   ├── notifications-form.tsx
-│   │   └── event-form.tsx
-│   ├── layout/
-│   │   ├── main-nav.tsx
-│   │   ├── site-header.tsx
-│   │   ├── dashboard-layout.tsx
-│   │   ├── side-nav.tsx
-│   │   └── user-nav.tsx
-│   ├── notifications/
-│   │   ├── template-preview.tsx
-│   │   ├── template-editor.tsx
-│   │   ├── full-preview.tsx
-│   │   └── create-template.tsx
-│   └── marketing/
+│   ├── attendees/
+│   │   └── invitation-form.tsx
+│   ├── auth/
+│   │   ├── auth-debug.tsx
+│   │   ├── auth-form.tsx
+│   │   ├── auth-guard.tsx
+│   │   ├── debug-panel.tsx
+│   │   ├── permission-gate.tsx
+│   │   ├── role-guard.tsx
+│   │   └── social-auth-buttons.tsx
+│   ├── dashboard/
+│   │   ├── activity-feed.tsx
+│   │   ├── analytics-overview.tsx
+│   │   ├── contact-stats.tsx
+│   │   ├── contact-submissions.tsx
+│   │   ├── dashboard-stats.tsx
+│   │   ├── event-summary.tsx
+│   │   ├── newsletter-stats.tsx
+│   │   ├── newsletter-subscribers.tsx
+│   │   ├── quick-actions.tsx
+│   │   ├── recent-activity.tsx
+│   │   └── recent-events.tsx
+│   ├── events/
+│   │   ├── add-attendee-dialog.tsx
+│   │   ├── attendee-management.tsx
+│   │   ├── enhanced-event-card.tsx
+│   │   ├── event-actions.tsx
+│   │   ├── event-card.tsx
+│   │   ├── event-details.tsx
+│   │   ├── event-filters.tsx
+│   │   ├── event-form.tsx
+│   │   ├── event-list-client.tsx
+│   │   ├── event-list.tsx
+│   │   ├── event-search.tsx
+│   │   ├── event-status-selector.tsx
+│   │   ├── image-upload.tsx
+│   │   └── qr-code-display.tsx
+│   ├── forms/
+│   │   ├── avatar-upload.tsx
+│   │   ├── event-customization-form.tsx
+│   │   ├── event-form.tsx
+│   │   ├── notifications-form.tsx
+│   │   ├── preferences-form.tsx
+│   │   ├── profile-form.tsx
+│   │   └── security-form.tsx
+│   ├── gallery/
+│   │   ├── gallery-grid.tsx
+│   │   ├── gallery-tabs.tsx
+│   │   ├── index.ts
+│   │   ├── optimized-image.tsx
+│   │   ├── photo-lightbox.tsx
+│   │   ├── upload-dropzone.tsx
+│   │   └── upload-with-tags.tsx
+│   ├── layout/
+│   │   ├── dashboard-layout.tsx
+│   │   └── main-nav.tsx
+│   ├── marketing/
+│   │   ├── contact-form.tsx
+│   │   └── newsletter-form.tsx
+│   ├── nav/
+│   │   ├── logo.tsx
+│   │   ├── main-nav.tsx
+│   │   ├── side-nav.tsx
+│   │   └── user-nav.tsx
+│   ├── notifications/
+│   │   ├── create-template.tsx
+│   │   ├── full-preview.tsx
+│   │   ├── notification-item.tsx
+│   │   ├── notifications-content.tsx
+│   │   ├── template-editor.tsx
+│   │   └── template-preview.tsx
+│   ├── providers/
+│   │   ├── query-provider.tsx
+│   │   ├── toast-provider.tsx
+│   │   └── tooltip-provider.tsx
+│   ├── ui/
+│   │   ├── contact/
+│   │   │   └── page.tsx
+│   │   ├── accordion.tsx
+│   │   ├── alert-dialog.tsx
+│   │   ├── alert.tsx
+│   │   ├── aspect-ratio.tsx
+│   │   ├── avatar.tsx
+│   │   ├── badge.tsx
+│   │   ├── button.tsx
+│   │   ├── calendar.tsx
+│   │   ├── card.tsx
+│   │   ├── charts.tsx
+│   │   ├── checkbox.tsx
+│   │   ├── command.tsx
+│   │   ├── dialog.tsx
+│   │   ├── dropdown-menu.tsx
+│   │   ├── form.tsx
+│   │   ├── icons.tsx
+│   │   ├── index.ts
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   ├── loading-spinner.tsx
+│   │   ├── mobile-nav.tsx
+│   │   ├── mode-toggle.tsx
+│   │   ├── navigation-menu.tsx
+│   │   ├── newsletter-form.tsx
+│   │   ├── popover.tsx
+│   │   ├── progress.tsx
+│   │   ├── radio-group.tsx
+│   │   ├── scroll-area.tsx
+│   │   ├── select.tsx
+│   │   ├── separator.tsx
+│   │   ├── sheet.tsx
+│   │   ├── site-footer.tsx
+│   │   ├── site-header.tsx
+│   │   ├── skeleton.tsx
+│   │   ├── slider.tsx
+│   │   ├── sonner.tsx
+│   │   ├── switch.tsx
+│   │   ├── table.tsx
+│   │   ├── tabs.tsx
+│   │   ├── textarea.tsx
+│   │   ├── toast.tsx
+│   │   ├── toaster.tsx
+│   │   ├── tooltip.tsx
+│   │   └── use-toast.ts
+│   ├── cookie-consent.tsx
+│   ├── debug-info.tsx
+│   ├── error-boundary.tsx
+│   ├── query-provider.tsx
+│   └── theme-provider.tsx
 ├── hooks/
-│   ├── use-auth.ts
-│   ├── use-permissions.ts
-│   ├── use-toast.ts
-│   ├── use-event.ts
-│   └── use-profile.ts
+│   ├── __tests__/
+│   │   └── use-permissions.test.ts
+│   ├── use-analytics.ts
+│   ├── use-auth.ts
+│   ├── use-debounced-auth.ts
+│   ├── use-permissions.ts
+│   ├── use-profile.ts
+│   ├── use-toast.ts
+│   ├── use-update-profile.ts
+│   └── use-user.ts
 ├── lib/
-│   ├── supabase/
-│   │   ├── client.ts
-│   │   ├── server.ts
-│   │   ├── auth-store.ts
-│   │   ├── templates.ts
-│   │   ├── events.ts
-│   │   ├── photos.ts
-│   │   └── types.ts
-│   └── utils/
+│   ├── ai/
+│   │   ├── color-extraction.ts
+│   │   └── photo-enhancement.ts
+│   ├── realtime/
+│   │   └── event-collaboration.ts
+│   ├── supabase/
+│   │   ├── __tests__/
+│   │   │   ├── auth-store.test.ts
+│   │   │   └── events.test.ts
+│   │   ├── auth-store.ts
+│   │   ├── auth-utils.ts
+│   │   ├── client.ts
+│   │   ├── debug-queries.ts
+│   │   ├── events.server.ts
+│   │   ├── events.ts
+│   │   ├── galleries.ts
+│   │   ├── photos.server.ts
+│   │   ├── photos.ts
+│   │   ├── run-migration.js
+│   │   ├── search.ts
+│   │   ├── server.ts
+│   │   ├── templates.ts
+│   │   ├── test-utils.ts
+│   │   ├── verify-schema.html
+│   │   └── verify-schema.js
+│   ├── analytics.ts
+│   ├── event-customization-server.ts
+│   ├── event-customization.ts
+│   ├── qr-code.ts
+│   ├── security-settings.ts
+│   ├── user-sessions.ts
+│   └── utils.ts
+├── scripts/
+│   └── mobile-menu.js
 ├── store/
-│   ├── events-store.ts
-│   ├── photos-store.ts
-│   └── notifications-store.ts
-└── types/
-    ├── supabase.ts
-    ├── events.ts
-    ├── gallery.ts
-    └── attendees.ts
-```
+│   ├── events-store.ts
+│   ├── index.ts
+│   └── photos-store.ts
+├── styles/
+│   └── layout.css
+├── types/
+│   ├── auth.ts
+│   ├── events.ts
+│   ├── gallery.ts
+│   ├── notifications.ts
+│   ├── search.ts
+│   └── supabase.ts
+├── .DS_Store
+├── middleware.test.ts
+└── middleware.ts
+
+108 directories, 287 files
 
 ---
 
-## 🔒 Security Considerations  
+## 📝 Component Documentation
 
-### Authentication & Authorization [Complete]
-✔️ **Authentication System**:
-- ✅ Supabase Auth
+### 🔐 Authentication
+- ✅ Login/register forms with validation
+- ✅ Password recovery flow
+- ✅ Social authentication options
+- ✅ Protected route HOC
+- ✅ Auth state management with Zustand
+
+### 📊 Dashboard
+- ✅ Activity feed with recent actions
+- ✅ Quick actions menu for common tasks
+- ✅ Stats cards showing key metrics
+- ✅ Event management shortcuts
+- ✅ Gallery access points
+- ✅ Analytics summaries
+
+### 📅 Event Management
+- ✅ Event creation wizard
+- ✅ Event listing with filtering
+- ✅ Event details page
+- ✅ QR code generation
+- ✅ Attendee management interface
+- ✅ Status management for event lifecycle
+
+### 🖼️ Gallery Components
+- 🟢 Upload dropzone with drag-and-drop [Active]
+- 🟢 Gallery grid with responsive layout [Active]
+- 🟢 Photo details modal [Active]
+- 🟢 Masonry layout for aesthetic display [Active]
+- 🟢 Slideshow view for sequential browsing [Active]
+- 🟢 Album management interface [Active]
+- 🟢 Photo moderation queue [Active]
+
+### 📊 Analytics Components
+- ✅ Engagement metrics cards
+- ✅ Trends visualization charts
+- ✅ Time period selectors
+- ✅ Data comparison views
+- ✅ Export functionality (UI only)
+- 🟡 Event performance metrics [Coming Soon]
+- 🟡 Photographer performance metrics [Planned]
+
+### ⚙️ Settings
+- ✅ Profile management
+- ✅ Security settings
+- ✅ Notification preferences
+- ✅ Subscription management [Beta: Hidden]
+
+---
+
+## 🧠 State Management
+
+### 🔐 Auth Store (Zustand)
+- ✅ User authentication state
+- ✅ User profile data
+- ✅ Role & permissions
 - ✅ Session management
-- ✅ Role-based access
-- ✅ Permission hooks
-- ⏸️ Advanced features [Post-Beta]
 
-### Database Security [Complete]
-✔️ **Row Level Security (RLS)**:
-- ✅ Basic RLS policies
-- ✅ Template access rules
-- ✅ Event access policies
-- ✅ Role-based policies
-- ⏸️ Advanced policies [Post-Beta]
+### 📅 Events Store (Zustand)
+- ✅ Event data caching
+- ✅ Event creation/editing state
+- ✅ Event filtering preferences
+- ✅ Attendee management state
 
-### Session Management [Complete]
-- ✅ Session validation
-- ✅ Cookie handling
-- ✅ Role verification
-- ✅ Permission checking
-- ⏸️ Advanced features [Post-Beta]
+### 🖼️ Gallery Store (Zustand)
+- 🟢 Photo upload queue [Active]
+- 🟢 Gallery view preferences [Active]
+- 🟢 Selection state for batch operations [Active]
+- 🟢 Moderation queue state [Active]
+- 🟢 Album management state [Active]
 
-### Access Control [Complete]
-✔️ **Role-Based Access Control (RBAC)**:
-- ✅ Permission system
-- ✅ Role hierarchy
-- ✅ Protected route middleware
-- ✅ API route protection
-- ✅ Conditional UI rendering
+### 📊 Analytics Store (Zustand)
+- ✅ Selected time periods
+- ✅ Chart configuration preferences
+- ✅ Comparison selections
+- ✅ Data caching for performance
+- 🟡 Export configuration [Planned]
 
-## 🎯 Next Steps [v0.7.5 Focus] 
-1. 📊 Complete dashboard section implementations
-2. 📅 Build all event management pages
-3. 👥 Implement attendee management features
-4. 🖼️ Develop gallery section with photo organization
-5. ⚙️ Create settings pages for profile and preferences
-6. 🧪 Test role-based access under real scenarios
+### 🎨 UI Store (Zustand)
+- ✅ Theme preferences
+- ✅ Sidebar collapse state
+- ✅ Modal management
+- ✅ Toast notifications
+- ✅ Form wizard steps
 
-## 📝 Notes  
-- Authentication system has been repaired with proper styling and validation
-- Dashboard foundation enhanced with Activity Feed and Quick Actions
-- Comprehensive sidebar navigation structure implemented
-- Create Event interface refined with Basic and Advanced tabs
-- Mobile responsiveness improved but still needs optimization
-- Component architecture updated with better separation of concerns
-- Documentation updated with latest technical decisions
+---
 
-## 🔒 Security Implementation
+## 📊 Analytics Architecture
+📍 *Status: Active (60% Complete)*
 
-### Middleware Protection
-- ✅ Rate limiting for API routes
-- ✅ Security headers implementation
-- ✅ Session management system
-- ✅ Protected route patterns
-- ✅ Method validation
-- ✅ Role-based middleware
-- ✅ Error boundary implementation
-- ✅ Permission-based route protection
+The Analytics system provides valuable insights for event organizers and photographers to understand engagement, success metrics, and user behavior. The implementation prioritizes performance, visual clarity, and actionable insights.
 
-### Authentication Flow
-- ✅ Secure auth flow
-- ✅ Token management
-- ✅ Server-side validation
+### Component Structure
+- ✅ Metrics Cards: Key performance indicators
+- ✅ Trends Charts: Visualizations of data over time
+- ✅ Comparison Views: Side-by-side metric analysis
+- ✅ Time Period Selectors: Historical data navigation
+- ✅ Category Filters: Data segmentation by type
+- 🟡 Export Tools: Data export in various formats
+
+### Data Flow
+- ✅ Client-side data fetching with TanStack Query
+- ✅ Static mock data for initial implementation
+- 🟡 API integration with database (planned)
+- 🟡 Real-time updates (planned)
+- 🟡 Export functionality (planned)
+
+### Analytics Categories
+- ✅ Engagement Metrics
+  - Photo views
+  - Interaction rates
+  - Time spent
+  - Return visits
+  - Sharing metrics
+- 🟡 Event Metrics (Coming Soon)
+  - Attendance rates
+  - Event popularity
+  - Growth over time
+  - Category performance
+- 🟡 Photographer Metrics (Planned)
+  - Upload volume
+  - Photo performance
+  - Quality metrics
+  - User feedback
+
+## 🖼️ Gallery Architecture
+📍 *Status: Active (25% Complete)*
+
+The Gallery system is the heart of Cloud Burst, enabling photographers to upload, organize, and share their event photos with attendees. This comprehensive photo management system prioritizes performance, usability, and flexibility.
+
+### Upload System
+- 🟢 Drag-and-drop interface
+- 🟢 Progress indicators
+- 🟢 Error handling
+- 🟢 File validation
+- 🟢 Large batch uploads
+
+### View Options
+- 🟢 Grid layout
+- 🟢 Masonry layout
+- 🟢 Slideshow view
+- 🟢 Filmstrip view
+- 🟢 Layout preference storage
+
+### Organization
+- 🟢 Album creation
+- 🟢 Photo tagging
+- 🟢 Sorting options
+- 🟢 Filtering capabilities
+- 🟢 Search functionality
+
+### Moderation
+- 🟢 Approval workflow
+- 🟢 Rejection with comments
+- 🟢 Batch moderation
+- 🟢 Moderation history
+- 🟢 Content guidelines enforcement
+
+### Storage Architecture
+- 🟢 Supabase Storage integration
+- 🟢 Efficient bucket organization
+- 🟢 Thumbnail generation
+- 🟢 Original file preservation
+- 🟢 Access control with RLS policies
+
+### Performance Optimization
+- 🟢 Lazy loading
+- 🟢 Image compression
+- 🟢 Progressive loading
+- 🟢 Responsive image sizing
+- 🟢 Cache management
+
+---
+
+## 🔐 Security Implementation
+
+### Authentication
+- ✅ Email/password authentication
+- ✅ Social login options
+- ✅ Password recovery flow
+- ✅ Session management
+- ✅ Account lockout protection
+- ✅ Multi-factor authentication [Beta: Hidden]
+
+### Authorization
+- ✅ Role-based access control
+- ✅ Permission-based UI rendering
 - ✅ Protected routes
-- ✅ Role-based access
-- ✅ Error handling
-- ✅ Permission checking
-- ✅ Form validation with Zod
+- ✅ API endpoint protection
+- ✅ Resource ownership verification
+
+### Data Protection
+- ✅ Row-Level Security policies
+- ✅ Client-side data validation
+- ✅ Server-side data validation
+- ✅ Input sanitization
+- ✅ XSS & CSRF protection
+
+### Privacy
+- ✅ Photo ownership tracking
+- ✅ Consent management
+- ✅ Data deletion capabilities
+- ✅ Privacy preference settings
+- ✅ Activity logging
 
 ---
 
-## 🚀 Deployment Architecture [Beta Focus]
+## 💬 User Experience & Accessibility
 
-### Platform: Replit
-- ✅ Node.js 20.x environment
-- ✅ 512MB memory allocation
-- ✅ Basic configuration
-- ⏸️ Advanced features [Post-Beta]
+### Responsive Design
+- ✅ Mobile-first approach
+- ✅ Adaptive layouts
+- ✅ Touch-friendly interfaces
+- ✅ Device-specific optimizations
+- ✅ Screen size detection and adaptation
 
-### Configuration Files
-```typescript
-├── .replit                 // Basic configuration
-├── replit.nix             // Essential dependencies
-└── next.config.js         // Core settings
-```
+### Accessibility
+- ✅ WCAG 2.1 AA compliance
+- ✅ Semantic HTML structure
+- ✅ Keyboard navigation support
+- ✅ Screen reader compatibility
+- ✅ Color contrast adherence
+- ✅ Focus states and indicators
 
-### Deployment Process [Beta]
-1. **Essential Build**
-   - ✅ Dependencies installation
-   - ✅ Basic compilation
-   - ✅ Core optimization
+### Performance
+- ✅ Optimized bundle sizes
+- ✅ Code splitting
+- ✅ Lazy loading
+- ✅ Caching strategies
+- ✅ Performance monitoring
 
-2. **Basic Security**
-   - ✅ Essential headers
-   - ✅ Basic CORS
-   - ✅ Role-based access control
-   - ⏸️ Advanced features [Post-Beta]
-
-3. **Simple Monitoring**
-   - ✅ Basic health check
-   - ⏸️ Advanced tracking [Post-Beta]
-   - ⏸️ Complex metrics [Post-Beta]
-
----
-
-## 🎯 Implementation Priority (v0.7.5)
-
-### Phase 1: Dashboard Implementation [Active]
-1. **Dashboard Overview**
-   - ✅ Activity Feed component
-   - ✅ Quick Actions component
-   - ✅ Dashboard Stats component
-   - ✅ Recent Events component
-   - 🟢 Dashboard layout refinement
-
-2. **Navigation Structure**
-   - ✅ Sidebar navigation
-   - ✅ User navigation
-   - ✅ Mobile navigation
-   - ✅ Breadcrumb navigation
-   - 🟢 Context-specific navigation
-
-### Phase 2: Event Management [Active]
-1. **Event Creation and Editing**
-   - ✅ Event form component
-   - ✅ Event form validation
-   - ✅ Basic and Advanced tabs
-   - 🟢 Event detail page
-   - 🟢 Event edit functionality
-
-2. **Event Features**
-   - ✅ Event actions with permissions
-   - 🟢 Attendee management
-   - 🟢 QR code display
-   - 🟢 Gallery integration
-   - 🟢 Event sharing
-
-### Phase 3: Attendee Management [Planned]
-1. **Invitation System**
-   - 🟡 Invitation form
-   - 🟡 Attendee list management
-   - 🟡 Role assignment
-   - 🟡 Email notifications
-   - 🟡 Attendance tracking
-
-2. **QR Code System**
-   - 🟡 QR code generation
-   - 🟡 Check-in tracking
-   - 🟡 QR code styling
-   - 🟡 Mobile scanning
-   - 🟡 Access control
-
-### Phase 4: Gallery Management [Planned]
-1. **Upload Pipeline**
-   - 🟡 Upload interface
-   - 🟡 Progress tracking
-   - 🟡 Error handling
-   - 🟡 Image optimization
-   - 🟡 Tag management
-
-2. **Photo Organization**
-   - 🟡 Gallery grid layout
-   - 🟡 Lightbox viewer
-   - 🟡 Album creation
-   - 🟡 Photo moderation
-   - 🟡 Download functionality
-
-## 📊 Current Sprint (v0.7.5)
-| Feature | Status | Timeline | Priority |
-|---------|--------|----------|-----------|
-| Dashboard Implementation | 🟢 Active | Week 1 | P0 |
-| Event Management Pages | 🟢 Active | Week 1-2 | P0 |
-| Attendee Management | 🟡 Planned | Week 2 | P1 |
-| Gallery System | 🟡 Planned | Week 2-3 | P1 |
-| Settings Pages | 🟡 Planned | Week 3 | P1 |
-| Role Testing | 🟡 Planned | Week 3-4 | P2 |
-
-## 🔄 Technical Debt Items
-1. Mobile responsiveness refinement
-2. Authentication edge case testing
-3. Form submission pattern standardization
-4. Component documentation updates
-5. Performance optimization for image loading
-6. Accessibility compliance verification
+### Error Handling
+- ✅ Graceful degradation
+- ✅ User-friendly error messages
+- ✅ Recovery options
+- ✅ Error boundaries
+- ✅ Offline capabilities
 
 ---
 
-## 🚀 Session 22 Objectives
-Session 22 is focused on transforming our navigational skeleton into a fully functional event management platform by implementing all the dashboard sections accessible from the sidebar. Each section will include:
+## 🗄️ Data Structure
 
-1. **Events Management**
-   - All Events list with filtering and sorting
-   - Event templates library
-   - Event detail pages with management tools
+### Database Tables (Supabase)
+- ✅ public.profiles
+- ✅ public.events
+- ✅ public.event_attendees
+- ✅ public.event_roles
+- ✅ public.templates
+- ✅ public.notifications
+- 🟢 public.photos
+- 🟢 public.albums
+- 🟢 public.photo_tags
+- 🟢 public.photo_moderation
+- ✅ public.analytics
 
-2. **Attendee Management**
-   - Invitation system with form and tracking
-   - QR code generation and management
-   - Attendee role assignment and permissions
+### Storage Buckets
+- ✅ avatars
+- ✅ events
+- 🟢 photos
+- 🟢 thumbnails
 
-3. **Gallery Management**
-   - Photo grid with organization tools
-   - Moderation queue for uploaded content
-   - Album creation and management
+### API Endpoints
+- ✅ /api/auth/*
+- ✅ /api/events/*
+- ✅ /api/templates/*
+- ✅ /api/attendees/*
+- 🟢 /api/gallery/*
+- 🟢 /api/photos/*
+- 🟢 /api/albums/*
+- ✅ /api/analytics/*
 
-4. **Settings Section**
-   - Profile management with preferences
-   - Notification settings and subscriptions
-   - Account security and preferences
+---
 
-By completing these objectives, we will have a comprehensive event organizer dashboard that delivers the core functionality promised in our platform vision, setting the stage for final refinements before launch.
+## 📅 Implementation Timeline
+
+### March 2025 (Current)
+- 🟢 Complete Analytics section
+- 🟢 Begin Gallery implementation
+- 🟢 Enhance navigation system
+- 🟢 Fix layout issues
+- 🟢 Update documentation
+
+### April 2025
+- 🟡 Complete Gallery system
+- 🟡 Integrate real Analytics data
+- 🟡 Implement search functionality
+- 🟡 Conduct performance optimization
+- 🟡 Complete responsive design
+
+### May 2025
+- 🟡 User acceptance testing
+- 🟡 Bug fixes and refinements
+- 🟡 Documentation completion
+- 🟡 Final quality assurance
+- 🟡 Pre-launch preparations
+
+### June 2025
+- 🟡 Public launch
+- 🟡 Monitoring and support
+- 🟡 Feedback collection
+- 🟡 Post-launch improvements
+- 🟡 Planning for future features
+
+---
+
+## 🖼️ Gallery Implementation Plan
+
+For Session 24, our focus will be on implementing the Gallery system, which is the core feature of Cloud Burst. The Gallery implementation will be divided into four main components:
+
+1. **Core Photo Management**
+   - Upload component with drag-and-drop
+   - Progress indicators and error handling
+   - Basic gallery grid view
+   - Photo detail view with metadata
+   - Basic filtering options
+
+2. **Album Management**
+   - Album listing interface
+   - Album creation workflow
+   - Photo-to-album assignment
+   - Cover photo selection
+   - Album sharing functionality
+
+3. **Photo Moderation**
+   - Moderation queue interface
+   - Approval/rejection workflow
+   - Moderation history
+   - Batch moderation capabilities
+   - Notification system for uploads
+
+4. **Enhanced Gallery Views**
+   - Grid layout implementation
+   - Masonry layout option
+   - Slideshow/carousel view
+   - Filmstrip view option
+   - Layout preference storage
+
+By completing these objectives, we will deliver the comprehensive photo management system that serves as the heart of our event photography platform, enabling photographers to showcase their work and attendees to experience events through carefully curated collections of images.
 
 ---

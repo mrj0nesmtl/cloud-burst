@@ -158,16 +158,23 @@ export default async function AdminDashboardPage() {
 
   return (
     <RoleGuard allowedRoles={['super_admin', 'admin']}>
-      <div className="space-y-8">
-        <DashboardHeader />
+      <div style={{ width: '100%', padding: '24px' }}>
+        <div style={{ marginBottom: '24px' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Admin Dashboard</h1>
+          <p style={{ color: 'var(--muted-foreground)' }}>
+            Platform administration and management
+          </p>
+        </div>
         
         <Suspense fallback={<LoadingSpinner />}>
           <StatsCards />
         </Suspense>
         
-        <QuickActions />
+        <div style={{ marginTop: '24px' }}>
+          <QuickActions />
+        </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+        <div style={{ marginTop: '24px', display: 'grid', gap: '24px', gridTemplateColumns: 'repeat(7, 1fr)' }} className="md:grid-cols-2 lg:grid-cols-7">
           <div className="md:col-span-2 lg:col-span-5">
             <AnalyticsOverview />
           </div>
@@ -176,12 +183,14 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div style={{ marginTop: '24px', display: 'grid', gap: '24px', gridTemplateColumns: 'repeat(2, 1fr)' }} className="md:grid-cols-2">
           <NewsletterStats />
           <ContactStats />
         </div>
 
-        <AuditLogViewer logs={[]} />
+        <div style={{ marginTop: '24px' }}>
+          <AuditLogViewer logs={[]} />
+        </div>
       </div>
     </RoleGuard>
   )

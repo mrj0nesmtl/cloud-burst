@@ -74,6 +74,11 @@ export interface Photo {
   metadata: Record<string, any>
   created_at: string
   updated_at: string
+  event?: {
+    id: string
+    name: string
+    date: string
+  }
 }
 
 export interface PhotoWithEvent extends Photo {
