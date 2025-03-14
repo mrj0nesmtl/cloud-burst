@@ -1,28 +1,24 @@
 # store Directory Structure
-Generated: 2025-03-13T02:42:52.998Z
+Generated: 2025-03-14T04:54:26.020Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./src/store/
 ├── events-store.ts
 ├── index.ts
+├── media-store.ts
 └── photos-store.ts
 
-1 directory, 3 files
+1 directory, 4 files
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- ts: 4 file(s)
 
 ## Ignored Patterns
 - node_modules

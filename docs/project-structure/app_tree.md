@@ -1,6 +1,11 @@
 # app Directory Structure
-Generated: 2025-03-13T02:42:52.961Z
+Generated: 2025-03-14T04:54:23.498Z
 
+## Overview
+
+This directory contains 67 route(s).
+
+## Directory Tree
 ```
 ./src/app/
 ├── api/
@@ -42,7 +47,26 @@ Generated: 2025-03-13T02:42:52.961Z
 │       ├── layout.tsx
 │       └── page.tsx
 ├── events/
-│   ├── [id]/
+│   ├── [eventId]/
+│   │   ├── gallery/
+│   │   │   ├── moderation/
+│   │   │   │   ├── moderation-content.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── event-gallery-content.tsx
+│   │   │   └── page.tsx
+│   │   ├── upload/
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── not-found.tsx
+│   │   └── page.tsx
+│   ├── [eventId].bak/
+│   │   └── gallery/
+│   │       ├── moderation/
+│   │       │   ├── moderation-content.tsx
+│   │       │   └── page.tsx
+│   │       ├── event-gallery-content.tsx
+│   │       └── page.tsx
+│   ├── [id].bak/
 │   │   ├── gallery/
 │   │   │   └── page.tsx
 │   │   ├── upload/
@@ -153,9 +177,14 @@ Generated: 2025-03-13T02:42:52.961Z
 │   │   ├── all/
 │   │   │   └── page.tsx
 │   │   ├── events/
+│   │   │   ├── [galleryId]/
+│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── moderate/
 │   │   │   └── page.tsx
+│   │   ├── upload/
+│   │   │   ├── page.tsx
+│   │   │   └── upload-content.tsx
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── notifications/
@@ -207,22 +236,14 @@ Generated: 2025-03-13T02:42:52.961Z
 ├── not-found.tsx
 └── page.tsx
 
-82 directories, 122 files
+91 directories, 137 files
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- ts: 13 file(s)
+- tsx: 115 file(s)
+- css: 2 file(s)
 
 ## Ignored Patterns
 - node_modules

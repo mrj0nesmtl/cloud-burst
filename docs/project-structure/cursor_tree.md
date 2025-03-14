@@ -1,6 +1,11 @@
 # cursor Directory Structure
-Generated: 2025-03-13T02:42:52.930Z
+Generated: 2025-03-14T04:54:22.941Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./.cursor/
 └── rules/
@@ -22,18 +27,8 @@ Generated: 2025-03-13T02:42:52.930Z
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+
 
 ## Ignored Patterns
 - node_modules

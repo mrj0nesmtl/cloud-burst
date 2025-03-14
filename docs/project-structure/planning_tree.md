@@ -1,6 +1,11 @@
 # planning Directory Structure
-Generated: 2025-03-13T02:42:53.077Z
+Generated: 2025-03-14T04:54:26.878Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./docs/planning/
 ├── auth-cleanup.md
@@ -17,18 +22,8 @@ Generated: 2025-03-13T02:42:53.077Z
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- md: 8 file(s)
 
 ## Ignored Patterns
 - node_modules

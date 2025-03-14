@@ -1,6 +1,11 @@
 # full Directory Structure
-Generated: 2025-03-13T02:42:52.862Z
+Generated: 2025-03-14T04:54:22.031Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./
 ├── .cursor/
@@ -22,6 +27,22 @@ Generated: 2025-03-13T02:42:52.862Z
 │   ├── workflows/
 │   │   └── versioning.yml
 │   └── dependabot.yml
+├── backup-routes/
+│   ├── events-eventId-route/
+│   │   └── gallery/
+│   │       ├── moderation/
+│   │       │   ├── moderation-content.tsx
+│   │       │   └── page.tsx
+│   │       ├── event-gallery-content.tsx
+│   │       └── page.tsx
+│   └── events-id-route/
+│       ├── gallery/
+│       │   └── page.tsx
+│       ├── upload/
+│       │   └── page.tsx
+│       ├── layout.tsx
+│       ├── not-found.tsx
+│       └── page.tsx
 ├── docs/
 │   ├── architecture/
 │   │   ├── application_design_document.md
@@ -34,6 +55,11 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   └── replit_deployment.md
 │   ├── design/
 │   │   ├── UI_components.md
+│   │   ├── consistent-layout.md
+│   │   ├── gallery_implementation_plan.md
+│   │   ├── gallery_implementation_spec.md
+│   │   ├── layout-troubleshooting.md
+│   │   ├── media_schema_migration.md
 │   │   ├── style.md
 │   │   └── website_overview.md
 │   ├── development/
@@ -64,6 +90,10 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   │   ├── session_22_checklist.md
 │   │   │   ├── session_22_kickoff_prompt.md
 │   │   │   ├── session_22_narrative.md
+│   │   │   ├── session_23_checklist.md
+│   │   │   ├── session_23_kickoff.md
+│   │   │   ├── session_23_narrative.md
+│   │   │   ├── session_23_summary.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -71,12 +101,12 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
+│   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_23_checklist.md
-│   │   ├── session_23_kickoff.md
-│   │   ├── session_23_narrative.md
-│   │   ├── status_notes.md
+│   │   ├── session_24_checklist.md
+│   │   ├── session_24_narrative.md
+│   │   ├── session_24_part2_kickoff_prompt.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
@@ -96,16 +126,23 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   ├── SRC_TREE.md
 │   │   ├── app_tree.md
 │   │   ├── architecture_tree.md
+│   │   ├── auth_tree.md
 │   │   ├── components_tree.md
 │   │   ├── cursor_tree.md
+│   │   ├── dashboard_tree.md
 │   │   ├── development_tree.md
+│   │   ├── events_tree.md
+│   │   ├── gallery_tree.md
 │   │   ├── hooks_tree.md
 │   │   ├── lib_tree.md
 │   │   ├── planning_tree.md
+│   │   ├── protected_tree.md
 │   │   ├── public_tree.md
 │   │   ├── store_tree.md
 │   │   ├── styles_tree.md
-│   │   └── types_tree.md
+│   │   ├── supabase_tree.md
+│   │   ├── types_tree.md
+│   │   └── ui_tree.md
 │   ├── rbac/
 │   │   ├── README.md
 │   │   └── role_based_access_control.md
@@ -117,9 +154,8 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   ├── README.md
-│   ├── consistent-layout.md
-│   └── layout-troubleshooting.md
+│   └── README.md
+├── merged-routes/
 ├── public/
 │   ├── images/
 │   │   ├── fallback-hero.jpg
@@ -147,8 +183,10 @@ Generated: 2025-03-13T02:42:52.862Z
 │   ├── sitemap.xml
 │   ├── vercel.svg
 │   └── window.svg
-├── rules/
 ├── scripts/
+│   ├── debug/
+│   │   ├── check-data.js
+│   │   └── create-gallery.js
 │   ├── types/
 │   │   └── tree-cli.d.ts
 │   ├── .DS_Store
@@ -199,7 +237,26 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   │       ├── layout.tsx
 │   │   │       └── page.tsx
 │   │   ├── events/
-│   │   │   ├── [id]/
+│   │   │   ├── [eventId]/
+│   │   │   │   ├── gallery/
+│   │   │   │   │   ├── moderation/
+│   │   │   │   │   │   ├── moderation-content.tsx
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── event-gallery-content.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── upload/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   ├── not-found.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── [eventId].bak/
+│   │   │   │   └── gallery/
+│   │   │   │       ├── moderation/
+│   │   │   │       │   ├── moderation-content.tsx
+│   │   │   │       │   └── page.tsx
+│   │   │   │       ├── event-gallery-content.tsx
+│   │   │   │       └── page.tsx
+│   │   │   ├── [id].bak/
 │   │   │   │   ├── gallery/
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── upload/
@@ -310,9 +367,14 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   │   │   ├── all/
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── events/
+│   │   │   │   │   ├── [galleryId]/
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── moderate/
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── upload/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── upload-content.tsx
 │   │   │   │   ├── layout.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── notifications/
@@ -410,7 +472,14 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   │   ├── profile-form.tsx
 │   │   │   └── security-form.tsx
 │   │   ├── gallery/
+│   │   │   ├── MediaCard.tsx
+│   │   │   ├── MediaGrid.tsx
+│   │   │   ├── MediaLightbox.tsx
+│   │   │   ├── MediaModeration.tsx
+│   │   │   ├── MediaUpload.tsx
+│   │   │   ├── README.md
 │   │   │   ├── gallery-grid.tsx
+│   │   │   ├── gallery-settings-form.tsx
 │   │   │   ├── gallery-tabs.tsx
 │   │   │   ├── index.ts
 │   │   │   ├── optimized-image.tsx
@@ -456,6 +525,7 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   │   ├── command.tsx
 │   │   │   ├── dialog.tsx
 │   │   │   ├── dropdown-menu.tsx
+│   │   │   ├── empty-state.tsx
 │   │   │   ├── form.tsx
 │   │   │   ├── icons.tsx
 │   │   │   ├── index.ts
@@ -478,6 +548,7 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   │   ├── skeleton.tsx
 │   │   │   ├── slider.tsx
 │   │   │   ├── sonner.tsx
+│   │   │   ├── spinner.tsx
 │   │   │   ├── switch.tsx
 │   │   │   ├── table.tsx
 │   │   │   ├── tabs.tsx
@@ -506,6 +577,8 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   ├── ai/
 │   │   │   ├── color-extraction.ts
 │   │   │   └── photo-enhancement.ts
+│   │   ├── auth/
+│   │   │   └── utils.ts
 │   │   ├── realtime/
 │   │   │   └── event-collaboration.ts
 │   │   ├── supabase/
@@ -518,7 +591,10 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   │   ├── debug-queries.ts
 │   │   │   ├── events.server.ts
 │   │   │   ├── events.ts
+│   │   │   ├── galleries.server.ts
 │   │   │   ├── galleries.ts
+│   │   │   ├── media.server.ts
+│   │   │   ├── media.ts
 │   │   │   ├── photos.server.ts
 │   │   │   ├── photos.ts
 │   │   │   ├── run-migration.js
@@ -540,6 +616,7 @@ Generated: 2025-03-13T02:42:52.862Z
 │   ├── store/
 │   │   ├── events-store.ts
 │   │   ├── index.ts
+│   │   ├── media-store.ts
 │   │   └── photos-store.ts
 │   ├── styles/
 │   │   └── layout.css
@@ -547,6 +624,7 @@ Generated: 2025-03-13T02:42:52.862Z
 │   │   ├── auth.ts
 │   │   ├── events.ts
 │   │   ├── gallery.ts
+│   │   ├── media.ts
 │   │   ├── notifications.ts
 │   │   ├── search.ts
 │   │   └── supabase.ts
@@ -560,6 +638,7 @@ Generated: 2025-03-13T02:42:52.862Z
 │   ├── .DS_Store
 │   ├── Event Columns Information.csv
 │   ├── Event Table Schema.csv
+│   ├── List of Public Tables NEW.csv
 │   ├── List of Public Tables.csv
 │   ├── Marc Reichel - IMDb.mhtml
 │   ├── Photo Metadata.csv
@@ -569,8 +648,11 @@ Generated: 2025-03-13T02:42:52.862Z
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (3).csv
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (4).csv
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx).csv
+│   ├── Supabase Snippet Retrieve Gallery Information by Event ID.csv
+│   ├── View RLS Policies for Galleries.csv
 │   ├── events_rows (1).csv
 │   ├── events_rows.csv
+│   ├── galleries_rows.csv
 │   ├── profiles_rows.csv
 │   ├── supabase_logs (1).csv
 │   ├── supabase_logs (2).csv
@@ -585,9 +667,7 @@ Generated: 2025-03-13T02:42:52.862Z
 ├── README.md
 ├── cloud-burst.code-workspace
 ├── components.json
-├── core-standards.mdc
 ├── eslint.config.mjs
-├── frontend-architecture.mdc
 ├── jsconfig.json
 ├── next-env.d.ts
 ├── next.config.js
@@ -599,22 +679,18 @@ Generated: 2025-03-13T02:42:52.862Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-130 directories, 466 files
+148 directories, 523 files
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- ts: 8013 file(s)
+- tsx: 373 file(s)
+- js: 24303 file(s)
+- json: 1796 file(s)
+- md: 1347 file(s)
+- css: 22 file(s)
+- yml: 154 file(s)
 
 ## Ignored Patterns
 - node_modules

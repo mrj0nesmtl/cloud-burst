@@ -1,6 +1,11 @@
 # github Directory Structure
-Generated: 2025-03-13T02:42:52.918Z
+Generated: 2025-03-14T04:54:22.796Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./.github/
 ├── workflows/
@@ -11,18 +16,8 @@ Generated: 2025-03-13T02:42:52.918Z
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- yml: 2 file(s)
 
 ## Ignored Patterns
 - node_modules

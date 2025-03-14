@@ -1,11 +1,18 @@
 # lib Directory Structure
-Generated: 2025-03-13T02:42:52.987Z
+Generated: 2025-03-14T04:54:25.743Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./src/lib/
 ├── ai/
 │   ├── color-extraction.ts
 │   └── photo-enhancement.ts
+├── auth/
+│   └── utils.ts
 ├── realtime/
 │   └── event-collaboration.ts
 ├── supabase/
@@ -18,7 +25,10 @@ Generated: 2025-03-13T02:42:52.987Z
 │   ├── debug-queries.ts
 │   ├── events.server.ts
 │   ├── events.ts
+│   ├── galleries.server.ts
 │   ├── galleries.ts
+│   ├── media.server.ts
+│   ├── media.ts
 │   ├── photos.server.ts
 │   ├── photos.ts
 │   ├── run-migration.js
@@ -36,22 +46,13 @@ Generated: 2025-03-13T02:42:52.987Z
 ├── user-sessions.ts
 └── utils.ts
 
-5 directories, 28 files
+6 directories, 32 files
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- ts: 29 file(s)
+- js: 2 file(s)
 
 ## Ignored Patterns
 - node_modules
