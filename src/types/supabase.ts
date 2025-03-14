@@ -40,6 +40,87 @@ export interface Database {
         }
         Relationships: []
       }
+      media: {
+        Row: {
+          id: string
+          event_id: string
+          media_type: string
+          storage_path: string
+          file_path: string
+          url: string
+          thumbnail_url: string | null
+          title: string | null
+          description: string | null
+          size: number | null
+          mime_type: string | null
+          width: number | null
+          height: number | null
+          duration: number | null
+          user_id: string | null
+          status: string
+          metadata: Json | null
+          created_at: string
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          event_id: string
+          media_type: string
+          storage_path: string
+          file_path: string
+          url: string
+          thumbnail_url?: string | null
+          title?: string | null
+          description?: string | null
+          size?: number | null
+          mime_type?: string | null
+          width?: number | null
+          height?: number | null
+          duration?: number | null
+          user_id?: string | null
+          status?: string
+          metadata?: Json | null
+          created_at?: string
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          event_id?: string
+          media_type?: string
+          storage_path?: string
+          file_path?: string
+          url?: string
+          thumbnail_url?: string | null
+          title?: string | null
+          description?: string | null
+          size?: number | null
+          mime_type?: string | null
+          width?: number | null
+          height?: number | null
+          duration?: number | null
+          user_id?: string | null
+          status?: string
+          metadata?: Json | null
+          created_at?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       event_attendees: {
         Row: {
           id: string
