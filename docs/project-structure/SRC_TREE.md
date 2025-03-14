@@ -1,6 +1,11 @@
 # src Directory Structure
-Generated: 2025-03-13T02:42:52.893Z
+Generated: 2025-03-14T04:54:22.492Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./src/
 ├── app/
@@ -43,7 +48,26 @@ Generated: 2025-03-13T02:42:52.893Z
 │   │       ├── layout.tsx
 │   │       └── page.tsx
 │   ├── events/
-│   │   ├── [id]/
+│   │   ├── [eventId]/
+│   │   │   ├── gallery/
+│   │   │   │   ├── moderation/
+│   │   │   │   │   ├── moderation-content.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── event-gallery-content.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── upload/
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   ├── not-found.tsx
+│   │   │   └── page.tsx
+│   │   ├── [eventId].bak/
+│   │   │   └── gallery/
+│   │   │       ├── moderation/
+│   │   │       │   ├── moderation-content.tsx
+│   │   │       │   └── page.tsx
+│   │   │       ├── event-gallery-content.tsx
+│   │   │       └── page.tsx
+│   │   ├── [id].bak/
 │   │   │   ├── gallery/
 │   │   │   │   └── page.tsx
 │   │   │   ├── upload/
@@ -154,9 +178,14 @@ Generated: 2025-03-13T02:42:52.893Z
 │   │   │   ├── all/
 │   │   │   │   └── page.tsx
 │   │   │   ├── events/
+│   │   │   │   ├── [galleryId]/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── moderate/
 │   │   │   │   └── page.tsx
+│   │   │   ├── upload/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── upload-content.tsx
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
 │   │   ├── notifications/
@@ -254,7 +283,14 @@ Generated: 2025-03-13T02:42:52.893Z
 │   │   ├── profile-form.tsx
 │   │   └── security-form.tsx
 │   ├── gallery/
+│   │   ├── MediaCard.tsx
+│   │   ├── MediaGrid.tsx
+│   │   ├── MediaLightbox.tsx
+│   │   ├── MediaModeration.tsx
+│   │   ├── MediaUpload.tsx
+│   │   ├── README.md
 │   │   ├── gallery-grid.tsx
+│   │   ├── gallery-settings-form.tsx
 │   │   ├── gallery-tabs.tsx
 │   │   ├── index.ts
 │   │   ├── optimized-image.tsx
@@ -300,6 +336,7 @@ Generated: 2025-03-13T02:42:52.893Z
 │   │   ├── command.tsx
 │   │   ├── dialog.tsx
 │   │   ├── dropdown-menu.tsx
+│   │   ├── empty-state.tsx
 │   │   ├── form.tsx
 │   │   ├── icons.tsx
 │   │   ├── index.ts
@@ -322,6 +359,7 @@ Generated: 2025-03-13T02:42:52.893Z
 │   │   ├── skeleton.tsx
 │   │   ├── slider.tsx
 │   │   ├── sonner.tsx
+│   │   ├── spinner.tsx
 │   │   ├── switch.tsx
 │   │   ├── table.tsx
 │   │   ├── tabs.tsx
@@ -350,6 +388,8 @@ Generated: 2025-03-13T02:42:52.893Z
 │   ├── ai/
 │   │   ├── color-extraction.ts
 │   │   └── photo-enhancement.ts
+│   ├── auth/
+│   │   └── utils.ts
 │   ├── realtime/
 │   │   └── event-collaboration.ts
 │   ├── supabase/
@@ -362,7 +402,10 @@ Generated: 2025-03-13T02:42:52.893Z
 │   │   ├── debug-queries.ts
 │   │   ├── events.server.ts
 │   │   ├── events.ts
+│   │   ├── galleries.server.ts
 │   │   ├── galleries.ts
+│   │   ├── media.server.ts
+│   │   ├── media.ts
 │   │   ├── photos.server.ts
 │   │   ├── photos.ts
 │   │   ├── run-migration.js
@@ -384,6 +427,7 @@ Generated: 2025-03-13T02:42:52.893Z
 ├── store/
 │   ├── events-store.ts
 │   ├── index.ts
+│   ├── media-store.ts
 │   └── photos-store.ts
 ├── styles/
 │   └── layout.css
@@ -391,6 +435,7 @@ Generated: 2025-03-13T02:42:52.893Z
 │   ├── auth.ts
 │   ├── events.ts
 │   ├── gallery.ts
+│   ├── media.ts
 │   ├── notifications.ts
 │   ├── search.ts
 │   └── supabase.ts
@@ -398,22 +443,16 @@ Generated: 2025-03-13T02:42:52.893Z
 ├── middleware.test.ts
 └── middleware.ts
 
-108 directories, 287 files
+118 directories, 317 files
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- ts: 67 file(s)
+- tsx: 234 file(s)
+- js: 3 file(s)
+- md: 1 file(s)
+- css: 3 file(s)
 
 ## Ignored Patterns
 - node_modules

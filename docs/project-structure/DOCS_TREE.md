@@ -1,6 +1,11 @@
 # docs Directory Structure
-Generated: 2025-03-13T02:42:52.907Z
+Generated: 2025-03-14T04:54:22.657Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./docs/
 ├── architecture/
@@ -14,6 +19,11 @@ Generated: 2025-03-13T02:42:52.907Z
 │   └── replit_deployment.md
 ├── design/
 │   ├── UI_components.md
+│   ├── consistent-layout.md
+│   ├── gallery_implementation_plan.md
+│   ├── gallery_implementation_spec.md
+│   ├── layout-troubleshooting.md
+│   ├── media_schema_migration.md
 │   ├── style.md
 │   └── website_overview.md
 ├── development/
@@ -44,6 +54,10 @@ Generated: 2025-03-13T02:42:52.907Z
 │   │   ├── session_22_checklist.md
 │   │   ├── session_22_kickoff_prompt.md
 │   │   ├── session_22_narrative.md
+│   │   ├── session_23_checklist.md
+│   │   ├── session_23_kickoff.md
+│   │   ├── session_23_narrative.md
+│   │   ├── session_23_summary.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -51,12 +65,12 @@ Generated: 2025-03-13T02:42:52.907Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
+│   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_23_checklist.md
-│   ├── session_23_kickoff.md
-│   ├── session_23_narrative.md
-│   ├── status_notes.md
+│   ├── session_24_checklist.md
+│   ├── session_24_narrative.md
+│   ├── session_24_part2_kickoff_prompt.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
@@ -76,16 +90,23 @@ Generated: 2025-03-13T02:42:52.907Z
 │   ├── SRC_TREE.md
 │   ├── app_tree.md
 │   ├── architecture_tree.md
+│   ├── auth_tree.md
 │   ├── components_tree.md
 │   ├── cursor_tree.md
+│   ├── dashboard_tree.md
 │   ├── development_tree.md
+│   ├── events_tree.md
+│   ├── gallery_tree.md
 │   ├── hooks_tree.md
 │   ├── lib_tree.md
 │   ├── planning_tree.md
+│   ├── protected_tree.md
 │   ├── public_tree.md
 │   ├── store_tree.md
 │   ├── styles_tree.md
-│   └── types_tree.md
+│   ├── supabase_tree.md
+│   ├── types_tree.md
+│   └── ui_tree.md
 ├── rbac/
 │   ├── README.md
 │   └── role_based_access_control.md
@@ -97,26 +118,14 @@ Generated: 2025-03-13T02:42:52.907Z
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store
-├── README.md
-├── consistent-layout.md
-└── layout-troubleshooting.md
+└── README.md
 
-10 directories, 88 files
+10 directories, 102 files
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- md: 96 file(s)
 
 ## Ignored Patterns
 - node_modules

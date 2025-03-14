@@ -540,4 +540,11 @@ export async function updateEventStatus(id: string, status: 'draft' | 'published
   }
   
   return data as Event
+}
+
+/**
+ * Get an event by its ID
+ */
+export async function getEventById(id: string): Promise<Event> {
+  return getEvent(id)
 } 

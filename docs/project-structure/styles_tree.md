@@ -1,6 +1,11 @@
 # styles Directory Structure
-Generated: 2025-03-13T02:42:53.023Z
+Generated: 2025-03-14T04:54:26.292Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./src/styles/
 └── layout.css
@@ -9,18 +14,8 @@ Generated: 2025-03-13T02:42:53.023Z
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- css: 1 file(s)
 
 ## Ignored Patterns
 - node_modules

@@ -1,6 +1,11 @@
 # hooks Directory Structure
-Generated: 2025-03-13T02:42:53.036Z
+Generated: 2025-03-14T04:54:26.441Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./src/hooks/
 ├── __tests__/
@@ -18,18 +23,8 @@ Generated: 2025-03-13T02:42:53.036Z
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- ts: 9 file(s)
 
 ## Ignored Patterns
 - node_modules

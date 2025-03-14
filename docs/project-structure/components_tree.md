@@ -1,6 +1,11 @@
 # components Directory Structure
-Generated: 2025-03-13T02:42:52.975Z
+Generated: 2025-03-14T04:54:24.835Z
 
+## Overview
+This directory contains 119 component(s).
+
+
+## Directory Tree
 ```
 ./src/components/
 ├── attendees/
@@ -49,7 +54,14 @@ Generated: 2025-03-13T02:42:52.975Z
 │   ├── profile-form.tsx
 │   └── security-form.tsx
 ├── gallery/
+│   ├── MediaCard.tsx
+│   ├── MediaGrid.tsx
+│   ├── MediaLightbox.tsx
+│   ├── MediaModeration.tsx
+│   ├── MediaUpload.tsx
+│   ├── README.md
 │   ├── gallery-grid.tsx
+│   ├── gallery-settings-form.tsx
 │   ├── gallery-tabs.tsx
 │   ├── index.ts
 │   ├── optimized-image.tsx
@@ -95,6 +107,7 @@ Generated: 2025-03-13T02:42:52.975Z
 │   ├── command.tsx
 │   ├── dialog.tsx
 │   ├── dropdown-menu.tsx
+│   ├── empty-state.tsx
 │   ├── form.tsx
 │   ├── icons.tsx
 │   ├── index.ts
@@ -117,6 +130,7 @@ Generated: 2025-03-13T02:42:52.975Z
 │   ├── skeleton.tsx
 │   ├── slider.tsx
 │   ├── sonner.tsx
+│   ├── spinner.tsx
 │   ├── switch.tsx
 │   ├── table.tsx
 │   ├── tabs.tsx
@@ -131,22 +145,14 @@ Generated: 2025-03-13T02:42:52.975Z
 ├── query-provider.tsx
 └── theme-provider.tsx
 
-14 directories, 114 files
+14 directories, 123 files
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- ts: 3 file(s)
+- tsx: 119 file(s)
+- md: 1 file(s)
 
 ## Ignored Patterns
 - node_modules

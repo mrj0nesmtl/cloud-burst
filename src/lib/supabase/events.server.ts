@@ -187,4 +187,11 @@ export async function checkEventAccess(eventId: string): Promise<boolean> {
     .eq('user_id', session.user.id);
   
   return count ? count > 0 : false;
+}
+
+/**
+ * Get an event by its ID - SERVER VERSION
+ */
+export async function getEventById(id: string): Promise<Event> {
+  return getEvent(id)
 } 

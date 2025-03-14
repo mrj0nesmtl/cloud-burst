@@ -1,6 +1,11 @@
 # public Directory Structure
-Generated: 2025-03-13T02:42:52.942Z
+Generated: 2025-03-14T04:54:23.099Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./public/
 ├── images/
@@ -34,18 +39,8 @@ Generated: 2025-03-13T02:42:52.942Z
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- json: 1 file(s)
 
 ## Ignored Patterns
 - node_modules

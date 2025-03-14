@@ -1,6 +1,11 @@
 # architecture Directory Structure
-Generated: 2025-03-13T02:42:53.065Z
+Generated: 2025-03-14T04:54:26.726Z
 
+## Overview
+
+
+
+## Directory Tree
 ```
 ./docs/architecture/
 ├── application_design_document.md
@@ -11,18 +16,8 @@ Generated: 2025-03-13T02:42:53.065Z
 
 ```
 
-## File Types
-- *.ts
-- *.tsx
-- *.js
-- *.jsx
-- *.json
-- *.md
-- *.mdx
-- *.css
-- *.scss
-- *.yaml
-- *.yml
+## File Type Breakdown
+- md: 3 file(s)
 
 ## Ignored Patterns
 - node_modules

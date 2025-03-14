@@ -3,13 +3,14 @@ import { cookies } from 'next/headers'
 import { Gallery, GallerySettings, GalleryStats } from '@/types/gallery'
 
 /**
- * Get user galleries from server component
+ * Get user galleries from the server context
  */
 export async function getUserGalleriesServer(): Promise<Gallery[]> {
   console.log('🔍 getUserGalleriesServer: Starting')
   
   try {
-    const supabase = createServerComponentClient({ cookies })
+    const cookieStore = cookies()
+    const supabase = createServerComponentClient({ cookies: () => cookieStore })
     
     // Get the current user
     const { data: { user }, error: userError } = await supabase.auth.getUser()
@@ -61,218 +62,315 @@ export async function getUserGalleriesServer(): Promise<Gallery[]> {
 }
 
 /**
- * Get gallery for an event (server component implementation)
- */
-export async function getGalleryForEventServer(eventId: string): Promise<Gallery | null> {
-  const supabase = createServerComponentClient({ cookies })
-  
-  const { data, error } = await supabase
-    .from('galleries')
-    .select('*')
-    .eq('event_id', eventId)
-    .single()
-    
-  if (error) {
-    if (error.code === 'PGRST116') {
-      // No rows returned - gallery doesn't exist
-      return null
-    }
-    
-    console.error('Error fetching gallery:', error)
-    throw new Error(`Failed to fetch gallery: ${error.message}`)
-  }
-  
-  return data as Gallery
-}
-
-/**
- * Create a gallery for an event (server component implementation)
+ * Create a gallery for an event from server context
  */
 export async function createGalleryForEventServer(eventId: string): Promise<Gallery> {
-  console.log('🔍 createGalleryForEventServer: Starting gallery creation for event:', eventId);
+  console.log('🔍 createGalleryForEventServer: Starting for event:', eventId)
   
   try {
-    const supabase = createServerComponentClient({ cookies })
+    const cookieStore = cookies()
+    const supabase = createServerComponentClient({ cookies: () => cookieStore })
     
     // Check if gallery already exists
-    console.log('🔍 createGalleryForEventServer: Checking if gallery already exists');
     const { data: existingGallery, error: checkError } = await supabase
       .from('galleries')
       .select('*')
       .eq('event_id', eventId)
-      .single();
+      .maybeSingle()
     
     if (checkError && checkError.code !== 'PGRST116') {
-      console.error('🔍 createGalleryForEventServer: Error checking existing gallery:', checkError);
-      throw new Error(`Error checking existing gallery: ${checkError.message}`);
+      console.error('🔍 createGalleryForEventServer: Error checking gallery:', checkError)
+      throw new Error(`Error checking existing gallery: ${checkError.message}`)
     }
     
     if (existingGallery) {
-      console.log('🔍 createGalleryForEventServer: Gallery already exists:', existingGallery.id);
-      return existingGallery as Gallery;
+      console.log('🔍 createGalleryForEventServer: Gallery already exists:', existingGallery.id)
+      return existingGallery as Gallery
     }
     
-    // Get user to verify permissions
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    console.log('🔍 createGalleryForEventServer: User data:', userData?.user?.id);
-    
+    // Get user for verification
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
     if (userError) {
-      console.error('🔍 createGalleryForEventServer: User auth error:', userError);
-      throw new Error(`Authentication error: ${userError.message}`);
+      console.error('🔍 createGalleryForEventServer: Auth error:', userError)
+      throw new Error(`Authentication error: ${userError.message}`)
     }
     
-    // Verify user owns the event
-    console.log('🔍 createGalleryForEventServer: Verifying event ownership');
-    const { data: event, error: eventError } = await supabase
-      .from('events')
-      .select('organizer_id')
-      .eq('id', eventId)
-      .single();
+    console.log('🔍 createGalleryForEventServer: Authenticated as user:', user?.id)
     
-    if (eventError) {
-      console.error('🔍 createGalleryForEventServer: Error fetching event:', eventError);
-      throw new Error(`Event not found: ${eventError.message}`);
-    }
-    
-    console.log('🔍 createGalleryForEventServer: Event organizer:', event.organizer_id);
-    console.log('🔍 createGalleryForEventServer: Current user:', userData?.user?.id);
-    
-    // Create gallery
-    console.log('🔍 createGalleryForEventServer: Creating gallery');
+    // Create gallery with default settings
     const defaultSettings = {
       layout: 'grid',
       allowUploads: true,
       requireApproval: true,
       maxUploadSize: 10 * 1024 * 1024, // 10MB
       allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-    };
+    }
     
+    // Verify that the user has access to this event before creating the gallery
+    const { data: event, error: eventError } = await supabase
+      .from('events')
+      .select('id, organizer_id')
+      .eq('id', eventId)
+      .single()
+    
+    if (eventError) {
+      console.error('🔍 createGalleryForEventServer: Error fetching event:', eventError)
+      throw new Error(`Error fetching event: ${eventError.message}`)
+    }
+    
+    if (event.organizer_id !== user?.id) {
+      console.error('🔍 createGalleryForEventServer: User not authorized for this event')
+      throw new Error('User not authorized to create gallery for this event')
+    }
+    
+    // Create the gallery
     const { data: gallery, error: createError } = await supabase
       .from('galleries')
       .insert({
         event_id: eventId,
-        settings: defaultSettings
+        settings: defaultSettings,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       })
-      .select()
-      .single();
+      .select('*')
+      .single()
     
     if (createError) {
-      console.error('🔍 createGalleryForEventServer: Error creating gallery:', createError);
-      throw new Error(`Failed to create gallery: ${createError.message}`);
+      console.error('🔍 createGalleryForEventServer: Error creating gallery:', createError)
+      throw new Error(`Failed to create gallery: ${createError.message}`)
     }
     
-    console.log('🔍 createGalleryForEventServer: Gallery created successfully:', gallery.id);
-    return gallery as Gallery;
-    
+    console.log('🔍 createGalleryForEventServer: Gallery created successfully:', gallery.id)
+    return gallery as Gallery
   } catch (error) {
-    console.error('🔍 createGalleryForEventServer: Error in createGalleryForEvent:', error);
-    throw error;
+    console.error('🔍 createGalleryForEventServer: Error:', error)
+    throw error
   }
 }
 
 /**
- * Update gallery settings (server component implementation)
+ * Get gallery for an event from server context
+ */
+export async function getGalleryForEventServer(eventId: string): Promise<Gallery | null> {
+  console.log('🔍 getGalleryForEventServer: Starting for event:', eventId)
+  
+  try {
+    const cookieStore = cookies()
+    const supabase = createServerComponentClient({ cookies: () => cookieStore })
+    
+    const { data, error } = await supabase
+      .from('galleries')
+      .select('*')
+      .eq('event_id', eventId)
+      .maybeSingle()
+    
+    if (error) {
+      console.error('🔍 getGalleryForEventServer: Error fetching gallery:', error)
+      throw error
+    }
+    
+    return data as Gallery | null
+  } catch (error) {
+    console.error('🔍 getGalleryForEventServer: Error:', error)
+    throw error
+  }
+}
+
+/**
+ * Update gallery settings from server context
  */
 export async function updateGallerySettingsServer(
   galleryId: string, 
   settings: Partial<GallerySettings>
 ): Promise<Gallery> {
-  const supabase = createServerComponentClient({ cookies })
+  console.log('🔍 updateGallerySettingsServer: Starting for gallery:', galleryId)
   
-  // Get current gallery to merge settings
-  const { data: currentGallery, error: getError } = await supabase
-    .from('galleries')
-    .select('settings')
-    .eq('id', galleryId)
-    .single()
+  try {
+    const cookieStore = cookies()
+    const supabase = createServerComponentClient({ cookies: () => cookieStore })
     
-  if (getError) {
-    console.error('Error fetching gallery settings:', getError)
-    throw new Error(`Failed to fetch gallery settings: ${getError.message}`)
-  }
-  
-  // Merge current settings with new settings
-  const updatedSettings = {
-    ...(currentGallery.settings as GallerySettings),
-    ...settings
-  }
-  
-  const { data, error } = await supabase
-    .from('galleries')
-    .update({
-      settings: updatedSettings,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', galleryId)
-    .select('*')
-    .single()
+    // Get current gallery to merge settings
+    const { data: currentGallery, error: getError } = await supabase
+      .from('galleries')
+      .select('settings, event_id')
+      .eq('id', galleryId)
+      .single()
     
-  if (error) {
-    console.error('Error updating gallery settings:', error)
-    throw new Error(`Failed to update gallery settings: ${error.message}`)
+    if (getError) {
+      console.error('🔍 updateGallerySettingsServer: Error fetching gallery:', getError)
+      throw new Error(`Failed to fetch gallery settings: ${getError.message}`)
+    }
+    
+    // Verify user has permission to update this gallery
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    if (userError) {
+      console.error('🔍 updateGallerySettingsServer: Auth error:', userError)
+      throw new Error(`Authentication error: ${userError.message}`)
+    }
+    
+    // Get the event to check organizer
+    const { data: event, error: eventError } = await supabase
+      .from('events')
+      .select('organizer_id')
+      .eq('id', currentGallery.event_id)
+      .single()
+    
+    if (eventError) {
+      console.error('🔍 updateGallerySettingsServer: Error fetching event:', eventError)
+      throw new Error(`Error fetching event: ${eventError.message}`)
+    }
+    
+    if (event.organizer_id !== user?.id) {
+      console.error('🔍 updateGallerySettingsServer: User not authorized for this gallery')
+      throw new Error('User not authorized to update gallery settings')
+    }
+    
+    // Merge current settings with new settings
+    const updatedSettings = {
+      ...(currentGallery.settings as GallerySettings),
+      ...settings
+    }
+    
+    // Update the gallery
+    const { data: updatedGallery, error: updateError } = await supabase
+      .from('galleries')
+      .update({ 
+        settings: updatedSettings,
+        updated_at: new Date().toISOString() 
+      })
+      .eq('id', galleryId)
+      .select('*')
+      .single()
+    
+    if (updateError) {
+      console.error('🔍 updateGallerySettingsServer: Error updating gallery:', updateError)
+      throw new Error(`Failed to update gallery settings: ${updateError.message}`)
+    }
+    
+    console.log('🔍 updateGallerySettingsServer: Gallery updated successfully')
+    return updatedGallery as Gallery
+  } catch (error) {
+    console.error('🔍 updateGallerySettingsServer: Error:', error)
+    throw error
   }
-  
-  return data as Gallery
 }
 
 /**
- * Get gallery statistics (server component implementation)
+ * Get gallery stats from server context
  */
 export async function getGalleryStatsServer(galleryId: string): Promise<GalleryStats> {
-  const supabase = createServerComponentClient({ cookies })
+  console.log('🔍 getGalleryStatsServer: Starting for gallery:', galleryId)
   
-  // Get the gallery to find the event ID
-  const { data: gallery, error: galleryError } = await supabase
-    .from('galleries')
-    .select('event_id')
-    .eq('id', galleryId)
-    .single()
-  
-  if (galleryError) {
-    console.error('Error fetching gallery:', galleryError)
-    throw new Error(`Failed to fetch gallery: ${galleryError.message}`)
-  }
-  
-  // Get photo counts
-  const { count: totalPhotos, error: totalError } = await supabase
-    .from('photos')
-    .select('*', { count: 'exact', head: true })
-    .eq('event_id', gallery.event_id)
-  
-  const { count: approvedPhotos, error: approvedError } = await supabase
-    .from('photos')
-    .select('*', { count: 'exact', head: true })
-    .eq('event_id', gallery.event_id)
-    .eq('is_approved', true)
-  
-  if (totalError || approvedError) {
-    console.error('Error fetching photo counts:', totalError || approvedError)
-    throw new Error(`Failed to fetch photo counts: ${(totalError || approvedError)?.message}`)
-  }
-  
-  // For now, we don't track views and downloads, so we'll return 0
-  return {
-    totalPhotos: totalPhotos || 0,
-    approvedPhotos: approvedPhotos || 0,
-    pendingPhotos: (totalPhotos || 0) - (approvedPhotos || 0),
-    totalViews: 0,
-    totalDownloads: 0
+  try {
+    const cookieStore = cookies()
+    const supabase = createServerComponentClient({ cookies: () => cookieStore })
+    
+    // Get photo counts
+    const { count: totalPhotos, error: totalError } = await supabase
+      .from('gallery_photos')
+      .select('*', { count: 'exact', head: true })
+      .eq('gallery_id', galleryId)
+    
+    if (totalError) {
+      console.error('🔍 getGalleryStatsServer: Error fetching total photos:', totalError)
+      throw totalError
+    }
+    
+    // Get approved photo count
+    const { count: approvedPhotos, error: approvedError } = await supabase
+      .from('gallery_photos')
+      .select('*', { count: 'exact', head: true })
+      .eq('gallery_id', galleryId)
+      .eq('is_approved', true)
+    
+    if (approvedError) {
+      console.error('🔍 getGalleryStatsServer: Error fetching approved photos:', approvedError)
+      throw approvedError
+    }
+    
+    return {
+      totalPhotos: totalPhotos || 0,
+      approvedPhotos: approvedPhotos || 0,
+      pendingPhotos: (totalPhotos || 0) - (approvedPhotos || 0),
+      totalViews: 0,
+      totalDownloads: 0
+    }
+  } catch (error) {
+    console.error('🔍 getGalleryStatsServer: Error:', error)
+    throw error
   }
 }
 
 /**
- * Delete a gallery (server component implementation)
+ * Delete a gallery from server context
  */
 export async function deleteGalleryServer(galleryId: string): Promise<void> {
-  const supabase = createServerComponentClient({ cookies })
+  console.log('🔍 deleteGalleryServer: Starting for gallery:', galleryId)
   
-  const { error } = await supabase
-    .from('galleries')
-    .delete()
-    .eq('id', galleryId)
-  
-  if (error) {
-    console.error('Error deleting gallery:', error)
-    throw new Error(`Failed to delete gallery: ${error.message}`)
+  try {
+    const cookieStore = cookies()
+    const supabase = createServerComponentClient({ cookies: () => cookieStore })
+    
+    // Verify user has permission to delete this gallery
+    const { data: gallery, error: galleryError } = await supabase
+      .from('galleries')
+      .select('event_id')
+      .eq('id', galleryId)
+      .single()
+    
+    if (galleryError) {
+      console.error('🔍 deleteGalleryServer: Error fetching gallery:', galleryError)
+      throw new Error(`Failed to fetch gallery: ${galleryError.message}`)
+    }
+    
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    if (userError) {
+      console.error('🔍 deleteGalleryServer: Auth error:', userError)
+      throw new Error(`Authentication error: ${userError.message}`)
+    }
+    
+    // Get the event to check organizer
+    const { data: event, error: eventError } = await supabase
+      .from('events')
+      .select('organizer_id')
+      .eq('id', gallery.event_id)
+      .single()
+    
+    if (eventError) {
+      console.error('🔍 deleteGalleryServer: Error fetching event:', eventError)
+      throw new Error(`Error fetching event: ${eventError.message}`)
+    }
+    
+    if (event.organizer_id !== user?.id) {
+      console.error('🔍 deleteGalleryServer: User not authorized for this gallery')
+      throw new Error('User not authorized to delete gallery')
+    }
+    
+    // Delete all photos first (this should cascade delete favorites and views)
+    const { error: photosError } = await supabase
+      .from('gallery_photos')
+      .delete()
+      .eq('gallery_id', galleryId)
+    
+    if (photosError) {
+      console.error('🔍 deleteGalleryServer: Error deleting gallery photos:', photosError)
+      throw photosError
+    }
+    
+    // Delete the gallery
+    const { error: deleteError } = await supabase
+      .from('galleries')
+      .delete()
+      .eq('id', galleryId)
+    
+    if (deleteError) {
+      console.error('🔍 deleteGalleryServer: Error deleting gallery:', deleteError)
+      throw deleteError
+    }
+    
+    console.log('🔍 deleteGalleryServer: Gallery deleted successfully')
+  } catch (error) {
+    console.error('🔍 deleteGalleryServer: Error:', error)
+    throw error
   }
 } 

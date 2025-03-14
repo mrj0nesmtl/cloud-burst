@@ -30,6 +30,20 @@ We've set up the following foundation for the Gallery implementation:
 - Access control and permission system is in place
 - State management patterns are established
 
+For Part 2 of our implementation, we'll be referencing these key project structure documents:
+
+### Primary References
+- [Protected Gallery Tree](../project-structure/protected_gallery_tree.md) - Current gallery route structure
+- [Gallery Components Tree](../project-structure/gallery_components_tree.md) - Available gallery components
+- [Supabase Tree](../project-structure/supabase_tree.md) - Data access layer for galleries
+
+### Supporting References
+- [UI Components Tree](../project-structure/ui_components_tree.md) - Available UI components for consistent design
+- [Protected Events Tree](../project-structure/protected_events_tree.md) - Events-gallery relationship structure
+- [Events Tree](../project-structure/events_tree.md) - Public events pages structure
+
+These references will provide clear visibility into our existing code structure, reference points for new implementations, and guidance for maintaining consistent patterns throughout the gallery system. 
+
 ## Session 24 Objectives
 
 ### Primary Goals

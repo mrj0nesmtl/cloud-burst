@@ -1,7 +1,6 @@
 # Layout Troubleshooting Guide
 
-> **Version:** 1.0.0  
-> **Last Updated:** March 2024  
+> **Last Updated:** March 14, 2025  
 > **Related to:** Dashboard and QR Codes Layout Fix
 
 ## Issue: Layout Corruption in Next.js Pages
