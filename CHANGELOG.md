@@ -24,6 +24,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance Optimization**: Improved image loading and caching for gallery components
 - **Accessibility Enhancements**: Ensuring WCAG 2.1 AA compliance across new features
 
+## [0.7.8] - 2025-03-21
+### Added
+- Event gallery system with proper server/client architecture
+- Gallery navigation with View Gallery button from events page
+- Gallery settings page structure
+- Enhanced gallery card interface with metadata display
+- Secure gallery data retrieval with proper authentication
+
+### Fixed
+- Authentication issues in gallery components
+- Row Level Security violations in gallery access
+- Server component import errors
+- Gallery creation and access permissions
+
+### Changed
+- Improved error handling for gallery operations
+- Enhanced responsive design for gallery cards
+- Updated navigation patterns between events and galleries
+- Optimized server-side data fetching for galleries
+
+### Technical
+- Created proper separation between client and server gallery functions
+- Implemented cookies-based authentication in server components
+- Enhanced logging for debugging gallery operations
+- Fixed type definitions for gallery interfaces
+
+## [0.7.7.2] - 2025-03-20
+### Added
+- Professional gallery card interface with industry-standard layouts
+- Gallery server component with proper client/server separation
+- Improved 4:3 aspect ratio for gallery images
+- Enhanced metadata display with date badges and photo counts
+- Visual status indicators for event status (draft/published)
+- Gallery filtering foundation
+- Backdrop blur effects for modern UI elements
+
+### Changed
+- Enhanced responsive grid with `repeat(auto-fill, minmax(320px, 1fr))` for better layouts
+- Improved error and empty state handling in gallery components
+- Enhanced gallery card interactivity with hover effects
+- Optimized image loading with Next.js Image component optimizations
+- Updated gallery styling with consistent spacing and typography
+
+### Fixed
+- Server component import errors in galleries.ts
+- Authentication issues in gallery data retrieval
+- Responsive layout issues on smaller screens
+- RLS permissions for gallery access
+- TypeScript errors in gallery utility functions
+
+### Technical
+- Implemented client/server code separation pattern
+- Enhanced logging for better debugging
+- Optimized error handling in gallery functions
+
 ## [0.7.7] - 2025-03-19
 ### Added
 - New Analytics section with Engagement Metrics page
@@ -704,6 +759,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS integration
 - Shadcn UI setup
 - Supabase initialization
+
+
 
 [Unreleased]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.7.3...HEAD
 [0.7.3]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.7.2...v0.7.3
