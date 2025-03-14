@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Trash, Edit, Share, QrCode } from 'lucide-react'
+import { Trash, Edit, Share, QrCode, Image } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -106,6 +106,16 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
           <Link href={`/protected/events/${eventId}/qr`}>
             <QrCode className="h-4 w-4 mr-2" />
             QR Code
+          </Link>
+        </Button>
+      </PermissionGate>
+      
+      {/* View Gallery button - visible to all who can view the event */}
+      <PermissionGate action="read" resource="event">
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/events/${eventId}/gallery`}>
+            <Image className="h-4 w-4 mr-2" />
+            Gallery
           </Link>
         </Button>
       </PermissionGate>

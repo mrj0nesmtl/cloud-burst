@@ -6,10 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getUserGalleries, createGalleryForEvent } from '@/lib/supabase/galleries'
-import { formatDate } from '@/lib/utils'
 import { Calendar, ImageIcon, Camera, Settings, ExternalLink } from 'lucide-react'
 import { Gallery } from '@/types/gallery'
+// Import the server-side gallery functions
+import { getUserGalleriesServer, createGalleryForEventServer } from '@/lib/supabase/galleries.server'
+import { formatDate } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Event Galleries | Gallery | Cloud Burst',
@@ -80,7 +81,8 @@ export default async function EventGalleriesPage() {
     let galleries: Gallery[] = []
     try {
       console.log('🔍 EventGalleriesPage: Attempting to get user galleries');
-      galleries = await getUserGalleries()
+      // Use the server-side function instead
+      galleries = await getUserGalleriesServer()
       console.log('🔍 EventGalleriesPage: Galleries received:', galleries?.length || 0);
     } catch (error) {
       console.error('🔍 EventGalleriesPage: Error fetching galleries, will create missing ones:', error)
@@ -101,7 +103,8 @@ export default async function EventGalleriesPage() {
       if (!gallery) {
         try {
           console.log('🔍 EventGalleriesPage: Creating gallery for event:', event.id);
-          gallery = await createGalleryForEvent(event.id)
+          // Use the server-side function instead
+          gallery = await createGalleryForEventServer(event.id)
         } catch (error) {
           console.error('🔍 EventGalleriesPage: Error creating gallery for event', event.id, error)
           // Return null for events where gallery creation failed
