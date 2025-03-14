@@ -1,6 +1,6 @@
 # Session 24 Narrative: Building the Heart of Cloud Burst - The Gallery System
 
-As we embark on Session 24, Cloud Burst reaches a pivotal moment in its development journey. With the successful resolution of technical debt and security concerns in Session 23, we're now positioned to implement one of the platform's cornerstone features: the comprehensive Gallery system. This feature represents the heart of our event photography platform, enabling photographers to showcase their work and attendees to experience events through carefully curated collections of images.
+As we continue into Part 2 of Session 24, Cloud Burst reaches a pivotal moment in its development journey. We're now positioned to implement one of the platform's cornerstone features: the comprehensive Gallery system. This feature represents the heart of our event photography platform, enabling photographers to showcase their work and attendees to experience events through carefully curated collections of images.
 
 ## The Foundation We've Built
 
@@ -8,15 +8,16 @@ Our development journey has methodically laid the groundwork for this critical p
 
 The Gallery page structure has been created, with routes for the main gallery, all photos view, events list, albums view, and moderation interface. While these currently return minimal content, they provide the architecture upon which we'll build our comprehensive photo management system.
 
+
 ## The Gallery Vision
 
 The Gallery system we're building is designed to serve multiple user needs simultaneously:
 
-1. **For Photographers**: A seamless upload experience with intuitive organization tools, efficient workflow management, and powerful moderation capabilities.
+1. **For Event Organizers**: Comprehensive oversight of event photos, approval workflows, and attendee engagement metrics.
 
-2. **For Event Organizers**: Comprehensive oversight of event photos, approval workflows, and attendee engagement metrics.
+2. **For Attendees**: An immersive viewing experience with multiple layout options, easy navigation, and simple download capabilities.
 
-3. **For Attendees**: An immersive viewing experience with multiple layout options, easy navigation, and simple download capabilities.
+3. **For Photographers**: A seamless upload experience with intuitive organization tools, efficient workflow management, and powerful moderation capabilities.
 
 This system must be both powerful and intuitive, handling large collections of high-resolution images while maintaining excellent performance, even within our 512MB memory constraints on Replit.
 
@@ -24,16 +25,16 @@ This system must be both powerful and intuitive, handling large collections of h
 
 Our implementation strategy follows a user-centric approach, focusing first on the core functionality that photographers need to upload and organize photos, then expanding to the features that enhance the viewing experience for attendees.
 
-### Day 1: Core Upload and Display
+### 1: Core Upload and Display
 We'll begin by implementing the foundational components: the upload system with drag-and-drop support, progress indicators, and error handling. This will be paired with a basic grid view for displaying photos and a detail view for examining individual images.
 
-### Day 2: Organization and Albums
+### 2: Organization and Albums
 With the basic upload and viewing functionality in place, we'll focus on organization through the album system. This includes creating albums, assigning photos to albums, selecting cover images, and managing album metadata.
 
-### Day 3: Moderation and Quality Control
+### 3: Moderation and Quality Control
 Next, we'll implement the moderation workflow, enabling event organizers to review, approve, or reject uploaded photos. This includes a moderation queue interface, batch operations, and notification systems.
 
-### Day 4: Enhanced Viewing and Advanced Features
+### 4: Enhanced Viewing and Advanced Features
 Finally, we'll enhance the viewing experience with multiple layout options (grid, masonry, slideshow, filmstrip), implement search and filtering capabilities, and add features like AI-assisted tagging and customizable gallery settings.
 
 ## Technical Considerations
@@ -56,6 +57,18 @@ We'll ensure that all gallery components are accessible, with keyboard navigatio
 
 A critical part of our work will be implementing the database schema for photos, albums, tags, and moderation logs. This includes creating the necessary tables and establishing appropriate relationships between them:
 
+### Media Type Consideration
+
+An important schema decision we must make is whether to expand our vision beyond just photos to include video content. We're considering three approaches:
+
+1. Renaming the `photos` table to `media` with a type discriminator to support both photos and videos
+2. Keeping the separate `photos` table and creating a new `videos` table
+3. Implementing a polymorphic approach with shared attributes
+
+This decision has implications for our UI components, storage configuration, and processing pipelines, so it must be made early in the implementation process.
+
+### Database Tables
+
 1. The `photos` table will store metadata about each uploaded image, including references to its storage location, associated event and album, and moderation status.
 
 2. The `albums` table will organize photos into collections, with references to the associated event and cover photo.
@@ -72,4 +85,20 @@ By the end of Session 24, we aim to have a fully functional Gallery system that 
 
 Following the Gallery implementation, our focus will shift to Analytics and final optimizations as we prepare for our April 1, 2025 launch date. The Gallery system represents the culmination of our core feature development, embodying the primary value proposition of the Cloud Burst platform.
 
-As we embark on this critical phase of development, we're guided by our commitment to creating a seamless, intuitive experience for all users, leveraging modern web technologies to deliver a platform that transforms how photographers and clients collaborate around life's most precious moments. 
+As we embark on this critical phase of development, we're guided by our commitment to creating a seamless, intuitive experience for all users, leveraging modern web technologies to deliver a platform that transforms how photographers and clients collaborate around life's most precious moments.
+
+## Project Structure References
+
+For Part 2 of our implementation, we'll be referencing these key project structure documents:
+
+### Primary References
+- [Protected Gallery Tree](../project-structure/protected_gallery_tree.md) - Current gallery route structure
+- [Gallery Components Tree](../project-structure/gallery_components_tree.md) - Available gallery components
+- [Supabase Tree](../project-structure/supabase_tree.md) - Data access layer for galleries
+
+### Supporting References
+- [UI Components Tree](../project-structure/ui_components_tree.md) - Available UI components for consistent design
+- [Protected Events Tree](../project-structure/protected_events_tree.md) - Events-gallery relationship structure
+- [Events Tree](../project-structure/events_tree.md) - Public events pages structure
+
+These references will provide clear visibility into our existing code structure, reference points for new implementations, and guidance for maintaining consistent patterns throughout the gallery system. 

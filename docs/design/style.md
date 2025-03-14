@@ -1,8 +1,8 @@
 # 📝 Style Guide
 
 ## Cloud Burst Design System
-📅 *Updated: March 9, 2025*
-📊 *Version: 0.7.4*
+📅 *Updated: March 14, 2025*
+📊 *Version: 0.7.7*
 
 ## 📌 Situational Abstract
 
