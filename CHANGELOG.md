@@ -16,7 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
-### Planned
+### Planned for Beta 0.9.0 (April 1, 2025)
+- **Enhanced Invitation System**: Email tracking, metrics dashboard, and full integration
+- **Comprehensive Media Moderation**: Workflow for photos and videos with approval process
+- **Analytics Data Integration**: Real-time metrics and event performance dashboards
+- **Mobile Experience Optimization**: Enhanced QR scanning and responsive design
+- **Performance Improvements**: Image loading, caching, and resource optimization
+- **Security Enhancements**: Invitation token security and QR code validation
+
+### Planned for v1.0.0 (April 15, 2025)
 - **Enhanced Gallery Experience**: Masonry layout, filtering, sorting, and slideshow view
 - **Intuitive User Flows**: Step-by-step wizards, contextual help, and progress indicators
 - **Advanced QR Code System**: Improved styling, scanning functionality, and analytics
@@ -24,7 +32,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance Optimization**: Improved image loading and caching for gallery components
 - **Accessibility Enhancements**: Ensuring WCAG 2.1 AA compliance across new features
 
-## [0.7.8] - 2025-03-21
+## [0.7.8] - 2025-03-15
+### Added
+- QR code scanning interface with camera integration
+- "Scan QR" button on the sign-in page
+- Update homepage to direct users to About page
+- Database schema for invitation system
+- API endpoints for invitation management
+- Basic invitation management UI
+- QR code-based authentication for invited users
+- Email template integration for invitations
+
+### Changed
+- Updated video upload and playback capabilities
+- Enhanced gallery view to support both photos and videos
+- Optimized media player controls
+- Updated terminology from "Photo" to "Media" throughout the platform
+- Enhanced sidebar navigation with proper organization
+
+### Fixed
+- Authentication flow for invited users
+- QR code not displaying properly in email templates
+- Various UI alignment issues
+- Performance bottlenecks in gallery loading
+
+## [0.7.7] - 2025-03-07
 ### Added
 - Event gallery system with proper server/client architecture
 - Gallery navigation with View Gallery button from events page
@@ -32,23 +64,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced gallery card interface with metadata display
 - Secure gallery data retrieval with proper authentication
 
+### Changed
+- Sidebar width increased for better layout
+- Top padding added to gallery pages
+- Navigation items reordered for better usability
+- Loading states optimized for analytics pages
+
 ### Fixed
-- Authentication issues in gallery components
-- Row Level Security violations in gallery access
-- Server component import errors
-- Gallery creation and access permissions
+- Events analytics page rendering issues
+- Modal overflow on mobile devices
+- Event card loading skeleton alignment
+- Date picker format inconsistency
+
+## [0.7.6] - 2025-02-28
+### Added
+- Event status management
+- QR code generation during event creation
+- Enhanced QR code page layout
+- Add Attendee dialog
+- RLS policies for role_capabilities table
+
+### Fixed
+- QR codes not appearing in listing page
+- Database functions with mutable search paths
+- Permissions caching to reduce API calls
+- Error handling in middleware
+
+## [0.7.5] - 2025-02-22
+### Added
+- Enhanced form validation
+- Expanded user settings
+- New dashboard card components
+- Event list filtering
 
 ### Changed
-- Improved error handling for gallery operations
-- Enhanced responsive design for gallery cards
-- Updated navigation patterns between events and galleries
-- Optimized server-side data fetching for galleries
+- Typography system for better readability
+- Color palette refinements
+- Button style consistency
+- Form error messaging
 
-### Technical
-- Created proper separation between client and server gallery functions
-- Implemented cookies-based authentication in server components
-- Enhanced logging for debugging gallery operations
-- Fixed type definitions for gallery interfaces
+### Fixed
+- Mobile navigation drawer
+- Settings sync with database
+- Authentication token refresh
+- Image loading placeholders
+
+## [0.7.0] - 2025-02-15
+### Added
+- RBAC system implementation
+- Permission hooks
+- Role-based conditional rendering
+- Route protection middleware
+
+### Changed
+- Database schema for user roles
+- Navigation based on permissions
+- Button visibility based on capabilities
+- Form access based on roles
+
+## [0.6.0] - 2025-02-08
+### Added
+- User dashboard
+- Event creation workflow
+- Settings panel
+- Media upload prototype
+
+### Changed
+- Authentication flow
+- Landing page design
+- Navigation structure
+- Form components
 
 ## [0.7.7.2] - 2025-03-20
 ### Added
@@ -330,7 +415,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Optimized Build Process**: Improved performance and reduced bundle size
 
 ### Infrastructure
-- **TensorFlow.js Integration**: Foundation for AI-powered photo enhancements
+- **TensorFlow.js Integration**: Foundation for AI-powered photo 
+
 - **WebSocket Implementation**: Real-time updates for collaborative features
 - **PWA Configuration**: Progressive Web App setup for better mobile experience
 - **Search Optimization**: Enhanced database queries for better content discovery
