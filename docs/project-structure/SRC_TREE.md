@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-14T04:54:22.492Z
+Generated: 2025-03-15T16:44:05.730Z
 
 ## Overview
 
@@ -29,6 +29,9 @@ Generated: 2025-03-14T04:54:22.492Z
 │   ├── auth/
 │   │   ├── callback/
 │   │   │   └── route.ts
+│   │   ├── qr-scan/
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
 │   │   ├── register/
 │   │   │   └── page.tsx
 │   │   ├── signin/
@@ -443,13 +446,13 @@ Generated: 2025-03-14T04:54:22.492Z
 ├── middleware.test.ts
 └── middleware.ts
 
-118 directories, 317 files
+119 directories, 319 files
 
 ```
 
 ## File Type Breakdown
 - ts: 67 file(s)
-- tsx: 234 file(s)
+- tsx: 236 file(s)
 - js: 3 file(s)
 - md: 1 file(s)
 - css: 3 file(s)

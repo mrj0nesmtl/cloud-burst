@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-14T04:54:22.657Z
+Generated: 2025-03-15T16:44:06.232Z
 
 ## Overview
 
@@ -77,6 +77,7 @@ Generated: 2025-03-14T04:54:22.657Z
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
 │   ├── deck.md
+│   ├── invitation_system_development_plan.md
 │   ├── payment_subscription_design_document.md
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
@@ -120,12 +121,12 @@ Generated: 2025-03-14T04:54:22.657Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 102 files
+10 directories, 103 files
 
 ```
 
 ## File Type Breakdown
-- md: 96 file(s)
+- md: 97 file(s)
 
 ## Ignored Patterns
 - node_modules

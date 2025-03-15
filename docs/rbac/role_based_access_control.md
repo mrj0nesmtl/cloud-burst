@@ -2,7 +2,7 @@
 
 ## Cloud Burst
 📅 *Updated: March 15, 2025*  
-📊 *Version: 0.7.1*
+📊 *Version: 0.7.8*
 
 ## 📌 Situational Abstract
 
@@ -78,14 +78,14 @@ pie
   - ✅ Security controls
   - ✅ Template management
   - ✅ Event management
-  - ✅ Photo moderation
+  - ✅ Media moderation
 
 ### Admin
 - **Description**: Administrative access - internal use only
 - **Capabilities**:
   - ✅ User management
   - ✅ Event management
-  - ✅ Photo moderation
+  - ✅ Media moderation
   - ✅ Analytics access
   - ✅ Template viewing
   - ❌ Role assignment
@@ -98,7 +98,7 @@ pie
   - ✅ Event editing
   - ✅ Event deletion
   - ✅ Attendee management
-  - ✅ Photo moderation
+  - ✅ Media moderation
   - ✅ Analytics view
   - ✅ QR code generation
   - ✅ Gallery management
@@ -113,7 +113,7 @@ pie
   - ✅ Event editing
   - ❌ Event deletion
   - ✅ Attendee management
-  - ✅ Photo moderation
+  - ✅ Media moderation
   - ✅ Limited analytics
   - ❌ Admin access
 
@@ -122,8 +122,8 @@ pie
 - **Subscription**: Free
 - **Capabilities**:
   - ✅ Event access
-  - ✅ Photo viewing
-  - ✅ Photo upload
+  - ✅ Media viewing
+  - ✅ Media upload
   - ✅ Basic interaction
   - ❌ Event management
   - ❌ Admin access
@@ -133,7 +133,7 @@ pie
 - **Subscription**: Free
 - **Capabilities**:
   - ✅ Gallery access
-  - ✅ Photo upload
+  - ✅ Media upload
   - ✅ Profile management
   - ✅ Settings control
   - ❌ Event management
@@ -144,14 +144,14 @@ pie
 - **Subscription**: Free
 - **Capabilities**:
   - ✅ Event access
-  - ✅ Photo viewing
+  - ✅ Media viewing
   - ✅ Limited upload
   - ✅ Basic interaction
   - ❌ Profile management
   - ❌ Event management
   - ❌ Admin access
 
-## 📊 Access Matrix
+## �� Access Matrix
 
 ```mermaid
 graph TD
@@ -200,13 +200,13 @@ graph TD
 | **Attendee Management** |
 | Manage Own Event Attendees | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
 | View All Attendees | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Photo Management** |
-| Upload Photos (Own Events) | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| Upload Photos (Any Event) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Approve Photos (Own Events) | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Approve Photos (Any Event) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Delete Photos (Own Events) | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Delete Photos (Any Event) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Media Management** |
+| Upload Media (Own Events) | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Upload Media (Any Event) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Approve Media (Own Events) | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Approve Media (Any Event) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Delete Media (Own Events) | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Delete Media (Any Event) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Admin Features** |
 | User Management | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Role Assignment | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -548,7 +548,7 @@ To fully implement the desired role-based access control, the following tasks ne
 2. **Verify dashboard access** - Check what appears in the sidebar
 3. **Test event creation** - Try to create a new event
 4. **Test event management** - Try to edit/delete events
-5. **Test photo management** - Try to upload/approve/delete photos
+5. **Test media management** - Try to upload/approve/delete media
 6. **Test admin features** - Try to access admin pages
 
 ### QA Checklist

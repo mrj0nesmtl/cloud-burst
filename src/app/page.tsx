@@ -6,10 +6,10 @@ import Image from "next/image"
 import "@/styles/layout.css"
 
 export const metadata: Metadata = {
-  title: 'Cloud Burst - Elevate Your Event Photography',
+  title: 'Cloud Burst - Capture Every Moment',
   description: 'Capture, enhance, and share event photos with AI-powered technology. Perfect for weddings, corporate events, and celebrations.',
   openGraph: {
-    title: 'Cloud Burst - Elevate Your Event Photography',
+    title: 'Cloud Burst - Capture Every Moment',
     description: 'AI-powered event photography platform for seamless photo sharing and management.'
   }
 }
@@ -24,13 +24,13 @@ export default function Home() {
       <section className="hero-section">
         <div className="container mx-auto">
           <div className="hero-logo">
-            <CloudLightning className="h-12 w-12 text-primary" />
+            <CloudLightning className="h-20 w-20 text-primary" />
           </div>
           <h1 className="hero-title">
-            Elevate Your Event Photography
+            Capture Every Moment
           </h1>
           <p className="hero-subtitle">
-            AI-powered platform for seamless photo capture, enhancement, and sharing.
+            Crowd-powered platform for seamless media capture, enhancement, and sharing.
             Perfect for weddings, corporate events, and celebrations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -41,7 +41,7 @@ export default function Home() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-base min-w-[180px] bg-background/80 backdrop-blur hover:bg-background/60 transition-all">
-              <Link href="/marketing/pricing">
+              <Link href="/marketing/about">
                 Learn More
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>

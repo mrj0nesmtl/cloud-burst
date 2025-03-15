@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-14T04:54:22.031Z
+Generated: 2025-03-15T16:44:05.257Z
 
 ## Overview
 
@@ -113,6 +113,7 @@ Generated: 2025-03-14T04:54:22.031Z
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
 │   │   ├── deck.md
+│   │   ├── invitation_system_development_plan.md
 │   │   ├── payment_subscription_design_document.md
 │   │   ├── project_budget_overview.md
 │   │   ├── request_for_product_RFP.md
@@ -164,9 +165,10 @@ Generated: 2025-03-14T04:54:22.031Z
 │   ├── android-chrome-192x192.png
 │   ├── android-chrome-512x512.png
 │   ├── apple-touch-icon.png
+│   ├── cb_002_sora_ai.mp4
+│   ├── cb_003_sora_ai.MP4
 │   ├── cloud-lightning.png
 │   ├── cloud-lightning.svg
-│   ├── cloudburst_event.MP4
 │   ├── favicon-16x16.png
 │   ├── favicon-32x32.png
 │   ├── favicon.ico
@@ -218,6 +220,9 @@ Generated: 2025-03-14T04:54:22.031Z
 │   │   ├── auth/
 │   │   │   ├── callback/
 │   │   │   │   └── route.ts
+│   │   │   ├── qr-scan/
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── register/
 │   │   │   │   └── page.tsx
 │   │   │   ├── signin/
@@ -679,16 +684,16 @@ Generated: 2025-03-14T04:54:22.031Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-148 directories, 523 files
+149 directories, 527 files
 
 ```
 
 ## File Type Breakdown
-- ts: 8013 file(s)
-- tsx: 373 file(s)
-- js: 24303 file(s)
-- json: 1796 file(s)
-- md: 1347 file(s)
+- ts: 8037 file(s)
+- tsx: 375 file(s)
+- js: 24327 file(s)
+- json: 1790 file(s)
+- md: 1349 file(s)
 - css: 22 file(s)
 - yml: 154 file(s)
 

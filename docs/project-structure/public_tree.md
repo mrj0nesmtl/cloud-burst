@@ -1,5 +1,5 @@
 # public Directory Structure
-Generated: 2025-03-14T04:54:23.099Z
+Generated: 2025-03-15T16:44:06.661Z
 
 ## Overview
 
@@ -15,9 +15,10 @@ Generated: 2025-03-14T04:54:23.099Z
 ├── android-chrome-192x192.png
 ├── android-chrome-512x512.png
 ├── apple-touch-icon.png
+├── cb_002_sora_ai.mp4
+├── cb_003_sora_ai.MP4
 ├── cloud-lightning.png
 ├── cloud-lightning.svg
-├── cloudburst_event.MP4
 ├── favicon-16x16.png
 ├── favicon-32x32.png
 ├── favicon.ico
@@ -35,7 +36,7 @@ Generated: 2025-03-14T04:54:23.099Z
 ├── vercel.svg
 └── window.svg
 
-2 directories, 25 files
+2 directories, 26 files
 
 ```
 
