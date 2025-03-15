@@ -1,13 +1,13 @@
 # 📖 **User Flow Overview**  
 
 ## Cloud Burst
-📅 *Updated: March 3, 2025*  
-📊 *Version: 0.7.0*
+📅 *Updated: March 14, 2025*  
+📊 *Version: 0.7.8*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the Email Template Management System, role-based access control, custom event URLs, and enhanced gallery functionality, Cloud Burst's user flows have been streamlined and secured. With Zustand for state management and TanStack Query for data fetching, the platform now offers a more robust and performant experience with multiple gallery layouts, tag-based filtering, and intuitive navigation.
+Following the successful implementation of the Gallery System with video support, Cloud Burst now offers a comprehensive media management platform. Users can capture and share both photos and videos seamlessly through QR code check-ins that patch directly to their mobile device cameras. The platform now features enhanced processing for both media types, with optimized streaming capabilities for video content and multiple viewing options for all media.
 
-The user flow system is approximately 85% complete, with current development focused on finalizing the download functionality, enhancing mobile responsiveness, and implementing the notification system. Recent implementations of role-based UI rendering and permission-based access controls have significantly improved the platform's security and user experience as we approach our April 1, 2025 launch date.
+The media management system is approximately 90% complete, with recent additions including direct camera integration, video capture support, and enhanced gallery layouts that accommodate both photos and videos. Current development focuses on optimizing video processing and implementing advanced sharing options for mixed media galleries.
 
 ## 🔄 **Core User Flows** [Updated]
 
@@ -16,7 +16,7 @@ flowchart TD
     A[User] --> B{Auth Check}
     B -->|No Auth| C[Landing Page]
     B -->|Has Auth| D[Dashboard]
-    B -->|Event URL| E[Event Gallery]
+    B -->|Event URL/QR| E[Event Gallery]
     
     C --> |Sign Up| F[Auth Form]
     C --> |Sign In| F
@@ -36,7 +36,7 @@ flowchart TD
     
     H --> Q[Admin Dashboard]
     H --> R[Event Management]
-    H --> S[Photo Moderation]
+    H --> S[Media Moderation]
     
     I --> T[Event Dashboard]
     I --> U[Event Creation]
@@ -52,26 +52,55 @@ flowchart TD
     E --> AA
     
     AA --> AB[View Gallery]
-    AA --> AC[Upload Photos]
+    AA --> AC[Capture Media]
     
-    AB --> AD[Grid View]
-    AB --> AE[Masonry View]
-    AB --> AF[Slideshow View]
+    AC --> AD[Photo Capture]
+    AC --> AE[Video Recording]
     
-    N --> AG[Template List]
-    AG --> AH[Template Editor]
-    AH --> AI[Template Preview]
-    AH --> AJ[Template Sync]
+    AB --> AF[Grid View]
+    AB --> AG[Masonry View]
+    AB --> AH[Slideshow View]
     
-    U --> AK[Event Form]
-    AK --> AL[Event Detail]
-    AL --> AM[QR Code]
-    AL --> AN[Gallery Setup]
-    AL --> AO[Custom URL]
+    AF --> AI[Media Actions]
+    AG --> AI
+    AH --> AI
     
-    AC --> AP[Upload Form]
-    AP --> AQ[Processing]
-    AQ --> AR[Gallery Update]
+    AI --> AJ[Like/Comment]
+    AI --> AK[Share]
+    AI --> AL[Download]
+    
+    AD --> AM[Upload Process]
+    AE --> AM
+    AM --> AN[Processing]
+    AN --> AO[Gallery Update]
+```
+
+## 📸 **Media Capture Flow** [Enhanced]
+
+```mermaid
+flowchart TD
+    A[Attendee] --> B[Scan QR Code]
+    B --> C[Camera Access]
+    C --> D{Media Type}
+    
+    D -->|Photo| E[Take Photo]
+    D -->|Video| F[Record Video]
+    
+    E --> G[Review]
+    F --> G
+    
+    G --> H{Approval}
+    H -->|Yes| I[Upload Process]
+    H -->|No| D
+    
+    I --> J[Processing]
+    J --> K[Gallery Update]
+    K --> L[View in Gallery]
+    
+    L --> M[Media Actions]
+    M --> N[Like/Comment]
+    M --> O[Share]
+    M --> P[Download]
 ```
 
 ## 🔐 **Security Flow** [Enhanced]
@@ -92,17 +121,14 @@ flowchart LR
     K -->|No| F
 ```
 
-## 📊 **User Engagement Metrics**
+## 📊 **Media Type Distribution**
 
 ```mermaid
 pie
-    title "User Interaction Distribution"
-    "Photo Upload" : 35
-    "Gallery Browsing" : 30
-    "Event Management" : 15
-    "Social Sharing" : 10
-    "Profile Management" : 5
-    "Template Management" : 5
+    title "Media Distribution by Type"
+    "Photos" : 70
+    "Videos" : 20
+    "Mixed Albums" : 10
 ```
 
 ## 🔒 **Security-Enhanced Flow**  
@@ -130,27 +156,27 @@ pie
 - ✅ Resource ownership verification
 
 ## 📝 **Introduction**  
-Cloud Burst is an **event photography platform** designed to **seamlessly collect, filter, and organize event photos**. The platform features comprehensive role-based access control, custom event URLs, and multiple gallery layouts to enhance the user experience.
+Cloud Burst is an **event media platform** designed to **seamlessly collect, filter, and organize event photos and videos**. The platform features comprehensive role-based access control, custom event URLs, and multiple gallery layouts to enhance the user experience.
 
-📌 *This document outlines the complete user journey, from event creation to photo engagement.*  
+📌 *This document outlines the complete user journey, from event creation to media engagement.*  
 
 ## 📈 **Feature Usage Distribution**
 
 ```mermaid
 graph LR
-    A[Features] --> B[Photo Upload]
+    A[Features] --> B[Media Upload]
     A --> C[Gallery View]
     A --> D[Event Management]
     A --> E[Social Sharing]
     A --> F[Profile Settings]
     A --> G[Template Management]
     
-    B --> H[35% Usage]
+    B --> H[40% Usage]
     C --> I[30% Usage]
     D --> J[15% Usage]
-    E --> K[10% Usage]
-    F --> L[5% Usage]
-    G --> M[5% Usage]
+    E --> K[8% Usage]
+    F --> L[4% Usage]
+    G --> M[3% Usage]
 
     style H fill:#90EE90
     style I fill:#ADD8E6
@@ -172,12 +198,12 @@ graph LR
 
 ✔️ Upon purchasing a ticket, users **receive an email** with:
   - Event details
-  - Unique QR code
+  - Unique QR code for camera integration
   - Platform instructions
   - Custom event URL
   - Branding elements
 
-## 🎉 **Event Arrival & Authentication**  
+## 🎉 **Event Arrival & Camera Integration**  
 
 ### 📱 **Access Components**
 - `<Dialog>` for camera permission
@@ -185,31 +211,41 @@ graph LR
 - `<Form>` for guest info
 - `<Button>` variants for social login
 - `<Alert>` for authentication status
+- `<CameraIntegration>` for direct device access
+- `<MediaSelector>` for photo/video toggle
 - ✅ Role-based access control
 - ✅ Permission-based UI rendering
 
 ✔️ Users can:
   - Scan QR with smartphone
   - Use custom event URL
-  - Choose auth method
-  - Access gallery instantly
+  - Grant camera access
+  - Toggle between photo/video modes
+  - Capture media directly within app
   - Set basic preferences
 
-## 📸 **Photo Management**  
+## 📸 **Media Management**  
 
-### 📷 **Upload Components**
-- `<DropZone>` for uploads
+### 📷 **Capture Components**
+- `<CameraView>` for live preview
+- `<MediaControls>` for photo/video toggle
+- `<RecordButton>` for video capture
+- `<CaptureButton>` for photos
+- `<DropZone>` for manual uploads
 - `<Progress>` for status
 - `<Toast>` for notifications
-- `<Carousel>` for image preview
+- `<Carousel>` for media preview
 - `<Skeleton>` for loading states
 - ✅ Multiple file selection
+- ✅ Direct camera integration
+- ✅ Video recording with duration limits
 - ✅ Drag-and-drop support
 - ✅ Format validation
 - ✅ Size optimization
 
 ✔️ Features include:
-  - Direct camera access
+  - Direct camera integration
+  - Video recording capabilities
   - Multiple file uploads
   - Progress indicators
   - Format validation
@@ -222,19 +258,24 @@ graph LR
 - `<ScrollArea>` for gallery
 - `<AspectRatio>` for images
 - `<Dialog>` for previews
+- `<VideoPlayer>` for video content
+- `<MediaCard>` for unified display
 - `<HoverCard>` for details
 - `<Select>` for filter options
 - ✅ Multiple gallery layouts (Grid, Masonry, Slideshow)
 - ✅ Tag-based filtering
+- ✅ Media type filtering
 - ✅ Responsive design
-- 🟡 Download options (60% complete)
+- ✅ Video playback controls
+- 🟡 Download options (70% complete)
 
 ✔️ Users can:
   - Browse real-time
   - Switch between layouts
-  - Filter by tags
+  - Filter by tags or media type
   - Like and share
   - View full-screen
+  - Play videos inline
   - Download favorites (in progress)
 
 ## 📧 **Email Template Management**
@@ -327,32 +368,28 @@ graph LR
 
 ## 🔄 **Implementation Progress**
 
-As we approach our April 1, 2025 launch date, the user flow system is approximately 85% complete. Recent implementations include:
+As we approach our April 1, 2025 launch date, the media management system is approximately 90% complete. Recent implementations include:
 
 ### Key Achievements:
-- ✅ Comprehensive role-based access control
-- ✅ Permission-based UI rendering
-- ✅ Multiple gallery layouts (Grid, Masonry, Slideshow)
-- ✅ Tag-based filtering for better content organization
-- ✅ Custom event URLs for better branding and sharing
-- ✅ Enhanced mobile responsiveness
-- ✅ Improved error handling and recovery
+- ✅ Comprehensive video support
+- ✅ Direct camera integration for seamless capture
+- ✅ Enhanced gallery layouts for mixed media
+- ✅ Optimized video processing pipeline
+- ✅ Improved mobile responsiveness
 
 ### Current Focus:
-- 🟡 Completing download functionality (60% complete)
-- 🟡 Implementing notification system (40% complete)
-- 🟡 Enhancing mobile experience (70% complete)
-- 🟡 Finalizing sharing options (70% complete)
-- 🟡 Optimizing performance for large galleries (75% complete)
+- 🟡 Optimizing video processing (80% complete)
+- 🟡 Enhancing video playback controls (75% complete)
+- 🟡 Implementing advanced sharing options (70% complete)
+- 🟡 Finalizing download functionality (70% complete)
 
 ### Next Steps:
-1. Complete download functionality for gallery images
-2. Implement notification system for event updates
-3. Enhance mobile responsiveness for complex components
-4. Finalize sharing options for gallery items
-5. Optimize performance for large galleries and uploads
+1. Complete video processing optimization
+2. Enhance mobile video playback experience
+3. Finalize download functionality for all media types
+4. Implement advanced sharing options for galleries
 
 ## 🎯 **Conclusion**  
-Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly**. By integrating **role-based access control, custom event URLs, multiple gallery layouts, and tag-based filtering**, Cloud Burst creates an **engaging and seamless user experience** that adapts to different user roles and permissions. As we approach our April 1, 2025 launch date, the platform is well-positioned to deliver a polished, professional-grade solution for event photography management.
+Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly** through both photos and videos. By integrating **role-based access control, direct camera integration, custom event URLs, multiple gallery layouts, and comprehensive video support**, Cloud Burst creates an **engaging and seamless user experience** that adapts to different user roles and media preferences. As we approach our April 1, 2025 launch date, the platform is well-positioned to deliver a polished, professional-grade solution for complete event media management.
 
 ---

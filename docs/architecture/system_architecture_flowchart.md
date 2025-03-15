@@ -1,7 +1,8 @@
-# 🏛️ **System Architecture Flowchart (Beta v0.7.7)**  
+# 🏛️ **System Architecture Flowchart (Beta v0.7.8)**  
 
 ## Cloud Burst  
-📅 *Mar 13, 2025, 10:15 AM*  
+📅 *Updated: March 15, 2025*  
+📊 *Version: 0.7.8*
 
 ---
 
@@ -19,6 +20,8 @@ flowchart TD
         Gallery[🖼️ Gallery Components]
         Analytics[📈 Analytics System]
         Forms[📝 Form System]
+        Invitations[📨 Invitation System]
+        QRScanner[📱 QR Scanner]
     end
 
     subgraph Auth[🔑 Authentication Layer]
@@ -27,6 +30,7 @@ flowchart TD
         Roles[👥 Role System]
         Zustand[🔄 Auth Store]
         Permissions[🔐 Permission System]
+        InviteAuth[📨 Invitation Auth]
     end
 
     subgraph Data[💾 Data Layer]
@@ -35,9 +39,10 @@ flowchart TD
         RLS[🔒 Enhanced RLS]
         TemplateDB[📋 Template Configurations]
         EventsDB[📅 Events Database]
-        PhotosDB[📸 Photos Database]
+        MediaDB[🎬 Media Database]
         AttendeeDB[👥 Attendees Database]
         AnalyticsDB[📊 Analytics Database]
+        InvitationsDB[📨 Invitations Database]
     end
 
     WebApp -->|1. Auth Request| AuthForms
@@ -50,6 +55,7 @@ flowchart TD
     Protected -->|8. Load| Dashboard
     Protected -->|8. Load| Gallery
     Protected -->|8. Load| Analytics
+    Protected -->|8. Load| Invitations
     Roles -->|9. Access| Database
     Roles -->|9. Access| Storage
     TanStack -->|10. Cache| Data
@@ -58,12 +64,15 @@ flowchart TD
     Templates -->|13. Sync| SupaAuth
     Events -->|14. Manage| EventsDB
     Events -->|15. Manage| AttendeeDB
-    Gallery -->|16. Display| PhotosDB
+    Gallery -->|16. Display| MediaDB
     Analytics -->|17. Visualize| AnalyticsDB
     Forms -->|18. Validate| Data
+    Invitations -->|19. Manage| InvitationsDB
+    QRScanner -->|20. Authenticate| InviteAuth
+    InviteAuth -->|21. Validate| InvitationsDB
 ```
 
-## 🛠️ **Beta Components (v0.7.7)**  
+## 🛠️ **Beta Components (v0.7.8)**  
 
 ### 📱 **Client Layer**
 - Next.js 14 App Router
@@ -75,8 +84,10 @@ flowchart TD
 - Template Management UI
 - Role-Based Access Control
 - Event Management System
-- Gallery Components
+- Gallery Components (Photos & Videos)
 - Analytics Components
+- Invitation System UI
+- QR Code Scanner
 - React Hook Form + Zod Validation
 
 ### 🔑 **Authentication Layer**
@@ -88,6 +99,8 @@ flowchart TD
 - Permission System
 - Conditional UI Rendering
 - Form Validation
+- Invitation-based Authentication
+- QR Code Authentication
 
 ### 💾 **Data Layer**
 - PostgreSQL Database
@@ -95,14 +108,15 @@ flowchart TD
 - Enhanced RLS Policies
 - Template Configurations Table
 - Events Database
-- Photos Database
+- Media Database (Photos & Videos)
 - Attendees Database
 - Analytics Database
+- Invitations Database
 - Role Capabilities Table
 
 ---
 
-## 📐 **Beta System Overview (v0.7.7)**  
+## 📐 **Beta System Overview (v0.7.8)**  
 
 ```mermaid
 graph TD
@@ -116,6 +130,8 @@ graph TD
     WebApp -->|"⚙️ User Settings"| Settings["⚙️ Settings System"]
     WebApp -->|"📈 Analytics"| Analytics["📈 Analytics System"]
     WebApp -->|"🔒 Access Control"| RBAC["🔒 RBAC System"]
+    WebApp -->|"📨 Invitation System"| Invitations["📨 Invitation System"]
+    WebApp -->|"📱 QR Scanning"| QRScanner["📱 QR Scanner"]
     Dashboard -->|"🔄 Load"| Supabase
     Templates -->|"🔄 Sync"| Supabase
     Events -->|"🔄 CRUD"| Supabase
@@ -124,12 +140,15 @@ graph TD
     Settings -->|"🔄 CRUD"| Supabase
     Analytics -->|"🔄 Query"| Supabase
     RBAC -->|"🔐 Verify"| Supabase
+    Invitations -->|"🔄 CRUD"| Supabase
+    QRScanner -->|"🔐 Authenticate"| Supabase
     Supabase --> Auth["🔑 Auth"]
     Supabase --> Database["💾 Database"]
     Supabase --> Storage["📦 Storage"]
+    Supabase --> Email["📧 Email"]
 ```
 
-## 🔒 **Security (v0.7.7)**  
+## 🔒 **Security (v0.7.8)**  
 ✔️ **Complete Auth** – Email/password & social login  
 ✔️ **Enhanced RLS** – Role-based data protection  
 ✔️ **Route Guards** – Protected routes with role verification  
@@ -140,16 +159,18 @@ graph TD
 ✔️ **Event Security** – Owner-based access control for events  
 ✔️ **Gallery Security** – Content moderation and access controls  
 ✔️ **Analytics Security** – Role-based access to metrics  
+✔️ **Invitation Security** – Secure invitation token generation and validation  
+✔️ **QR Security** – Encrypted QR code data with validation  
 ✔️ **Form Validation** – Zod schema validation for all inputs  
 ✔️ **Error Handling** – Comprehensive error states and recovery  
 
-## 🎯 **Next Steps (v0.7.8)**  
-1. 🖼️ Implement comprehensive Gallery system
-2. 📊 Complete Analytics data integration
-3. 📱 Optimize responsive design for all devices
-4. 🔍 Implement robust search functionality
-5. 🧪 Conduct thorough performance testing
-6. 📏 Finalize layout and design refinements
+## 🎯 **Next Steps (v0.8.1)**  
+1. 🖼️ Complete Media moderation system
+2. 📨 Finalize Invitation tracking and metrics
+3. 📊 Complete Analytics data integration
+4. 📱 Optimize mobile QR scanning experience
+5. 🧪 Conduct thorough security testing for invitation flows
+6. 📏 Refine user experience for invited guests
 
 ## 📊 **Analytics Architecture**
 
@@ -418,6 +439,11 @@ flowchart TD
         QRGenerator[📱 QR Generator]
         CheckIn[✅ Check-in System]
         AddAttendeeDialog[➕ Add Attendee Dialog]
+        InvitationDashboard[📊 Invitation Dashboard]
+        EmailTemplateEditor[✉️ Email Template Editor]
+        BatchUpload[📁 Batch Upload]
+        MetricsView[📈 Metrics View]
+        QRScanner[📱 QR Scanner]
     end
 
     subgraph API[🔌 API Layer]
@@ -425,6 +451,9 @@ flowchart TD
         InvitationAPI[📧 Invitation API]
         QrAPI[📱 QR API]
         EventAccessAPI[🔑 Event Access API]
+        EmailAPI[📧 Email API]
+        TokenAPI[🔑 Token API]
+        TrackingAPI[📊 Tracking API]
     end
 
     subgraph Data[💾 Data Layer]
@@ -432,26 +461,119 @@ flowchart TD
         InvitationsDB[📧 Invitations Table]
         EventsDB[📅 Events Table]
         AccessLogsDB[📋 Access Logs]
+        EmailTemplatesDB[✉️ Email Templates]
+        EmailLogsDB[📋 Email Logs]
+        TokensDB[🔑 Security Tokens]
         RLS[🔒 Row Level Security]
     end
 
     InvitationForm -->|Create| InvitationAPI
+    InvitationDashboard -->|Manage| InvitationAPI
+    EmailTemplateEditor -->|Customize| EmailAPI
+    BatchUpload -->|Bulk Create| InvitationAPI
+    MetricsView -->|View| TrackingAPI
     AttendeeList -->|Manage| AttendeeAPI
     RoleAssignment -->|Update| AttendeeAPI
     QRGenerator -->|Generate| QrAPI
+    QRScanner -->|Scan| QrAPI
     CheckIn -->|Validate| EventAccessAPI
     AddAttendeeDialog -->|Add| AttendeeAPI
     
     InvitationAPI -->|CRUD| InvitationsDB
+    InvitationAPI -->|Send| EmailAPI
+    EmailAPI -->|Use| EmailTemplatesDB
+    EmailAPI -->|Log| EmailLogsDB
     AttendeeAPI -->|CRUD| AttendeesDB
+    QrAPI -->|Generate| TokenAPI
     QrAPI -->|Read| EventsDB
-    EventAccessAPI -->|Validate| AttendeesDB
+    TokenAPI -->|Store| TokensDB
+    EventAccessAPI -->|Validate| TokenAPI
+    EventAccessAPI -->|Auth| AttendeesDB
     EventAccessAPI -->|Log| AccessLogsDB
+    TrackingAPI -->|Query| EmailLogsDB
+    TrackingAPI -->|Query| AccessLogsDB
+    TrackingAPI -->|Query| InvitationsDB
     
     RLS -->|Secure| AttendeesDB
     RLS -->|Secure| InvitationsDB
     RLS -->|Secure| EventsDB
     RLS -->|Secure| AccessLogsDB
+    RLS -->|Secure| EmailTemplatesDB
+    RLS -->|Secure| EmailLogsDB
+    RLS -->|Secure| TokensDB
+```
+
+## 📨 **Invitation System Architecture**
+
+```mermaid
+flowchart TD
+    subgraph UserInterface[📱 User Interface]
+        InvitePage[📝 Invitation Management Page]
+        EmailEditor[✉️ Email Template Editor]
+        QRPreview[📱 QR Code Preview]
+        BatchUploader[📁 Batch Upload Component]
+        StatusDashboard[📊 Status Dashboard]
+        InviteForm[📝 Invitation Form]
+        QRScanner[📱 QR Code Scanner]
+        GuestPortal[👤 Guest Portal]
+    end
+
+    subgraph API[🔌 API Layer]
+        InviteAPI[📧 Invitation API]
+        EmailAPI[✉️ Email API]
+        QRCodeAPI[📱 QR Code API]
+        TrackingAPI[📊 Tracking API]
+        AuthAPI[🔑 Authentication API]
+    end
+
+    subgraph Services[⚙️ Service Layer]
+        TokenGenerator[🔑 Token Generator]
+        EmailSender[📧 Email Sender]
+        QRGenerator[📱 QR Generator]
+        InviteProcessor[📋 Invitation Processor]
+        AuthValidator[✅ Auth Validator]
+        MetricsCalculator[📊 Metrics Calculator]
+    end
+
+    subgraph Data[💾 Data Layer]
+        InvitationsDB[📧 Invitations Table]
+        EmailTemplatesDB[✉️ Email Templates]
+        TokensDB[🔑 Security Tokens]
+        EventsDB[📅 Events]
+        AttendeesDB[👥 Attendees]
+        TrackingDB[📊 Tracking Data]
+    end
+
+    InvitePage -->|Manage| InviteForm
+    InvitePage -->|Display| StatusDashboard
+    InviteForm -->|Create| InviteAPI
+    EmailEditor -->|Design| EmailAPI
+    QRPreview -->|Display| QRCodeAPI
+    BatchUploader -->|Upload CSV| InviteAPI
+    StatusDashboard -->|Fetch| TrackingAPI
+    QRScanner -->|Scan| QRCodeAPI
+    QRScanner -->|Authenticate| AuthAPI
+    GuestPortal -->|Access| AuthAPI
+    
+    InviteAPI -->|Process| InviteProcessor
+    InviteAPI -->|Generate| TokenGenerator
+    EmailAPI -->|Send| EmailSender
+    QRCodeAPI -->|Generate| QRGenerator
+    QRCodeAPI -->|Validate| AuthValidator
+    TrackingAPI -->|Calculate| MetricsCalculator
+    AuthAPI -->|Validate| AuthValidator
+    
+    InviteProcessor -->|Store| InvitationsDB
+    InviteProcessor -->|Associate| EventsDB
+    TokenGenerator -->|Store| TokensDB
+    EmailSender -->|Use| EmailTemplatesDB
+    EmailSender -->|Update| InvitationsDB
+    EmailSender -->|Track| TrackingDB
+    QRGenerator -->|Read| TokensDB
+    AuthValidator -->|Verify| TokensDB
+    AuthValidator -->|Create| AttendeesDB
+    MetricsCalculator -->|Read| TrackingDB
+    MetricsCalculator -->|Read| InvitationsDB
 ```
 
 ## ⚙️ **Settings System Architecture**

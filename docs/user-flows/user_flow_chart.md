@@ -1,119 +1,141 @@
 # 🔄 User Flow Chart
 
 ## Cloud Burst
-📅 *Updated: March 3, 2025*  
-📊 *Version: 0.7.0*
+📅 *Updated: March 14, 2025*  
+📊 *Version: 0.7.8*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the Email Template Management System, role-based access control, custom event URLs, and enhanced gallery functionality, Cloud Burst's user flows have been updated to reflect our comprehensive permission system and improved security measures. The platform now offers multiple gallery layouts, tag-based filtering, and a more intuitive navigation experience while maintaining our focus on essential features for the April 1, 2025 launch.
+Following the successful implementation of comprehensive video support, Cloud Burst now offers a complete media management solution that handles both photos and videos seamlessly. The platform features direct camera integration through QR code scanning, allowing attendees to capture media directly within the application. With enhanced processing capabilities for videos and optimized gallery displays for mixed media, Cloud Burst provides an intuitive and engaging experience for all users.
 
-The user flow system is approximately 85% complete, with current development focused on finalizing the download functionality, enhancing mobile responsiveness, and implementing the notification system. Recent implementations of role-based UI rendering and permission-based access controls have significantly improved the platform's security and user experience.
+The media management system is approximately 90% complete, with recent additions including video capture, processing, and playback functionalities. Current development focuses on optimizing video compression, enhancing playback controls, and implementing advanced sharing options for mixed media galleries.
 
 ```mermaid
 flowchart TD
     A[User Arrives] --> B[Auth Check]
     B --> |No Auth| C[Landing Page]
     B --> |Has Auth| D[Role Check]
+    B --> |QR Code/Event URL| E[Camera Integration]
     
-    C --> |Sign Up| E[Auth Form]
-    C --> |Sign In| E
-    C --> |Event URL| F[Event Gallery]
+    C --> |Sign Up| F[Auth Form]
+    C --> |Sign In| F
+    C --> |Event URL| G[Event Gallery]
     
-    E --> |Success| D
+    F --> |Success| D
     
-    D --> |Super Admin| G[Admin Dashboard]
-    D --> |Admin| H[Admin Dashboard]
-    D --> |Organizer| I[Event Dashboard]
-    D --> |Event Host| J[Event Dashboard]
-    D --> |User| K[User Dashboard]
-    D --> |Guest| L[Gallery Access]
+    E --> H[Camera Access]
+    H --> I{Media Type}
+    I --> |Photo| J[Photo Capture]
+    I --> |Video| K[Video Recording]
     
-    G --> M[User Management]
-    G --> N[System Settings]
-    G --> O[Template Management]
-    G --> P[Role Management]
+    J --> L[Upload Process]
+    K --> L
+    L --> M[Processing]
+    M --> N[Gallery Update]
+    N --> G
     
-    H --> Q[Event Management]
-    H --> R[Photo Moderation]
-    H --> S[Template Access]
+    D --> |Super Admin| O[Admin Dashboard]
+    D --> |Admin| P[Admin Dashboard]
+    D --> |Organizer| Q[Event Dashboard]
+    D --> |Event Host| R[Event Dashboard]
+    D --> |User| S[User Dashboard]
+    D --> |Guest| T[Gallery Access]
     
-    I --> T[Event Creation]
-    I --> U[Event Management]
-    I --> V[Attendee Management]
-    I --> W[Photo Moderation]
+    O --> U[User Management]
+    O --> V[System Settings]
+    O --> W[Template Management]
+    O --> X[Role Management]
     
-    J --> X[Event Creation]
-    J --> Y[Basic Management]
-    J --> Z[Attendee List]
+    P --> Y[Event Management]
+    P --> Z[Media Moderation]
+    P --> AA[Template Access]
     
-    K --> AA[Profile Settings]
-    K --> AB[Event Access]
+    Q --> AB[Event Creation]
+    Q --> AC[Event Management]
+    Q --> AD[Attendee Management]
+    Q --> AE[Media Moderation]
     
-    L --> AC[View Gallery]
-    L --> AD[Upload Photos]
+    R --> AF[Event Creation]
+    R --> AG[Basic Management]
+    R --> AH[Attendee List]
     
-    F --> AE[View Photos]
-    F --> |Auth Check| AF[Upload Option]
+    S --> AI[Profile Settings]
+    S --> AJ[Event Access]
     
-    O --> AG[Template List]
-    AG --> AH[Template Editor]
-    AH --> AI[Template Preview]
-    AH --> AJ[Template Sync]
+    T --> G
+    G --> AK[View Media]
+    G --> |Auth Check| AL[Capture Media]
     
-    T --> AK[Event Form]
-    AK --> AL[Event Detail]
-    AL --> AM[QR Code]
-    AL --> AN[Gallery Setup]
+    W --> AM[Template List]
+    AM --> AN[Template Editor]
+    AN --> AO[Template Preview]
+    AN --> AP[Template Sync]
     
-    AC --> AO[Grid View]
-    AC --> AP[Masonry View]
-    AC --> AQ[Slideshow View]
+    AB --> AQ[Event Form]
+    AQ --> AR[Event Detail]
+    AR --> AS[QR Code]
+    AR --> AT[Gallery Setup]
     
-    AD --> AR[Upload Form]
-    AR --> AS[Processing]
-    AS --> AT[Gallery Update]
+    AK --> AU[Grid View]
+    AK --> AV[Masonry View]
+    AK --> AW[Slideshow View]
+    
+    AU --> AX[Media Actions]
+    AV --> AX
+    AW --> AX
+    
+    AX --> AY[Like/Comment]
+    AX --> AZ[Share]
+    AX --> BA[Download]
+    
+    AL --> I
 ```
 
-## 📧 **Email Template Flow**
+## 📹 **Media Capture Flow**
 
 ```mermaid
 flowchart LR
-    A[Admin User] --> B[Template Management]
-    B --> C[View Templates]
-    C --> D[Select Template]
-    D --> E[Edit Template]
-    E --> F[Preview Template]
-    E --> G[Save Template]
-    G --> H[Sync with Auth]
-    H --> I[Success Notification]
+    A[User] --> B[Scan QR Code]
+    B --> C[Camera Access]
+    C --> D{Media Type Selection}
+    D --> E[Photo Mode]
+    D --> F[Video Mode]
     
-    J[System] --> K[Cron Job]
-    K --> L[Auto-Sync Templates]
-    L --> H
+    E --> G[Capture Photo]
+    F --> H[Record Video]
+    H --> I[Stop Recording]
+    
+    G --> J[Review Media]
+    I --> J
+    
+    J --> K{Approve}
+    K -->|Yes| L[Upload Process]
+    K -->|No| M[Discard]
+    M --> D
+    
+    L --> N[Processing]
+    N --> O[Gallery Update]
+    O --> P[Media Actions]
+    
+    P --> Q[View]
+    P --> R[Like]
+    P --> S[Share]
+    P --> T[Download]
 ```
 
-## 📸 **Photo Upload Flow**
+## 📸 **Video Processing Flow**
 
 ```mermaid
 flowchart TD
-    A[User] --> B[Gallery Access]
-    B --> C[Upload Button]
-    C --> D[File Selection]
-    D --> E[Multiple Files]
-    E --> F[Upload Process]
-    F --> G[Processing]
-    G --> H[Gallery Update]
-    H --> I[View Options]
-    I --> J[Grid View]
-    I --> K[Masonry View]
-    I --> L[Slideshow View]
-    J --> M[Photo Actions]
-    K --> M
-    L --> M
-    M --> N[Share]
-    M --> O[Download]
-    M --> P[Like]
-    M --> Q[Tag]
+    A[Video Upload] --> B[Initial Validation]
+    B --> C[Metadata Extraction]
+    C --> D[Format Check]
+    D --> E[Compression]
+    E --> F[Thumbnail Generation]
+    F --> G[Various Resolution Creation]
+    G --> H[Storage Upload]
+    H --> I[Database Update]
+    I --> J[Gallery Refresh]
+    J --> K[Video Playback Ready]
 ```
 
 ## 🎯 **Key Components**  
@@ -128,11 +150,22 @@ flowchart TD
 - ✅ Permission-based access
 - ✅ Row Level Security
 
+### 📹 **Video Capture System**
+- ✅ In-app recording interface
+- ✅ Duration controls
+- ✅ Quality settings
+- ✅ Preview generation
+- ✅ Processing indicator
+- ✅ Format optimization
+- ✅ Error recovery
+- 🟡 Advanced editing options (50% complete)
+
 ### ⚙️ **Settings System**
 - ✅ Profile management
 - ✅ User preferences
 - ✅ Theme selection (light/dark/system)
 - ✅ Language options
+- ✅ Media quality preferences
 - 🟡 Notification settings (60% complete)
 - ✅ Template preferences
 - ✅ Real-time updates
@@ -148,65 +181,40 @@ flowchart TD
 - ✅ Permission hooks
 - ✅ Conditional UI rendering
 
-### 📧 **Template Management**
-- ✅ Template database
-- ✅ Editor interface
-- ✅ Preview functionality
-- ✅ Synchronization process
-- ✅ Variable substitution
-- 🟡 Delivery tracking (50% complete)
-- ✅ Template versioning
-- ✅ Role-based access
-
 ### 🖼️ **Gallery System**
 - ✅ Multiple layouts (Grid, Masonry, Slideshow)
+- ✅ Mixed media support (photos and videos)
+- ✅ Inline video playback
 - ✅ Tag-based filtering
+- ✅ Media type filtering
 - ✅ Responsive design
-- 🟡 Download options (60% complete)
+- 🟡 Download options (70% complete)
 - ✅ Upload functionality
 - ✅ Progress indicators
 - ✅ Error handling
 - 🟡 Sharing options (70% complete)
 
-## 🔄 **User Role Transitions**
-
-```mermaid
-stateDiagram-v2
-    [*] --> GuestUser
-    GuestUser --> RegisteredUser: Registration
-    RegisteredUser --> EventHost: Role Upgrade
-    EventHost --> Organizer: Role Upgrade
-    Organizer --> Admin: Admin Promotion
-    Admin --> SuperAdmin: Admin Promotion
-    SuperAdmin --> Admin: Role Downgrade
-    Admin --> Organizer: Role Downgrade
-    Organizer --> EventHost: Role Downgrade
-    EventHost --> RegisteredUser: Role Downgrade
-    RegisteredUser --> [*]: Account Deletion
-```
-
 ## 🔄 **Implementation Progress**
 
-As we approach our April 1, 2025 launch date, the user flow system is approximately 85% complete. Recent implementations include:
+As we approach our April 1, 2025 launch date, the media management system is approximately 90% complete. Recent implementations include:
 
 ### Key Achievements:
-- ✅ Comprehensive role-based access control
-- ✅ Permission-based UI rendering
-- ✅ Multiple gallery layouts
-- ✅ Tag-based filtering
-- ✅ Custom event URLs
-- ✅ Enhanced mobile responsiveness
+- ✅ Comprehensive video capture and playback
+- ✅ Direct camera integration via QR code scanning
+- ✅ Enhanced gallery layouts for mixed media
+- ✅ Optimized video processing pipeline
+- ✅ Media type filtering
 
 ### Current Focus:
-- 🟡 Completing download functionality (60% complete)
-- 🟡 Implementing notification system (40% complete)
-- 🟡 Enhancing mobile experience (70% complete)
-- 🟡 Finalizing sharing options (70% complete)
+- 🟡 Optimizing video processing (80% complete)
+- 🟡 Enhancing playback controls (75% complete)
+- 🟡 Implementing advanced sharing options (70% complete)
+- 🟡 Finalizing download functionality (70% complete)
 
 ### Next Steps:
-1. Complete download functionality for gallery images
-2. Implement notification system for event updates
-3. Enhance mobile responsiveness for complex components
-4. Finalize sharing options for gallery items
+1. Complete video processing optimization
+2. Enhance mobile playback experience
+3. Finalize download functionality for all media types
+4. Implement advanced sharing options for galleries
 
 ---

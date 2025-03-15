@@ -1,18 +1,18 @@
 # 🎟️ **Invited Guest - User Flow Design Document**  
 
-## Cloud Burst  
-📅 *Updated: March 3, 2025*  
-📊 *Version: 0.7.0*
+## 📂 *Cloud Burst Platform - User Flows*
+📅 *Last Updated: March 15, 2025*
+📊 *Version: 0.7.8*
 
 ## 📌 Situational Abstract
-With the implementation of enhanced authentication, role-based access control, and custom event URLs, Cloud Burst's invited guest flow has been refined to provide a secure yet seamless experience. The platform now features improved state management with Zustand and optimized data fetching with TanStack Query, while maintaining our streamlined approach for the April 1, 2025 launch.
+With the implementation of our comprehensive invitation system, Cloud Burst now provides a seamless experience for invited guests from pre-event engagement through event-day participation. The platform features direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching with TanStack Query, and state management with Zustand. This document details the enhanced invited guest flow, which bridges the gap between event planning and attendance while maintaining our streamlined approach for the April 1, 2025 launch.
 
-The invited guest flow is approximately 80% complete, with current development focused on finalizing the QR code-based authentication process and enhancing the mobile experience. Recent implementations of multiple gallery layouts (grid, masonry, slideshow) and tag-based filtering have significantly improved the guest experience, allowing for more intuitive navigation and content discovery.
+The invited guest flow is approximately 75% complete, with plans for robust support for both photo and video content. Current development focuses on invitation management, QR code-based authentication, direct camera access, and media capture integration for both pre-registered users and walk-in guests.
 
 ## 🔍 Introduction  
-Cloud Burst is an **event photography platform** that enables guests to capture, upload, and share photos at **live events** such as weddings, parties, and corporate gatherings.  
+Cloud Burst is an **event media platform** that enables guests to capture, upload, and share photos and videos at **live events** such as weddings, parties, and corporate gatherings.  
 
-📸 *This document details the guest user flow, authentication options, and the event gallery's temporary nature.*  
+📸 *This document details the guest invitation flow, QR code authentication, camera integration, and the comprehensive media management system.*  
 
 ---
 
@@ -26,141 +26,224 @@ Cloud Burst is an **event photography platform** that enables guests to capture,
 - ✅ Comprehensive error boundaries
 - ✅ Row Level Security policies
 - ✅ Permission-based access controls
+- ✅ Invitation-based authentication
 
-### 🔐 **Guest Authentication** [Implementation Status: 80%]
+### 🔐 **Guest Authentication** [Implementation Status: 90%]
 - ✅ Secure session handling
 - ✅ Protected route system
 - ✅ Rate limited endpoints
 - ✅ Cookie security
-- ✅ QR code-based access
+- ✅ QR code-based camera access
 - ✅ Temporary access tokens
-- 🟡 Social authentication integration (70% complete)
-- 🟡 Guest profile persistence (60% complete)
+- ✅ Invitation verification
+- 🟡 Social authentication integration (20% complete)
+- 🟡 Guest profile persistence (50% complete)
 
 ### ⚙️ **User Settings**
 - ✅ Profile customization
 - ✅ Theme preferences (light/dark/system)
 - ✅ Language selection
-- 🟡 Notification management (60% complete)
-- 🟡 Display options (70% complete)
+- ✅ Media quality preferences
+- ✅ Invitation management
+- 🟡 Notification management (50% complete)
+- 🟡 Display options (50% complete)
 
 ## 👤 Guest User Journey  
 
-### 📩 **Step 1: Invitation & QR Code Distribution**  
-✅ Guests receive an **email or physical invitation** containing a unique **QR code**
-- Uses `<AspectRatio>` for QR code display
-- `<Card>` component for email template
-- `<Button>` for direct gallery access
+### 📩 **Step 1: Invitation Receipt & Pre-Event Engagement**  
+✅ Guests receive an **email invitation** containing:
+- Personalized event details and messaging
+- Unique **QR code** for event access
+- Direct link to create or sign into their account
+- Instructions for the event day experience
+- Options for calendar integration
 - ✅ Custom event URL integration
 - ✅ Email template customization
+- ✅ Camera access instructions
+- ✅ Pre-event account setup guidance
 
-### 🎉 **Step 2: Arrival & QR Code Scan**  
-✅ Guests scan the **QR code** using their smartphone camera
+### 🔑 **Step 2: Pre-Event Account Setup** [Optional]
+✅ Invited guests can prepare for the event in advance by:
+- Creating an account or signing in with existing credentials
+- Setting preferences for media quality and notifications
+- Exploring the app features before the event
+- Saving their QR code for offline access
+- ✅ Email verification flow
+- ✅ Preference customization
+- ✅ Device compatibility check
+- ✅ Offline access preparation
+
+### 🎉 **Step 3: Event-Day Arrival & QR Code Scan**  
+✅ Guests arrive at the event and access the platform by:
+- Opening Cloud Burst if pre-registered
+- Scanning their personalized QR code from the invitation
+- Scanning the event's public QR code displayed at the venue
+- Receiving assistance from event staff for access
 - `<Dialog>` for camera access permission
 - `<Toast>` for scan confirmation
 - `<Progress>` for loading states
 - ✅ Progressive Web App capabilities
 - ✅ Offline scanning support
+- ✅ Direct camera integration
+- ✅ Multiple access paths (personalized or event-wide QR)
 
-### 🔑 **Step 3: Authentication & Settings**  
-✅ **Guest Mode** – Instant access, no sign-up required
-🟡 **Social Sign-In** – Login via Google, Apple, or Facebook (70% complete)
-✅ **Profile Setup** – Optional profile customization
+### 🔑 **Step 4: Authentication & Camera Integration**  
+✅ **Pre-registered User** – Automatic authentication based on existing account
+✅ **Invited Guest** – Streamlined authentication using invitation credentials
+✅ **Walk-in Guest** – Quick access via anonymous guest mode
 - `<Tabs>` for auth options
 - `<Form>` with validation for guest info
 - `<Button>` variants for social login
 - `<Alert>` for authentication status
+- `<CameraView>` for live preview
+- `<MediaTypeTabs>` for photo/video selection
 - `<PreferencesForm>` for settings
 - `<NotificationsForm>` for alerts
 - ✅ Role-based access control
 - ✅ Permission-based UI rendering
+- ✅ Invitation token verification
+- ✅ Guest session management
 
-### 📷 **Step 4: Photo Capture & Upload**  
-✅ **Capture & Upload** button opens the camera/file picker
-🟡 **AI-enhanced processing** automatically improves image quality (Planned for post-launch)
+### 📷 **Step 5: Media Capture & Upload**  
+✅ **Camera Integration** provides direct access to device camera
+✅ **Photo/Video Toggle** allows switching between media types
+🟡 **AI-enhanced processing** automatically improves media quality (Planned for post-launch)
+- `<CameraView>` for live preview
+- `<MediaControls>` for photo/video toggle
+- `<CaptureButton>` for photos
+- `<RecordButton>` for videos
+- `<TimerDisplay>` for video recording
 - `<DropZone>` for file uploads
 - `<Progress>` for upload status
-- `<Carousel>` for image preview
+- `<Carousel>` for media preview
 - `<Skeleton>` for loading states
 - `<Toast>` for processing notifications
 - ✅ Multiple file selection
 - ✅ Drag-and-drop support
 - ✅ Format validation
 - ✅ Size optimization
+- ✅ Video compression
+- ✅ Media attribution to user/guest
+- ✅ Offline capture with sync
 
-### 🖼️ **Step 5: Live Photo Gallery**  
-✅ A **real-time photo wall** updates as guests upload images
+### 🖼️ **Step 6: Live Media Gallery**  
+✅ A **real-time media wall** updates as guests upload photos and videos
 ✅ **Interactive features** – Like, share, and (optionally) comment
-🟡 **Tag-based filtering** allows guests to organize by categories (80% complete)
+✅ **Tag-based filtering** allows guests to organize by categories
+✅ **Media type filtering** to view photos, videos, or both
 - `<ScrollArea>` for gallery view
-- `<AspectRatio>` for consistent image display
-- `<HoverCard>` for image details
+- `<AspectRatio>` for consistent media display
+- `<VideoPlayer>` for video playback
+- `<MediaCard>` for unified display
+- `<HoverCard>` for media details
 - `<Dialog>` for full-screen view
 - `<Select>` for filter options
 - ✅ Multiple gallery layouts (Grid, Masonry, Slideshow)
 - ✅ Responsive design for all devices
-- 🟡 Download functionality (60% complete)
+- ✅ Inline video playback
+- ✅ Real-time updates
+- 🟡 Download functionality (70% complete)
 
-### ⏳ **Step 6: Post-Event Access**  
-✅ Event photos remain available **for a limited time (1-4 weeks)**
+### ⏳ **Step 7: Post-Event Access & Engagement**  
+✅ Event media remains available **for a limited time (1-4 weeks)**
 ✅ **Guests receive a follow-up email** with the gallery link
+✅ **Anonymous guests** are encouraged to create accounts to claim their media
 - `<Calendar>` for expiry countdown
 - `<Alert>` for access expiration notices
 - `<Button>` for download options
+- `<ConversionPrompt>` for guest account creation
 - ✅ Custom event URL for sharing
-- 🟡 Bulk download options (50% complete)
+- ✅ Account conversion flow
+- ✅ Media attribution linking
+- 🟡 Bulk download options (70% complete)
 
 ---
 
 ## 🎨 Page Layouts & Components  
 
-### 🏠 **Welcome Page**  
+### 🏠 **Event Welcome Page**  
 ✅ Event branding & high-quality visuals
 ✅ CTA buttons: *Join as Guest* or *Sign In*
+✅ Event information and schedule
 - `<NavigationMenu>` for main navigation
 - `<Sheet>` for mobile menu
 - `<AspectRatio>` for hero images
 - `<Card>` for feature highlights
+- `<EventDetails>` for information display
 - ✅ Custom event branding
 - ✅ Responsive design
 - ✅ Role-based navigation
+- ✅ Countdown timer to event
 
-### 📷 **Photo Capture & Upload Page**  
-✅ Simple **camera & file upload interface**
-🟡 AI-enhanced processing for **best image quality** (Planned for post-launch)
+### 🔑 **Authentication Page**  
+✅ Multiple authentication options:
+- Email/password sign-in
+- Social login options
+- QR code scanning
+- Guest access
+- `<Tabs>` for auth methods
+- `<AuthForm>` for credentials
+- `<QRScanner>` for code scanning
+- `<GuestForm>` for quick access
+- ✅ Error handling
+- ✅ Loading states
+- ✅ Invitation recognition
+- ✅ Secure token management
+
+### 📷 **Media Capture Page**  
+✅ Integrated **camera interface** for photos and videos
+✅ **Media type toggle** for switching between capture modes
+🟡 AI-enhanced processing for **best media quality** (Planned for post-launch)
+- `<CameraView>` for live preview
+- `<MediaControls>` for photo/video toggle
+- `<CaptureButton>` for photos
+- `<RecordButton>` for videos
+- `<TimerDisplay>` for video recording
 - `<Tabs>` for capture/upload options
 - `<DropZone>` for file handling
-- `<Slider>` for image adjustments
+- `<Slider>` for media adjustments
 - `<Progress>` for processing status
+- ✅ Direct camera integration
+- ✅ Video recording with duration controls
 - ✅ Multiple file upload
 - ✅ Progress indicators
 - ✅ Error handling
+- ✅ Offline capabilities
 
-### 🏆 **Live Gallery (Photo Wall)**  
-✅ **Dynamic grid layout** with uploaded images
+### 🏆 **Live Gallery (Media Wall)**  
+✅ **Dynamic grid layout** with uploaded photos and videos
+✅ **Inline video playback** for seamless browsing
 ✅ **Like, share, and comment** functionality
 - `<ScrollArea>` for infinite scroll
-- `<AspectRatio>` for image containers
-- `<Dialog>` for image modals
+- `<AspectRatio>` for media containers
+- `<VideoPlayer>` for inline playback
+- `<Dialog>` for media modals
 - `<Popover>` for sharing options
 - `<Form>` for comments
 - ✅ Multiple gallery layouts
+- ✅ Media type filtering
 - ✅ Tag-based filtering
-- 🟡 Download options (60% complete)
+- ✅ Playback controls
+- ✅ User attribution display
+- 🟡 Download options (70% complete)
 
 ### 📨 **Post-Event Page**  
 ✅ **Reminder & persistent gallery link**
-🟡 **Download & sharing options** for guests (60% complete)
+🟡 **Download & sharing options** for all media types (70% complete)
 - `<Card>` for download options
 - `<Button>` for actions
 - `<Alert>` for expiry notices
+- `<ConversionCTA>` for account creation
 - ✅ Custom event URL
-- 🟡 Bulk download functionality (50% complete)
+- ✅ Social sharing integration
+- 🟡 Bulk download functionality (70% complete)
+- 🟡 Media album creation (50% complete)
 
 ### ⚙️ **Settings Page**
 ✅ Profile management & customization
 ✅ Theme & language preferences
-🟡 Notification settings (60% complete)
+✅ Media quality preferences
+🟡 Notification settings (70% complete)
 - `<Tabs>` for settings navigation
 - `<Form>` for preferences
 - `<Select>` for options
@@ -168,19 +251,26 @@ Cloud Burst is an **event photography platform** that enables guests to capture,
 - `<Toast>` for updates
 - ✅ Role-based settings access
 - ✅ Permission-based UI rendering
+- ✅ Preference persistence
+- ✅ Device-specific options
 
 ---
 
 ## 🎯 User Benefits  
 
 ✅ **Frictionless Access** – No app installation needed
-🟡 **AI-Enhanced Images** – Automatic quality improvements (Planned for post-launch)
+✅ **Pre-Event Engagement** – Account setup before the event
+✅ **Direct Camera Integration** – Seamless media capture
+✅ **Multiple Access Paths** – Personal invitation or event QR code
+✅ **Comprehensive Media Support** – Photos and videos in one platform
+🟡 **AI-Enhanced Media** – Automatic quality improvements (Planned for post-launch)
 ✅ **Real-Time Engagement** – Live, interactive gallery
 ✅ **Social Sharing** – Easy sharing on social media
 ✅ **Temporary Hosting** – Limited-time access to event memories
 ✅ **Multiple Gallery Views** – Grid, masonry, and slideshow options
 ✅ **Custom Event URLs** – Branded sharing links
 ✅ **Tag-Based Organization** – Intuitive content discovery
+✅ **Post-Event Conversion** – From guest to registered user
 
 ---
 
@@ -188,60 +278,76 @@ Cloud Burst is an **event photography platform** that enables guests to capture,
 
 ### 🔒 Security Measures
 - ✅ JWT-based authentication
+- ✅ Invitation token verification
 - ✅ Rate limiting on uploads
 - ✅ Secure file handling
 - ✅ CSRF protection
 - ✅ Row Level Security policies
 - ✅ Permission-based access controls
 - ✅ Role-based middleware
+- ✅ Session timeout management
+- ✅ Secure cookie implementation
 
 ### 🎨 UI/UX Considerations
 - ✅ Mobile-first design
-- 🟡 Offline capabilities (70% complete)
+- ✅ Direct camera integration
+- ✅ Pre-event engagement flow
+- 🟡 Offline capabilities (80% complete)
 - ✅ Progressive loading
 - ✅ Touch-optimized interfaces
 - ✅ Responsive layouts
 - ✅ Accessibility compliance
 - ✅ Dark mode support
+- ✅ Guest-specific UI adaptations
 
 ### ⚡ Performance Optimizations
-- ✅ Image lazy loading
+- ✅ Media lazy loading
 - ✅ Progressive image loading
+- ✅ Adaptive video streaming
 - ✅ Client-side caching
 - ✅ Optimized asset delivery
 - ✅ Bundle size optimization
 - ✅ Code splitting
-- 🟡 Advanced caching strategies (50% complete)
+- ✅ Server-side rendering
+- ✅ Image format optimization
+- ✅ Connection-aware uploading
+
+### 📊 Database Relationships
+```mermaid
+erDiagram
+    EVENTS ||--o{ INVITATIONS : has
+    INVITATIONS ||--o{ EVENT_ATTENDEES : creates
+    USERS ||--o{ EVENT_ATTENDEES : becomes
+    EVENTS ||--o{ EVENT_ATTENDEES : includes
+    EVENT_ATTENDEES ||--o{ MEDIA : contributes
+    USERS ||--o{ MEDIA : owns
+    EVENTS ||--o{ MEDIA : contains
+```
+
+### 📱 Development Status
+- ✅ Database schema - **90% complete**
+- ✅ API endpoints - **85% complete**
+- ✅ Authentication flows - **90% complete**
+- ✅ QR code generation - **95% complete**
+- ✅ QR code scanning - **95% complete**
+- ✅ Camera integration - **90% complete**
+- ✅ Media upload - **85% complete**
+- ✅ Gallery display - **80% complete**
+- 🟡 Invitation management - **75% complete**
+- 🟡 Post-event engagement - **70% complete**
 
 ---
 
-## 🔄 Implementation Progress
+## 🗓️ Implementation Roadmap
 
-As we approach our April 1, 2025 launch date, the invited guest flow is approximately 80% complete. Recent implementations include:
-
-### Key Achievements:
-- ✅ Custom event URLs for better branding and sharing
-- ✅ Multiple gallery layouts (grid, masonry, slideshow)
-- ✅ Tag-based filtering for better content organization
-- ✅ Enhanced security with role-based access control
-- ✅ Improved mobile responsiveness
-
-### Current Focus:
-- 🟡 Finalizing QR code-based authentication (80% complete)
-- 🟡 Completing download functionality (60% complete)
-- 🟡 Enhancing mobile experience (70% complete)
-- 🟡 Implementing social authentication (70% complete)
-
-### Next Steps:
-1. Complete download functionality for gallery images
-2. Finalize QR code-based authentication process
-3. Enhance mobile responsiveness for complex components
-4. Implement social authentication options
+| Phase | Focus | Timeline | Status |
+|-------|-------|----------|--------|
+| **Database Foundation** | Schema updates, relationships | April 2025 | ✅ Complete |
+| **Invitation System** | Email templates, QR codes | April 2025 | 🟡 In Progress (75%) |
+| **Authentication Flow** | Guest access, token handling | April 2025 | 🟡 In Progress (90%) |
+| **Media Capture** | Camera integration, uploads | May 2025 | 🟡 In Progress (85%) |
+| **Post-Event Engagement** | Follow-ups, conversions | May 2025 | 🟡 Planned (70%) |
 
 ---
 
-## 🎯 Conclusion  
-
-The **Cloud Burst Invited Guest Flow** ensures an **engaging, seamless** photo-sharing experience. By combining **instant access, multiple gallery layouts, and interactive social features**, Cloud Burst redefines how guests **capture and relive their event memories**. With the implementation of custom event URLs and tag-based filtering, the platform now offers a more intuitive and branded experience for event attendees.
-
----
+This document will be regularly updated as the invited guest flow implementation progresses, with a target completion date of May 15, 2025, ahead of our June 1, 2025 public launch.

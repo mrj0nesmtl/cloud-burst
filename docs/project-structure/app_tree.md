@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-03-14T04:54:23.498Z
+Generated: 2025-03-15T16:44:07.071Z
 
 ## Overview
 
-This directory contains 67 route(s).
+This directory contains 68 route(s).
 
 ## Directory Tree
 ```
@@ -28,6 +28,9 @@ This directory contains 67 route(s).
 ├── auth/
 │   ├── callback/
 │   │   └── route.ts
+│   ├── qr-scan/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
 │   ├── register/
 │   │   └── page.tsx
 │   ├── signin/
@@ -236,13 +239,13 @@ This directory contains 67 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-91 directories, 137 files
+92 directories, 139 files
 
 ```
 
 ## File Type Breakdown
 - ts: 13 file(s)
-- tsx: 115 file(s)
+- tsx: 117 file(s)
 - css: 2 file(s)
 
 ## Ignored Patterns

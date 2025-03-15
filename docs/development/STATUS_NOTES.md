@@ -86,7 +86,7 @@ Cloud Burst is an event photography platform that enables seamless photo capture
 1. Resolve media table schema decision (target: immediate)
 2. Complete Gallery functionality implementation (target: v0.7.8 by March 22, 2025)
 3. Finalize photo moderation features (target: v0.7.9 by March 25, 2025)
-4. Complete Analytics Dashboard with real data (target: v0.8.0 by March 28, 2025)
+4. Complete Analytics Dashboard with real data (target: v0.7.8 by March 15, 2025)
 5. Comprehensive testing and bug fixes (target: v0.9.0 by April 10, 2025)
 6. Beta release to selected users (target: v0.9.5 by April 15, 2025)
 7. Public launch (target: v1.0.0 by June 1, 2025)
