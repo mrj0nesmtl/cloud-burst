@@ -20,16 +20,33 @@ export default function Home() {
       {/* Background Pattern - Just use one simple pattern */}
       <div className="hexagon-pattern"></div>
       
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="container mx-auto">
+      {/* Hero Section with Video Background */}
+      <section className="hero-section relative overflow-hidden">
+        {/* Video Background */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="object-cover w-full h-full"
+            poster="/hero-poster.jpg"
+          >
+            <source src="/hero_bg2.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay to ensure text readability */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        </div>
+
+        {/* Hero Content */}
+        <div className="container mx-auto relative z-10">
           <div className="hero-logo">
             <CloudLightning className="h-20 w-20 text-primary" />
           </div>
-          <h1 className="hero-title">
+          <h1 className="hero-title text-white">
             Capture Every Moment
           </h1>
-          <p className="hero-subtitle">
+          <p className="hero-subtitle text-gray-100">
             Crowd-powered platform for seamless media capture, enhancement, and sharing.
             Perfect for weddings, corporate events, and celebrations.
           </p>
@@ -40,7 +57,7 @@ export default function Home() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-base min-w-[180px] bg-background/80 backdrop-blur hover:bg-background/60 transition-all">
+            <Button asChild size="lg" variant="outline" className="text-base min-w-[180px] bg-white/10 backdrop-blur hover:bg-white/20 text-white border-white/20 transition-all">
               <Link href="/marketing/about">
                 Learn More
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -51,7 +68,7 @@ export default function Home() {
       </section>
 
       {/* Why Choose Cloud Burst Section */}
-      <section className="section">
+      <section className="section bg-background">
         <div className="container mx-auto">
           <h2 className="section-title">Why Choose Cloud Burst?</h2>
           <p className="section-subtitle">
@@ -102,6 +119,24 @@ export default function Home() {
                 Allow guests to contribute their photos to create a comprehensive event gallery.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 space-y-6 border border-primary/20 shadow-lg">
+          <h2 className="text-3xl font-bold text-primary">Join Us Today</h2>
+          <p className="text-lg">
+            Cloud Burst is by Invitation Only.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <Button variant="outline" className="bg-background hover:bg-muted" asChild>
+              <Link href="/marketing/about">
+                Learn More
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

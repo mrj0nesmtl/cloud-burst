@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { getEventMedia } from '@/lib/supabase/media'
 import { Button } from '@/components/ui/button'
+import { MediaType } from '@/types/media'
 
 interface UploadContentProps {
   eventId: string
@@ -39,8 +40,11 @@ export function UploadContent({
         setRecentMedia(media.slice(0, 4))
       } catch (error) {
         console.error('Error loading recent media:', error)
+        // Prevent continuous retries on error
+        setRecentMedia([])
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
     
     loadRecentMedia()
@@ -76,7 +80,7 @@ export function UploadContent({
             eventId={eventId}
             userId={userId}
             onUploadComplete={handleUploadComplete}
-            acceptedMediaTypes={['photo', 'video']}
+            acceptedMediaTypes={[MediaType.PHOTO, MediaType.VIDEO]}
             maxFileSizeMB={50}
             maxFiles={100}
           />

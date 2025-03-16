@@ -14,7 +14,8 @@ import {
   Camera,
   QrCode,
   Lock,
-  Share
+  Share,
+  CheckCircle2
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -32,6 +33,50 @@ export const metadata = {
   title: 'About | Cloud Burst',
   description: 'Learn about Cloud Burst - Crowd-powered event photography platform',
 }
+
+// Helper function to format the modal descriptions
+const formatDescription = (text: string) => {
+  // Split the text by bullet points and format them
+  if (text.includes('Benefits:') || text.includes('Key Benefits:') || text.includes('Features:') || text.includes('Advantages:')) {
+    const parts = text.split(/Benefits:|Key Benefits:|Features:|Advantages:/);
+    const intro = parts[0].trim();
+    const benefitsSection = parts[1]?.trim() || '';
+    
+    // Extract the section type (Benefits, Features, etc.)
+    let sectionType = "Benefits";
+    if (text.includes('Key Benefits:')) sectionType = "Key Benefits";
+    if (text.includes('Features:')) sectionType = "Features";
+    if (text.includes('Advantages:')) sectionType = "Advantages";
+    
+    // Format the benefits/features section
+    const bulletPoints = benefitsSection.split('•').filter(item => item.trim().length > 0).map(item => item.trim());
+    
+    return (
+      <>
+        <p className="mb-6 text-gray-700 leading-relaxed">{intro}</p>
+        <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+          <h4 className="text-primary font-semibold mb-3 flex items-center">
+            <span className="bg-primary text-white p-1 rounded-full mr-2 flex items-center justify-center" style={{ width: '24px', height: '24px' }}>
+              <CheckCircle2 className="h-4 w-4" />
+            </span>
+            {sectionType}
+          </h4>
+          <ul className="space-y-3 pl-2">
+            {bulletPoints.map((point: string, i: number) => (
+              <li key={i} className="flex items-start group">
+                <div className="bg-primary/10 rounded-full p-1 mr-3 flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                </div>
+                <span className="text-gray-800">{point}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </>
+    );
+  }
+  return <p className="text-gray-700 leading-relaxed">{text}</p>;
+};
 
 const howItWorksCards = [
   {
@@ -221,32 +266,38 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-full">
       {/* Hero Section */}
-      <section className="hero-section">
+      <section className="hero-section relative overflow-hidden">
+        {/* Video Background */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="object-cover w-full h-full"
+            poster="/hero-poster.jpg"
+          >
+            <source src="/hero_bg.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay to ensure text readability */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        </div>
+        
         <div className="hexagon-pattern opacity-15"></div>
-        <div className="container mx-auto">
+        <div className="container mx-auto relative z-10">
           <div className="hero-logo">
             <CloudLightning className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="hero-title">
+          <h1 className="hero-title text-white">
             What is Cloud Burst?
           </h1>
-          <p className="hero-subtitle">
+          <p className="hero-subtitle text-gray-100">
             Elevating event photography by blending nostalgia with modern technology.
           </p>
         </div>
       </section>
 
       <div className="container mx-auto py-12 px-4 space-y-14">
-        {/* Vision Section */}
-        <section className="section py-0">
-          <h2 className="section-title">The Vision</h2>
-          <p className="section-subtitle">
-            Inspired by the nostalgia of disposable cameras on event tables, Cloud Burst 
-            modernizes the experience using guests' smartphones and a seamless cloud-based 
-            infrastructure. We're transforming event photography for a digital-first audience.
-          </p>
-        </section>
-
         {/* How It Works Section */}
         <section className="section py-0">
           <h2 className="section-title">How It Works</h2>
@@ -269,13 +320,18 @@ export default function AboutPage() {
                     </div>
                   </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>{card.modalContent.title}</DialogTitle>
-                    <DialogDescription>
-                      {card.modalContent.description}
-                    </DialogDescription>
+                <DialogContent className="sm:max-w-lg bg-white">
+                  <DialogHeader className="border-b pb-3">
+                    <DialogTitle className="text-xl font-bold text-primary flex items-center">
+                      <div className="bg-primary/10 p-2 rounded-full mr-3">
+                        {card.icon}
+                      </div>
+                      {card.modalContent.title}
+                    </DialogTitle>
                   </DialogHeader>
+                  <div className="py-5">
+                    {formatDescription(card.modalContent.description)}
+                  </div>
                 </DialogContent>
               </Dialog>
             ))}
@@ -304,27 +360,34 @@ export default function AboutPage() {
                     </div>
                   </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>{card.modalContent.title}</DialogTitle>
-                    <DialogDescription>
-                      {card.modalContent.description}
-                    </DialogDescription>
+                <DialogContent className="sm:max-w-lg bg-white">
+                  <DialogHeader className="border-b pb-3">
+                    <DialogTitle className="text-xl font-bold text-primary flex items-center">
+                      <div className="bg-primary/10 p-2 rounded-full mr-3">
+                        {card.icon}
+                      </div>
+                      {card.modalContent.title}
+                    </DialogTitle>
                   </DialogHeader>
+                  <div className="py-5">
+                    {formatDescription(card.modalContent.description)}
+                  </div>
                 </DialogContent>
               </Dialog>
             ))}
           </div>
         </section>
 
-        {/* Why Choose Section */}
+        {/* Why Choose Section - Enhanced with Vision content */}
         <section className="section py-0">
           <h2 className="section-title">Why Choose Cloud Burst?</h2>
           <p className="section-subtitle">
-            Unlike traditional solutions that rely on expensive photographers or 
-            disorganized social media hashtags, Cloud Burst provides a private, 
-            AI-powered ecosystem that ensures high-quality photos while being more 
-            cost-effective than traditional photography solutions.
+            Inspired by the nostalgia of disposable cameras on event tables, Cloud Burst 
+            modernizes the experience using guests' smartphones and a seamless cloud-based 
+            infrastructure. Unlike traditional solutions that rely on expensive photographers or 
+            disorganized social media hashtags, we provide a private, AI-powered ecosystem 
+            that ensures high-quality photos while being more cost-effective than conventional approaches.
+            We're transforming event photography for a digital-first audience who values both quality and convenience.
           </p>
         </section>
 
