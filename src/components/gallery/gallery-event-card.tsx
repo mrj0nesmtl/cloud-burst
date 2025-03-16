@@ -48,7 +48,7 @@ export function GalleryEventCard({
     'bg-orange-500/20 text-orange-500 hover:bg-orange-500/20';
 
   return (
-    <Card className="group overflow-hidden border bg-card shadow-sm hover:shadow-md flex flex-col h-full">
+    <Card className="group overflow-hidden border bg-card shadow-sm hover:shadow-md flex flex-col h-full w-full">
       {/* Image Container with 4:3 Aspect Ratio */}
       <div className="relative bg-muted w-full" style={{ paddingTop: "75%" }}>
         {imageUrl ? (
