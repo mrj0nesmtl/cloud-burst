@@ -1,8 +1,7 @@
 # 📨 **Invitation System Development Plan**
 
 ## 📊 Document Information
-📅 *April 15, 2025*  
-Version: 0.1.0  
+📅 *March 15, 2025*  
 Status: Active Development
 
 ## 📌 Situational Abstract
