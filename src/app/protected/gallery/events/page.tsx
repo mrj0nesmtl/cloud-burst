@@ -5,12 +5,12 @@ import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import Image from 'next/image'
-import { Calendar, ImageIcon, Camera, Settings, ExternalLink } from 'lucide-react'
+import { Calendar, ImageIcon } from 'lucide-react'
 import { Gallery } from '@/types/gallery'
 // Import the server-side gallery functions
 import { getUserGalleriesServer, createGalleryForEventServer } from '@/lib/supabase/galleries.server'
-import { formatDate } from '@/lib/utils'
+import { GalleryEventCard } from '@/components/gallery/gallery-event-card'
+import { EmptyState } from '@/components/ui/empty-state'
 
 export const metadata: Metadata = {
   title: 'Event Galleries | Gallery | Cloud Burst',
@@ -38,41 +38,29 @@ export default async function EventGalleriesPage() {
     // Get all user's events first
     const { data: events, error: eventsError } = await supabase
       .from('events')
-      .select('id, name, date, cover_image_url, status')
+      .select('id, name, date, cover_image_url, logo_url, status, organizer_id')
       .eq('organizer_id', session.user.id)
     
-    if (eventsError) throw eventsError
+    if (eventsError) {
+      console.error('🔍 EventGalleriesPage: Error fetching events:', eventsError)
+      throw eventsError
+    }
     
     if (!events || events.length === 0) {
       return (
-        <div className="w-full max-w-7xl mx-auto">
-          <Card className="border-border/40 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center text-2xl">
-                <Calendar className="mr-3 h-6 w-6 text-primary" />
-                Event Galleries
-              </CardTitle>
-              <CardDescription className="text-base">
-                No events found to display galleries
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="bg-muted/30 p-5 rounded-full mb-6">
-                  <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                </div>
-                <h3 className="text-xl font-medium mb-2">No Events Found</h3>
-                <p className="text-muted-foreground max-w-md mb-8">
-                  You don't have any events yet. Create an event to get started with your gallery.
-                </p>
-                <Button size="lg" asChild>
-                  <Link href="/protected/events/create">
-                    Create New Event
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="w-full max-w-7xl mx-auto p-6">
+          <EmptyState
+            icon={<Calendar className="h-12 w-12" />}
+            title="No Events Found"
+            description="You don't have any events yet. Create an event to get started with your gallery."
+            action={
+              <Button size="lg" asChild>
+                <Link href="/protected/events/create">
+                  Create New Event
+                </Link>
+              </Button>
+            }
+          />
         </div>
       )
     }
@@ -103,7 +91,6 @@ export default async function EventGalleriesPage() {
       if (!gallery) {
         try {
           console.log('🔍 EventGalleriesPage: Creating gallery for event:', event.id);
-          // Use the server-side function instead
           gallery = await createGalleryForEventServer(event.id)
         } catch (error) {
           console.error('🔍 EventGalleriesPage: Error creating gallery for event', event.id, error)
@@ -139,7 +126,7 @@ export default async function EventGalleriesPage() {
     })
 
     return (
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-7xl mx-auto p-6">
         <Card className="border-border/40 shadow-sm">
           <CardHeader className="pb-6">
             <CardTitle className="flex items-center text-2xl">
@@ -155,116 +142,34 @@ export default async function EventGalleriesPage() {
           </CardHeader>
           <CardContent>
             {galleryData.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="bg-muted/30 p-5 rounded-full mb-6">
-                  <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                </div>
-                <h3 className="text-xl font-medium mb-2">No Event Galleries</h3>
-                <p className="text-muted-foreground max-w-md mb-8">
-                  You don't have any events with galleries yet. Create an event to get started.
-                </p>
-                <Button size="lg" asChild>
-                  <Link href="/protected/events/create">
-                    Create New Event
-                  </Link>
-                </Button>
-              </div>
+              <EmptyState
+                icon={<ImageIcon className="h-12 w-12" />}
+                title="No Event Galleries"
+                description="You don't have any events with galleries yet. Create an event to get started."
+                action={
+                  <Button size="lg" asChild>
+                    <Link href="/protected/events/create">
+                      Create New Event
+                    </Link>
+                  </Button>
+                }
+              />
             ) : (
-              <div 
-                className="grid gap-6"
-                style={{
-                  gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-                  margin: "0 auto"
-                }}
-              >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {galleryData.map(({ gallery, event, photoCount }) => (
-                  <div 
-                    key={gallery.id} 
-                    className="group"
-                    style={{
-                      minWidth: "320px",
-                      transition: "all 0.2s ease-in-out",
-                      height: "100%"
-                    }}
-                  >
-                    <div 
-                      className="relative overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md flex flex-col h-full"
-                      style={{
-                        transform: "translateY(0)",
-                        transition: "all 0.2s ease-in-out"
-                      }}
-                    >
-                      {/* Image Container with 4:3 Aspect Ratio */}
-                      <div className="relative bg-muted w-full" style={{ paddingTop: "75%" }}>
-                        {event?.cover_image_url ? (
-                          <Image
-                            src={event.cover_image_url}
-                            alt={event?.name || 'Event gallery'}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            priority
-                          />
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                            <ImageIcon className="h-12 w-12 text-muted-foreground/40" />
-                          </div>
-                        )}
-                        
-                        {/* Top-right date badge */}
-                        {event?.date && (
-                          <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md">
-                            {formatDate(event.date)}
-                          </div>
-                        )}
-                        
-                        {/* Bottom gradient and title */}
-                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent">
-                          <div className="absolute bottom-0 left-0 right-0 p-4">
-                            <h3 className="font-medium text-lg text-white mb-1 line-clamp-1">
-                              {event?.name || 'Unnamed Event'}
-                            </h3>
-                            <div className="flex items-center">
-                              <div className="bg-black/40 backdrop-blur-sm text-white/90 text-xs px-2 py-1 rounded-full flex items-center">
-                                <Camera className="h-3 w-3 mr-1" />
-                                {photoCount} {photoCount === 1 ? 'Photo' : 'Photos'}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Card content */}
-                      <div className="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center text-sm text-muted-foreground">
-                              <Settings className="mr-2 h-4 w-4" />
-                              {gallery.settings?.layout || 'Grid'} Layout
-                            </div>
-                            <div className="px-2 py-0.5 rounded-full text-xs bg-primary/10 text-primary">
-                              {event?.status || 'Draft'}
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="flex gap-3 mt-4">
-                          <Button className="flex-1" variant="default" size="sm" asChild>
-                            <Link href={`/events/${event?.id}/gallery`}>
-                              <ExternalLink className="mr-2 h-4 w-4" />
-                              View Gallery
-                            </Link>
-                          </Button>
-                          <Button variant="outline" size="sm" asChild>
-                            <Link href={`/protected/gallery/events/${gallery.id}`}>
-                              <Settings className="mr-2 h-4 w-4" />
-                              Settings
-                            </Link>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <GalleryEventCard
+                    key={gallery.id}
+                    id={gallery.id}
+                    eventId={event.id}
+                    name={event.name || "Unnamed Event"}
+                    date={event.date}
+                    thumbnailUrl={event.cover_image_url}
+                    logoUrl={event.logo_url}
+                    photoCount={photoCount || 0}
+                    status={event.status || "draft"}
+                    settings={gallery.settings || { layout: 'grid' }}
+                    organizerId={event.organizer_id}
+                  />
                 ))}
               </div>
             )}
@@ -275,12 +180,17 @@ export default async function EventGalleriesPage() {
   } catch (error) {
     console.error('🔍 EventGalleriesPage: Error in page component:', error)
     return (
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-7xl mx-auto p-6">
         <div className="bg-destructive/10 border border-destructive rounded-lg p-6">
           <h1 className="text-xl font-bold text-destructive mb-3">Error Loading Galleries</h1>
           <p className="text-muted-foreground mb-4">
             There was an error loading your event galleries. Please try again later.
           </p>
+          <Button asChild className="mb-4">
+            <Link href="/protected/dashboard">
+              Return to Dashboard
+            </Link>
+          </Button>
           <pre className="mt-4 p-4 bg-muted/50 rounded-md text-xs overflow-auto max-h-[200px]">
             {JSON.stringify(error, null, 2)}
           </pre>

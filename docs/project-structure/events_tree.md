@@ -1,8 +1,8 @@
 # events Directory Structure
-Generated: 2025-03-15T16:44:08.839Z
+Generated: 2025-03-16T02:49:01.557Z
 
 ## Overview
-This directory contains 14 component(s).
+This directory contains 15 component(s).
 
 
 ## Directory Tree
@@ -21,14 +21,15 @@ This directory contains 14 component(s).
 ├── event-search.tsx
 ├── event-status-selector.tsx
 ├── image-upload.tsx
-└── qr-code-display.tsx
+├── qr-code-display.tsx
+└── theme-preview.tsx
 
-1 directory, 14 files
+1 directory, 15 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 14 file(s)
+- tsx: 15 file(s)
 
 ## Ignored Patterns
 - node_modules

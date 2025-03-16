@@ -18,6 +18,12 @@ import {
 import { Button } from '@/components/ui/button'
 import { PermissionGate } from '@/components/auth/permission-gate'
 import { createClient } from '@/lib/supabase/client'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface EventActionsProps {
   eventId: string
@@ -88,56 +94,103 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
     }
   }
 
+  // Action button with responsive text
+  const ActionButton = ({ 
+    icon: Icon, 
+    label, 
+    onClick, 
+    href, 
+    variant = "outline" 
+  }: { 
+    icon: React.ComponentType<any>, 
+    label: string, 
+    onClick?: () => void, 
+    href?: string,
+    variant?: "outline" | "destructive" | "ghost" | "default" 
+  }) => {
+    const content = (
+      <Button 
+        variant={variant} 
+        size="sm"
+        onClick={onClick}
+        className="h-8"
+      >
+        <Icon className="h-4 w-4 md:mr-1" />
+        <span className="hidden md:inline">{label}</span>
+      </Button>
+    );
+
+    // For mobile, provide tooltips since we're hiding text
+    const wrappedContent = (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {content}
+          </TooltipTrigger>
+          <TooltipContent className="md:hidden">
+            {label}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+
+    if (href) {
+      return (
+        <Link href={href}>
+          {wrappedContent}
+        </Link>
+      );
+    }
+
+    return wrappedContent;
+  };
+
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex flex-wrap items-center gap-2">
       {/* Edit button - visible to event owners and admins */}
       <PermissionGate action="update" resource="event" ownerId={organizerId}>
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/protected/events/${eventId}/edit`}>
-            <Edit className="h-4 w-4 mr-2" />
-            Edit
-          </Link>
-        </Button>
+        <ActionButton 
+          icon={Edit} 
+          label="Edit" 
+          href={`/protected/events/${eventId}/edit`} 
+        />
       </PermissionGate>
       
       {/* QR Code button - visible to all who can view the event */}
       <PermissionGate action="read" resource="event">
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/protected/events/${eventId}/qr`}>
-            <QrCode className="h-4 w-4 mr-2" />
-            QR Code
-          </Link>
-        </Button>
+        <ActionButton 
+          icon={QrCode} 
+          label="QR Code" 
+          href={`/protected/events/${eventId}/qr`} 
+        />
       </PermissionGate>
       
       {/* View Gallery button - visible to all who can view the event */}
       <PermissionGate action="read" resource="event">
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/events/${eventId}/gallery`}>
-            <Image className="h-4 w-4 mr-2" />
-            Gallery
-          </Link>
-        </Button>
+        <ActionButton 
+          icon={Image} 
+          label="Gallery" 
+          href={`/events/${eventId}/gallery`} 
+        />
       </PermissionGate>
       
       {/* Share button - visible to all who can view the event */}
       <PermissionGate action="read" resource="event">
-        <Button variant="outline" size="sm" onClick={handleShare}>
-          <Share className="h-4 w-4 mr-2" />
-          Share
-        </Button>
+        <ActionButton 
+          icon={Share} 
+          label="Share" 
+          onClick={handleShare} 
+        />
       </PermissionGate>
       
       {/* Delete button - visible only to organizers and admins */}
       <PermissionGate action="delete" resource="event" ownerId={organizerId}>
-        <Button 
+        <ActionButton 
+          icon={Trash} 
+          label="Delete" 
+          onClick={() => setIsDeleteDialogOpen(true)} 
           variant="destructive" 
-          size="sm" 
-          onClick={() => setIsDeleteDialogOpen(true)}
-        >
-          <Trash className="h-4 w-4 mr-2" />
-          Delete
-        </Button>
+        />
       </PermissionGate>
       
       {/* Delete confirmation dialog */}

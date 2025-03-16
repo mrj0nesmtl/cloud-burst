@@ -1,5 +1,5 @@
 # development Directory Structure
-Generated: 2025-03-15T16:44:10.452Z
+Generated: 2025-03-16T02:49:03.045Z
 
 ## Overview
 
@@ -46,6 +46,9 @@ Generated: 2025-03-15T16:44:10.452Z
 │   ├── session_8.md
 │   └── session_9.md
 ├── .DS_Store
+├── SESSION_25_CHECKLIST.md
+├── SESSION_25_KICKOFF.md
+├── SESSION_25_NARRATIVE.md
 ├── STATUS_NOTES.md
 ├── VERSION_CONTROL.md
 ├── contributing.md
@@ -54,12 +57,12 @@ Generated: 2025-03-15T16:44:10.452Z
 ├── session_24_part2_kickoff_prompt.md
 └── version-sync.plan
 
-2 directories, 44 files
+2 directories, 47 files
 
 ```
 
 ## File Type Breakdown
-- md: 40 file(s)
+- md: 43 file(s)
 
 ## Ignored Patterns
 - node_modules

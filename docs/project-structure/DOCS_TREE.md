@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-15T16:44:06.232Z
+Generated: 2025-03-16T02:48:59.102Z
 
 ## Overview
 
@@ -65,6 +65,9 @@ Generated: 2025-03-15T16:44:06.232Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
+│   ├── SESSION_25_CHECKLIST.md
+│   ├── SESSION_25_KICKOFF.md
+│   ├── SESSION_25_NARRATIVE.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
@@ -121,12 +124,12 @@ Generated: 2025-03-15T16:44:06.232Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 103 files
+10 directories, 106 files
 
 ```
 
 ## File Type Breakdown
-- md: 97 file(s)
+- md: 100 file(s)
 
 ## Ignored Patterns
 - node_modules

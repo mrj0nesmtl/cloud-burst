@@ -14,6 +14,7 @@ export interface GallerySettings {
   requireApproval?: boolean
   maxUploadSize?: number
   allowedTypes?: string[]
+  useLogoAsThumbnail?: boolean
 }
 
 export interface GalleryWithPhotos extends Gallery {
