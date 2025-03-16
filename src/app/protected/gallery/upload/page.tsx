@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { Upload } from 'lucide-react'
-import { getUserAuth } from '@/lib/auth'
+import { getUserAuth } from '@/lib/auth/utils'
 import { getEventById } from '@/lib/supabase/events.server'
 import { UploadContent } from './upload-content'
 
