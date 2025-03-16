@@ -61,6 +61,11 @@ export function MobileNav() {
   useEffect(() => {
     setIsOpen(false)
   }, [pathname])
+  
+  // Function to handle link clicks and close the menu
+  const handleLinkClick = () => {
+    setIsOpen(false)
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -105,6 +110,7 @@ export function MobileNav() {
                       "flex items-center w-full py-2 text-base hover:text-primary transition-colors",
                       pathname === route.href && "text-primary font-medium"
                     )}
+                    onClick={handleLinkClick}
                   >
                     <route.icon className="mr-3 h-5 w-5" />
                     {route.label}
@@ -123,6 +129,7 @@ export function MobileNav() {
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-primary/10"
+                onClick={handleLinkClick}
               >
                 <Github className="h-5 w-5" />
                 <span className="sr-only">GitHub</span>
@@ -132,6 +139,7 @@ export function MobileNav() {
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-primary/10"
+                onClick={handleLinkClick}
               >
                 <Twitter className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
@@ -143,12 +151,20 @@ export function MobileNav() {
           <div className="px-6 py-4 border-t">
             <div className="grid gap-3">
               <Button variant="outline" asChild className="w-full">
-                <Link href="/auth/signin" className="mobile-menu-item">
+                <Link 
+                  href="/auth/signin" 
+                  className="mobile-menu-item"
+                  onClick={handleLinkClick}
+                >
                   Sign in
                 </Link>
               </Button>
               <Button asChild className="w-full">
-                <Link href="/auth/register" className="mobile-menu-item">
+                <Link 
+                  href="/auth/register" 
+                  className="mobile-menu-item"
+                  onClick={handleLinkClick}
+                >
                   Get Started
                 </Link>
               </Button>

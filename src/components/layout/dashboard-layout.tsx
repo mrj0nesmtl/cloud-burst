@@ -8,7 +8,7 @@ import { Menu, X, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { toast } from '@/components/ui/use-toast'
 import Link from 'next/link'
 import { Logo } from '@/components/nav/logo'
@@ -23,6 +23,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const { user, profile, isLoading, signOut } = useAuth()
   const router = useRouter()
+  const pathname = usePathname()
 
   // Load sidebar collapsed state from localStorage on mount
   useEffect(() => {
@@ -36,6 +37,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   useEffect(() => {
     localStorage.setItem('sidebarCollapsed', String(sidebarCollapsed))
   }, [sidebarCollapsed])
+  
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [pathname])
 
   const handleSignOut = async () => {
     try {
@@ -99,7 +105,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="sr-only">Close sidebar</span>
             </Button>
           </div>
-          <SideNav collapsed={false} />
+          <SideNav collapsed={false} setIsOpen={setSidebarOpen} />
         </div>
       </div>
       

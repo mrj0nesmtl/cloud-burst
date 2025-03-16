@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-15T16:44:05.730Z
+Generated: 2025-03-16T02:48:58.897Z
 
 ## Overview
 
@@ -172,6 +172,9 @@ Generated: 2025-03-15T16:44:05.730Z
 │   │   │   ├── manage/
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── migrations/
+│   │   │   │   ├── README.md
+│   │   │   │   └── add_event_fields.sql
 │   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
@@ -182,6 +185,8 @@ Generated: 2025-03-15T16:44:05.730Z
 │   │   │   │   └── page.tsx
 │   │   │   ├── events/
 │   │   │   │   ├── [galleryId]/
+│   │   │   │   │   ├── settings/
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── moderate/
@@ -276,7 +281,8 @@ Generated: 2025-03-15T16:44:05.730Z
 │   │   ├── event-search.tsx
 │   │   ├── event-status-selector.tsx
 │   │   ├── image-upload.tsx
-│   │   └── qr-code-display.tsx
+│   │   ├── qr-code-display.tsx
+│   │   └── theme-preview.tsx
 │   ├── forms/
 │   │   ├── avatar-upload.tsx
 │   │   ├── event-customization-form.tsx
@@ -292,6 +298,7 @@ Generated: 2025-03-15T16:44:05.730Z
 │   │   ├── MediaModeration.tsx
 │   │   ├── MediaUpload.tsx
 │   │   ├── README.md
+│   │   ├── gallery-event-card.tsx
 │   │   ├── gallery-grid.tsx
 │   │   ├── gallery-settings-form.tsx
 │   │   ├── gallery-tabs.tsx
@@ -446,15 +453,15 @@ Generated: 2025-03-15T16:44:05.730Z
 ├── middleware.test.ts
 └── middleware.ts
 
-119 directories, 319 files
+121 directories, 324 files
 
 ```
 
 ## File Type Breakdown
 - ts: 67 file(s)
-- tsx: 236 file(s)
+- tsx: 239 file(s)
 - js: 3 file(s)
-- md: 1 file(s)
+- md: 2 file(s)
 - css: 3 file(s)
 
 ## Ignored Patterns

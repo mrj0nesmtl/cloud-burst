@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-03-15T16:44:08.483Z
+Generated: 2025-03-16T02:49:01.257Z
 
 ## Overview
-This directory contains 119 component(s).
+This directory contains 121 component(s).
 
 
 ## Directory Tree
@@ -44,7 +44,8 @@ This directory contains 119 component(s).
 │   ├── event-search.tsx
 │   ├── event-status-selector.tsx
 │   ├── image-upload.tsx
-│   └── qr-code-display.tsx
+│   ├── qr-code-display.tsx
+│   └── theme-preview.tsx
 ├── forms/
 │   ├── avatar-upload.tsx
 │   ├── event-customization-form.tsx
@@ -60,6 +61,7 @@ This directory contains 119 component(s).
 │   ├── MediaModeration.tsx
 │   ├── MediaUpload.tsx
 │   ├── README.md
+│   ├── gallery-event-card.tsx
 │   ├── gallery-grid.tsx
 │   ├── gallery-settings-form.tsx
 │   ├── gallery-tabs.tsx
@@ -145,13 +147,13 @@ This directory contains 119 component(s).
 ├── query-provider.tsx
 └── theme-provider.tsx
 
-14 directories, 123 files
+14 directories, 125 files
 
 ```
 
 ## File Type Breakdown
 - ts: 3 file(s)
-- tsx: 119 file(s)
+- tsx: 121 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

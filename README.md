@@ -3,7 +3,7 @@
 
 # Cloud Burst
 
-## 📸 Event Media Platform
+## Capture Every Moment
 
 [![Version](https://img.shields.io/badge/version-0.7.8-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
@@ -11,48 +11,83 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-Styling-38B2AC)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+</div>
 
-## 📌 Abstract
-Cloud Burst represents the evolution of event media capture, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, and enhanced gallery functionality, our platform now offers a comprehensive solution for event media management. Deployed in beta at https://cb-beta.replit.app, Cloud Burst maintains exceptional performance within memory constraints while delivering a seamless user experience across devices as we approach our April 1, 2025 launch date.
+## 📋 Table of Contents
 
-### 📹 Crowd-Powered 📹
+- [Abstract](#abstract-)
+- [Crowd-Powered](#crowd-powered-)
+- [Our Pitch](#our-pitch-)
+- [System Architecture](#-system-architecture-v078)
+- [Features](#features)
+  - [Media Management](#media-management)
+  - [Event Management](#event-management)
+  - [Invitation System](#invitation-system)
+  - [Security](#security)
+  - [Key Benefits](#key-benefits)
+- [User Roles](#-user-roles)
+- [User Experience](#-user-experience)
+- [Current Status](#-current-status)
+- [Project Timeline](#-project-timeline)
+- [Getting Started](#-getting-started)
+- [Documentation](#-documentation)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+## Abstract 💡
+
+Cloud Burst represents the evolution of event media capture, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, and enhanced gallery functionality, our platform now offers a comprehensive solution for event media management. Deployed in beta at [https://cb-beta.replit.app](https://cb-beta.replit.app), Cloud Burst maintains exceptional performance within memory constraints while delivering a seamless user experience across devices as we approach our April 1, 2025 launch date.
+
+## Crowd-Powered 🤳
+
 No apps to download, no accounts to create. Just scan a QR code and start capturing memories. It's that simple.
 Cloud Burst revolutionizes event media capture by bringing the charm of disposable cameras into the digital age. Our 
 platform transforms every event into a collaborative media story, powered by AI and created by all attendees. With 
 no apps to download and no accounts to create, guests simply scan a QR code to instantly start capturing and sharing 
 photos and videos.
 
-## 🎯 Pitch
-Remember the magic of disposable cameras at wedding tables? We've reimagined that collaborative spirit for the digital age. Cloud Burst transforms every event into a living media story, powered by AI and created by everyone who matters – your guests. No apps to download, no accounts to create – just scan, snap, and share. With enterprise-grade security, AI-enhanced media, and real-time galleries, we're not just capturing moments; we're revolutionizing how memories are made.
+## Our Pitch 🎙️
+
+Remember the magic of disposable cameras 📸 on wedding tables? We've reimagined that collaborative spirit for the digital age. Cloud Burst transforms every event into a living media story, powered by AI and created by everyone who matters – your guests. No apps to download, no accounts to create – just scan, snap, and share. With enterprise-grade security, AI-enhanced media, and real-time galleries, we're not just capturing moments; **We're revolutionizing how memories are made.**
+
+<div align="center">
 
 ### [Live Demo](https://cb-beta.replit.app) • [Documentation](docs/) • [Contributing](CONTRIBUTING.md)
 
-<div align="left">
+</div>
+
+## Features
+
 ### Media Management
+
 - **Unified Media Gallery**: Support for both photos and videos in a seamless gallery experience
 - **Direct Camera Integration**: Capture media directly through the platform with QR code access
 - **Automated Processing**: Efficient handling of uploads with progress tracking and error handling
 - **Content Moderation**: Review and approval workflow to ensure appropriate content
 
 ### Event Management
+
 - **Comprehensive Dashboard**: Create, manage, and track events from a single interface
 - **Attendee Management**: Invite and manage event participants with role-based permissions
 - **QR Code System**: Generate event-specific and personalized QR codes for streamlined access
 - **Status Tracking**: Monitor event lifecycle from planning to completion
 
 ### Invitation System
+
 - **Email Invitations**: Send personalized invitations with secure access links and QR codes
 - **Attendee Tracking**: Monitor invitation status, RSVPs, and event participation
 - **QR Code Access**: Scan event QR codes for immediate camera and gallery access
 - **Guest Authentication**: Temporary access for invited users with streamlined registration
 
 ### Security
+
 - **Role-Based Access Control**: Comprehensive permission system with clearly defined capabilities
 - **Row Level Security**: Database-level protection for all resources
 - **Authentication Options**: Multiple secure login methods including QR code scanning
 - **Content Protection**: Ensure media is only accessible to authorized users
 
 ### Key Benefits
+
 - **Instant Access**: One QR code connects all your guests
 - **Real-Time Gallery**: Watch your event's story unfold live
 - **AI-Powered**: Automatic media enhancement and organization
@@ -171,6 +206,50 @@ Cloud Burst is currently in beta (v0.7.8) with approximately 85% of core feature
 
 We're targeting Beta 0.9.0 for internal testing by April 1, 2025, with public launch (v1.0.0) planned for April 15, 2025.
 
+## 📅 Project Timeline
+
+Cloud Burst has evolved from concept to robust beta platform since its inception. Here's our development roadmap:
+
+```mermaid
+gantt
+    title Cloud Burst Development Timeline
+    dateFormat  YYYY-MM-DD
+    axisFormat %b %d
+    
+    section Foundation
+    Project Setup           :done, f1, 2025-02-01, 7d
+    Authentication          :done, f2, 2025-02-08, 7d
+    Database Schema         :done, f3, 2025-02-15, 5d
+    
+    section Core Functionality
+    Event Management        :done, c1, 2025-02-20, 7d
+    Basic Media Upload      :done, c2, 2025-02-25, 5d
+    User Roles & Permissions:done, c3, 2025-03-01, 5d
+    
+    section Enhanced Features
+    Advanced Gallery Layouts:done, e1, 2025-03-05, 5d
+    Navigation Recovery     :done, e2, 2025-03-07, 3d
+    Authentication Repair   :done, e3, 2025-03-10, 3d
+    Dashboard Implementation:done, e4, 2025-03-11, 4d
+    Database Security Fixes :done, e5, 2025-03-15, 1d
+    Invitation System       :active, e6, 2025-03-16, 7d
+    Media Moderation        :e7, 2025-03-21, 5d
+    Final Optimizations     :e8, 2025-03-26, 6d
+    
+    section Final Preparations
+    Beta v0.9.0 Release     :milestone, b1, 2025-04-01, 0d
+    Performance Tuning      :o1, 2025-04-02, 5d
+    Security Audit          :o2, 2025-04-07, 3d
+    Public Launch (v1.0.0)  :milestone, l3, 2025-04-15, 0d
+```
+
+### Key Development Phases
+
+1. **Foundation Phase** (Feb 1-15, 2025): Project setup, authentication system, database schema design
+2. **Core Functionality Phase** (Feb 16-Mar 1, 2025): Event management, basic media upload, user roles
+3. **Enhanced Features Phase** (Mar 2-31, 2025): Advanced gallery, navigation, authentication refinements, invitation system
+4. **Final Preparations Phase** (Apr 1-15, 2025): Performance tuning, security audit, public launch preparations
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -196,13 +275,37 @@ We're targeting Beta 0.9.0 for internal testing by April 1, 2025, with public la
    npm run dev
    ```
 
-## 📄 Documentation
+## 📚 Documentation
 
-For complete documentation, including API references, component guidelines, and development workflows, see the [docs](./docs) directory.
+For complete documentation of the Cloud Burst platform, please visit our [Documentation Center](./docs/).
+
+Our documentation includes:
+
+- [Architecture Documentation](./docs/architecture/)
+  - [Application Design](./docs/architecture/application_design_document.md)
+  - [System Architecture Flowchart](./docs/architecture/system_architecture_flowchart.md)
+  - [Security Architecture](./docs/architecture/security.md)
+
+- [Deployment Guides](./docs/deployment/)
+  - [Deployment Guides](./docs/deployment/deployment_guides.md)
+  - [Replit Deployment](./docs/deployment/replit_deployment.md)
+
+- [Design Documentation](./docs/design/)
+  - [UI Components](./docs/design/UI_components.md)
+  - [Style Guide](./docs/design/style.md)
+
+- [Development Documentation](./docs/development/)
+  - [Status Notes](./docs/development/STATUS_NOTES.md)
+  - [Version Control](./docs/development/VERSION_CONTROL.md)
+  - [Contributing Guidelines](./docs/development/contributing.md)
+
+- [User Flows & RBAC](./docs/rbac/)
+  - [Role-Based Access Control](./docs/rbac/role_based_access_control.md)
+  - [User Flow Documentation](./docs/user-flows/)
 
 ## 🤝 Contributing
 
-We welcome contributions! Please read our [Contributing Guide](./docs/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+We welcome contributions! Please read our [Contributing Guide](./CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## 📝 License
 
@@ -210,4 +313,8 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
+<div align="center">
+
 Built with ❤️ by the Cloud Burst Team
+
+</div>

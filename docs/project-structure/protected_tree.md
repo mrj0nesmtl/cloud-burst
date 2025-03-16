@@ -1,9 +1,9 @@
 # protected Directory Structure
-Generated: 2025-03-15T16:44:07.370Z
+Generated: 2025-03-16T02:49:00.243Z
 
 ## Overview
 
-This directory contains 42 route(s).
+This directory contains 43 route(s).
 
 ## Directory Tree
 ```
@@ -75,6 +75,9 @@ This directory contains 42 route(s).
 │   ├── manage/
 │   │   ├── loading.tsx
 │   │   └── page.tsx
+│   ├── migrations/
+│   │   ├── README.md
+│   │   └── add_event_fields.sql
 │   ├── layout.tsx
 │   ├── loading.tsx
 │   └── page.tsx
@@ -85,6 +88,8 @@ This directory contains 42 route(s).
 │   │   └── page.tsx
 │   ├── events/
 │   │   ├── [galleryId]/
+│   │   │   ├── settings/
+│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   └── page.tsx
 │   ├── moderate/
@@ -135,12 +140,13 @@ This directory contains 42 route(s).
 │   └── page.tsx
 └── layout.tsx
 
-47 directories, 80 files
+49 directories, 83 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 73 file(s)
+- tsx: 74 file(s)
+- md: 1 file(s)
 
 ## Ignored Patterns
 - node_modules

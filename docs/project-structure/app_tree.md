@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-03-15T16:44:07.071Z
+Generated: 2025-03-16T02:48:59.948Z
 
 ## Overview
 
-This directory contains 68 route(s).
+This directory contains 69 route(s).
 
 ## Directory Tree
 ```
@@ -171,6 +171,9 @@ This directory contains 68 route(s).
 │   │   ├── manage/
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── migrations/
+│   │   │   ├── README.md
+│   │   │   └── add_event_fields.sql
 │   │   ├── layout.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
@@ -181,6 +184,8 @@ This directory contains 68 route(s).
 │   │   │   └── page.tsx
 │   │   ├── events/
 │   │   │   ├── [galleryId]/
+│   │   │   │   ├── settings/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── moderate/
@@ -239,13 +244,14 @@ This directory contains 68 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-92 directories, 139 files
+94 directories, 142 files
 
 ```
 
 ## File Type Breakdown
 - ts: 13 file(s)
-- tsx: 117 file(s)
+- tsx: 118 file(s)
+- md: 1 file(s)
 - css: 2 file(s)
 
 ## Ignored Patterns

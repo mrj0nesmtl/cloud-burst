@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-15T16:44:05.257Z
+Generated: 2025-03-16T02:48:58.450Z
 
 ## Overview
 
@@ -101,6 +101,9 @@ Generated: 2025-03-15T16:44:05.257Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
+│   │   ├── SESSION_25_CHECKLIST.md
+│   │   ├── SESSION_25_KICKOFF.md
+│   │   ├── SESSION_25_NARRATIVE.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
@@ -363,6 +366,9 @@ Generated: 2025-03-15T16:44:05.257Z
 │   │   │   │   ├── manage/
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── migrations/
+│   │   │   │   │   ├── README.md
+│   │   │   │   │   └── add_event_fields.sql
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
@@ -373,6 +379,8 @@ Generated: 2025-03-15T16:44:05.257Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── events/
 │   │   │   │   │   ├── [galleryId]/
+│   │   │   │   │   │   ├── settings/
+│   │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── moderate/
@@ -467,7 +475,8 @@ Generated: 2025-03-15T16:44:05.257Z
 │   │   │   ├── event-search.tsx
 │   │   │   ├── event-status-selector.tsx
 │   │   │   ├── image-upload.tsx
-│   │   │   └── qr-code-display.tsx
+│   │   │   ├── qr-code-display.tsx
+│   │   │   └── theme-preview.tsx
 │   │   ├── forms/
 │   │   │   ├── avatar-upload.tsx
 │   │   │   ├── event-customization-form.tsx
@@ -483,6 +492,7 @@ Generated: 2025-03-15T16:44:05.257Z
 │   │   │   ├── MediaModeration.tsx
 │   │   │   ├── MediaUpload.tsx
 │   │   │   ├── README.md
+│   │   │   ├── gallery-event-card.tsx
 │   │   │   ├── gallery-grid.tsx
 │   │   │   ├── gallery-settings-form.tsx
 │   │   │   ├── gallery-tabs.tsx
@@ -684,16 +694,16 @@ Generated: 2025-03-15T16:44:05.257Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-149 directories, 527 files
+151 directories, 535 files
 
 ```
 
 ## File Type Breakdown
-- ts: 8037 file(s)
-- tsx: 375 file(s)
-- js: 24327 file(s)
-- json: 1790 file(s)
-- md: 1349 file(s)
+- ts: 8066 file(s)
+- tsx: 378 file(s)
+- js: 24380 file(s)
+- json: 1797 file(s)
+- md: 1355 file(s)
 - css: 22 file(s)
 - yml: 154 file(s)
 
