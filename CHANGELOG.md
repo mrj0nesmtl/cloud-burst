@@ -34,6 +34,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.7.8] - 2025-03-15
 ### Added
+- Gallery event card component with responsive design
+- Gallery settings page for customizing event gallery appearance
+- Enhanced gallery events page with proper grid layout
+- "Use logo as thumbnail" option in gallery settings
 - QR code scanning interface with camera integration
 - "Scan QR" button on the sign-in page
 - Update homepage to direct users to About page
@@ -49,12 +53,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized media player controls
 - Updated terminology from "Photo" to "Media" throughout the platform
 - Enhanced sidebar navigation with proper organization
+- Improved error handling in gallery components
+- Enhanced responsive design for event gallery cards
 
 ### Fixed
+- Critical issue with gallery event card component causing build failure
+- Empty state handling in gallery pages
 - Authentication flow for invited users
 - QR code not displaying properly in email templates
 - Various UI alignment issues
 - Performance bottlenecks in gallery loading
+- Navigation to gallery settings page
 
 ## [0.7.7] - 2025-03-07
 ### Added
@@ -845,30 +854,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS integration
 - Shadcn UI setup
 - Supabase initialization
-
-
-
-[Unreleased]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.7.3...HEAD
-[0.7.3]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.7.2...v0.7.3
-[0.7.2]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.7.1...v0.7.2
-[0.7.1]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.7.0...v0.7.1
-[0.7.0]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.19...v0.7.0
-[0.1.19]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.18...v0.1.19
-[0.1.18]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.17...v0.1.18
-[0.1.17]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.16...v0.1.17
-[0.1.16]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.15...v0.1.16
-[0.1.15]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.14...v0.1.15
-[0.1.14]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.13...v0.1.14
-[0.1.13]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.11...v0.1.13
-[0.1.11]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.10...v0.1.11
-[0.1.10]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.9...v0.1.10
-[0.1.9]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.8...v0.1.9
-[0.1.8]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.7...v0.1.8
-[0.1.7]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.6...v0.1.7
-[0.1.6]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.5...v0.1.6
-[0.1.5]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.4...v0.1.5
-[0.1.4]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.3...v0.1.4
-[0.1.3]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.2...v0.1.3
-[0.1.2]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.1...v0.1.2
-[0.1.1]: https://github.com/mrj0nesmtl/cloud-capture/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/mrj0nesmtl/cloud-capture/releases/tag/v0.1.0 
