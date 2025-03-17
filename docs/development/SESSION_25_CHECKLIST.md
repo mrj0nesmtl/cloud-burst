@@ -1,11 +1,47 @@
-# Session 25 Checklist: Implementing the Invitation System
-## [0.7.8] - 2025-03-15
+# Session 25 Checklist: Fixing Critical Issues & Implementing the Invitation System
+## [0.7.8] - 2025-03-22
 
 ## Pre-Development Setup
 - [x] Create session-25-invitations branch from main
 - [x] Verify clean working directory
+- [x] Document current critical issues
+- [x] Establish priority for issue resolution
 - [x] Review QR scanning implementation for integration points
 - [x] Document starting state
+
+## Phase 0: Critical Issue Resolution
+
+### Authentication State Management
+- [ ] Investigate authentication state loss when navigating between protected and public pages
+- [ ] Identify root cause in the auth context or middleware implementation
+- [ ] Implement persistent auth state using Zustand store
+- [ ] Ensure auth state persists across page navigation
+- [ ] Update middleware to properly handle authentication state
+- [ ] Test auth persistence in various navigation scenarios
+- [ ] Fix "Sign In" link displaying when user is already authenticated
+
+### Mobile Menu Enhancement
+- [ ] Review current mobile menu implementation
+- [ ] Add conditional rendering for authenticated user menu items
+- [ ] Ensure consistent navigation options between desktop and mobile
+- [ ] Test menu behavior in different authenticated states
+- [ ] Implement responsive design patterns for menu items
+- [ ] Ensure proper role-based access in mobile menu
+
+### Modal Dialog Redesign
+- [ ] Create new component for information card modals
+- [ ] Implement proper typography, spacing, and visual hierarchy
+- [ ] Fix formatting for bulleted lists and paragraphs
+- [ ] Ensure consistent styling across all modals
+- [ ] Implement responsive behavior for different screen sizes
+- [ ] Test dialog functionality across browsers
+
+### Gallery Upload Fix
+- [ ] Investigate "Upload Media" feature access issue in gallery dashboard
+- [ ] Identify permission or routing problems preventing access
+- [ ] Fix integration between gallery dashboard and upload functionality
+- [ ] Test upload functionality for different user roles
+- [ ] Document proper upload workflow for future reference
 
 ## Phase 1: Database Schema Implementation
 
@@ -183,6 +219,9 @@
 ## Phase 5: Testing & QA
 
 ### Unit Testing
+- [ ] Test authentication state management fixes
+- [ ] Test modal dialog components
+- [ ] Test mobile menu implementation
 - [ ] Test API endpoints
 - [ ] Create tests for database functions
 - [ ] Test QR code generation and validation
@@ -190,6 +229,7 @@
 - [ ] Test security policies
 
 ### Integration Testing
+- [ ] Test authentication persistence across navigation
 - [ ] Test end-to-end invitation creation flow
 - [ ] Create batch upload tests
 - [ ] Test QR code scanning with invitations
@@ -211,6 +251,9 @@
 ## Phase 6: Documentation
 
 ### User Documentation
+- [ ] Document authentication state behavior
+- [ ] Create mobile menu usage guide
+- [ ] Document modal dialog interaction patterns
 - [ ] Create invitation system user guide
 - [ ] Write QR code management instructions
 - [ ] Create email template guide
@@ -218,6 +261,8 @@
 - [ ] Create metrics interpretation guide
 
 ### Developer Documentation
+- [ ] Document auth state management implementation
+- [ ] Document modal dialog component architecture
 - [ ] Document database schema
 - [ ] Create API endpoint documentation
 - [ ] Write component documentation
@@ -231,6 +276,10 @@
 - [ ] Document database indexing strategy
 
 ## Success Metrics
+- [ ] Authentication state persists when navigating between pages
+- [ ] Mobile menu correctly displays authenticated options
+- [ ] Modal dialogs render correctly with proper formatting
+- [ ] "Upload Media" feature is accessible from gallery dashboard
 - [ ] Invitation creation success rate > 99%
 - [ ] QR code generation success > 99%
 - [ ] Batch upload success rate > 95%

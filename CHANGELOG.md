@@ -24,6 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance Improvements**: Image loading, caching, and resource optimization
 - **Security Enhancements**: Invitation token security and QR code validation
 
+### Known Issues (To be fixed before Session 25)
+- **Authentication State Management**: Session state lost when navigating between protected and public pages
+- **UI Navigation Inconsistency**: "Sign In" link inappropriately appears when user is already authenticated
+- **Mobile Menu Limitations**: Authenticated menu items not properly displayed on mobile
+- **Modal Dialog Design**: Information card modals on home and about pages need complete redesign
+- **Gallery Access Issue**: "Upload Media" feature inaccessible from gallery dashboard for organizers
+
 ### Planned for v1.0.0 (April 15, 2025)
 - **Enhanced Gallery Experience**: Masonry layout, filtering, sorting, and slideshow view
 - **Intuitive User Flows**: Step-by-step wizards, contextual help, and progress indicators
@@ -46,6 +53,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic invitation management UI
 - QR code-based authentication for invited users
 - Email template integration for invitations
+- Video backgrounds for home page and about page with improved UX
+- Elegant Call to Action section on home page with consistent styling
+- New media assets to enhance visual appeal
 
 ### Changed
 - Updated video upload and playback capabilities
@@ -55,6 +65,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced sidebar navigation with proper organization
 - Improved error handling in gallery components
 - Enhanced responsive design for event gallery cards
+- Improved About page with better formatting and cleaner layout
+- Enhanced modal dialog design with better typography and visual hierarchy
+- Streamlined content flow with removal of redundant Vision section
 
 ### Fixed
 - Critical issue with gallery event card component causing build failure
