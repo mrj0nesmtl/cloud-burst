@@ -1,8 +1,15 @@
-// Re-export the server client functionality from client.ts
-import { createServerClient } from './client'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import type { Database } from '@/types/supabase'
 
-// Export the function with the name that's being imported elsewhere
-export const getServerSupabase = createServerClient
+// Create a typed Supabase client for server-side use
+function createSupabaseServer() {
+  return createServerComponentClient<Database>({
+    cookies
+  })
+}
 
-// Also export the original function for compatibility
-export { createServerClient } 
+// Export with different names for compatibility
+export const createServerClient = createSupabaseServer
+export const getServerSupabase = createSupabaseServer
+export const createClient = createSupabaseServer 
