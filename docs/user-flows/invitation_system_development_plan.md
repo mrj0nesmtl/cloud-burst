@@ -53,31 +53,31 @@ The Cloud Burst platform requires a comprehensive invitation system to enhance t
 
 ## 📝 Implementation Methodology
 
-### Phase 1: Foundation (Week 1-2)
+### Phase 1: Foundation (Hours 1-2)
 - Update database schema to support invitations
 - Create invitation model and database relationships
 - Develop API endpoints for invitation CRUD operations
 - Implement basic invitation management UI
 
-### Phase 2: Core Functionality (Week 3-4)
+### Phase 2: Core Functionality (Hours 3-4)
 - Integrate with Supabase Email service
 - Implement email template system
 - Develop QR code generation and security token system
 - Create QR code scanning interface
 
-### Phase 3: Authentication & Security (Week 5-6)
+### Phase 3: Authentication & Security (Hours 5-6)
 - Implement invited guest authentication flow
 - Create security policies for invitation-based access
 - Develop permission scopes for guest users
 - Add rate limiting and security measures
 
-### Phase 4: User Experience & Integration (Week 7-8)
+### Phase 4: User Experience & Integration (Hours 7-8)
 - Enhance UI for invitation management
 - Add metrics and tracking features
 - Implement post-event engagement flows
 - Connect invited users to their media contributions
 
-### Phase 5: Testing & Optimization (Week 9-10)
+### Phase 5: Testing & Optimization (Hours 9-10)
 - Comprehensive testing across different user scenarios
 - Performance optimization
 - Security auditing
@@ -145,10 +145,10 @@ erDiagram
 
 | Phase | Focus | Duration | Dependencies | Deliverables |
 |-------|-------|----------|--------------|--------------|
-| 1 | Foundation | 2 weeks | Database access | Schema updates, API endpoints, Basic UI |
-| 2 | Core Functionality | 2 weeks | Supabase Email access | Email integration, QR system, Scanning interface |
-| 3 | Authentication & Security | 2 weeks | Auth middleware | Guest auth flow, Security policies |
-| 4 | UX & Integration | 2 weeks | UI components | Enhanced UI, Metrics, Media connections |
+| 1 | Foundation | 2 hours | Database access | Schema updates, API endpoints, Basic UI |
+| 2 | Core Functionality | 2 hours | Supabase Email access | Email integration, QR system, Scanning interface |
+| 3 | Authentication & Security | 2 hours | Auth middleware | Guest auth flow, Security policies |
+| 4 | UX & Integration | 2 hours | UI components | Enhanced UI, Metrics, Media connections |
 | 5 | Testing & Optimization | 2 weeks | All prior phases | Final product, Documentation |
 
 ## 🔒 Security Considerations
@@ -264,3 +264,4 @@ The Invitation System will serve as a critical component of the Cloud Burst plat
 
 ## 📝 Change Log
 - April 15, 2025: Initial document creation (v0.1.0) 
+- March 18, 2025: Updated development plan (v0.2.0)
