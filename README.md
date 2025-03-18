@@ -5,7 +5,7 @@
 
 ## Capture Every Moment
 
-[![Version](https://img.shields.io/badge/version-0.7.8-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
+[![Version](https://img.shields.io/badge/version-0.7.9-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -15,16 +15,16 @@
 
 ## 📋 Table of Contents
 
-- [Abstract](#abstract-)
-- [Crowd-Powered](#crowd-powered-)
-- [Our Pitch](#our-pitch-)
-- [System Architecture](#-system-architecture-v078)
+- [Abstract](#-abstract)
+- [Crowd-Powered](#-crowd-powered)
+- [Our Pitch](#-our-pitch)
 - [Features](#features)
   - [Media Management](#media-management)
   - [Event Management](#event-management)
   - [Invitation System](#invitation-system)
   - [Security](#security)
   - [Key Benefits](#key-benefits)
+- [System Architecture](#-system-architecture)
 - [User Roles](#-user-roles)
 - [User Experience](#-user-experience)
 - [Current Status](#-current-status)
@@ -97,7 +97,7 @@ Remember the magic of disposable cameras 📸 on wedding tables? We've reimagine
 - **Customizable**: Tailor the experience to match your event theme
 - **Collaborative**: Everyone contributes to a shared visual story
 
-## 🏗️ System Architecture (v0.7.8)
+## 🏗️ System Architecture
 
 ```mermaid
 graph TD
@@ -193,7 +193,7 @@ graph LR
 
 ## 🔄 Current Status
 
-Cloud Burst is currently in beta (v0.7.8) with approximately 85% of core features implemented:
+Cloud Burst is currently in beta (v0.7.9) with approximately 90% of core features implemented:
 
 - ✅ Event management system
 - ✅ Media upload and gallery display (photos and videos)
@@ -203,6 +203,12 @@ Cloud Burst is currently in beta (v0.7.8) with approximately 85% of core feature
 - 🟡 Invitation system (75% complete)
 - 🟡 Media moderation (65% complete)
 - 🟡 Analytics integration (60% complete)
+- ✅ Mobile navigation and responsive design
+- ✅ Enhanced modal dialogs and UI components
+- 🟡 Gallery masonry layout (80% complete)
+- 🟡 Analytics dashboard (75% complete)
+- 🟡 Bulk upload functionality (70% complete)
+- 🟡 Performance optimization (65% complete)
 
 We're targeting Beta 0.9.0 for internal testing by April 1, 2025, with public launch (v1.0.0) planned for April 15, 2025.
 
