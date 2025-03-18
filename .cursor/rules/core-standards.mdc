@@ -5,8 +5,8 @@ alwaysApply: false
 ---
 # Core development standards for Cloud Burst, including TypeScript, code style, and documentation
 
-> **Version:** 0.7.1  
-> **Last Updated:** March 2024
+> **Version:** 0.7.2  
+> **Last Updated:** March 17, 2024
 
 ```json
 {
@@ -162,6 +162,31 @@ alwaysApply: false
             "services": "API services",
             "store": "Zustand stores",
             "middleware": "Route middleware"
+          }
+        },
+        "components": {
+          "gallery": {
+            "layout": "masonry",
+            "aspectRatio": "4:3",
+            "loading": "progressive",
+            "optimization": {
+              "quality": 80,
+              "formats": ["webp", "avif"],
+              "sizes": ["thumbnail", "preview", "full"]
+            }
+          },
+          "analytics": {
+            "charts": {
+              "library": "recharts",
+              "colors": ["primary", "secondary", "accent"],
+              "responsiveness": true,
+              "loading": "skeleton"
+            },
+            "metrics": {
+              "realtime": true,
+              "caching": "stale-while-revalidate",
+              "polling": 30000
+            }
           }
         }
       }
