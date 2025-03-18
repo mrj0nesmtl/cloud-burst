@@ -15,14 +15,14 @@ The **Cloud Burst** subscription and payment system enables event planners, wedd
 
 ---
 
-## 💰 Subscription Plans  
+## 💰 Event Plans - Pay to Pay No Subscription Required
 
 ```mermaid
 graph TD
-    A[Cloud Burst Plans] --> B[Free Tier]
-    A --> C[Basic Plan]
-    A --> D[Pro Plan]
-    A --> E[Enterprise]
+    A[Cloud Burst Plans] --> B[Free Tier - 7 day trial]
+    A --> C[Basic Event]
+    A --> D[Pro Event]
+    A --> E[Enterprise Event]
     
     B --> F[Limited Features]
     C --> G[Essential Features]
@@ -37,19 +37,19 @@ graph TD
 ```
 
 ### 🎟️ **Free Tier**
-- **Price**: $0/month
+- **Price**: $0
 - **Features**:
-  - 1 event/month
+  - 1 event for free
   - Up to 100 photos/event
   - Basic AI enhancement
   - 7-day gallery access
   - Standard support
 - **Ideal for**: Personal events, small gatherings
 
-### 🌟 **Basic Plan**
-- **Price**: $29/month
+### 🌟 **Basic Event**
+- **Price**: $49/event
 - **Features**:
-  - 5 events/month
+  - up to 5 events a month
   - Up to 500 photos/event
   - Advanced AI enhancement
   - 30-day gallery access
@@ -57,10 +57,9 @@ graph TD
   - Basic analytics
 - **Ideal for**: Small businesses, wedding photographers
 
-### 🚀 **Pro Plan**
-- **Price**: $99/month
+### 🚀 **Pro Event**
+- **Price**: $179/event
 - **Features**:
-  - Unlimited events
   - Up to 2000 photos/event
   - Premium AI features
   - 90-day gallery access
@@ -69,7 +68,7 @@ graph TD
   - Custom branding
 - **Ideal for**: Professional photographers, medium events
 
-### 🏢 **Enterprise Plan**
+### 🏢 **Enterprise Event**
 - **Price**: Custom pricing
 - **Features**:
   - Unlimited everything
@@ -82,8 +81,8 @@ graph TD
 
 ### 🎯 Beta Implementation Priority
 ✅ Free Tier Implementation
-🟡 Basic Plan Structure
-⏸️ Pro Plan Features [Post-Beta]
+✅ Basic Event Structure
+⏸️ Pro Event Features [Post-Beta]
 ⏸️ Enterprise Solutions [Post-Beta]
 
 ### 🔄 Current Integration Status

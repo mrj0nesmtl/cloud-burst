@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-03-16T02:49:01.257Z
+Generated: 2025-03-18T02:29:14.745Z
 
 ## Overview
-This directory contains 121 component(s).
+This directory contains 123 component(s).
 
 
 ## Directory Tree
@@ -53,7 +53,8 @@ This directory contains 121 component(s).
 │   ├── notifications-form.tsx
 │   ├── preferences-form.tsx
 │   ├── profile-form.tsx
-│   └── security-form.tsx
+│   ├── security-form.tsx
+│   └── subscription-form.tsx
 ├── gallery/
 │   ├── MediaCard.tsx
 │   ├── MediaGrid.tsx
@@ -92,6 +93,8 @@ This directory contains 121 component(s).
 │   ├── query-provider.tsx
 │   ├── toast-provider.tsx
 │   └── tooltip-provider.tsx
+├── settings/
+│   └── system-status.tsx
 ├── ui/
 │   ├── contact/
 │   │   └── page.tsx
@@ -147,13 +150,13 @@ This directory contains 121 component(s).
 ├── query-provider.tsx
 └── theme-provider.tsx
 
-14 directories, 125 files
+15 directories, 127 files
 
 ```
 
 ## File Type Breakdown
 - ts: 3 file(s)
-- tsx: 121 file(s)
+- tsx: 123 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

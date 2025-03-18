@@ -1,6 +1,6 @@
 # Cloud Burst Documentation
 
-> **Version:** 0.7.8   
+> **Version:** 0.7.9   
 > **Last Updated:** March 2024
 
 ## 📌 Situational Abstract

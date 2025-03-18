@@ -46,12 +46,7 @@ const securitySettingsSchema = z.object({
 type PasswordFormValues = z.infer<typeof passwordSchema>
 type SecuritySettingsValues = z.infer<typeof securitySettingsSchema>
 
-interface SecurityFormProps {
-  initialValues?: Partial<SecuritySettingsValues>
-  onSecuritySettingsSubmit: (values: SecuritySettingsValues) => Promise<void>
-}
-
-export function SecurityForm({ initialValues, onSecuritySettingsSubmit }: SecurityFormProps) {
+export function SecurityForm() {
   const { toast } = useToast()
   const supabase = createClientComponentClient()
   const [isChangingPassword, setIsChangingPassword] = useState(false)
@@ -59,6 +54,12 @@ export function SecurityForm({ initialValues, onSecuritySettingsSubmit }: Securi
   const [twoFactorSetupVisible, setTwoFactorSetupVisible] = useState(false)
   const [sessions, setSessions] = useState<UserSession[]>([])
   const [isLoadingSessions, setIsLoadingSessions] = useState(false)
+  const [initialValues, setInitialValues] = useState<Partial<SecuritySettingsValues>>({
+    enableTwoFactor: false,
+    autoLockSession: false,
+    sessionTimeout: '30m',
+    loginNotifications: true,
+  })
 
   const passwordForm = useForm<PasswordFormValues>({
     resolver: zodResolver(passwordSchema),
@@ -71,14 +72,44 @@ export function SecurityForm({ initialValues, onSecuritySettingsSubmit }: Securi
 
   const securitySettingsForm = useForm<SecuritySettingsValues>({
     resolver: zodResolver(securitySettingsSchema),
-    defaultValues: {
-      enableTwoFactor: false,
-      autoLockSession: false,
-      sessionTimeout: '30m',
-      loginNotifications: true,
-      ...initialValues,
-    },
+    defaultValues: initialValues as SecuritySettingsValues,
   })
+
+  // Load initial security settings
+  useEffect(() => {
+    async function loadSecuritySettings() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session?.user) return
+        
+        const { data: settings } = await supabase
+          .from('security_settings')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single()
+        
+        if (settings) {
+          setInitialValues({
+            enableTwoFactor: settings.enable_two_factor,
+            autoLockSession: settings.auto_lock_session,
+            sessionTimeout: settings.session_timeout,
+            loginNotifications: settings.login_notifications,
+          })
+          
+          securitySettingsForm.reset({
+            enableTwoFactor: settings.enable_two_factor,
+            autoLockSession: settings.auto_lock_session,
+            sessionTimeout: settings.session_timeout,
+            loginNotifications: settings.login_notifications,
+          })
+        }
+      } catch (error) {
+        console.error('Error loading security settings:', error)
+      }
+    }
+    
+    loadSecuritySettings()
+  }, [supabase, securitySettingsForm])
 
   useEffect(() => {
     async function loadSessions() {

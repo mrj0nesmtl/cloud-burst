@@ -26,8 +26,8 @@ export function usePermissions(role?: UserRole) {
   
   useEffect(() => {
     const fetchCapabilities = async () => {
-      if (!user && !process.env.NEXT_PUBLIC_BYPASS_AUTH) {
-        setCapabilities([])
+      if (!user) {
+        setCapabilities(['view_public_events']) // Default guest capability
         setLoading(false)
         return
       }
@@ -45,107 +45,89 @@ export function usePermissions(role?: UserRole) {
       }
       
       try {
-        let retryAttempts = 0;
-        let capabilitiesData: string[] = [];
-        let fetchSuccess = false;
+        const supabase = createClientComponentClient()
         
-        // Try to fetch from database with limited retries
-        while (!fetchSuccess && retryAttempts < MAX_RETRY_ATTEMPTS) {
-          retryAttempts++;
+        // First get the user's profile to ensure we have the correct role
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('role')
+          .single()
+        
+        // Only proceed with capabilities fetch if we have a valid role
+        if (profileData?.role) {
+          // Fetch capabilities from database
+          const { data, error: fetchError } = await supabase
+            .from('role_capabilities')
+            .select('capability')
+            .eq('role', profileData.role)
           
-          try {
-            const supabase = createClientComponentClient()
+          if (fetchError) {
+            // Provide role-specific fallback capabilities
+            const fallbackCapabilities = getFallbackCapabilities(userRole)
+            setCapabilities(fallbackCapabilities)
             
-            // In development mode with BYPASS_AUTH, use hardcoded capabilities
-            if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BYPASS_AUTH === 'true') {
-              console.log('Development mode: Using hardcoded capabilities for role:', userRole)
-              
-              // Provide default capabilities based on role
-              const defaultCapabilities: Record<string, string[]> = {
-                'super_admin': ['*', 'manage:all'],
-                'admin': ['manage_events', 'manage_users', 'manage_photos', 'view_dashboard', 'edit_settings'],
-                'organizer': ['manage_events', 'manage_photos', 'view_dashboard'],
-                'event_host': ['manage_own_events', 'upload_photos', 'view_dashboard'],
-                'user': ['view_events', 'upload_photos'],
-                'guest': ['view_public_events']
-              }
-              
-              const roleCapabilities = defaultCapabilities[userRole] || defaultCapabilities['guest']
-              setCapabilities(roleCapabilities)
-              capabilitiesCache[userRole] = {
-                data: roleCapabilities,
-                timestamp: now
-              }
-              setLoading(false)
-              return
+            // Update cache with fallbacks
+            capabilitiesCache[userRole] = {
+              data: fallbackCapabilities,
+              timestamp: now
             }
             
-            // Fetch capabilities from database
-            const { data, error } = await supabase
-              .from('role_capabilities')
-              .select('capability')
-              .eq('role', userRole)
-            
-            if (error) {
-              console.warn(`Attempt ${retryAttempts}: Error fetching capabilities:`, error)
-              throw error;
-            }
-            
-            // If successful, use the database capabilities
-            capabilitiesData = data?.map(p => p.capability) || [];
-            fetchSuccess = true;
-          } catch (error) {
-            // Last attempt failed, we'll use fallbacks
-            if (retryAttempts >= MAX_RETRY_ATTEMPTS) {
-              console.warn('Max retry attempts reached, using fallback capabilities');
-            }
+            // Don't throw error, just log it
+            console.warn('Using fallback capabilities due to fetch error:', fetchError)
+            setLoading(false)
+            return
           }
-        }
-        
-        // If we successfully fetched capabilities, use them
-        if (fetchSuccess) {
-          setCapabilities(capabilitiesData);
-          capabilitiesCache[userRole] = {
-            data: capabilitiesData,
-            timestamp: now
-          };
-        } else {
-          // Use hardcoded fallback capabilities
-          console.log('Development mode: Using hardcoded capabilities for role:', userRole);
           
-          // Provide default capabilities based on role
-          const defaultCapabilities: Record<string, string[]> = {
-            'super_admin': ['*', 'manage:all'],
-            'admin': ['manage_events', 'manage_users', 'manage_photos', 'view_dashboard', 'edit_settings'],
-            'organizer': ['manage_events', 'manage_photos', 'view_dashboard'],
-            'event_host': ['manage_own_events', 'upload_photos', 'view_dashboard'],
-            'user': ['view_events', 'upload_photos'],
-            'guest': ['view_public_events']
-          };
+          // Use the fetched capabilities
+          const roleCapabilities = data?.map(p => p.capability) || getFallbackCapabilities(userRole)
+          setCapabilities(roleCapabilities)
           
-          const roleCapabilities = defaultCapabilities[userRole] || defaultCapabilities['guest'];
-          setCapabilities(roleCapabilities);
-          
-          // Cache even the fallback capabilities
+          // Update cache
           capabilitiesCache[userRole] = {
             data: roleCapabilities,
             timestamp: now
-          };
+          }
+        } else {
+          // No profile found, use fallback capabilities
+          const fallbackCapabilities = getFallbackCapabilities(userRole)
+          setCapabilities(fallbackCapabilities)
+          capabilitiesCache[userRole] = {
+            data: fallbackCapabilities,
+            timestamp: now
+          }
         }
-      } catch (err) {
-        // Final error handler
-        console.error('Unhandled error in usePermissions:', err);
-        setError(err instanceof Error ? err : new Error('Unknown error'));
         
-        // Use empty capabilities as last resort
-        setCapabilities([]);
-      } finally {
-        setLoading(false);
+        setLoading(false)
+      } catch (err) {
+        console.error('Error fetching capabilities:', err)
+        // Use role-specific fallback capabilities
+        const fallbackCapabilities = getFallbackCapabilities(userRole)
+        setCapabilities(fallbackCapabilities)
+        setError(err as Error)
+        setLoading(false)
       }
     }
     
     fetchCapabilities()
   }, [user, profile, role])
+  
+  // Helper function to get fallback capabilities based on role
+  const getFallbackCapabilities = (role: UserRole): string[] => {
+    switch (role) {
+      case 'super_admin':
+        return ['manage:all']
+      case 'admin':
+        return ['manage:events', 'manage:users', 'view:analytics']
+      case 'organizer':
+        return ['create:events', 'manage:own_events', 'manage:photos', 'view:event_analytics']
+      case 'event_host':
+        return ['create:events', 'manage:own_events', 'invite:guests']
+      case 'user':
+        return ['view:events', 'manage:own_profile', 'upload:photos']
+      default:
+        return ['view:public_events']
+    }
+  }
   
   /**
    * Check if user has a specific capability

@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { UserCog, BellRing, CreditCard, LogOut } from "lucide-react"
+import { UserCog, BellRing, CreditCard, LogOut, Settings } from "lucide-react"
 
 interface Profile {
   id: string
@@ -81,21 +81,9 @@ export function UserNav({ user, profile, onSignOut }: UserNavProps) {
         
         {/* User Settings */}
         <DropdownMenuItem asChild>
-          <Link href="/protected/settings/profile" className="flex items-center">
-            <UserCog className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/protected/settings/notifications" className="flex items-center">
-            <BellRing className="mr-2 h-4 w-4" />
-            <span>Notifications</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/protected/settings/billing" className="flex items-center">
-            <CreditCard className="mr-2 h-4 w-4" />
-            <span>Subscription</span>
+          <Link href="/protected/settings" className="flex items-center">
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Settings</span>
           </Link>
         </DropdownMenuItem>
         

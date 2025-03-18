@@ -36,51 +36,41 @@ export const metadata = {
 
 // Helper function to format the modal descriptions
 const formatDescription = (text: string) => {
-  // Split the text by bullet points and format them
   if (text.includes('Benefits:') || text.includes('Key Benefits:') || text.includes('Features:') || text.includes('Advantages:')) {
     const parts = text.split(/Benefits:|Key Benefits:|Features:|Advantages:/);
     const intro = parts[0].trim();
     const benefitsSection = parts[1]?.trim() || '';
     
-    // Extract the section type (Benefits, Features, etc.)
-    let sectionType = "Benefits";
-    if (text.includes('Key Benefits:')) sectionType = "Key Benefits";
-    if (text.includes('Features:')) sectionType = "Features";
-    if (text.includes('Advantages:')) sectionType = "Advantages";
-    
-    // Format the benefits/features section
+    let sectionType = text.match(/(Benefits|Key Benefits|Features|Advantages):/)?.[1] || "Benefits";
     const bulletPoints = benefitsSection.split('•').filter(item => item.trim().length > 0).map(item => item.trim());
     
     return (
-      <>
-        <p className="mb-6 text-gray-700 leading-relaxed">{intro}</p>
-        <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
-          <h4 className="text-primary font-semibold mb-3 flex items-center">
-            <span className="bg-primary text-white p-1 rounded-full mr-2 flex items-center justify-center" style={{ width: '24px', height: '24px' }}>
-              <CheckCircle2 className="h-4 w-4" />
-            </span>
-            {sectionType}
-          </h4>
-          <ul className="space-y-3 pl-2">
+      <div className="space-y-6">
+        <DialogDescription>
+          {intro}
+        </DialogDescription>
+        
+        <div className="space-y-4">
+          <h4 className="text-sm font-semibold text-primary">{sectionType}</h4>
+          <ul className="space-y-3">
             {bulletPoints.map((point: string, i: number) => (
-              <li key={i} className="flex items-start group">
-                <div className="bg-primary/10 rounded-full p-1 mr-3 flex-shrink-0 group-hover:bg-primary/20 transition-colors">
-                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
-                </div>
-                <span className="text-gray-800">{point}</span>
+              <li key={i} className="flex gap-3 items-start">
+                <CheckCircle2 className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
+                <span className="text-sm text-muted-foreground">{point}</span>
               </li>
             ))}
           </ul>
         </div>
-      </>
+      </div>
     );
   }
-  return <p className="text-gray-700 leading-relaxed">{text}</p>;
+  
+  return <DialogDescription>{text}</DialogDescription>;
 };
 
 const howItWorksCards = [
   {
-    icon: <QrCode className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <QrCode className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "Frictionless Access",
     description: "No app download required—guests scan & capture moments instantly via QR code.",
     modalContent: {
@@ -96,7 +86,7 @@ const howItWorksCards = [
     }
   },
   {
-    icon: <Sparkles className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <Sparkles className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "AI-Powered Curation",
     description: "Smart filters remove duplicates & categorize photos using facial recognition & timestamps.",
     modalContent: {
@@ -114,7 +104,7 @@ const howItWorksCards = [
     }
   },
   {
-    icon: <Share2 className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <Share2 className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "Seamless Collection",
     description: "All images are automatically uploaded to a centralized event gallery.",
     modalContent: {
@@ -132,7 +122,7 @@ const howItWorksCards = [
     }
   },
   {
-    icon: <Shield className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <Shield className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "Privacy Controls",
     description: "Event hosts can moderate content & set permissions for sharing.",
     modalContent: {
@@ -153,7 +143,7 @@ const howItWorksCards = [
 
 const perfectForCards = [
   {
-    icon: <PartyPopper className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <PartyPopper className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "Wedding Planners & Celebrations",
     description: "Capture every precious moment of the special day.",
     modalContent: {
@@ -171,7 +161,7 @@ const perfectForCards = [
     }
   },
   {
-    icon: <Building2 className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <Building2 className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "Corporate Events & Conferences",
     description: "Professional documentation of business gatherings.",
     modalContent: {
@@ -189,7 +179,7 @@ const perfectForCards = [
     }
   },
   {
-    icon: <Music className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <Music className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "Music Festivals & Entertainment",
     description: "Crowd-sourced memories from live events.",
     modalContent: {
@@ -207,7 +197,7 @@ const perfectForCards = [
     }
   },
   {
-    icon: <Rocket className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <Rocket className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "Brand Activations & Launches",
     description: "Engage audiences and capture brand moments.",
     modalContent: {
@@ -225,7 +215,7 @@ const perfectForCards = [
     }
   },
   {
-    icon: <Users2 className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <Users2 className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "Private Celebrations",
     description: "Personal gatherings and intimate events.",
     modalContent: {
@@ -243,7 +233,7 @@ const perfectForCards = [
     }
   },
   {
-    icon: <Camera className="h-8 w-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300" />,
+    icon: <Camera className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />,
     title: "Photography Studios",
     description: "Enhanced workflow for professional photographers.",
     modalContent: {
@@ -264,9 +254,9 @@ const perfectForCards = [
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col min-h-full">
+    <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="hero-section relative overflow-hidden">
+      <section className="hero-section relative overflow-hidden" style={{ minHeight: '60vh', maxHeight: '800px' }}>
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full z-0">
           <video
@@ -280,29 +270,33 @@ export default function AboutPage() {
             <source src="/hero_bg.mp4" type="video/mp4" />
           </video>
           {/* Overlay to ensure text readability */}
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
         
         <div className="hexagon-pattern opacity-15"></div>
-        <div className="container mx-auto relative z-10">
-          <div className="hero-logo">
+        <div className="container mx-auto relative z-10 h-full flex flex-col items-center justify-center px-4">
+          <div className="hero-logo mb-6">
             <CloudLightning className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="hero-title text-white">
+          <h1 className="hero-title text-white text-center mb-4">
             What is Cloud Burst?
           </h1>
-          <p className="hero-subtitle text-gray-100">
-            Elevating event photography by blending nostalgia with modern technology.
+          <p className="hero-subtitle text-gray-100 text-center max-w-2xl">
+            Blending nostalgia with modern technology.
           </p>
         </div>
       </section>
 
-      <div className="container mx-auto py-12 px-4 space-y-14">
+      <div className="container mx-auto px-4">
         {/* How It Works Section */}
-        <section className="section py-0">
-          <h2 className="section-title">How It Works</h2>
-          <p className="section-subtitle">
-            Cloud Burst simplifies and enhances event photography through a seamless four-step process.
+        <section className="section py-16">
+          <h2 className="section-title text-center mb-6">How It Works</h2>
+          <p className="section-subtitle text-center max-w-3xl mx-auto mb-12">
+            No apps to download, no accounts to create. Just scan a QR code and start capturing memories. It's that simple.
+            Cloud Burst revolutionizes event media capture by bringing the charm of disposable cameras into the modern age. Our 
+            platform transforms every event into a collaborative media story, powered by AI and created by all attendees. With 
+            no apps to download and no accounts to create, guests simply scan a QR code to instantly start capturing and sharing 
+            photos and videos.
           </p>
           
           <div className="card-grid md-grid-cols-2 lg-grid-cols-2">
@@ -310,7 +304,7 @@ export default function AboutPage() {
               <Dialog key={index}>
                 <DialogTrigger asChild>
                   <div className="feature-card cursor-pointer">
-                    <div className="feature-icon group">
+                    <div className="feature-icon group flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6 mx-auto">
                       {card.icon}
                     </div>
                     <h3 className="feature-title">{card.title}</h3>
@@ -320,18 +314,18 @@ export default function AboutPage() {
                     </div>
                   </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-lg bg-white">
-                  <DialogHeader className="border-b pb-3">
-                    <DialogTitle className="text-xl font-bold text-primary flex items-center">
-                      <div className="bg-primary/10 p-2 rounded-full mr-3">
-                        {card.icon}
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      <div className="flex items-center gap-3">
+                        <span className="bg-primary/10 p-2.5 rounded-md">
+                          {card.icon}
+                        </span>
+                        <span>{card.modalContent.title}</span>
                       </div>
-                      {card.modalContent.title}
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="py-5">
-                    {formatDescription(card.modalContent.description)}
-                  </div>
+                  {formatDescription(card.modalContent.description)}
                 </DialogContent>
               </Dialog>
             ))}
@@ -350,7 +344,7 @@ export default function AboutPage() {
               <Dialog key={index}>
                 <DialogTrigger asChild>
                   <div className="feature-card cursor-pointer">
-                    <div className="feature-icon group">
+                    <div className="feature-icon group flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6 mx-auto">
                       {card.icon}
                     </div>
                     <h3 className="feature-title">{card.title}</h3>
@@ -360,18 +354,18 @@ export default function AboutPage() {
                     </div>
                   </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-lg bg-white">
-                  <DialogHeader className="border-b pb-3">
-                    <DialogTitle className="text-xl font-bold text-primary flex items-center">
-                      <div className="bg-primary/10 p-2 rounded-full mr-3">
-                        {card.icon}
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      <div className="flex items-center gap-3">
+                        <span className="bg-primary/10 p-2.5 rounded-md">
+                          {card.icon}
+                        </span>
+                        <span>{card.modalContent.title}</span>
                       </div>
-                      {card.modalContent.title}
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="py-5">
-                    {formatDescription(card.modalContent.description)}
-                  </div>
+                  {formatDescription(card.modalContent.description)}
                 </DialogContent>
               </Dialog>
             ))}
@@ -392,21 +386,28 @@ export default function AboutPage() {
         </section>
 
         {/* Join Us Section */}
-        <section className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 space-y-6 border border-primary/20 shadow-lg">
-          <h2 className="text-3xl font-bold text-primary">Join Us Today</h2>
-          <p className="text-lg">
+        <section className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 space-y-6 border border-primary/20 shadow-lg mb-24">
+          <h2 className="text-3xl font-bold text-primary text-center">Join Us Today</h2>
+          <p className="text-lg text-center">
             Ready to transform your event photography experience?
           </p>
-          <div className="flex flex-wrap gap-4">
-            <Button className="btn-primary" asChild>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Button size="lg" className="btn-primary" asChild>
               <Link href="/auth/register">Get Started</Link>
             </Button>
-            <Button variant="outline" className="bg-background hover:bg-muted" asChild>
+            <Button size="lg" variant="outline" className="bg-background hover:bg-muted" asChild>
               <Link href="/pricing">View Pricing</Link>
             </Button>
           </div>
         </section>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-background border-t border-border mt-auto">
+        <div className="container mx-auto py-16 px-4">
+          {/* Footer content */}
+        </div>
+      </footer>
     </div>
   )
 } 

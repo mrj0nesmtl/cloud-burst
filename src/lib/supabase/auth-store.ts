@@ -238,12 +238,20 @@ export const useAuthStore = create<AuthStore>()(
         const supabase = createClientComponentClient()
         try {
           set({ loading: true })
+          
+          // Calculate trial expiration date (30 days from now)
+          const trialExpiresAt = new Date()
+          trialExpiresAt.setDate(trialExpiresAt.getDate() + 30)
+          
           const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
               data: {
-                role: 'user' // Default role for new signups
+                role: 'event_host', // Lowercase as per UserRole transform
+                subscription_tier: 'basic',
+                subscription_status: 'trial',
+                trial_expires_at: trialExpiresAt.toISOString()
               }
             }
           })
@@ -254,14 +262,18 @@ export const useAuthStore = create<AuthStore>()(
               user: {
                 id: data.user.id,
                 email: data.user.email!,
-                role: 'user',
+                role: 'event_host', // Lowercase as per UserRole transform
                 username: null,
                 full_name: null,
                 avatar_url: null,
-                updated_at: new Date().toISOString()
+                updated_at: new Date().toISOString(),
+                subscription_tier: 'basic',
+                subscription_status: 'trial',
+                trial_expires_at: trialExpiresAt.toISOString(),
+                trial_started_at: new Date().toISOString()
               },
               session: data.session,
-              capabilities: roleCapabilities.user as Capability[]
+              capabilities: roleCapabilities.event_host as Capability[]
             })
           }
         } catch (error) {

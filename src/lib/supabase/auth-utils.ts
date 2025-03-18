@@ -16,7 +16,7 @@ const AUTH_CACHE_DURATION_MS = 60000; // 1 minute cache duration
 
 /**
  * Securely gets the current user with proper authentication
- * Replaces the insecure getSession() method
+ * Returns null for unauthenticated users without throwing errors
  */
 export async function getAuthenticatedUser() {
   const supabase = createClientComponentClient();
@@ -28,11 +28,15 @@ export async function getAuthenticatedUser() {
   }
   
   try {
-    // Always use getUser() instead of getSession() for secure authentication
     const { data, error } = await supabase.auth.getUser();
     
+    // If there's no user or session, return null without error
+    if (!data?.user || error?.message?.includes('Auth session missing')) {
+      return { user: null, error: null };
+    }
+    
     if (error) {
-      console.error('Authentication error:', error);
+      console.warn('Authentication check failed:', error);
       return { user: null, error };
     }
     
@@ -42,7 +46,7 @@ export async function getAuthenticatedUser() {
     
     return { user: data.user, error: null };
   } catch (error) {
-    console.error('Unexpected auth error:', error);
-    return { user: null, error: error as Error };
+    console.warn('Auth check failed:', error);
+    return { user: null, error: null };
   }
 }

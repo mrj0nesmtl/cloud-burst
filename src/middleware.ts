@@ -24,78 +24,75 @@ export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone()
   const path = url.pathname
   
-  // Public routes that don't require authentication
-  const isPublicRoute = 
-    path === '/' || 
-    path.startsWith('/auth/') || 
-    path.startsWith('/public/') ||
-    path.startsWith('/_next/') ||
-    path.startsWith('/api/public/')
-  
-  // If this is a public route, skip authentication checks
-  if (isPublicRoute) {
-    return res
-  }
-  
-  // Protected routes that require authentication
-  const isProtectedRoute = path.startsWith('/protected/')
-  
-  // If not a protected route, no need to check auth
-  if (!isProtectedRoute) {
-    return res
-  }
-  
-  // Bypass auth in development mode if enabled
-  if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BYPASS_AUTH === 'true') {
-    console.log('Development mode: Bypassing authentication middleware')
-    return NextResponse.next()
-  }
-  
-  // Check for auth retry count to prevent infinite loops
-  const retryCount = parseInt(req.headers.get(authRetryKey) || '0')
-  if (retryCount >= MAX_AUTH_RETRIES) {
-    console.warn('Max auth retries reached, redirecting to sign in page')
-    const redirectUrl = req.nextUrl.clone()
-    redirectUrl.pathname = '/auth/signin'
-    redirectUrl.searchParams.set('error', 'session_error')
-    return NextResponse.redirect(redirectUrl)
-  }
-  
-  // Increment retry count
-  res.headers.set(authRetryKey, (retryCount + 1).toString())
-  
-  // Admin routes that require admin privileges
-  const isAdminRoute = path.startsWith('/protected/admin/')
-  
-  // Event management routes
-  const isEventRoute = path.startsWith('/protected/events/')
-  
+  // Create Supabase client for all routes
   const supabase = createMiddlewareClient({ req, res })
   
-  // Try to get the session, with error handling
+  // Try to get the session for all routes
   try {
-    const { data, error } = await supabase.auth.getSession()
+    const { data: { session }, error } = await supabase.auth.getSession()
     
     if (error) {
       console.error('Error getting session:', error)
       throw error
     }
+
+    // Public routes that don't require authentication
+    const isPublicRoute = 
+      path === '/' || 
+      path.startsWith('/auth/') || 
+      path.startsWith('/public/') ||
+      path.startsWith('/_next/') ||
+      path.startsWith('/api/public/')
     
-    const session = data.session
-    
-    // If user is not authenticated, redirect to sign in
-    if (!session) {
-      url.pathname = '/auth/signin'
-      url.searchParams.set('redirectTo', path)
-      return NextResponse.redirect(url)
-    }
-    
-    // If user is authenticated and this isn't an admin or event route, allow access
-    if (!(isAdminRoute || isEventRoute)) {
-      // Reset retry count on successful auth
-      res.headers.delete(authRetryKey)
+    // For public routes, maintain session state but don't enforce auth
+    if (isPublicRoute) {
+      // If user is already authenticated and trying to access signin page, redirect to dashboard
+      if (session && path.startsWith('/auth/signin')) {
+        const redirectUrl = new URL('/protected/dashboard', req.url)
+        return NextResponse.redirect(redirectUrl)
+      }
+      
+      if (session) {
+        // Attach session info to response
+        res.headers.set('x-user-authenticated', 'true')
+        res.headers.set('x-user-role', session.user.role || 'guest')
+      }
       return res
     }
+
+    // Protected routes that require authentication
+    const isProtectedRoute = path.startsWith('/protected/')
+    
+    // If not a protected route, no need to check auth
+    if (!isProtectedRoute) {
+      return res
+    }
+
+    // If user is not authenticated, redirect to sign in
+    if (!session) {
+      // Don't increment retry count for initial auth redirect
+      const redirectUrl = new URL('/auth/signin', req.url)
+      redirectUrl.searchParams.set('returnTo', path)
+      return NextResponse.redirect(redirectUrl)
+    }
+
+    // Check for auth retry count to prevent infinite loops
+    const retryCount = parseInt(req.headers.get(authRetryKey) || '0')
+    if (retryCount >= MAX_AUTH_RETRIES) {
+      console.warn('Max auth retries reached, redirecting to sign in page')
+      const redirectUrl = new URL('/auth/signin', req.url)
+      redirectUrl.searchParams.set('error', 'session_error')
+      return NextResponse.redirect(redirectUrl)
+    }
+    
+    // Increment retry count only for subsequent auth checks
+    res.headers.set(authRetryKey, (retryCount + 1).toString())
+    
+    // Admin routes that require admin privileges
+    const isAdminRoute = path.startsWith('/protected/admin/')
+    
+    // Event management routes
+    const isEventRoute = path.startsWith('/protected/events/')
     
     // Get user ID from session for role check
     const userId = session.user.id

@@ -1,571 +1,136 @@
-# 👥 Role-Based Access Control System
+# Role-Based Access Control (RBAC)
 
-## Cloud Burst
-📅 *Updated: March 15, 2025*  
-📊 *Version: 0.7.8*
+## Overview
+Cloud Burst implements a comprehensive role-based access control system that manages permissions across different user types, from system administrators to event attendees. The system is designed to be flexible, secure, and scalable, supporting both paid and free tiers of the platform.
 
-## 📌 Situational Abstract
-
-Cloud Burst's role-based access control (RBAC) system has evolved into a comprehensive security framework that forms the backbone of our platform's permission structure. Since the project's inception in February 2025, we've implemented a sophisticated multi-tiered role hierarchy with clearly defined capabilities that adapt the user experience based on permissions and resource ownership.
-
-The RBAC system is approximately 95% complete, with six fully implemented roles and one role (invited_user) currently in development. Recent implementations include permission hooks for capability checking, conditional UI rendering based on permissions, and database-level security through Row Level Security policies. These enhancements ensure that users can only access and modify resources appropriate to their role and ownership status.
-
-The organizer role has been fully implemented with complete UI integration, including access to event management, QR code generation, gallery management, and event page customization features. This represents a significant milestone in our RBAC implementation.
-
-As we approach our April 1, 2025 launch date, our current focus is on finalizing the invited_user role implementation and removing the delete capability from event hosts. The system has been extensively tested with dedicated test accounts for each role, ensuring a secure yet intuitive user experience across the platform.
-
-## 🎭 User Roles & Hierarchy
+## Role Hierarchy
 
 ```mermaid
 graph TD
-    A[Super Admin] --> B[Admin]
-    B --> C[Organizer]
-    C --> D[Event Host]
-    D --> E[Invited User]
-    E --> F[User]
-    F --> G[Guest]
-    
-    style A fill:#ff9999
-    style B fill:#ffcc99
-    style C fill:#ffff99
-    style D fill:#ccff99
-    style E fill:#99ffff
-    style F fill:#cc99ff
-    style G fill:#dddddd
+    A[super_admin] --> B[admin]
+    B --> C[organizer]
+    C --> D[event_host]
+    D --> E[invited_user]
+    E --> F[user]
+    F --> G[guest]
 ```
 
-### Role Overview
+## Roles and Tiers
 
-| Role | Email | Description | Access Level | Subscription |
-|------|-------|-------------|--------------|--------------|
-| `super_admin` | joel.yaffe@gmail.com | Full system access - internal use only | Highest | N/A |
-| `admin` | joel.yaffe+admin@gmail.com | Administrative access - internal use only | High | N/A |
-| `organizer` | joel.yaffe+organizer@gmail.com | Event management access - can create and manage multiple events | Medium-High | Paid Only |
-| `event_host` | joel.yaffe+eventhost@gmail.com | Can create and manage their own events - cannot delete events | Medium | Free/Paid |
-| `invited_user` | joel.yaffe+inviteduser@gmail.com | Invited attendee with QR code access | Low-Medium | Free |
-| `user` | joel.yaffe+user@gmail.com | Standard user with basic platform access | Low | Free |
-| `guest` | joel.yaffe+guest@gmail.com | Public access - can view public events and galleries | Lowest | Free |
+| Role | Tier | Description |
+|------|------|-------------|
+| super_admin | Internal | Full system access with all capabilities - internal use only |
+| admin | Internal | Administrative access for platform management - internal use only |
+| organizer | Paid | Event management access - paid tier only, can create and manage multiple events |
+| event_host | Free/Paid | Can create and manage their own events (cannot delete events) |
+| invited_user | Free | Invited attendee with QR code access - event-specific permissions and media upload capabilities |
+| user | Free | Standard user with basic platform access |
+| guest | Free | Public access - can view public events and upload event photos |
 
-### Implementation Status
+## Core Capabilities
 
-```mermaid
-pie
-    title "Role Implementation Status"
-    "Fully Implemented" : 6
-    "In Development" : 1
-    "Planned" : 0
-```
+### Profile Management
+- `manage:own_profile`: Manage personal profile settings
+- `manage:all_profiles`: Manage any user's profile (admin only)
 
-| Role | Database Status | User Created | Capabilities Defined | Notes |
-|------|----------------|--------------|---------------------|-------|
-| `super_admin` | ✅ Implemented | ✅ Created | ✅ Defined | Working as expected |
-| `admin` | ✅ Implemented | ✅ Created | ✅ Defined | Working as expected |
-| `organizer` | ✅ Implemented | ✅ Created | ✅ Defined | ✅ UI integration complete |
-| `event_host` | ✅ Implemented | ✅ Created | ✅ Defined | Need to remove delete capability |
-| `invited_user` | 🟡 In Development | 🟡 Created | 🟡 Defined | Needs QR code authentication |
-| `user` | ✅ Implemented | ✅ Created | ✅ Defined | Working as expected |
-| `guest` | ✅ Implemented | ✅ Created | ✅ Defined | Working as expected |
+### Event Management
+- `manage:events`: Create and manage multiple events
+- `manage:own_events`: Manage events created by the user
+- `view:events`: View event details and galleries
 
-## 🔐 Role Capabilities
+### Media Management
+- `upload:event_photos`: Upload photos to event galleries
+- `upload:event_videos`: Upload videos to event galleries
+- `manage:own_media`: Manage own uploaded media
+- `manage:all_media`: Moderate and manage all media
+- `view:event_photos`: View event photo galleries
+- `view:event_videos`: View event video galleries
 
-### Super Admin
-- **Description**: Full system access - internal use only
-- **Capabilities**:
-  - ✅ System configuration
-  - ✅ User management
-  - ✅ Role assignment
-  - ✅ Analytics access
-  - ✅ Security controls
-  - ✅ Template management
-  - ✅ Event management
-  - ✅ Media moderation
+### System Management
+- `manage:roles`: Manage role assignments and capabilities
+- `manage:templates`: Manage email and system templates
+- `view:analytics`: Access system analytics and metrics
 
-### Admin
-- **Description**: Administrative access - internal use only
-- **Capabilities**:
-  - ✅ User management
-  - ✅ Event management
-  - ✅ Media moderation
-  - ✅ Analytics access
-  - ✅ Template viewing
-  - ❌ Role assignment
+## Feature Access by Role
 
-### Organizer
-- **Description**: Event management access - can create and manage multiple events
-- **Subscription**: Paid Only
-- **Capabilities**:
-  - ✅ Event creation
-  - ✅ Event editing
-  - ✅ Event deletion
-  - ✅ Attendee management
-  - ✅ Media moderation
-  - ✅ Analytics view
-  - ✅ QR code generation
-  - ✅ Gallery management
-  - ✅ Event page customization
-  - ❌ Admin access
-
-### Event Host
-- **Description**: Can create and manage their own events - cannot delete events
-- **Subscription**: Free/Paid
-- **Capabilities**:
-  - ✅ Event creation
-  - ✅ Event editing
-  - ❌ Event deletion
-  - ✅ Attendee management
-  - ✅ Media moderation
-  - ✅ Limited analytics
-  - ❌ Admin access
-
-### Invited User (In Development)
-- **Description**: Invited attendee (QR) - can view own events and galleries
-- **Subscription**: Free
-- **Capabilities**:
-  - ✅ Event access
-  - ✅ Media viewing
-  - ✅ Media upload
-  - ✅ Basic interaction
-  - ❌ Event management
-  - ❌ Admin access
-
-### User
-- **Description**: Standard user with basic platform access
-- **Subscription**: Free
-- **Capabilities**:
-  - ✅ Gallery access
-  - ✅ Media upload
-  - ✅ Profile management
-  - ✅ Settings control
-  - ❌ Event management
-  - ❌ Admin access
-
-### Guest
-- **Description**: Public access - can view public events and galleries
-- **Subscription**: Free
-- **Capabilities**:
-  - ✅ Event access
-  - ✅ Media viewing
-  - ✅ Limited upload
-  - ✅ Basic interaction
-  - ❌ Profile management
-  - ❌ Event management
-  - ❌ Admin access
-
-## �� Access Matrix
-
-```mermaid
-graph TD
-    A[User Request] --> B{Auth Check}
-    B -->|Authenticated| C{Role Check}
-    B -->|Not Authenticated| D[Guest Access]
-    C -->|Super Admin| E[Full Access]
-    C -->|Admin| F[Admin Access]
-    C -->|Organizer| G[Organizer Access]
-    C -->|Event Host| H[Event Host Access]
-    C -->|Invited User| I[Invited User Access]
-    C -->|User| J[User Access]
-    D -->|Public Resources| K[Limited Access]
-    
-    style E fill:#ff9999
-    style F fill:#ffcc99
-    style G fill:#ffff99
-    style H fill:#ccff99
-    style I fill:#99ffff
-    style J fill:#cc99ff
-    style K fill:#dddddd
-```
-
-### Feature Access by Role
-
-| Feature/Page | super_admin | admin | organizer | event_host | invited_user | user | guest |
-|--------------|-------------|-------|-----------|------------|--------------|------|-------|
-| **Public Pages** |
-| Home Page | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| About Page | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Pricing Page | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Contact Page | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Public Events | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Public Event Gallery | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Protected Pages** |
-| Dashboard | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Profile Settings | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
-| **Event Management** |
-| View Own Events | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Feature | super_admin | admin | organizer | event_host | invited_user | user | guest |
+|---------|-------------|-------|-----------|------------|--------------|------|-------|
+| Manage All Profiles | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Manage Own Profile | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
 | Create Events | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Edit Own Events | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Delete Own Events | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| View All Events | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Edit Any Event | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Delete Any Event | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Attendee Management** |
-| Manage Own Event Attendees | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| View All Attendees | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Media Management** |
-| Upload Media (Own Events) | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| Upload Media (Any Event) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Approve Media (Own Events) | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Approve Media (Any Event) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Delete Media (Own Events) | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Delete Media (Any Event) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Admin Features** |
-| User Management | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Role Assignment | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| System Settings | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Email Templates | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Manage All Events | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Manage Own Events | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Upload Photos | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Upload Videos | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Moderate Media | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| View Analytics | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Manage Templates | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Manage Roles | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
-## 🔄 Role Transitions
+## Implementation Details
 
-```mermaid
-stateDiagram-v2
-    [*] --> GuestUser
-    GuestUser --> RegisteredUser: Registration
-    RegisteredUser --> EventHost: Role Upgrade
-    EventHost --> Organizer: Role Upgrade (Paid)
-    Organizer --> Admin: Admin Promotion
-    Admin --> SuperAdmin: Admin Promotion
-    SuperAdmin --> Admin: Role Downgrade
-    Admin --> Organizer: Role Downgrade
-    Organizer --> EventHost: Role Downgrade
-    EventHost --> RegisteredUser: Role Downgrade
-    RegisteredUser --> [*]: Account Deletion
-    GuestUser --> InvitedUser: QR Code Access
-    InvitedUser --> RegisteredUser: Registration
-```
+### Database Schema
+The RBAC system is implemented using the following tables:
+- `roles`: Defines available roles
+- `role_capabilities`: Maps capabilities to roles
+- `profiles`: User profiles with assigned roles
+- `event_attendees`: Links users to events with specific permissions
 
-## 🛠️ Technical Implementation
+### Event Attendee Integration
+The `event_attendees` table serves as a bridge between users and events, handling:
+- Invitation-based access control
+- Event-specific permissions
+- Media contribution tracking
+- Attendance verification
 
-### Database Structure
-```sql
--- Roles table
-CREATE TABLE public.roles (
-  name TEXT PRIMARY KEY,
-  description TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
+### Security Policies
+Row Level Security (RLS) policies ensure:
+- Users can only access authorized resources
+- Event-specific permissions are enforced
+- Media ownership is properly tracked
+- Role-based access is maintained
 
--- Role capabilities table
-CREATE TABLE public.role_capabilities (
-  role TEXT REFERENCES public.roles(name),
-  capability TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  PRIMARY KEY (role, capability)
-);
+### Capability Format
+Capabilities follow the format: `action:resource`
+- Actions: manage, view, upload
+- Resources: events, profiles, media, templates
+- Scope modifiers: own_, all_
 
--- Profiles table with role column
-CREATE TABLE public.profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id),
-  role TEXT REFERENCES public.roles(name),
-  subscription_tier TEXT DEFAULT 'free',
-  -- other fields
-  CHECK (role = ANY (ARRAY['super_admin', 'admin', 'organizer', 'event_host', 'invited_user', 'user', 'guest']))
-);
-```
+## Usage Examples
 
-### Middleware Implementation
-```typescript
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
-import { NextResponse } from 'next/server'
+### Invited User Flow
+1. Receives event invitation with QR code
+2. Scans QR code to access event
+3. Creates/uses existing profile
+4. Gains event-specific permissions
+5. Can upload and manage media
+6. Access persists for event duration
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req, res })
-  const session = await supabase.auth.getSession()
-  
-  // Get user profile with role
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-      
-    const role = profile?.role || 'guest'
-    
-    // Route protection
-    const protectedRoute = req.nextUrl.pathname.startsWith('/protected')
-    const adminRoute = req.nextUrl.pathname.startsWith('/protected/admin')
-    
-    if (protectedRoute && !session?.data?.session) {
-      return NextResponse.redirect(new URL('/auth/signin', req.url))
-    }
-    
-    // Admin route protection
-    if (adminRoute && !['super_admin', 'admin'].includes(role)) {
-      return NextResponse.redirect(new URL('/protected/dashboard', req.url))
-    }
-  }
-  
-  return res
-}
-```
+### Event Host Flow
+1. Creates event (free/paid tier)
+2. Manages event details
+3. Sends invitations
+4. Moderates event media
+5. Views event analytics
 
-### Permission Hooks
-```typescript
-import { createClient } from '@/lib/supabase/client'
-import { useUser } from '@/hooks/use-user'
+## Security Considerations
 
-// Hook to check if user has a specific capability
-export function useHasPermission(action: string, resource: string) {
-  const { profile } = useUser()
-  const [hasPermission, setHasPermission] = useState(false)
-  
-  useEffect(() => {
-    async function checkPermission() {
-      if (!profile) return setHasPermission(false)
-      
-      const supabase = createClient()
-      
-      // Super admin has all permissions
-      if (profile.role === 'super_admin') {
-        return setHasPermission(true)
-      }
-      
-      // Check if role has capability
-      const { data: capabilities } = await supabase
-        .from('role_capabilities')
-        .select('capability')
-        .eq('role', profile.role)
-      
-      const hasCapability = capabilities?.some(
-        c => c.capability === `${action}:${resource}` || c.capability === 'manage:all'
-      )
-      
-      setHasPermission(!!hasCapability)
-    }
-    
-    checkPermission()
-  }, [profile, action, resource])
-  
-  return hasPermission
-}
+1. Role elevation requires admin approval
+2. Capability checks on all protected routes
+3. Regular security audit logging
+4. Rate limiting on sensitive operations
+5. Session management and timeout
+6. Secure invitation token handling
 
-// Hook to check if user owns a resource
-export function useOwnsResource(resourceType: string, resourceId: string) {
-  const { user } = useUser()
-  const [isOwner, setIsOwner] = useState(false)
-  
-  useEffect(() => {
-    async function checkOwnership() {
-      if (!user || !resourceId) return setIsOwner(false)
-      
-      const supabase = createClient()
-      
-      // Check resource ownership
-      const { data, error } = await supabase
-        .from(resourceType)
-        .select('user_id')
-        .eq('id', resourceId)
-        .single()
-      
-      setIsOwner(data?.user_id === user.id)
-    }
-    
-    checkOwnership()
-  }, [user, resourceType, resourceId])
-  
-  return isOwner
-}
-```
+## Monitoring and Maintenance
 
-### UI Conditional Rendering
-```tsx
-import { useHasPermission, useOwnsResource } from '@/hooks/use-permissions'
+1. Regular capability audit
+2. Role usage analytics
+3. Permission conflict detection
+4. Security policy updates
+5. Performance monitoring
 
-// Permission Gate Component
-export function PermissionGate({ 
-  action, 
-  resource, 
-  children 
-}: { 
-  action: string, 
-  resource: string, 
-  children: React.ReactNode 
-}) {
-  const hasPermission = useHasPermission(action, resource)
-  
-  if (!hasPermission) return null
-  
-  return <>{children}</>
-}
+---
 
-// Resource Owner Gate Component
-export function OwnerGate({ 
-  resourceType, 
-  resourceId, 
-  children 
-}: { 
-  resourceType: string, 
-  resourceId: string, 
-  children: React.ReactNode 
-}) {
-  const isOwner = useOwnsResource(resourceType, resourceId)
-  const isSuperAdmin = useHasPermission('manage', 'all')
-  
-  if (!isOwner && !isSuperAdmin) return null
-  
-  return <>{children}</>
-}
-
-// Example Usage
-export function EventActions({ event }) {
-  return (
-    <div className="flex space-x-2">
-      <PermissionGate action="edit" resource="events">
-        <OwnerGate resourceType="events" resourceId={event.id}>
-          <Button variant="outline" asChild>
-            <Link href={`/protected/events/${event.id}/edit`}>
-              Edit
-            </Link>
-          </Button>
-        </OwnerGate>
-      </PermissionGate>
-      
-      <PermissionGate action="delete" resource="events">
-        <OwnerGate resourceType="events" resourceId={event.id}>
-          <Button variant="destructive" onClick={handleDelete}>
-            Delete
-          </Button>
-        </OwnerGate>
-      </PermissionGate>
-    </div>
-  )
-}
-```
-
-### Subscription Tier Check
-```tsx
-import { useUser } from '@/hooks/use-user'
-
-export function CreateEventButton() {
-  const { profile } = useUser()
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
-  
-  const handleClick = () => {
-    // Check if user is trying to create as organizer but doesn't have paid tier
-    if (profile?.role === 'organizer' && profile?.subscription_tier !== 'pro') {
-      setShowUpgradeModal(true)
-      return
-    }
-    
-    // Otherwise proceed to event creation
-    router.push('/protected/events/create')
-  }
-  
-  return (
-    <>
-      <Button onClick={handleClick}>
-        Create Event
-      </Button>
-      
-      {showUpgradeModal && (
-        <UpgradeModal 
-          onClose={() => setShowUpgradeModal(false)}
-          feature="organizer"
-        />
-      )}
-    </>
-  )
-}
-```
-
-## 🔄 Implementation Progress
-
-As we approach our April 1, 2025 launch date, the RBAC system is approximately 90% complete. Recent implementations include:
-
-### Key Achievements:
-- ✅ Comprehensive role hierarchy with six fully implemented roles
-- ✅ Database-level security with Row Level Security policies
-- ✅ Permission hooks for capability checking
-- ✅ Conditional UI rendering based on permissions
-- ✅ Resource ownership verification
-- ✅ Role-based middleware for route protection
-- ✅ Subscription tier integration
-
-### Current Focus:
-- 🟡 Finalizing invited_user role implementation (80% complete)
-- ✅ Updating organizer subscription tier requirements (100% complete)
-- 🟡 Removing delete capability from event hosts (70% complete)
-- 🟡 Enhancing QR code-based authentication (60% complete)
-
-### Next Steps:
-1. Complete the invited_user role implementation
-2. ✅ Update organizer role UI integration
-3. Remove delete capability from event hosts
-4. Implement QR code-based authentication for invited users
-5. Conduct comprehensive testing across all roles
-
-## 📋 Implementation Tasks
-
-To fully implement the desired role-based access control, the following tasks need to be completed:
-
-1. **Create Invited User Role**:
-   ```sql
-   -- Add invited_user to allowed roles
-   ALTER TABLE public.profiles
-   DROP CONSTRAINT profiles_role_check;
-   
-   ALTER TABLE public.profiles
-   ADD CONSTRAINT profiles_role_check
-   CHECK (role = ANY (ARRAY['super_admin', 'admin', 'organizer', 'event_host', 'invited_user', 'user', 'guest']));
-   
-   -- Add role to roles table
-   INSERT INTO public.roles (name, description)
-   VALUES ('invited_user', 'Invited attendee with QR code access');
-   
-   -- Define capabilities
-   INSERT INTO public.role_capabilities (role, capability)
-   VALUES 
-     ('invited_user', 'view:events'),
-     ('invited_user', 'view:event_photos'),
-     ('invited_user', 'upload:event_photos');
-   ```
-
-2. **Update Event Host Permissions**:
-   ```sql
-   -- Remove delete capability from event_host
-   DELETE FROM public.role_capabilities
-   WHERE role = 'event_host' AND capability = 'delete:events';
-   ```
-
-3. **Update Organizer Subscription**:
-   ```sql
-   -- Update organizer to paid tier
-   UPDATE public.profiles
-   SET subscription_tier = 'pro'
-   WHERE id IN (
-     SELECT id FROM auth.users WHERE email = 'joel.yaffe+organizer@gmail.com'
-   );
-   ```
-   ✅ Completed: Organizer role now has full UI integration with appropriate capabilities.
-
-## 🧪 Testing Instructions
-
-### How to Test Each Role
-
-1. **Sign in** with the appropriate email and password
-2. **Verify dashboard access** - Check what appears in the sidebar
-3. **Test event creation** - Try to create a new event
-4. **Test event management** - Try to edit/delete events
-5. **Test media management** - Try to upload/approve/delete media
-6. **Test admin features** - Try to access admin pages
-
-### QA Checklist
-
-When testing each role, verify:
-
-1. **Navigation** - Correct menu items appear/disappear
-2. **Access Control** - Appropriate pages are accessible/inaccessible
-3. **Functionality** - Features work as expected for the role
-4. **Error Handling** - Appropriate error messages for unauthorized actions
-5. **UI Elements** - Buttons and controls appear/disappear based on permissions
-6. **Subscription Tier** - Verify paid features are only available to appropriate tiers
-
-## 🎯 Conclusion
-
-Cloud Burst's role-based access control system provides a robust security framework that adapts the user experience based on permissions and resource ownership. By implementing a comprehensive role hierarchy with clearly defined capabilities, we ensure that users can only access and modify resources appropriate to their role while maintaining an intuitive and seamless user experience.
-
-As we approach our April 1, 2025 launch date, the RBAC system is well-positioned to support the platform's security requirements and user management needs. The implementation of permission hooks, conditional UI rendering, and database-level security ensures a secure yet flexible foundation that can evolve with the platform's growing feature set and user base.
-
---- 
+Last Updated: March 17, 2025
+Version: 1.0.0 

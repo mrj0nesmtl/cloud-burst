@@ -1,6 +1,13 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import type { Database } from '@/types/supabase'
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables')
+}
+
 /**
  * Supabase Client Configuration
  * 
@@ -12,7 +19,10 @@ import type { Database } from '@/types/supabase'
 
 // Client-side Supabase instance (use in 'use client' components)
 export const createClient = () => {
-  return createClientComponentClient<Database>()
+  return createClientComponentClient<Database>({
+    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  })
 }
 
 // Server-side Supabase instance (use in Server Components)
@@ -37,10 +47,16 @@ export const supabase = createClient()
 export const getTables = (client = supabase) => {
   return {
     profiles: () => client.from('profiles'),
-    roles: () => client.from('roles'),
-    roleCapabilities: () => client.from('role_capabilities'),
     events: () => client.from('events'),
-    eventGuests: () => client.from('event_guests')
+    eventAttendees: () => client.from('event_attendees'),
+    media: () => client.from('media'),
+    galleries: () => client.from('galleries'),
+    photos: () => client.from('photos'),
+    contactFormSubmissions: () => client.from('contact_form_submissions'),
+    // @ts-ignore - Tables exist in database but not in type definition
+    roles: () => client.from('roles'),
+    // @ts-ignore - Tables exist in database but not in type definition
+    roleCapabilities: () => client.from('role_capabilities')
   }
 }
 

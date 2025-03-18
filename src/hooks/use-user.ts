@@ -31,85 +31,54 @@ export function useUser() {
   useEffect(() => {
     const fetchUserAndProfile = async () => {
       try {
-        // Development mode with bypass auth
-        if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BYPASS_AUTH === 'true') {
-          console.log('Development mode: Using mock profile')
-          
-          // Create a mock user
-          const mockUser = {
-            id: 'dd913d28-dd14-40f7-8a4d-6b8b64e5e8bf',
-            email: 'joel.yaffe+organizer@gmail.com',
-            role: 'organizer',
-          } as User
-          
-          // Create a mock profile
-          const mockProfile = {
-            id: 'dd913d28-dd14-40f7-8a4d-6b8b64e5e8bf',
-            email: 'joel.yaffe+organizer@gmail.com',
-            role: 'organizer',
-            full_name: 'Organizer User',
-            username: 'organizer',
-            avatar_url: null,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }
-          
-          setUser(mockUser)
-          setProfile(mockProfile)
-          setLoading(false)
-          return
-        }
-        
-        // Use the secure authentication method
         const { user: authUser, error: authError } = await getAuthenticatedUser()
         
-        if (authError) throw authError
+        // Handle unauthenticated state gracefully
         if (!authUser) {
-          // No user found, clean up state
           setUser(null)
           setProfile(null)
           setLoading(false)
           return
         }
         
-        setUser(authUser)
-        console.log('User authenticated:', authUser.email)
-        
-        // Get the cached user profile, which reduces database calls
-        const cachedProfile = localStorage.getItem(`profile:${authUser.id}`)
-        const cacheTimestamp = localStorage.getItem(`profile:${authUser.id}:timestamp`)
-        const now = Date.now()
-        
-        // Use cache if it's less than 5 minutes old
-        if (cachedProfile && cacheTimestamp && (now - parseInt(cacheTimestamp)) < 300000) {
-          console.log('Using cached profile for user:', authUser.email)
-          setProfile(JSON.parse(cachedProfile))
-          setLoading(false)
-          return
+        // Only proceed with profile fetch if we have an authenticated user
+        if (authUser) {
+          setUser(authUser)
+          
+          // Get the cached user profile
+          const cachedProfile = localStorage.getItem(`profile:${authUser.id}`)
+          const cacheTimestamp = localStorage.getItem(`profile:${authUser.id}:timestamp`)
+          const now = Date.now()
+          
+          // Use cache if it's less than 5 minutes old
+          if (cachedProfile && cacheTimestamp && (now - parseInt(cacheTimestamp)) < 300000) {
+            setProfile(JSON.parse(cachedProfile))
+            setLoading(false)
+            return
+          }
+          
+          // Fetch profile from database
+          const supabase = createClientComponentClient()
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', authUser.id)
+            .single()
+          
+          if (error) throw error
+          
+          setProfile(data)
+          
+          // Cache the profile
+          localStorage.setItem(`profile:${authUser.id}`, JSON.stringify(data))
+          localStorage.setItem(`profile:${authUser.id}:timestamp`, now.toString())
         }
-        
-        // Fetch profile from database
-        const supabase = createClientComponentClient()
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', authUser.id)
-          .single()
-        
-        if (error) throw error
-        
-        // Store user profile in state
-        console.log('Profile fetched successfully:', data.email)
-        setProfile(data)
-        
-        // Cache the profile to reduce database calls
-        localStorage.setItem(`profile:${authUser.id}`, JSON.stringify(data))
-        localStorage.setItem(`profile:${authUser.id}:timestamp`, now.toString())
       } catch (err) {
-        console.error('Error in useUser hook:', err)
-        setError(err instanceof Error ? err : new Error('Unknown error fetching user'))
-        setUser(null)
-        setProfile(null)
+        console.warn('Profile fetch failed:', err)
+        // Don't set error for auth session missing
+        if (!(err instanceof Error && err.message.includes('Auth session missing'))) {
+          setError(err instanceof Error ? err : new Error('Unknown error fetching user'))
+        }
       } finally {
         setLoading(false)
       }

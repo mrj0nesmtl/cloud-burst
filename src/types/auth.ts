@@ -69,6 +69,10 @@ export const userProfileSchema = z.object({
   full_name: z.string().min(2).max(100).nullable(),
   avatar_url: z.string().url().nullable(),
   updated_at: z.string().datetime(),
+  subscription_tier: z.enum(['free', 'basic', 'pro']).nullable(),
+  subscription_status: z.enum(['active', 'inactive', 'cancelled', 'past_due', 'trial']).nullable(),
+  trial_expires_at: z.string().datetime().nullable(),
+  trial_started_at: z.string().datetime().nullable()
 })
 
 // Role schema

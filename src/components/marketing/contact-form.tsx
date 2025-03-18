@@ -78,17 +78,21 @@ export function ContactForm() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-2xl mx-auto">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel className="text-base">Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your name" {...field} />
+                  <Input 
+                    placeholder="Your name" 
+                    {...field} 
+                    className="h-12 text-base px-4" 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,9 +104,13 @@ export function ContactForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-base">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="your@email.com" {...field} />
+                  <Input 
+                    placeholder="your@email.com" 
+                    {...field} 
+                    className="h-12 text-base px-4" 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -114,9 +122,13 @@ export function ContactForm() {
             name="subject"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Subject</FormLabel>
+                <FormLabel className="text-base">Subject</FormLabel>
                 <FormControl>
-                  <Input placeholder="What is this regarding?" {...field} />
+                  <Input 
+                    placeholder="What is this regarding?" 
+                    {...field} 
+                    className="h-12 text-base px-4" 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -128,11 +140,11 @@ export function ContactForm() {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Message</FormLabel>
+                <FormLabel className="text-base">Message</FormLabel>
                 <FormControl>
                   <Textarea 
                     placeholder="Your message..." 
-                    className="min-h-[120px]" 
+                    className="min-h-[200px] text-base p-4 resize-none" 
                     {...field} 
                   />
                 </FormControl>
@@ -141,7 +153,11 @@ export function ContactForm() {
             )}
           />
           
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button 
+            type="submit" 
+            className="w-full h-12 text-base" 
+            disabled={isLoading}
+          >
             {isLoading ? 'Sending...' : 'Send Message'}
           </Button>
         </form>
