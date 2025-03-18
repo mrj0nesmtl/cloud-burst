@@ -5,17 +5,89 @@ import { ProfileForm } from '@/components/forms/profile-form'
 import { PreferencesForm } from '@/components/forms/preferences-form'
 import { NotificationsForm } from '@/components/forms/notifications-form'
 import { SecurityForm } from '@/components/forms/security-form'
-import { EventCustomizationForm } from '@/components/forms/event-customization-form'
+import { SubscriptionForm } from '@/components/forms/subscription-form'
+import { SystemStatusDisplay } from '@/components/settings/system-status'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { redirect } from 'next/navigation'
-import { SecuritySettings } from '@/lib/security-settings'
-import { getEventCustomizationSettings } from '@/lib/event-customization-server'
+import { revalidatePath } from 'next/cache'
 
 export const metadata: Metadata = {
   title: 'Settings | Cloud Burst',
   description: 'Manage your account settings and preferences',
+}
+
+type PreferencesFormValues = {
+  autoPlay: boolean
+  theme: "system" | "light" | "dark"
+  emailDigest: boolean
+  autoUpload: boolean
+  highQualityPreviews: boolean
+  language: "fr" | "en" | "es" | "de"
+  displayDensity: "comfortable" | "compact" | "spacious"
+  sortOrder: "size" | "name" | "newest" | "oldest"
+}
+
+type NotificationsFormValues = {
+  emailNotifications: boolean
+  pushNotifications: boolean
+  marketingEmails: boolean
+  newEventAlerts: boolean
+  photoComments: boolean
+  photoLikes: boolean
+  digestFrequency: "never" | "daily" | "weekly" | "monthly"
+  notificationSound: boolean
+}
+
+async function updatePreferences(values: PreferencesFormValues): Promise<void> {
+  'use server'
+  
+  const supabase = createServerComponentClient({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
+  
+  if (!session) {
+    throw new Error('Not authenticated')
+  }
+  
+  const { error } = await supabase
+    .from('user_preferences')
+    .upsert({
+      user_id: session.user.id,
+      ...values,
+      updated_at: new Date().toISOString()
+    })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/protected/settings')
+}
+
+async function updateNotifications(values: NotificationsFormValues): Promise<void> {
+  'use server'
+  
+  const supabase = createServerComponentClient({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
+  
+  if (!session) {
+    throw new Error('Not authenticated')
+  }
+  
+  const { error } = await supabase
+    .from('user_notifications')
+    .upsert({
+      user_id: session.user.id,
+      ...values,
+      updated_at: new Date().toISOString()
+    })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/protected/settings')
 }
 
 export default async function SettingsPage() {
@@ -44,10 +116,10 @@ export default async function SettingsPage() {
   const isEventHost = userRoles?.some(role => role.role_id === 2) || false
 
   return (
-    <div style={{ width: '100%', padding: '24px' }}>
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Settings</h1>
-        <p style={{ color: 'var(--muted-foreground)' }}>
+    <div className="w-full p-6">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-2">Settings</h1>
+        <p className="text-muted-foreground">
           Manage your account settings and preferences
         </p>
       </div>
@@ -55,12 +127,13 @@ export default async function SettingsPage() {
       <Separator />
       
       <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="preferences">Preferences</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
-          {isEventHost && <TabsTrigger value="event-customization">Event Customization</TabsTrigger>}
+          <TabsTrigger value="subscription">Subscription</TabsTrigger>
+          <TabsTrigger value="system">System Status</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile" className="space-y-6">
@@ -86,23 +159,7 @@ export default async function SettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <PreferencesForm 
-                initialValues={{
-                  theme: 'system',
-                  emailDigest: true,
-                  autoUpload: false,
-                  highQualityPreviews: true,
-                  language: 'en',
-                  displayDensity: 'comfortable',
-                  dateFormat: 'MM/DD/YYYY',
-                  timeFormat: '12h',
-                  defaultView: 'grid',
-                }}
-                onSubmit={async (values) => {
-                  // Handle preferences update
-                  console.log(values)
-                }}
-              />
+              <PreferencesForm onSubmit={updatePreferences} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -116,65 +173,42 @@ export default async function SettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <NotificationsForm 
-                initialValues={{
-                  emailNotifications: true,
-                  pushNotifications: true,
-                  marketingEmails: false,
-                  newEventAlerts: true,
-                  photoComments: true,
-                  photoLikes: true,
-                  digestFrequency: 'weekly',
-                  notificationSound: true,
-                }}
-                onSubmit={async (values) => {
-                  // Handle notifications update
-                  console.log(values)
-                }}
-              />
+              <NotificationsForm onSubmit={updateNotifications} />
             </CardContent>
           </Card>
         </TabsContent>
         
         <TabsContent value="security" className="space-y-6">
-          <SecurityForm 
-            initialValues={{
-              enableTwoFactor: false,
-              autoLockSession: true,
-              sessionTimeout: '4h',
-              loginNotifications: true,
-            }}
-            onSecuritySettingsSubmit={async (values) => {
-              // Handle security settings update
-              console.log(values)
-              
-              // In a real implementation, we would update the user's security settings in the database
-              // await supabase.from('user_security_settings').upsert({
-              //   user_id: session.user.id,
-              //   ...values,
-              //   updated_at: new Date().toISOString(),
-              // })
-            }}
-          />
+          <SecurityForm />
         </TabsContent>
-        
-        {isEventHost && (
-          <TabsContent value="event-customization" className="space-y-6">
-            <EventCustomizationForm 
-              onSubmit={async (values) => {
-                // Handle event customization update
-                console.log(values)
-                
-                // In a real implementation, we would update the event customization settings in the database
-                // await supabase.from('event_customization').upsert({
-                //   user_id: session.user.id,
-                //   ...values,
-                //   updated_at: new Date().toISOString(),
-                // })
-              }}
-            />
-          </TabsContent>
-        )}
+
+        <TabsContent value="subscription" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Subscription</CardTitle>
+              <CardDescription>
+                Manage your subscription and billing settings
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <SubscriptionForm />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="system" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>System Status</CardTitle>
+              <CardDescription>
+                View system health and performance metrics
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <SystemStatusDisplay />
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   )

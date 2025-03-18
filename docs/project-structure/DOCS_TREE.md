@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-16T02:48:59.102Z
+Generated: 2025-03-18T02:29:08.691Z
 
 ## Overview
 
@@ -58,6 +58,9 @@ Generated: 2025-03-16T02:48:59.102Z
 │   │   ├── session_23_kickoff.md
 │   │   ├── session_23_narrative.md
 │   │   ├── session_23_summary.md
+│   │   ├── session_24_checklist.md
+│   │   ├── session_24_narrative.md
+│   │   ├── session_24_part2_kickoff_prompt.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -71,16 +74,12 @@ Generated: 2025-03-16T02:48:59.102Z
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_24_checklist.md
-│   ├── session_24_narrative.md
-│   ├── session_24_part2_kickoff_prompt.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
 │   ├── deck.md
-│   ├── invitation_system_development_plan.md
 │   ├── payment_subscription_design_document.md
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
@@ -117,8 +116,9 @@ Generated: 2025-03-16T02:48:59.102Z
 ├── user-flows/
 │   ├── create_test_users_ui.md
 │   ├── event_management.md
+│   ├── invitation_system_development_plan.md
 │   ├── invited_user_flow_design_document.md
-│   ├── photo_upload_sequence_diagram.md
+│   ├── media_upload_sequence_diagram.md
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store

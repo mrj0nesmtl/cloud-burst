@@ -83,7 +83,7 @@ const plans = [
     route: "/auth/register?plan=free"
   },
   {
-    name: "Basic Plan",
+    name: "Basic",
     price: "$49",
     description: "Great for small to medium events",
     icon: <Star className="h-12 w-12 text-yellow-500 group-hover:scale-110 transition-transform duration-300" />,
@@ -97,7 +97,7 @@ const plans = [
       "Extended storage"
     ],
     modalContent: {
-      title: "Basic Plan Features",
+      title: "Basic Features",
       description: `Enhanced features for better event coverage and organization.
 
       Advanced Features:
@@ -119,7 +119,7 @@ const plans = [
     route: "/auth/register?plan=basic"
   },
   {
-    name: "Pro Plan",
+    name: "Pro",
     price: "$99",
     description: "Perfect for professional photographers",
     icon: <Crown className="h-12 w-12 text-purple-500 group-hover:scale-110 transition-transform duration-300" />,
@@ -133,7 +133,7 @@ const plans = [
       "API access"
     ],
     modalContent: {
-      title: "Professional Plan Benefits",
+      title: "Professional Benefits",
       description: `Complete solution for professional event photography needs.
 
       Premium Features:
@@ -188,6 +188,7 @@ const plans = [
       • Global brands`,
     },
     popular: false,
+    comingSoon: true,
     route: "/auth/register?plan=enterprise"
   }
 ]
@@ -231,7 +232,7 @@ export default function PricingPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="hero-section py-8">
+      <section className="hero-section py-8" style={{ minHeight: '30vh' }}>
         <div className="hexagon-pattern opacity-15"></div>
         <div className="container-md mx-auto px-4">
           <div className="hero-logo mb-4">
@@ -261,6 +262,11 @@ export default function PricingPage() {
                 {plan.popular && (
                   <div className="absolute -top-3 left-0 right-0 mx-auto w-fit px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full shadow-lg">
                     Most Popular
+                  </div>
+                )}
+                {plan.comingSoon && (
+                  <div className="absolute -top-3 left-0 right-0 mx-auto w-fit px-3 py-1 bg-yellow-500 text-white text-xs font-medium rounded-full shadow-lg">
+                    Coming Soon
                   </div>
                 )}
                 

@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-16T02:48:58.897Z
+Generated: 2025-03-18T02:29:08.288Z
 
 ## Overview
 
@@ -290,7 +290,8 @@ Generated: 2025-03-16T02:48:58.897Z
 │   │   ├── notifications-form.tsx
 │   │   ├── preferences-form.tsx
 │   │   ├── profile-form.tsx
-│   │   └── security-form.tsx
+│   │   ├── security-form.tsx
+│   │   └── subscription-form.tsx
 │   ├── gallery/
 │   │   ├── MediaCard.tsx
 │   │   ├── MediaGrid.tsx
@@ -329,6 +330,8 @@ Generated: 2025-03-16T02:48:58.897Z
 │   │   ├── query-provider.tsx
 │   │   ├── toast-provider.tsx
 │   │   └── tooltip-provider.tsx
+│   ├── settings/
+│   │   └── system-status.tsx
 │   ├── ui/
 │   │   ├── contact/
 │   │   │   └── page.tsx
@@ -453,13 +456,13 @@ Generated: 2025-03-16T02:48:58.897Z
 ├── middleware.test.ts
 └── middleware.ts
 
-121 directories, 324 files
+122 directories, 326 files
 
 ```
 
 ## File Type Breakdown
 - ts: 67 file(s)
-- tsx: 239 file(s)
+- tsx: 241 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

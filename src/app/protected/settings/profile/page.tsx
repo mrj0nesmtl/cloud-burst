@@ -8,6 +8,6 @@ export const metadata: Metadata = {
 
 // This page simply redirects to the existing profile settings page
 export default function ProfileSettingsRedirectPage() {
-  // Redirect to the main profile settings page
-  redirect('/protected/profile/settings');
+  // Redirect to the main profile page
+  redirect('/protected/profile');
 } 

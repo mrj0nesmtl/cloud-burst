@@ -20,26 +20,32 @@ export default function DashboardPage() {
   const upcomingCount = 0;
   
   return (
-    <div style={{ width: '100%', padding: '24px' }}>
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>Dashboard</h1>
+    <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
+      {/* Page header */}
+      <div className="flex items-center justify-between space-y-2">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Overview</h2>
+          <p className="text-muted-foreground">
+            Welcome to your event management dashboard
+          </p>
+        </div>
+        <div className="flex items-center space-x-2">
           <Button asChild>
             <Link href="/protected/events/create">
               <Plus className="mr-2 h-4 w-4" /> Create Event
             </Link>
           </Button>
         </div>
-        <p style={{ color: 'var(--muted-foreground)' }}>
-          Welcome back, Organizer User
-        </p>
       </div>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+
+      {/* Dashboard Stats Grid */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Events</CardTitle>
-            <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            <div className="rounded-full bg-primary/10 p-1.5">
+              <CalendarDays className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{eventCount}</div>
@@ -49,10 +55,12 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Attendees</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <div className="rounded-full bg-primary/10 p-1.5">
+              <Users className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{attendeeCount}</div>
@@ -62,10 +70,12 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Photos</CardTitle>
-            <Image className="h-4 w-4 text-muted-foreground" />
+            <div className="rounded-full bg-primary/10 p-1.5">
+              <Image className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{photoCount}</div>
@@ -75,10 +85,12 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Upcoming</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <div className="rounded-full bg-primary/10 p-1.5">
+              <Calendar className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{upcomingCount}</div>
@@ -89,8 +101,9 @@ export default function DashboardPage() {
         </Card>
       </div>
       
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <Card>
+      {/* Activity and Events Grid */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Card className="shadow-sm">
           <CardHeader>
             <CardTitle>Recent Events</CardTitle>
           </CardHeader>
@@ -99,7 +112,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="shadow-sm">
           <CardHeader>
             <CardTitle>Activity Feed</CardTitle>
           </CardHeader>

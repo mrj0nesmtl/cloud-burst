@@ -27,8 +27,11 @@ export function useAuth() {
   
   // Enhanced error handling
   const handleAuthError = useCallback((error: any) => {
-    console.error('Authentication error:', error)
-    // Add additional error handling logic here if needed
+    // Don't treat auth session missing as an error on public pages
+    if (error?.message?.includes('Auth session missing')) {
+      return null
+    }
+    console.warn('Authentication error:', error)
     return error
   }, [])
   
@@ -38,17 +41,21 @@ export function useAuth() {
       try {
         const supabase = createClient()
         
-        // Use getUser instead of getSession for better security
         const { data: { user }, error } = await supabase.auth.getUser()
         
+        // Handle unauthenticated state gracefully
+        if (!user || error?.message?.includes('Auth session missing')) {
+          useAuthStore.getState().setUser(null)
+          useAuthStore.getState().setLoading(false)
+          return
+        }
+        
         if (error) {
-          console.error('Error initializing auth:', error)
+          console.warn('Error initializing auth:', error)
           return
         }
         
         if (user) {
-          console.log('User authenticated:', user.email)
-          
           // Fetch user profile
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
@@ -57,13 +64,11 @@ export function useAuth() {
             .single()
             
           if (profileError) {
-            console.error('Error fetching profile:', profileError)
+            console.warn('Error fetching profile:', profileError)
             return
           }
           
           if (profile?.role) {
-            console.log('Role:', profile.role)
-            
             // Try to fetch role capabilities from database
             try {
               const { data: rolePerms, error: roleError } = await supabase
@@ -71,19 +76,17 @@ export function useAuth() {
                 .select('capability')
                 .eq('role', profile.role)
                 
-              if (!roleError) {
-                // If successful, use the database capabilities
+              if (!roleError && rolePerms) {
                 useAuthStore.getState().setCapabilities(
-                  rolePerms?.map(p => p.capability as Capability) ?? []
+                  rolePerms.map(p => p.capability as Capability)
                 )
               } else {
-                // If there's an error, use the hardcoded capabilities from types
-                console.warn('Using fallback capabilities due to database error:', roleError.message)
+                // Use fallback capabilities
                 const fallbackCapabilities = roleCapabilities[profile.role as keyof typeof roleCapabilities] || []
                 useAuthStore.getState().setCapabilities(fallbackCapabilities as Capability[])
               }
             } catch (capError) {
-              console.warn('Error fetching capabilities, using fallback:', capError)
+              // Use fallback capabilities
               const fallbackCapabilities = roleCapabilities[profile.role as keyof typeof roleCapabilities] || []
               useAuthStore.getState().setCapabilities(fallbackCapabilities as Capability[])
             }
@@ -91,11 +94,9 @@ export function useAuth() {
           
           // Update auth store with user profile
           useAuthStore.getState().setUser(profile)
-        } else {
-          console.log('No authenticated user')
         }
       } catch (err) {
-        console.error('Auth initialization error:', err)
+        console.warn('Auth initialization error:', err)
       } finally {
         useAuthStore.getState().setLoading(false)
       }

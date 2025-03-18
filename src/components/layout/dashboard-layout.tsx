@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { SideNav } from '@/components/nav/side-nav'
 import { UserNav } from '@/components/nav/user-nav'
 import { Button } from '@/components/ui/button'
-import { Menu, X, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Menu, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
@@ -46,7 +46,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const handleSignOut = async () => {
     try {
       await signOut()
-      // Use router.push instead of relying on the middleware redirect
       router.push('/auth/signin')
     } catch (error) {
       console.error('Error signing out:', error)
@@ -84,62 +83,43 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen">
       {/* Mobile sidebar */}
       <div
         className={cn(
-          "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden",
+          "fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden",
           sidebarOpen ? "block" : "hidden"
         )}
+        onClick={() => setSidebarOpen(false)}
       >
-        <div className="fixed inset-y-0 left-0 z-50 h-full w-3/4 max-w-xs border-r bg-background shadow-lg sm:max-w-sm">
-          <div className="flex h-16 items-center px-6">
+        <div 
+          className="fixed inset-y-0 left-0 z-50 h-full w-3/4 max-w-xs border-r bg-background shadow-lg sm:max-w-sm"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex h-16 items-center justify-between px-6">
             <Logo />
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-4 top-4"
               onClick={() => setSidebarOpen(false)}
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
               <span className="sr-only">Close sidebar</span>
             </Button>
           </div>
-          <SideNav collapsed={false} setIsOpen={setSidebarOpen} />
+          <div className="h-[calc(100vh-4rem)]">
+            <SideNav collapsed={false} />
+          </div>
         </div>
       </div>
-      
-      {/* Top navigation */}
-      <div className="sticky top-0 z-40 border-b bg-background">
-        <header className="flex h-16 items-center gap-4 px-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle menu</span>
-          </Button>
-          <Logo />
-          <div className="ml-auto flex items-center gap-2">
-            <UserNav
-              user={user}
-              profile={profile}
-              onSignOut={handleSignOut}
-            />
-          </div>
-        </header>
-      </div>
-      
-      {/* Main content */}
-      <div className="flex flex-1">
-        {/* Desktop sidebar */}
-        <div className={cn(
-          "hidden border-r transition-all duration-300 ease-in-out lg:block",
-          sidebarCollapsed ? "w-[4.5rem]" : "w-[18rem]"
-        )}>
-          <div className="relative sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto py-6">
+
+      {/* Desktop sidebar */}
+      <div className={cn(
+        "hidden border-r bg-background transition-all duration-300 ease-in-out lg:block",
+        sidebarCollapsed ? "w-[4.5rem]" : "w-64"
+      )}>
+        <div className="sticky top-0 h-screen">
+          <div className="relative h-full py-6">
             <Button
               variant="ghost"
               size="icon"
@@ -155,14 +135,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <SideNav collapsed={sidebarCollapsed} />
           </div>
         </div>
-        
-        <main className={cn(
-          "flex-1 w-full overflow-y-auto",
-          sidebarCollapsed ? "lg:ml-[4.5rem]" : "lg:ml-0"
-        )}>
-          {children}
-        </main>
       </div>
+
+      {/* Main content */}
+      <main className="flex-1 overflow-y-auto p-6">
+        {children}
+      </main>
     </div>
   )
 } 

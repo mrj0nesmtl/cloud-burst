@@ -23,7 +23,7 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="hero-section py-8">
+      <section className="hero-section py-4" style={{ minHeight: '30vh' }}>
         <div className="hexagon-pattern opacity-15"></div>
         <div className="container-md mx-auto px-4">
           <div className="hero-logo mb-4">
@@ -101,33 +101,43 @@ export default function ContactPage() {
             {/* Contact Form */}
             <Card className="p-8 md:col-span-2 hover:shadow-md transition-all">
               <form className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">First Name</label>
-                    <Input placeholder="John" />
+                    <label className="text-base font-medium">First Name</label>
+                    <Input 
+                      placeholder="John" 
+                      className="h-14 text-lg px-4 rounded-lg min-w-[240px]"
+                    />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Last Name</label>
-                    <Input placeholder="Doe" />
+                    <label className="text-base font-medium">Last Name</label>
+                    <Input 
+                      placeholder="Doe" 
+                      className="h-14 text-lg px-4 rounded-lg min-w-[240px]"
+                    />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Email</label>
-                  <Input type="email" placeholder="you@example.com" />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Message</label>
-                  <Textarea 
-                    placeholder="How can we help you?"
-                    className="min-h-[150px]"
+                  <label className="text-base font-medium">Email</label>
+                  <Input 
+                    type="email" 
+                    placeholder="you@example.com" 
+                    className="h-14 text-lg px-4 rounded-lg"
                   />
                 </div>
 
-                <Button className="w-full" size="lg">
+                <div className="space-y-2">
+                  <label className="text-base font-medium">Message</label>
+                  <Textarea 
+                    placeholder="How can we help you?"
+                    className="min-h-[200px] text-lg p-4 rounded-lg resize-none"
+                  />
+                </div>
+
+                <Button className="w-full h-14 text-lg" size="lg">
                   Send Message
-                  <Send className="ml-2 h-4 w-4" />
+                  <Send className="ml-2 h-5 w-5" />
                 </Button>
               </form>
             </Card>

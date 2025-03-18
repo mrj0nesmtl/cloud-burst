@@ -1,5 +1,5 @@
 # public Directory Structure
-Generated: 2025-03-16T02:48:59.535Z
+Generated: 2025-03-18T02:29:10.014Z
 
 ## Overview
 
@@ -25,6 +25,7 @@ Generated: 2025-03-16T02:48:59.535Z
 ├── file.svg
 ├── globe.svg
 ├── hero_bg.mp4
+├── hero_bg2.mp4
 ├── manifest.json
 ├── next.svg
 ├── pexels-themo-bg.jpg
@@ -36,7 +37,7 @@ Generated: 2025-03-16T02:48:59.535Z
 ├── vercel.svg
 └── window.svg
 
-2 directories, 26 files
+2 directories, 27 files
 
 ```
 

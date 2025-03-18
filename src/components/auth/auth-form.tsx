@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
@@ -21,6 +20,7 @@ import {
 import { cn } from '@/lib/utils'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { createClient } from '@/lib/supabase/client'
 
 // Enhanced schema with better error messages
 const authSchema = z.object({
@@ -41,7 +41,6 @@ const MIN_AUTH_INTERVAL_MS = 2000 // 2 seconds between attempts
 export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
   const [isLoading, setIsLoading] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
-  const supabase = createClientComponentClient()
   const { toast } = useToast()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -99,6 +98,7 @@ export function AuthForm({ mode }: { mode: 'signin' | 'signup' }) {
     setIsLoading(true)
     
     try {
+      const supabase = createClient()
       const authResponse = mode === 'signin' 
         ? await supabase.auth.signInWithPassword(data)
         : await supabase.auth.signUp(data)

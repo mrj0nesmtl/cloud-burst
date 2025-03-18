@@ -1,16 +1,4 @@
-Need to install the following packages:
-supabase@2.15.8
-Ok to proceed? (y) 
-
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
-
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       contact_form_submissions: {
@@ -38,299 +26,142 @@ export interface Database {
           created_at?: string
           status?: string | null
         }
-        Relationships: []
-      }
-      media: {
-        Row: {
-          id: string
-          event_id: string
-          media_type: string
-          storage_path: string
-          file_path: string
-          url: string
-          thumbnail_url: string | null
-          title: string | null
-          description: string | null
-          size: number | null
-          mime_type: string | null
-          width: number | null
-          height: number | null
-          duration: number | null
-          user_id: string | null
-          status: string
-          metadata: Json | null
-          created_at: string
-          updated_at: string | null
-        }
-        Insert: {
-          id?: string
-          event_id: string
-          media_type: string
-          storage_path: string
-          file_path: string
-          url: string
-          thumbnail_url?: string | null
-          title?: string | null
-          description?: string | null
-          size?: number | null
-          mime_type?: string | null
-          width?: number | null
-          height?: number | null
-          duration?: number | null
-          user_id?: string | null
-          status?: string
-          metadata?: Json | null
-          created_at?: string
-          updated_at?: string | null
-        }
-        Update: {
-          id?: string
-          event_id?: string
-          media_type?: string
-          storage_path?: string
-          file_path?: string
-          url?: string
-          thumbnail_url?: string | null
-          title?: string | null
-          description?: string | null
-          size?: number | null
-          mime_type?: string | null
-          width?: number | null
-          height?: number | null
-          duration?: number | null
-          user_id?: string | null
-          status?: string
-          metadata?: Json | null
-          created_at?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "media_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "media_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
       }
       event_attendees: {
         Row: {
           id: string
           event_id: string
-          email: string
-          name: string
+          user_id: string
           status: string
-          access_code: string | null
-          user_id: string | null
           created_at: string
-          updated_at: string | null
         }
         Insert: {
           id?: string
           event_id: string
-          email: string
-          name: string
+          user_id: string
           status?: string
-          access_code?: string | null
-          user_id?: string | null
           created_at?: string
-          updated_at?: string | null
         }
         Update: {
           id?: string
           event_id?: string
-          email?: string
-          name?: string
+          user_id?: string
           status?: string
-          access_code?: string | null
-          user_id?: string | null
           created_at?: string
-          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "event_attendees_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "event_attendees_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
       }
       events: {
         Row: {
           id: string
-          name: string
+          title: string
           description: string | null
           date: string
-          location: string | null
-          organizer_id: string
-          status: string
-          max_attendees: number | null
-          is_public: boolean
-          cover_image_url: string | null
-          qr_code_url: string | null
+          location: string
           created_at: string
           updated_at: string | null
-          custom_url: string | null
-          start_date: string | null
-          end_date: string | null
+          user_id: string
+          status: string
         }
         Insert: {
           id?: string
-          name: string
+          title: string
           description?: string | null
           date: string
-          location?: string | null
-          organizer_id: string
-          status?: string
-          max_attendees?: number | null
-          is_public?: boolean
-          cover_image_url?: string | null
-          qr_code_url?: string | null
+          location: string
           created_at?: string
           updated_at?: string | null
-          custom_url?: string | null
-          start_date?: string | null
-          end_date?: string | null
+          user_id: string
+          status?: string
         }
         Update: {
           id?: string
-          name?: string
+          title?: string
           description?: string | null
           date?: string
-          location?: string | null
-          organizer_id?: string
-          status?: string
-          max_attendees?: number | null
-          is_public?: boolean
-          cover_image_url?: string | null
-          qr_code_url?: string | null
+          location?: string
           created_at?: string
           updated_at?: string | null
-          custom_url?: string | null
-          start_date?: string | null
-          end_date?: string | null
+          user_id?: string
+          status?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "events_organizer_id_fkey"
-            columns: ["organizer_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
       }
       galleries: {
         Row: {
           id: string
           event_id: string
-          settings: Json | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          event_id: string
-          settings?: Json | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          event_id?: string
-          settings?: Json | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "galleries_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      photos: {
-        Row: {
-          id: string
-          event_id: string
-          storage_path: string
-          filename: string
-          size: number
-          mime_type: string
-          width: number | null
-          height: number | null
-          uploaded_by: string | null
-          is_approved: boolean
-          metadata: Json | null
+          name: string
+          description: string | null
           created_at: string
           updated_at: string | null
         }
         Insert: {
           id?: string
           event_id: string
-          storage_path: string
-          filename: string
-          size: number
-          mime_type: string
-          width?: number | null
-          height?: number | null
-          uploaded_by?: string | null
-          is_approved?: boolean
-          metadata?: Json | null
+          name: string
+          description?: string | null
           created_at?: string
           updated_at?: string | null
         }
         Update: {
           id?: string
           event_id?: string
-          storage_path?: string
-          filename?: string
-          size?: number
-          mime_type?: string
-          width?: number | null
-          height?: number | null
-          uploaded_by?: string | null
-          is_approved?: boolean
-          metadata?: Json | null
+          name?: string
+          description?: string | null
           created_at?: string
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "photos_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photos_uploaded_by_fkey"
-            columns: ["uploaded_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
+      }
+      media: {
+        Row: {
+          id: string
+          url: string
+          type: string
+          created_at: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          url: string
+          type: string
+          created_at?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          url?: string
+          type?: string
+          created_at?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+      }
+      photos: {
+        Row: {
+          id: string
+          url: string
+          gallery_id: string
+          created_at: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          url: string
+          gallery_id: string
+          created_at?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          url?: string
+          gallery_id?: string
+          created_at?: string
+          updated_at?: string | null
+          user_id?: string
+        }
       }
       profiles: {
         Row: {
@@ -340,8 +171,11 @@ export interface Database {
           avatar_url: string | null
           created_at: string
           updated_at: string | null
-          role: string | null
-          preferences: Json | null
+          role: string
+          subscription_tier: string
+          subscription_status: string
+          trial_expires_at: string | null
+          trial_started_at: string | null
         }
         Insert: {
           id: string
@@ -350,8 +184,11 @@ export interface Database {
           avatar_url?: string | null
           created_at?: string
           updated_at?: string | null
-          role?: string | null
-          preferences?: Json | null
+          role?: string
+          subscription_tier?: string
+          subscription_status?: string
+          trial_expires_at?: string | null
+          trial_started_at?: string | null
         }
         Update: {
           id?: string
@@ -360,18 +197,46 @@ export interface Database {
           avatar_url?: string | null
           created_at?: string
           updated_at?: string | null
-          role?: string | null
-          preferences?: Json | null
+          role?: string
+          subscription_tier?: string
+          subscription_status?: string
+          trial_expires_at?: string | null
+          trial_started_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+      }
+      roles: {
+        Row: {
+          name: string
+          description: string
+          created_at: string
+        }
+        Insert: {
+          name: string
+          description: string
+          created_at?: string
+        }
+        Update: {
+          name?: string
+          description?: string
+          created_at?: string
+        }
+      }
+      role_capabilities: {
+        Row: {
+          role: string
+          capability: string
+          created_at: string
+        }
+        Insert: {
+          role: string
+          capability: string
+          created_at?: string
+        }
+        Update: {
+          role?: string
+          capability?: string
+          created_at?: string
+        }
       }
     }
     Views: {
@@ -383,8 +248,5 @@ export interface Database {
     Enums: {
       [_ in never]: never
     }
-    CompositeTypes: {
-      [_ in never]: never
-    }
   }
-} 
+}

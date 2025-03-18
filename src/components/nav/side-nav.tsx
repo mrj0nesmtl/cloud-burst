@@ -69,8 +69,8 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
         className={cn(
           buttonVariants({ variant: "ghost" }),
           active && "bg-muted",
-          "justify-start w-full",
-          collapsed ? "justify-center p-2" : "pr-4"
+          "justify-start w-full rounded-md",
+          collapsed ? "justify-center px-2" : "px-2"
         )}
         onClick={handleNavClick}
       >
@@ -97,8 +97,8 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
 
   return (
     <nav className={cn(
-      "flex flex-col p-4",
-      collapsed ? "items-center space-y-2 w-16" : "items-start space-y-4 w-72"
+      "flex h-full flex-col gap-2",
+      collapsed ? "px-2" : "px-2"
     )}>
       {/* Dashboard Section */}
       <div className={cn(
@@ -267,59 +267,34 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
             label="Engagement Metrics"
             active={pathname === "/protected/analytics/engagement"}
           />
-          {/* Disabled Event Performance with Coming Soon label */}
-          {collapsed ? (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className={cn(
-                  buttonVariants({ variant: "ghost" }),
-                  "justify-center p-2 w-full cursor-not-allowed opacity-70"
-                )}>
-                  <BarChart className="h-4 w-4" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                Event Performance (Coming Soon)
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <div className={cn(
-              buttonVariants({ variant: "ghost" }),
-              "justify-start w-full cursor-not-allowed opacity-70 pr-2"
-            )}>
-              <BarChart className="h-4 w-4" />
-              <div className="ml-2 flex items-center">
-                <span>Event Performance</span>
-                <Badge variant="outline" className="ml-2 text-xs font-normal whitespace-nowrap">Coming Soon</Badge>
-              </div>
-            </div>
-          )}
+          {/* Event Performance with Coming Soon badge */}
+          <div className="flex flex-col items-start w-full">
+            <NavItem
+              href="/protected/analytics/performance"
+              icon={<BarChart className="h-4 w-4" />}
+              label="Event Performance"
+              active={pathname === "/protected/analytics/performance"}
+            />
+            {!collapsed && (
+              <Badge variant="outline" className="ml-8 mt-1 text-xs font-normal">
+                Coming Soon
+              </Badge>
+            )}
+          </div>
         </div>
       )}
 
       {/* Settings Section */}
       <div className={cn(
-        "flex flex-col w-full",
+        "flex flex-col w-full mt-auto",
         collapsed ? "items-center space-y-1" : "items-start space-y-1"
       )}>
         {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Settings</h4>}
         <NavItem
-          href="/protected/settings/profile"
-          icon={<UserCog className="h-4 w-4" />}
-          label="Profile"
-          active={pathname === "/protected/settings/profile"}
-        />
-        <NavItem
-          href="/protected/settings/notifications"
-          icon={<BellRing className="h-4 w-4" />}
-          label="Notifications"
-          active={pathname === "/protected/settings/notifications"}
-        />
-        <NavItem
-          href="/protected/settings/billing"
-          icon={<CreditCard className="h-4 w-4" />}
-          label="Subscription"
-          active={pathname === "/protected/settings/billing"}
+          href="/protected/settings"
+          icon={<Settings className="h-4 w-4" />}
+          label="Settings"
+          active={pathname.startsWith("/protected/settings")}
         />
       </div>
     </nav>

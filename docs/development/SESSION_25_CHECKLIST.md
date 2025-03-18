@@ -7,16 +7,15 @@
 - [x] Document current critical issues
 - [x] Establish priority for issue resolution
 - [x] Review QR scanning implementation for integration points
-- [x] Document starting state
+- [x] Document session
 
 ## Phase 0: Critical Issue Resolution
 
 ### Authentication State Management
-- [ ] Investigate authentication state loss when navigating between protected and public pages
-- [ ] Identify root cause in the auth context or middleware implementation
-- [ ] Implement persistent auth state using Zustand store
+- [ ] Check authentication state persistence when navigating between protected and public pages
+- [ ] Check if the auth state is being lost in the Zustand store
 - [ ] Ensure auth state persists across page navigation
-- [ ] Update middleware to properly handle authentication state
+- [ ] Review the auth context and middleware implementation
 - [ ] Test auth persistence in various navigation scenarios
 - [ ] Fix "Sign In" link displaying when user is already authenticated
 

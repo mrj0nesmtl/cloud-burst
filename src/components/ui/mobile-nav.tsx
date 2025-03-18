@@ -22,10 +22,26 @@ import {
   Twitter,
   CloudLightning,
   Camera,
-  X
+  X,
+  LayoutDashboard,
+  CalendarDays,
+  PlusCircle,
+  FileText,
+  Users,
+  QrCode,
+  Image,
+  FolderOpen,
+  Shield,
+  Album,
+  BarChart,
+  LineChart,
+  User,
+  Settings
 } from "lucide-react"
+import { useAuth } from "@/hooks/useAuth"
 
-const routes = [
+// Public routes
+const publicRoutes = [
   {
     href: "/",
     label: "Home",
@@ -53,9 +69,97 @@ const routes = [
   },
 ]
 
+// Protected routes organized by section
+const protectedRoutes = {
+  dashboard: [
+    {
+      href: "/protected/dashboard",
+      label: "Overview",
+      icon: LayoutDashboard
+    }
+  ],
+  events: [
+    {
+      href: "/protected/events",
+      label: "All Events",
+      icon: CalendarDays
+    },
+    {
+      href: "/protected/events/create",
+      label: "Create New Event",
+      icon: PlusCircle
+    },
+    {
+      href: "/protected/events/templates",
+      label: "Templates",
+      icon: FileText
+    }
+  ],
+  attendees: [
+    {
+      href: "/protected/attendees/invitations",
+      label: "Manage Invitations",
+      icon: Users
+    },
+    {
+      href: "/protected/attendees/qr-codes",
+      label: "QR Codes",
+      icon: QrCode
+    }
+  ],
+  gallery: [
+    {
+      href: "/protected/gallery",
+      label: "All Media",
+      icon: Image
+    },
+    {
+      href: "/protected/gallery/events",
+      label: "Events (Galleries)",
+      icon: FolderOpen
+    },
+    {
+      href: "/protected/gallery/moderation",
+      label: "Moderation",
+      icon: Shield
+    },
+    {
+      href: "/protected/gallery/albums",
+      label: "Albums",
+      icon: Album
+    }
+  ],
+  analytics: [
+    {
+      href: "/protected/analytics/engagement",
+      label: "Engagement Metrics",
+      icon: BarChart
+    },
+    {
+      href: "/protected/analytics/performance",
+      label: "Event Performance",
+      icon: LineChart,
+      badge: "Coming Soon"
+    }
+  ],
+  account: [
+    {
+      href: "/protected/profile",
+      label: "Profile",
+      icon: User
+    },
+    {
+      href: "/protected/settings",
+      label: "Settings",
+      icon: Settings
+    }
+  ]
+}
+
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const { isAuthenticated, user } = useAuth()
 
   // Close sheet when route changes
   useEffect(() => {
@@ -66,6 +170,35 @@ export function MobileNav() {
   const handleLinkClick = () => {
     setIsOpen(false)
   }
+
+  // Helper function to render a section of protected routes
+  const renderProtectedSection = (section: keyof typeof protectedRoutes, title: string) => (
+    <div key={section} className="py-2">
+      <h3 className="text-sm font-medium text-muted-foreground mb-2">{title}</h3>
+      <ul className="space-y-1">
+        {protectedRoutes[section].map((route) => (
+          <li key={route.href} className="mobile-menu-item">
+            <Link 
+              href={route.href}
+              className={cn(
+                "flex items-center w-full py-2 text-sm hover:text-primary transition-colors",
+                pathname === route.href && "text-primary font-medium bg-primary/10 rounded-md"
+              )}
+              onClick={handleLinkClick}
+            >
+              <route.icon className="mr-3 h-4 w-4" />
+              <span className="flex-1">{route.label}</span>
+              {route.badge && (
+                <span className="text-xs bg-muted px-2 py-0.5 rounded-full">
+                  {route.badge}
+                </span>
+              )}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -82,7 +215,7 @@ export function MobileNav() {
           <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="p-0 mobile-menu" data-mobile-menu>
+      <SheetContent side="left" className="p-0 w-80 mobile-menu" data-mobile-menu>
         <SheetTitle className="sr-only">
           Navigation Menu
         </SheetTitle>
@@ -100,75 +233,98 @@ export function MobileNav() {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 px-6 py-4">
-            <ul className="space-y-3">
-              {routes.map((route) => (
-                <li key={route.href} className="mobile-menu-item reveal-on-scroll">
-                  <Link 
-                    href={route.href}
-                    className={cn(
-                      "flex items-center w-full py-2 text-base hover:text-primary transition-colors",
-                      pathname === route.href && "text-primary font-medium"
-                    )}
-                    onClick={handleLinkClick}
-                  >
-                    <route.icon className="mr-3 h-5 w-5" />
-                    {route.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <nav className="flex-1 px-4 py-2 overflow-y-auto">
+            {isAuthenticated ? (
+              // Protected Routes
+              <div className="space-y-4">
+                {/* User Info */}
+                <div className="px-2 py-3 mb-2">
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{user?.email}</p>
+                      <p className="text-xs text-muted-foreground">Role: {user?.role}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dashboard Section */}
+                {renderProtectedSection("dashboard", "Dashboard")}
+                
+                {/* Events Section */}
+                {renderProtectedSection("events", "Events")}
+                
+                {/* Attendees Section */}
+                {renderProtectedSection("attendees", "Attendees")}
+                
+                {/* Gallery Section */}
+                {renderProtectedSection("gallery", "Gallery")}
+                
+                {/* Analytics Section */}
+                {renderProtectedSection("analytics", "Analytics")}
+                
+                {/* Account Section */}
+                {renderProtectedSection("account", "Account")}
+              </div>
+            ) : (
+              // Public Routes
+              <ul className="space-y-1">
+                {publicRoutes.map((route) => (
+                  <li key={route.href} className="mobile-menu-item">
+                    <Link 
+                      href={route.href}
+                      className={cn(
+                        "flex items-center w-full py-2 text-sm hover:text-primary transition-colors px-2",
+                        pathname === route.href && "text-primary font-medium bg-primary/10 rounded-md"
+                      )}
+                      onClick={handleLinkClick}
+                    >
+                      <route.icon className="mr-3 h-4 w-4" />
+                      {route.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </nav>
 
-          {/* Social Links */}
+          {/* Footer */}
           <div className="px-6 py-4 border-t">
-            <p className="text-sm text-muted-foreground mb-3">Follow us</p>
-            <div className="flex space-x-4">
-              <a 
-                href="https://github.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-primary/10"
-                onClick={handleLinkClick}
+            {isAuthenticated ? (
+              // Sign Out Button
+              <Button 
+                variant="destructive" 
+                className="w-full"
+                onClick={() => {
+                  handleLinkClick()
+                  // Add sign out logic here
+                }}
               >
-                <Github className="h-5 w-5" />
-                <span className="sr-only">GitHub</span>
-              </a>
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-primary/10"
-                onClick={handleLinkClick}
-              >
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Auth Buttons */}
-          <div className="px-6 py-4 border-t">
-            <div className="grid gap-3">
-              <Button variant="outline" asChild className="w-full">
-                <Link 
-                  href="/auth/signin" 
-                  className="mobile-menu-item"
-                  onClick={handleLinkClick}
-                >
-                  Sign in
-                </Link>
+                Sign Out
               </Button>
-              <Button asChild className="w-full">
-                <Link 
-                  href="/auth/register" 
-                  className="mobile-menu-item"
-                  onClick={handleLinkClick}
-                >
-                  Get Started
-                </Link>
-              </Button>
-            </div>
+            ) : (
+              // Auth Buttons
+              <div className="grid gap-3">
+                <Button variant="outline" asChild className="w-full">
+                  <Link 
+                    href="/auth/signin" 
+                    onClick={handleLinkClick}
+                  >
+                    Sign in
+                  </Link>
+                </Button>
+                <Button asChild className="w-full">
+                  <Link 
+                    href="/auth/register" 
+                    onClick={handleLinkClick}
+                  >
+                    Get Started
+                  </Link>
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </SheetContent>

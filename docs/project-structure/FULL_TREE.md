@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-16T02:48:58.450Z
+Generated: 2025-03-18T02:29:07.533Z
 
 ## Overview
 
@@ -94,6 +94,9 @@ Generated: 2025-03-16T02:48:58.450Z
 │   │   │   ├── session_23_kickoff.md
 │   │   │   ├── session_23_narrative.md
 │   │   │   ├── session_23_summary.md
+│   │   │   ├── session_24_checklist.md
+│   │   │   ├── session_24_narrative.md
+│   │   │   ├── session_24_part2_kickoff_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -107,16 +110,12 @@ Generated: 2025-03-16T02:48:58.450Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_24_checklist.md
-│   │   ├── session_24_narrative.md
-│   │   ├── session_24_part2_kickoff_prompt.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
 │   │   ├── deck.md
-│   │   ├── invitation_system_development_plan.md
 │   │   ├── payment_subscription_design_document.md
 │   │   ├── project_budget_overview.md
 │   │   ├── request_for_product_RFP.md
@@ -153,8 +152,9 @@ Generated: 2025-03-16T02:48:58.450Z
 │   ├── user-flows/
 │   │   ├── create_test_users_ui.md
 │   │   ├── event_management.md
+│   │   ├── invitation_system_development_plan.md
 │   │   ├── invited_user_flow_design_document.md
-│   │   ├── photo_upload_sequence_diagram.md
+│   │   ├── media_upload_sequence_diagram.md
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
@@ -178,6 +178,7 @@ Generated: 2025-03-16T02:48:58.450Z
 │   ├── file.svg
 │   ├── globe.svg
 │   ├── hero_bg.mp4
+│   ├── hero_bg2.mp4
 │   ├── manifest.json
 │   ├── next.svg
 │   ├── pexels-themo-bg.jpg
@@ -484,7 +485,8 @@ Generated: 2025-03-16T02:48:58.450Z
 │   │   │   ├── notifications-form.tsx
 │   │   │   ├── preferences-form.tsx
 │   │   │   ├── profile-form.tsx
-│   │   │   └── security-form.tsx
+│   │   │   ├── security-form.tsx
+│   │   │   └── subscription-form.tsx
 │   │   ├── gallery/
 │   │   │   ├── MediaCard.tsx
 │   │   │   ├── MediaGrid.tsx
@@ -523,6 +525,8 @@ Generated: 2025-03-16T02:48:58.450Z
 │   │   │   ├── query-provider.tsx
 │   │   │   ├── toast-provider.tsx
 │   │   │   └── tooltip-provider.tsx
+│   │   ├── settings/
+│   │   │   └── system-status.tsx
 │   │   ├── ui/
 │   │   │   ├── contact/
 │   │   │   │   └── page.tsx
@@ -647,9 +651,29 @@ Generated: 2025-03-16T02:48:58.450Z
 │   ├── middleware.test.ts
 │   └── middleware.ts
 ├── supabase/
+│   ├── migrations/
+│   │   ├── 20240317000000_fix_role_capabilities_rls.sql
+│   │   ├── 20240317001000_standardize_role_capabilities.sql
+│   │   ├── 20240317002000_document_role_capabilities.sql
+│   │   ├── 20240317003000_add_profile_capabilities.sql
+│   │   ├── 20240317004000_align_roles_and_documentation.sql
+│   │   ├── 20240317004000_update_role_documentation.sql
+│   │   ├── 20240317004500_create_invitations_table.sql
+│   │   ├── 20240317005000_add_trial_fields.sql
+│   │   └── 20240317005000_invited_user_capabilities.sql
 │   ├── .gitignore
 │   └── config.toml
 ├── supabase-exports/
+│   ├── Mar 17/
+│   │   ├── +.csv
+│   │   ├── Role Capabilities Migration.csv
+│   │   ├── Supabase Snippet Role Management Migration.csv
+│   │   ├── role_capabilities_rows (1).csv
+│   │   ├── role_capabilities_rows (2).csv
+│   │   ├── role_capabilities_rows.csv
+│   │   ├── roles_rows (1).csv
+│   │   └── roles_rows.csv
+│   ├── old/
 │   ├── .DS_Store
 │   ├── Event Columns Information.csv
 │   ├── Event Table Schema.csv
@@ -657,6 +681,9 @@ Generated: 2025-03-16T02:48:58.450Z
 │   ├── List of Public Tables.csv
 │   ├── Marc Reichel - IMDb.mhtml
 │   ├── Photo Metadata.csv
+│   ├── Retrieve RLS Policies - NEW.csv
+│   ├── Retrieve Role Capabilities Policies - new.csv
+│   ├── Retrieve Role Capabilities Policies.csv
 │   ├── Supabase  Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (1).csv
 │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
@@ -694,16 +721,16 @@ Generated: 2025-03-16T02:48:58.450Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-151 directories, 535 files
+155 directories, 558 files
 
 ```
 
 ## File Type Breakdown
-- ts: 8066 file(s)
-- tsx: 378 file(s)
-- js: 24380 file(s)
-- json: 1797 file(s)
-- md: 1355 file(s)
+- ts: 8183 file(s)
+- tsx: 380 file(s)
+- js: 24499 file(s)
+- json: 1832 file(s)
+- md: 1379 file(s)
 - css: 22 file(s)
 - yml: 154 file(s)
 
