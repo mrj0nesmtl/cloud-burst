@@ -38,7 +38,8 @@ import {
   User,
   Settings
 } from "lucide-react"
-import { useAuth } from "@/hooks/useAuth"
+import { useAuth } from "@/hooks/use-auth"
+import { NavItem } from '@/components/nav/nav-item'
 
 // Public routes
 const publicRoutes = [
@@ -80,7 +81,7 @@ const protectedRoutes = {
   ],
   events: [
     {
-      href: "/protected/events",
+      href: "/protected/events/manage",
       label: "All Events",
       icon: CalendarDays
     },
@@ -157,176 +158,80 @@ const protectedRoutes = {
 }
 
 export function MobileNav() {
-  const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
-  const { isAuthenticated, user } = useAuth()
-
+  const [isOpen, setIsOpen] = useState(false)
+  const { user, hasCapability } = useAuth()
+  
   // Close sheet when route changes
   useEffect(() => {
     setIsOpen(false)
   }, [pathname])
-  
-  // Function to handle link clicks and close the menu
-  const handleLinkClick = () => {
-    setIsOpen(false)
-  }
 
-  // Helper function to render a section of protected routes
-  const renderProtectedSection = (section: keyof typeof protectedRoutes, title: string) => (
-    <div key={section} className="py-2">
-      <h3 className="text-sm font-medium text-muted-foreground mb-2">{title}</h3>
-      <ul className="space-y-1">
-        {protectedRoutes[section].map((route) => (
-          <li key={route.href} className="mobile-menu-item">
-            <Link 
-              href={route.href}
-              className={cn(
-                "flex items-center w-full py-2 text-sm hover:text-primary transition-colors",
-                pathname === route.href && "text-primary font-medium bg-primary/10 rounded-md"
-              )}
-              onClick={handleLinkClick}
-            >
-              <route.icon className="mr-3 h-4 w-4" />
-              <span className="flex-1">{route.label}</span>
-              {route.badge && (
-                <span className="text-xs bg-muted px-2 py-0.5 rounded-full">
-                  {route.badge}
-                </span>
-              )}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
+  const canManageEvents = hasCapability('manage:own_events')
+  const isOrganizer = user?.role === 'organizer'
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="md:hidden"
-          aria-expanded={isOpen}
-          aria-label="Toggle menu"
-          data-mobile-toggle
-        >
+        <Button variant="ghost" className="md:hidden">
           <Menu className="h-6 w-6" />
-          <span className="sr-only">Toggle menu</span>
+          <span className="sr-only">Toggle navigation menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="p-0 w-80 mobile-menu" data-mobile-menu>
-        <SheetTitle className="sr-only">
-          Navigation Menu
-        </SheetTitle>
-        <div className="flex flex-col h-full">
-          {/* Header with Logo */}
-          <div className="px-6 py-4 border-b flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CloudLightning className="h-6 w-6 text-primary" />
-              <h2 className="text-lg font-semibold">Cloud Burst</h2>
+      <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+        <nav className="flex flex-col space-y-4">
+          <div className="px-2 py-4">
+            <h2 className="mb-2 px-4 text-lg font-semibold">Dashboard</h2>
+            <NavItem href="/protected/dashboard" active={pathname === '/protected/dashboard'}>
+              Overview
+            </NavItem>
+          </div>
+
+          {/* Events Section */}
+          {(isOrganizer || canManageEvents) && (
+            <div className="px-2 py-4">
+              <h2 className="mb-2 px-4 text-lg font-semibold">Events</h2>
+              <div className="space-y-1">
+                <NavItem 
+                  href="/protected/events/manage" 
+                  active={pathname === '/protected/events/manage'}
+                >
+                  All Events
+                </NavItem>
+                <NavItem 
+                  href="/protected/events/create" 
+                  active={pathname === '/protected/events/create'}
+                >
+                  Create New Event
+                </NavItem>
+              </div>
             </div>
-            <SheetClose className="rounded-full p-2 hover:bg-accent/50" data-mobile-close>
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close menu</span>
-            </SheetClose>
-          </div>
+          )}
 
-          {/* Navigation Links */}
-          <nav className="flex-1 px-4 py-2 overflow-y-auto">
-            {isAuthenticated ? (
-              // Protected Routes
-              <div className="space-y-4">
-                {/* User Info */}
-                <div className="px-2 py-3 mb-2">
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <User className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">{user?.email}</p>
-                      <p className="text-xs text-muted-foreground">Role: {user?.role}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Dashboard Section */}
-                {renderProtectedSection("dashboard", "Dashboard")}
-                
-                {/* Events Section */}
-                {renderProtectedSection("events", "Events")}
-                
-                {/* Attendees Section */}
-                {renderProtectedSection("attendees", "Attendees")}
-                
-                {/* Gallery Section */}
-                {renderProtectedSection("gallery", "Gallery")}
-                
-                {/* Analytics Section */}
-                {renderProtectedSection("analytics", "Analytics")}
-                
-                {/* Account Section */}
-                {renderProtectedSection("account", "Account")}
-              </div>
-            ) : (
-              // Public Routes
-              <ul className="space-y-1">
-                {publicRoutes.map((route) => (
-                  <li key={route.href} className="mobile-menu-item">
-                    <Link 
-                      href={route.href}
-                      className={cn(
-                        "flex items-center w-full py-2 text-sm hover:text-primary transition-colors px-2",
-                        pathname === route.href && "text-primary font-medium bg-primary/10 rounded-md"
-                      )}
-                      onClick={handleLinkClick}
-                    >
-                      <route.icon className="mr-3 h-4 w-4" />
-                      {route.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </nav>
-
-          {/* Footer */}
-          <div className="px-6 py-4 border-t">
-            {isAuthenticated ? (
-              // Sign Out Button
-              <Button 
-                variant="destructive" 
-                className="w-full"
-                onClick={() => {
-                  handleLinkClick()
-                  // Add sign out logic here
-                }}
+          {/* Gallery Section */}
+          <div className="px-2 py-4">
+            <h2 className="mb-2 px-4 text-lg font-semibold">Gallery</h2>
+            <div className="space-y-1">
+              <NavItem 
+                href="/protected/gallery" 
+                active={pathname.startsWith('/protected/gallery')}
               >
-                Sign Out
-              </Button>
-            ) : (
-              // Auth Buttons
-              <div className="grid gap-3">
-                <Button variant="outline" asChild className="w-full">
-                  <Link 
-                    href="/auth/signin" 
-                    onClick={handleLinkClick}
-                  >
-                    Sign in
-                  </Link>
-                </Button>
-                <Button asChild className="w-full">
-                  <Link 
-                    href="/auth/register" 
-                    onClick={handleLinkClick}
-                  >
-                    Get Started
-                  </Link>
-                </Button>
-              </div>
-            )}
+                All Media
+              </NavItem>
+            </div>
           </div>
-        </div>
+
+          {/* Settings Section */}
+          <div className="px-2 py-4">
+            <h2 className="mb-2 px-4 text-lg font-semibold">Settings</h2>
+            <NavItem 
+              href="/protected/settings" 
+              active={pathname.startsWith('/protected/settings')}
+            >
+              Settings
+            </NavItem>
+          </div>
+        </nav>
       </SheetContent>
     </Sheet>
   )

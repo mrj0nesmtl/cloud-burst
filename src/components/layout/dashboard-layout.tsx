@@ -13,6 +13,7 @@ import { toast } from '@/components/ui/use-toast'
 import Link from 'next/link'
 import { Logo } from '@/components/nav/logo'
 import { ModeToggle } from '@/components/ui/mode-toggle'
+import { MobileNav } from '@/components/nav/mobile-nav'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -84,6 +85,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="flex min-h-screen">
+      {/* Add MobileNav here */}
+      <MobileNav />
+      
       {/* Mobile sidebar */}
       <div
         className={cn(
