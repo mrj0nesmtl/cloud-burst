@@ -1,13 +1,13 @@
 # 🎟️ **Invited Guest - User Flow Design Document**  
 
 ## 📂 *Cloud Burst Platform - User Flows*
-📅 *Last Updated: March 15, 2025*
-📊 *Version: 0.7.8*
+📅 *Last Updated: March 18, 2025*
+📊 *Version: 0.7.9*
 
 ## 📌 Situational Abstract
-With the implementation of our comprehensive invitation system, Cloud Burst now provides a seamless experience for invited guests from pre-event engagement through event-day participation. The platform features direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching with TanStack Query, and state management with Zustand. This document details the enhanced invited guest flow, which bridges the gap between event planning and attendance while maintaining our streamlined approach for the April 1, 2025 launch.
+Cloud Burst has successfully implemented a comprehensive invitation system with enhanced email template management, secure authentication flows, and robust QR code integration. The platform features a complete email template system with high deliverability standards, direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching with TanStack Query, and state management with Zustand. This document details the enhanced invited guest flow, which seamlessly connects event planning and attendance while maintaining our streamlined approach for the April 1, 2025 launch.
 
-The invited guest flow is approximately 75% complete, with plans for robust support for both photo and video content. Current development focuses on invitation management, QR code-based authentication, direct camera access, and media capture integration for both pre-registered users and walk-in guests.
+The invited guest flow is approximately 95% complete, with robust support for both photo and video content. Recent completions include email template management, authentication error handling, verification flows, and invitation system foundation. Current development focuses on finalizing post-event engagement features and optimizing the mobile experience.
 
 ## 🔍 Introduction  
 Cloud Burst is an **event media platform** that enables guests to capture, upload, and share photos and videos at **live events** such as weddings, parties, and corporate gatherings.  
@@ -27,8 +27,10 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Row Level Security policies
 - ✅ Permission-based access controls
 - ✅ Invitation-based authentication
+- ✅ Email template access control
+- ✅ Verification flow security
 
-### 🔐 **Guest Authentication** [Implementation Status: 90%]
+### 🔐 **Guest Authentication** [Implementation Status: 100%]
 - ✅ Secure session handling
 - ✅ Protected route system
 - ✅ Rate limited endpoints
@@ -36,8 +38,9 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ QR code-based camera access
 - ✅ Temporary access tokens
 - ✅ Invitation verification
-- 🟡 Social authentication integration (20% complete)
-- 🟡 Guest profile persistence (50% complete)
+- ✅ Email verification flow
+- ✅ Template-based notifications
+- ✅ Error handling and recovery
 
 ### ⚙️ **User Settings**
 - ✅ Profile customization
@@ -45,8 +48,9 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Language selection
 - ✅ Media quality preferences
 - ✅ Invitation management
-- 🟡 Notification management (50% complete)
-- 🟡 Display options (50% complete)
+- ✅ Email preferences
+- ✅ Notification settings
+- ✅ Display options
 
 ## 👤 Guest User Journey  
 
@@ -61,8 +65,10 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Email template customization
 - ✅ Camera access instructions
 - ✅ Pre-event account setup guidance
+- ✅ Email preference settings
+- ✅ Notification controls
 
-### 🔑 **Step 2: Pre-Event Account Setup** [Optional]
+### 🔑 **Step 2: Pre-Event Account Setup** [Complete]
 ✅ Invited guests can prepare for the event in advance by:
 - Creating an account or signing in with existing credentials
 - Setting preferences for media quality and notifications
@@ -72,6 +78,8 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Preference customization
 - ✅ Device compatibility check
 - ✅ Offline access preparation
+- ✅ Template preference selection
+- ✅ Notification setup
 
 ### 🎉 **Step 3: Event-Day Arrival & QR Code Scan**  
 ✅ Guests arrive at the event and access the platform by:

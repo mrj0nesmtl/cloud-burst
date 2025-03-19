@@ -1,13 +1,13 @@
 # 🔄 User Flow Chart
 
 ## Cloud Burst
-📅 *Updated: March 14, 2025*  
-📊 *Version: 0.7.8*
+📅 *Updated: March 18, 2025*  
+📊 *Version: 0.7.9*
 
 ## 📌 Situational Abstract
-Following the successful implementation of comprehensive video support, Cloud Burst now offers a complete media management solution that handles both photos and videos seamlessly. The platform features direct camera integration through QR code scanning, allowing attendees to capture media directly within the application. With enhanced processing capabilities for videos and optimized gallery displays for mixed media, Cloud Burst provides an intuitive and engaging experience for all users.
+Following the successful implementation of the email template system and invitation system foundation, Cloud Burst now offers a complete media management solution with enhanced user verification and notification capabilities. The platform features comprehensive email template management, direct camera integration through QR code scanning, and robust authentication flows. With enhanced processing capabilities for both photos and videos, optimized gallery displays for mixed media, and comprehensive email notifications, Cloud Burst provides an intuitive and engaging experience for all users.
 
-The media management system is approximately 90% complete, with recent additions including video capture, processing, and playback functionalities. Current development focuses on optimizing video compression, enhancing playback controls, and implementing advanced sharing options for mixed media galleries.
+The media management system is approximately 95% complete, with recent completions including email template management, authentication error handling, verification flows, and invitation system foundation. Current development focuses on finalizing post-event engagement features and optimizing the mobile experience.
 
 ```mermaid
 flowchart TD
@@ -21,73 +21,79 @@ flowchart TD
     C --> |Event URL| G[Event Gallery]
     
     F --> |Success| D
+    F --> |Verification| H[Email Verification]
+    H --> |Complete| D
+    H --> |Resend| I[Resend Email]
     
-    E --> H[Camera Access]
-    H --> I{Media Type}
-    I --> |Photo| J[Photo Capture]
-    I --> |Video| K[Video Recording]
+    E --> J[Camera Access]
+    J --> K{Media Type}
+    K --> |Photo| L[Photo Capture]
+    K --> |Video| M[Video Recording]
     
-    J --> L[Upload Process]
-    K --> L
-    L --> M[Processing]
-    M --> N[Gallery Update]
-    N --> G
+    L --> N[Upload Process]
+    M --> N
+    N --> O[Processing]
+    O --> P[Gallery Update]
+    P --> G
+    P --> Q[Email Notification]
     
-    D --> |Super Admin| O[Admin Dashboard]
-    D --> |Admin| P[Admin Dashboard]
-    D --> |Organizer| Q[Event Dashboard]
-    D --> |Event Host| R[Event Dashboard]
-    D --> |User| S[User Dashboard]
-    D --> |Guest| T[Gallery Access]
+    D --> |Super Admin| R[Admin Dashboard]
+    D --> |Admin| S[Admin Dashboard]
+    D --> |Organizer| T[Event Dashboard]
+    D --> |Event Host| U[Event Dashboard]
+    D --> |User| V[User Dashboard]
+    D --> |Guest| W[Gallery Access]
     
-    O --> U[User Management]
-    O --> V[System Settings]
-    O --> W[Template Management]
-    O --> X[Role Management]
+    R --> X[User Management]
+    R --> Y[System Settings]
+    R --> Z[Template Management]
+    R --> AA[Role Management]
     
-    P --> Y[Event Management]
-    P --> Z[Media Moderation]
-    P --> AA[Template Access]
+    S --> AB[Event Management]
+    S --> AC[Media Moderation]
+    S --> AD[Template Access]
     
-    Q --> AB[Event Creation]
-    Q --> AC[Event Management]
-    Q --> AD[Attendee Management]
-    Q --> AE[Media Moderation]
+    T --> AE[Event Creation]
+    T --> AF[Event Management]
+    T --> AG[Attendee Management]
+    T --> AH[Media Moderation]
     
-    R --> AF[Event Creation]
-    R --> AG[Basic Management]
-    R --> AH[Attendee List]
+    U --> AI[Event Creation]
+    U --> AJ[Basic Management]
+    U --> AK[Attendee List]
     
-    S --> AI[Profile Settings]
-    S --> AJ[Event Access]
+    V --> AL[Profile Settings]
+    V --> AM[Event Access]
+    V --> AN[Email Preferences]
     
-    T --> G
-    G --> AK[View Media]
-    G --> |Auth Check| AL[Capture Media]
+    W --> G
+    G --> AO[View Media]
+    G --> |Auth Check| AP[Capture Media]
     
-    W --> AM[Template List]
-    AM --> AN[Template Editor]
-    AN --> AO[Template Preview]
-    AN --> AP[Template Sync]
+    Z --> AQ[Template List]
+    AQ --> AR[Template Editor]
+    AR --> AS[Template Preview]
+    AR --> AT[Template Sync]
+    AT --> AU[Email Service]
     
-    AB --> AQ[Event Form]
-    AQ --> AR[Event Detail]
-    AR --> AS[QR Code]
-    AR --> AT[Gallery Setup]
+    AE --> AV[Event Form]
+    AV --> AW[Event Detail]
+    AW --> AX[QR Code]
+    AW --> AY[Gallery Setup]
+    AW --> AZ[Email Setup]
     
-    AK --> AU[Grid View]
-    AK --> AV[Masonry View]
-    AK --> AW[Slideshow View]
+    AO --> BA[Grid View]
+    AO --> BB[Masonry View]
+    AO --> BC[Slideshow View]
     
-    AU --> AX[Media Actions]
-    AV --> AX
-    AW --> AX
+    BA --> BD[Media Actions]
+    BB --> BD
+    BC --> BD
     
-    AX --> AY[Like/Comment]
-    AX --> AZ[Share]
-    AX --> BA[Download]
-    
-    AL --> I
+    BD --> BE[Like/Comment]
+    BD --> BF[Share]
+    BD --> BG[Download]
+    BD --> BH[Email Updates]
 ```
 
 ## 📹 **Media Capture Flow**

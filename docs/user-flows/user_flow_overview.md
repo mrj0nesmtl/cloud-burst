@@ -1,13 +1,13 @@
 # 📖 **User Flow Overview**  
 
 ## Cloud Burst
-📅 *Updated: March 14, 2025*  
-📊 *Version: 0.7.8*
+📅 *Updated: March 18, 2025*  
+📊 *Version: 0.7.9*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the Gallery System with video support, Cloud Burst now offers a comprehensive media management platform. Users can capture and share both photos and videos seamlessly through QR code check-ins that patch directly to their mobile device cameras. The platform now features enhanced processing for both media types, with optimized streaming capabilities for video content and multiple viewing options for all media.
+Following the successful implementation of the email template system and invitation system foundation, Cloud Burst now offers a comprehensive media management platform with enhanced user verification and notification capabilities. Users can capture and share both photos and videos seamlessly through QR code check-ins that patch directly to their mobile device cameras, while receiving personalized email notifications throughout their journey. The platform now features enhanced processing for both media types, optimized streaming capabilities for video content, multiple viewing options for all media, and a complete email template system for user communications.
 
-The media management system is approximately 90% complete, with recent additions including direct camera integration, video capture support, and enhanced gallery layouts that accommodate both photos and videos. Current development focuses on optimizing video processing and implementing advanced sharing options for mixed media galleries.
+The media management system is approximately 95% complete, with recent completions including email template management, authentication error handling, verification flows, and invitation system foundation. Current development focuses on finalizing post-event engagement features and optimizing the mobile experience.
 
 ## 🔄 **Core User Flows** [Updated]
 
@@ -21,58 +21,67 @@ flowchart TD
     C --> |Sign Up| F[Auth Form]
     C --> |Sign In| F
     F --> |Success| D
+    F --> |Verification| G[Email Verification]
+    G --> |Complete| D
+    G --> |Resend| H[Resend Email]
     
-    D --> G[Super Admin]
-    D --> H[Admin]
-    D --> I[Organizer]
-    D --> J[Event Host]
-    D --> K[User]
-    D --> L[Guest]
+    D --> I[Super Admin]
+    D --> J[Admin]
+    D --> K[Organizer]
+    D --> L[Event Host]
+    D --> M[User]
+    D --> N[Guest]
     
-    G --> M[Admin Dashboard]
-    G --> N[Template Management]
-    G --> O[User Management]
-    G --> P[Role Management]
+    I --> O[Admin Dashboard]
+    I --> P[Template Management]
+    I --> Q[User Management]
+    I --> R[Role Management]
     
-    H --> Q[Admin Dashboard]
-    H --> R[Event Management]
-    H --> S[Media Moderation]
+    J --> S[Admin Dashboard]
+    J --> T[Event Management]
+    J --> U[Media Moderation]
+    J --> V[Template Access]
     
-    I --> T[Event Dashboard]
-    I --> U[Event Creation]
-    I --> V[Attendee Management]
+    K --> W[Event Dashboard]
+    K --> X[Event Creation]
+    K --> Y[Attendee Management]
+    K --> Z[Email Management]
     
-    J --> W[Event Dashboard]
-    J --> X[Basic Management]
+    L --> AA[Event Dashboard]
+    L --> AB[Basic Management]
+    L --> AC[Email Settings]
     
-    K --> Y[User Dashboard]
-    K --> Z[Profile Settings]
+    M --> AD[User Dashboard]
+    M --> AE[Profile Settings]
+    M --> AF[Email Preferences]
     
-    L --> AA[Gallery Access]
-    E --> AA
+    N --> AG[Gallery Access]
+    E --> AG
     
-    AA --> AB[View Gallery]
-    AA --> AC[Capture Media]
+    AG --> AH[View Gallery]
+    AG --> AI[Capture Media]
     
-    AC --> AD[Photo Capture]
-    AC --> AE[Video Recording]
+    AI --> AJ[Photo Capture]
+    AI --> AK[Video Recording]
     
-    AB --> AF[Grid View]
-    AB --> AG[Masonry View]
-    AB --> AH[Slideshow View]
+    AH --> AL[Grid View]
+    AH --> AM[Masonry View]
+    AH --> AN[Slideshow View]
     
-    AF --> AI[Media Actions]
-    AG --> AI
-    AH --> AI
+    AL --> AO[Media Actions]
+    AM --> AO
+    AN --> AO
     
-    AI --> AJ[Like/Comment]
-    AI --> AK[Share]
-    AI --> AL[Download]
+    AO --> AP[Like/Comment]
+    AO --> AQ[Share]
+    AO --> AR[Download]
+    AO --> AS[Email Updates]
     
-    AD --> AM[Upload Process]
-    AE --> AM
-    AM --> AN[Processing]
-    AN --> AO[Gallery Update]
+    P --> AT[Template List]
+    AT --> AU[Template Editor]
+    AU --> AV[Template Preview]
+    AU --> AW[Template Sync]
+    AW --> AX[Email Service]
 ```
 
 ## 📸 **Media Capture Flow** [Enhanced]
@@ -96,11 +105,13 @@ flowchart TD
     I --> J[Processing]
     J --> K[Gallery Update]
     K --> L[View in Gallery]
+    K --> M[Email Notification]
     
-    L --> M[Media Actions]
-    M --> N[Like/Comment]
-    M --> O[Share]
-    M --> P[Download]
+    L --> N[Media Actions]
+    N --> O[Like/Comment]
+    N --> P[Share]
+    N --> Q[Download]
+    N --> R[Email Updates]
 ```
 
 ## 🔐 **Security Flow** [Enhanced]
@@ -119,6 +130,7 @@ flowchart LR
     I --> K{Session Valid}
     K -->|Yes| L[Resource]
     K -->|No| F
+    L --> M[Email Notification]
 ```
 
 ## 📊 **Media Type Distribution**
@@ -143,6 +155,8 @@ pie
 - ✅ Permission-based access
 - ✅ Row Level Security
 - ✅ Error boundaries
+- ✅ Email verification
+- ✅ Template security
 
 ### 🔐 **Authentication Layer**
 - ✅ Secure session handling
@@ -154,6 +168,8 @@ pie
 - ✅ Permission hooks
 - ✅ Conditional UI rendering
 - ✅ Resource ownership verification
+- ✅ Email verification flow
+- ✅ Template-based notifications
 
 ## 📝 **Introduction**  
 Cloud Burst is an **event media platform** designed to **seamlessly collect, filter, and organize event photos and videos**. The platform features comprehensive role-based access control, custom event URLs, and multiple gallery layouts to enhance the user experience.
@@ -170,20 +186,23 @@ graph LR
     A --> E[Social Sharing]
     A --> F[Profile Settings]
     A --> G[Template Management]
+    A --> H[Email System]
     
-    B --> H[40% Usage]
-    C --> I[30% Usage]
-    D --> J[15% Usage]
-    E --> K[8% Usage]
-    F --> L[4% Usage]
-    G --> M[3% Usage]
+    B --> I[35% Usage]
+    C --> J[25% Usage]
+    D --> K[15% Usage]
+    E --> L[8% Usage]
+    F --> M[4% Usage]
+    G --> N[8% Usage]
+    H --> O[5% Usage]
 
-    style H fill:#90EE90
-    style I fill:#ADD8E6
-    style J fill:#FFB6C1
-    style K fill:#DDA0DD
-    style L fill:#FFDAB9
-    style M fill:#F0E68C
+    style I fill:#90EE90
+    style J fill:#ADD8E6
+    style K fill:#FFB6C1
+    style L fill:#DDA0DD
+    style M fill:#FFDAB9
+    style N fill:#F0E68C
+    style O fill:#98FB98
 ```
 
 ## 🏷️ **Pre-Event: Ticket Confirmation & QR Code**  

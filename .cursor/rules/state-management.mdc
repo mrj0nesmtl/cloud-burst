@@ -13,9 +13,18 @@ alwaysApply: false
       },
       "patterns": {
         "persistence": {
-          "required": ["auth", "theme", "userPreferences"],
+          "required": ["auth", "theme", "userPreferences", "gallery", "analytics"],
           "storage": "localStorage",
-          "key": "cloud-burst-store"
+          "key": "cloud-burst-store",
+          "version": "0.8.0",
+          "migrate": true,
+          "partialize": true
+        },
+        "hydration": {
+          "useSSR": true,
+          "useInitialState": true,
+          "useConcurrentBridge": true,
+          "useProgressiveHydration": true
         }
       }
     },
@@ -24,20 +33,129 @@ alwaysApply: false
         "required": ["user", "session", "loading", "error", "isAuthenticated"]
       },
       "ui": {
-        "required": ["theme", "modal", "toast", "navigation"]
+        "required": ["theme", "modal", "toast", "navigation", "mobileNav", "offlineStatus"]
       },
       "gallery": {
-        "required": ["photos", "uploadProgress", "filters"]
+        "required": [
+          "photos",
+          "uploadProgress",
+          "filters",
+          "selectedPhotos",
+          "viewMode",
+          "sortOrder",
+          "offlineQueue",
+          "cachingStatus"
+        ]
       },
       "event": {
-        "required": ["currentEvent", "participants", "settings"]
+        "required": ["currentEvent", "participants", "settings", "analytics"]
+      },
+      "analytics": {
+        "required": [
+          "metrics",
+          "filters",
+          "timeRange",
+          "customViews",
+          "exportQueue",
+          "offlineData"
+        ]
+      },
+      "mobile": {
+        "required": [
+          "networkStatus",
+          "deviceCapabilities",
+          "offlineMode",
+          "syncStatus",
+          "uploadQueue"
+        ]
       }
     },
     "reactQuery": {
       "location": "src/lib/query",
-      "staleTime": 5 * 60 * 1000,
+      "staleTime": 300000,
       "retries": 3,
-      "prefetch": ["events", "gallery"]
+      "prefetch": ["events", "gallery", "analytics"],
+      "optimisticUpdates": true,
+      "infiniteQueries": {
+        "gallery": {
+          "batchSize": 20,
+          "suspense": true,
+          "placeholderData": true
+        },
+        "analytics": {
+          "batchSize": 50,
+          "suspense": true,
+          "placeholderData": true
+        }
+      },
+      "mutations": {
+        "gallery": {
+          "optimistic": true,
+          "rollback": true,
+          "retry": true,
+          "offline": true
+        },
+        "analytics": {
+          "batch": true,
+          "debounce": true,
+          "throttle": true
+        }
+      },
+      "caching": {
+        "gallery": {
+          "type": "memory",
+          "ttl": 3600000,
+          "maxSize": 1000
+        },
+        "analytics": {
+          "type": "persistent",
+          "ttl": 86400000,
+          "maxSize": 500
+        }
+      }
+    },
+    "offline": {
+      "storage": {
+        "gallery": {
+          "type": "indexedDB",
+          "maxSize": "500MB",
+          "compression": true,
+          "encryption": true
+        },
+        "analytics": {
+          "type": "localStorage",
+          "maxSize": "50MB",
+          "compression": true
+        }
+      },
+      "sync": {
+        "strategy": "queue",
+        "retryAttempts": 3,
+        "batchSize": 10,
+        "prioritization": true
+      },
+      "conflict": {
+        "resolution": "lastWriteWins",
+        "mergeStrategy": "smart",
+        "userPrompt": true
+      }
+    },
+    "performance": {
+      "memoryManagement": {
+        "maxCacheSize": "1GB",
+        "cleanupInterval": 300000,
+        "priorityEviction": true
+      },
+      "networkOptimization": {
+        "batchRequests": true,
+        "compression": true,
+        "caching": true
+      },
+      "rendering": {
+        "virtualization": true,
+        "lazyLoading": true,
+        "suspense": true
+      }
     }
   }
 }

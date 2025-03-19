@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reauthentication Required - Cloud Burst</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.5;
+      color: #1a1a1a;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #ffffff;
+    }
+    .container {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 32px;
+    }
+    .logo-container {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .logo {
+      width: 120px;
+      height: auto;
+      margin: 20px 0;
+    }
+    .divider {
+      border: 0;
+      height: 1px;
+      background: #eee;
+      margin: 20px 0;
+    }
+    h2 {
+      color: #1a1a1a;
+      font-size: 24px;
+      font-weight: 600;
+      margin: 24px 0;
+    }
+    p {
+      color: #333;
+      font-size: 16px;
+      margin: 16px 0;
+    }
+    .token {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 20px 0;
+      padding: 16px;
+      background: #f5f7fa;
+      border-radius: 6px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+    .footer {
+      color: #666;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+      }
+      .container {
+        padding: 24px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <img src="https://bxvbovzqzjfomnqidzzx.supabase.co/storage/v1/object/public/email-assets//logo.svg" alt="Cloud Burst" class="logo">
+      <hr class="divider">
+    </div>
+
+    <h2>Reauthentication Required</h2>
+
+    <p>Hello,</p>
+
+    <p>For security purposes, please enter the following code to continue accessing your Cloud Burst account:</p>
+
+    <div class="token">{{ .Token }}</div>
+
+    <p>If you didn't request this, please contact our support team immediately at support@arcanaconcept.com</p>
+
+    <hr class="divider">
+
+    <p class="footer">Cloud Burst - Ensuring your account's security and privacy</p>
+  </div>
+</body>
+</html>

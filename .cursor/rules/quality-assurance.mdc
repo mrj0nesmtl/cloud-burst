@@ -5,954 +5,317 @@ alwaysApply: false
 ---
 # Quality Assurance Practices
 
-> **Version:** 0.7.0  
-> **Last Updated:** March 2024
+> **Version:** 1.1.0  
+> **Last Updated:** March 18, 2025
 
 ```json
 {
-  "description": "Quality assurance practices for Cloud Burst, including Testing, Performance, and Error Handling",
-  "globs": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/tests/**", "**/performance/**"],
+  "description": "Quality assurance practices for Cloud Burst, with focus on gallery, mobile, and analytics testing",
+  "globs": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
   "rules": {
     "testing": {
-      "frameworks": {
-        "useJest": true,
-        "useReactTestingLibrary": true,
-        "usePlaywright": true,
-        "useCypress": false,
-        "useVitest": false
+      "gallery": {
+        "masonry": {
+          "testVirtualization": true,
+          "testProgressiveLoading": true,
+          "testResizing": true,
+          "testAccessibility": true
+        },
+        "filtering": {
+          "testComposition": true,
+          "testPerformance": true,
+          "testUrlSync": true,
+          "testStateManagement": true
+        },
+        "upload": {
+          "testChunking": true,
+          "testConcurrency": true,
+          "testProgress": true,
+          "testRecovery": true
+        }
       },
-      "types": {
-        "useUnitTests": true,
-        "useIntegrationTests": true,
-        "useE2ETests": true,
-        "useComponentTests": true,
-        "useSnapshotTests": true
+      "mobile": {
+        "progressive": {
+          "testSkeletons": true,
+          "testLazyLoading": true,
+          "testImageOptimization": true,
+          "testConnectionHandling": true
+        },
+        "offline": {
+          "testServiceWorker": true,
+          "testStorage": true,
+          "testSync": true,
+          "testConflicts": true
+        },
+        "touch": {
+          "testGestures": true,
+          "testFeedback": true,
+          "testTargets": true,
+          "testAccessibility": true
+        }
       },
-      "coverage": {
-        "statements": 80,
-        "branches": 70,
-        "functions": 80,
-        "lines": 80
-      },
-      "patterns": {
-        "useArrange": true,
-        "useAct": true,
-        "useAssert": true,
-        "useMocks": true,
-        "useFixtures": true,
-        "useFactories": true
+      "analytics": {
+        "realtime": {
+          "testWebSocket": true,
+          "testAggregation": true,
+          "testCaching": true,
+          "testFallback": true
+        },
+        "visualization": {
+          "testResponsiveness": true,
+          "testTheming": true,
+          "testAccessibility": true,
+          "testInteractivity": true
+        },
+        "export": {
+          "testFormats": true,
+          "testLargeData": true,
+          "testProgress": true,
+          "testErrors": true
+        }
       }
     },
     "performance": {
       "metrics": {
-        "useLCP": true,
-        "useFID": true,
-        "useCLS": true,
-        "useTTFB": true,
-        "useFCP": true
+        "fcp": "< 1.5s",
+        "lcp": "< 2.5s",
+        "cls": "< 0.1",
+        "fid": "< 100ms",
+        "tti": "< 3.0s"
       },
-      "targets": {
-        "LCP": 2500,
-        "FID": 100,
-        "CLS": 0.1,
-        "TTFB": 800,
-        "FCP": 1800
-      },
-      "optimization": {
-        "useCodeSplitting": true,
-        "useLazyLoading": true,
-        "useImageOptimization": true,
-        "useFontOptimization": true,
-        "useCaching": true,
-        "useMinification": true,
-        "useCompression": true,
-        "usePrefetching": true,
-        "usePreloading": true,
-        "useBundleAnalysis": true
-      },
-      "monitoring": {
-        "useWebVitals": true,
-        "useLighthouse": true,
-        "usePageSpeedInsights": true,
-        "useCustomMetrics": true,
-        "useRealUserMonitoring": true,
-        "useSyntheticMonitoring": true
+      "thresholds": {
+        "bundleSize": "< 200KB",
+        "imageSize": "< 100KB",
+        "apiLatency": "< 200ms",
+        "renderTime": "< 50ms"
       }
     },
-    "errorHandling": {
-      "client": {
-        "useErrorBoundaries": true,
-        "useGlobalHandlers": true,
-        "useToasts": true,
-        "useRetry": true,
-        "useFallbacks": true,
-        "useRecovery": true
-      },
-      "server": {
-        "useStructuredErrors": true,
-        "useLogging": true,
-        "useStatusCodes": true,
-        "useFallbacks": true,
-        "useCircuitBreakers": true,
-        "useRetry": true
-      },
-      "monitoring": {
-        "useSentry": true,
-        "useLogging": true,
-        "useAlerts": true,
-        "useErrorReporting": true,
-        "useErrorTracking": true
+    "accessibility": {
+      "compliance": "WCAG 2.1 AA",
+      "requirements": {
+        "keyboard": true,
+        "screenReader": true,
+        "highContrast": true,
+        "reducedMotion": true
       }
+    }
+  },
+  "implementation": {
+    "testing": {
+      "gallery": {
+        "masonry": "src/components/gallery/__tests__/MasonryLayout.test.tsx",
+        "filtering": "src/components/gallery/__tests__/FilterSystem.test.tsx",
+        "upload": "src/components/gallery/__tests__/UploadManager.test.tsx"
+      },
+      "mobile": {
+        "progressive": "src/components/mobile/__tests__/ProgressiveLoader.test.tsx",
+        "offline": "src/lib/offline/__tests__/ServiceWorker.test.ts",
+        "touch": "src/components/mobile/__tests__/TouchHandler.test.tsx"
+      },
+      "analytics": {
+        "realtime": "src/components/analytics/__tests__/RealTimeMetrics.test.tsx",
+        "visualization": "src/components/analytics/__tests__/Visualizations.test.tsx",
+        "export": "src/lib/analytics/__tests__/ExportManager.test.ts"
+      }
+    }
+  },
+  "examples": {
+    "gallery": {
+      "masonry": `
+        describe('MasonryLayout', () => {
+          it('should handle virtualization correctly', () => {
+            const { container } = render(<MasonryLayout items={mockItems} />);
+            expect(container.querySelectorAll('.masonry-item')).toHaveLength(20);
+          });
+
+          it('should load images progressively', async () => {
+            const { getByTestId } = render(<MasonryLayout items={mockItems} />);
+            const image = getByTestId('progressive-image');
+            expect(image).toHaveAttribute('loading', 'lazy');
+          });
+        });
+      `,
+      "filtering": `
+        describe('FilterSystem', () => {
+          it('should compose filters correctly', () => {
+            const { result } = renderHook(() => useFilters());
+            act(() => {
+              result.current.addFilter('tag', 'nature');
+              result.current.addFilter('date', '2025-03');
+            });
+            expect(result.current.items).toHaveLength(5);
+          });
+        });
+      `
+    },
+    "mobile": {
+      "offline": `
+        describe('OfflineSupport', () => {
+          it('should handle offline mode', async () => {
+            const { result } = renderHook(() => useOffline());
+            await act(async () => {
+              await mockOfflineState(true);
+            });
+            expect(result.current.isOffline).toBe(true);
+          });
+        });
+      `,
+      "touch": `
+        describe('TouchHandler', () => {
+          it('should handle gestures correctly', () => {
+            const onSwipe = jest.fn();
+            const { getByTestId } = render(
+              <TouchHandler onSwipe={onSwipe} />
+            );
+            fireEvent.touchStart(getByTestId('touch-area'));
+            fireEvent.touchMove(getByTestId('touch-area'));
+            fireEvent.touchEnd(getByTestId('touch-area'));
+            expect(onSwipe).toHaveBeenCalled();
+          });
+        });
+      `
+    },
+    "analytics": {
+      "realtime": `
+        describe('RealTimeMetrics', () => {
+          it('should update metrics in real-time', async () => {
+            const { result } = renderHook(() => useRealTimeMetrics());
+            act(() => {
+              mockWebSocket.emit('metric-update', newData);
+            });
+            expect(result.current.metrics).toEqual(newData);
+          });
+        });
+      `,
+      "export": `
+        describe('DataExport', () => {
+          it('should handle large exports', async () => {
+            const { result } = renderHook(() => useDataExport());
+            await act(async () => {
+              await result.current.startExport('large-dataset');
+            });
+            expect(result.current.progress).toBe(100);
+          });
+        });
+      `
     }
   }
 }
 ```
 
-## Testing Standards
+## Testing Guidelines
 
-Cloud Burst implements a comprehensive testing strategy to ensure code quality and reliability:
+### Gallery Testing
 
-### Testing Frameworks
+#### Masonry Layout
+- Test virtualization performance
+- Verify progressive loading
+- Check resize handling
+- Validate accessibility
 
-- **Jest**: Primary test runner and assertion library
-- **React Testing Library**: Component testing
-- **Playwright**: End-to-end testing
+#### Filtering System
+- Test filter composition
+- Verify URL synchronization
+- Check state management
+- Validate performance
 
-### Test Types
+#### Upload System
+- Test chunked uploads
+- Verify concurrent uploads
+- Check progress tracking
+- Validate error recovery
 
-#### Unit Tests
+### Mobile Testing
 
-Unit tests focus on testing individual functions and components in isolation:
+#### Progressive Loading
+- Test skeleton screens
+- Verify lazy loading
+- Check image optimization
+- Validate connection handling
 
-```typescript
-// src/utils/date-utils.test.ts
-import { formatDate, isDateInPast } from './date-utils';
+#### Offline Support
+- Test service worker
+- Verify storage handling
+- Check sync functionality
+- Validate conflict resolution
 
-describe('Date Utils', () => {
-  describe('formatDate', () => {
-    it('formats date correctly', () => {
-      const date = new Date('2023-01-15T12:00:00Z');
-      expect(formatDate(date, 'short')).toBe('01/15/2023');
-    });
-    
-    it('handles different formats', () => {
-      const date = new Date('2023-01-15T12:00:00Z');
-      expect(formatDate(date, 'long')).toBe('January 15, 2023');
-    });
-  });
-  
-  describe('isDateInPast', () => {
-    it('returns true for past dates', () => {
-      const pastDate = new Date();
-      pastDate.setDate(pastDate.getDate() - 1);
-      expect(isDateInPast(pastDate)).toBe(true);
-    });
-    
-    it('returns false for future dates', () => {
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 1);
-      expect(isDateInPast(futureDate)).toBe(false);
-    });
-  });
-});
-```
+#### Touch Interactions
+- Test gesture handling
+- Verify haptic feedback
+- Check touch targets
+- Validate accessibility
 
-#### Component Tests
+### Analytics Testing
 
-Component tests verify that UI components render and behave correctly:
+#### Real-time Metrics
+- Test WebSocket connection
+- Verify data aggregation
+- Check caching behavior
+- Validate fallback handling
 
-```typescript
-// src/components/Button/Button.test.tsx
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Button } from './Button';
+#### Visualization
+- Test responsive layouts
+- Verify theme support
+- Check accessibility
+- Validate interactivity
 
-describe('Button', () => {
-  it('renders correctly', () => {
-    render(<Button>Click me</Button>);
-    expect(screen.getByRole('button')).toHaveTextContent('Click me');
-  });
-  
-  it('calls onClick when clicked', () => {
-    const handleClick = jest.fn();
-    render(<Button onClick={handleClick}>Click me</Button>);
-    fireEvent.click(screen.getByRole('button'));
-    expect(handleClick).toHaveBeenCalledTimes(1);
-  });
-  
-  it('can be disabled', () => {
-    render(<Button disabled>Click me</Button>);
-    expect(screen.getByRole('button')).toBeDisabled();
-  });
-  
-  it('renders with different variants', () => {
-    render(<Button variant="primary">Primary</Button>);
-    expect(screen.getByRole('button')).toHaveClass('bg-primary');
-    
-    render(<Button variant="secondary">Secondary</Button>);
-    expect(screen.getByRole('button')).toHaveClass('bg-secondary');
-  });
-});
-```
+#### Export System
+- Test format handling
+- Verify large datasets
+- Check progress tracking
+- Validate error handling
 
-#### Integration Tests
-
-Integration tests verify that multiple components work together correctly:
-
-```typescript
-// src/features/auth/LoginForm.test.tsx
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { LoginForm } from './LoginForm';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { mockSupabaseClient } from '@/tests/mocks/supabase';
-
-// Mock Supabase client
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createClientComponentClient: () => mockSupabaseClient,
-}));
-
-describe('LoginForm', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-  
-  it('submits the form with email and password', async () => {
-    mockSupabaseClient.auth.signInWithPassword.mockResolvedValueOnce({
-      data: { user: { id: '123' } },
-      error: null,
-    });
-    
-    render(
-      <AuthProvider>
-        <LoginForm />
-      </AuthProvider>
-    );
-    
-    fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: 'test@example.com' },
-    });
-    
-    fireEvent.change(screen.getByLabelText(/password/i), {
-      target: { value: 'password123' },
-    });
-    
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
-    
-    await waitFor(() => {
-      expect(mockSupabaseClient.auth.signInWithPassword).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        password: 'password123',
-      });
-    });
-  });
-  
-  it('displays error message on failed login', async () => {
-    mockSupabaseClient.auth.signInWithPassword.mockResolvedValueOnce({
-      data: { user: null },
-      error: { message: 'Invalid credentials' },
-    });
-    
-    render(
-      <AuthProvider>
-        <LoginForm />
-      </AuthProvider>
-    );
-    
-    fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: 'test@example.com' },
-    });
-    
-    fireEvent.change(screen.getByLabelText(/password/i), {
-      target: { value: 'wrongpassword' },
-    });
-    
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
-    
-    await waitFor(() => {
-      expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument();
-    });
-  });
-});
-```
-
-#### End-to-End Tests
-
-E2E tests verify that the entire application works correctly from a user's perspective:
-
-```typescript
-// e2e/auth.spec.ts
-import { test, expect } from '@playwright/test';
-
-test.describe('Authentication', () => {
-  test('user can sign in', async ({ page }) => {
-    // Navigate to login page
-    await page.goto('/login');
-    
-    // Fill in login form
-    await page.fill('input[name="email"]', 'test@example.com');
-    await page.fill('input[name="password"]', 'password123');
-    
-    // Submit form
-    await page.click('button[type="submit"]');
-    
-    // Verify redirect to dashboard
-    await expect(page).toHaveURL('/protected/dashboard');
-    
-    // Verify user is logged in
-    await expect(page.locator('text=Welcome, Test User')).toBeVisible();
-  });
-  
-  test('user sees error with invalid credentials', async ({ page }) => {
-    // Navigate to login page
-    await page.goto('/login');
-    
-    // Fill in login form with invalid credentials
-    await page.fill('input[name="email"]', 'test@example.com');
-    await page.fill('input[name="password"]', 'wrongpassword');
-    
-    // Submit form
-    await page.click('button[type="submit"]');
-    
-    // Verify error message
-    await expect(page.locator('text=Invalid email or password')).toBeVisible();
-    
-    // Verify still on login page
-    await expect(page).toHaveURL('/login');
-  });
-});
-```
-
-### Test Patterns
-
-Cloud Burst follows the Arrange-Act-Assert pattern for tests:
-
-```typescript
-// Example of AAA pattern
-it('updates user profile', async () => {
-  // Arrange
-  const initialUser = { name: 'John Doe', email: 'john@example.com' };
-  const updatedUser = { name: 'Jane Doe', email: 'jane@example.com' };
-  const updateProfile = jest.fn().mockResolvedValue({ data: updatedUser });
-  
-  // Act
-  const result = await updateProfile(updatedUser);
-  
-  // Assert
-  expect(result.data).toEqual(updatedUser);
-  expect(updateProfile).toHaveBeenCalledWith(updatedUser);
-});
-```
-
-### Test Coverage
-
-Cloud Burst aims for the following test coverage targets:
-
-- 80% statement coverage
-- 70% branch coverage
-- 80% function coverage
-- 80% line coverage
-
-### Test Organization
-
-- Unit tests are co-located with the code they test
-- Integration tests are located in a `__tests__` directory
-- E2E tests are located in an `e2e` directory
-- Test utilities are located in a `tests/utils` directory
-- Test fixtures are located in a `tests/fixtures` directory
-- Test mocks are located in a `tests/mocks` directory
-
-### Test Best Practices
-
-- Write tests before or alongside code (TDD/BDD)
-- Keep tests simple and focused
-- Use descriptive test names
-- Avoid testing implementation details
-- Use mocks and stubs for external dependencies
-- Use factories for test data
-- Clean up after tests
-
-## Performance Standards
-
-Cloud Burst prioritizes performance to ensure a smooth user experience:
+## Performance Testing
 
 ### Core Web Vitals
-
-Cloud Burst targets the following Core Web Vitals metrics:
-
-- **Largest Contentful Paint (LCP)**: < 2.5s
-- **First Input Delay (FID)**: < 100ms
-- **Cumulative Layout Shift (CLS)**: < 0.1
-- **Time to First Byte (TTFB)**: < 800ms
-- **First Contentful Paint (FCP)**: < 1.8s
-
-### Performance Optimization Techniques
-
-#### Code Optimization
-
-- **Code Splitting**: Split code into smaller chunks to reduce initial load time
-- **Tree Shaking**: Remove unused code from the bundle
-- **Minification**: Reduce code size by removing whitespace and shortening variable names
-- **Compression**: Use Gzip or Brotli to compress assets
-- **Bundle Analysis**: Regularly analyze bundle size to identify bloat
-
-```typescript
-// Dynamic import example
-import dynamic from 'next/dynamic';
-
-const DashboardChart = dynamic(() => import('@/components/DashboardChart'), {
-  loading: () => <p>Loading chart...</p>,
-});
-```
-
-#### Image Optimization
-
-Cloud Burst uses Next.js Image component for automatic image optimization:
-
-```tsx
-import Image from 'next/image';
-
-export function EventPhoto({ photo }) {
-  return (
-    <div className="relative h-64 w-full">
-      <Image
-        src={photo.url}
-        alt={photo.title}
-        fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        className="object-cover rounded-lg"
-        priority={photo.featured}
-      />
-    </div>
-  );
-}
-```
-
-#### Font Optimization
-
-Cloud Burst uses Next.js Font optimization:
-
-```typescript
-// app/layout.tsx
-import { Inter } from 'next/font/google';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en" className={inter.variable}>
-      <body>{children}</body>
-    </html>
-  );
-}
-```
-
-#### Caching Strategies
-
-Cloud Burst implements effective caching strategies:
-
-```typescript
-// Route segment config
-export const revalidate = 3600; // Revalidate every hour
-
-// Dynamic data fetching with TanStack Query
-const { data } = useQuery({
-  queryKey: ['events'],
-  queryFn: fetchEvents,
-  staleTime: 5 * 60 * 1000, // 5 minutes
-  cacheTime: 60 * 60 * 1000, // 1 hour
-});
-```
-
-#### Prefetching and Preloading
-
-- **Prefetching**: Prefetch links that are likely to be clicked
-- **Preloading**: Preload critical resources like fonts and hero images
-- **Preconnect**: Establish early connections to important third-party origins
-
-```html
-<!-- Preload critical fonts -->
-<link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
-
-<!-- Preconnect to important third-party origins -->
-<link rel="preconnect" href="https://bxvbovzqzjfomqtdzzx.supabase.co" />
-```
-
-### Performance Monitoring
-
-Cloud Burst uses Web Vitals for client-side performance monitoring:
-
-```typescript
-// app/layout.tsx
-'use client'
-
-import { useReportWebVitals } from 'next/web-vitals';
-
-export function WebVitalsReporter() {
-  useReportWebVitals((metric) => {
-    console.log(metric);
-    
-    // Send to analytics
-    if (window.gtag) {
-      window.gtag('event', metric.name, {
-        value: metric.value,
-        event_category: 'Web Vitals',
-        event_label: metric.id,
-        non_interaction: true,
-      });
-    }
-  });
-  
-  return null;
-}
-```
-
-### Performance Testing
-
-- **Lighthouse**: Automated performance audits
-- **WebPageTest**: Detailed performance analysis
-- **Chrome DevTools**: Performance profiling
-- **Next.js Analytics**: Built-in performance monitoring
-
-### Performance Best Practices
-
-- Minimize main thread work
-- Reduce JavaScript execution time
-- Optimize rendering performance
-- Implement responsive images
-- Use efficient animations
-- Minimize HTTP requests
-- Implement progressive loading
-- Optimize for mobile devices
-
-## Error Handling
-
-Cloud Burst implements comprehensive error handling to ensure a robust user experience:
-
-### Client-Side Error Handling
-
-#### Error Boundaries
-
-Cloud Burst uses React Error Boundaries to catch and handle errors:
-
-```tsx
-// components/ErrorBoundary.tsx
-'use client'
-
-import { Component, ErrorInfo, ReactNode } from 'react';
-
-interface ErrorBoundaryProps {
-  fallback: ReactNode;
-  children: ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-}
-
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
-    // Log to error reporting service
-  }
-
-  render(): ReactNode {
-    if (this.state.hasError) {
-      return this.props.fallback;
-    }
-
-    return this.props.children;
-  }
-}
-```
-
-#### Global Error Handlers
-
-Cloud Burst implements global error handlers for unhandled errors:
-
-```typescript
-// app/error.tsx
-'use client'
-
-import { useEffect } from 'react';
-import { Button } from '@/components/ui/Button';
-
-export default function GlobalError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error('Global error:', error);
-  }, [error]);
-
-  return (
-    <html>
-      <body>
-        <div className="flex flex-col items-center justify-center min-h-screen p-4">
-          <h1 className="text-2xl font-bold mb-4">Something went wrong!</h1>
-          <p className="text-gray-600 mb-6">
-            We apologize for the inconvenience. Please try again later.
-          </p>
-          <Button onClick={reset}>Try again</Button>
-        </div>
-      </body>
-    </html>
-  );
-}
-```
-
-#### Toast Notifications
-
-Cloud Burst uses toast notifications for user-friendly error messages:
-
-```typescript
-// Example of using toast for error handling
-import { useToast } from '@/hooks/useToast';
-
-export function useUpdateProfile() {
-  const { toast } = useToast();
-  
-  const updateProfile = async (data) => {
-    try {
-      // Update profile logic
-      return result;
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to update profile. Please try again.',
-        variant: 'destructive',
-      });
-      throw error;
-    }
-  };
-  
-  return { updateProfile };
-}
-```
-
-### Server-Side Error Handling
-
-Cloud Burst implements structured error handling for server-side operations:
-
-```typescript
-// lib/error-handling.ts
-export class AppError extends Error {
-  public statusCode: number;
-  public code: string;
-  
-  constructor(message: string, statusCode = 500, code = 'INTERNAL_ERROR') {
-    super(message);
-    this.statusCode = statusCode;
-    this.code = code;
-    this.name = 'AppError';
-  }
-}
-
-export class ValidationError extends AppError {
-  public details: Record<string, string[]>;
-  
-  constructor(message: string, details: Record<string, string[]>) {
-    super(message, 400, 'VALIDATION_ERROR');
-    this.details = details;
-    this.name = 'ValidationError';
-  }
-}
-
-export class AuthError extends AppError {
-  constructor(message = 'Unauthorized') {
-    super(message, 401, 'UNAUTHORIZED');
-    this.name = 'AuthError';
-  }
-}
-
-export class ForbiddenError extends AppError {
-  constructor(message = 'Forbidden') {
-    super(message, 403, 'FORBIDDEN');
-    this.name = 'ForbiddenError';
-  }
-}
-
-export class NotFoundError extends AppError {
-  constructor(message = 'Resource not found') {
-    super(message, 404, 'NOT_FOUND');
-    this.name = 'NotFoundError';
-  }
-}
-```
-
-#### API Error Handling
-
-```typescript
-// app/api/events/[id]/route.ts
-import { NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { AppError, NotFoundError } from '@/lib/error-handling';
-
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const supabase = createRouteHandlerClient({ cookies });
-    
-    const { data, error } = await supabase
-      .from('events')
-      .select('*')
-      .eq('id', params.id)
-      .single();
-      
-    if (error) {
-      if (error.code === 'PGRST116') {
-        throw new NotFoundError(`Event with ID ${params.id} not found`);
-      }
-      throw new AppError(error.message, 500, error.code);
-    }
-    
-    return NextResponse.json({ data });
-  } catch (error) {
-    if (error instanceof AppError) {
-      return NextResponse.json(
-        { 
-          error: {
-            message: error.message,
-            code: error.code,
-            ...(error instanceof ValidationError ? { details: error.details } : {})
-          }
-        },
-        { status: error.statusCode }
-      );
-    }
-    
-    console.error('Unhandled error:', error);
-    
-    return NextResponse.json(
-      { error: { message: 'Internal server error', code: 'INTERNAL_ERROR' } },
-      { status: 500 }
-    );
-  }
-}
-```
-
-### Error Monitoring
-
-Cloud Burst uses Sentry for error monitoring:
-
-```typescript
-// app/sentry.ts
-import * as Sentry from '@sentry/nextjs';
-
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  tracesSampleRate: 1.0,
-  environment: process.env.NODE_ENV,
-});
-```
-
-### Error Recovery Strategies
-
-- **Retry Logic**: Automatically retry failed operations
-- **Circuit Breakers**: Prevent cascading failures
-- **Fallbacks**: Provide alternative content when primary content fails
-- **Graceful Degradation**: Maintain core functionality when non-critical features fail
-
-```typescript
-// Example of retry logic
-async function fetchWithRetry(url, options, retries = 3, backoff = 300) {
-  try {
-    return await fetch(url, options);
-  } catch (error) {
-    if (retries <= 0) throw error;
-    
-    await new Promise(resolve => setTimeout(resolve, backoff));
-    return fetchWithRetry(url, options, retries - 1, backoff * 2);
-  }
-}
-```
-
-## Examples
-
-### Unit Test Example
-
-```typescript
-// src/utils/validation.test.ts
-import { validateEmail, validatePassword } from './validation';
-
-describe('Validation Utils', () => {
-  describe('validateEmail', () => {
-    it('returns true for valid emails', () => {
-      expect(validateEmail('test@example.com')).toBe(true);
-      expect(validateEmail('user.name+tag@example.co.uk')).toBe(true);
-    });
-    
-    it('returns false for invalid emails', () => {
-      expect(validateEmail('test')).toBe(false);
-      expect(validateEmail('test@')).toBe(false);
-      expect(validateEmail('@example.com')).toBe(false);
-      expect(validateEmail('test@example')).toBe(false);
-    });
-  });
-  
-  describe('validatePassword', () => {
-    it('returns true for valid passwords', () => {
-      expect(validatePassword('Password123!')).toBe(true);
-    });
-    
-    it('returns false for passwords without uppercase', () => {
-      expect(validatePassword('password123!')).toBe(false);
-    });
-    
-    it('returns false for passwords without lowercase', () => {
-      expect(validatePassword('PASSWORD123!')).toBe(false);
-    });
-    
-    it('returns false for passwords without numbers', () => {
-      expect(validatePassword('Password!')).toBe(false);
-    });
-    
-    it('returns false for passwords without special characters', () => {
-      expect(validatePassword('Password123')).toBe(false);
-    });
-    
-    it('returns false for short passwords', () => {
-      expect(validatePassword('Pass1!')).toBe(false);
-    });
-  });
-});
-```
-
-### Performance Optimization Example
-
-```typescript
-// components/PhotoGallery.tsx
-'use client'
-
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { useInView } from 'react-intersection-observer';
-import { useQuery } from '@tanstack/react-query';
-import { PhotoCard } from './PhotoCard';
-import { Spinner } from './ui/Spinner';
-import { fetchPhotos } from '@/lib/api';
-
-interface PhotoGalleryProps {
-  eventId: string;
-}
-
-export function PhotoGallery({ eventId }: PhotoGalleryProps) {
-  const [page, setPage] = useState(1);
-  const [allPhotos, setAllPhotos] = useState<Photo[]>([]);
-  const hasMore = useRef(true);
-  
-  const { ref, inView } = useInView();
-  
-  const { data, isLoading, isFetching } = useQuery({
-    queryKey: ['photos', eventId, page],
-    queryFn: () => fetchPhotos(eventId, page),
-    keepPreviousData: true,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
-  
-  useEffect(() => {
-    if (data) {
-      setAllPhotos((prev) => [...prev, ...data.photos]);
-      hasMore.current = data.hasMore;
-    }
-  }, [data]);
-  
-  useEffect(() => {
-    if (inView && hasMore.current && !isFetching) {
-      setPage((prev) => prev + 1);
-    }
-  }, [inView, isFetching]);
-  
-  if (isLoading && page === 1) {
-    return <Spinner />;
-  }
-  
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {allPhotos.map((photo) => (
-        <PhotoCard key={photo.id} photo={photo} />
-      ))}
-      
-      {hasMore.current && (
-        <div ref={ref} className="flex justify-center p-4">
-          <Spinner />
-        </div>
-      )}
-    </div>
-  );
-}
-```
-
-### Error Handling Example
-
-```typescript
-// hooks/usePhotoUpload.ts
-'use client'
-
-import { useState } from 'react';
-import { useToast } from '@/hooks/useToast';
-import { uploadPhoto } from '@/lib/api';
-
-export function usePhotoUpload() {
-  const [isUploading, setIsUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const { toast } = useToast();
-  
-  const upload = async (file: File, eventId: string) => {
-    setIsUploading(true);
-    setProgress(0);
-    
-    try {
-      const onProgress = (percent: number) => {
-        setProgress(percent);
-      };
-      
-      const result = await uploadPhoto(file, eventId, onProgress);
-      
-      toast({
-        title: 'Success',
-        description: 'Photo uploaded successfully',
-        variant: 'success',
-      });
-      
-      return result;
-    } catch (error) {
-      console.error('Photo upload error:', error);
-      
-      toast({
-        title: 'Upload Failed',
-        description: error instanceof Error ? error.message : 'Failed to upload photo',
-        variant: 'destructive',
-      });
-      
-      throw error;
-    } finally {
-      setIsUploading(false);
-    }
-  };
-  
-  return {
-    upload,
-    isUploading,
-    progress,
-  };
-}
-``` 
+- First Contentful Paint (FCP)
+- Largest Contentful Paint (LCP)
+- Cumulative Layout Shift (CLS)
+- First Input Delay (FID)
+- Time to Interactive (TTI)
+
+### Resource Optimization
+- Bundle size analysis
+- Image optimization
+- API response times
+- Render performance
+
+### Mobile Performance
+- Connection throttling
+- Device emulation
+- Memory profiling
+- Battery impact
+
+## Accessibility Testing
+
+### WCAG Compliance
+- Keyboard navigation
+- Screen reader support
+- Color contrast
+- Focus management
+
+### Mobile Accessibility
+- Touch target size
+- Gesture alternatives
+- Voice navigation
+- Zoom support
+
+## Documentation Requirements
+
+### Test Documentation
+- Document test cases
+- Explain test patterns
+- List test coverage
+- Detail test setup
+
+### Performance Documentation
+- Document metrics
+- Explain thresholds
+- List optimizations
+- Detail profiling
+
+### Accessibility Documentation
+- Document compliance
+- Explain patterns
+- List requirements
+- Detail testing tools

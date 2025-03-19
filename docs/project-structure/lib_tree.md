@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-03-18T02:29:17.361Z
+Generated: 2025-03-19T01:19:55.470Z
 
 ## Overview
 
@@ -13,6 +13,9 @@ Generated: 2025-03-18T02:29:17.361Z
 │   └── photo-enhancement.ts
 ├── auth/
 │   └── utils.ts
+├── email/
+│   ├── index.ts
+│   └── sendgrid.ts
 ├── realtime/
 │   └── event-collaboration.ts
 ├── supabase/
@@ -41,17 +44,19 @@ Generated: 2025-03-18T02:29:17.361Z
 ├── analytics.ts
 ├── event-customization-server.ts
 ├── event-customization.ts
+├── index.ts
 ├── qr-code.ts
 ├── security-settings.ts
+├── sendgrid.ts
 ├── user-sessions.ts
 └── utils.ts
 
-6 directories, 32 files
+7 directories, 36 files
 
 ```
 
 ## File Type Breakdown
-- ts: 29 file(s)
+- ts: 33 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

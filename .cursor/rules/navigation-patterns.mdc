@@ -5,9 +5,9 @@ alwaysApply: false
 ---
 # Navigation Patterns for Cloud Burst
 
-> **Version:** 0.7.4  
-> **Last Updated:** March 2025  
-> **Related to:** Session 21 & 22 - Dashboard Implementation
+> **Version:** 0.8.0  
+> **Last Updated:** March 18, 2025  
+> **Related to:** Session 27 - Gallery Enhancement & Mobile Optimization
 
 ```json
 {
@@ -63,11 +63,38 @@ alwaysApply: false
         "includeParents": true
       },
       "mobile": {
-        "useDrawer": true,
-        "useBottomNav": false,
-        "useHamburgerMenu": true,
-        "useGestures": false,
-        "swipeToOpen": false
+        "useDrawer": false,
+        "useBottomNav": true,
+        "useHamburgerMenu": false,
+        "useGestures": true,
+        "swipeToOpen": true,
+        "bottomNavItems": [
+          {
+            "title": "Home",
+            "icon": "home",
+            "path": "/protected/dashboard"
+          },
+          {
+            "title": "Gallery",
+            "icon": "image",
+            "path": "/protected/gallery"
+          },
+          {
+            "title": "Capture",
+            "icon": "camera",
+            "path": "/protected/capture"
+          },
+          {
+            "title": "Events",
+            "icon": "calendar",
+            "path": "/protected/events"
+          },
+          {
+            "title": "Profile",
+            "icon": "user",
+            "path": "/protected/profile"
+          }
+        ]
       },
       "accessibility": {
         "ariaLabels": true,
@@ -226,35 +253,39 @@ alwaysApply: false
         ]
       },
       "galleryDetails": {
-        "tabs": [
-          {
-            "title": "All Photos",
-            "path": "/protected/gallery/:id",
-            "icon": "grid"
-          },
-          {
-            "title": "Albums",
-            "path": "/protected/gallery/:id/albums",
-            "icon": "folder"
-          },
-          {
-            "title": "Sharing",
-            "path": "/protected/gallery/:id/sharing",
-            "icon": "share"
-          }
-        ],
         "views": [
           {
             "title": "Grid",
-            "icon": "grid"
-          },
-          {
-            "title": "Masonry",
-            "icon": "layout"
+            "icon": "grid",
+            "layout": "masonry"
           },
           {
             "title": "List",
-            "icon": "list"
+            "icon": "list",
+            "layout": "table"
+          },
+          {
+            "title": "Calendar",
+            "icon": "calendar",
+            "layout": "timeline"
+          }
+        ],
+        "filters": [
+          {
+            "title": "Date",
+            "type": "dateRange"
+          },
+          {
+            "title": "Event",
+            "type": "select"
+          },
+          {
+            "title": "Tags",
+            "type": "multiSelect"
+          },
+          {
+            "title": "People",
+            "type": "search"
           }
         ],
         "actions": [
@@ -264,13 +295,77 @@ alwaysApply: false
             "primary": true
           },
           {
-            "title": "Select",
-            "icon": "check",
+            "title": "Share",
+            "icon": "share",
             "primary": false
           },
           {
-            "title": "Filter",
-            "icon": "filter",
+            "title": "Edit",
+            "icon": "edit",
+            "primary": false
+          },
+          {
+            "title": "Delete",
+            "icon": "trash",
+            "destructive": true
+          }
+        ]
+      },
+      "analyticsDetails": {
+        "views": [
+          {
+            "title": "Overview",
+            "icon": "layout",
+            "path": "/protected/analytics"
+          },
+          {
+            "title": "Events",
+            "icon": "calendar",
+            "path": "/protected/analytics/events"
+          },
+          {
+            "title": "Engagement",
+            "icon": "users",
+            "path": "/protected/analytics/engagement"
+          },
+          {
+            "title": "Media",
+            "icon": "image",
+            "path": "/protected/analytics/media"
+          }
+        ],
+        "timeRanges": [
+          {
+            "title": "Today",
+            "value": "today"
+          },
+          {
+            "title": "Week",
+            "value": "week"
+          },
+          {
+            "title": "Month",
+            "value": "month"
+          },
+          {
+            "title": "Custom",
+            "value": "custom"
+          }
+        ],
+        "actions": [
+          {
+            "title": "Export",
+            "icon": "download",
+            "primary": true
+          },
+          {
+            "title": "Share",
+            "icon": "share",
+            "primary": false
+          },
+          {
+            "title": "Print",
+            "icon": "printer",
             "primary": false
           }
         ]

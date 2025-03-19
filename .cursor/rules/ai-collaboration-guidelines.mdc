@@ -5,8 +5,8 @@ alwaysApply: false
 ---
 # AI Collaboration Guidelines
 
-> **Version:** 0.7.0  
-> **Last Updated:** March 2024
+> **Version:** 0.8.0  
+> **Last Updated:** March 18, 2025
 
 ```json
 {
@@ -19,7 +19,10 @@ alwaysApply: false
         "useContextAwareness": true,
         "useProgressiveDisclosure": true,
         "useExplanations": true,
-        "useCodeComments": true
+        "useCodeComments": true,
+        "useTypeDefinitions": true,
+        "useAccessibilityNotes": true,
+        "usePerformanceConsiderations": true
       },
       "codeGeneration": {
         "useTypeScript": true,
@@ -27,21 +30,29 @@ alwaysApply: false
         "useConsistentStyle": true,
         "useTestableCode": true,
         "useAccessibleCode": true,
-        "useSecureCode": true
+        "useSecureCode": true,
+        "useOptimizedCode": true,
+        "useMobileFirstDesign": true
       },
       "workflow": {
         "useIncrementalDevelopment": true,
         "useCodeReview": true,
         "useRefactoring": true,
         "useDebugging": true,
-        "useDocumentation": true
+        "useDocumentation": true,
+        "usePerformanceTesting": true,
+        "useAccessibilityTesting": true,
+        "useMobileResponsiveTesting": true
       },
       "learning": {
         "useExplanations": true,
         "useReferences": true,
         "useAlternatives": true,
         "usePatterns": true,
-        "useBestPractices": true
+        "useBestPractices": true,
+        "usePerformancePatterns": true,
+        "useAccessibilityPatterns": true,
+        "useMobilePatterns": true
       }
     },
     "aiFeatures": {
@@ -49,28 +60,106 @@ alwaysApply: false
         "useTensorFlowJS": true,
         "useOpenCV": true,
         "useDeepSeek": true,
-        "useOpenAI": true
+        "useOpenAI": true,
+        "useWebWorkers": true,
+        "useServiceWorkers": true,
+        "useWebAssembly": true
       },
       "patterns": {
         "useClientSideInference": true,
         "useServerSideInference": true,
         "useHybridApproach": true,
         "useStreamingResponses": true,
-        "useBatchProcessing": true
+        "useBatchProcessing": true,
+        "useProgressiveLoading": true,
+        "useOfflineSupport": true,
+        "useRealTimeProcessing": true
       },
       "optimization": {
         "useModelQuantization": true,
         "useModelPruning": true,
         "useModelCaching": true,
         "useProgressiveLoading": true,
-        "useAdaptiveComputing": true
+        "useAdaptiveComputing": true,
+        "useMemoryOptimization": true,
+        "useBatteryOptimization": true,
+        "useNetworkOptimization": true
       },
       "ethics": {
         "usePrivacyPreservation": true,
         "useFairness": true,
         "useTransparency": true,
         "useHumanOversight": true,
-        "useDataMinimization": true
+        "useDataMinimization": true,
+        "useConsentManagement": true,
+        "useAccessibility": true,
+        "useInclusion": true
+      }
+    },
+    "gallery": {
+      "implementation": {
+        "useMasonryLayout": true,
+        "useVirtualization": true,
+        "useProgressiveLoading": true,
+        "useImageOptimization": true,
+        "useAccessibleControls": true,
+        "useMobileResponsive": true,
+        "useOfflineSupport": true,
+        "useAnalytics": true
+      },
+      "patterns": {
+        "useInfiniteScroll": true,
+        "useLazyLoading": true,
+        "usePreloading": true,
+        "usePlaceholders": true,
+        "useErrorBoundaries": true,
+        "useLoadingStates": true,
+        "useGestureControls": true,
+        "useKeyboardControls": true
+      }
+    },
+    "mobile": {
+      "implementation": {
+        "useProgressiveEnhancement": true,
+        "useResponsiveDesign": true,
+        "useTouchOptimization": true,
+        "useOfflineFirst": true,
+        "usePerformanceOptimization": true,
+        "useNetworkAwareness": true,
+        "useBatteryAwareness": true,
+        "useDeviceCapabilities": true
+      },
+      "patterns": {
+        "useAdaptiveLoading": true,
+        "useGestureHandling": true,
+        "useVirtualization": true,
+        "usePreloading": true,
+        "useCaching": true,
+        "useBackgroundSync": true,
+        "useErrorRecovery": true,
+        "useAnalytics": true
+      }
+    },
+    "analytics": {
+      "implementation": {
+        "useRealTimeMetrics": true,
+        "useDataAggregation": true,
+        "useVisualization": true,
+        "useExportCapabilities": true,
+        "useAccessibleCharts": true,
+        "useMobileOptimized": true,
+        "useOfflineSupport": true,
+        "usePerformanceMetrics": true
+      },
+      "patterns": {
+        "useWebSockets": true,
+        "useWorkers": true,
+        "useStreaming": true,
+        "useCaching": true,
+        "useCompression": true,
+        "useErrorHandling": true,
+        "useDataValidation": true,
+        "useSecureTransport": true
       }
     }
   }
@@ -90,6 +179,9 @@ When collaborating with AI assistants:
 - **Review generated code**: Verify correctness and style
 - **Ask for explanations**: Understand the implementation
 - **Provide feedback**: Help the AI improve
+- **Consider performance**: Discuss optimization opportunities
+- **Consider accessibility**: Ensure inclusive design
+- **Consider mobile**: Ensure responsive implementation
 
 ### Code Generation Standards
 
@@ -101,83 +193,138 @@ AI-generated code should follow these standards:
 - Include proper error handling
 - Ensure accessibility compliance
 - Follow security best practices
+- Optimize for performance
+- Support mobile devices
 
+### Gallery Implementation Standards
+
+When implementing gallery features:
+
+- Use virtualization for large collections
+- Implement progressive loading
+- Optimize image loading and caching
+- Support keyboard navigation
+- Implement touch controls
+- Support offline functionality
+- Include analytics tracking
+- Ensure responsive design
+
+### Mobile Implementation Standards
+
+When implementing mobile features:
+
+- Use progressive enhancement
+- Implement responsive design
+- Optimize touch interactions
+- Support offline functionality
+- Monitor performance
+- Consider battery impact
+- Handle network changes
+- Track analytics
+
+### Analytics Implementation Standards
+
+When implementing analytics features:
+
+- Use real-time data processing
+- Implement data aggregation
+- Create accessible visualizations
+- Support data export
+- Optimize for mobile
+- Handle offline scenarios
+- Monitor performance
+- Ensure security
+
+## Example Implementations
+
+### Gallery Component
 ```typescript
-// Example of good AI-generated code
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { useToast } from '@/hooks/useToast';
-import { validateEmail } from '@/lib/validation';
+const GalleryGrid = () => {
+  const { items, virtualizer } = useMasonryGrid({
+    columnWidth: 300,
+    gap: 16,
+    items: photos,
+  });
 
-interface NewsletterFormProps {
-  onSubscribe: (email: string) => Promise<void>;
-}
+  return (
+    <div ref={virtualizer.ref}>
+      {items.map((item) => (
+        <PhotoCard
+          key={item.id}
+          photo={item}
+          loading="progressive"
+          analytics={{
+            track: true,
+            category: 'gallery',
+            action: 'view'
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+```
 
-/**
- * Newsletter subscription form component
- * @param onSubscribe - Callback function when user subscribes
- */
-export function NewsletterForm({ onSubscribe }: NewsletterFormProps): JSX.Element {
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
+### Mobile Component
+```typescript
+const MobileGallery = () => {
+  const { isOnline, networkType } = useNetwork();
+  const { items, loadMore } = useInfiniteGallery({
+    batchSize: 20,
+    prefetch: networkType === '4g',
+    offlineFirst: true
+  });
 
-  // Reset error when email changes
-  useEffect(() => {
-    if (error) setError(null);
-  }, [email, error]);
+  return (
+    <div>
+      <InfiniteScroll
+        items={items}
+        onLoadMore={loadMore}
+        useWindowScroll
+        threshold={500}
+      >
+        {(item) => (
+          <PhotoCard
+            key={item.id}
+            photo={item}
+            loading="progressive"
+            offline={!isOnline}
+          />
+        )}
+      </InfiniteScroll>
+    </div>
+  );
+};
+```
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validate email
-    if (!validateEmail(email)) {
-      setError('Please enter a valid email address');
-      return;
-    }
-{
-  "aiCollaboration": {
-    "context": {
-      "project": {
-        "name": "Cloud Burst",
-        "type": "Event Photography Platform",
-        "stack": {
-          "frontend": "Next.js 14 + TypeScript",
-          "backend": "Supabase",
-          "ui": "shadcn/ui",
-          "styling": "tailwindcss"
-        },
-        "version": "0.1.13"
-      }
-    },
-    "patterns": {
-      "preferred": {
-        "state": "zustand",
-        "forms": "react-hook-form + zod",
-        "auth": "@supabase/auth-helpers-nextjs",
-        "components": "shadcn/ui",
-        "media": {
-          "video": "static-optimized",
-          "images": "next/image"
-        }
-      }
-    },
-    "deployment": {
-      "platform": "Replit",
-      "environment": {
-        "secrets": [
-          "NEXT_PUBLIC_SUPABASE_URL",
-          "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-          "NEXT_PUBLIC_SITE_URL"
-        ],
-        "limits": {
-          "memory": "512MB",
-          "storage": "1GB"
-        }
-      }
-    }
-  }
-}
+### Analytics Component
+```typescript
+const AnalyticsDashboard = () => {
+  const { data, isLoading } = useRealTimeMetrics({
+    interval: 5000,
+    aggregation: 'sum',
+    cache: true
+  });
+
+  return (
+    <div>
+      <MetricsChart
+        data={data}
+        loading={isLoading}
+        type="line"
+        responsive
+        accessible
+        exportable
+      />
+      <MetricsTable
+        data={data}
+        loading={isLoading}
+        virtual
+        sortable
+        filterable
+        exportable
+      />
+    </div>
+  );
+};
 ```

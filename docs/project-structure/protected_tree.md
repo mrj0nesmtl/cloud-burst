@@ -1,9 +1,9 @@
 # protected Directory Structure
-Generated: 2025-03-18T02:29:11.722Z
+Generated: 2025-03-19T01:19:53.204Z
 
 ## Overview
 
-This directory contains 43 route(s).
+This directory contains 44 route(s).
 
 ## Directory Tree
 ```
@@ -48,6 +48,12 @@ This directory contains 43 route(s).
 │       └── page.tsx
 ├── attendees/
 │   └── invitations/
+│       ├── components/
+│       │   └── invitations-table.tsx
+│       ├── create/
+│       │   └── page.tsx
+│       ├── .page.tsx.swp
+│       ├── columns.tsx
 │       └── page.tsx
 ├── dashboard/
 │   ├── overview/
@@ -140,12 +146,12 @@ This directory contains 43 route(s).
 │   └── page.tsx
 └── layout.tsx
 
-49 directories, 83 files
+51 directories, 87 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 74 file(s)
+- tsx: 77 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

@@ -5,8 +5,8 @@ alwaysApply: false
 ---
 # Core development standards for Cloud Burst, including TypeScript, code style, and documentation
 
-> **Version:** 0.7.2  
-> **Last Updated:** March 17, 2024
+> **Version:** 0.8.0  
+> **Last Updated:** March 18, 2025
 
 ```json
 {
@@ -37,7 +37,9 @@ alwaysApply: false
         "useTypeAliasesForComplexTypes": true,
         "useInterfacesForObjectTypes": true,
         "useEnumsForConstantSets": true,
-        "useGenericsForReusableComponents": true
+        "useGenericsForReusableComponents": true,
+        "useUtilityTypes": true,
+        "useDiscriminatedUnions": true
       },
       "imports": {
         "useAbsoluteImports": true,
@@ -94,24 +96,30 @@ alwaysApply: false
           "loading": "loading.tsx",
           "error": "error.tsx",
           "notFound": "not-found.tsx",
-          "middleware": "middleware.ts"
+          "middleware": "middleware.ts",
+          "analytics": "{metric}.analytics.ts",
+          "gallery": "{feature}.gallery.ts"
         }
       },
       "layout": {
         "containers": {
           "mainContainer": "p-6 w-full space-y-6",
           "contentSection": "space-y-4",
-          "cardGrid": "grid gap-4 md:grid-cols-2 lg:grid-cols-4"
+          "cardGrid": "grid gap-4 md:grid-cols-2 lg:grid-cols-4",
+          "galleryGrid": "masonry-grid gap-4",
+          "mobileContainer": "px-4 py-6 w-full space-y-4"
         },
         "spacing": {
           "sectionSpacing": "space-y-6",
           "itemSpacing": "space-y-4",
-          "gridGap": "gap-4"
+          "gridGap": "gap-4",
+          "mobileGap": "gap-3"
         },
         "patterns": {
           "topLevelContainer": "Wrap all page content in a container with width and padding",
           "explicitWidth": "Always include w-full on top-level containers",
           "consistentPadding": "Use p-6 consistently across pages",
+          "mobileFirst": "Design mobile layouts first, then enhance for larger screens",
           "troubleshootingGuide": "See docs/layout-troubleshooting.md for layout issues"
         }
       },
@@ -142,19 +150,27 @@ alwaysApply: false
               "auth": "Authentication routes",
               "dashboard": "Protected dashboard routes",
               "events": "Event management routes",
-              "settings": "User settings routes"
+              "settings": "User settings routes",
+              "gallery": "Gallery management routes",
+              "analytics": "Analytics and reporting routes"
             },
             "components": {
               "auth": "Authentication components",
               "profile": "Profile management components",
               "ui": "Shadcn UI components",
               "shared": "Shared components",
-              "forms": "Form components"
+              "forms": "Form components",
+              "gallery": "Gallery components",
+              "analytics": "Analytics components",
+              "mobile": "Mobile-specific components"
             },
             "lib": {
               "utils": "Utility functions",
               "supabase": "Supabase client",
-              "validation": "Zod schemas"
+              "validation": "Zod schemas",
+              "analytics": "Analytics utilities",
+              "gallery": "Gallery utilities",
+              "mobile": "Mobile utilities"
             },
             "hooks": "Custom hooks",
             "types": "TypeScript types",
@@ -172,7 +188,16 @@ alwaysApply: false
             "optimization": {
               "quality": 80,
               "formats": ["webp", "avif"],
-              "sizes": ["thumbnail", "preview", "full"]
+              "sizes": ["thumbnail", "preview", "full"],
+              "lazyLoading": true,
+              "preloading": true,
+              "caching": true
+            },
+            "interaction": {
+              "gestures": true,
+              "keyboard": true,
+              "accessibility": true,
+              "sharing": true
             }
           },
           "analytics": {
@@ -180,12 +205,30 @@ alwaysApply: false
               "library": "recharts",
               "colors": ["primary", "secondary", "accent"],
               "responsiveness": true,
-              "loading": "skeleton"
+              "loading": "skeleton",
+              "accessibility": true,
+              "export": true
             },
             "metrics": {
               "realtime": true,
               "caching": "stale-while-revalidate",
-              "polling": 30000
+              "polling": 30000,
+              "aggregation": true,
+              "filtering": true
+            }
+          },
+          "mobile": {
+            "navigation": {
+              "gestures": true,
+              "bottomNav": true,
+              "pullToRefresh": true,
+              "swipeActions": true
+            },
+            "optimization": {
+              "lazyLoading": true,
+              "imageOptimization": true,
+              "networkAware": true,
+              "offlineSupport": true
             }
           }
         }
@@ -202,7 +245,9 @@ alwaysApply: false
           "components": "TSDoc for props interface",
           "hooks": "TSDoc for parameters and return",
           "utils": "TSDoc for functions",
-          "types": "TSDoc for type definitions"
+          "types": "TSDoc for type definitions",
+          "analytics": "TSDoc for metrics and charts",
+          "gallery": "TSDoc for gallery features"
         }
       },
       "markdown": {
@@ -210,7 +255,8 @@ alwaysApply: false
         "useCodeBlocks": true,
         "useLinks": true,
         "useTables": true,
-        "useImages": true
+        "useImages": true,
+        "useDiagrams": true
       },
       "required": {
         "README": true,
@@ -220,12 +266,16 @@ alwaysApply: false
         "componentDocumentation": true,
         "apiDocumentation": true,
         "deploymentDocumentation": true,
-        "layoutTroubleshooting": true
+        "layoutTroubleshooting": true,
+        "analyticsGuide": true,
+        "galleryGuide": true,
+        "mobileGuide": true
       },
       "format": {
         "useMarkdown": true,
         "useTSDoc": true,
-        "useJSDoc": true
+        "useJSDoc": true,
+        "useMermaid": true
       }
     }
   }

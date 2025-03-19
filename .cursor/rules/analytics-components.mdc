@@ -1,0 +1,382 @@
+---
+description: 
+globs: **/analytics/**/*.ts, **/analytics/**/*.tsx
+alwaysApply: false
+---
+# Analytics Component Standards
+
+## Version: 1.0.0
+Last Updated: March 18, 2025
+
+```json
+{
+  "description": "Analytics component standards for Cloud Burst, focusing on real-time metrics, visualization, and export functionality",
+  "globs": ["**/analytics/**/*.ts", "**/analytics/**/*.tsx"],
+  "rules": {
+    "metrics": {
+      "realtime": {
+        "websocket": {
+          "useReconnection": true,
+          "useHeartbeat": true,
+          "useBackoff": true,
+          "useFallback": true
+        },
+        "aggregation": {
+          "useWindowedAggregation": true,
+          "useMemoization": true,
+          "useDebounce": true,
+          "useBatching": true
+        },
+        "caching": {
+          "useLocalStorage": true,
+          "useStaleWhileRevalidate": true,
+          "useVersioning": true,
+          "useExpiration": true
+        }
+      },
+      "historical": {
+        "fetching": {
+          "usePagination": true,
+          "useInfiniteScroll": true,
+          "useFiltering": true,
+          "useSorting": true
+        },
+        "processing": {
+          "useWorkers": true,
+          "useStreaming": true,
+          "useCompression": true,
+          "useBatching": true
+        }
+      }
+    },
+    "visualization": {
+      "charts": {
+        "useResponsive": true,
+        "useTheming": true,
+        "useAnimations": true,
+        "useInteractivity": true,
+        "components": {
+          "LineChart": true,
+          "BarChart": true,
+          "PieChart": true,
+          "ScatterPlot": true
+        }
+      },
+      "tables": {
+        "useVirtualization": true,
+        "useSorting": true,
+        "useFiltering": true,
+        "usePagination": true,
+        "features": {
+          "columnResizing": true,
+          "rowSelection": true,
+          "columnVisibility": true,
+          "export": true
+        }
+      },
+      "dashboards": {
+        "useGridLayout": true,
+        "useDragAndDrop": true,
+        "useResponsive": true,
+        "useCustomization": true,
+        "features": {
+          "widgetResize": true,
+          "widgetSettings": true,
+          "layoutPersistence": true,
+          "themeSupport": true
+        }
+      }
+    },
+    "export": {
+      "formats": {
+        "csv": {
+          "useStreaming": true,
+          "useCompression": true,
+          "useEncoding": true,
+          "useValidation": true
+        },
+        "excel": {
+          "useTemplates": true,
+          "useStyles": true,
+          "useFormulas": true,
+          "useValidation": true
+        },
+        "pdf": {
+          "useTemplates": true,
+          "useCompression": true,
+          "useWatermarks": true,
+          "useHeaders": true
+        }
+      },
+      "processing": {
+        "useWorkers": true,
+        "useProgress": true,
+        "useChunking": true,
+        "useRetry": true
+      }
+    }
+  },
+  "implementation": {
+    "metrics": {
+      "realtime": "src/components/analytics/RealTimeMetrics.tsx",
+      "historical": "src/components/analytics/HistoricalMetrics.tsx"
+    },
+    "visualization": {
+      "charts": "src/components/analytics/charts",
+      "tables": "src/components/analytics/tables",
+      "dashboards": "src/components/analytics/dashboards"
+    },
+    "export": {
+      "manager": "src/lib/analytics/ExportManager.ts",
+      "workers": "src/workers/analytics"
+    }
+  },
+  "examples": {
+    "realtime": {
+      "metrics": `
+        const RealTimeMetrics = () => {
+          const { data, isLoading, error } = useRealTimeMetrics({
+            interval: 5000,
+            aggregation: 'sum',
+            cache: true
+          });
+
+          return (
+            <MetricsDisplay
+              data={data}
+              loading={isLoading}
+              error={error}
+              chartType="line"
+            />
+          );
+        };
+      `,
+      "websocket": `
+        const WebSocketManager = () => {
+          const socket = useWebSocket({
+            url: WS_URL,
+            reconnect: true,
+            backoff: {
+              initial: 1000,
+              max: 30000
+            }
+          });
+
+          return (
+            <WebSocketContext.Provider value={socket}>
+              <RealTimeMetrics />
+            </WebSocketContext.Provider>
+          );
+        };
+      `
+    },
+    "visualization": {
+      "chart": `
+        const MetricsChart = () => {
+          const { data, loading } = useMetricsData();
+          
+          return (
+            <ResponsiveContainer>
+              <LineChart
+                data={data}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="timestamp" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          );
+        };
+      `,
+      "table": `
+        const MetricsTable = () => {
+          const table = useReactTable({
+            data,
+            columns,
+            getCoreRowModel: getCoreRowModel(),
+            getSortedRowModel: getSortedRowModel(),
+            getPaginationRowModel: getPaginationRowModel(),
+            getFilteredRowModel: getFilteredRowModel()
+          });
+
+          return (
+            <DataTable
+              table={table}
+              loading={loading}
+              virtualRows={true}
+              exportOptions={['csv', 'excel']}
+            />
+          );
+        };
+      `
+    },
+    "export": {
+      "manager": `
+        const ExportManager = () => {
+          const { startExport, progress, error } = useExport({
+            format: 'csv',
+            compression: true,
+            streaming: true
+          });
+
+          return (
+            <ExportUI
+              onExport={startExport}
+              progress={progress}
+              error={error}
+              formats={['csv', 'excel', 'pdf']}
+            />
+          );
+        };
+      `,
+      "worker": `
+        // analytics.worker.ts
+        self.onmessage = async (e) => {
+          const { data, format, options } = e.data;
+          
+          try {
+            const chunks = chunkData(data);
+            for (const chunk of chunks) {
+              const processed = await processChunk(chunk, format);
+              self.postMessage({
+                type: 'progress',
+                data: processed,
+                progress: (processed.length / data.length) * 100
+              });
+            }
+            self.postMessage({ type: 'complete' });
+          } catch (error) {
+            self.postMessage({ type: 'error', error });
+          }
+        };
+      `
+    }
+  }
+}
+```
+
+## Analytics Component Guidelines
+
+### Real-time Metrics
+
+#### WebSocket Management
+- Implement reconnection logic
+- Use heartbeat mechanism
+- Implement exponential backoff
+- Provide fallback mechanism
+
+#### Data Aggregation
+- Use windowed aggregation
+- Implement memoization
+- Use debouncing
+- Implement batching
+
+#### Caching Strategy
+- Use local storage
+- Implement stale-while-revalidate
+- Use versioning
+- Handle expiration
+
+### Visualization Components
+
+#### Chart Components
+- Use responsive containers
+- Implement theming
+- Add animations
+- Enable interactivity
+
+#### Table Components
+- Use virtualization
+- Implement sorting
+- Enable filtering
+- Add pagination
+
+#### Dashboard Layout
+- Use grid system
+- Enable drag-and-drop
+- Make responsive
+- Allow customization
+
+### Export Functionality
+
+#### Format Support
+- CSV with streaming
+- Excel with templates
+- PDF with customization
+- JSON with compression
+
+#### Processing
+- Use web workers
+- Show progress
+- Implement chunking
+- Handle retries
+
+## Performance Guidelines
+
+### Real-time Performance
+- Optimize WebSocket connections
+- Minimize data transfer
+- Use efficient aggregation
+- Implement caching
+
+### Visualization Performance
+- Use virtualization
+- Optimize rendering
+- Implement lazy loading
+- Use efficient data structures
+
+### Export Performance
+- Use streaming for large data
+- Implement compression
+- Use web workers
+- Handle memory efficiently
+
+## Accessibility Guidelines
+
+### Chart Accessibility
+- Provide alternative text
+- Use ARIA labels
+- Support keyboard navigation
+- Maintain color contrast
+
+### Table Accessibility
+- Enable keyboard navigation
+- Use proper headers
+- Support screen readers
+- Maintain focus management
+
+### Dashboard Accessibility
+- Enable keyboard shortcuts
+- Provide focus indicators
+- Support screen readers
+- Maintain semantic structure
+
+## Documentation Requirements
+
+### Component Documentation
+- Document props and types
+- Provide usage examples
+- List dependencies
+- Include accessibility notes
+
+### Integration Documentation
+- Document setup process
+- Explain data requirements
+- Detail configuration options
+- Provide integration examples
+
+### Performance Documentation
+- Document optimization techniques
+- List performance metrics
+- Provide benchmarks
+- Include optimization tips
+``` 

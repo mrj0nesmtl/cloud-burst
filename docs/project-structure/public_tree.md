@@ -1,5 +1,5 @@
 # public Directory Structure
-Generated: 2025-03-18T02:29:10.014Z
+Generated: 2025-03-19T01:19:52.396Z
 
 ## Overview
 
@@ -9,6 +9,10 @@ Generated: 2025-03-18T02:29:10.014Z
 ```
 ./public/
 ├── images/
+│   ├── email/
+│   │   ├── logo.png
+│   │   └── logo.svg
+│   ├── .DS_Store
 │   ├── fallback-hero.jpg
 │   └── pexels-themo1-bg.jpg
 ├── .DS_Store
@@ -19,6 +23,7 @@ Generated: 2025-03-18T02:29:10.014Z
 ├── cb_003_sora_ai.MP4
 ├── cloud-lightning.png
 ├── cloud-lightning.svg
+├── emailtemplate.html
 ├── favicon-16x16.png
 ├── favicon-32x32.png
 ├── favicon.ico
@@ -37,7 +42,7 @@ Generated: 2025-03-18T02:29:10.014Z
 ├── vercel.svg
 └── window.svg
 
-2 directories, 27 files
+3 directories, 31 files
 
 ```
 

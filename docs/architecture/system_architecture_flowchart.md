@@ -1,8 +1,8 @@
 # 🏛️ **System Architecture Flowchart (Beta v0.7.9)**  
 
 ## Cloud Burst  
-📅 *Updated: March 17, 2025*  
-�� *Version: 0.7.9*
+📅 *Updated: March 18, 2025*  
+📊 *Version: 0.7.9*
 
 ---
 
@@ -22,6 +22,8 @@ flowchart TD
         Forms[📝 Form System]
         Invitations[📨 Invitation System]
         QRScanner[📱 QR Scanner]
+        ErrorPages[❌ Error Pages]
+        VerificationFlow[✅ Verification Flow]
     end
 
     subgraph Auth[🔑 Authentication Layer]
@@ -31,6 +33,9 @@ flowchart TD
         Zustand[🔄 Auth Store]
         Permissions[🔐 Permission System]
         InviteAuth[📨 Invitation Auth]
+        EmailAuth[📧 Email Auth]
+        ErrorHandler[❌ Error Handler]
+        TokenManager[🔑 Token Manager]
     end
 
     subgraph Data[💾 Data Layer]
@@ -43,6 +48,8 @@ flowchart TD
         AttendeeDB[👥 Attendees Database]
         AnalyticsDB[📊 Analytics Database]
         InvitationsDB[📨 Invitations Database]
+        EmailTemplatesDB[📧 Email Templates]
+        EmailAssetsDB[🖼️ Email Assets]
     end
 
     WebApp -->|1. Auth Request| AuthForms
@@ -70,9 +77,14 @@ flowchart TD
     Invitations -->|19. Manage| InvitationsDB
     QRScanner -->|20. Authenticate| InviteAuth
     InviteAuth -->|21. Validate| InvitationsDB
+    ErrorPages -->|22. Handle| ErrorHandler
+    VerificationFlow -->|23. Process| EmailAuth
+    EmailAuth -->|24. Templates| EmailTemplatesDB
+    EmailAuth -->|25. Assets| EmailAssetsDB
+    TokenManager -->|26. Manage| Session
 ```
 
-## 🛠️ **Beta Components (v0.7.8)**  
+## 🛠️ **Beta Components (v0.7.9)**  
 
 ### 📱 **Client Layer**
 - Next.js 14 App Router
@@ -89,6 +101,9 @@ flowchart TD
 - Invitation System UI
 - QR Code Scanner
 - React Hook Form + Zod Validation
+- Error Pages
+- Verification Flow UI
+- Email Template Preview
 
 ### 🔑 **Authentication Layer**
 - Supabase Auth
@@ -101,6 +116,10 @@ flowchart TD
 - Form Validation
 - Invitation-based Authentication
 - QR Code Authentication
+- Error Handling System
+- Email Authentication Flow
+- Token Management
+- Link Expiration Handling
 
 ### 💾 **Data Layer**
 - PostgreSQL Database
@@ -113,6 +132,8 @@ flowchart TD
 - Analytics Database
 - Invitations Database
 - Role Capabilities Table
+- Email Templates Database
+- Email Assets Storage
 
 ---
 
@@ -357,26 +378,40 @@ flowchart TD
         TemplateList[📋 Template List]
         Editor[✏️ Template Editor]
         Preview[👁️ Template Preview]
+        AssetManager[🖼️ Asset Manager]
+        DeliveryMetrics[📊 Delivery Metrics]
+        SpamScore[📈 Spam Score]
     end
 
     subgraph API[🔌 API Layer]
         TemplateAPI[📡 Template API]
         SyncAPI[🔄 Sync API]
         CronAPI[⏱️ Cron API]
+        AssetAPI[🖼️ Asset API]
+        DeliveryAPI[📧 Delivery API]
     end
 
     subgraph Data[💾 Data Layer]
         TemplateDB[🗄️ Template Configurations]
         SupaAuth[🔑 Supabase Auth]
         FileSystem[📁 File System]
+        AssetStorage[📦 Asset Storage]
+        DeliveryStats[📊 Delivery Statistics]
     end
 
     TemplateList -->|View| TemplateDB
     Editor -->|Update| TemplateAPI
     Preview -->|Render| TemplateAPI
+    AssetManager -->|Manage| AssetAPI
+    DeliveryMetrics -->|Monitor| DeliveryAPI
+    SpamScore -->|Check| DeliveryAPI
+    
     TemplateAPI -->|CRUD| TemplateDB
     SyncAPI -->|Synchronize| SupaAuth
     CronAPI -->|Auto-Sync| SyncAPI
+    AssetAPI -->|Store| AssetStorage
+    DeliveryAPI -->|Track| DeliveryStats
+    
     TemplateAPI -->|Fallback| FileSystem
 ```
 
@@ -670,58 +705,59 @@ flowchart TD
     State -->|Analytics| AnalyticsStore
 ```
 
-## 💻 **Session 24 Implementation Focus**
+## 💻 **Session 27 Implementation Focus**
 
 ```mermaid
 flowchart TD
     subgraph Gallery[🖼️ Gallery Implementation]
-        UploadSystem[📤 Photo Upload System]
-        AlbumManagement[📁 Album Management]
-        PhotoModeration[✅ Photo Moderation]
-        EnhancedViews[👁️ Enhanced Gallery Views]
+        MasonryLayout[🧱 Masonry Layout]
+        AdvancedFiltering[🔍 Advanced Filtering]
+        BulkUpload[📤 Bulk Upload]
+        ProgressiveLoading[🔄 Progressive Loading]
     end
 
-    subgraph Components[🧩 Component Implementation]
-        UploadComponents[📤 Upload Components]
-        AlbumComponents[📁 Album Components]
-        ModerationComponents[✅ Moderation Components]
-        ViewComponents[👁️ View Components]
+    subgraph Analytics[📊 Analytics Implementation]
+        RealTimeMetrics[⚡ Real-time Metrics]
+        EventAnalytics[📈 Event Analytics]
+        ExportSystem[📤 Export System]
+        DataVisualization[📊 Data Visualization]
     end
 
-    subgraph Data[💾 Data Integration]
-        PhotosDB[📸 Photos Database]
-        AlbumsDB[📁 Albums Database]
-        TagsDB[🏷️ Tags Database]
-        ModerationLogsDB[📋 Moderation Logs]
+    subgraph Mobile[📱 Mobile Optimization]
+        ProgressiveEnhancement[📱 Progressive Enhancement]
+        OfflineSupport[💾 Offline Support]
+        TouchInteractions[👆 Touch Interactions]
+        PerformanceOptimization[⚡ Performance]
     end
 
-    subgraph Storage[📦 Storage Configuration]
-        StorageBuckets[📦 Storage Buckets]
-        RLSPolicies[🔒 RLS Policies]
-        LifecyclePolicies[⏱️ Lifecycle Policies]
-        CORSSettings[🌐 CORS Settings]
+    subgraph QA[✅ Quality Assurance]
+        Testing[🧪 Testing]
+        Performance[⚡ Performance]
+        Security[🔒 Security]
+        Accessibility[♿ Accessibility]
+        Documentation[📚 Documentation]
     end
 
-    Gallery -->|Implement| UploadSystem
-    Gallery -->|Implement| AlbumManagement
-    Gallery -->|Implement| PhotoModeration
-    Gallery -->|Implement| EnhancedViews
+    Gallery -->|Implement| MasonryLayout
+    Gallery -->|Implement| AdvancedFiltering
+    Gallery -->|Implement| BulkUpload
+    Gallery -->|Implement| ProgressiveLoading
     
-    UploadSystem -->|Use| UploadComponents
-    AlbumManagement -->|Use| AlbumComponents
-    PhotoModeration -->|Use| ModerationComponents
-    EnhancedViews -->|Use| ViewComponents
+    Analytics -->|Implement| RealTimeMetrics
+    Analytics -->|Implement| EventAnalytics
+    Analytics -->|Implement| ExportSystem
+    Analytics -->|Implement| DataVisualization
     
-    UploadComponents -->|Connect to| PhotosDB
-    AlbumComponents -->|Connect to| AlbumsDB
-    ModerationComponents -->|Connect to| ModerationLogsDB
-    ViewComponents -->|Connect to| PhotosDB
+    Mobile -->|Optimize| ProgressiveEnhancement
+    Mobile -->|Implement| OfflineSupport
+    Mobile -->|Enhance| TouchInteractions
+    Mobile -->|Optimize| PerformanceOptimization
     
-    PhotosDB -->|Store in| StorageBuckets
-    AlbumsDB -->|Reference| StorageBuckets
-    PhotosDB -->|Secure via| RLSPolicies
-    StorageBuckets -->|Manage via| LifecyclePolicies
-    StorageBuckets -->|Configure| CORSSettings
+    QA -->|Conduct| Testing
+    QA -->|Measure| Performance
+    QA -->|Verify| Security
+    QA -->|Validate| Accessibility
+    QA -->|Update| Documentation
 ```
 
 ## 4. CHANGELOG Update

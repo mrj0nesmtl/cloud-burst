@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-18T02:29:08.288Z
+Generated: 2025-03-19T01:19:51.746Z
 
 ## Overview
 
@@ -20,19 +20,30 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   │       └── route.ts
 │   │   ├── extract-colors/
 │   │   │   └── route.ts
-│   │   └── templates/
-│   │       ├── [templateId]/
-│   │       │   └── html/
-│   │       │       └── route.ts
-│   │       └── sync/
-│   │           └── route.ts
+│   │   ├── invitations/
+│   │   │   ├── bulk-create/
+│   │   │   │   └── route.ts
+│   │   │   └── create/
+│   │   │       └── route.ts
+│   │   ├── templates/
+│   │   │   ├── [templateId]/
+│   │   │   │   └── html/
+│   │   │   │       └── route.ts
+│   │   │   └── sync/
+│   │   │       └── route.ts
+│   │   └── test-email/
+│   │       └── route.ts
 │   ├── auth/
 │   │   ├── callback/
 │   │   │   └── route.ts
+│   │   ├── error/
+│   │   │   └── page.tsx
 │   │   ├── qr-scan/
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
 │   │   ├── register/
+│   │   │   └── page.tsx
+│   │   ├── resend-verification/
 │   │   │   └── page.tsx
 │   │   ├── signin/
 │   │   │   └── page.tsx
@@ -82,6 +93,11 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
 │   │   └── page.tsx
+│   ├── invite/
+│   │   └── [token]/
+│   │       ├── upload/
+│   │       │   └── page.tsx
+│   │       └── page.tsx
 │   ├── legal/
 │   │   ├── cookies/
 │   │   │   └── page.tsx
@@ -103,6 +119,8 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   ├── pricing/
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── onboarding/
 │   │   └── page.tsx
 │   ├── protected/
 │   │   ├── admin/
@@ -145,6 +163,12 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   │       └── page.tsx
 │   │   ├── attendees/
 │   │   │   └── invitations/
+│   │   │       ├── components/
+│   │   │       │   └── invitations-table.tsx
+│   │   │       ├── create/
+│   │   │       │   └── page.tsx
+│   │   │       ├── .page.tsx.swp
+│   │   │       ├── columns.tsx
 │   │   │       └── page.tsx
 │   │   ├── dashboard/
 │   │   │   ├── overview/
@@ -236,6 +260,8 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   ├── templates/
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
+│   ├── verify/
+│   │   └── page.tsx
 │   ├── components.css
 │   ├── error.tsx
 │   ├── globals.css
@@ -253,6 +279,7 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   ├── auth-guard.tsx
 │   │   ├── debug-panel.tsx
 │   │   ├── permission-gate.tsx
+│   │   ├── resend-verification-form.tsx
 │   │   ├── role-guard.tsx
 │   │   └── social-auth-buttons.tsx
 │   ├── dashboard/
@@ -308,12 +335,16 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   ├── photo-lightbox.tsx
 │   │   ├── upload-dropzone.tsx
 │   │   └── upload-with-tags.tsx
+│   ├── invitations/
+│   │   └── create-invitation-form.tsx
 │   ├── layout/
 │   │   ├── dashboard-layout.tsx
 │   │   └── main-nav.tsx
 │   ├── marketing/
 │   │   ├── contact-form.tsx
 │   │   └── newsletter-form.tsx
+│   ├── media/
+│   │   └── upload-media-button.tsx
 │   ├── nav/
 │   │   ├── logo.tsx
 │   │   ├── main-nav.tsx
@@ -326,6 +357,12 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   ├── notifications-content.tsx
 │   │   ├── template-editor.tsx
 │   │   └── template-preview.tsx
+│   ├── onboarding/
+│   │   ├── steps/
+│   │   │   ├── completion.tsx
+│   │   │   ├── event-setup.tsx
+│   │   │   └── profile-setup.tsx
+│   │   └── onboarding-flow.tsx
 │   ├── providers/
 │   │   ├── query-provider.tsx
 │   │   ├── toast-provider.tsx
@@ -347,6 +384,7 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   ├── charts.tsx
 │   │   ├── checkbox.tsx
 │   │   ├── command.tsx
+│   │   ├── data-table.tsx
 │   │   ├── dialog.tsx
 │   │   ├── dropdown-menu.tsx
 │   │   ├── empty-state.tsx
@@ -385,6 +423,7 @@ Generated: 2025-03-18T02:29:08.288Z
 │   ├── debug-info.tsx
 │   ├── error-boundary.tsx
 │   ├── query-provider.tsx
+│   ├── shell.tsx
 │   └── theme-provider.tsx
 ├── hooks/
 │   ├── __tests__/
@@ -392,6 +431,7 @@ Generated: 2025-03-18T02:29:08.288Z
 │   ├── use-analytics.ts
 │   ├── use-auth.ts
 │   ├── use-debounced-auth.ts
+│   ├── use-events.ts
 │   ├── use-permissions.ts
 │   ├── use-profile.ts
 │   ├── use-toast.ts
@@ -403,6 +443,9 @@ Generated: 2025-03-18T02:29:08.288Z
 │   │   └── photo-enhancement.ts
 │   ├── auth/
 │   │   └── utils.ts
+│   ├── email/
+│   │   ├── index.ts
+│   │   └── sendgrid.ts
 │   ├── realtime/
 │   │   └── event-collaboration.ts
 │   ├── supabase/
@@ -431,8 +474,10 @@ Generated: 2025-03-18T02:29:08.288Z
 │   ├── analytics.ts
 │   ├── event-customization-server.ts
 │   ├── event-customization.ts
+│   ├── index.ts
 │   ├── qr-code.ts
 │   ├── security-settings.ts
+│   ├── sendgrid.ts
 │   ├── user-sessions.ts
 │   └── utils.ts
 ├── scripts/
@@ -448,6 +493,8 @@ Generated: 2025-03-18T02:29:08.288Z
 │   ├── auth.ts
 │   ├── events.ts
 │   ├── gallery.ts
+│   ├── invisation.ts
+│   ├── invitations.ts
 │   ├── media.ts
 │   ├── notifications.ts
 │   ├── search.ts
@@ -456,13 +503,13 @@ Generated: 2025-03-18T02:29:08.288Z
 ├── middleware.test.ts
 └── middleware.ts
 
-122 directories, 326 files
+140 directories, 355 files
 
 ```
 
 ## File Type Breakdown
-- ts: 67 file(s)
-- tsx: 241 file(s)
+- ts: 77 file(s)
+- tsx: 259 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

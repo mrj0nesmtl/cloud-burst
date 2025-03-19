@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-18T02:29:08.691Z
+Generated: 2025-03-19T01:19:51.933Z
 
 ## Overview
 
@@ -30,6 +30,9 @@ Generated: 2025-03-18T02:29:08.691Z
 │   ├── prompt_archive/
 │   │   ├── .DS_Store
 │   │   ├── Archive.zip
+│   │   ├── SESSION_25_CHECKLIST.md
+│   │   ├── SESSION_25_KICKOFF.md
+│   │   ├── SESSION_25_NARRATIVE.md
 │   │   ├── additional_notes.md
 │   │   ├── auth-debug.md
 │   │   ├── session_10.md
@@ -68,9 +71,8 @@ Generated: 2025-03-18T02:29:08.691Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
-│   ├── SESSION_25_CHECKLIST.md
-│   ├── SESSION_25_KICKOFF.md
-│   ├── SESSION_25_NARRATIVE.md
+│   ├── SESSION_26_CHECKLIST.md
+│   ├── SESSION_26_NARRATIVE.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
@@ -124,12 +126,12 @@ Generated: 2025-03-18T02:29:08.691Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 106 files
+10 directories, 108 files
 
 ```
 
 ## File Type Breakdown
-- md: 100 file(s)
+- md: 102 file(s)
 
 ## Ignored Patterns
 - node_modules
