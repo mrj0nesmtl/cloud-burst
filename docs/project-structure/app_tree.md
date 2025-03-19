@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-03-19T01:19:52.872Z
+Generated: 2025-03-19T19:50:15.714Z
 
 ## Overview
 
@@ -166,7 +166,6 @@ This directory contains 76 route(s).
 │   │       │   └── invitations-table.tsx
 │   │       ├── create/
 │   │       │   └── page.tsx
-│   │       ├── .page.tsx.swp
 │   │       ├── columns.tsx
 │   │       └── page.tsx
 │   ├── dashboard/
@@ -270,7 +269,7 @@ This directory contains 76 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-107 directories, 155 files
+107 directories, 154 files
 
 ```
 

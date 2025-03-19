@@ -1,5 +1,5 @@
 # cursor Directory Structure
-Generated: 2025-03-19T01:19:52.230Z
+Generated: 2025-03-19T19:50:14.997Z
 
 ## Overview
 
@@ -10,6 +10,7 @@ Generated: 2025-03-19T01:19:52.230Z
 ./.cursor/
 └── rules/
     ├── ai-collaboration-guidelines.mdc
+    ├── analytics-components.mdc
     ├── backend-integration.mdc
     ├── core-standards.mdc
     ├── dashboard-components.mdc
@@ -23,7 +24,7 @@ Generated: 2025-03-19T01:19:52.230Z
     ├── state-management.mdc
     └── typescript.mdc
 
-2 directories, 13 files
+2 directories, 14 files
 
 ```
 
