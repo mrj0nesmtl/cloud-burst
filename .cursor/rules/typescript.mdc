@@ -29,6 +29,112 @@ alwaysApply: false
     "zod": {
       "location": "src/lib/validations",
       "naming": "{name}.schema.ts"
+    },
+    "types": {
+      "gallery": {
+        "location": "src/types/gallery.ts",
+        "interfaces": {
+          "IPhoto": {
+            "id": "string",
+            "url": "string",
+            "thumbnailUrl": "string",
+            "title": "string",
+            "description": "string | null",
+            "takenAt": "Date",
+            "uploadedAt": "Date",
+            "metadata": "IPhotoMetadata",
+            "album": "IAlbum | null"
+          },
+          "IPhotoMetadata": {
+            "width": "number",
+            "height": "number",
+            "size": "number",
+            "format": "string",
+            "location": "IGeoLocation | null",
+            "camera": "ICameraInfo | null"
+          },
+          "IAlbum": {
+            "id": "string",
+            "title": "string",
+            "description": "string | null",
+            "coverPhotoId": "string | null",
+            "photoCount": "number",
+            "createdAt": "Date",
+            "updatedAt": "Date"
+          }
+        },
+        "types": {
+          "TPhotoAction": "'select' | 'share' | 'edit' | 'delete'",
+          "TPhotoLayout": "'grid' | 'masonry' | 'list'",
+          "TPhotoFilter": "'date' | 'album' | 'tag' | 'person'"
+        }
+      },
+      "analytics": {
+        "location": "src/types/analytics.ts",
+        "interfaces": {
+          "IMetric": {
+            "id": "string",
+            "name": "string",
+            "value": "number",
+            "unit": "string",
+            "trend": "number",
+            "comparison": "IComparison"
+          },
+          "IChartData": {
+            "labels": "string[]",
+            "datasets": "IDataset[]",
+            "options": "IChartOptions"
+          },
+          "IDataset": {
+            "label": "string",
+            "data": "number[]",
+            "backgroundColor": "string",
+            "borderColor": "string"
+          }
+        },
+        "types": {
+          "TChartType": "'line' | 'bar' | 'pie' | 'doughnut'",
+          "TTimeRange": "'today' | 'week' | 'month' | 'custom'",
+          "TMetricType": "'count' | 'average' | 'sum' | 'rate'"
+        }
+      },
+      "mobile": {
+        "location": "src/types/mobile.ts",
+        "interfaces": {
+          "ISwipeEvent": {
+            "direction": "'left' | 'right' | 'up' | 'down'",
+            "distance": "number",
+            "velocity": "number"
+          },
+          "IDeviceInfo": {
+            "platform": "string",
+            "osVersion": "string",
+            "screenSize": "IScreenSize",
+            "orientation": "'portrait' | 'landscape'"
+          }
+        },
+        "types": {
+          "TGestureType": "'swipe' | 'pinch' | 'rotate' | 'tap'",
+          "TNavigationType": "'stack' | 'modal' | 'tab'",
+          "TAnimationType": "'slide' | 'fade' | 'scale'"
+        }
+      }
+    },
+    "validation": {
+      "schemas": {
+        "gallery": {
+          "location": "src/lib/validations/gallery.schema.ts",
+          "schemas": ["photoSchema", "albumSchema", "uploadSchema"]
+        },
+        "analytics": {
+          "location": "src/lib/validations/analytics.schema.ts",
+          "schemas": ["metricSchema", "filterSchema", "exportSchema"]
+        },
+        "mobile": {
+          "location": "src/lib/validations/mobile.schema.ts",
+          "schemas": ["gestureSchema", "deviceSchema", "settingsSchema"]
+        }
+      }
     }
   }
 }

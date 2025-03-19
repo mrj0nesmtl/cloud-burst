@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Your Cloud Burst Event Organizer Account</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .logo {
+      width: 150px;
+      height: auto;
+    }
+    .content {
+      padding: 30px 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #0066FF;
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #555;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #0066FF;
+      color: white !important;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 600;
+      margin: 20px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #0052CC;
+    }
+    .footer {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #eaeaea;
+      color: #999;
+      font-size: 12px;
+    }
+    .code {
+      font-family: monospace;
+      background-color: #f5f5f5;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 18px;
+      letter-spacing: 2px;
+      margin: 15px 0;
+      display: inline-block;
+    }
+    .info {
+      background-color: #f8f9fa;
+      border-left: 4px solid #0066FF;
+      padding: 15px;
+      margin: 20px 0;
+      text-align: left;
+      border-radius: 4px;
+    }
+    .features {
+      text-align: left;
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .features ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .features li {
+      margin-bottom: 8px;
+      color: #555;
+    }
+    @media only screen and (max-width: 600px) {
+      .container {
+        width: 100%;
+        border-radius: 0;
+      }
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://bxvbovzqzjfomnqidzzx.supabase.co/storage/v1/object/public/email-assets/logo.svg" alt="Cloud Burst" class="logo">
+    </div>
+    
+    <div class="content">
+      <h1>Welcome to Cloud Burst Event Management!</h1>
+      
+      <p>Thank you for choosing Cloud Burst as your event photography platform. To begin creating and managing your events, please confirm your email address.</p>
+      
+      <a href="{{ .ConfirmationURL }}" class="button">Activate Event Organizer Account</a>
+      
+      <div class="features">
+        <p><strong>As an Event Organizer, you'll have access to:</strong></p>
+        <ul>
+          <li>Create and manage multiple events</li>
+          <li>Invite event staff and photographers</li>
+          <li>Generate QR codes for guest access</li>
+          <li>Manage photo galleries and approvals</li>
+          <li>Access real-time analytics and insights</li>
+          <li>Customize event pages and settings</li>
+        </ul>
+      </div>
+
+      <p>If the button doesn't work, use this verification code:</p>
+      <div class="code">{{ .Token }}</div>
+      
+      <div class="info">
+        <p><strong>Account Details:</strong></p>
+        <p>Email: {{ .Email }}</p>
+        <p>Role: Event Organizer</p>
+        <p>If you didn't register for a Cloud Burst Event Organizer account, please ignore this email.</p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>&copy; 2024 Cloud Burst. All rights reserved.</p>
+      <p>This is an automated message, please do not reply.</p>
+      <p>Need help? Contact <a href="mailto:support@cloudburst.com" style="color: #0066FF;">support@cloudburst.com</a></p>
+    </div>
+  </div>
+</body>
+</html>

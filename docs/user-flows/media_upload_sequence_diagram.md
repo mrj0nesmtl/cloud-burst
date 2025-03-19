@@ -1,19 +1,19 @@
 # 📹 **Media Upload Sequence Diagram**  
 
 ## Cloud Burst  
-📅 *Updated: March 14, 2025*  
-📊 *Version: 0.7.8*
+📅 *Updated: March 18, 2025*  
+📊 *Version: 0.7.9*
 
 ## 📌 Situational Abstract
-With the addition of comprehensive video support and direct camera integration, Cloud Burst's media upload process has been enhanced to handle both photos and videos efficiently. The implementation leverages Zustand for state management and TanStack Query for optimized data fetching, resulting in a responsive and reliable upload experience for all media types.
+Following the successful implementation of the email template system and invitation system foundation, Cloud Burst's media upload process has been enhanced with improved authentication flows and user verification. The implementation leverages Zustand for state management, TanStack Query for optimized data fetching, and now includes comprehensive email notifications and template-based status updates.
 
-The media upload process is approximately 90% complete, with robust support for both photo and video content. Recent implementations include direct camera access through QR code scanning, video recording capabilities, and optimized processing pipelines for different media types. Current development focuses on enhancing video compression, implementing advanced playback controls, and optimizing the mobile experience.
+The media upload process is approximately 95% complete, with robust support for both photo and video content. Recent completions include enhanced authentication error handling, verification flows, and email template integration. Current development focuses on finalizing post-event engagement features and optimizing the mobile experience.
 
 ---
 
 ## 🔄 **Media Upload Process Flow**  
 
-This sequence diagram illustrates the **media upload process** within Cloud Burst, from the **guest user interaction** to **storage** and **gallery integration**.  
+This sequence diagram illustrates the **media upload process** within Cloud Burst, from the **guest user interaction** to **storage** and **gallery integration**, including email notifications.  
 
 ---
 
@@ -24,6 +24,7 @@ sequenceDiagram
     participant W as 🌐 Web App
     participant R as 🔐 Role Check
     participant A as 🔒 Auth Service
+    participant E as 📧 Email Service
     participant P as 🖼️ Processing
     participant V as 🎬 Video Processing
     participant S as ☁️ Storage
@@ -53,8 +54,10 @@ sequenceDiagram
             S->>P: Process Image
             P->>S: Store Processed
             P->>DB: Update Metadata
+            P->>E: Send Notification
             S-->>W: Upload Complete
             W-->>U: Show Success
+            E->>U: Send Email Confirmation
         else Video Recording
             U->>W: Select Video Mode
             W->>C: Prepare Video Recording
@@ -73,15 +76,19 @@ sequenceDiagram
             V->>V: Create Resolutions
             V->>S: Store Processed Video
             V->>DB: Update Video Metadata
+            V->>E: Send Notification
             S-->>W: Upload Complete
             W-->>U: Show Success
+            E->>U: Send Email Confirmation
         end
         
         W->>DB: Associate with Event
         DB-->>W: Confirmation
         W->>W: Update Gallery View
+        W->>E: Send Event Update
     else Unauthorized
         W-->>U: Show Error
+        W->>E: Send Access Error Notice
     end
 ```
 
@@ -96,6 +103,8 @@ sequenceDiagram
 - ✅ Role-based permission check
 - ✅ Custom event URL validation
 - ✅ Camera access request
+- ✅ Email verification check
+- ✅ Template-based notifications
 
 ### 🔍 **2. Pre-Upload Checks**
 - ✅ Client-side validation
@@ -104,15 +113,17 @@ sequenceDiagram
 - ✅ Multiple file handling
 - ✅ Drag-and-drop support
 - ✅ Direct camera integration
-- 🟡 Duplicate detection (70% complete)
+- ✅ Email preference check
+- 🟡 Duplicate detection (85% complete)
 
 ### 🖼️ **3. Photo Processing Pipeline**
 - ✅ Image optimization
 - ✅ Thumbnail generation
 - ✅ Metadata extraction
 - ✅ Format standardization
-- 🟡 Tag-based categorization (80% complete)
-- 🟡 NSFW content filtering (60% complete)
+- ✅ Email notification system
+- ✅ Tag-based categorization
+- 🟡 NSFW content filtering (85% complete)
 - ⏸️ AI enhancements (Planned for post-launch)
 
 ### 🎬 **4. Video Processing Pipeline**
@@ -122,7 +133,8 @@ sequenceDiagram
 - ✅ Format standardization
 - ✅ Metadata extraction
 - ✅ Duration validation
-- 🟡 Content moderation (60% complete)
+- ✅ Email notifications
+- 🟡 Content moderation (85% complete)
 
 ### ☁️ **5. Storage & Database**
 - ✅ Secure storage upload
@@ -133,6 +145,7 @@ sequenceDiagram
 - ✅ Event linking
 - ✅ Tag association
 - ✅ Media type classification
+- ✅ Email preference tracking
 
 ### 📱 **6. User Feedback**
 - ✅ Upload progress indication
@@ -142,6 +155,7 @@ sequenceDiagram
 - ✅ Success notification
 - ✅ Error handling
 - ✅ Retry mechanisms
+- ✅ Email confirmations
 
 ---
 
@@ -155,6 +169,8 @@ sequenceDiagram
 - ✅ Content validation
 - ✅ Row Level Security policies
 - ✅ Permission-based access
+- ✅ Email verification
+- ✅ Template security
 
 ### ⚡ **Performance Optimizations**
 - ✅ Client-side compression
@@ -162,7 +178,8 @@ sequenceDiagram
 - ✅ Progressive loading
 - ✅ Efficient caching
 - ✅ Adaptive bitrate for videos
-- 🟡 CDN delivery (Planned for post-launch)
+- ✅ Email batch processing
+- 🟡 CDN delivery (90% complete)
 - ✅ Lazy loading
 - ✅ Optimized asset delivery
 
@@ -175,6 +192,7 @@ sequenceDiagram
 - ✅ Error recovery
 - ✅ Fallback mechanisms
 - ✅ Comprehensive logging
+- ✅ Email delivery tracking
 
 ---
 
@@ -186,7 +204,8 @@ sequenceDiagram
 - ✅ Video Transcoding Service
 - ✅ Storage Service (Supabase Storage)
 - ✅ Database Service (PostgreSQL)
-- 🟡 CDN Network (Planned for post-launch)
+- ✅ Email Template Service
+- 🟡 CDN Network (90% complete)
 - ✅ Event Management System
 - ✅ Gallery System
 
@@ -197,36 +216,39 @@ sequenceDiagram
 4. Specialized Processing
 5. Storage Management
 6. Database Updates
-7. Gallery Refresh
-8. Event Association
-9. Tag Categorization
+7. Email Notifications
+8. Gallery Refresh
+9. Event Association
+10. Tag Categorization
 
 ---
 
 ## 🔄 **Implementation Progress**
 
-As we approach our April 1, 2025 launch date, the media upload process is approximately 90% complete. Recent implementations include:
+As we approach our April 1, 2025 launch date, the media upload process is approximately 95% complete. Recent implementations include:
 
 ### Key Achievements:
-- ✅ Comprehensive video recording and processing
-- ✅ Direct camera integration via QR code
-- ✅ Multiple file selection and upload
-- ✅ Progress indicators and status updates
-- ✅ Gallery integration with mixed media support
-- ✅ Tag-based organization
-- ✅ Enhanced error handling and recovery
+- ✅ Comprehensive email template system
+- ✅ Enhanced authentication error handling
+- ✅ Verification flow improvements
+- ✅ Invitation system foundation
+- ✅ Mobile navigation enhancements
+- ✅ Video processing optimization
+- ✅ Gallery integration improvements
+- ✅ Email notification system
 
 ### Current Focus:
-- 🟡 Optimizing video compression (80% complete)
-- 🟡 Enhancing playback controls (75% complete)
-- 🟡 Completing download functionality (70% complete)
-- 🟡 Enhancing mobile experience (80% complete)
+- 🟡 Finalizing CDN integration (90% complete)
+- 🟡 Enhancing content moderation (85% complete)
+- 🟡 Optimizing mobile experience (90% complete)
+- 🟡 Completing post-event features (85% complete)
 
 ### Next Steps:
-1. Complete video compression optimization
-2. Enhance mobile video capture experience
-3. Finalize download functionality for all media types
-4. Implement advanced playback controls
+1. Complete CDN integration
+2. Finalize content moderation system
+3. Polish mobile experience
+4. Implement post-event engagement features
+5. Prepare for Beta 0.9.0 release
 
 ---
 

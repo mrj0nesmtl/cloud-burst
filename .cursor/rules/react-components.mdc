@@ -65,6 +65,112 @@ alwaysApply: false
         "images": true,
         "components": ["GalleryGrid", "EventMap"]
       }
+    },
+    "gallery": {
+      "components": {
+        "GalleryGrid": {
+          "type": "organism",
+          "features": ["masonry", "virtualization", "lazyLoading"],
+          "props": {
+            "photos": "Photo[]",
+            "layout": "'grid' | 'masonry' | 'list'",
+            "onPhotoSelect": "(photo: Photo) => void",
+            "onPhotoAction": "(action: PhotoAction, photo: Photo) => void"
+          }
+        },
+        "PhotoCard": {
+          "type": "molecule",
+          "features": ["preview", "actions", "metadata"],
+          "props": {
+            "photo": "Photo",
+            "variant": "'grid' | 'list' | 'detail'",
+            "actions": "PhotoAction[]"
+          }
+        },
+        "UploadZone": {
+          "type": "organism",
+          "features": ["dragDrop", "multiUpload", "progress"],
+          "props": {
+            "onUpload": "(files: File[]) => Promise<void>",
+            "maxSize": "number",
+            "acceptedTypes": "string[]"
+          }
+        }
+      },
+      "optimizations": {
+        "useVirtualization": true,
+        "useLazyLoading": true,
+        "useImageOptimization": true,
+        "useProgressiveLoading": true
+      }
+    },
+    "analytics": {
+      "components": {
+        "AnalyticsChart": {
+          "type": "organism",
+          "features": ["responsive", "interactive", "exportable"],
+          "props": {
+            "data": "ChartData",
+            "type": "'line' | 'bar' | 'pie'",
+            "options": "ChartOptions"
+          }
+        },
+        "MetricCard": {
+          "type": "molecule",
+          "features": ["comparison", "trend", "sparkline"],
+          "props": {
+            "metric": "Metric",
+            "comparison": "Comparison",
+            "trend": "Trend"
+          }
+        },
+        "DataTable": {
+          "type": "organism",
+          "features": ["sorting", "filtering", "pagination"],
+          "props": {
+            "data": "TableData",
+            "columns": "Column[]",
+            "options": "TableOptions"
+          }
+        }
+      }
+    },
+    "mobile": {
+      "components": {
+        "BottomNav": {
+          "type": "organism",
+          "features": ["swipeable", "badges", "animations"],
+          "props": {
+            "items": "NavItem[]",
+            "activeItem": "string",
+            "onItemSelect": "(item: NavItem) => void"
+          }
+        },
+        "SwipeableView": {
+          "type": "molecule",
+          "features": ["gestures", "animations", "indicators"],
+          "props": {
+            "items": "ViewItem[]",
+            "currentIndex": "number",
+            "onSwipe": "(direction: 'left' | 'right') => void"
+          }
+        },
+        "PullToRefresh": {
+          "type": "molecule",
+          "features": ["customIndicator", "resistance", "completion"],
+          "props": {
+            "onRefresh": "() => Promise<void>",
+            "threshold": "number",
+            "resistance": "number"
+          }
+        }
+      },
+      "optimizations": {
+        "useTouchEvents": true,
+        "useNativeScrolling": true,
+        "useVirtualization": true,
+        "usePrefetching": true
+      }
     }
   }
 }

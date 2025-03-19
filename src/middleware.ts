@@ -27,6 +27,22 @@ export async function middleware(req: NextRequest) {
   // Create Supabase client for all routes
   const supabase = createMiddlewareClient({ req, res })
   
+  // Check if there are auth error parameters
+  const hasAuthError = url.searchParams.has('error') && 
+    url.searchParams.has('error_code');
+
+  if (hasAuthError) {
+    // Redirect to our error page with the error parameters
+    const errorParams = new URLSearchParams();
+    errorParams.set('error', url.searchParams.get('error') || '');
+    errorParams.set('error_code', url.searchParams.get('error_code') || '');
+    errorParams.set('error_description', url.searchParams.get('error_description') || '');
+    
+    return NextResponse.redirect(
+      new URL(`/auth/error?${errorParams.toString()}`, req.url)
+    );
+  }
+
   // Try to get the session for all routes
   try {
     const { data: { session }, error } = await supabase.auth.getSession()

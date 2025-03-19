@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cloud shape -->
+  <path d="M45 15C45 9.477 40.523 5 35 5C31.77 5 28.935 6.69 27.186 9.233C25.976 8.443 24.537 8 23 8C18.582 8 15 11.582 15 16C15 16.362 15.029 16.717 15.086 17.063C13.284 17.375 11.828 18.792 11.353 20.624C10.561 20.223 9.672 20 8.732 20C5.571 20 3 22.571 3 25.732C3 28.894 5.571 31.464 8.732 31.464H41.268C44.429 31.464 47 28.894 47 25.732C47 22.571 44.429 20 41.268 20C40.328 20 39.439 20.223 38.647 20.624" stroke="#0066FF" stroke-width="3"/>
+  
+  <!-- Lightning bolt -->
+  <path d="M30 15L22 25H28L20 35L35 22H27L30 15Z" fill="#0066FF"/>
+  
+  <!-- Text -->
+  <text x="60" y="28" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#333333">
+    Cloud Burst
+  </text>
+</svg> 

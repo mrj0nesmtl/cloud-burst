@@ -1,8 +1,12 @@
 ---
 description: Security Standards for Cloud Burst
 globs: src/**/*.{ts,tsx}, middleware.ts
+alwaysApply: false
 ---
 # Security Standards
+
+> **Version:** 0.8.0  
+> **Last Updated:** March 18, 2025
 
 ## Core Standards
 ```typescript
@@ -10,18 +14,32 @@ globs: src/**/*.{ts,tsx}, middleware.ts
   "securityStandards": {
     "authentication": {
       "supabase": {
-        "providers": ["email", "magic-link"],
+        "providers": ["email", "magic-link", "oauth"],
         "session": {
           "persistence": true,
           "storage": "cookieSession",
-          "middleware": "required"
+          "middleware": "required",
+          "refreshToken": true,
+          "mobileSession": true
         },
         "flows": {
           "emailAuth": {
             "verification": true,
             "passwordReset": true,
-            "magicLink": true
+            "magicLink": true,
+            "mfa": true
+          },
+          "oauth": {
+            "providers": ["google", "apple"],
+            "mobileFlow": true,
+            "webFlow": true
           }
+        },
+        "mobile": {
+          "biometric": true,
+          "persistentSession": true,
+          "offlineAccess": true,
+          "secureStorage": true
         }
       },
       "routes": {
@@ -31,41 +49,179 @@ globs: src/**/*.{ts,tsx}, middleware.ts
           "/admin/**",
           "/settings/**",
           "/profile/**",
-          "/gallery/**"
+          "/gallery/**",
+          "/analytics/**",
+          "/api/protected/**"
         ],
         "public": [
           "/",
           "/auth/**",
           "/marketing/**",
-          "/event/[code]"
+          "/event/[code]",
+          "/api/public/**"
         ]
       }
     },
     "authorization": {
       "roles": {
+        "SUPER_ADMIN": "System-wide administration",
         "ADMIN": "Full system access",
         "EVENT_MANAGER": "Event creation and management",
+        "PHOTOGRAPHER": "Photo upload and management",
         "USER": "Basic authenticated access",
         "GUEST": "Limited event access"
       },
       "permissions": {
         "photos": {
-          "upload": ["USER", "EVENT_MANAGER"],
-          "moderate": ["ADMIN", "EVENT_MANAGER"],
-          "delete": ["ADMIN", "EVENT_MANAGER"]
+          "upload": ["PHOTOGRAPHER", "EVENT_MANAGER", "ADMIN"],
+          "moderate": ["EVENT_MANAGER", "ADMIN"],
+          "delete": ["EVENT_MANAGER", "ADMIN"],
+          "download": ["USER", "GUEST"],
+          "share": ["USER", "GUEST"]
         },
         "events": {
           "create": ["EVENT_MANAGER", "ADMIN"],
           "manage": ["EVENT_MANAGER", "ADMIN"],
+          "view": ["USER", "GUEST"],
+          "analyze": ["EVENT_MANAGER", "ADMIN"]
+        },
+        "analytics": {
+          "view": ["EVENT_MANAGER", "ADMIN"],
+          "export": ["ADMIN"],
+          "configure": ["ADMIN"]
+        },
+        "gallery": {
+          "create": ["PHOTOGRAPHER", "EVENT_MANAGER", "ADMIN"],
+          "manage": ["EVENT_MANAGER", "ADMIN"],
+          "moderate": ["EVENT_MANAGER", "ADMIN"],
           "view": ["USER", "GUEST"]
         }
       }
     },
     "rls": {
       "tables": {
-        "photos": "row level security enabled",
-        "events": "row level security enabled",
-        "profiles": "row level security enabled"
+        "photos": {
+          "enabled": true,
+          "policies": {
+            "select": "user_can_view_photos",
+            "insert": "user_can_upload_photos",
+            "update": "user_can_modify_photos",
+            "delete": "user_can_delete_photos"
+          }
+        },
+        "events": {
+          "enabled": true,
+          "policies": {
+            "select": "user_can_view_events",
+            "insert": "user_can_create_events",
+            "update": "user_can_modify_events",
+            "delete": "user_can_delete_events"
+          }
+        },
+        "profiles": {
+          "enabled": true,
+          "policies": {
+            "select": "user_can_view_profiles",
+            "insert": "user_can_create_profile",
+            "update": "user_can_modify_profile",
+            "delete": "user_can_delete_profile"
+          }
+        },
+        "analytics": {
+          "enabled": true,
+          "policies": {
+            "select": "user_can_view_analytics",
+            "insert": "system_can_write_analytics",
+            "update": "admin_can_modify_analytics",
+            "delete": "admin_can_delete_analytics"
+          }
+        }
+      }
+    },
+    "api": {
+      "rateLimit": {
+        "public": {
+          "requests": 100,
+          "window": "1m"
+        },
+        "authenticated": {
+          "requests": 1000,
+          "window": "1m"
+        },
+        "upload": {
+          "requests": 50,
+          "window": "1m",
+          "size": "100MB"
+        }
+      },
+      "cors": {
+        "origins": ["https://*.cloudburst.com"],
+        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "headers": ["Authorization", "Content-Type"],
+        "credentials": true
+      },
+      "security": {
+        "headers": {
+          "HSTS": true,
+          "CSP": true,
+          "XSS": true,
+          "CSRF": true,
+          "referrer": "strict-origin-when-cross-origin"
+        },
+        "validation": {
+          "input": true,
+          "output": true,
+          "sanitization": true
+        }
+      }
+    },
+    "storage": {
+      "photos": {
+        "encryption": {
+          "atRest": true,
+          "inTransit": true,
+          "clientSide": true
+        },
+        "access": {
+          "public": false,
+          "authenticated": true,
+          "eventBased": true
+        },
+        "scanning": {
+          "malware": true,
+          "content": true,
+          "metadata": true
+        }
+      },
+      "exports": {
+        "encryption": {
+          "atRest": true,
+          "inTransit": true
+        },
+        "retention": {
+          "period": "7d",
+          "cleanup": true
+        }
+      }
+    },
+    "mobile": {
+      "security": {
+        "storage": {
+          "encryption": true,
+          "keychain": true,
+          "biometric": true
+        },
+        "network": {
+          "ssl": true,
+          "certificatePinning": true,
+          "proxyDetection": true
+        },
+        "app": {
+          "jailbreakDetection": true,
+          "rootDetection": true,
+          "debugDetection": true,
+          "screenshotPrevention": true
+        }
       }
     }
   }

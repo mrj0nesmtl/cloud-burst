@@ -56,6 +56,108 @@ Frontend Architecture Guidelines for Cloud Burst
     },
     "accessibility": {
       // ... existing code ...
+    },
+    "gallery": {
+      "layout": {
+        "masonry": {
+          "useVirtualization": true,
+          "useProgressiveLoading": true,
+          "useIntersectionObserver": true,
+          "useDynamicColumns": true
+        },
+        "filtering": {
+          "useComposableFilters": true,
+          "useMemoization": true,
+          "useDebounce": true,
+          "useQueryParams": true
+        },
+        "upload": {
+          "useChunkedUploads": true,
+          "useConcurrentUploads": true,
+          "useProgressTracking": true,
+          "useErrorRecovery": true
+        }
+      },
+      "mobile": {
+        "progressive": {
+          "useSkeletonLoading": true,
+          "useLazyLoading": true,
+          "useImageOptimization": true,
+          "usePrioritization": true
+        },
+        "offline": {
+          "useServiceWorker": true,
+          "useIndexedDB": true,
+          "useSyncQueue": true,
+          "useConflictResolution": true
+        },
+        "touch": {
+          "useGestureHandlers": true,
+          "useHapticFeedback": true,
+          "useTouchOptimization": true,
+          "useAccessibleInteractions": true
+        }
+      },
+      "analytics": {
+        "realtime": {
+          "useWebSocket": true,
+          "useDataAggregation": true,
+          "useCaching": true,
+          "useFallback": true
+        },
+        "visualization": {
+          "useResponsiveCharts": true,
+          "useThemeSupport": true,
+          "useAccessibleGraphs": true,
+          "useInteractivity": true
+        },
+        "export": {
+          "useStreamProcessing": true,
+          "useBackgroundTasks": true,
+          "useProgressTracking": true,
+          "useErrorHandling": true
+        }
+      }
+    },
+    "patterns": {
+      "components": {
+        "useAtomicDesign": true,
+        "useComposition": true,
+        "useHooks": true,
+        "useMemoization": true
+      },
+      "state": {
+        "useZustand": true,
+        "useTanStackQuery": true,
+        "useContextAPI": true,
+        "useImmer": true
+      },
+      "performance": {
+        "useDynamicImports": true,
+        "useCodeSplitting": true,
+        "usePreloading": true,
+        "useCaching": true
+      }
+    },
+    "optimization": {
+      "images": {
+        "useNextImage": true,
+        "useBlurPlaceholders": true,
+        "useProgressiveLoading": true,
+        "useFormatOptimization": true
+      },
+      "javascript": {
+        "useTreeShaking": true,
+        "useBundleAnalysis": true,
+        "useChunkOptimization": true,
+        "useDependencyOptimization": true
+      },
+      "styles": {
+        "useTailwindPurge": true,
+        "useCSSModules": true,
+        "useAtomicCSS": true,
+        "useStyleOptimization": true
+      }
     }
   }
 } 

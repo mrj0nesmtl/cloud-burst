@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-18T02:29:07.533Z
+Generated: 2025-03-19T01:19:51.265Z
 
 ## Overview
 
@@ -66,6 +66,9 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   ├── prompt_archive/
 │   │   │   ├── .DS_Store
 │   │   │   ├── Archive.zip
+│   │   │   ├── SESSION_25_CHECKLIST.md
+│   │   │   ├── SESSION_25_KICKOFF.md
+│   │   │   ├── SESSION_25_NARRATIVE.md
 │   │   │   ├── additional_notes.md
 │   │   │   ├── auth-debug.md
 │   │   │   ├── session_10.md
@@ -104,9 +107,8 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
-│   │   ├── SESSION_25_CHECKLIST.md
-│   │   ├── SESSION_25_KICKOFF.md
-│   │   ├── SESSION_25_NARRATIVE.md
+│   │   ├── SESSION_26_CHECKLIST.md
+│   │   ├── SESSION_26_NARRATIVE.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
@@ -162,6 +164,10 @@ Generated: 2025-03-18T02:29:07.533Z
 ├── merged-routes/
 ├── public/
 │   ├── images/
+│   │   ├── email/
+│   │   │   ├── logo.png
+│   │   │   └── logo.svg
+│   │   ├── .DS_Store
 │   │   ├── fallback-hero.jpg
 │   │   └── pexels-themo1-bg.jpg
 │   ├── .DS_Store
@@ -172,6 +178,7 @@ Generated: 2025-03-18T02:29:07.533Z
 │   ├── cb_003_sora_ai.MP4
 │   ├── cloud-lightning.png
 │   ├── cloud-lightning.svg
+│   ├── emailtemplate.html
 │   ├── favicon-16x16.png
 │   ├── favicon-32x32.png
 │   ├── favicon.ico
@@ -215,19 +222,30 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   │       └── route.ts
 │   │   │   ├── extract-colors/
 │   │   │   │   └── route.ts
-│   │   │   └── templates/
-│   │   │       ├── [templateId]/
-│   │   │       │   └── html/
-│   │   │       │       └── route.ts
-│   │   │       └── sync/
-│   │   │           └── route.ts
+│   │   │   ├── invitations/
+│   │   │   │   ├── bulk-create/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── create/
+│   │   │   │       └── route.ts
+│   │   │   ├── templates/
+│   │   │   │   ├── [templateId]/
+│   │   │   │   │   └── html/
+│   │   │   │   │       └── route.ts
+│   │   │   │   └── sync/
+│   │   │   │       └── route.ts
+│   │   │   └── test-email/
+│   │   │       └── route.ts
 │   │   ├── auth/
 │   │   │   ├── callback/
 │   │   │   │   └── route.ts
+│   │   │   ├── error/
+│   │   │   │   └── page.tsx
 │   │   │   ├── qr-scan/
 │   │   │   │   ├── layout.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── register/
+│   │   │   │   └── page.tsx
+│   │   │   ├── resend-verification/
 │   │   │   │   └── page.tsx
 │   │   │   ├── signin/
 │   │   │   │   └── page.tsx
@@ -277,6 +295,11 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   │   └── page.tsx
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
+│   │   ├── invite/
+│   │   │   └── [token]/
+│   │   │       ├── upload/
+│   │   │       │   └── page.tsx
+│   │   │       └── page.tsx
 │   │   ├── legal/
 │   │   │   ├── cookies/
 │   │   │   │   └── page.tsx
@@ -298,6 +321,8 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   ├── pricing/
 │   │   │   │   └── page.tsx
 │   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── onboarding/
 │   │   │   └── page.tsx
 │   │   ├── protected/
 │   │   │   ├── admin/
@@ -340,6 +365,12 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   │       └── page.tsx
 │   │   │   ├── attendees/
 │   │   │   │   └── invitations/
+│   │   │   │       ├── components/
+│   │   │   │       │   └── invitations-table.tsx
+│   │   │   │       ├── create/
+│   │   │   │       │   └── page.tsx
+│   │   │   │       ├── .page.tsx.swp
+│   │   │   │       ├── columns.tsx
 │   │   │   │       └── page.tsx
 │   │   │   ├── dashboard/
 │   │   │   │   ├── overview/
@@ -431,6 +462,8 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   ├── templates/
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
+│   │   ├── verify/
+│   │   │   └── page.tsx
 │   │   ├── components.css
 │   │   ├── error.tsx
 │   │   ├── globals.css
@@ -448,6 +481,7 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   ├── auth-guard.tsx
 │   │   │   ├── debug-panel.tsx
 │   │   │   ├── permission-gate.tsx
+│   │   │   ├── resend-verification-form.tsx
 │   │   │   ├── role-guard.tsx
 │   │   │   └── social-auth-buttons.tsx
 │   │   ├── dashboard/
@@ -503,12 +537,16 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   ├── photo-lightbox.tsx
 │   │   │   ├── upload-dropzone.tsx
 │   │   │   └── upload-with-tags.tsx
+│   │   ├── invitations/
+│   │   │   └── create-invitation-form.tsx
 │   │   ├── layout/
 │   │   │   ├── dashboard-layout.tsx
 │   │   │   └── main-nav.tsx
 │   │   ├── marketing/
 │   │   │   ├── contact-form.tsx
 │   │   │   └── newsletter-form.tsx
+│   │   ├── media/
+│   │   │   └── upload-media-button.tsx
 │   │   ├── nav/
 │   │   │   ├── logo.tsx
 │   │   │   ├── main-nav.tsx
@@ -521,6 +559,12 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   ├── notifications-content.tsx
 │   │   │   ├── template-editor.tsx
 │   │   │   └── template-preview.tsx
+│   │   ├── onboarding/
+│   │   │   ├── steps/
+│   │   │   │   ├── completion.tsx
+│   │   │   │   ├── event-setup.tsx
+│   │   │   │   └── profile-setup.tsx
+│   │   │   └── onboarding-flow.tsx
 │   │   ├── providers/
 │   │   │   ├── query-provider.tsx
 │   │   │   ├── toast-provider.tsx
@@ -542,6 +586,7 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   ├── charts.tsx
 │   │   │   ├── checkbox.tsx
 │   │   │   ├── command.tsx
+│   │   │   ├── data-table.tsx
 │   │   │   ├── dialog.tsx
 │   │   │   ├── dropdown-menu.tsx
 │   │   │   ├── empty-state.tsx
@@ -580,6 +625,7 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   ├── debug-info.tsx
 │   │   ├── error-boundary.tsx
 │   │   ├── query-provider.tsx
+│   │   ├── shell.tsx
 │   │   └── theme-provider.tsx
 │   ├── hooks/
 │   │   ├── __tests__/
@@ -587,6 +633,7 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   ├── use-analytics.ts
 │   │   ├── use-auth.ts
 │   │   ├── use-debounced-auth.ts
+│   │   ├── use-events.ts
 │   │   ├── use-permissions.ts
 │   │   ├── use-profile.ts
 │   │   ├── use-toast.ts
@@ -598,6 +645,9 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   │   └── photo-enhancement.ts
 │   │   ├── auth/
 │   │   │   └── utils.ts
+│   │   ├── email/
+│   │   │   ├── index.ts
+│   │   │   └── sendgrid.ts
 │   │   ├── realtime/
 │   │   │   └── event-collaboration.ts
 │   │   ├── supabase/
@@ -626,8 +676,10 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   ├── analytics.ts
 │   │   ├── event-customization-server.ts
 │   │   ├── event-customization.ts
+│   │   ├── index.ts
 │   │   ├── qr-code.ts
 │   │   ├── security-settings.ts
+│   │   ├── sendgrid.ts
 │   │   ├── user-sessions.ts
 │   │   └── utils.ts
 │   ├── scripts/
@@ -643,6 +695,8 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   ├── auth.ts
 │   │   ├── events.ts
 │   │   ├── gallery.ts
+│   │   ├── invisation.ts
+│   │   ├── invitations.ts
 │   │   ├── media.ts
 │   │   ├── notifications.ts
 │   │   ├── search.ts
@@ -651,6 +705,8 @@ Generated: 2025-03-18T02:29:07.533Z
 │   ├── middleware.test.ts
 │   └── middleware.ts
 ├── supabase/
+│   ├── .temp/
+│   │   └── cli-latest
 │   ├── migrations/
 │   │   ├── 20240317000000_fix_role_capabilities_rls.sql
 │   │   ├── 20240317001000_standardize_role_capabilities.sql
@@ -660,7 +716,21 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   ├── 20240317004000_update_role_documentation.sql
 │   │   ├── 20240317004500_create_invitations_table.sql
 │   │   ├── 20240317005000_add_trial_fields.sql
-│   │   └── 20240317005000_invited_user_capabilities.sql
+│   │   ├── 20240317005000_invited_user_capabilities.sql
+│   │   ├── 20240318000000_update_media_rls_policies.sql
+│   │   ├── 20240318001000_add_event_staff_role.sql
+│   │   ├── 20240318002000_setup_storage_buckets.sql
+│   │   ├── 20240318003000_update_media_rls_with_staff.sql
+│   │   ├── 20240318004000_setup_auth_email_templates.sql
+│   │   └── 20240318005000_create_profiles_table.sql
+│   ├── templates/
+│   │   └── auth_emails/
+│   │       ├── change_email_address.html
+│   │       ├── confirm_signup.html
+│   │       ├── invite_user.html
+│   │       ├── magic_link.html
+│   │       ├── reauthentication.html
+│   │       └── reset_password.html
 │   ├── .gitignore
 │   └── config.toml
 ├── supabase-exports/
@@ -673,34 +743,46 @@ Generated: 2025-03-18T02:29:07.533Z
 │   │   ├── role_capabilities_rows.csv
 │   │   ├── roles_rows (1).csv
 │   │   └── roles_rows.csv
+│   ├── mar_18/
+│   │   ├── Supabase Snippet Detailed Table Definitions.csv
+│   │   ├── Supabase Snippet Retrieve Invitations.csv
+│   │   ├── Supabase Snippet Retrieve Table Structures and Constraints.csv
+│   │   ├── Supabase Snippet Retrieve Table Structures.csv
+│   │   ├── Supabase Snippet Table Definitions for Key Entities.csv
+│   │   ├── invitations_rows.csv
+│   │   ├── profiles_rows (1).csv
+│   │   ├── profiles_rows (2).csv
+│   │   ├── profiles_rows.csv
+│   │   ├── role_capabilities_rows.csv
+│   │   └── roles_rows.csv
 │   ├── old/
-│   ├── .DS_Store
-│   ├── Event Columns Information.csv
-│   ├── Event Table Schema.csv
-│   ├── List of Public Tables NEW.csv
-│   ├── List of Public Tables.csv
-│   ├── Marc Reichel - IMDb.mhtml
-│   ├── Photo Metadata.csv
-│   ├── Retrieve RLS Policies - NEW.csv
-│   ├── Retrieve Role Capabilities Policies - new.csv
-│   ├── Retrieve Role Capabilities Policies.csv
-│   ├── Supabase  Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
-│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (1).csv
-│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
-│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (3).csv
-│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (4).csv
-│   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx).csv
-│   ├── Supabase Snippet Retrieve Gallery Information by Event ID.csv
-│   ├── View RLS Policies for Galleries.csv
-│   ├── events_rows (1).csv
-│   ├── events_rows.csv
-│   ├── galleries_rows.csv
-│   ├── profiles_rows.csv
-│   ├── supabase_logs (1).csv
-│   ├── supabase_logs (2).csv
-│   ├── supabase_logs (3).csv
-│   ├── supabase_logs.csv
-│   └── supabase_logs_for_one_login.csv
+│   │   ├── Event Columns Information.csv
+│   │   ├── Event Table Schema.csv
+│   │   ├── List of Public Tables NEW.csv
+│   │   ├── List of Public Tables.csv
+│   │   ├── Marc Reichel - IMDb.mhtml
+│   │   ├── Photo Metadata.csv
+│   │   ├── Retrieve RLS Policies - NEW.csv
+│   │   ├── Retrieve Role Capabilities Policies - new.csv
+│   │   ├── Retrieve Role Capabilities Policies.csv
+│   │   ├── Supabase  Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
+│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (1).csv
+│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
+│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (3).csv
+│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (4).csv
+│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx).csv
+│   │   ├── Supabase Snippet Retrieve Gallery Information by Event ID.csv
+│   │   ├── View RLS Policies for Galleries.csv
+│   │   ├── events_rows (1).csv
+│   │   ├── events_rows.csv
+│   │   ├── galleries_rows.csv
+│   │   ├── profiles_rows.csv
+│   │   ├── supabase_logs (1).csv
+│   │   ├── supabase_logs (2).csv
+│   │   ├── supabase_logs (3).csv
+│   │   ├── supabase_logs.csv
+│   │   └── supabase_logs_for_one_login.csv
+│   └── .DS_Store
 ├── .DS_Store
 ├── .gitignore
 ├── .replit
@@ -721,18 +803,18 @@ Generated: 2025-03-18T02:29:07.533Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-155 directories, 558 files
+178 directories, 617 files
 
 ```
 
 ## File Type Breakdown
-- ts: 8183 file(s)
-- tsx: 380 file(s)
-- js: 24499 file(s)
-- json: 1832 file(s)
-- md: 1379 file(s)
-- css: 22 file(s)
-- yml: 154 file(s)
+- ts: 8223 file(s)
+- tsx: 398 file(s)
+- js: 24660 file(s)
+- json: 1850 file(s)
+- md: 1401 file(s)
+- css: 23 file(s)
+- yml: 156 file(s)
 
 ## Ignored Patterns
 - node_modules

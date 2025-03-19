@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-03-18T02:29:11.018Z
+Generated: 2025-03-19T01:19:52.872Z
 
 ## Overview
 
-This directory contains 69 route(s).
+This directory contains 76 route(s).
 
 ## Directory Tree
 ```
@@ -19,19 +19,30 @@ This directory contains 69 route(s).
 │   │       └── route.ts
 │   ├── extract-colors/
 │   │   └── route.ts
-│   └── templates/
-│       ├── [templateId]/
-│       │   └── html/
-│       │       └── route.ts
-│       └── sync/
-│           └── route.ts
+│   ├── invitations/
+│   │   ├── bulk-create/
+│   │   │   └── route.ts
+│   │   └── create/
+│   │       └── route.ts
+│   ├── templates/
+│   │   ├── [templateId]/
+│   │   │   └── html/
+│   │   │       └── route.ts
+│   │   └── sync/
+│   │       └── route.ts
+│   └── test-email/
+│       └── route.ts
 ├── auth/
 │   ├── callback/
 │   │   └── route.ts
+│   ├── error/
+│   │   └── page.tsx
 │   ├── qr-scan/
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── register/
+│   │   └── page.tsx
+│   ├── resend-verification/
 │   │   └── page.tsx
 │   ├── signin/
 │   │   └── page.tsx
@@ -81,6 +92,11 @@ This directory contains 69 route(s).
 │   │   └── page.tsx
 │   ├── layout.tsx
 │   └── page.tsx
+├── invite/
+│   └── [token]/
+│       ├── upload/
+│       │   └── page.tsx
+│       └── page.tsx
 ├── legal/
 │   ├── cookies/
 │   │   └── page.tsx
@@ -102,6 +118,8 @@ This directory contains 69 route(s).
 │   ├── pricing/
 │   │   └── page.tsx
 │   ├── layout.tsx
+│   └── page.tsx
+├── onboarding/
 │   └── page.tsx
 ├── protected/
 │   ├── admin/
@@ -144,6 +162,12 @@ This directory contains 69 route(s).
 │   │       └── page.tsx
 │   ├── attendees/
 │   │   └── invitations/
+│   │       ├── components/
+│   │       │   └── invitations-table.tsx
+│   │       ├── create/
+│   │       │   └── page.tsx
+│   │       ├── .page.tsx.swp
+│   │       ├── columns.tsx
 │   │       └── page.tsx
 │   ├── dashboard/
 │   │   ├── overview/
@@ -235,6 +259,8 @@ This directory contains 69 route(s).
 │   ├── templates/
 │   │   └── page.tsx
 │   └── layout.tsx
+├── verify/
+│   └── page.tsx
 ├── components.css
 ├── error.tsx
 ├── globals.css
@@ -244,13 +270,13 @@ This directory contains 69 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-94 directories, 142 files
+107 directories, 155 files
 
 ```
 
 ## File Type Breakdown
-- ts: 13 file(s)
-- tsx: 118 file(s)
+- ts: 16 file(s)
+- tsx: 127 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

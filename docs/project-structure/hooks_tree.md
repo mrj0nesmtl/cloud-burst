@@ -1,5 +1,5 @@
 # hooks Directory Structure
-Generated: 2025-03-18T02:29:19.135Z
+Generated: 2025-03-19T01:19:56.200Z
 
 ## Overview
 
@@ -13,18 +13,19 @@ Generated: 2025-03-18T02:29:19.135Z
 ├── use-analytics.ts
 ├── use-auth.ts
 ├── use-debounced-auth.ts
+├── use-events.ts
 ├── use-permissions.ts
 ├── use-profile.ts
 ├── use-toast.ts
 ├── use-update-profile.ts
 └── use-user.ts
 
-2 directories, 9 files
+2 directories, 10 files
 
 ```
 
 ## File Type Breakdown
-- ts: 9 file(s)
+- ts: 10 file(s)
 
 ## Ignored Patterns
 - node_modules

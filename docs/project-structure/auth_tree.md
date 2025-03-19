@@ -1,8 +1,8 @@
 # auth Directory Structure
-Generated: 2025-03-18T02:29:16.383Z
+Generated: 2025-03-19T01:19:55.164Z
 
 ## Overview
-This directory contains 7 component(s).
+This directory contains 8 component(s).
 
 
 ## Directory Tree
@@ -13,15 +13,16 @@ This directory contains 7 component(s).
 ├── auth-guard.tsx
 ├── debug-panel.tsx
 ├── permission-gate.tsx
+├── resend-verification-form.tsx
 ├── role-guard.tsx
 └── social-auth-buttons.tsx
 
-1 directory, 7 files
+1 directory, 8 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 7 file(s)
+- tsx: 8 file(s)
 
 ## Ignored Patterns
 - node_modules

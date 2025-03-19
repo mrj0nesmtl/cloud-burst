@@ -5,8 +5,8 @@ alwaysApply: false
 ---
 # Backend Integration Patterns
 
-> **Version:** 0.7.0  
-> **Last Updated:** March 2024
+> **Version:** 0.8.0  
+> **Last Updated:** March 18, 2025
 
 ```json
 {
@@ -18,7 +18,11 @@ alwaysApply: false
         "useRouteHandlers": true,
         "useServerActions": true,
         "useMiddleware": true,
-        "useSupabase": true
+        "useSupabase": true,
+        "useWebSockets": true,
+        "useWorkers": true,
+        "useStreaming": true,
+        "useCompression": true
       },
       "patterns": {
         "useRESTful": true,
@@ -27,7 +31,8 @@ alwaysApply: false
         "useValidation": true,
         "usePagination": true,
         "useFiltering": true,
-        "useSorting": true
+        "useSorting": true,
+        "useRealTime": true
       },
       "security": {
         "useAuthentication": true,
@@ -35,13 +40,115 @@ alwaysApply: false
         "useRateLimiting": true,
         "useCORS": true,
         "useCSRF": true,
-        "useHTTPS": true
+        "useHTTPS": true,
+        "useWebSocketSecurity": true,
+        "useAPIKeys": true
       },
       "performance": {
         "useCaching": true,
         "useCompression": true,
         "useETagging": true,
-        "useConditionalRequests": true
+        "useConditionalRequests": true,
+        "useConnectionPooling": true,
+        "useQueryOptimization": true,
+        "useIndexing": true,
+        "useLoadBalancing": true
+      }
+    },
+    "gallery": {
+      "storage": {
+        "useSupabaseBuckets": true,
+        "useImageProcessing": true,
+        "useVersioning": true,
+        "useCDN": true,
+        "useCompression": true,
+        "useMetadata": true,
+        "useThumbnails": true,
+        "useBackups": true
+      },
+      "database": {
+        "usePostGIS": true,
+        "useFullTextSearch": true,
+        "useVectorIndexing": true,
+        "usePartitioning": true,
+        "useMaterializedViews": true,
+        "useChangeTracking": true,
+        "useVersioning": true,
+        "useAuditLogs": true
+      },
+      "api": {
+        "useUploadAPI": true,
+        "useDownloadAPI": true,
+        "useSearchAPI": true,
+        "useFilterAPI": true,
+        "useSortAPI": true,
+        "useExportAPI": true,
+        "useWebSocketAPI": true,
+        "useAnalyticsAPI": true
+      }
+    },
+    "mobile": {
+      "api": {
+        "useOptimizedPayloads": true,
+        "useCompression": true,
+        "useBatchRequests": true,
+        "useConnectionPooling": true,
+        "useOfflineSync": true,
+        "useProgressiveLoading": true,
+        "useNetworkAwareness": true,
+        "usePushNotifications": true
+      },
+      "storage": {
+        "useOfflineStorage": true,
+        "useSyncQueue": true,
+        "useConflictResolution": true,
+        "useVersioning": true,
+        "useCompression": true,
+        "usePrioritization": true,
+        "useQuota": true,
+        "useCleanup": true
+      },
+      "performance": {
+        "useImageOptimization": true,
+        "useResponseCompression": true,
+        "useCaching": true,
+        "usePreloading": true,
+        "useConnectionPooling": true,
+        "useLoadBalancing": true,
+        "useRateLimiting": true,
+        "useMonitoring": true
+      }
+    },
+    "analytics": {
+      "realtime": {
+        "useWebSockets": true,
+        "useRedis": true,
+        "useKafka": true,
+        "useAggregation": true,
+        "useStreaming": true,
+        "useBatching": true,
+        "useCompression": true,
+        "useMonitoring": true
+      },
+      "storage": {
+        "useTimescaleDB": true,
+        "usePartitioning": true,
+        "useCompression": true,
+        "useRetention": true,
+        "useAggregation": true,
+        "useBackups": true,
+        "useArchiving": true,
+        "useReplication": true
+      },
+      "processing": {
+        "useWorkers": true,
+        "useQueues": true,
+        "useStreaming": true,
+        "useBatching": true,
+        "useAggregation": true,
+        "useCompression": true,
+        "useScheduling": true,
+        "useMonitoring": true
       }
     },
     "security": {
@@ -50,27 +157,30 @@ alwaysApply: false
         "useJWT": true,
         "useSessionCookies": true,
         "useOAuth": true,
-        "useMFA": true
+        "useMFA": true,
+        "useAPIKeys": true,
+        "useRateLimiting": true,
+        "useAuditLogs": true
       },
       "authorization": {
         "useRBAC": true,
         "useRLS": true,
         "useMiddleware": true,
-        "useServerComponents": true
+        "useServerComponents": true,
+        "useAPIGateway": true,
+        "useTokenValidation": true,
+        "usePermissions": true,
+        "useAuditLogs": true
       },
       "dataProtection": {
         "useEncryption": true,
         "useSanitization": true,
         "useValidation": true,
-        "usePreparedStatements": true
-      },
-      "webSecurity": {
-        "useCSP": true,
-        "useXSS": true,
-        "useCSRF": true,
-        "useSameSite": true,
-        "useSecureCookies": true,
-        "useHTTPSOnly": true
+        "usePreparedStatements": true,
+        "useBackups": true,
+        "useVersioning": true,
+        "useAuditLogs": true,
+        "useCompliance": true
       }
     },
     "supabase": {
@@ -78,26 +188,41 @@ alwaysApply: false
         "useSupabaseAuth": true,
         "useServerComponentClient": true,
         "useClientComponentClient": true,
-        "useMiddlewareClient": true
+        "useMiddlewareClient": true,
+        "useWebSocketAuth": true,
+        "useStorageAuth": true,
+        "useAnalyticsAuth": true,
+        "useAuditLogs": true
       },
       "database": {
         "useTypedQueries": true,
         "useRLS": true,
         "useFunctions": true,
         "useTriggers": true,
-        "useIndexes": true
+        "useIndexes": true,
+        "useViews": true,
+        "usePartitioning": true,
+        "useReplication": true
       },
       "storage": {
         "useBuckets": true,
         "usePublicBuckets": true,
         "usePrivateBuckets": true,
-        "useRLS": true
+        "useRLS": true,
+        "useCDN": true,
+        "useImageProcessing": true,
+        "useVersioning": true,
+        "useBackups": true
       },
       "realtime": {
         "useSubscriptions": true,
         "useChannels": true,
         "useBroadcast": true,
-        "usePresence": true
+        "usePresence": true,
+        "useFiltering": true,
+        "useTransformation": true,
+        "useRetry": true,
+        "useMonitoring": true
       }
     }
   }

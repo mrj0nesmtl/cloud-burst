@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-03-18T02:29:14.745Z
+Generated: 2025-03-19T01:19:54.486Z
 
 ## Overview
-This directory contains 123 component(s).
+This directory contains 132 component(s).
 
 
 ## Directory Tree
@@ -16,6 +16,7 @@ This directory contains 123 component(s).
 │   ├── auth-guard.tsx
 │   ├── debug-panel.tsx
 │   ├── permission-gate.tsx
+│   ├── resend-verification-form.tsx
 │   ├── role-guard.tsx
 │   └── social-auth-buttons.tsx
 ├── dashboard/
@@ -71,12 +72,16 @@ This directory contains 123 component(s).
 │   ├── photo-lightbox.tsx
 │   ├── upload-dropzone.tsx
 │   └── upload-with-tags.tsx
+├── invitations/
+│   └── create-invitation-form.tsx
 ├── layout/
 │   ├── dashboard-layout.tsx
 │   └── main-nav.tsx
 ├── marketing/
 │   ├── contact-form.tsx
 │   └── newsletter-form.tsx
+├── media/
+│   └── upload-media-button.tsx
 ├── nav/
 │   ├── logo.tsx
 │   ├── main-nav.tsx
@@ -89,6 +94,12 @@ This directory contains 123 component(s).
 │   ├── notifications-content.tsx
 │   ├── template-editor.tsx
 │   └── template-preview.tsx
+├── onboarding/
+│   ├── steps/
+│   │   ├── completion.tsx
+│   │   ├── event-setup.tsx
+│   │   └── profile-setup.tsx
+│   └── onboarding-flow.tsx
 ├── providers/
 │   ├── query-provider.tsx
 │   ├── toast-provider.tsx
@@ -110,6 +121,7 @@ This directory contains 123 component(s).
 │   ├── charts.tsx
 │   ├── checkbox.tsx
 │   ├── command.tsx
+│   ├── data-table.tsx
 │   ├── dialog.tsx
 │   ├── dropdown-menu.tsx
 │   ├── empty-state.tsx
@@ -148,15 +160,16 @@ This directory contains 123 component(s).
 ├── debug-info.tsx
 ├── error-boundary.tsx
 ├── query-provider.tsx
+├── shell.tsx
 └── theme-provider.tsx
 
-15 directories, 127 files
+19 directories, 136 files
 
 ```
 
 ## File Type Breakdown
 - ts: 3 file(s)
-- tsx: 123 file(s)
+- tsx: 132 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns
