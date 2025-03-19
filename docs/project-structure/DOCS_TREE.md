@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-19T01:19:51.933Z
+Generated: 2025-03-19T19:50:14.712Z
 
 ## Overview
 
@@ -33,6 +33,8 @@ Generated: 2025-03-19T01:19:51.933Z
 │   │   ├── SESSION_25_CHECKLIST.md
 │   │   ├── SESSION_25_KICKOFF.md
 │   │   ├── SESSION_25_NARRATIVE.md
+│   │   ├── SESSION_26_CHECKLIST.md
+│   │   ├── SESSION_26_NARRATIVE.md
 │   │   ├── additional_notes.md
 │   │   ├── auth-debug.md
 │   │   ├── session_10.md
@@ -71,8 +73,11 @@ Generated: 2025-03-19T01:19:51.933Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
-│   ├── SESSION_26_CHECKLIST.md
-│   ├── SESSION_26_NARRATIVE.md
+│   ├── SESSION_27_CHECKLIST.md
+│   ├── SESSION_27_KICKOFF.md
+│   ├── SESSION_27_KICKOFF_2.md
+│   ├── SESSION_27_NARRATIVE.md
+│   ├── SESSION_27_NARRATIVE_2.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
@@ -83,6 +88,7 @@ Generated: 2025-03-19T01:19:51.933Z
 │   ├── ca-en-merchant-fees-15-oct-2024.pdf
 │   ├── deck.md
 │   ├── payment_subscription_design_document.md
+│   ├── permissions-analysis.md
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
 │   ├── roadmap.md
@@ -113,7 +119,6 @@ Generated: 2025-03-19T01:19:51.933Z
 │   ├── types_tree.md
 │   └── ui_tree.md
 ├── rbac/
-│   ├── README.md
 │   └── role_based_access_control.md
 ├── user-flows/
 │   ├── create_test_users_ui.md
@@ -126,12 +131,12 @@ Generated: 2025-03-19T01:19:51.933Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 108 files
+10 directories, 113 files
 
 ```
 
 ## File Type Breakdown
-- md: 102 file(s)
+- md: 107 file(s)
 
 ## Ignored Patterns
 - node_modules

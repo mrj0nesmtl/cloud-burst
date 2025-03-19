@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-03-19T01:19:54.486Z
+Generated: 2025-03-19T19:50:17.038Z
 
 ## Overview
-This directory contains 132 component(s).
+This directory contains 134 component(s).
 
 
 ## Directory Tree
@@ -85,6 +85,8 @@ This directory contains 132 component(s).
 ├── nav/
 │   ├── logo.tsx
 │   ├── main-nav.tsx
+│   ├── mobile-nav.tsx
+│   ├── nav-item.tsx
 │   ├── side-nav.tsx
 │   └── user-nav.tsx
 ├── notifications/
@@ -163,13 +165,13 @@ This directory contains 132 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-19 directories, 136 files
+19 directories, 138 files
 
 ```
 
 ## File Type Breakdown
 - ts: 3 file(s)
-- tsx: 132 file(s)
+- tsx: 134 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns
