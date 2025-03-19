@@ -9,9 +9,6 @@ const authRetryKey = 'x-auth-retry-count'
 // Define valid role types
 type UserRole = 'super_admin' | 'admin' | 'organizer' | 'event_host' | 'user' | 'guest';
 
-// Cache to reduce duplicate profile lookups
-const profileRoleCache = new Map<string, string>()
-
 export async function middleware(req: NextRequest) {
   // Skip middleware only during static generation
   if (process.env.NEXT_PHASE === 'phase-production-build') {
@@ -55,7 +52,6 @@ export async function middleware(req: NextRequest) {
       if (session) {
         // Attach session info to response
         res.headers.set('x-user-authenticated', 'true')
-        res.headers.set('x-user-role', session.user.role || 'guest')
       }
       return res
     }
@@ -88,55 +84,25 @@ export async function middleware(req: NextRequest) {
     // Increment retry count only for subsequent auth checks
     res.headers.set(authRetryKey, (retryCount + 1).toString())
     
-    // Admin routes that require admin privileges
-    const isAdminRoute = path.startsWith('/protected/admin/')
+    // Get user's profile to check role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', session.user.id)
+      .single()
     
-    // Event management routes
-    const isEventRoute = path.startsWith('/protected/events/')
-    
-    // Get user ID from session for role check
-    const userId = session.user.id
-    if (!userId) {
-      throw new Error('User ID is missing from session')
-    }
-    
-    // Try to get role from cache first
-    let userRole: UserRole = 'guest' // Default to guest if no role found
-    
-    if (profileRoleCache.has(userId)) {
-      // If role is in cache, use it (with proper type casting)
-      const cachedRole = profileRoleCache.get(userId)
-      if (cachedRole) {
-        userRole = cachedRole as UserRole
-      }
-    } else {
-      // If not in cache, fetch from database
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', userId)
-        .single()
-      
-      if (profileError) {
-        console.error('Error fetching profile:', profileError)
-        throw profileError
-      }
-      
-      // Set role with fallback to guest if undefined
-      const fetchedRole = profile?.role || 'guest'
-      userRole = fetchedRole as UserRole
-      
-      // Cache the role to reduce future API calls (now properly typed as string)
-      profileRoleCache.set(userId, userRole)
-    }
+    // Get user role from profile or default to guest
+    const userRole = (profile?.role as UserRole) || 'guest'
     
     // Admin routes are only accessible by super_admin and admin
+    const isAdminRoute = path.startsWith('/protected/admin/')
     if (isAdminRoute && !['super_admin', 'admin'].includes(userRole)) {
       url.pathname = '/protected/dashboard'
       return NextResponse.redirect(url)
     }
     
     // Event management routes are only accessible by super_admin, admin, organizer, and event_host
+    const isEventRoute = path.startsWith('/protected/events/')
     if (isEventRoute && !['super_admin', 'admin', 'organizer', 'event_host'].includes(userRole)) {
       url.pathname = '/protected/dashboard'
       return NextResponse.redirect(url)
@@ -144,6 +110,7 @@ export async function middleware(req: NextRequest) {
     
     // If we've made it this far, allow access
     res.headers.delete(authRetryKey) // Reset retry count
+    res.headers.set('x-user-role', userRole) // Attach role to response
     return res
     
   } catch (error) {

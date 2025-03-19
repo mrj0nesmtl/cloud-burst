@@ -35,12 +35,27 @@ export default async function EventsPage() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   
+  // Add debugging logs
+  console.log('[Events Page] Auth Check:', {
+    userId: user?.id,
+    userEmail: user?.email,
+    metadata: user?.user_metadata,
+    timestamp: new Date().toISOString()
+  })
+  
   // Check if user is admin (for future use)
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
     .eq('id', user?.id || '')
     .single()
+  
+  // Add role verification logs
+  console.log('[Events Page] Role Check:', {
+    profileRole: profile?.role,
+    isAdmin: profile?.role === 'super_admin' || profile?.role === 'admin',
+    timestamp: new Date().toISOString()
+  })
   
   const isAdmin = profile?.role === 'super_admin' || profile?.role === 'admin'
   
