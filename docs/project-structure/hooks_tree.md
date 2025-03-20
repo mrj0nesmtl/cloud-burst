@@ -1,5 +1,5 @@
 # hooks Directory Structure
-Generated: 2025-03-19T19:50:18.647Z
+Generated: 2025-03-20T22:04:11.755Z
 
 ## Overview
 

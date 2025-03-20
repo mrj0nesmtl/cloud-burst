@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-19T19:50:14.007Z
+Generated: 2025-03-20T22:04:06.142Z
 
 ## Overview
 
@@ -112,12 +112,12 @@ Generated: 2025-03-19T19:50:14.007Z
 │   │   ├── .DS_Store
 │   │   ├── SESSION_27_CHECKLIST.md
 │   │   ├── SESSION_27_KICKOFF.md
-│   │   ├── SESSION_27_KICKOFF_2.md
+│   │   ├── SESSION_27_MOBILE_AUDIT.md
 │   │   ├── SESSION_27_NARRATIVE.md
-│   │   ├── SESSION_27_NARRATIVE_2.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
+│   │   ├── session_27_prompt.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
@@ -496,11 +496,16 @@ Generated: 2025-03-19T19:50:14.007Z
 │   │   │   ├── contact-submissions.tsx
 │   │   │   ├── dashboard-stats.tsx
 │   │   │   ├── event-summary.tsx
+│   │   │   ├── header.tsx
+│   │   │   ├── index.ts
 │   │   │   ├── newsletter-stats.tsx
 │   │   │   ├── newsletter-subscribers.tsx
+│   │   │   ├── overview-chart.tsx
+│   │   │   ├── overview.tsx
 │   │   │   ├── quick-actions.tsx
 │   │   │   ├── recent-activity.tsx
-│   │   │   └── recent-events.tsx
+│   │   │   ├── recent-events.tsx
+│   │   │   └── stats.tsx
 │   │   ├── events/
 │   │   │   ├── add-attendee-dialog.tsx
 │   │   │   ├── attendee-management.tsx
@@ -555,7 +560,6 @@ Generated: 2025-03-19T19:50:14.007Z
 │   │   ├── nav/
 │   │   │   ├── logo.tsx
 │   │   │   ├── main-nav.tsx
-│   │   │   ├── mobile-nav.tsx
 │   │   │   ├── nav-item.tsx
 │   │   │   ├── side-nav.tsx
 │   │   │   └── user-nav.tsx
@@ -614,6 +618,7 @@ Generated: 2025-03-19T19:50:14.007Z
 │   │   │   ├── select.tsx
 │   │   │   ├── separator.tsx
 │   │   │   ├── sheet.tsx
+│   │   │   ├── sidebar.tsx
 │   │   │   ├── site-footer.tsx
 │   │   │   ├── site-header.tsx
 │   │   │   ├── skeleton.tsx
@@ -628,6 +633,7 @@ Generated: 2025-03-19T19:50:14.007Z
 │   │   │   ├── toaster.tsx
 │   │   │   ├── tooltip.tsx
 │   │   │   └── use-toast.ts
+│   │   ├── app-sidebar.tsx
 │   │   ├── cookie-consent.tsx
 │   │   ├── debug-info.tsx
 │   │   ├── error-boundary.tsx
@@ -810,15 +816,15 @@ Generated: 2025-03-19T19:50:14.007Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-178 directories, 624 files
+178 directories, 630 files
 
 ```
 
 ## File Type Breakdown
-- ts: 8247 file(s)
-- tsx: 400 file(s)
-- js: 24775 file(s)
-- json: 1871 file(s)
+- ts: 8232 file(s)
+- tsx: 405 file(s)
+- js: 24703 file(s)
+- json: 1849 file(s)
 - md: 1406 file(s)
 - css: 23 file(s)
 - yml: 156 file(s)

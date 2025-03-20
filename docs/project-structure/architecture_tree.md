@@ -1,5 +1,5 @@
 # architecture Directory Structure
-Generated: 2025-03-19T19:50:18.919Z
+Generated: 2025-03-20T22:04:12.150Z
 
 ## Overview
 

@@ -1,5 +1,5 @@
 # development Directory Structure
-Generated: 2025-03-19T19:50:18.786Z
+Generated: 2025-03-20T22:04:11.966Z
 
 ## Overview
 
@@ -56,12 +56,12 @@ Generated: 2025-03-19T19:50:18.786Z
 ├── .DS_Store
 ├── SESSION_27_CHECKLIST.md
 ├── SESSION_27_KICKOFF.md
-├── SESSION_27_KICKOFF_2.md
+├── SESSION_27_MOBILE_AUDIT.md
 ├── SESSION_27_NARRATIVE.md
-├── SESSION_27_NARRATIVE_2.md
 ├── STATUS_NOTES.md
 ├── VERSION_CONTROL.md
 ├── contributing.md
+├── session_27_prompt.md
 └── version-sync.plan
 
 2 directories, 54 files

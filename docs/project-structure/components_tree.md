@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-03-19T19:50:17.038Z
+Generated: 2025-03-20T22:04:09.573Z
 
 ## Overview
-This directory contains 134 component(s).
+This directory contains 139 component(s).
 
 
 ## Directory Tree
@@ -26,11 +26,16 @@ This directory contains 134 component(s).
 │   ├── contact-submissions.tsx
 │   ├── dashboard-stats.tsx
 │   ├── event-summary.tsx
+│   ├── header.tsx
+│   ├── index.ts
 │   ├── newsletter-stats.tsx
 │   ├── newsletter-subscribers.tsx
+│   ├── overview-chart.tsx
+│   ├── overview.tsx
 │   ├── quick-actions.tsx
 │   ├── recent-activity.tsx
-│   └── recent-events.tsx
+│   ├── recent-events.tsx
+│   └── stats.tsx
 ├── events/
 │   ├── add-attendee-dialog.tsx
 │   ├── attendee-management.tsx
@@ -85,7 +90,6 @@ This directory contains 134 component(s).
 ├── nav/
 │   ├── logo.tsx
 │   ├── main-nav.tsx
-│   ├── mobile-nav.tsx
 │   ├── nav-item.tsx
 │   ├── side-nav.tsx
 │   └── user-nav.tsx
@@ -144,6 +148,7 @@ This directory contains 134 component(s).
 │   ├── select.tsx
 │   ├── separator.tsx
 │   ├── sheet.tsx
+│   ├── sidebar.tsx
 │   ├── site-footer.tsx
 │   ├── site-header.tsx
 │   ├── skeleton.tsx
@@ -158,6 +163,7 @@ This directory contains 134 component(s).
 │   ├── toaster.tsx
 │   ├── tooltip.tsx
 │   └── use-toast.ts
+├── app-sidebar.tsx
 ├── cookie-consent.tsx
 ├── debug-info.tsx
 ├── error-boundary.tsx
@@ -165,13 +171,13 @@ This directory contains 134 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-19 directories, 138 files
+19 directories, 144 files
 
 ```
 
 ## File Type Breakdown
-- ts: 3 file(s)
-- tsx: 134 file(s)
+- ts: 4 file(s)
+- tsx: 139 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns
