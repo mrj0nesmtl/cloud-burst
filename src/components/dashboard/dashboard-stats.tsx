@@ -40,16 +40,18 @@ export function DashboardStats({
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (
-        <Card key={stat.title}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
+        <Card key={stat.title} className="min-w-[240px] md:min-w-0">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-center space-x-4">
+              <div className="flex-1 space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">
                   {stat.title}
                 </p>
-                <h3 className="text-2xl font-bold">{stat.value}</h3>
+                <h3 className="text-2xl font-bold tracking-tight">
+                  {stat.value.toLocaleString()}
+                </h3>
               </div>
-              <div className="rounded-full bg-muted p-2">
+              <div className="rounded-full bg-muted p-2.5 sm:p-3">
                 {stat.icon}
               </div>
             </div>

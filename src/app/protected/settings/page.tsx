@@ -116,9 +116,9 @@ export default async function SettingsPage() {
   const isEventHost = userRoles?.some(role => role.role_id === 2) || false
 
   return (
-    <div className="w-full p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Settings</h1>
+    <div style={{ width: '100%', padding: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
         <p className="text-muted-foreground">
           Manage your account settings and preferences
         </p>
