@@ -404,51 +404,174 @@ As we approach our revised April 15, 2025 launch date, the design system is appr
 
 ## 📱 Responsive Design
 
-1. **Breakpoints**
-   ```typescript
-   // Default breakpoints
-   screens: {
-     sm: '640px',
-     md: '768px',
-     lg: '1024px',
-     xl: '1280px',
-     '2xl': '1536px',
-   }
-   ```
+### Official Responsive Implementation
 
-2. **Mobile-First Approach**
-   ```typescript
-   // Mobile-first example
-   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-     {/* Content */}
-   </div>
-   ```
+> **IMPORTANT:** After extensive testing, we've determined that **direct inline styles with explicit mobile detection** is the official recommended approach for all layout containers in protected pages.
 
-3. **Container Queries**
-   ```typescript
-   // Container query example
-   <div className="@container">
-     <div className="@md:grid @md:grid-cols-2 gap-4">
-       {/* Content */}
-     </div>
-   </div>
-   ```
+```tsx
+// Official responsive implementation pattern
+import { useState, useEffect } from 'react';
 
-4. **Responsive Typography**
-   ```typescript
-   // Responsive typography
-   <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">
-     Heading Text
-   </h1>
-   ```
+export default function Component() {
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+  
+  return (
+    <div style={{ 
+      width: '100%', 
+      padding: isMobile ? '16px' : '24px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: isMobile ? '16px' : '24px'
+    }}>
+      {/* Responsive content */}
+      <div style={{ 
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))',
+        gap: isMobile ? '16px' : '24px',
+        width: '100%'
+      }}>
+        {/* Cards or items */}
+      </div>
+    </div>
+  );
+}
+```
 
-5. **Touch Targets**
-   ```typescript
-   // Proper touch target sizing
-   <button className="h-10 min-w-10 px-4 rounded-md">
-     Button Text
-   </button>
-   ```
+This approach has successfully resolved layout issues across all device sizes and should be used for all layout containers in protected pages. For UI components that don't control layout (buttons, inputs, etc.), Tailwind classes can still be used.
+
+### Key Benefits of Direct Style Approach:
+- **Explicit Control**: Layout styles are directly visible in the component
+- **Simplified Debugging**: Easier to diagnose and fix layout issues
+- **Consistent Behavior**: Reliable rendering across devices and browsers
+- **Clearer Intention**: Developer intent is explicitly stated
+- **Reduced Conflicts**: No competing utility classes or CSS specificity issues
+- **Viewport Awareness**: Built-in mobile detection for responsive adjustments
+
+See `docs/design/consistent-layout.md` and `docs/design/layout-troubleshooting.md` for complete implementation details.
+
+### Breakpoints
+
+```typescript
+// Standard viewport breakpoints
+const breakpoints = {
+  xs: 0,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  '2xl': 1536,
+}
+```
+
+### Mobile-First Approach
+
+When using inline styles for responsive layouts:
+
+```tsx
+// Mobile-first approach with inline styles
+const cardContainerStyle = {
+  display: 'grid', 
+  gridTemplateColumns: '1fr', // Mobile default (single column)
+  gap: '16px',
+  width: '100%'
+};
+
+// Adjust for larger screens
+if (!isMobile) {
+  cardContainerStyle.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+  cardContainerStyle.gap = '24px';
+}
+
+// Apply the styles
+return (
+  <div style={cardContainerStyle}>
+    {/* Content */}
+  </div>
+);
+```
+
+### Container Queries
+
+For components that need to respond to their container size rather than viewport:
+
+```tsx
+// Container query example with ResizeObserver
+import { useState, useEffect, useRef } from 'react';
+
+function ContainerResponsiveComponent() {
+  const containerRef = useRef(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const resizeObserver = new ResizeObserver(entries => {
+      if (entries[0]) {
+        setContainerWidth(entries[0].contentRect.width);
+      }
+    });
+    
+    resizeObserver.observe(containerRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+  
+  const isNarrow = containerWidth < 400;
+  
+  return (
+    <div ref={containerRef} style={{ width: '100%' }}>
+      <div style={{ 
+        display: isNarrow ? 'flex' : 'grid',
+        flexDirection: isNarrow ? 'column' : undefined,
+        gridTemplateColumns: isNarrow ? undefined : '1fr 1fr',
+        gap: '16px'
+      }}>
+        {/* Content */}
+      </div>
+    </div>
+  );
+}
+```
+
+### Responsive Typography
+
+```typescript
+// Responsive typography with inline styles
+<h1 style={{ 
+  fontSize: isMobile ? '24px' : '32px',
+  lineHeight: isMobile ? '32px' : '40px',
+  fontWeight: 'bold'
+}}>
+  Heading Text
+</h1>
+```
+
+### Touch Targets
+
+```typescript
+// Proper touch target sizing
+<button style={{
+  height: isMobile ? '48px' : '40px', // Larger target on mobile
+  minWidth: isMobile ? '48px' : '40px',
+  padding: isMobile ? '0 16px' : '0 12px',
+  borderRadius: '8px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+}}>
+  Button Text
+</button>
+```
 
 ## 🎯 Component Best Practices
 

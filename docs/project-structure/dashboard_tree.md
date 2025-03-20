@@ -1,8 +1,8 @@
 # dashboard Directory Structure
-Generated: 2025-03-19T19:50:17.820Z
+Generated: 2025-03-20T22:04:10.604Z
 
 ## Overview
-This directory contains 11 component(s).
+This directory contains 15 component(s).
 
 
 ## Directory Tree
@@ -14,18 +14,24 @@ This directory contains 11 component(s).
 ├── contact-submissions.tsx
 ├── dashboard-stats.tsx
 ├── event-summary.tsx
+├── header.tsx
+├── index.ts
 ├── newsletter-stats.tsx
 ├── newsletter-subscribers.tsx
+├── overview-chart.tsx
+├── overview.tsx
 ├── quick-actions.tsx
 ├── recent-activity.tsx
-└── recent-events.tsx
+├── recent-events.tsx
+└── stats.tsx
 
-1 directory, 11 files
+1 directory, 16 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 11 file(s)
+- ts: 1 file(s)
+- tsx: 15 file(s)
 
 ## Ignored Patterns
 - node_modules

@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-19T19:50:14.499Z
+Generated: 2025-03-20T22:04:06.667Z
 
 ## Overview
 
@@ -288,11 +288,16 @@ Generated: 2025-03-19T19:50:14.499Z
 │   │   ├── contact-submissions.tsx
 │   │   ├── dashboard-stats.tsx
 │   │   ├── event-summary.tsx
+│   │   ├── header.tsx
+│   │   ├── index.ts
 │   │   ├── newsletter-stats.tsx
 │   │   ├── newsletter-subscribers.tsx
+│   │   ├── overview-chart.tsx
+│   │   ├── overview.tsx
 │   │   ├── quick-actions.tsx
 │   │   ├── recent-activity.tsx
-│   │   └── recent-events.tsx
+│   │   ├── recent-events.tsx
+│   │   └── stats.tsx
 │   ├── events/
 │   │   ├── add-attendee-dialog.tsx
 │   │   ├── attendee-management.tsx
@@ -347,7 +352,6 @@ Generated: 2025-03-19T19:50:14.499Z
 │   ├── nav/
 │   │   ├── logo.tsx
 │   │   ├── main-nav.tsx
-│   │   ├── mobile-nav.tsx
 │   │   ├── nav-item.tsx
 │   │   ├── side-nav.tsx
 │   │   └── user-nav.tsx
@@ -406,6 +410,7 @@ Generated: 2025-03-19T19:50:14.499Z
 │   │   ├── select.tsx
 │   │   ├── separator.tsx
 │   │   ├── sheet.tsx
+│   │   ├── sidebar.tsx
 │   │   ├── site-footer.tsx
 │   │   ├── site-header.tsx
 │   │   ├── skeleton.tsx
@@ -420,6 +425,7 @@ Generated: 2025-03-19T19:50:14.499Z
 │   │   ├── toaster.tsx
 │   │   ├── tooltip.tsx
 │   │   └── use-toast.ts
+│   ├── app-sidebar.tsx
 │   ├── cookie-consent.tsx
 │   ├── debug-info.tsx
 │   ├── error-boundary.tsx
@@ -504,13 +510,13 @@ Generated: 2025-03-19T19:50:14.499Z
 ├── middleware.test.ts
 └── middleware.ts
 
-140 directories, 356 files
+140 directories, 362 files
 
 ```
 
 ## File Type Breakdown
-- ts: 77 file(s)
-- tsx: 261 file(s)
+- ts: 78 file(s)
+- tsx: 266 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)
