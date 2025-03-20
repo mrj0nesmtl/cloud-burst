@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   CalendarDays, 
   MapPin, 
@@ -62,6 +62,17 @@ export function EnhancedEventCard({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDuplicating, setIsDuplicating] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check for mobile viewport
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const checkMobile = () => setIsMobile(window.innerWidth < 768);
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+  }, []);
   
   // Handle delete action
   const handleDelete = async () => {
@@ -94,15 +105,43 @@ export function EnhancedEventCard({
   
   // Render status badge
   const renderStatusBadge = () => {
+    const baseStyles = {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '0.125rem 0.5rem',
+      fontSize: '0.75rem',
+      fontWeight: '500',
+      borderRadius: '9999px',
+      whiteSpace: 'nowrap' as const,
+    };
+    
     switch (event.status) {
       case 'published':
-        return <Badge className="bg-green-500">Published</Badge>;
+        return <span style={{
+          ...baseStyles,
+          backgroundColor: 'var(--green-500)',
+          color: 'white'
+        }}>Published</span>;
       case 'draft':
-        return <Badge variant="outline">Draft</Badge>;
+        return <span style={{
+          ...baseStyles,
+          backgroundColor: 'transparent',
+          color: 'var(--muted-foreground)',
+          border: '1px solid var(--border)'
+        }}>Draft</span>;
       case 'completed':
-        return <Badge className="bg-blue-500">Completed</Badge>;
+        return <span style={{
+          ...baseStyles,
+          backgroundColor: 'var(--blue-500)',
+          color: 'white'
+        }}>Completed</span>;
       case 'cancelled':
-        return <Badge variant="destructive">Cancelled</Badge>;
+        return <span style={{
+          ...baseStyles,
+          backgroundColor: 'var(--destructive)',
+          color: 'var(--destructive-foreground)'
+        }}>Cancelled</span>;
       default:
         return null;
     }
@@ -110,58 +149,152 @@ export function EnhancedEventCard({
   
   return (
     <>
-      <Card className="overflow-hidden">
-        <CardHeader className="pb-3">
-          <div className="flex justify-between items-start">
+      <Card style={{ 
+        overflow: 'hidden',
+        border: '1px solid var(--border)',
+        borderRadius: '0.5rem', 
+        background: 'var(--card)'
+      }}>
+        <CardHeader style={{ 
+          padding: '1.25rem 1.25rem 0.75rem',
+        }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'flex-start',
+            flexWrap: 'wrap',
+            gap: '0.75rem'
+          }}>
             <div>
-              <CardTitle className="text-xl">
-                <Link href={`/protected/events/${event.id}`} className="hover:text-blue-500 transition-colors">
+              <CardTitle style={{ 
+                fontSize: isMobile ? '1.125rem' : '1.25rem',
+                fontWeight: '600',
+                lineHeight: '1.3'
+              }}>
+                <Link 
+                  href={`/protected/events/${event.id}`} 
+                  style={{ 
+                    color: 'inherit', 
+                    textDecoration: 'none',
+                    transition: 'color 0.2s ease'
+                  }}
+                >
                   {event.name}
                 </Link>
               </CardTitle>
-              <CardDescription className="flex items-center mt-1">
-                <CalendarDays className="mr-1 h-3.5 w-3.5" />
-                {formatDate(event.date)}
+              <CardDescription style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                marginTop: '0.25rem',
+                fontSize: '0.875rem',
+                color: 'var(--muted-foreground)',
+                gap: '0.5rem'
+              }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                  <CalendarDays style={{ 
+                    marginRight: '0.25rem', 
+                    height: '0.875rem', 
+                    width: '0.875rem' 
+                  }} />
+                  {formatDate(event.date)}
+                </span>
                 {event.location && (
-                  <>
-                    <span className="mx-1">•</span>
-                    <MapPin className="mr-1 h-3.5 w-3.5" />
+                  <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <MapPin style={{ 
+                      marginRight: '0.25rem', 
+                      height: '0.875rem', 
+                      width: '0.875rem' 
+                    }} />
                     {event.location}
-                  </>
+                  </span>
                 )}
               </CardDescription>
             </div>
-            <div className="flex items-center gap-2">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
               {renderStatusBadge()}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <MoreHorizontal className="h-4 w-4" />
-                    <span className="sr-only">Open menu</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    style={{
+                      height: '2rem',
+                      width: '2rem',
+                      padding: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <MoreHorizontal style={{ height: '1rem', width: '1rem' }} />
+                    <span style={{ 
+                      position: 'absolute', 
+                      width: '1px',
+                      height: '1px',
+                      padding: 0,
+                      margin: '-1px',
+                      overflow: 'hidden',
+                      clip: 'rect(0, 0, 0, 0)',
+                      whiteSpace: 'nowrap',
+                      borderWidth: 0
+                    }}>Open menu</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Link href={`/protected/events/${event.id}`} className="cursor-pointer">
-                      <Eye className="mr-2 h-4 w-4" />
+                    <Link 
+                      href={`/protected/events/${event.id}`} 
+                      style={{ 
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Eye style={{ marginRight: '0.5rem', height: '1rem', width: '1rem' }} />
                       View details
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href={`/protected/events/${event.id}/edit`} className="cursor-pointer">
-                      <Edit className="mr-2 h-4 w-4" />
+                    <Link 
+                      href={`/protected/events/${event.id}/edit`} 
+                      style={{ 
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Edit style={{ marginRight: '0.5rem', height: '1rem', width: '1rem' }} />
                       Edit event
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href={`/protected/events/${event.id}/qr`} className="cursor-pointer">
-                      <QrCode className="mr-2 h-4 w-4" />
+                    <Link 
+                      href={`/protected/events/${event.id}/qr`} 
+                      style={{ 
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <QrCode style={{ marginRight: '0.5rem', height: '1rem', width: '1rem' }} />
                       QR code
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href={`/protected/events/${event.id}/share`} className="cursor-pointer">
-                      <Share2 className="mr-2 h-4 w-4" />
+                    <Link 
+                      href={`/protected/events/${event.id}/share`} 
+                      style={{ 
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Share2 style={{ marginRight: '0.5rem', height: '1rem', width: '1rem' }} />
                       Share event
                     </Link>
                   </DropdownMenuItem>
@@ -170,18 +303,28 @@ export function EnhancedEventCard({
                     <DropdownMenuItem 
                       onClick={handleDuplicate}
                       disabled={isDuplicating}
-                      className="cursor-pointer"
+                      style={{ 
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        opacity: isDuplicating ? 0.5 : 1
+                      }}
                     >
-                      <Copy className="mr-2 h-4 w-4" />
+                      <Copy style={{ marginRight: '0.5rem', height: '1rem', width: '1rem' }} />
                       {isDuplicating ? 'Duplicating...' : 'Duplicate event'}
                     </DropdownMenuItem>
                   )}
                   {onDelete && (
                     <DropdownMenuItem 
                       onClick={() => setIsDeleteDialogOpen(true)}
-                      className="text-red-600 cursor-pointer"
+                      style={{ 
+                        color: 'var(--destructive)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
                     >
-                      <Trash className="mr-2 h-4 w-4" />
+                      <Trash style={{ marginRight: '0.5rem', height: '1rem', width: '1rem' }} />
                       Delete event
                     </DropdownMenuItem>
                   )}
@@ -190,35 +333,98 @@ export function EnhancedEventCard({
             </div>
           </div>
         </CardHeader>
-        <CardContent className="pb-3">
+        <CardContent style={{ padding: '0 1.25rem 0.75rem' }}>
           {event.description && (
-            <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+            <p style={{ 
+              fontSize: '0.875rem', 
+              color: 'var(--muted-foreground)',
+              marginBottom: '1rem',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden'
+            }}>
               {event.description}
             </p>
           )}
-          <div className="flex flex-wrap gap-4">
-            <div className="flex items-center text-sm">
-              <Users className="mr-1.5 h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">{event.attendees_count}</span>
-              <span className="text-muted-foreground ml-1">attendees</span>
+          <div style={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            gap: '1rem'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              fontSize: '0.875rem'
+            }}>
+              <Users style={{ 
+                marginRight: '0.375rem', 
+                height: '1rem', 
+                width: '1rem', 
+                color: 'var(--muted-foreground)' 
+              }} />
+              <span style={{ fontWeight: '500' }}>{event.attendees_count}</span>
+              <span style={{ color: 'var(--muted-foreground)', marginLeft: '0.25rem' }}>attendees</span>
             </div>
-            <div className="flex items-center text-sm">
-              <Image className="mr-1.5 h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">{event.photos_count}</span>
-              <span className="text-muted-foreground ml-1">photos</span>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              fontSize: '0.875rem'
+            }}>
+              <Image style={{ 
+                marginRight: '0.375rem', 
+                height: '1rem', 
+                width: '1rem', 
+                color: 'var(--muted-foreground)' 
+              }} />
+              <span style={{ fontWeight: '500' }}>{event.photos_count}</span>
+              <span style={{ color: 'var(--muted-foreground)', marginLeft: '0.25rem' }}>photos</span>
             </div>
-            <div className="flex items-center text-sm">
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              fontSize: '0.75rem'
+            }}>
               {event.is_public ? (
-                <span className="text-green-500 text-xs bg-green-500/10 px-2 py-0.5 rounded-full">Public</span>
+                <span style={{ 
+                  color: 'var(--green-500)', 
+                  backgroundColor: 'rgba(34, 197, 94, 0.1)', 
+                  padding: '0.125rem 0.5rem', 
+                  borderRadius: '9999px'
+                }}>Public</span>
               ) : (
-                <span className="text-amber-500 text-xs bg-amber-500/10 px-2 py-0.5 rounded-full">Private</span>
+                <span style={{ 
+                  color: 'var(--amber-500)', 
+                  backgroundColor: 'rgba(245, 158, 11, 0.1)', 
+                  padding: '0.125rem 0.5rem', 
+                  borderRadius: '9999px'
+                }}>Private</span>
               )}
             </div>
           </div>
         </CardContent>
-        <div className="border-t px-6 py-3 flex justify-end">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={`/protected/events/${event.id}`}>
+        <div style={{ 
+          borderTop: '1px solid var(--border)', 
+          padding: '0.75rem 1.5rem', 
+          display: 'flex', 
+          justifyContent: 'flex-end'
+        }}>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            asChild
+            style={{
+              height: 'auto',
+              padding: '0.375rem 0.75rem',
+              fontSize: '0.875rem'
+            }}
+          >
+            <Link 
+              href={`/protected/events/${event.id}`}
+              style={{
+                textDecoration: 'none'
+              }}
+            >
               Manage Event
             </Link>
           </Button>
@@ -240,7 +446,10 @@ export function EnhancedEventCard({
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
-              className="bg-red-600 hover:bg-red-700"
+              style={{
+                backgroundColor: 'var(--destructive)',
+                color: 'var(--destructive-foreground)'
+              }}
             >
               {isDeleting ? 'Deleting...' : 'Delete Event'}
             </AlertDialogAction>

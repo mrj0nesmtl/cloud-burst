@@ -166,9 +166,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1">
+        <div style={{ width: '100%' }}>
           {children}
-        </main>
+        </div>
       </div>
     </div>
   )

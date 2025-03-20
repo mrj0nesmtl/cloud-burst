@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Trash, Edit, Share, QrCode, Image } from 'lucide-react'
@@ -34,6 +34,17 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
   const router = useRouter()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  
+  // Check if we're on a mobile device
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
+      checkIfMobile()
+      window.addEventListener('resize', checkIfMobile)
+      return () => window.removeEventListener('resize', checkIfMobile)
+    }
+  }, [])
 
   const handleDelete = async () => {
     try {
@@ -108,16 +119,46 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
     href?: string,
     variant?: "outline" | "destructive" | "ghost" | "default" 
   }) => {
+    const baseButtonStyles = {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '2rem',
+      gap: '0.25rem',
+      padding: '0 0.5rem',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      borderRadius: '0.375rem',
+      cursor: 'pointer',
+      whiteSpace: 'nowrap' as const,
+      border: variant === 'outline' ? '1px solid var(--border)' : 'none',
+      background: variant === 'destructive' 
+        ? 'var(--destructive)' 
+        : variant === 'default' 
+          ? 'var(--primary)' 
+          : 'transparent',
+      color: variant === 'destructive' 
+        ? 'var(--destructive-foreground)' 
+        : variant === 'default' 
+          ? 'var(--primary-foreground)' 
+          : 'currentColor',
+    }
+    
+    const iconStyles = {
+      height: '1rem',
+      width: '1rem',
+      marginRight: isMobile ? '0' : '0.25rem'
+    }
+    
     const content = (
-      <Button 
-        variant={variant} 
-        size="sm"
+      <button 
+        type="button"
         onClick={onClick}
-        className="h-8"
+        style={baseButtonStyles}
       >
-        <Icon className="h-4 w-4 md:mr-1" />
-        <span className="hidden md:inline">{label}</span>
-      </Button>
+        <Icon style={iconStyles} />
+        {!isMobile && <span>{label}</span>}
+      </button>
     );
 
     // For mobile, provide tooltips since we're hiding text
@@ -127,7 +168,17 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
           <TooltipTrigger asChild>
             {content}
           </TooltipTrigger>
-          <TooltipContent className="md:hidden">
+          <TooltipContent style={{
+            display: isMobile ? 'block' : 'none',
+            padding: '0.25rem 0.5rem',
+            fontSize: '0.75rem',
+            background: 'var(--popover)',
+            color: 'var(--popover-foreground)',
+            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+            borderRadius: '0.25rem',
+            maxWidth: '12rem',
+            zIndex: 50
+          }}>
             {label}
           </TooltipContent>
         </Tooltip>
@@ -136,7 +187,7 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
 
     if (href) {
       return (
-        <Link href={href}>
+        <Link href={href} style={{ textDecoration: 'none' }}>
           {wrappedContent}
         </Link>
       );
@@ -146,7 +197,13 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div style={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: '0.5rem',
+      justifyContent: 'flex-end'
+    }}>
       {/* Edit button - visible to event owners and admins */}
       <PermissionGate action="update" resource="event" ownerId={organizerId}>
         <ActionButton 
@@ -208,7 +265,10 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
             <AlertDialogAction 
               onClick={handleDelete} 
               disabled={isDeleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              style={{
+                background: 'var(--destructive)',
+                color: 'var(--destructive-foreground)'
+              }}
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
