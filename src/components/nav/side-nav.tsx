@@ -21,37 +21,28 @@ import { useAuth } from "@/hooks/use-auth"
 import { NavItem } from './nav-item'
 
 interface SideNavProps {
-  setIsOpen?: (open: boolean) => void
   collapsed?: boolean
 }
 
-export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
+export function SideNav({ collapsed = false }: SideNavProps) {
   const pathname = usePathname()
   const { user, hasCapability } = useAuth()
   
   const canManageEvents = hasCapability('manage:own_events')
   const isOrganizer = user?.role === 'organizer'
 
-  // Function to handle navigation item clicks
-  const handleNavClick = () => {
-    console.log('Navigation clicked')
-    // Close the mobile menu if setIsOpen is provided
-    if (setIsOpen) {
-      setIsOpen(false)
-    }
-  }
-
   return (
     <nav className={cn(
-      "flex h-full flex-col gap-4",
-      collapsed ? "px-2" : "px-2"
+      "flex flex-col gap-6 px-2 py-4",
+      collapsed && "items-center"
     )}>
       {/* Dashboard Section */}
-      <div className={cn(
-        "flex flex-col w-full",
-        collapsed ? "items-center space-y-1" : "items-start space-y-1"
-      )}>
-        {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Dashboard</h4>}
+      <div className="space-y-1">
+        {!collapsed && (
+          <h4 className="px-2 text-xs font-semibold text-muted-foreground">
+            Dashboard
+          </h4>
+        )}
         <NavItem
           href="/protected/dashboard"
           active={pathname === "/protected/dashboard"}
@@ -64,11 +55,12 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
 
       {/* Events Section */}
       {(isOrganizer || canManageEvents) && (
-        <div className={cn(
-          "flex flex-col w-full",
-          collapsed ? "items-center space-y-1" : "items-start space-y-1"
-        )}>
-          {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Events</h4>}
+        <div className="space-y-1">
+          {!collapsed && (
+            <h4 className="px-2 text-xs font-semibold text-muted-foreground">
+              Events
+            </h4>
+          )}
           <NavItem
             href="/protected/events/manage"
             active={pathname === "/protected/events/manage"}
@@ -83,7 +75,7 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
             icon={PlusCircle}
             collapsed={collapsed}
           >
-            Create New Event
+            Create New
           </NavItem>
           <NavItem
             href="/protected/events/templates"
@@ -98,18 +90,19 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
       
       {/* Attendees Section */}
       {canManageEvents && (
-        <div className={cn(
-          "flex flex-col w-full",
-          collapsed ? "items-center space-y-1" : "items-start space-y-1"
-        )}>
-          {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Attendees</h4>}
+        <div className="space-y-1">
+          {!collapsed && (
+            <h4 className="px-2 text-xs font-semibold text-muted-foreground">
+              Attendees
+            </h4>
+          )}
           <NavItem
             href="/protected/attendees/invitations"
             active={pathname === "/protected/attendees/invitations"}
             icon={Users}
             collapsed={collapsed}
           >
-            Manage Invitations
+            Invitations
           </NavItem>
           <NavItem
             href="/protected/qr-codes"
@@ -123,11 +116,12 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
       )}
 
       {/* Gallery Section */}
-      <div className={cn(
-        "flex flex-col w-full",
-        collapsed ? "items-center space-y-1" : "items-start space-y-1"
-      )}>
-        {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Gallery</h4>}
+      <div className="space-y-1">
+        {!collapsed && (
+          <h4 className="px-2 text-xs font-semibold text-muted-foreground">
+            Gallery
+          </h4>
+        )}
         <NavItem
           href="/protected/gallery"
           active={pathname.startsWith("/protected/gallery")}
@@ -144,7 +138,7 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
               icon={FolderOpen}
               collapsed={collapsed}
             >
-              Events (Galleries)
+              Events
             </NavItem>
             <NavItem
               href="/protected/gallery/moderate"
@@ -168,18 +162,19 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
 
       {/* Analytics Section */}
       {(isOrganizer || canManageEvents) && (
-        <div className={cn(
-          "flex flex-col w-full",
-          collapsed ? "items-center space-y-1" : "items-start space-y-1"
-        )}>
-          {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Analytics</h4>}
+        <div className="space-y-1">
+          {!collapsed && (
+            <h4 className="px-2 text-xs font-semibold text-muted-foreground">
+              Analytics
+            </h4>
+          )}
           <NavItem
             href="/protected/analytics/engagement"
             active={pathname === "/protected/analytics/engagement"}
             icon={BarChart}
             collapsed={collapsed}
           >
-            Engagement Metrics
+            Engagement
           </NavItem>
           <NavItem
             href="/protected/analytics/performance"
@@ -188,17 +183,18 @@ export function SideNav({ setIsOpen, collapsed = false }: SideNavProps) {
             collapsed={collapsed}
             badge="Coming Soon"
           >
-            Event Performance
+            Performance
           </NavItem>
         </div>
       )}
 
       {/* Settings Section */}
-      <div className={cn(
-        "flex flex-col w-full mt-auto",
-        collapsed ? "items-center space-y-1" : "items-start space-y-1"
-      )}>
-        {!collapsed && <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-2">Settings</h4>}
+      <div className="mt-auto space-y-1">
+        {!collapsed && (
+          <h4 className="px-2 text-xs font-semibold text-muted-foreground">
+            Settings
+          </h4>
+        )}
         <NavItem
           href="/protected/settings"
           active={pathname.startsWith("/protected/settings")}

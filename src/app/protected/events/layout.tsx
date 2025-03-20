@@ -1,12 +1,12 @@
 import { ReactNode } from "react"
 
 interface EventsLayoutProps {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 export default function EventsLayout({ children }: EventsLayoutProps) {
   return (
-    <div className="container mx-auto py-6">
+    <div style={{ width: '100%', padding: '24px' }}>
       {children}
     </div>
   )

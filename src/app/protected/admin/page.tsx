@@ -159,22 +159,25 @@ export default async function AdminDashboardPage() {
   return (
     <RoleGuard allowedRoles={['super_admin', 'admin']}>
       <div style={{ width: '100%', padding: '24px' }}>
+        {/* Header Section */}
         <div style={{ marginBottom: '24px' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Admin Dashboard</h1>
-          <p style={{ color: 'var(--muted-foreground)' }}>
-            Platform administration and management
-          </p>
+          <DashboardHeader />
         </div>
         
-        <Suspense fallback={<LoadingSpinner />}>
-          <StatsCards />
-        </Suspense>
+        {/* Stats Section */}
+        <div style={{ marginBottom: '24px' }}>
+          <Suspense fallback={<LoadingSpinner />}>
+            <StatsCards />
+          </Suspense>
+        </div>
         
-        <div style={{ marginTop: '24px' }}>
+        {/* Quick Actions Section */}
+        <div style={{ marginBottom: '24px' }}>
           <QuickActions />
         </div>
 
-        <div style={{ marginTop: '24px', display: 'grid', gap: '24px', gridTemplateColumns: 'repeat(7, 1fr)' }} className="md:grid-cols-2 lg:grid-cols-7">
+        {/* Analytics Grid */}
+        <div style={{ display: 'grid', gap: '24px', gridTemplateColumns: 'repeat(7, 1fr)' }} className="md:grid-cols-2 lg:grid-cols-7">
           <div className="md:col-span-2 lg:col-span-5">
             <AnalyticsOverview />
           </div>
@@ -183,11 +186,13 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
+        {/* Stats Grid */}
         <div style={{ marginTop: '24px', display: 'grid', gap: '24px', gridTemplateColumns: 'repeat(2, 1fr)' }} className="md:grid-cols-2">
           <NewsletterStats />
           <ContactStats />
         </div>
 
+        {/* Audit Log */}
         <div style={{ marginTop: '24px' }}>
           <AuditLogViewer logs={[]} />
         </div>

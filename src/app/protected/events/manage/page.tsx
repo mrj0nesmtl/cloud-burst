@@ -83,15 +83,6 @@ export default async function ManageEventsPage() {
   // Get the current user
   const { data: { user } } = await supabase.auth.getUser()
   
-  // Enhanced debugging for auth
-  console.log('[Manage Events Page] Auth Check:', {
-    userId: user?.id,
-    userEmail: user?.email,
-    metadata: user?.user_metadata,
-    timestamp: new Date().toISOString(),
-    path: '/protected/events/manage'
-  })
-  
   // Get the user's profile to check their role
   const { data: profile } = await supabase
     .from('profiles')
@@ -99,34 +90,10 @@ export default async function ManageEventsPage() {
     .eq('id', user?.id)
     .single()
   
-  // Enhanced role verification logs
-  console.log('[Manage Events Page] Role Check:', {
-    profileRole: profile?.role,
-    hasEventAccess: ['super_admin', 'admin', 'organizer', 'event_host'].includes(profile?.role || ''),
-    timestamp: new Date().toISOString()
-  })
-  
   // Fetch events
   const { data: events, error } = await supabase
     .from('events')
     .select('*')
-  
-  // Enhanced error logging
-  if (error) {
-    console.error('[Manage Events Page] Error:', {
-      error,
-      userId: user?.id,
-      role: profile?.role,
-      timestamp: new Date().toISOString()
-    })
-  }
-  
-  // Enhanced events logging
-  console.log('[Manage Events Page] Events Query:', {
-    totalEvents: events?.length || 0,
-    userRole: profile?.role,
-    timestamp: new Date().toISOString()
-  })
   
   // Post-query filtering based on role if needed
   let filteredEvents: EventData[] = events || [];
@@ -136,15 +103,6 @@ export default async function ManageEventsPage() {
       event.user_id === user?.id || 
       event.is_public === true
     );
-    
-    // Log filtering results
-    console.log('[Manage Events Page] Events Filtering:', {
-      beforeFilter: events?.length || 0,
-      afterFilter: filteredEvents.length,
-      userRole: profile?.role,
-      userId: user?.id,
-      timestamp: new Date().toISOString()
-    })
   }
   
   // Fetch event attendees in a separate query to properly count
@@ -173,63 +131,116 @@ export default async function ManageEventsPage() {
   const cancelledEvents = processedEvents.filter(event => event.status === 'cancelled');
   
   return (
-    <div className="container py-6">
+    <div style={{ 
+      width: '100%', 
+      padding: '1.5rem 1rem',
+      display: 'flex', 
+      flexDirection: 'column', 
+      gap: '1.5rem' 
+    }}>
       {/* Header section */}
-      <div className="flex justify-between items-center mb-6">
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '1rem'
+      }}>
         <div>
-          <h1 className="text-2xl font-bold mb-2">Manage Events</h1>
-          <p className="text-muted-foreground">
+          <h1 style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: '700', 
+            marginBottom: '0.5rem',
+            lineHeight: '1.2'
+          }}>
+            Manage Events
+          </h1>
+          <p style={{ 
+            color: 'var(--muted-foreground)', 
+            fontSize: '0.9rem'
+          }}>
             View and manage all your photography events
           </p>
         </div>
         
-        <Button asChild>
+        <Button asChild style={{
+          height: '2.5rem',
+          whiteSpace: 'nowrap'
+        }}>
           <Link href="/protected/events/create">
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
             Create Event
           </Link>
         </Button>
       </div>
       
       {/* Stats cards */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Events</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+        gap: '1rem',
+      }}>
+        <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
+          <CardHeader style={{ 
+            display: 'flex', 
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            padding: '1rem 1rem 0.5rem'
+          }}>
+            <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Total Events</CardTitle>
+            <Calendar style={{ height: '1rem', width: '1rem', color: 'var(--muted-foreground)' }} />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{processedEvents.length}</div>
+          <CardContent style={{ padding: '0 1rem 1rem' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{processedEvents.length}</div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Active Events</CardTitle>
-            <BadgeIcon className="h-4 w-4 text-muted-foreground" />
+        <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
+          <CardHeader style={{ 
+            display: 'flex', 
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            padding: '1rem 1rem 0.5rem'
+          }}>
+            <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Active Events</CardTitle>
+            <BadgeIcon style={{ height: '1rem', width: '1rem', color: 'var(--muted-foreground)' }} />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{publishedEvents.length}</div>
+          <CardContent style={{ padding: '0 1rem 1rem' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{publishedEvents.length}</div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Draft Events</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+        <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
+          <CardHeader style={{ 
+            display: 'flex', 
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            padding: '1rem 1rem 0.5rem'
+          }}>
+            <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Draft Events</CardTitle>
+            <Clock style={{ height: '1rem', width: '1rem', color: 'var(--muted-foreground)' }} />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{draftEvents.length}</div>
+          <CardContent style={{ padding: '0 1rem 1rem' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{draftEvents.length}</div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Attendees</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+        <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
+          <CardHeader style={{ 
+            display: 'flex', 
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            padding: '1rem 1rem 0.5rem'
+          }}>
+            <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Total Attendees</CardTitle>
+            <Users style={{ height: '1rem', width: '1rem', color: 'var(--muted-foreground)' }} />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+          <CardContent style={{ padding: '0 1rem 1rem' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>
               {processedEvents.reduce((total, event) => total + event.attendeeCount, 0)}
             </div>
           </CardContent>
@@ -237,44 +248,86 @@ export default async function ManageEventsPage() {
       </div>
       
       {/* Events list */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Events</CardTitle>
-          <CardDescription>
+      <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
+        <CardHeader style={{ padding: '1.25rem' }}>
+          <CardTitle style={{ fontSize: '1.25rem', fontWeight: '600' }}>Your Events</CardTitle>
+          <CardDescription style={{ fontSize: '0.9rem', color: 'var(--muted-foreground)' }}>
             View and manage all your photography events
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent style={{ padding: '0 1.25rem 1.25rem' }}>
           {processedEvents && processedEvents.length > 0 ? (
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {processedEvents.map((event) => (
-                <div 
+                <Link 
                   key={event.id}
-                  className="border rounded-lg p-4"
+                  href={`/protected/events/${event.id}`}
+                  style={{
+                    display: 'block',
+                    border: '1px solid var(--border)',
+                    borderRadius: '0.5rem',
+                    padding: '1rem',
+                    transition: 'background-color 150ms ease-in-out, border-color 150ms ease-in-out',
+                    touchAction: 'manipulation',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    color: 'inherit'
+                  }}
                 >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-semibold">{event.name}</h3>
-                      <div className="text-sm text-muted-foreground mt-1">
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          {formatDate(event.date || '')}
+                  <div style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    gap: '0.5rem'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      flexWrap: 'wrap',
+                      gap: '0.5rem'
+                    }}>
+                      <h3 style={{ 
+                        fontSize: '1.1rem', 
+                        fontWeight: '600',
+                        margin: 0
+                      }}>
+                        {event.name}
+                      </h3>
+                      <div>{event.status && getStatusBadge(event.status)}</div>
+                    </div>
+                    <div style={{ 
+                      fontSize: '0.875rem', 
+                      color: 'var(--muted-foreground)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.5rem'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Calendar style={{ height: '0.875rem', width: '0.875rem', marginRight: '0.5rem' }} />
+                        {formatDate(event.date || '')}
+                      </div>
+                      {event.location && (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <MapPin style={{ height: '0.875rem', width: '0.875rem', marginRight: '0.5rem' }} />
+                          {event.location}
                         </div>
-                        {event.location && (
-                          <div className="flex items-center mt-1">
-                            <MapPin className="h-4 w-4 mr-2" />
-                            {event.location}
-                          </div>
-                        )}
+                      )}
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Users style={{ height: '0.875rem', width: '0.875rem', marginRight: '0.5rem' }} />
+                        {event.attendeeCount} attendees
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
-            <div className="text-center py-6">
-              <p className="text-muted-foreground">No events found</p>
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '2rem 0',
+              color: 'var(--muted-foreground)'
+            }}>
+              <p>No events found</p>
             </div>
           )}
         </CardContent>
@@ -282,12 +335,22 @@ export default async function ManageEventsPage() {
       
       {/* Error display in development */}
       {process.env.NODE_ENV === 'development' && error && (
-        <Card className="mt-6 border-destructive">
+        <Card style={{ 
+          marginTop: '1.5rem', 
+          border: '1px solid var(--destructive)',
+          background: 'var(--card)'
+        }}>
           <CardHeader>
-            <CardTitle className="text-destructive">Error Loading Events</CardTitle>
+            <CardTitle style={{ color: 'var(--destructive)' }}>Error Loading Events</CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="text-sm overflow-auto">
+            <pre style={{ 
+              fontSize: '0.875rem', 
+              overflow: 'auto',
+              padding: '0.5rem',
+              background: 'var(--muted)',
+              borderRadius: '0.25rem'
+            }}>
               {JSON.stringify(error, null, 2)}
             </pre>
           </CardContent>

@@ -34,6 +34,16 @@ interface AnalyticsData {
   }>
 }
 
+interface EventsByMonth {
+  month: string
+  count: number
+}
+
+interface UsersByRole {
+  role: string
+  count: number
+}
+
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']
 
 export function AnalyticsOverview() {
@@ -81,7 +91,7 @@ export function AnalyticsOverview() {
           .rpc('get_events_by_month')
         
         // If the RPC function doesn't exist yet, we'll mock the data
-        const eventsByMonth = eventsByMonthError ? 
+        const eventsByMonth: EventsByMonth[] = eventsByMonthError ? 
           [
             { month: 'Jan', count: 5 },
             { month: 'Feb', count: 8 },
@@ -90,14 +100,14 @@ export function AnalyticsOverview() {
             { month: 'May', count: 15 },
             { month: 'Jun', count: 20 }
           ] : 
-          eventsByMonthData
+          (eventsByMonthData as EventsByMonth[])
         
         // Fetch users by role
         const { data: usersByRoleData, error: usersByRoleError } = await supabase
           .rpc('get_users_by_role')
         
         // If the RPC function doesn't exist yet, we'll mock the data
-        const usersByRole = usersByRoleError ? 
+        const usersByRole: UsersByRole[] = usersByRoleError ? 
           [
             { role: 'super_admin', count: 1 },
             { role: 'admin', count: 3 },
@@ -105,7 +115,7 @@ export function AnalyticsOverview() {
             { role: 'user', count: 120 },
             { role: 'guest', count: 45 }
           ] : 
-          usersByRoleData
+          (usersByRoleData as UsersByRole[])
         
         setData({
           totalEvents: totalEvents || 0,
@@ -150,68 +160,68 @@ export function AnalyticsOverview() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="min-w-[240px] md:min-w-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
             <CardTitle className="text-sm font-medium">Total Events</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{data.totalEvents}</div>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <div className="text-2xl font-bold tracking-tight">{data.totalEvents.toLocaleString()}</div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="min-w-[240px] md:min-w-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{data.totalUsers}</div>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <div className="text-2xl font-bold tracking-tight">{data.totalUsers.toLocaleString()}</div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="min-w-[240px] md:min-w-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
             <CardTitle className="text-sm font-medium">Total Photos</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{data.totalPhotos}</div>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <div className="text-2xl font-bold tracking-tight">{data.totalPhotos.toLocaleString()}</div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="min-w-[240px] md:min-w-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
             <CardTitle className="text-sm font-medium">Active Events</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{data.activeEvents}</div>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <div className="text-2xl font-bold tracking-tight">{data.activeEvents.toLocaleString()}</div>
           </CardContent>
         </Card>
       </div>
       
-      <Tabs defaultValue="events">
-        <TabsList>
-          <TabsTrigger value="events">Events</TabsTrigger>
-          <TabsTrigger value="users">Users</TabsTrigger>
+      <Tabs defaultValue="events" className="space-y-4">
+        <TabsList className="w-full grid grid-cols-2 lg:w-auto">
+          <TabsTrigger value="events" className="text-sm sm:text-base">Events</TabsTrigger>
+          <TabsTrigger value="users" className="text-sm sm:text-base">Users</TabsTrigger>
         </TabsList>
         
         <TabsContent value="events" className="space-y-4">
           <Card>
-            <CardHeader>
+            <CardHeader className="p-4 sm:p-6">
               <CardTitle>Events by Month</CardTitle>
             </CardHeader>
-            <CardContent className="h-80">
+            <CardContent className="h-[300px] sm:h-[400px] p-4 sm:p-6">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={data.eventsByMonth}
                   margin={{
                     top: 20,
-                    right: 30,
-                    left: 20,
+                    right: 20,
+                    left: 0,
                     bottom: 5,
                   }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
+                  <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                  <YAxis tick={{ fontSize: 12 }} width={30} />
                   <Tooltip />
                   <Bar dataKey="count" fill="#3b82f6" />
                 </BarChart>
@@ -222,10 +232,10 @@ export function AnalyticsOverview() {
         
         <TabsContent value="users" className="space-y-4">
           <Card>
-            <CardHeader>
+            <CardHeader className="p-4 sm:p-6">
               <CardTitle>Users by Role</CardTitle>
             </CardHeader>
-            <CardContent className="h-80">
+            <CardContent className="h-[300px] sm:h-[400px] p-4 sm:p-6">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -233,18 +243,18 @@ export function AnalyticsOverview() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={80}
+                    outerRadius="80%"
                     fill="#8884d8"
                     dataKey="count"
                     nameKey="role"
-                    label={({ role, count }) => `${role}: ${count}`}
+                    label={({ role, count }) => `${role}: ${count.toLocaleString()}`}
                   >
                     {data.usersByRole.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip />
-                  <Legend />
+                  <Legend wrapperStyle={{ fontSize: '12px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>

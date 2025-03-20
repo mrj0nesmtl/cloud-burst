@@ -13,7 +13,6 @@ import { toast } from '@/components/ui/use-toast'
 import Link from 'next/link'
 import { Logo } from '@/components/nav/logo'
 import { ModeToggle } from '@/components/ui/mode-toggle'
-import { MobileNav } from '@/components/nav/mobile-nav'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -22,7 +21,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const { user, profile, isLoading, signOut } = useAuth()
+  const { user, profile, loading: isLoading, signOut } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
@@ -85,49 +84,53 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="flex min-h-screen">
-      {/* Add MobileNav here */}
-      <MobileNav />
-      
+      {/* Mobile sidebar backdrop */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Mobile sidebar */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden",
-          sidebarOpen ? "block" : "hidden"
+          "fixed inset-y-0 left-0 z-50 w-64 border-r bg-background transition-transform duration-200 ease-in-out lg:hidden",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
-        onClick={() => setSidebarOpen(false)}
       >
-        <div 
-          className="fixed inset-y-0 left-0 z-50 h-full w-3/4 max-w-xs border-r bg-background shadow-lg sm:max-w-sm"
-          onClick={e => e.stopPropagation()}
-        >
-          <div className="flex h-16 items-center justify-between px-6">
-            <Logo />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSidebarOpen(false)}
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close sidebar</span>
-            </Button>
-          </div>
-          <div className="h-[calc(100vh-4rem)]">
-            <SideNav collapsed={false} />
-          </div>
+        <div className="flex h-16 items-center justify-between px-4">
+          <Logo />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close sidebar</span>
+          </Button>
+        </div>
+        <div className="h-[calc(100vh-4rem)] overflow-y-auto">
+          <SideNav collapsed={false} />
         </div>
       </div>
 
       {/* Desktop sidebar */}
-      <div className={cn(
-        "hidden border-r bg-background transition-all duration-300 ease-in-out lg:block",
-        sidebarCollapsed ? "w-[4.5rem]" : "w-64"
-      )}>
+      <div
+        className={cn(
+          "hidden border-r bg-background transition-all duration-300 ease-in-out lg:block",
+          sidebarCollapsed ? "w-[4.5rem]" : "w-64"
+        )}
+      >
         <div className="sticky top-0 h-screen">
-          <div className="relative h-full py-6">
+          <div className="flex h-16 items-center px-4">
+            {!sidebarCollapsed && <Logo />}
+          </div>
+          <div className="relative h-[calc(100vh-4rem)]">
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-[-12px] top-6 z-20 h-6 w-6 rounded-full border bg-background shadow-md"
+              className="absolute right-[-12px] top-2 z-20 h-6 w-6 rounded-full border bg-background shadow-md"
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             >
               {sidebarCollapsed ? (
@@ -142,9 +145,31 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto p-6">
-        {children}
-      </main>
+      <div className="flex-1">
+        {/* Top header */}
+        <header className="sticky top-0 z-40 border-b bg-background">
+          <div className="flex h-16 items-center gap-4 px-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="h-6 w-6" />
+              <span className="sr-only">Open sidebar</span>
+            </Button>
+            <div className="flex flex-1 items-center justify-end space-x-4">
+              <ModeToggle />
+              <UserNav user={user} profile={profile} onSignOut={handleSignOut} />
+            </div>
+          </div>
+        </header>
+
+        {/* Page content */}
+        <div style={{ width: '100%' }}>
+          {children}
+        </div>
+      </div>
     </div>
   )
 } 

@@ -31,8 +31,8 @@ export default async function GalleryLayout({ children }: GalleryLayoutProps) {
     if (!session) redirect('/auth/signin?returnTo=/protected/gallery/all')
 
     return (
-      <div className="container px-0 pt-8 pb-0 max-w-full">
-        <div className="flex flex-col space-y-6 mb-8">
+      <div style={{ width: '100%', padding: '24px' }}>
+        <div style={{ marginBottom: '24px' }}>
           <div className="flex flex-col space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">Gallery</h1>
             <p className="text-muted-foreground">
@@ -40,7 +40,7 @@ export default async function GalleryLayout({ children }: GalleryLayoutProps) {
             </p>
           </div>
           
-          <div className="flex flex-wrap items-center gap-2">
+          <div style={{ marginTop: '24px' }} className="flex flex-wrap items-center gap-2">
             <GalleryTabs />
           </div>
         </div>

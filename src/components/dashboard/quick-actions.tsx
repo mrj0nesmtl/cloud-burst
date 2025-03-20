@@ -15,54 +15,54 @@ export function QuickActions() {
     {
       title: "Generate QR Codes",
       description: "Create check-in codes for events",
-      icon: <QrCode className="h-5 w-5" />,
+      icon: <QrCode className="h-4 w-4" />,
       href: "/protected/attendees/qr-codes",
     },
     {
       title: "Invite Attendees",
       description: "Send invitations to guests",
-      icon: <UserPlus className="h-5 w-5" />,
+      icon: <UserPlus className="h-4 w-4" />,
       href: "/protected/attendees/manage",
     },
     {
       title: "Moderate Photos",
       description: "Review and approve photos",
-      icon: <Camera className="h-5 w-5" />,
+      icon: <Camera className="h-4 w-4" />,
       href: "/protected/gallery/moderate",
     },
     {
       title: "View Analytics",
       description: "Check event performance",
-      icon: <BarChart className="h-5 w-5" />,
+      icon: <BarChart className="h-4 w-4" />,
       href: "/protected/analytics/events",
     },
   ]
 
   return (
-    <Card className="overflow-hidden">
+    <Card>
       <CardHeader>
         <CardTitle>Quick Actions</CardTitle>
       </CardHeader>
-      <CardContent className="px-4">
-        <div className="grid gap-4 max-w-full">
+      <CardContent>
+        <div className="grid gap-2">
           {actions.map((action) => (
             <Button
               key={action.title}
               variant="outline"
-              className="justify-start h-auto p-4 overflow-hidden"
+              className="h-auto w-full justify-start space-x-4 px-4 py-3"
               asChild
             >
               <Link href={action.href}>
-                <div className="flex items-center gap-4 min-w-0">
-                  <div className="rounded-full p-2 bg-muted shrink-0">
-                    {action.icon}
-                  </div>
-                  <div className="text-left min-w-0">
-                    <div className="font-medium truncate">{action.title}</div>
-                    <div className="text-xs text-muted-foreground truncate">
-                      {action.description}
-                    </div>
-                  </div>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted">
+                  {action.icon}
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <span className="text-sm font-medium">
+                    {action.title}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {action.description}
+                  </span>
                 </div>
               </Link>
             </Button>

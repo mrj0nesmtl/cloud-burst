@@ -1,12 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { formatDate } from "@/lib/utils"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { formatDistance } from "date-fns"
 import Link from "next/link"
-import { EyeIcon, Edit, Users } from "lucide-react"
+import { Card } from "@/components/ui/card"
 
 interface Event {
   id: string
-  title: string
+  name: string
   date: string
   attendeeCount: number
   photoCount: number
@@ -17,73 +16,101 @@ interface RecentEventsProps {
 }
 
 export function RecentEvents({ events }: RecentEventsProps) {
-  if (!events || events.length === 0) {
+  if (events.length === 0) {
     return (
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Recent Events</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center justify-center p-8 text-center">
-            <p className="mb-4 text-muted-foreground">
-              You haven't created any events yet.
-            </p>
-            <Button asChild>
-              <Link href="/protected/events/create">Create Your First Event</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    )
+      <div style={{
+        display: 'flex',
+        height: '180px',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '1px dashed var(--border)',
+        borderRadius: '6px'
+      }}>
+        <p style={{ fontSize: '12px', color: 'var(--muted-foreground)' }}>No recent events</p>
+      </div>
+    );
   }
 
   return (
-    <Card className="mt-6">
-      <CardHeader>
-        <CardTitle>Recent Events</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {events.map((event) => (
-            <div 
-              key={event.id} 
-              className="flex items-center justify-between rounded-lg border p-4"
-            >
-              <div className="space-y-1">
-                <h4 className="font-semibold">{event.name}</h4>
-                <div className="flex gap-4 text-sm text-muted-foreground">
-                  <p>{formatDate(event.date)}</p>
-                  <p className="flex items-center gap-1">
-                    <Users className="h-3.5 w-3.5" />
-                    {event.attendeeCount} Attendees
-                  </p>
-                  <p>{event.photoCount} Photos</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+      {events.map((event) => {
+        const eventDate = new Date(event.date)
+        const initials = event.name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase()
+          .substring(0, 2)
+
+        return (
+          <Link 
+            href={`/protected/events/${event.id}`} 
+            key={event.id}
+            style={{ display: 'block', touchAction: 'manipulation', width: '100%' }}
+          >
+            <Card style={{ 
+              padding: '8px', 
+              transition: 'background 0.2s',
+              cursor: 'pointer',
+              width: '100%'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', width: '100%' }}>
+                <Avatar style={{ width: '32px', height: '32px', flexShrink: 0 }}>
+                  <AvatarFallback style={{ fontSize: '10px' }}>{initials}</AvatarFallback>
+                </Avatar>
+                <div style={{ flex: '1 1 auto', minWidth: 0, width: '100%' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    width: '100%',
+                    gap: '4px'
+                  }}>
+                    <p style={{ 
+                      fontSize: '12px', 
+                      fontWeight: 500, 
+                      margin: 0,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      width: '100%'
+                    }}>{event.name}</p>
+                    <p style={{ 
+                      fontSize: '10px', 
+                      color: 'var(--muted-foreground)',
+                      margin: 0
+                    }}>
+                      {formatDistance(eventDate, new Date(), { addSuffix: true })}
+                    </p>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    flexWrap: 'wrap', 
+                    gap: '4px', 
+                    marginTop: '4px' 
+                  }}>
+                    <span style={{ 
+                      backgroundColor: 'var(--muted)', 
+                      padding: '2px 6px', 
+                      borderRadius: '4px', 
+                      fontSize: '10px' 
+                    }}>
+                      {event.attendeeCount} attendees
+                    </span>
+                    <span style={{ 
+                      backgroundColor: 'var(--muted)', 
+                      padding: '2px 6px', 
+                      borderRadius: '4px', 
+                      fontSize: '10px' 
+                    }}>
+                      {event.photoCount} photos
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Button asChild variant="outline" size="sm">
-                  <Link href={`/protected/events/${event.id}`}>
-                    <EyeIcon className="mr-1 h-4 w-4" />
-                    View
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="sm">
-                  <Link href={`/protected/events/${event.id}/edit`}>
-                    <Edit className="mr-1 h-4 w-4" />
-                    Edit
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="sm">
-                  <Link href={`/protected/events/${event.id}/attendees`}>
-                    <Users className="mr-1 h-4 w-4" />
-                    Manage
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+            </Card>
+          </Link>
+        )
+      })}
+    </div>
   )
 } 
