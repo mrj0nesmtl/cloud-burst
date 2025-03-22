@@ -51,6 +51,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: hsl(var(--primary));
   max-width: 90%;
   margin-left: auto;
   margin-right: auto;
@@ -122,9 +123,7 @@
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 1.5rem;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  margin-bottom: 2.5rem;
 }
 
 .card-grid-compact {
@@ -276,53 +275,39 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 2rem;
-  border-radius: 1rem;
-  background-color: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  padding: 2rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
   transition: all 0.3s ease;
-  height: 100%;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
 }
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.4);
-  background-color: rgba(30, 41, 59, 0.6);
+  box-shadow: 0 4px 16px rgba(17, 17, 26, 0.1);
+  border-color: hsl(var(--primary) / 0.3);
 }
 
-.feature-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 4.5rem;
-  height: 4.5rem;
-  margin-bottom: 1.5rem;
-  color: #3b82f6;
-  background-color: rgba(59, 130, 246, 0.1);
-  border-radius: 50%;
-  padding: 1rem;
-  transition: all 0.3s ease;
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: hsl(var(--foreground));
+}
+
+.feature-description {
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
 }
 
 .feature-card:hover .feature-icon {
   transform: scale(1.1);
-  background-color: rgba(59, 130, 246, 0.15);
 }
 
-.feature-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #f8fafc;
-}
-
-.feature-description {
-  font-size: 1rem;
-  color: rgba(248, 250, 252, 0.7);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
+.feature-icon {
+  transition: transform 0.3s ease;
 }
 
 /* Card hover effects for all cards */
@@ -406,4 +391,13 @@
   .footer-layout {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+/* CTA Section Spacing */
+.cta-section {
+  margin-top: 1rem;
+  margin-bottom: 4rem;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  background-color: hsl(var(--secondary) / 0.3);
 } 

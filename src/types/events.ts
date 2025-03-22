@@ -19,10 +19,10 @@ export interface Event {
   created_at: string
   updated_at: string
   custom_url?: string | null
-  start_date: string
+  start_date?: string
   end_date?: string
   cover_image?: string
-  user_id: string
+  user_id?: string
 }
 
 export interface EventWithOrganizer extends Event {
@@ -164,7 +164,7 @@ export interface BulkImportAttendeesParams {
 
 export interface QRCodeParams {
   event_id: string
-  type: 'event' | 'attendee'
+  type: 'event' | 'gallery' | 'check-in' | 'attendee'
   attendee_id?: string
   size?: number
 }

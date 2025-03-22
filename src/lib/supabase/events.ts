@@ -1,4 +1,9 @@
-import { createClient } from './client'
+import { createClient } from '@/lib/supabase/server'
+import { v4 as uuidv4 } from 'uuid'
+import { createGalleryForEvent } from './galleries'
+import { Database } from '@/types/supabase'
+import { generateEventAccessCode } from '../utils/codeGenerator'
+import { generateQRCodeUrl } from '@/lib/qr-code'
 import { 
   CreateEventParams, 
   UpdateEventParams, 
@@ -14,252 +19,341 @@ import { generateRandomCode } from '@/lib/utils'
 /**
  * Create a new event
  */
-export async function createEvent(params: CreateEventParams): Promise<Event> {
+export async function createEvent(eventData: CreateEventParams) {
   const supabase = createClient()
-  const { data: userData } = await supabase.auth.getUser()
   
-  if (!userData?.user) {
-    throw new Error('User not authenticated')
-  }
-  
-  // Import the QR code generation function
-  const { generateQRCodeUrl } = await import('@/lib/qr-code')
-  
-  const { data, error } = await supabase
-    .from('events')
-    .insert({
-      ...params,
-      organizer_id: userData.user.id
-    })
-    .select('*')
-    .single()
-    
-  if (error) {
-    console.error('Error creating event:', error)
-    throw new Error(`Failed to create event: ${error.message}`)
-  }
-  
-  // Generate QR code URL with the event ID
-  const qrCodeUrl = generateQRCodeUrl({
-    event_id: data.id,
-    type: 'event'
-  })
-  
-  // Update the event with the QR code URL
-  const { error: updateError } = await supabase
-    .from('events')
-    .update({ qr_code_url: qrCodeUrl })
-    .eq('id', data.id)
-  
-  if (updateError) {
-    console.error('Error updating QR code URL:', updateError)
-  }
-  
-  // Create a gallery for the event
   try {
-    const { createGalleryForEvent } = await import('./galleries')
-    await createGalleryForEvent(data.id)
-  } catch (galleryError) {
-    console.error('Error creating gallery for event:', galleryError)
-    // Don't throw here, as the event was created successfully
+    // Generate a unique ID for the event
+    const eventId = uuidv4()
+    
+    // Generate a QR code URL for the event
+    const qrCodeURL = generateQRCodeUrl({
+      event_id: eventId,
+      type: 'event'
+    })
+    
+    // Get the current user
+    const { data: { user } } = await supabase.auth.getUser()
+    
+    if (!user) {
+      return { error: { message: 'User not authenticated' } }
+    }
+    
+    // Add the generated QR code URL and organizer ID to the event data
+    const completeEventData = {
+      ...eventData,
+      id: eventId,
+      organizer_id: user.id,
+      status: eventData.status || 'draft', // Default to draft if not specified
+      qr_code_url: qrCodeURL
+    }
+    
+    // Insert the event into the database
+    const { data: event, error: createError } = await supabase
+      .from('events')
+      .insert(completeEventData)
+      .select()
+      .single()
+    
+    if (createError) {
+      console.error('Error creating event:', createError)
+      return { error: createError }
+    }
+    
+    // Create a gallery for the event
+    const galleryResult = await createGalleryForEvent(eventId)
+    
+    if (galleryResult.error) {
+      console.error('Error creating gallery for event:', galleryResult.error)
+      // We'll continue anyway since the event was created successfully
+      // The gallery can be created later
+    } else {
+      console.log('Gallery created successfully for event', eventId)
+    }
+    
+    return { data: event }
+  } catch (error) {
+    console.error('Error in createEvent:', error)
+    return { error }
   }
-  
-  return {
-    ...data,
-    qr_code_url: qrCodeUrl
-  } as Event
 }
 
 /**
  * Update an existing event
  */
-export async function updateEvent(id: string, params: UpdateEventParams): Promise<Event> {
+export async function updateEvent(eventId: string, updates: UpdateEventParams) {
   const supabase = createClient()
   
   const { data, error } = await supabase
     .from('events')
-    .update(params)
-    .eq('id', id)
-    .select('*')
+    .update(updates)
+    .eq('id', eventId)
+    .select()
     .single()
-    
+  
   if (error) {
     console.error('Error updating event:', error)
-    throw new Error(`Failed to update event: ${error.message}`)
+    return { error }
   }
   
-  return data as Event
+  // If we're updating to published status and the event was a draft,
+  // make sure the gallery is properly set up
+  if (updates.status === 'published') {
+    // Check if gallery exists
+    const { data: existingGallery } = await supabase
+      .from('galleries')
+      .select('id')
+      .eq('event_id', eventId)
+      .maybeSingle()
+    
+    // If gallery doesn't exist, create it
+    if (!existingGallery) {
+      const galleryResult = await createGalleryForEvent(eventId)
+      if (galleryResult.error) {
+        console.error('Error creating gallery during event publication:', galleryResult.error)
+        // Continue anyway as the event is updated
+      }
+    }
+  }
+  
+  return { data }
 }
 
 /**
  * Delete an event
  */
-export async function deleteEvent(id: string): Promise<void> {
+export async function deleteEvent(eventId: string) {
   const supabase = createClient()
   
   const { error } = await supabase
     .from('events')
     .delete()
-    .eq('id', id)
-    
+    .eq('id', eventId)
+  
   if (error) {
     console.error('Error deleting event:', error)
-    throw new Error(`Failed to delete event: ${error.message}`)
+    return { error }
   }
+  
+  return { success: true }
 }
 
 /**
  * Get an event by ID
  */
-export async function getEvent(id: string): Promise<Event> {
+export async function getEvent(eventId: string) {
   const supabase = createClient()
   
   const { data, error } = await supabase
     .from('events')
     .select('*')
-    .eq('id', id)
+    .eq('id', eventId)
     .single()
-    
+  
   if (error) {
     console.error('Error fetching event:', error)
-    throw new Error(`Failed to fetch event: ${error.message}`)
+    return { error }
   }
   
-  return data as Event
+  return { data }
 }
 
 /**
  * Get an event with attendee and photo counts
  */
-export async function getEventWithCounts(id: string): Promise<EventWithCounts> {
+export async function getEventWithCounts(eventId: string) {
   const supabase = createClient()
   
-  const { data, error } = await supabase
+  // Get the event
+  const { data: event, error: eventError } = await supabase
     .from('events')
-    .select(`
-      *,
-      attendees_count: event_attendees(count),
-      photos_count: photos(count)
-    `)
-    .eq('id', id)
+    .select('*')
+    .eq('id', eventId)
     .single()
-    
-  if (error) {
-    console.error('Error fetching event with counts:', error)
-    throw new Error(`Failed to fetch event with counts: ${error.message}`)
+  
+  if (eventError) {
+    console.error('Error fetching event:', eventError)
+    return { error: eventError }
   }
   
-  return {
-    ...data,
-    attendees_count: data.attendees_count[0]?.count || 0,
-    photos_count: data.photos_count[0]?.count || 0
-  } as EventWithCounts
+  // Get attendee count
+  const { count: attendeeCount, error: attendeeError } = await supabase
+    .from('event_attendees')
+    .select('id', { count: 'exact', head: true })
+    .eq('event_id', eventId)
+  
+  if (attendeeError) {
+    console.error('Error fetching attendee count:', attendeeError)
+    // Continue anyway
+  }
+  
+  // Get photo count (via gallery)
+  let photoCount = 0
+  
+  // First get the gallery for this event
+  const { data: gallery, error: galleryError } = await supabase
+    .from('galleries')
+    .select('id')
+    .eq('event_id', eventId)
+    .maybeSingle()
+  
+  if (!galleryError && gallery) {
+    // Then get the photo count
+    const { count, error: photoError } = await supabase
+      .from('photos')
+      .select('id', { count: 'exact', head: true })
+      .eq('gallery_id', gallery.id)
+    
+    if (!photoError) {
+      photoCount = count || 0
+    }
+  }
+  
+  return { 
+    data: {
+      ...event,
+      attendeeCount: attendeeCount || 0,
+      photoCount
+    } 
+  }
 }
 
 /**
  * Get all events for the current user
  */
-export async function getUserEvents(): Promise<Event[]> {
+export async function getUserEvents() {
   const supabase = createClient()
-  const { data: userData } = await supabase.auth.getUser()
   
-  if (!userData?.user) {
-    throw new Error('User not authenticated')
+  // Get the current user
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    return { error: { message: 'User not authenticated' } }
   }
   
+  // Get all events where the user is the organizer
   const { data, error } = await supabase
     .from('events')
     .select('*')
-    .eq('organizer_id', userData.user.id)
-    .order('date', { ascending: false })
-    
+    .eq('organizer_id', user.id)
+    .order('created_at', { ascending: false })
+  
   if (error) {
     console.error('Error fetching user events:', error)
-    throw new Error(`Failed to fetch user events: ${error.message}`)
+    return { error }
   }
   
-  return data as Event[]
+  return { data }
 }
 
 /**
- * Get all events for the current user with counts
+ * Get all events for the current user with attendee counts
  */
-export async function getUserEventsWithCounts(): Promise<EventWithCounts[]> {
+export async function getUserEventsWithCounts() {
   const supabase = createClient()
-  const { data: userData } = await supabase.auth.getUser()
   
-  if (!userData?.user) {
-    throw new Error('User not authenticated')
+  // Get the current user
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    return { error: { message: 'User not authenticated' } }
   }
   
-  const { data, error } = await supabase
+  // Get all events where the user is the organizer
+  const { data: events, error: eventsError } = await supabase
     .from('events')
-    .select(`
-      *,
-      attendees_count: event_attendees(count),
-      photos_count: photos(count)
-    `)
-    .eq('organizer_id', userData.user.id)
-    .order('date', { ascending: false })
-    
-  if (error) {
-    console.error('Error fetching user events with counts:', error)
-    throw new Error(`Failed to fetch user events with counts: ${error.message}`)
+    .select('*')
+    .eq('organizer_id', user.id)
+    .order('created_at', { ascending: false })
+  
+  if (eventsError) {
+    console.error('Error fetching user events:', eventsError)
+    return { error: eventsError }
   }
   
-  return data.map(event => ({
+  // Get all attendees for these events
+  const eventIds = events.map(event => event.id)
+  const { data: attendees, error: attendeesError } = await supabase
+    .from('event_attendees')
+    .select('event_id')
+    .in('event_id', eventIds)
+  
+  if (attendeesError) {
+    console.error('Error fetching event attendees:', attendeesError)
+    // Continue anyway
+  }
+  
+  // Count attendees per event
+  const attendeeCountMap: Record<string, number> = {}
+  if (attendees) {
+    attendees.forEach(attendee => {
+      if (attendee.event_id) {
+        attendeeCountMap[attendee.event_id] = (attendeeCountMap[attendee.event_id] || 0) + 1
+      }
+    })
+  }
+  
+  // Add attendee counts to events
+  const eventsWithCounts = events.map(event => ({
     ...event,
-    attendees_count: event.attendees_count[0]?.count || 0,
-    photos_count: event.photos_count[0]?.count || 0
-  })) as EventWithCounts[]
+    attendeeCount: attendeeCountMap[event.id] || 0
+  }))
+  
+  return { data: eventsWithCounts }
 }
 
 /**
- * Get public events
+ * Get public events (published and upcoming)
  */
-export async function getPublicEvents(): Promise<Event[]> {
+export async function getPublicEvents() {
   const supabase = createClient()
+  
+  const now = new Date().toISOString()
   
   const { data, error } = await supabase
     .from('events')
     .select('*')
     .eq('is_public', true)
     .eq('status', 'published')
+    .gte('date', now)
     .order('date', { ascending: true })
-    .gte('date', new Date().toISOString())
-    
+  
   if (error) {
     console.error('Error fetching public events:', error)
-    throw new Error(`Failed to fetch public events: ${error.message}`)
+    return { error }
   }
   
-  return data as Event[]
+  return { data }
 }
 
 /**
  * Add an attendee to an event
  */
-export async function addEventAttendee(params: CreateAttendeeParams): Promise<EventAttendee> {
+export async function addEventAttendee(eventId: string, attendeeData: any, code?: string) {
   const supabase = createClient()
   
-  // Generate a random access code if not provided
-  const accessCode = params.access_code || generateRandomCode(8)
+  // Generate a unique code for this attendee if not provided
+  const accessCode = code || generateEventAccessCode()
+  
+  const completeAttendeeData = {
+    ...attendeeData,
+    event_id: eventId,
+    access_code: accessCode,
+    created_at: new Date().toISOString()
+  }
   
   const { data, error } = await supabase
     .from('event_attendees')
-    .insert({
-      ...params,
-      access_code: accessCode
-    })
-    .select('*')
+    .insert(completeAttendeeData)
+    .select()
     .single()
-    
+  
   if (error) {
     console.error('Error adding event attendee:', error)
-    throw new Error(`Failed to add event attendee: ${error.message}`)
+    return { error }
   }
   
-  return data as EventAttendee
+  return { data }
 }
 
 /**
@@ -446,7 +540,7 @@ export async function getAttendingEvents(): Promise<Event[]> {
 /**
  * Duplicate an event
  */
-export async function duplicateEvent(id: string): Promise<Event> {
+export async function duplicateEvent(id: string): Promise<{ data: Event }> {
   const supabase = createClient()
   
   // Get the original event
@@ -518,13 +612,13 @@ export async function duplicateEvent(id: string): Promise<Event> {
     console.error('Error creating gallery for duplicated event:', galleryError)
   }
   
-  return createdEvent as Event
+  return { data: createdEvent as unknown as Event }
 }
 
 /**
  * Update event status
  */
-export async function updateEventStatus(id: string, status: 'draft' | 'published' | 'completed' | 'cancelled'): Promise<Event> {
+export async function updateEventStatus(id: string, status: 'draft' | 'published' | 'completed' | 'cancelled'): Promise<{ data: Event }> {
   const supabase = createClient()
   
   const { data, error } = await supabase
@@ -539,12 +633,18 @@ export async function updateEventStatus(id: string, status: 'draft' | 'published
     throw new Error(`Failed to update event status: ${error.message}`)
   }
   
-  return data as Event
+  return { data: data as unknown as Event }
 }
 
 /**
  * Get an event by its ID
  */
-export async function getEventById(id: string): Promise<Event> {
-  return getEvent(id)
+export async function getEventById(id: string): Promise<{ data: Event }> {
+  const result = await getEvent(id)
+  
+  if (result.error) {
+    throw new Error(`Failed to get event: ${result.error.message}`)
+  }
+  
+  return { data: result.data as unknown as Event }
 } 

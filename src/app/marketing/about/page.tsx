@@ -265,7 +265,7 @@ export default function AboutPage() {
             loop
             playsInline
             className="object-cover w-full h-full"
-            poster="/hero-poster.jpg"
+            poster="/images/pexels-themo1-bg.jpg"
           >
             <source src="/hero_bg.mp4" type="video/mp4" />
           </video>
@@ -278,11 +278,11 @@ export default function AboutPage() {
           <div className="hero-logo mb-6">
             <CloudLightning className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="hero-title text-white text-center mb-4">
-            What is Cloud Burst?
+          <h1 className="hero-title text-center mb-4">
+            About Cloud Burst
           </h1>
-          <p className="hero-subtitle text-gray-100 text-center max-w-2xl">
-            Blending nostalgia with modern technology.
+          <p className="hero-subtitle text-center max-w-2xl">
+            Cloud Burst is amping up events with crowd-powered tools to make capturing and sharing memories easier than ever before.
           </p>
         </div>
       </section>
@@ -291,12 +291,13 @@ export default function AboutPage() {
         {/* How It Works Section */}
         <section className="section py-16">
           <h2 className="section-title text-center mb-6">How It Works</h2>
-          <p className="section-subtitle text-center max-w-3xl mx-auto mb-12">
-            No apps to download, no accounts to create. Just scan a QR code and start capturing memories. It's that simple.
-            Cloud Burst revolutionizes event media capture by bringing the charm of disposable cameras into the modern age. Our 
-            platform transforms every event into a collaborative media story, powered by AI and created by all attendees. With 
-            no apps to download and no accounts to create, guests simply scan a QR code to instantly start capturing and sharing 
-            photos and videos.
+          <p className="text-center max-w-3xl mx-auto mb-12 text-muted-foreground">
+            No apps to download, just scan a QR code and start capturing
+            memories. It's that simple. Cloud Burst revolutionizes event media capture by bringing
+            the charm of disposable cameras into the modern age. Our platform transforms every
+            event into a collaborative media story, powered by AI and created by all attendees. With
+            no apps to download and no accounts to create, guests simply scan a QR code to
+            instantly start capturing and sharing photos and videos.
           </p>
           
           <div className="card-grid md-grid-cols-2 lg-grid-cols-2">
@@ -385,18 +386,24 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* Join Us Section */}
-        <section className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 space-y-6 border border-primary/20 shadow-lg mb-24">
-          <h2 className="text-3xl font-bold text-primary text-center">Join Us Today</h2>
-          <p className="text-lg text-center">
-            Ready to transform your event photography experience?
+        {/* CTA Section */}
+        <section className="cta-section bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 space-y-6 border border-primary/20 shadow-lg mb-24">
+          <h2 className="text-3xl font-bold text-primary text-center">Sign up Today</h2>
+          <p className="text-lg text-center text-foreground">
+            Cloud Burst is by Invitation Only.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Button size="lg" className="btn-primary" asChild>
-              <Link href="/auth/register">Get Started</Link>
+              <Link href="/auth/register">
+                Get Started
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
             <Button size="lg" variant="outline" className="bg-background hover:bg-muted" asChild>
-              <Link href="/pricing">View Pricing</Link>
+              <Link href="/api/invites/request">
+                Request Invite
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </section>
