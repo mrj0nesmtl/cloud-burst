@@ -1,33 +1,56 @@
 import { QRCodeParams } from '@/types/events'
 
 /**
- * Generate a QR code URL for an event or attendee
- * Uses the QR Code Generator API (https://goqr.me/api/)
+ * Client-safe QR code utilities
+ */
+
+export interface QRCodeParams {
+  event_id: string;
+  type: 'event' | 'gallery' | 'check-in';
+}
+
+/**
+ * Generate a QR code URL for an event using the external QR code service
  */
 export function generateQRCodeUrl(params: QRCodeParams): string {
-  const { event_id, type, attendee_id, size = 300 } = params
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://app.cloudburst.io';
+  let targetUrl = '';
   
-  // Base URL for the application
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cb-beta.replit.app'
-  
-  // Create the target URL based on the type
-  let targetUrl: string
-  
-  if (type === 'event') {
-    // URL for accessing the event gallery
-    targetUrl = `${baseUrl}/events/${event_id}/gallery`
-  } else if (type === 'attendee' && attendee_id) {
-    // URL for an attendee-specific access
-    targetUrl = `${baseUrl}/events/${event_id}/access/${attendee_id}`
-  } else {
-    throw new Error('Invalid QR code parameters')
+  switch (params.type) {
+    case 'event':
+      targetUrl = `${baseUrl}/event/${params.event_id}`;
+      break;
+    case 'gallery':
+      targetUrl = `${baseUrl}/gallery/${params.event_id}`;
+      break;
+    case 'check-in':
+      targetUrl = `${baseUrl}/check-in/${params.event_id}`;
+      break;
+    default:
+      targetUrl = `${baseUrl}/event/${params.event_id}`;
   }
   
-  // Encode the URL for the QR code API
-  const encodedUrl = encodeURIComponent(targetUrl)
-  
-  // Generate the QR code URL using the goqr.me API
-  return `https://api.qrserver.com/v1/create-qr-code/?data=${encodedUrl}&size=${size}x${size}&margin=10`
+  return `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(targetUrl)}&size=300x300`;
+}
+
+/**
+ * Fetch a QR code URL from our API endpoint
+ */
+export async function fetchEventQRCode(eventId: string): Promise<string> {
+  try {
+    const response = await fetch(`/api/events/qr-code?eventId=${eventId}`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch QR code');
+    }
+    
+    const data = await response.json();
+    return data.qrCodeUrl;
+  } catch (error) {
+    console.error('Error fetching QR code:', error);
+    // Return a fallback URL
+    return '/placeholder-qr.png';
+  }
 }
 
 /**

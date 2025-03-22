@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card"
 import { Calendar, MapPin, Users, Plus, Clock, Badge as BadgeIcon, Edit, QrCode, Share, Trash2, Image } from 'lucide-react'
 import { EventActions } from '@/components/events/event-actions'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export const metadata = {
   title: 'Manage Events | Cloud Burst',
@@ -247,115 +248,317 @@ export default async function ManageEventsPage() {
         </Card>
       </div>
       
-      {/* Events list */}
-      <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
-        <CardHeader style={{ padding: '1.25rem' }}>
-          <CardTitle style={{ fontSize: '1.25rem', fontWeight: '600' }}>Your Events</CardTitle>
-          <CardDescription style={{ fontSize: '0.9rem', color: 'var(--muted-foreground)' }}>
-            View and manage all your photography events
-          </CardDescription>
-        </CardHeader>
-        <CardContent style={{ padding: '0 1.25rem 1.25rem' }}>
-          {processedEvents && processedEvents.length > 0 ? (
+      {/* Status filter tabs */}
+      <Tabs defaultValue="all" style={{ marginTop: '1rem' }}>
+        <TabsList style={{ 
+          justifyContent: 'flex-start', 
+          backgroundColor: 'var(--background)',
+          borderBottom: '1px solid var(--border)',
+          padding: '0',
+          marginBottom: '1rem'
+        }}>
+          <TabsTrigger value="all" style={{ position: 'relative' }}>
+            All Events ({processedEvents.length})
+          </TabsTrigger>
+          <TabsTrigger value="published" style={{ position: 'relative' }}>
+            Published ({publishedEvents.length})
+          </TabsTrigger>
+          <TabsTrigger value="draft" style={{ position: 'relative' }}>
+            Draft ({draftEvents.length})
+          </TabsTrigger>
+          <TabsTrigger value="completed" style={{ position: 'relative' }}>
+            Completed ({completedEvents.length})
+          </TabsTrigger>
+          <TabsTrigger value="cancelled" style={{ position: 'relative' }}>
+            Cancelled ({cancelledEvents.length})
+          </TabsTrigger>
+        </TabsList>
+        
+        {/* All Events Tab */}
+        <TabsContent value="all">
+          <div style={{ marginTop: '1rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
+              Your Events
+            </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {processedEvents.map((event) => (
-                <Link 
-                  key={event.id}
-                  href={`/protected/events/${event.id}`}
-                  style={{
-                    display: 'block',
-                    border: '1px solid var(--border)',
-                    borderRadius: '0.5rem',
-                    padding: '1rem',
-                    transition: 'background-color 150ms ease-in-out, border-color 150ms ease-in-out',
-                    touchAction: 'manipulation',
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                    color: 'inherit'
-                  }}
-                >
-                  <div style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column',
-                    gap: '0.5rem'
-                  }}>
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
-                      flexWrap: 'wrap',
-                      gap: '0.5rem'
-                    }}>
-                      <h3 style={{ 
-                        fontSize: '1.1rem', 
-                        fontWeight: '600',
-                        margin: 0
-                      }}>
-                        {event.name}
-                      </h3>
-                      <div>{event.status && getStatusBadge(event.status)}</div>
-                    </div>
-                    <div style={{ 
-                      fontSize: '0.875rem', 
-                      color: 'var(--muted-foreground)',
+              {processedEvents.length > 0 ? (
+                processedEvents.map((event) => (
+                  <div 
+                    key={event.id}
+                    style={{
+                      borderRadius: '0.5rem', 
+                      border: '1px solid var(--border)',
+                      backgroundColor: 'var(--card)',
+                      padding: '1.25rem',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '0.5rem'
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Calendar style={{ height: '0.875rem', width: '0.875rem', marginRight: '0.5rem' }} />
-                        {formatDate(event.date || '')}
-                      </div>
-                      {event.location && (
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <MapPin style={{ height: '0.875rem', width: '0.875rem', marginRight: '0.5rem' }} />
-                          {event.location}
+                      gap: '1rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
+                          </div>
+                          {event.location && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                            </div>
+                          )}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                          </div>
                         </div>
-                      )}
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Users style={{ height: '0.875rem', width: '0.875rem', marginRight: '0.5rem' }} />
-                        {event.attendeeCount} attendees
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                        {getStatusBadge(event.status || '')}
+                        <EventActions eventId={event.id} />
                       </div>
                     </div>
                   </div>
-                </Link>
-              ))}
+                ))
+              ) : (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
+                  No events found. Create your first event to get started.
+                </div>
+              )}
             </div>
-          ) : (
-            <div style={{ 
-              textAlign: 'center', 
-              padding: '2rem 0',
-              color: 'var(--muted-foreground)'
-            }}>
-              <p>No events found</p>
+          </div>
+        </TabsContent>
+        
+        {/* Published Events Tab */}
+        <TabsContent value="published">
+          <div style={{ marginTop: '1rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
+              Published Events
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {publishedEvents.length > 0 ? (
+                publishedEvents.map((event) => (
+                  <div 
+                    key={event.id}
+                    style={{
+                      borderRadius: '0.5rem', 
+                      border: '1px solid var(--border)',
+                      backgroundColor: 'var(--card)',
+                      padding: '1.25rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
+                          </div>
+                          {event.location && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                            </div>
+                          )}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                        {getStatusBadge(event.status || '')}
+                        <EventActions eventId={event.id} />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
+                  No published events found.
+                </div>
+              )}
             </div>
-          )}
-        </CardContent>
-      </Card>
-      
-      {/* Error display in development */}
-      {process.env.NODE_ENV === 'development' && error && (
-        <Card style={{ 
-          marginTop: '1.5rem', 
-          border: '1px solid var(--destructive)',
-          background: 'var(--card)'
-        }}>
-          <CardHeader>
-            <CardTitle style={{ color: 'var(--destructive)' }}>Error Loading Events</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre style={{ 
-              fontSize: '0.875rem', 
-              overflow: 'auto',
-              padding: '0.5rem',
-              background: 'var(--muted)',
-              borderRadius: '0.25rem'
-            }}>
-              {JSON.stringify(error, null, 2)}
-            </pre>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        </TabsContent>
+        
+        {/* Draft Events Tab */}
+        <TabsContent value="draft">
+          <div style={{ marginTop: '1rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
+              Draft Events
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {draftEvents.length > 0 ? (
+                draftEvents.map((event) => (
+                  <div 
+                    key={event.id}
+                    style={{
+                      borderRadius: '0.5rem', 
+                      border: '1px solid var(--border)',
+                      backgroundColor: 'var(--card)',
+                      padding: '1.25rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
+                          </div>
+                          {event.location && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                            </div>
+                          )}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                        {getStatusBadge(event.status || '')}
+                        <EventActions eventId={event.id} />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
+                  No draft events found.
+                </div>
+              )}
+            </div>
+          </div>
+        </TabsContent>
+        
+        {/* Completed Events Tab */}
+        <TabsContent value="completed">
+          <div style={{ marginTop: '1rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
+              Completed Events
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {completedEvents.length > 0 ? (
+                completedEvents.map((event) => (
+                  <div 
+                    key={event.id}
+                    style={{
+                      borderRadius: '0.5rem', 
+                      border: '1px solid var(--border)',
+                      backgroundColor: 'var(--card)',
+                      padding: '1.25rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
+                          </div>
+                          {event.location && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                            </div>
+                          )}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                        {getStatusBadge(event.status || '')}
+                        <EventActions eventId={event.id} />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
+                  No completed events found.
+                </div>
+              )}
+            </div>
+          </div>
+        </TabsContent>
+        
+        {/* Cancelled Events Tab */}
+        <TabsContent value="cancelled">
+          <div style={{ marginTop: '1rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
+              Cancelled Events
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {cancelledEvents.length > 0 ? (
+                cancelledEvents.map((event) => (
+                  <div 
+                    key={event.id}
+                    style={{
+                      borderRadius: '0.5rem', 
+                      border: '1px solid var(--border)',
+                      backgroundColor: 'var(--card)',
+                      padding: '1.25rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
+                          </div>
+                          {event.location && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                            </div>
+                          )}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                        {getStatusBadge(event.status || '')}
+                        <EventActions eventId={event.id} />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
+                  No cancelled events found.
+                </div>
+              )}
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

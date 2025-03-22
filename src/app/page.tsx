@@ -7,10 +7,10 @@ import "@/styles/layout.css"
 
 export const metadata: Metadata = {
   title: 'Cloud Burst - Capture Every Moment',
-  description: 'Capture, enhance, and share event photos with AI-powered technology. Perfect for weddings, corporate events, and celebrations.',
+  description: 'Capture, enhance, and share event memories with AI-powered technology. Perfect for weddings, corporate events, and celebrations.',
   openGraph: {
     title: 'Cloud Burst - Capture Every Moment',
-    description: 'AI-powered event photography platform for seamless photo sharing and management.'
+    description: 'Crowd-powered event media platform for seamless photo sharing and engagement.'
   }
 }
 
@@ -30,7 +30,7 @@ export default function Home() {
             loop
             playsInline
             className="object-cover w-full h-full"
-            poster="/hero-poster.jpg"
+            poster="/images/pexels-themo1-bg.jpg"
           >
             <source src="/hero_bg2.mp4" type="video/mp4" />
           </video>
@@ -43,7 +43,7 @@ export default function Home() {
           <div className="hero-logo mb-6">
             <CloudLightning className="h-16 w-16 text-primary" />
           </div>
-          <h1 className="hero-title text-white text-center mb-4">
+          <h1 className="hero-title text-center mb-4">
             Capture Every Moment
           </h1>
           <p className="hero-subtitle text-gray-100 text-center max-w-2xl mb-8">
@@ -70,8 +70,8 @@ export default function Home() {
       {/* Why Choose Cloud Burst Section */}
       <section className="section bg-background py-16">
         <div className="container mx-auto px-4">
-          <h2 className="section-title text-center mb-6">How memories should be captured.</h2>
-          <p className="section-subtitle text-center max-w-3xl mx-auto mb-12">
+          <h2 className="section-title text-center mb-6">How memories will be captured.</h2>
+          <p className="text-center max-w-3xl mx-auto mb-12 text-muted-foreground">
             Experience the future of event media capture.
           </p>
           
@@ -81,9 +81,9 @@ export default function Home() {
               <div className="feature-icon group flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6 mx-auto">
                 <CameraIcon className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <h3 className="feature-title text-center">Instant Capture</h3>
+              <h3 className="feature-title text-center">Crowd Capture</h3>
               <p className="feature-description text-center">
-                Seamlessly capture moments with our intuitive interface and AI-powered tools.
+                Seamlessly capture moments with our intuitive interface and crowd-powered tools.
               </p>
             </div>
             
@@ -92,9 +92,9 @@ export default function Home() {
               <div className="feature-icon group flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6 mx-auto">
                 <Sparkles className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <h3 className="feature-title text-center">AI Enhancement</h3>
+              <h3 className="feature-title text-center">Auto-Enhance</h3>
               <p className="feature-description text-center">
-                Automatically enhance photos with our advanced AI algorithms for perfect results.
+                Automatically enhance and stitch media with our advanced algorithms for perfect clips.
               </p>
             </div>
             
@@ -105,7 +105,7 @@ export default function Home() {
               </div>
               <h3 className="feature-title text-center">Easy Sharing</h3>
               <p className="feature-description text-center">
-                Share your event photos instantly with guests through our cloud platform.
+                Share your event memories instantly with guests and friends through our engagement platform.
               </p>
             </div>
             
@@ -116,7 +116,7 @@ export default function Home() {
               </div>
               <h3 className="feature-title text-center">Collaborative</h3>
               <p className="feature-description text-center">
-                Allow guests to contribute their photos to create a comprehensive event gallery.
+                Allow professional photographers to contribute their photos to capture the full essence of the event.
               </p>
             </div>
           </div>
@@ -125,10 +125,10 @@ export default function Home() {
 
       {/* Call to Action Section */}
       <section className="container mx-auto px-4 mb-24">
-        <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 space-y-6 border border-primary/20 shadow-lg">
-          <h2 className="text-3xl font-bold text-primary text-center">Join Us Today</h2>
-          <p className="text-lg text-center">
-            Cloud Burst is by Invitation Only.
+        <div className="cta-section bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 space-y-6 border border-primary/20 shadow-lg">
+          <h2 className="text-3xl font-bold text-primary text-center">Register for Cloud Burst Beta</h2>
+          <p className="text-lg text-center text-foreground">
+            April 2025
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Button size="lg" className="btn-primary" asChild>

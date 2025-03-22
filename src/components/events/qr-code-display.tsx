@@ -6,15 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Download, Share2, RefreshCw } from 'lucide-react'
-import { generateQRCodeUrl, generateQRCodeDataUrl } from '@/lib/qr-code'
-import { QRCodeParams } from '@/types/events'
+import { generateQRCodeUrl, fetchEventQRCode } from '@/lib/qr-code'
 
 interface QRCodeDisplayProps {
   eventId: string
-  eventCode?: string
+  url?: string // Allow direct URL passing to support both approaches
   eventName?: string
-  type?: 'event' | 'attendee'
-  attendeeId?: string
+  type?: 'event' | 'gallery' | 'check-in'
   title?: string
   description?: string
   size?: number
@@ -22,39 +20,48 @@ interface QRCodeDisplayProps {
 
 export function QRCodeDisplay({
   eventId,
-  eventCode,
+  url,
   eventName,
   type = 'event',
-  attendeeId,
   title = eventName ? `${eventName} QR Code` : 'Event QR Code',
   description = 'Scan this code to access the event gallery',
   size = 300
 }: QRCodeDisplayProps) {
-  const [qrCodeUrl, setQrCodeUrl] = useState<string>('')
-  const [isLoading, setIsLoading] = useState(true)
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>(url || '')
+  const [isLoading, setIsLoading] = useState(!url)
   const [isGenerating, setIsGenerating] = useState(false)
   
-  // Generate QR code on mount
+  // Generate QR code on mount if no URL is provided
   useEffect(() => {
-    generateQRCode()
-  }, [eventId, type, attendeeId, size])
+    if (!url) {
+      generateQRCode()
+    }
+  }, [eventId, type, url])
   
   // Generate QR code
   const generateQRCode = async () => {
     setIsLoading(true)
     
     try {
-      const params: QRCodeParams = {
-        event_id: eventId,
-        type,
-        attendee_id: attendeeId,
-        size
+      // If a URL was directly provided, use it
+      if (url) {
+        setQrCodeUrl(url)
+        return
       }
       
-      const url = generateQRCodeUrl(params)
-      setQrCodeUrl(url)
+      // Otherwise generate the QR code using our client-safe utility
+      // First try using the API endpoint
+      const fetchedUrl = await fetchEventQRCode(eventId)
+      setQrCodeUrl(fetchedUrl)
     } catch (error) {
       console.error('Error generating QR code:', error)
+      
+      // Fallback to direct generation
+      const generatedUrl = generateQRCodeUrl({
+        event_id: eventId,
+        type: type
+      })
+      setQrCodeUrl(generatedUrl)
     } finally {
       setIsLoading(false)
     }
@@ -71,19 +78,12 @@ export function QRCodeDisplay({
   // Download QR code
   const handleDownload = async () => {
     try {
-      const params: QRCodeParams = {
-        event_id: eventId,
-        type,
-        attendee_id: attendeeId,
-        size
-      }
-      
-      const dataUrl = await generateQRCodeDataUrl(params)
+      if (!qrCodeUrl) return
       
       // Create a download link
       const downloadLink = document.createElement('a')
-      downloadLink.href = dataUrl
-      downloadLink.download = `${type}-qr-code-${eventId}${attendeeId ? `-${attendeeId}` : ''}.png`
+      downloadLink.href = qrCodeUrl
+      downloadLink.download = `${type}-qr-code-${eventId}.png`
       
       // Trigger download
       document.body.appendChild(downloadLink)
@@ -97,35 +97,18 @@ export function QRCodeDisplay({
   // Share QR code
   const handleShare = async () => {
     try {
-      // Get the data URL for sharing
-      const params: QRCodeParams = {
-        event_id: eventId,
-        type,
-        attendee_id: attendeeId,
-        size
-      }
-      
-      const dataUrl = await generateQRCodeDataUrl(params)
-      
       // Check if Web Share API is available
       if (navigator.share) {
-        // Convert data URL to blob
-        const response = await fetch(dataUrl)
-        const blob = await response.blob()
-        
-        // Create file from blob
-        const file = new File([blob], `${type}-qr-code.png`, { type: 'image/png' })
-        
-        // Share the file
+        // Share the URL
         await navigator.share({
           title: title,
           text: description,
-          files: [file]
+          url: qrCodeUrl
         })
       } else {
         // Fallback to copying to clipboard
-        await navigator.clipboard.writeText(window.location.href)
-        alert('Link copied to clipboard')
+        await navigator.clipboard.writeText(qrCodeUrl)
+        alert('QR code URL copied to clipboard')
       }
     } catch (error) {
       console.error('Error sharing QR code:', error)
@@ -173,7 +156,7 @@ export function QRCodeDisplay({
             size="sm"
             className="flex items-center gap-1"
             onClick={handleDownload}
-            disabled={isLoading}
+            disabled={isLoading || !qrCodeUrl}
           >
             <Download className="h-4 w-4" />
             <span>Download</span>
@@ -184,7 +167,7 @@ export function QRCodeDisplay({
             size="sm"
             className="flex items-center gap-1"
             onClick={handleShare}
-            disabled={isLoading}
+            disabled={isLoading || !qrCodeUrl}
           >
             <Share2 className="h-4 w-4" />
             <span>Share</span>

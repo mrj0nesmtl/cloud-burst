@@ -1,116 +1,186 @@
-import { Metadata } from 'next'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { cookies } from 'next/headers'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { QRCodeDisplay } from '@/components/events/qr-code-display'
 import { Button } from '@/components/ui/button'
-import { QrCode, Download, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image'
+import { Badge } from '@/components/ui/badge'
+import { Plus } from 'lucide-react'
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'QR Codes | Cloud Burst',
-  description: 'Manage QR codes for your events',
+  description: 'Access your event QR codes',
 }
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// Helper function to get status badge
+const getStatusBadge = (status: string) => {
+  switch (status?.toLowerCase()) {
+    case 'draft':
+      return <Badge variant="outline" className="bg-amber-500/20 text-amber-500 hover:bg-amber-500/20">Draft</Badge>
+    case 'published':
+      return <Badge variant="default" className="bg-green-500">Published</Badge>
+    case 'completed':
+      return <Badge variant="secondary">Completed</Badge>
+    case 'cancelled':
+      return <Badge variant="destructive">Cancelled</Badge>
+    default:
+      return <Badge variant="outline">{status || 'Unknown'}</Badge>
+  }
+}
 
-export default function QRCodesPage() {
-  // Mock data for QR code
+export default async function QRCodesPage() {
+  const cookieStore = cookies()
+  const supabase = createServerComponentClient({ cookies: () => cookieStore })
+  
+  // Get the user's ID from the session
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  // Fetch all events for the user, including drafts
+  const { data: events, error } = await supabase
+    .from('events')
+    .select('id, name, qr_code_url, status')
+    .eq('organizer_id', user?.id)
+    .order('created_at', { ascending: false })
+  
+  // Mock data for demo QR code
   const mockEvent = {
-    id: '01',
-    name: 'Test Event 01',
-    date: '3/14/2025',
-    qr_code_url: '/placeholder-qr.png',
-    custom_url: 'https://cloudburst.app/e/test01',
-    status: 'active'
-  };
+    id: 'demo',
+    name: 'Demo Event',
+    qr_code_url: 'https://api.qrserver.com/v1/create-qr-code/?data=https://cloudburst-demo.example.com/event/demo&size=300x300'
+  }
   
   return (
-    <div style={{ width: '100%', padding: '24px' }}>
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>QR Codes</h1>
-        <p style={{ color: 'var(--muted-foreground)' }}>
-          Generate and manage QR codes for your events
-        </p>
-      </div>
-      
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)', marginBottom: '16px' }}>
-          <div style={{ padding: '8px 16px', borderBottom: '2px solid var(--primary)', fontWeight: 'medium' }}>
-            Active Events (1)
-          </div>
-          <div style={{ padding: '8px 16px', color: 'var(--muted-foreground)' }}>
-            Archived Events (0)
-          </div>
+    <div style={{ 
+      width: '100%', 
+      padding: '1.5rem 1rem',
+      display: 'flex', 
+      flexDirection: 'column', 
+      gap: '1.5rem' 
+    }}>
+      {/* Header section */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '1rem'
+      }}>
+        <div>
+          <h1 style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: '700', 
+            marginBottom: '0.5rem',
+            lineHeight: '1.2'
+          }}>
+            QR Codes
+          </h1>
+          <p style={{ 
+            color: 'var(--muted-foreground)', 
+            fontSize: '0.9rem'
+          }}>
+            Access your event QR codes for easy check-in
+          </p>
         </div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
-          <Card>
-            <CardHeader>
-              <CardTitle>{mockEvent.name}</CardTitle>
-              <p style={{ fontSize: '14px', color: 'var(--muted-foreground)' }}>{mockEvent.date}</p>
-            </CardHeader>
-            <CardContent>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-                <div style={{ border: '1px solid var(--border)', padding: '16px', borderRadius: '8px', background: 'white' }}>
-                  <div style={{ width: '150px', height: '150px', position: 'relative' }}>
-                    <Image 
-                      src="/placeholder-qr.png" 
-                      alt={`QR Code for ${mockEvent.name}`}
-                      width={150}
-                      height={150}
-                    />
+        <Button asChild style={{
+          height: '2.5rem',
+          whiteSpace: 'nowrap'
+        }}>
+          <Link href="/protected/events/create">
+            <Plus style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
+            Create Event
+          </Link>
+        </Button>
+      </div>
+      
+      {/* QR Codes section */}
+      <div style={{ marginTop: '1rem' }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
+          gap: '1.5rem'
+        }}>
+          {events && events.length > 0 ? (
+            events.map(event => (
+              <Card key={event.id} style={{ 
+                border: '1px solid var(--border)', 
+                background: 'var(--card)',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <CardHeader style={{ padding: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <CardTitle style={{ fontSize: '1.1rem', fontWeight: '600' }}>{event.name}</CardTitle>
+                    {getStatusBadge(event.status)}
                   </div>
-                </div>
-                
-                <div style={{ width: '100%', display: 'flex', gap: '8px' }}>
-                  <Button variant="outline" className="flex-1">
-                    <Download className="mr-2 h-4 w-4" /> Download
+                </CardHeader>
+                <CardContent style={{ padding: '0 1rem 1rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                  {event.qr_code_url ? (
+                    <div style={{ width: '100%', height: '300px', position: 'relative' }}>
+                      <QRCodeDisplay url={event.qr_code_url} eventId={event.id} />
+                    </div>
+                  ) : (
+                    <div style={{ 
+                      padding: '1rem', 
+                      border: '1px dashed var(--border)', 
+                      borderRadius: '0.5rem',
+                      backgroundColor: 'var(--muted)',
+                      textAlign: 'center',
+                      color: 'var(--muted-foreground)'
+                    }}>
+                      QR code not available
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter style={{ padding: '0 1rem 1rem', justifyContent: 'center' }}>
+                  <Button asChild size="sm" variant="outline" style={{ width: '100%' }}>
+                    <Link href={`/protected/events/${event.id}`}>
+                      View Event
+                    </Link>
                   </Button>
-                  <Button variant="outline" className="flex-1">
-                    <ExternalLink className="mr-2 h-4 w-4" /> View
-                  </Button>
-                </div>
-                
-                <div style={{ fontSize: '14px', color: 'var(--muted-foreground)', textAlign: 'center' }}>
-                  <p>Scan this code to access the event gallery</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                </CardFooter>
+              </Card>
+            ))
+          ) : (
+            <Card style={{ 
+              border: '1px solid var(--border)', 
+              background: 'var(--card)',
+              gridColumn: '1 / -1'
+            }}>
+              <CardContent style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted-foreground)' }}>
+                No events found. Create your first event to generate QR codes.
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
       
-      <div style={{ marginTop: '32px' }}>
-        <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>About QR Codes</h2>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <QrCode className="h-5 w-5" /> Event QR Codes
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                QR codes allow attendees to easily access your event gallery. Place these codes at your event venue for easy access.
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <QrCode className="h-5 w-5" /> Attendee QR Codes
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Each attendee receives a unique QR code for check-in and photo tagging. These codes help organize photos by attendee.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      {/* Information card */}
+      <Card style={{ 
+        border: '1px solid var(--border)', 
+        background: 'var(--card)',
+        marginTop: '1rem'
+      }}>
+        <CardHeader>
+          <CardTitle>How QR Codes Work</CardTitle>
+          <CardDescription>Use these QR codes to streamline your event check-in process</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ul style={{ 
+            listStyle: 'disc', 
+            paddingLeft: '1.5rem', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '0.5rem' 
+          }}>
+            <li>Share the QR code with your event staff for easy check-in</li>
+            <li>Attendees can scan the QR code to access event details</li>
+            <li>Link directly to your event gallery for instant photo uploads</li>
+            <li>QR codes update automatically if you change your event details</li>
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   )
 } 
