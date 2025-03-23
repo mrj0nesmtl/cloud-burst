@@ -391,13 +391,4 @@
   .footer-layout {
     grid-template-columns: repeat(4, 1fr);
   }
-}
-
-/* CTA Section Spacing */
-.cta-section {
-  margin-top: 1rem;
-  margin-bottom: 4rem;
-  padding: 2rem;
-  border-radius: 0.75rem;
-  background-color: hsl(var(--secondary) / 0.3);
 } 
