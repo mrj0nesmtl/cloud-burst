@@ -1,18 +1,131 @@
-# Cloud Burst - Session 28: Gallery Implementation & Guest Upload System
+# Session 28 Development Prompt: Gallery Implementation & Dashboard Enhancements
 
 ## Project Context
-We're continuing development of Cloud Burst (v0.8.0), focusing on implementing the gallery system with guest upload capabilities. We've completed mobile responsiveness optimizations in Session 27 and consolidated our gallery implementation plan.
+Cloud Burst is transitioning into version 0.8.0, focusing on implementing a comprehensive gallery system, enhancing the dashboard with analytics, integrating the invitation system with email templates, and developing the onboarding flow for new organizers. Following the successful resolution of build errors and permission issues in Session 27, we now have a stable foundation to build these critical features.
 
-## Recent Achievements
-- ✅ Enhanced mobile responsiveness for Dashboard and Events pages
-- ✅ Implemented direct style approach for layouts
-- ✅ Added mobile viewport detection to key components
-- ✅ Consolidated gallery implementation documentation
-- ✅ Fixed nested container layout issues
-- ✅ Established mobile-first design patterns
+## Current Status
+- Successfully resolved build errors related to server-only imports
+- Fixed event visibility and permission issues
+- Enhanced UI for better visibility in light mode
+- Improved event ownership and management
+- Platform is stable and ready for feature implementation
 
-## Key Technical Decision
-We've decided to rename the `photos` table to `media` to handle both photos and videos, providing greater flexibility as we expand platform capabilities.
+## Technical Requirements
+
+### 1. Gallery System Implementation
+- **Database Migration**: Create a flexible schema that supports both photos and videos
+- **Upload Component**: Build a responsive drag-and-drop interface with progress visualization
+- **Media Card Components**: Design consistent, visually appealing cards with appropriate actions
+- **Masonry Layout**: Implement a dynamic column system that adapts to different screen sizes
+- **Album Management**: Develop intuitive interfaces for organizing media into albums
+- **Guest Upload System**: Implement secure token-based authentication for guest contributions
+
+### 2. Dashboard Enhancements
+- **Analytics Panels**: Create clean, informative UI components displaying key metrics
+- **Data Visualization**: Implement charts and graphs for illustrating trends and engagement
+- **Filtering and Export**: Add tools for filtering data by date range and exporting results
+- **Mobile Optimization**: Ensure analytics are accessible and useful on all devices
+
+### 3. Invitation System Integration
+- **Email Templates**: Develop professional, customizable email designs for various communications
+- **QR Code Tracking**: Integrate QR codes within emails for easy check-in and tracking
+- **Guest Permissions**: Implement fine-grained control over guest access and contributions
+- **RSVP Functionality**: Create simple response mechanisms with real-time dashboard updates
+
+### 4. Onboarding Flow
+- **Step-by-Step Setup**: Guide new users through creating profiles and initial events
+- **Template Selection**: Offer pre-defined event templates for quick starts
+- **Welcome Automation**: Implement personalized emails and in-app guidance
+- **Contextual Help**: Provide just-in-time assistance throughout the interface
+
+## Development Approach
+- Follow mobile-first design principles
+- Ensure type safety with TypeScript
+- Implement comprehensive testing for all components
+- Maintain accessibility compliance (WCAG 2.1 AA)
+- Optimize performance for large media collections
+- Follow security best practices for user data and uploads
+- Write clean, maintainable code with proper documentation
+
+## Implementation Timeline
+- **March 23-25**: Database migration, upload component
+- **March 26-28**: Media cards, masonry layout
+- **March 29-31**: Album management, guest uploads, analytics, invitations, onboarding
+- **April 1**: Target Beta 0.9.0 release
+
+## Specific Tasks
+
+1. **Design and implement the database schema evolution**:
+   - Rename photos table to media
+   - Add fields for video-specific metadata
+   - Update related tables and relationships
+   - Implement appropriate RLS policies
+
+2. **Create a responsive upload dropzone component**:
+   - Support drag-and-drop and file browsing
+   - Implement file type and size validation
+   - Add progress visualization
+   - Create appropriate success/error states
+   - Optimize for touch devices
+
+3. **Build the gallery interface with masonry layout**:
+   - Implement responsive grid system
+   - Create media card components
+   - Add lazy loading for performance
+   - Ensure keyboard accessibility
+   - Optimize for mobile viewing
+
+4. **Develop album management system**:
+   - Create interfaces for album creation and editing
+   - Implement media assignment to albums
+   - Add cover selection capability
+   - Create sharing options
+   - Build album navigation
+
+5. **Implement guest upload system**:
+   - Design token-based authentication
+   - Create secure upload interface
+   - Add validation and moderation queue
+   - Implement expiration for upload tokens
+   - Build organizer notification system
+
+6. **Enhance dashboard with analytics**:
+   - Design analytics panels with clean UI
+   - Implement metrics tracking
+   - Create data visualization components
+   - Add export functionality
+   - Optimize for mobile viewing
+
+7. **Integrate invitation system**:
+   - Implement email templates
+   - Add QR code tracking
+   - Create guest permission management
+   - Build RSVP functionality
+   - Add notification system for responses
+
+8. **Develop onboarding flow**:
+   - Design step-by-step setup process
+   - Implement profile completion workflow
+   - Create event template selection
+   - Add welcome email automation
+   - Build contextual help system
+
+## Success Criteria
+- Users can upload, view, and organize both photos and videos
+- Organizers can gain insights from the analytics dashboard
+- Invitations can be sent with professional email templates
+- New users can quickly set up profiles and first events
+- All components maintain standards for performance, accessibility, and security
+
+## Technical Stack Reference
+- Next.js 14 with App Router
+- TypeScript 5.0
+- Zustand for state management
+- Tailwind CSS for styling
+- Shadcn/ui for components
+- Supabase for authentication, database, and storage
+- React Hook Form with Zod for forms
+- TanStack Query v5 for data fetching
 
 ## Project Structure
 ```typescript

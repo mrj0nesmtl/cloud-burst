@@ -17,86 +17,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added in Session 27 (March 18, 2025)
-- **Documentation Consolidation**:
-  - Merged and organized Session 27 documentation
-  - Updated completion status to 98%
-  - Archived Session 26 documentation
-  - Enhanced project structure documentation
-  - Reorganized development trees
-- **Mobile Navigation & Permissions**:
-  - Fixed organizer role 403 errors
-  - Corrected "All Events" navigation flow
-  - Updated RLS policies in Supabase
-  - Implemented consistent route protection
-  - Enhanced mobile navigation with role-based items
-  - Added sign-out functionality to mobile menu
-  - Verified navigation state management
-  - Tested role-based access control
-- **Mobile Responsiveness Optimization**:
-  - Enhanced dashboard layout for mobile devices
-  - Improved Events Management page for touch interfaces
-  - Implemented direct style approach to fix nested container issues
-  - Added mobile viewport detection to key components
-  - Optimized charts and data visualizations for small screens
-  - Made action buttons and controls touch-friendly
-  - Fixed text overflow and spacing on mobile screens
-  - Ensured consistent rendering across all device sizes
+## [0.8.0] - 2025-03-23
+### Added
+- **Gallery System Foundation**:
+  - Database migration from photos to media table
+  - Responsive upload dropzone component
+  - Media card components with consistent styling
+  - Masonry layout implementation
+  - Album management framework
+  - Guest upload system with token-based authentication
+- **Dashboard Enhancements**:
+  - Analytics panels with real-time data visualization
+  - Performance metrics tracking
+  - Event engagement statistics
+  - User activity monitoring
+- **Invitation System Integration**:
+  - Email template integration for invitations
+  - QR code-based invitation tracking
+  - Guest permission management
+  - RSVP functionality and tracking
+- **Onboarding Flow Implementation**:
+  - Step-by-step organizer setup process
+  - Profile completion workflow
+  - Event template selection
+  - Welcome email automation
 
-### Planned for 0.8.0 (March 19, 2025)
-- **Gallery Experience Enhancement**: Complete masonry layout and advanced filtering
-- **Dashboard Analytics**: Implement real-time metrics and visualization
-- **Guest Features**: Implement media upload and invitation management
-- **Performance Improvements**: Optimize image loading and caching
-- **Documentation**: Update technical guides and API documentation
+### Fixed in Session 27 (March 19-23, 2025)
+- **Build Error Resolution**:
+  - Fixed Next.js build errors related to server-only imports
+  - Properly separated client/server code in Supabase utilities
+  - Resolved route handler conflicts with component rendering
+  - Fixed TypeScript errors in events and galleries modules
+- **Event Management Improvements**:
+  - Added visibility for draft events across the platform
+  - Fixed QR code display for all event statuses
+  - Enhanced event status filtering with real-time updates
+  - Implemented consistent navigation between event views
+- **UI Enhancements**:
+  - Fixed light mode visibility issues in text elements
+  - Resolved color contrast concerns for accessibility
+  - Improved responsive layout for dashboard elements
+  - Enhanced navigation consistency across protected routes
+- **Organizer Permissions**:
+  - Resolved 403 errors for organizer roles
+  - Fixed event ownership reassignment process
+  - Updated RLS policies for proper permission checks
+  - Enhanced debugging for authentication flows
 
-### Added in Session 26 (March 18, 2025)
-- **Enhanced Authentication System**:
-  - Comprehensive email template system with consistent styling
-  - New auth email templates for all flows (verification, reset, magic link, etc.)
-  - Improved email deliverability with spam-safe content
-  - Professional email layouts with proper branding
-  - Direct Supabase storage integration for email assets
-- **Project Structure**:
-  - Generated comprehensive project structure documentation
-  - Updated all directory trees for better organization
-  - Enhanced documentation grouping and categorization
-  - New component directories for media and onboarding
-- **Database Migrations**:
-  - Added RLS policies for media management
-  - Created event staff role with proper permissions
-  - Set up storage buckets configuration
-  - Updated media RLS policies with staff access
-  - Configured auth email templates in database
-  - Created profiles table with proper relations
-- **New Routes and Components**:
-  - Auth error handling page
-  - Resend verification functionality
-  - Invitation system routes
-  - Onboarding flow implementation
-  - Verification handler with proper redirects
+### Changed
+- **Mobile Experience Enhancement**:
+  - Implemented direct style approach for consistent mobile layouts
+  - Added viewport detection to critical components
+  - Optimized touch targets for mobile interactions
+  - Enhanced responsive grids for all screen sizes
+  - Improved navigation patterns for mobile users
 - **Documentation**:
-  - Updated project structure trees
-  - Enhanced directory organization
-  - Improved development guidelines
-  - Added new component documentation
+  - Reorganized development documentation for Session 28
+  - Updated technical specifications for gallery implementation
+  - Enhanced roadmap with detailed timeline for v0.8.0
+  - Consolidated implementation checklists
+  - Created comprehensive narrative for gallery development
 
-### Planned for Session 26 (Remaining Tasks)
-- **Gallery Experience Enhancement**: Implement masonry layout and advanced filtering
-- **Event Analytics Dashboard**: Complete the analytics dashboard with real-time metrics
-- **Enhanced Photo Management**: Implement bulk upload and organization features
-- **Performance Optimization**: Implement image loading and caching improvements
-- **Mobile Experience Polish**: Final responsive design adjustments
-- **Documentation Updates**: Comprehensive documentation review and updates
-
-### Known Issues (To be fixed in Session 26)
-- **Gallery Performance**: Optimize image loading and caching for better performance
-- **Analytics Dashboard**: Complete implementation of event performance metrics
-- **Bulk Upload**: Implement drag-and-drop bulk upload functionality
-- **Mobile Gallery View**: Enhance gallery view on mobile devices
-- **Documentation**: Update technical documentation with latest changes
-
-### Planned for Beta 0.9.0 (April 1, 2025)
+### Planned for 0.9.0 (April 1, 2025)
 - **Enhanced Invitation System**: Email tracking, metrics dashboard, and full integration
 - **Comprehensive Media Moderation**: Workflow for photos and videos with approval process
 - **Analytics Data Integration**: Real-time metrics and event performance dashboards
