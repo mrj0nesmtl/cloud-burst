@@ -2,9 +2,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 // Import cookies only when used
 // import { cookies } from 'next/headers'
 import { Gallery, GallerySettings, GalleryStats, GalleryWithPhotos } from '@/types/gallery'
-import { createClient } from '@/lib/supabase/server'
-import { cookies } from 'next/headers'
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
+import { createClient, createServerClient } from '@/lib/supabase/client'
 import { Database } from '@/types/supabase'
 import { DEFAULT_GALLERY_SETTINGS } from '@/lib/constants'
 

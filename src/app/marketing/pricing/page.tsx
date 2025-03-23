@@ -328,11 +328,15 @@ export default function PricingPage() {
           </div>
 
           {/* FAQs */}
-          <div className="container mx-auto mt-24">
-            <h2 className="text-3xl font-bold text-center mb-4">Frequently Asked Questions</h2>
-            <p className="text-muted-foreground mb-8 text-center">
-              Have questions about our pricing or features? Find answers below.
-            </p>
+          <div className="container-md mx-auto max-w-4xl py-16">
+            <div className="text-center mb-12">
+              <h2 className="section-title mb-4 text-primary">
+                Frequently Asked Questions
+              </h2>
+              <p className="section-subtitle max-w-2xl mx-auto">
+                Find answers to common questions about our pricing, features, and services.
+              </p>
+            </div>
             
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
