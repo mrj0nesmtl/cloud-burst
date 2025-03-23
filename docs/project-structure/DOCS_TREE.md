@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-20T22:04:06.872Z
+Generated: 2025-03-23T16:17:34.003Z
 
 ## Overview
 
@@ -20,8 +20,7 @@ Generated: 2025-03-20T22:04:06.872Z
 ├── design/
 │   ├── UI_components.md
 │   ├── consistent-layout.md
-│   ├── gallery_implementation_plan.md
-│   ├── gallery_implementation_spec.md
+│   ├── gallery_implementation.md
 │   ├── layout-troubleshooting.md
 │   ├── media_schema_migration.md
 │   ├── style.md
@@ -35,6 +34,9 @@ Generated: 2025-03-20T22:04:06.872Z
 │   │   ├── SESSION_25_NARRATIVE.md
 │   │   ├── SESSION_26_CHECKLIST.md
 │   │   ├── SESSION_26_NARRATIVE.md
+│   │   ├── SESSION_27_CHECKLIST.md
+│   │   ├── SESSION_27_KICKOFF.md
+│   │   ├── SESSION_27_NARRATIVE.md
 │   │   ├── additional_notes.md
 │   │   ├── auth-debug.md
 │   │   ├── session_10.md
@@ -66,6 +68,7 @@ Generated: 2025-03-20T22:04:06.872Z
 │   │   ├── session_24_checklist.md
 │   │   ├── session_24_narrative.md
 │   │   ├── session_24_part2_kickoff_prompt.md
+│   │   ├── session_27_prompt.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -73,14 +76,14 @@ Generated: 2025-03-20T22:04:06.872Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
-│   ├── SESSION_27_CHECKLIST.md
-│   ├── SESSION_27_KICKOFF.md
 │   ├── SESSION_27_MOBILE_AUDIT.md
-│   ├── SESSION_27_NARRATIVE.md
+│   ├── SESSION_28_CHECKLIST.md
+│   ├── SESSION_28_KICKOFF.md
+│   ├── SESSION_28_NARRATIVE.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_27_prompt.md
+│   ├── session_28_prompt.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
@@ -131,12 +134,12 @@ Generated: 2025-03-20T22:04:06.872Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 113 files
+10 directories, 116 files
 
 ```
 
 ## File Type Breakdown
-- md: 107 file(s)
+- md: 110 file(s)
 
 ## Ignored Patterns
 - node_modules

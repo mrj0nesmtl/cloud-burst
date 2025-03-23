@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-20T22:04:06.667Z
+Generated: 2025-03-23T16:17:33.771Z
 
 ## Overview
 
@@ -17,6 +17,9 @@ Generated: 2025-03-20T22:04:06.667Z
 │   │   │   ├── functions/
 │   │   │   │   └── route.ts
 │   │   │   └── setup/
+│   │   │       └── route.ts
+│   │   ├── events/
+│   │   │   └── qr-code/
 │   │   │       └── route.ts
 │   │   ├── extract-colors/
 │   │   │   └── route.ts
@@ -299,6 +302,7 @@ Generated: 2025-03-20T22:04:06.667Z
 │   │   ├── recent-events.tsx
 │   │   └── stats.tsx
 │   ├── events/
+│   │   ├── .qr-code-display.tsx.swp
 │   │   ├── add-attendee-dialog.tsx
 │   │   ├── attendee-management.tsx
 │   │   ├── enhanced-event-card.tsx
@@ -478,7 +482,10 @@ Generated: 2025-03-20T22:04:06.667Z
 │   │   ├── test-utils.ts
 │   │   ├── verify-schema.html
 │   │   └── verify-schema.js
+│   ├── utils/
+│   │   └── codeGenerator.ts
 │   ├── analytics.ts
+│   ├── constants.ts
 │   ├── event-customization-server.ts
 │   ├── event-customization.ts
 │   ├── index.ts
@@ -510,12 +517,12 @@ Generated: 2025-03-20T22:04:06.667Z
 ├── middleware.test.ts
 └── middleware.ts
 
-140 directories, 362 files
+143 directories, 366 files
 
 ```
 
 ## File Type Breakdown
-- ts: 78 file(s)
+- ts: 81 file(s)
 - tsx: 266 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
