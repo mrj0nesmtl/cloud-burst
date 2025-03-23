@@ -1,5 +1,5 @@
 # development Directory Structure
-Generated: 2025-03-20T22:04:11.966Z
+Generated: 2025-03-23T16:17:41.317Z
 
 ## Overview
 
@@ -16,6 +16,9 @@ Generated: 2025-03-20T22:04:11.966Z
 │   ├── SESSION_25_NARRATIVE.md
 │   ├── SESSION_26_CHECKLIST.md
 │   ├── SESSION_26_NARRATIVE.md
+│   ├── SESSION_27_CHECKLIST.md
+│   ├── SESSION_27_KICKOFF.md
+│   ├── SESSION_27_NARRATIVE.md
 │   ├── additional_notes.md
 │   ├── auth-debug.md
 │   ├── session_10.md
@@ -47,6 +50,7 @@ Generated: 2025-03-20T22:04:11.966Z
 │   ├── session_24_checklist.md
 │   ├── session_24_narrative.md
 │   ├── session_24_part2_kickoff_prompt.md
+│   ├── session_27_prompt.md
 │   ├── session_4.md
 │   ├── session_5.md
 │   ├── session_6.md
@@ -54,22 +58,22 @@ Generated: 2025-03-20T22:04:11.966Z
 │   ├── session_8.md
 │   └── session_9.md
 ├── .DS_Store
-├── SESSION_27_CHECKLIST.md
-├── SESSION_27_KICKOFF.md
 ├── SESSION_27_MOBILE_AUDIT.md
-├── SESSION_27_NARRATIVE.md
+├── SESSION_28_CHECKLIST.md
+├── SESSION_28_KICKOFF.md
+├── SESSION_28_NARRATIVE.md
 ├── STATUS_NOTES.md
 ├── VERSION_CONTROL.md
 ├── contributing.md
-├── session_27_prompt.md
+├── session_28_prompt.md
 └── version-sync.plan
 
-2 directories, 54 files
+2 directories, 58 files
 
 ```
 
 ## File Type Breakdown
-- md: 50 file(s)
+- md: 54 file(s)
 
 ## Ignored Patterns
 - node_modules

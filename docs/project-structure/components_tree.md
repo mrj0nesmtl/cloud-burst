@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-20T22:04:09.573Z
+Generated: 2025-03-23T16:17:36.996Z
 
 ## Overview
 This directory contains 139 component(s).
@@ -37,6 +37,7 @@ This directory contains 139 component(s).
 │   ├── recent-events.tsx
 │   └── stats.tsx
 ├── events/
+│   ├── .qr-code-display.tsx.swp
 │   ├── add-attendee-dialog.tsx
 │   ├── attendee-management.tsx
 │   ├── enhanced-event-card.tsx
@@ -171,7 +172,7 @@ This directory contains 139 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-19 directories, 144 files
+19 directories, 145 files
 
 ```
 

@@ -1,5 +1,5 @@
 # events Directory Structure
-Generated: 2025-03-20T22:04:09.981Z
+Generated: 2025-03-23T16:17:37.536Z
 
 ## Overview
 This directory contains 15 component(s).
@@ -8,6 +8,7 @@ This directory contains 15 component(s).
 ## Directory Tree
 ```
 ./src/components/events/
+├── .qr-code-display.tsx.swp
 ├── add-attendee-dialog.tsx
 ├── attendee-management.tsx
 ├── enhanced-event-card.tsx
@@ -24,7 +25,7 @@ This directory contains 15 component(s).
 ├── qr-code-display.tsx
 └── theme-preview.tsx
 
-1 directory, 15 files
+1 directory, 16 files
 
 ```
 
