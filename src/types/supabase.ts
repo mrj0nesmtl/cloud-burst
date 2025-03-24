@@ -9,6 +9,93 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      album_media: {
+        Row: {
+          album_id: string
+          created_at: string | null
+          id: string
+          media_id: string
+          sort_order: number
+        }
+        Insert: {
+          album_id: string
+          created_at?: string | null
+          id?: string
+          media_id: string
+          sort_order?: number
+        }
+        Update: {
+          album_id?: string
+          created_at?: string | null
+          id?: string
+          media_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "album_media_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "album_media_media_id_fkey"
+            columns: ["media_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      albums: {
+        Row: {
+          cover_media_id: string | null
+          created_at: string | null
+          description: string | null
+          event_id: string
+          id: string
+          is_public: boolean | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          cover_media_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          event_id: string
+          id?: string
+          is_public?: boolean | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          cover_media_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          event_id?: string
+          id?: string
+          is_public?: boolean | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "albums_cover_media_id_fkey"
+            columns: ["cover_media_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "albums_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_form_submissions: {
         Row: {
           created_at: string | null
@@ -238,6 +325,41 @@ export type Database = {
           },
         ]
       }
+      event_staff: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          event_id: string | null
+          id: string
+          role: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          event_id?: string | null
+          id?: string
+          role?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          event_id?: string | null
+          id?: string
+          role?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_staff_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           accent_color: string | null
@@ -425,18 +547,22 @@ export type Database = {
       media: {
         Row: {
           created_at: string | null
+          description: string | null
           duration: number | null
           event_id: string | null
           filename: string
           height: number | null
           id: string
           is_approved: boolean | null
+          is_public: boolean | null
           media_type: string
           metadata: Json | null
           mime_type: string | null
           size: number | null
+          status: string
           storage_path: string
           thumbnail_url: string | null
+          title: string | null
           updated_at: string | null
           uploaded_by: string | null
           url: string | null
@@ -444,18 +570,22 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          description?: string | null
           duration?: number | null
           event_id?: string | null
           filename: string
           height?: number | null
           id?: string
           is_approved?: boolean | null
+          is_public?: boolean | null
           media_type: string
           metadata?: Json | null
           mime_type?: string | null
           size?: number | null
+          status?: string
           storage_path: string
           thumbnail_url?: string | null
+          title?: string | null
           updated_at?: string | null
           uploaded_by?: string | null
           url?: string | null
@@ -463,18 +593,22 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          description?: string | null
           duration?: number | null
           event_id?: string | null
           filename?: string
           height?: number | null
           id?: string
           is_approved?: boolean | null
+          is_public?: boolean | null
           media_type?: string
           metadata?: Json | null
           mime_type?: string | null
           size?: number | null
+          status?: string
           storage_path?: string
           thumbnail_url?: string | null
+          title?: string | null
           updated_at?: string | null
           uploaded_by?: string | null
           url?: string | null
@@ -486,6 +620,51 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      moderation_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          event_id: string
+          id: string
+          media_id: string
+          reason: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          event_id: string
+          id?: string
+          media_id: string
+          reason?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          event_id?: string
+          id?: string
+          media_id?: string
+          reason?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moderation_logs_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderation_logs_media_id_fkey"
+            columns: ["media_id"]
+            isOneToOne: false
+            referencedRelation: "media"
             referencedColumns: ["id"]
           },
         ]
@@ -847,6 +1026,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_invitation_eligibility: {
+        Args: {
+          p_event_id: string
+          p_user_id: string
+        }
+        Returns: boolean
+      }
       end_all_other_user_sessions:
         | {
             Args: {

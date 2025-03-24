@@ -9,398 +9,602 @@ import {
   GallerySortOption,
   GalleryFilter,
   MediaLayout,
-  MediaStatus
+  MediaStatus,
+  Album,
+  CreateMediaParams,
+  MediaUploadProgress,
+  mapDbMediaToMedia
 } from '@/types/media';
-import {
-  getEventMedia,
-  getApprovedEventMedia,
-  getPendingEventMedia,
-  getMediaById,
-  updateMediaApproval,
-  deleteMedia,
-  getMediaUrl,
-  approveMediaItem,
-  rejectMediaItem,
-  getEventPendingMedia,
-  getEventApprovedMedia,
-  getEventRejectedMedia
-} from '@/lib/supabase/media';
+import mediaService from '@/lib/supabase/media';
 
 export interface MediaState {
-  // Media Data
-  media: Media[];
-  currentEventId: string | null;
-  currentMediaId: string | null;
+  // Media data
+  eventMedia: Media[];
+  approvedMedia: Media[];
+  pendingMedia: Media[];
+  rejectedMedia: Media[];
+  userMedia: Media[];
+  albumMedia: Record<string, Media[]>;
   currentMedia: Media | null;
-  loadingMedia: boolean;
-  loadingMediaError: string | null;
+  albums: Album[];
   
-  // Layout and Display Settings
-  layout: GalleryLayout;
-  sortOption: GallerySortOption;
-  filter: GalleryFilter;
+  // Loading states
+  isLoadingEventMedia: boolean;
+  isLoadingApprovedMedia: boolean;
+  isLoadingPendingMedia: boolean;
+  isLoadingRejectedMedia: boolean;
+  isLoadingUserMedia: boolean;
+  isLoadingAlbumMedia: Record<string, boolean>;
+  isLoadingAlbums: boolean;
   
-  // Upload State
-  uploads: Record<string, {
-    file: File;
-    progress: number;
-    status: 'pending' | 'uploading' | 'success' | 'error';
-    error?: string;
-    mediaId?: string;
-  }>;
+  // Upload states
+  uploadProgress: MediaUploadProgress[];
+  
+  // Filter states
+  mediaTypeFilter: MediaType | 'all';
+  mediaStatusFilter: MediaStatus | 'all';
+  sortBy: 'newest' | 'oldest' | 'name' | 'size';
+  
+  // Error states
+  eventMediaError: Error | null;
+  approvedMediaError: Error | null;
+  pendingMediaError: Error | null;
+  rejectedMediaError: Error | null;
+  userMediaError: Error | null;
+  albumMediaError: Record<string, Error | null>;
+  albumsError: Error | null;
   
   // Actions
-  fetchEventMedia: (eventId: string, mediaType?: MediaType) => Promise<Media[]>;
-  fetchApprovedEventMedia: (eventId: string, mediaType?: MediaType) => Promise<Media[]>;
-  fetchPendingEventMedia: (eventId: string, mediaType?: MediaType) => Promise<Media[]>;
-  fetchMediaById: (mediaId: string) => Promise<Media | null>;
-  approveMedia: (mediaId: string) => Promise<boolean>;
-  rejectMedia: (mediaId: string) => Promise<boolean>;
-  removeMedia: (mediaId: string) => Promise<boolean>;
-  getMediaPublicUrl: (storagePath: string) => Promise<string | null>;
+  fetchEventMedia: (eventId: string) => Promise<void>;
+  fetchApprovedEventMedia: (eventId: string) => Promise<void>;
+  fetchPendingEventMedia: (eventId: string) => Promise<void>;
+  fetchRejectedEventMedia: (eventId: string) => Promise<void>;
+  fetchUserMedia: () => Promise<void>;
+  fetchAlbumMedia: (albumId: string) => Promise<void>;
+  fetchEventAlbums: (eventId: string) => Promise<void>;
+  setCurrentMedia: (media: Media | null) => void;
   
-  // Media Filtering and Sorting
-  setLayout: (layout: GalleryLayout) => void;
-  setSortOption: (sortOption: GallerySortOption) => void;
-  setFilter: (filter: GalleryFilter) => void;
-  clearFilters: () => void;
+  // Media actions
+  uploadMediaFile: (file: File, eventId: string, userId: string) => Promise<Media | null>;
+  updateMediaItem: (id: string, title?: string, description?: string, status?: MediaStatus) => Promise<Media | null>;
+  approveMediaItem: (id: string, reason?: string) => Promise<Media | null>;
+  rejectMediaItem: (id: string, reason?: string) => Promise<Media | null>;
+  deleteMediaItem: (id: string) => Promise<boolean>;
   
-  // Upload Management
-  addUpload: (file: File) => string;
-  updateUploadProgress: (id: string, progress: number) => void;
-  setUploadStatus: (id: string, status: 'pending' | 'uploading' | 'success' | 'error', error?: string, mediaId?: string) => void;
-  removeUpload: (id: string) => void;
-  clearUploads: () => void;
+  // Filter actions
+  setMediaTypeFilter: (filter: MediaType | 'all') => void;
+  setMediaStatusFilter: (filter: MediaStatus | 'all') => void;
+  setSortBy: (sort: 'newest' | 'oldest' | 'name' | 'size') => void;
   
-  // New fields for moderation
-  pendingMedia: Media[];
-  approvedMedia: Media[];
-  rejectedMedia: Media[];
-  selectedMedia: Media | null;
-  sortBy: 'newest' | 'oldest' | 'popular';
-  filterBy: 'all' | 'photos' | 'videos';
-  isUploading: boolean;
-  uploadProgress: number;
-  
-  // New actions for moderation
-  setMedia: (media: Media[]) => void;
-  setPendingMedia: (media: Media[]) => void;
-  setApprovedMedia: (media: Media[]) => void;
-  setRejectedMedia: (media: Media[]) => void;
-  setSelectedMedia: (media: Media | null) => void;
-  setSortBy: (sortBy: 'newest' | 'oldest' | 'popular') => void;
-  setFilterBy: (filterBy: 'all' | 'photos' | 'videos') => void;
-  setIsUploading: (isUploading: boolean) => void;
-  setUploadProgress: (progress: number) => void;
-  
-  // New fetch actions for moderation
-  fetchEventPendingMedia: (eventId: string) => Promise<void>;
-  fetchEventApprovedMedia: (eventId: string) => Promise<void>;
-  fetchEventRejectedMedia: (eventId: string) => Promise<void>;
+  // Helpers
+  getFilteredMedia: (media: Media[]) => Media[];
+  clearErrors: () => void;
 }
 
 export const useMediaStore = create<MediaState>()(
   devtools(
     persist(
       (set, get) => ({
-        // Initial State
-        media: [],
-        currentEventId: null,
-        currentMediaId: null,
-        currentMedia: null,
-        loadingMedia: false,
-        loadingMediaError: null,
-        
-        // Layout and Display Settings
-        layout: 'grid',
-        sortOption: 'newest',
-        filter: {},
-        
-        // Upload State
-        uploads: {},
-        
-        // New fields for moderation
-        pendingMedia: [],
+        // Initial state
+        eventMedia: [],
         approvedMedia: [],
+        pendingMedia: [],
         rejectedMedia: [],
-        selectedMedia: null,
+        userMedia: [],
+        albumMedia: {},
+        currentMedia: null,
+        albums: [],
+        
+        isLoadingEventMedia: false,
+        isLoadingApprovedMedia: false,
+        isLoadingPendingMedia: false,
+        isLoadingRejectedMedia: false,
+        isLoadingUserMedia: false,
+        isLoadingAlbumMedia: {},
+        isLoadingAlbums: false,
+        
+        uploadProgress: [],
+        
+        mediaTypeFilter: 'all',
+        mediaStatusFilter: 'all',
         sortBy: 'newest',
-        filterBy: 'all',
-        isUploading: false,
-        uploadProgress: 0,
         
-        // Actions
-        fetchEventMedia: async (eventId, mediaType) => {
-          set({ loadingMedia: true, loadingMediaError: null });
+        eventMediaError: null,
+        approvedMediaError: null,
+        pendingMediaError: null,
+        rejectedMediaError: null,
+        userMediaError: null,
+        albumMediaError: {},
+        albumsError: null,
+        
+        // Fetch all media for an event
+        fetchEventMedia: async (eventId: string) => {
+          set({ isLoadingEventMedia: true, eventMediaError: null });
+          
           try {
-            const media = await getEventMedia(eventId, mediaType);
-            set({ media, currentEventId: eventId, loadingMedia: false });
-            return media;
+            const media = await mediaService.getEventMedia(eventId);
+            set({ eventMedia: media, isLoadingEventMedia: false });
           } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Failed to fetch media';
-            set({ loadingMedia: false, loadingMediaError: errorMessage });
-            return [];
-          }
-        },
-        
-        fetchApprovedEventMedia: async (eventId, mediaType) => {
-          set({ loadingMedia: true, loadingMediaError: null });
-          try {
-            const media = await getApprovedEventMedia(eventId, mediaType);
-            set({ media, currentEventId: eventId, loadingMedia: false });
-            return media;
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Failed to fetch approved media';
-            set({ loadingMedia: false, loadingMediaError: errorMessage });
-            return [];
-          }
-        },
-        
-        fetchPendingEventMedia: async (eventId, mediaType) => {
-          set({ loadingMedia: true, loadingMediaError: null });
-          try {
-            const media = await getPendingEventMedia(eventId, mediaType);
-            set({ media, currentEventId: eventId, loadingMedia: false });
-            return media;
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Failed to fetch pending media';
-            set({ loadingMedia: false, loadingMediaError: errorMessage });
-            return [];
-          }
-        },
-        
-        fetchMediaById: async (mediaId) => {
-          set({ loadingMedia: true, loadingMediaError: null });
-          try {
-            const media = await getMediaById(mediaId);
+            console.error('Error fetching event media:', error);
             set({ 
-              currentMedia: media, 
-              currentMediaId: mediaId, 
-              loadingMedia: false 
+              eventMediaError: error instanceof Error ? error : new Error('Failed to fetch event media'), 
+              isLoadingEventMedia: false 
             });
-            return media;
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Failed to fetch media';
-            set({ loadingMedia: false, loadingMediaError: errorMessage });
-            return null;
           }
         },
         
-        approveMedia: async (mediaId) => {
+        // Fetch approved media for an event
+        fetchApprovedEventMedia: async (eventId: string) => {
+          set({ isLoadingApprovedMedia: true, approvedMediaError: null });
+          
           try {
-            await approveMediaItem(mediaId);
-            
-            // Update local state
-            const { pendingMedia, rejectedMedia, approvedMedia } = get();
-            
-            // Find the media item in pending or rejected arrays
-            const pendingItem = pendingMedia.find(item => item.id === mediaId);
-            const rejectedItem = rejectedMedia.find(item => item.id === mediaId);
-            const mediaItem = pendingItem || rejectedItem;
-            
-            if (mediaItem) {
-              // Update the status
-              const updatedItem = { ...mediaItem, status: MediaStatus.APPROVED };
-              
-              // Add to approved array
-              set({ 
-                approvedMedia: [...approvedMedia, updatedItem],
-                // Remove from pending array if it was there
-                pendingMedia: pendingMedia.filter(item => item.id !== mediaId),
-                // Remove from rejected array if it was there
-                rejectedMedia: rejectedMedia.filter(item => item.id !== mediaId)
-              });
+            const media = await mediaService.getApprovedEventMedia(eventId);
+            set({ approvedMedia: media, isLoadingApprovedMedia: false });
+          } catch (error) {
+            console.error('Error fetching approved media:', error);
+            set({ 
+              approvedMediaError: error instanceof Error ? error : new Error('Failed to fetch approved media'), 
+              isLoadingApprovedMedia: false 
+            });
+          }
+        },
+        
+        // Fetch pending media for an event
+        fetchPendingEventMedia: async (eventId: string) => {
+          set({ isLoadingPendingMedia: true, pendingMediaError: null });
+          
+          try {
+            const media = await mediaService.getPendingEventMedia(eventId);
+            set({ pendingMedia: media, isLoadingPendingMedia: false });
+          } catch (error) {
+            console.error('Error fetching pending media:', error);
+            set({ 
+              pendingMediaError: error instanceof Error ? error : new Error('Failed to fetch pending media'), 
+              isLoadingPendingMedia: false 
+            });
+          }
+        },
+        
+        // Fetch rejected media for an event
+        fetchRejectedEventMedia: async (eventId: string) => {
+          set({ isLoadingRejectedMedia: true, rejectedMediaError: null });
+          
+          try {
+            const media = await mediaService.getRejectedEventMedia(eventId);
+            set({ rejectedMedia: media, isLoadingRejectedMedia: false });
+          } catch (error) {
+            console.error('Error fetching rejected media:', error);
+            set({ 
+              rejectedMediaError: error instanceof Error ? error : new Error('Failed to fetch rejected media'), 
+              isLoadingRejectedMedia: false 
+            });
+          }
+        },
+        
+        // Fetch media uploaded by the current user
+        fetchUserMedia: async () => {
+          set({ isLoadingUserMedia: true, userMediaError: null });
+          
+          try {
+            const media = await mediaService.getUserMedia();
+            set({ userMedia: media, isLoadingUserMedia: false });
+          } catch (error) {
+            console.error('Error fetching user media:', error);
+            set({ 
+              userMediaError: error instanceof Error ? error : new Error('Failed to fetch user media'), 
+              isLoadingUserMedia: false 
+            });
+          }
+        },
+        
+        // Fetch media in an album
+        fetchAlbumMedia: async (albumId: string) => {
+          set(state => ({ 
+            isLoadingAlbumMedia: { 
+              ...state.isLoadingAlbumMedia, 
+              [albumId]: true 
+            },
+            albumMediaError: {
+              ...state.albumMediaError,
+              [albumId]: null
             }
-            return true;
-          } catch (error) {
-            console.error('Error approving media:', error);
-            return false;
-          }
-        },
-        
-        rejectMedia: async (mediaId) => {
+          }));
+          
           try {
-            await rejectMediaItem(mediaId);
-            
-            // Update local state
-            const { pendingMedia, approvedMedia, rejectedMedia } = get();
-            
-            // Find the media item in pending or approved arrays
-            const pendingItem = pendingMedia.find(item => item.id === mediaId);
-            const approvedItem = approvedMedia.find(item => item.id === mediaId);
-            const mediaItem = pendingItem || approvedItem;
-            
-            if (mediaItem) {
-              // Update the status
-              const updatedItem = { ...mediaItem, status: MediaStatus.REJECTED };
-              
-              // Add to rejected array
-              set({ 
-                rejectedMedia: [...rejectedMedia, updatedItem],
-                // Remove from pending array if it was there
-                pendingMedia: pendingMedia.filter(item => item.id !== mediaId),
-                // Remove from approved array if it was there
-                approvedMedia: approvedMedia.filter(item => item.id !== mediaId)
-              });
-            }
-            return true;
+            const media = await mediaService.getAlbumMedia(albumId);
+            set(state => ({ 
+              albumMedia: { 
+                ...state.albumMedia, 
+                [albumId]: media 
+              },
+              isLoadingAlbumMedia: {
+                ...state.isLoadingAlbumMedia,
+                [albumId]: false
+              }
+            }));
           } catch (error) {
-            console.error('Error rejecting media:', error);
-            return false;
+            console.error(`Error fetching album ${albumId} media:`, error);
+            set(state => ({ 
+              albumMediaError: { 
+                ...state.albumMediaError, 
+                [albumId]: error instanceof Error ? error : new Error(`Failed to fetch album ${albumId} media`) 
+              },
+              isLoadingAlbumMedia: {
+                ...state.isLoadingAlbumMedia,
+                [albumId]: false
+              }
+            }));
           }
         },
         
-        removeMedia: async (mediaId) => {
+        // Fetch albums for an event
+        fetchEventAlbums: async (eventId: string) => {
+          set({ isLoadingAlbums: true, albumsError: null });
+          
           try {
-            const success = await deleteMedia(mediaId);
-            if (success) {
-              // Remove the media from the state
-              set((state) => ({
-                media: state.media.filter(item => item.id !== mediaId),
-                currentMedia: state.currentMedia?.id === mediaId 
-                  ? null 
-                  : state.currentMedia,
-                currentMediaId: state.currentMediaId === mediaId 
-                  ? null 
-                  : state.currentMediaId
-              }));
-            }
-            return success;
+            const albums = await mediaService.getEventAlbums(eventId);
+            set({ albums, isLoadingAlbums: false });
           } catch (error) {
-            console.error('Error removing media:', error);
-            return false;
+            console.error('Error fetching event albums:', error);
+            set({ 
+              albumsError: error instanceof Error ? error : new Error('Failed to fetch event albums'), 
+              isLoadingAlbums: false 
+            });
           }
         },
         
-        getMediaPublicUrl: async (storagePath) => {
-          try {
-            return await getMediaUrl(storagePath);
-          } catch (error) {
-            console.error('Error getting media URL:', error);
-            return null;
-          }
+        // Set the current media
+        setCurrentMedia: (media: Media | null) => {
+          set({ currentMedia: media });
         },
         
-        // Layout and Filtering
-        setLayout: (layout) => set({ layout }),
-        
-        setSortOption: (sortOption) => set({ sortOption }),
-        
-        setFilter: (filter) => set((state) => ({ 
-          filter: { ...state.filter, ...filter } 
-        })),
-        
-        clearFilters: () => set({ filter: {} }),
-        
-        // Upload Management
-        addUpload: (file) => {
-          const id = `upload-${Date.now()}-${file.name}`;
-          set((state) => ({
-            uploads: {
-              ...state.uploads,
-              [id]: {
+        // Upload a media file
+        uploadMediaFile: async (file: File, eventId: string, userId: string) => {
+          // Create a unique ID for tracking this upload
+          const uploadId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+          
+          // Add to upload progress
+          set(state => ({
+            uploadProgress: [
+              ...state.uploadProgress,
+              {
+                id: uploadId,
                 file,
                 progress: 0,
                 status: 'pending'
               }
-            }
+            ]
           }));
-          return id;
-        },
-        
-        updateUploadProgress: (id, progress) => {
-          set((state) => {
-            const upload = state.uploads[id];
-            if (!upload) return state;
+          
+          try {
+            // Start upload
+            set(state => ({
+              uploadProgress: state.uploadProgress.map(p => 
+                p.id === uploadId ? { ...p, status: 'uploading' } : p
+              )
+            }));
             
-            return {
-              uploads: {
-                ...state.uploads,
-                [id]: {
-                  ...upload,
-                  progress
-                }
-              }
+            // Function to update progress
+            const updateProgress = (progress: number) => {
+              set(state => ({
+                uploadProgress: state.uploadProgress.map(p => 
+                  p.id === uploadId ? { ...p, progress } : p
+                )
+              }));
             };
-          });
-        },
-        
-        setUploadStatus: (id, status, error, mediaId) => {
-          set((state) => {
-            const upload = state.uploads[id];
-            if (!upload) return state;
             
-            return {
-              uploads: {
-                ...state.uploads,
-                [id]: {
-                  ...upload,
-                  status,
-                  error,
-                  mediaId
-                }
-              }
+            // Upload file to storage
+            const uploadResult = await mediaService.uploadMedia(file, eventId, updateProgress);
+            
+            if (!uploadResult) {
+              throw new Error('Failed to upload file');
+            }
+            
+            // Determine media type
+            const mediaType = file.type.startsWith('video/') ? MediaType.VIDEO : MediaType.PHOTO;
+            
+            // Get dimensions for images
+            let width = undefined;
+            let height = undefined;
+            let duration = undefined;
+            
+            if (mediaType === MediaType.PHOTO) {
+              // Get image dimensions
+              const img = new Image();
+              img.src = URL.createObjectURL(file);
+              await new Promise(resolve => {
+                img.onload = () => {
+                  width = img.width;
+                  height = img.height;
+                  URL.revokeObjectURL(img.src);
+                  resolve(true);
+                };
+              });
+            } else if (mediaType === MediaType.VIDEO) {
+              // Get video dimensions and duration
+              const video = document.createElement('video');
+              video.preload = 'metadata';
+              video.src = URL.createObjectURL(file);
+              await new Promise(resolve => {
+                video.onloadedmetadata = () => {
+                  width = video.videoWidth;
+                  height = video.videoHeight;
+                  duration = Math.round(video.duration);
+                  URL.revokeObjectURL(video.src);
+                  resolve(true);
+                };
+              });
+            }
+            
+            // Create media record in database
+            const mediaParams: CreateMediaParams = {
+              eventId,
+              userId,
+              mediaType,
+              filePath: uploadResult.path,
+              filename: file.name,
+              url: uploadResult.url,
+              thumbnailUrl: undefined,
+              title: file.name,
+              description: undefined,
+              size: file.size,
+              mimeType: file.type,
+              width,
+              height,
+              duration
             };
+            
+            const media = await mediaService.createMedia(mediaParams);
+            
+            if (!media) {
+              throw new Error('Failed to create media record');
+            }
+            
+            // Update progress to complete
+            set(state => ({
+              uploadProgress: state.uploadProgress.map(p => 
+                p.id === uploadId ? { ...p, progress: 100, status: 'complete' } : p
+              ),
+              // Add to event media if we're currently viewing this event
+              eventMedia: state.eventMedia.some(m => m.event_id === eventId) 
+                ? [media, ...state.eventMedia]
+                : state.eventMedia,
+              // Add to pending media if we're currently viewing this event
+              pendingMedia: state.pendingMedia.some(m => m.event_id === eventId)
+                ? [media, ...state.pendingMedia]
+                : state.pendingMedia,
+              // Add to user media
+              userMedia: [media, ...state.userMedia]
+            }));
+            
+            return media;
+          } catch (error) {
+            console.error('Error uploading media:', error);
+            
+            // Update progress to error
+            set(state => ({
+              uploadProgress: state.uploadProgress.map(p => 
+                p.id === uploadId ? { 
+                  ...p, 
+                  status: 'error', 
+                  error: error instanceof Error ? error.message : 'Unknown error' 
+                } : p
+              )
+            }));
+            
+            return null;
+          }
+        },
+        
+        // Update a media item
+        updateMediaItem: async (id: string, title?: string, description?: string, status?: MediaStatus) => {
+          try {
+            const media = await mediaService.updateMedia({ id, title, description, status });
+            
+            if (!media) {
+              throw new Error('Failed to update media');
+            }
+            
+            // Update media in all relevant state arrays
+            set(state => ({
+              eventMedia: state.eventMedia.map(m => m.id === id ? media : m),
+              approvedMedia: state.approvedMedia.map(m => m.id === id ? media : m),
+              pendingMedia: state.pendingMedia.filter(m => m.id !== id), // Remove from pending if approved
+              rejectedMedia: state.rejectedMedia.filter(m => m.id !== id), // Remove from rejected if approved
+              userMedia: state.userMedia.map(m => m.id === id ? media : m),
+              albumMedia: Object.fromEntries(
+                Object.entries(state.albumMedia).map(([albumId, albumMedia]) => [
+                  albumId,
+                  albumMedia.map(m => m.id === id ? media : m)
+                ])
+              ),
+              currentMedia: state.currentMedia?.id === id ? media : state.currentMedia
+            }));
+            
+            // If status changed to approved, add to approved media
+            if (status === MediaStatus.APPROVED) {
+              set(state => ({
+                approvedMedia: [media, ...state.approvedMedia.filter(m => m.id !== id)]
+              }));
+            }
+            
+            // If status changed to rejected, add to rejected media
+            if (status === MediaStatus.REJECTED) {
+              set(state => ({
+                rejectedMedia: [media, ...state.rejectedMedia.filter(m => m.id !== id)]
+              }));
+            }
+            
+            return media;
+          } catch (error) {
+            console.error('Error updating media:', error);
+            return null;
+          }
+        },
+        
+        // Approve a media item
+        approveMediaItem: async (id: string, reason?: string) => {
+          try {
+            const media = await mediaService.approveMedia(id, reason);
+            
+            if (!media) {
+              throw new Error('Failed to approve media');
+            }
+            
+            // Update media in all relevant state arrays
+            set(state => ({
+              eventMedia: state.eventMedia.map(m => m.id === id ? media : m),
+              approvedMedia: [media, ...state.approvedMedia.filter(m => m.id !== id)],
+              pendingMedia: state.pendingMedia.filter(m => m.id !== id), // Remove from pending
+              rejectedMedia: state.rejectedMedia.filter(m => m.id !== id), // Remove from rejected
+              userMedia: state.userMedia.map(m => m.id === id ? media : m),
+              albumMedia: Object.fromEntries(
+                Object.entries(state.albumMedia).map(([albumId, albumMedia]) => [
+                  albumId,
+                  albumMedia.map(m => m.id === id ? media : m)
+                ])
+              ),
+              currentMedia: state.currentMedia?.id === id ? media : state.currentMedia
+            }));
+            
+            return media;
+          } catch (error) {
+            console.error('Error approving media:', error);
+            return null;
+          }
+        },
+        
+        // Reject a media item
+        rejectMediaItem: async (id: string, reason?: string) => {
+          try {
+            const media = await mediaService.rejectMedia(id, reason);
+            
+            if (!media) {
+              throw new Error('Failed to reject media');
+            }
+            
+            // Update media in all relevant state arrays
+            set(state => ({
+              eventMedia: state.eventMedia.map(m => m.id === id ? media : m),
+              approvedMedia: state.approvedMedia.filter(m => m.id !== id), // Remove from approved
+              pendingMedia: state.pendingMedia.filter(m => m.id !== id), // Remove from pending
+              rejectedMedia: [media, ...state.rejectedMedia.filter(m => m.id !== id)],
+              userMedia: state.userMedia.map(m => m.id === id ? media : m),
+              albumMedia: Object.fromEntries(
+                Object.entries(state.albumMedia).map(([albumId, albumMedia]) => [
+                  albumId,
+                  albumMedia.map(m => m.id === id ? media : m)
+                ])
+              ),
+              currentMedia: state.currentMedia?.id === id ? media : state.currentMedia
+            }));
+            
+            return media;
+          } catch (error) {
+            console.error('Error rejecting media:', error);
+            return null;
+          }
+        },
+        
+        // Delete a media item
+        deleteMediaItem: async (id: string) => {
+          try {
+            const success = await mediaService.deleteMedia(id);
+            
+            if (!success) {
+              throw new Error('Failed to delete media');
+            }
+            
+            // Remove media from all state arrays
+            set(state => ({
+              eventMedia: state.eventMedia.filter(m => m.id !== id),
+              approvedMedia: state.approvedMedia.filter(m => m.id !== id),
+              pendingMedia: state.pendingMedia.filter(m => m.id !== id),
+              rejectedMedia: state.rejectedMedia.filter(m => m.id !== id),
+              userMedia: state.userMedia.filter(m => m.id !== id),
+              albumMedia: Object.fromEntries(
+                Object.entries(state.albumMedia).map(([albumId, albumMedia]) => [
+                  albumId,
+                  albumMedia.filter(m => m.id !== id)
+                ])
+              ),
+              currentMedia: state.currentMedia?.id === id ? null : state.currentMedia
+            }));
+            
+            return true;
+          } catch (error) {
+            console.error('Error deleting media:', error);
+            return false;
+          }
+        },
+        
+        // Set media type filter
+        setMediaTypeFilter: (filter: MediaType | 'all') => {
+          set({ mediaTypeFilter: filter });
+        },
+        
+        // Set media status filter
+        setMediaStatusFilter: (filter: MediaStatus | 'all') => {
+          set({ mediaStatusFilter: filter });
+        },
+        
+        // Set sort by
+        setSortBy: (sort: 'newest' | 'oldest' | 'name' | 'size') => {
+          set({ sortBy: sort });
+        },
+        
+        // Get filtered and sorted media
+        getFilteredMedia: (media: Media[]) => {
+          const { mediaTypeFilter, mediaStatusFilter, sortBy } = get();
+          
+          // Filter by media type
+          let filtered = media;
+          if (mediaTypeFilter !== 'all') {
+            filtered = filtered.filter(m => m.media_type === mediaTypeFilter);
+          }
+          
+          // Filter by status
+          if (mediaStatusFilter !== 'all') {
+            filtered = filtered.filter(m => m.status === mediaStatusFilter);
+          }
+          
+          // Sort
+          return [...filtered].sort((a, b) => {
+            if (sortBy === 'newest') {
+              return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+            }
+            if (sortBy === 'oldest') {
+              return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+            }
+            if (sortBy === 'name') {
+              return (a.title || a.id).localeCompare(b.title || b.id);
+            }
+            if (sortBy === 'size') {
+              return (b.size || 0) - (a.size || 0);
+            }
+            return 0;
           });
         },
         
-        removeUpload: (id) => {
-          set((state) => {
-            const { [id]: _, ...rest } = state.uploads;
-            return { uploads: rest };
+        // Clear all errors
+        clearErrors: () => {
+          set({ 
+            eventMediaError: null,
+            approvedMediaError: null,
+            pendingMediaError: null,
+            rejectedMediaError: null,
+            userMediaError: null,
+            albumMediaError: {},
+            albumsError: null
           });
-        },
-        
-        clearUploads: () => set({ uploads: {} }),
-        
-        // New actions for moderation
-        setMedia: (media) => set({ media }),
-        setPendingMedia: (media) => set({ pendingMedia: media }),
-        setApprovedMedia: (media) => set({ approvedMedia: media }),
-        setRejectedMedia: (media) => set({ rejectedMedia: media }),
-        setSelectedMedia: (media) => set({ selectedMedia: media }),
-        setSortBy: (sortBy) => set({ sortBy }),
-        setFilterBy: (filterBy) => set({ filterBy }),
-        setIsUploading: (isUploading) => set({ isUploading }),
-        setUploadProgress: (progress) => set({ uploadProgress: progress }),
-        
-        // New fetch actions for moderation
-        fetchEventPendingMedia: async (eventId) => {
-          try {
-            const media = await getEventPendingMedia(eventId);
-            set({ pendingMedia: media });
-          } catch (error) {
-            console.error('Error fetching pending media:', error);
-            throw error;
-          }
-        },
-        
-        fetchEventApprovedMedia: async (eventId) => {
-          try {
-            const media = await getEventApprovedMedia(eventId);
-            set({ approvedMedia: media });
-          } catch (error) {
-            console.error('Error fetching approved media:', error);
-            throw error;
-          }
-        },
-        
-        fetchEventRejectedMedia: async (eventId) => {
-          try {
-            const media = await getEventRejectedMedia(eventId);
-            set({ rejectedMedia: media });
-          } catch (error) {
-            console.error('Error fetching rejected media:', error);
-            throw error;
-          }
         }
       }),
       {
         name: 'media-store',
         partialize: (state) => ({
-          layout: state.layout,
-          sortOption: state.sortOption,
-          filter: state.filter
+          mediaTypeFilter: state.mediaTypeFilter,
+          mediaStatusFilter: state.mediaStatusFilter,
+          sortBy: state.sortBy
         })
       }
     )
