@@ -9,147 +9,133 @@ const authRetryKey = 'x-auth-retry-count'
 // Define valid role types
 type UserRole = 'super_admin' | 'admin' | 'organizer' | 'event_host' | 'user' | 'guest';
 
-export async function middleware(req: NextRequest) {
-  // Skip middleware only during static generation
-  if (process.env.NEXT_PHASE === 'phase-production-build') {
-    return NextResponse.next()
-  }
-  
+export async function middleware(request: NextRequest) {
+  // Initialize Supabase middleware client
   const res = NextResponse.next()
+  const supabase = createMiddlewareClient({ req: request, res })
   
-  // Get URL information
-  const url = req.nextUrl.clone()
-  const path = url.pathname
+  // Get session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
   
-  // Create Supabase client for all routes
-  const supabase = createMiddlewareClient({ req, res })
-  
-  // Check if there are auth error parameters
-  const hasAuthError = url.searchParams.has('error') && 
-    url.searchParams.has('error_code');
-
-  if (hasAuthError) {
-    // Redirect to our error page with the error parameters
-    const errorParams = new URLSearchParams();
-    errorParams.set('error', url.searchParams.get('error') || '');
-    errorParams.set('error_code', url.searchParams.get('error_code') || '');
-    errorParams.set('error_description', url.searchParams.get('error_description') || '');
+  // Handle invitation links via /invite/:token
+  if (request.nextUrl.pathname.startsWith('/invite/')) {
+    const token = request.nextUrl.pathname.split('/invite/')[1]
     
-    return NextResponse.redirect(
-      new URL(`/auth/error?${errorParams.toString()}`, req.url)
-    );
+    // Redirecting to our invitation handling page with the token
+    return NextResponse.redirect(new URL(`/invitation?token=${token}`, request.url))
   }
 
-  // Try to get the session for all routes
-  try {
-    const { data: { session }, error } = await supabase.auth.getSession()
-    
-    if (error) {
-      console.error('Error getting session:', error)
-      throw error
+  // Require authentication for auth-protected routes
+  if (
+    (request.nextUrl.pathname.startsWith('/dashboard') ||
+    request.nextUrl.pathname.startsWith('/account') ||
+    request.nextUrl.pathname.startsWith('/events') ||
+    request.nextUrl.pathname.startsWith('/admin')) &&
+    !session
+  ) {
+    // Auth required routes when not logged in redirect to login
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+  
+  // Handle authenticated users trying to access login/register pages
+  if (
+    (request.nextUrl.pathname.startsWith('/login') ||
+    request.nextUrl.pathname.startsWith('/register') ||
+    request.nextUrl.pathname === '/') &&
+    session
+  ) {
+    // Redirect authenticated users to dashboard
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+  
+  // For API routes, check for authentication
+  if (request.nextUrl.pathname.startsWith('/api/') && !session) {
+    // Special case for invitation validation API
+    if (request.nextUrl.pathname.startsWith('/api/invitations/validate')) {
+      return res
     }
-
-    // Public routes that don't require authentication
-    const isPublicRoute = 
-      path === '/' || 
-      path.startsWith('/auth/') || 
-      path.startsWith('/public/') ||
-      path.startsWith('/_next/') ||
-      path.startsWith('/api/public/')
     
-    // For public routes, maintain session state but don't enforce auth
-    if (isPublicRoute) {
-      // If user is already authenticated and trying to access signin page, redirect to dashboard
-      if (session && path.startsWith('/auth/signin')) {
-        const redirectUrl = new URL('/protected/dashboard', req.url)
+    // Other APIs require authentication
+    return new NextResponse(
+      JSON.stringify({ error: 'Authentication required' }),
+      { status: 401, headers: { 'content-type': 'application/json' } }
+    )
+  }
+  
+  // For gallery viewing, check if the user is authorized or the gallery is public
+  if (request.nextUrl.pathname.match(/\/events\/[^/]+\/gallery/)) {
+    if (!session) {
+      const eventId = request.nextUrl.pathname.split('/')[2]
+      
+      // Check if the gallery is public
+      const { data: eventData, error } = await supabase
+        .from('events')
+        .select('is_public_gallery')
+        .eq('id', eventId)
+        .single()
+      
+      // If the gallery is not public, redirect to login
+      if (!eventData?.is_public_gallery) {
+        // Store the original URL to redirect back after login
+        const redirectUrl = new URL('/login', request.url)
+        redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
         return NextResponse.redirect(redirectUrl)
       }
+    } else {
+      // User is logged in, check if they have access to this event
+      const eventId = request.nextUrl.pathname.split('/')[2]
+      const userId = session.user.id
       
-      if (session) {
-        // Attach session info to response
-        res.headers.set('x-user-authenticated', 'true')
+      // First check if user is event owner
+      const { data: eventData, error: eventError } = await supabase
+        .from('events')
+        .select('user_id')
+        .eq('id', eventId)
+        .single()
+      
+      if (eventData?.user_id === userId) {
+        // User is event owner, allow access
+        return res
       }
-      return res
+      
+      // Check if user is an attendee
+      const { data: attendeeData, error: attendeeError } = await supabase
+        .from('event_attendees')
+        .select('id')
+        .eq('event_id', eventId)
+        .eq('user_id', userId)
+        .single()
+      
+      if (!attendeeData) {
+        // Not an attendee either, check if gallery is public
+        const { data: publicData, error } = await supabase
+          .from('events')
+          .select('is_public_gallery')
+          .eq('id', eventId)
+          .single()
+        
+        if (!publicData?.is_public_gallery) {
+          // Gallery is not public and user is not authorized
+          return NextResponse.redirect(new URL('/dashboard', request.url))
+        }
+      }
     }
-
-    // Protected routes that require authentication
-    const isProtectedRoute = path.startsWith('/protected/')
-    
-    // If not a protected route, no need to check auth
-    if (!isProtectedRoute) {
-      return res
-    }
-
-    // If user is not authenticated, redirect to sign in
-    if (!session) {
-      // Don't increment retry count for initial auth redirect
-      const redirectUrl = new URL('/auth/signin', req.url)
-      redirectUrl.searchParams.set('returnTo', path)
-      return NextResponse.redirect(redirectUrl)
-    }
-
-    // Check for auth retry count to prevent infinite loops
-    const retryCount = parseInt(req.headers.get(authRetryKey) || '0')
-    if (retryCount >= MAX_AUTH_RETRIES) {
-      console.warn('Max auth retries reached, redirecting to sign in page')
-      const redirectUrl = new URL('/auth/signin', req.url)
-      redirectUrl.searchParams.set('error', 'session_error')
-      return NextResponse.redirect(redirectUrl)
-    }
-    
-    // Increment retry count only for subsequent auth checks
-    res.headers.set(authRetryKey, (retryCount + 1).toString())
-    
-    // Get user's profile to check role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', session.user.id)
-      .single()
-    
-    // Get user role from profile or default to guest
-    const userRole = (profile?.role as UserRole) || 'guest'
-    
-    // Admin routes are only accessible by super_admin and admin
-    const isAdminRoute = path.startsWith('/protected/admin/')
-    if (isAdminRoute && !['super_admin', 'admin'].includes(userRole)) {
-      url.pathname = '/protected/dashboard'
-      return NextResponse.redirect(url)
-    }
-    
-    // Event management routes are only accessible by super_admin, admin, organizer, and event_host
-    const isEventRoute = path.startsWith('/protected/events/')
-    if (isEventRoute && !['super_admin', 'admin', 'organizer', 'event_host'].includes(userRole)) {
-      url.pathname = '/protected/dashboard'
-      return NextResponse.redirect(url)
-    }
-    
-    // If we've made it this far, allow access
-    res.headers.delete(authRetryKey) // Reset retry count
-    res.headers.set('x-user-role', userRole) // Attach role to response
-    return res
-    
-  } catch (error) {
-    console.error('Auth middleware error:', error)
-    
-    // Redirect to sign in page
-    url.pathname = '/auth/signin'
-    url.searchParams.set('error', 'session_error')
-    return NextResponse.redirect(url)
   }
+  
+  return res
 }
 
-// Specify which routes this middleware should run on
+// Define which routes should be processed by this middleware
 export const config = {
   matcher: [
     /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     * - public files
+     * Match all routes except for:
+     * - _next (Next.js internals)
+     * - API routes that don't require auth
+     * - Static files (e.g. /favicon.ico, /static/*)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 } 

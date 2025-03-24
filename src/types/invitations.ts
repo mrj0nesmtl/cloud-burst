@@ -1,7 +1,7 @@
 import { Database } from './supabase';
 
 // Invitation Types
-export type InvitationStatus = 'pending' | 'sent' | 'accepted' | 'declined' | 'expired';
+export type InvitationStatus = 'pending' | 'sent' | 'accepted' | 'declined' | 'expired' | 'active' | 'used' | 'confirmed';
 export type RsvpStatus = 'pending' | 'yes' | 'no' | 'maybe';
 
 export interface Invitation {
@@ -21,6 +21,7 @@ export interface Invitation {
     dietary_preferences?: string;
     plus_one_allowed?: boolean;
     plus_one_used?: boolean;
+    magic_link?: string;
   } | null;
 }
 

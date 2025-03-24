@@ -15,6 +15,9 @@ import {
   BulkImportAttendeesParams
 } from '@/types/events'
 import { generateRandomCode } from '@/lib/utils'
+import { createServerClient } from './server'
+import { cookies } from 'next/headers'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 /**
  * Create a new event
@@ -637,14 +640,23 @@ export async function updateEventStatus(id: string, status: 'draft' | 'published
 }
 
 /**
- * Get an event by its ID
+ * Get an event by ID
+ * @param eventId The event ID
+ * @returns Event object or null if not found
  */
-export async function getEventById(id: string): Promise<{ data: Event }> {
-  const result = await getEvent(id)
+export async function getEventById(eventId: string): Promise<Event | null> {
+  const supabase = createClientComponentClient()
   
-  if (result.error) {
-    throw new Error(`Failed to get event: ${result.error.message}`)
+  const { data, error } = await supabase
+    .from('events')
+    .select('*')
+    .eq('id', eventId)
+    .single()
+  
+  if (error) {
+    console.error('Error fetching event:', error)
+    return null
   }
   
-  return { data: result.data as unknown as Event }
+  return data as Event
 } 
