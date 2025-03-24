@@ -5,6 +5,7 @@ import { sendInvitationEmail } from '@/lib/sendgrid';
 import type { EventWithOrganizer } from '@/types/events';
 import type { Invitation, InvitationStatus, RsvpStatus } from '@/types/invitations';
 import type { UserProfile } from '@/types/auth';
+import { createGuestAccount, generateGuestLoginLink } from '@/lib/supabase/auth-utils';
 
 export async function POST(request: Request) {
   try {
@@ -85,6 +86,30 @@ export async function POST(request: Request) {
       metadata
     };
 
+    // Create a guest account for the invited user
+    const { user, error: accountError } = await createGuestAccount(
+      data.email,
+      data.name,
+      data.eventId,
+      invitation.id
+    );
+
+    if (accountError) {
+      console.warn('Warning: Could not create guest account:', accountError);
+      // Continue with the invitation process even if account creation fails
+    }
+
+    // Generate a magic login link if the account was created
+    let magicLink = null;
+    if (user) {
+      const { link, error: linkError } = await generateGuestLoginLink(data.email, data.eventId);
+      if (!linkError) {
+        magicLink = link;
+      } else {
+        console.warn('Warning: Could not generate magic link:', linkError);
+      }
+    }
+
     // Get host information from the event's organizer
     const hostName = event.organizer?.full_name || 'The Host';
     const hostEmail = event.organizer?.email || 'team@cloud-burst.app';
@@ -97,7 +122,7 @@ export async function POST(request: Request) {
         timeStyle: 'short'
       }),
       eventLocation: event.location || 'TBD',
-      invitationLink: `${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}`,
+      invitationLink: magicLink || `${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}`,
       recipientName: data.name,
       hostName,
       hostEmail,
@@ -118,7 +143,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      invitation
+      invitation,
+      accountCreated: !!user,
+      magicLinkGenerated: !!magicLink
     });
   } catch (error) {
     console.error('Error in invitation creation:', error);

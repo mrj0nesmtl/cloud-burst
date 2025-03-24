@@ -1,7 +1,5 @@
 import { createClientComponentClient, createServerComponentClient, createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import type { Database } from '@/types/supabase'
-import { cookies } from 'next/headers'
-import { type RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
 /**
  * Create a Supabase client for use in server components or API routes
@@ -9,32 +7,64 @@ import { type RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
  * that is more flexible and can be used in different contexts.
  */
 export function createClient() {
-  // This is the safe pattern for server components
-  if (typeof document === 'undefined') {
-    // We're on the server, dynamically import the server-only code
-    return createServerComponentClient<Database>({ 
-      cookies: () => cookies() 
-    })
-  }
-  
-  // We're in the browser
   return createClientComponentClient<Database>()
 }
 
 /**
  * Create a Supabase client for use in server components
  */
-export function createServerClient() {
-  return createServerComponentClient<Database>({ 
-    cookies: () => cookies() 
-  })
+export async function createServerClient(cookieStore?: any) {
+  if (typeof window !== 'undefined') {
+    // We're in the browser
+    return createClientComponentClient<Database>()
+  }
+
+  // We're on the server
+  if (cookieStore) {
+    // Use provided cookies
+    return createServerComponentClient<Database>({ cookies: () => cookieStore })
+  } else {
+    // Try to dynamically import cookies (only works in App Router)
+    try {
+      const { cookies } = await import('next/headers')
+      return createServerComponentClient<Database>({ cookies: () => cookies() })
+    } catch (e) {
+      // Fallback for Pages Router or other contexts
+      console.warn('Could not import cookies from next/headers. Using client component client instead.')
+      return createClientComponentClient<Database>()
+    }
+  }
 }
 
 /**
  * Create a Supabase client for use in server actions
  */
-export function createActionClient() {
-  return createServerActionClient<Database>({ 
-    cookies: () => cookies() 
-  })
+export async function createActionClient(cookieStore?: any) {
+  if (typeof window !== 'undefined') {
+    // We're in the browser
+    throw new Error('createActionClient should only be called on the server')
+  }
+
+  if (cookieStore) {
+    // Use provided cookies
+    return createServerActionClient<Database>({ cookies: () => cookieStore })
+  } else {
+    // Try to dynamically import cookies
+    try {
+      const { cookies } = await import('next/headers')
+      return createServerActionClient<Database>({ cookies: () => cookies() })
+    } catch (e) {
+      // Fallback with error
+      throw new Error('Could not import cookies from next/headers. Make sure you are in a Server Action.')
+    }
+  }
+}
+
+// For middleware use
+export function createMiddlewareClient(context: { 
+  req: Request,
+  res: Response 
+}) {
+  const { createMiddlewareClient: createMiddleware } = require('@supabase/auth-helpers-nextjs')
+  return createMiddleware(context)
 } 

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 // Fetch dashboard data
 async function getDashboardData() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   
   try {
     // Fetch all required data concurrently
