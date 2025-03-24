@@ -8,207 +8,17 @@ import {
   Video,
   CreateMediaParams,
   UpdateMediaParams,
-  MediaStatus
+  MediaStatus,
+  Album,
+  AlbumMedia,
+  ModerationLog,
+  CreateAlbumParams,
+  UpdateAlbumParams,
+  MediaUploadResult,
+  MediaServiceClient,
+  mapDbMediaToMedia
 } from '@/types/media';
 import { createClient } from '@/lib/supabase/client';
-
-type MediaInsert = Database['public']['Tables']['media']['Insert'];
-type MediaUpdate = Database['public']['Tables']['media']['Update'];
-type MediaRow = Database['public']['Tables']['media']['Row'];
-
-/**
- * Map a database media record to the Media type
- */
-export function mapDbMediaToMedia(dbMedia: any): Media {
-  const metadata = dbMedia.metadata || {};
-  
-  // Determine status based on available fields
-  let status = dbMedia.status as MediaStatus;
-  let isApproved = dbMedia.is_approved;
-  
-  // If status is available, use it
-  if (status) {
-    // Set is_approved for backward compatibility
-    isApproved = status === MediaStatus.APPROVED;
-  } 
-  // If only is_approved is available, derive status from it
-  else if (isApproved !== undefined) {
-    status = isApproved ? MediaStatus.APPROVED : MediaStatus.PENDING;
-  }
-  // Default to PENDING if neither is available
-  else {
-    status = MediaStatus.PENDING;
-    isApproved = false;
-  }
-
-  return {
-    id: dbMedia.id,
-    event_id: dbMedia.event_id,
-    media_type: dbMedia.media_type as MediaType,
-    storage_path: dbMedia.storage_path,
-    file_path: dbMedia.file_path,
-    url: dbMedia.url,
-    thumbnail_url: dbMedia.thumbnail_url,
-    title: dbMedia.title,
-    description: dbMedia.description,
-    size: dbMedia.size,
-    mime_type: dbMedia.mime_type,
-    width: dbMedia.width || metadata.width,
-    height: dbMedia.height || metadata.height,
-    duration: dbMedia.duration,
-    user_id: dbMedia.user_id,
-    is_approved: isApproved,
-    status: status,
-    created_at: dbMedia.created_at,
-    updated_at: dbMedia.updated_at,
-    metadata: metadata
-  };
-}
-
-/**
- * Convert Media object to a Photo object for backward compatibility
- */
-export function mediaToPhoto(media: Media): Photo | null {
-  if (media.media_type !== MediaType.PHOTO) return null;
-  
-  return media as Photo;
-}
-
-/**
- * Convert Media object to a Video object
- */
-export function mediaToVideo(media: Media): Video | null {
-  if (media.media_type !== MediaType.VIDEO) return null;
-  
-  return media as Video;
-}
-
-/**
- * Upload and create a photo
- */
-export async function uploadAndCreatePhoto(
-  file: File,
-  eventId: string,
-  userId: string,
-  metadata: MediaMetadata = {}
-): Promise<Media | null> {
-  return uploadAndCreateMedia(file, eventId, userId, MediaType.PHOTO, metadata);
-}
-
-/**
- * Upload and create a video
- */
-export async function uploadAndCreateVideo(
-  file: File,
-  eventId: string,
-  userId: string,
-  duration: number,
-  metadata: MediaMetadata = {}
-): Promise<Media | null> {
-  return uploadAndCreateMedia(file, eventId, userId, MediaType.VIDEO, {
-    ...metadata,
-    duration
-  });
-}
-
-/**
- * Upload and create a media item (photo or video)
- */
-export async function uploadAndCreateMedia(
-  file: File,
-  eventId: string,
-  userId: string,
-  mediaType: MediaType = MediaType.PHOTO,
-  metadata: MediaMetadata = {}
-): Promise<Media | null> {
-  const supabase = createClientComponentClient<Database>();
-  
-  // Generate a unique filename
-  const timestamp = new Date().getTime();
-  const fileExt = file.name.split('.').pop();
-  const safeFileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
-  const storagePath = `events/${eventId}/${mediaType}s/${safeFileName}`;
-  
-  // Upload the file to Supabase Storage
-  const { data: uploadData, error: uploadError } = await supabase
-    .storage
-    .from('media')
-    .upload(storagePath, file);
-  
-  if (uploadError) {
-    console.error('Error uploading media:', uploadError);
-    return null;
-  }
-  
-  // Get the public URL for the uploaded file
-  const { data: { publicUrl } } = supabase
-    .storage
-    .from('media')
-    .getPublicUrl(storagePath);
-  
-  // Get dimensions for image files
-  let width: number | null = null;
-  let height: number | null = null;
-  let duration: number | null = null;
-  
-  if (mediaType === MediaType.PHOTO && file.type.startsWith('image/')) {
-    try {
-      const dimensions = await getImageDimensions(file);
-      width = dimensions.width;
-      height = dimensions.height;
-    } catch (error) {
-      console.warn('Could not get image dimensions:', error);
-    }
-  } else if (mediaType === MediaType.VIDEO && file.type.startsWith('video/')) {
-    duration = metadata.duration || null;
-  }
-  
-  // Create a record in the media table
-  const mediaRecord: MediaInsert = {
-    event_id: eventId,
-    media_type: mediaType,
-    storage_path: storagePath,
-    file_path: file.name,
-    url: publicUrl,
-    size: file.size,
-    mime_type: file.type,
-    width,
-    height,
-    duration,
-    user_id: userId,
-    status: MediaStatus.PENDING,
-    metadata: metadata,
-  };
-  
-  const { data: mediaData, error: mediaError } = await supabase
-    .from('media')
-    .insert(mediaRecord)
-    .select()
-    .single();
-  
-  if (mediaError) {
-    console.error('Error creating media record:', mediaError);
-    return null;
-  }
-  
-  return mapDbMediaToMedia(mediaData);
-}
-
-/**
- * Upload a photo with tags to Supabase Storage and create a record in the media table
- */
-export async function uploadAndCreatePhotoWithTags(
-  file: File,
-  eventId: string,
-  userId: string,
-  tags: string[] = []
-): Promise<Media | null> {
-  const metadata: MediaMetadata = {
-    tags: tags,
-  };
-  
-  return uploadAndCreatePhoto(file, eventId, userId, metadata);
-}
 
 /**
  * Get image dimensions from a file
@@ -230,458 +40,652 @@ export const getImageDimensions = (file: File): Promise<{width: number, height: 
 };
 
 /**
- * Get all media for an event
+ * Client-side Media Service
+ * Contains methods for interacting with media and albums
  */
-export async function getEventMedia(
-  eventId: string,
-  mediaType?: MediaType
-): Promise<Media[]> {
-  const supabase = createClient();
+const mediaService: MediaServiceClient = {
+  supabase: createClient(),
   
-  let query = supabase
-    .from('media')
-    .select('*')
-    .eq('event_id', eventId);
-  
-  if (mediaType) {
-    query = query.eq('media_type', mediaType);
-  }
-  
-  const { data, error } = await query.order('created_at', { ascending: false });
-  
-  if (error) {
-    console.error('Error fetching event media:', error);
-    return [];
-  }
-  
-  return (data || []).map(mapDbMediaToMedia);
-}
-
-/**
- * Get event photos
- */
-export async function getEventPhotos(eventId: string): Promise<Photo[]> {
-  const allMedia = await getEventMedia(eventId, MediaType.PHOTO);
-  return allMedia.filter(media => media.media_type === MediaType.PHOTO) as Photo[];
-}
-
-/**
- * Get event videos
- */
-export async function getEventVideos(eventId: string): Promise<Video[]> {
-  const allMedia = await getEventMedia(eventId, MediaType.VIDEO);
-  return allMedia.filter(media => media.media_type === MediaType.VIDEO) as Video[];
-}
-
-/**
- * Get a single media item by ID - CLIENT VERSION
- */
-export async function getMediaById(mediaId: string): Promise<Media | null> {
-  const supabase = createClientComponentClient<Database>();
-  
-  const { data, error } = await supabase
-    .from('media')
-    .select('*')
-    .eq('id', mediaId)
-    .single();
-  
-  if (error) {
-    console.error('Error fetching media:', error);
-    return null;
-  }
-  
-  return mapDbMediaToMedia(data);
-}
-
-/**
- * Get a single photo by ID (for backward compatibility)
- */
-export async function getPhotoById(photoId: string): Promise<Photo | null> {
-  const media = await getMediaById(photoId);
-  if (!media || media.media_type !== 'photo') return null;
-  return media as Photo;
-}
-
-/**
- * Update a media's approval status - CLIENT VERSION
- */
-export async function updateMediaApproval(mediaId: string, isApproved: boolean): Promise<boolean> {
-  const supabase = createClientComponentClient<Database>();
-  
-  const { error } = await supabase
-    .from('media')
-    .update({ is_approved: isApproved } as MediaUpdate)
-    .eq('id', mediaId);
-  
-  if (error) {
-    console.error('Error updating media approval:', error);
-    return false;
-  }
-  
-  return true;
-}
-
-/**
- * Delete a media from storage and the database - CLIENT VERSION
- */
-export async function deleteMedia(mediaId: string): Promise<boolean> {
-  const supabase = createClientComponentClient<Database>();
-  
-  // First, get the media to find its storage path
-  const { data: media, error: fetchError } = await supabase
-    .from('media')
-    .select('storage_path, media_type')
-    .eq('id', mediaId)
-    .single();
-  
-  if (fetchError) {
-    console.error('Error fetching media for deletion:', fetchError);
-    return false;
-  }
-  
-  // Delete from storage
-  const { error: storageError } = await supabase
-    .storage
-    .from('media')
-    .remove([media.storage_path]);
-  
-  if (storageError) {
-    console.error('Error deleting media from storage:', storageError);
-    return false;
-  }
-  
-  // Delete from database
-  const { error: dbError } = await supabase
-    .from('media')
-    .delete()
-    .eq('id', mediaId);
-  
-  if (dbError) {
-    console.error('Error deleting media from database:', dbError);
-    return false;
-  }
-  
-  return true;
-}
-
-/**
- * Add a tag to a media - CLIENT VERSION
- */
-export async function addTagToMedia(mediaId: string, tag: string): Promise<boolean> {
-  const supabase = createClientComponentClient<Database>();
-  
-  // First, get the current media metadata
-  const { data: media, error: fetchError } = await supabase
-    .from('media')
-    .select('metadata')
-    .eq('id', mediaId)
-    .single();
-  
-  if (fetchError) {
-    console.error('Error fetching media metadata:', fetchError);
-    return false;
-  }
-  
-  // Update the metadata with the new tag
-  const metadata = media.metadata as MediaMetadata || {};
-  const tags = metadata.tags || [];
-  
-  if (!tags.includes(tag)) {
-    tags.push(tag);
-  }
-  
-  const updatedMetadata: MediaMetadata = {
-    ...metadata,
-    tags,
-  };
-  
-  // Update the media record
-  const { error: updateError } = await supabase
-    .from('media')
-    .update({ metadata: updatedMetadata } as MediaUpdate)
-    .eq('id', mediaId);
-  
-  if (updateError) {
-    console.error('Error updating media tags:', updateError);
-    return false;
-  }
-  
-  return true;
-}
-
-/**
- * Remove a tag from a media - CLIENT VERSION
- */
-export async function removeTagFromMedia(mediaId: string, tag: string): Promise<boolean> {
-  const supabase = createClientComponentClient<Database>();
-  
-  // First, get the current media metadata
-  const { data: media, error: fetchError } = await supabase
-    .from('media')
-    .select('metadata')
-    .eq('id', mediaId)
-    .single();
-  
-  if (fetchError) {
-    console.error('Error fetching media metadata:', fetchError);
-    return false;
-  }
-  
-  // Update the metadata by removing the tag
-  const metadata = media.metadata as MediaMetadata || {};
-  const tags = metadata.tags || [];
-  
-  const updatedTags = tags.filter(t => t !== tag);
-  
-  const updatedMetadata: MediaMetadata = {
-    ...metadata,
-    tags: updatedTags,
-  };
-  
-  // Update the media record
-  const { error: updateError } = await supabase
-    .from('media')
-    .update({ metadata: updatedMetadata } as MediaUpdate)
-    .eq('id', mediaId);
-  
-  if (updateError) {
-    console.error('Error updating media tags:', updateError);
-    return false;
-  }
-  
-  return true;
-}
-
-/**
- * Get approved media for an event - CLIENT VERSION
- */
-export const getApprovedEventMedia = async (
-  eventId: string,
-  mediaType?: MediaType
-): Promise<Media[]> => {
-  const supabase = createClientComponentClient<Database>();
-  
-  let query = supabase
-    .from('media')
-    .select('*')
-    .eq('event_id', eventId)
-    .eq('is_approved', true);
+  // Media methods
+  getEventMedia: async (eventId: string) => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('media')
+      .select('*')
+      .eq('event_id', eventId)
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      console.error('Error fetching event media:', error);
+      return [];
+    }
     
-  if (mediaType) {
-    query = query.eq('media_type', mediaType);
-  }
+    return (data || []).map(media => mapDbMediaToMedia(media));
+  },
   
-  const { data, error } = await query.order('created_at', { ascending: false });
-  
-  if (error) {
-    console.error('Error fetching approved event media:', error);
-    return [];
-  }
-  
-  return data.map(mapDbMediaToMedia);
-};
-
-/**
- * Get pending media for an event - CLIENT VERSION
- */
-export const getPendingEventMedia = async (
-  eventId: string,
-  mediaType?: MediaType
-): Promise<Media[]> => {
-  const supabase = createClientComponentClient<Database>();
-  
-  let query = supabase
-    .from('media')
-    .select('*')
-    .eq('event_id', eventId)
-    .eq('is_approved', false);
+  getApprovedEventMedia: async (eventId: string) => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('media')
+      .select('*')
+      .eq('event_id', eventId)
+      .eq('status', MediaStatus.APPROVED)
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      console.error('Error fetching approved event media:', error);
+      return [];
+    }
     
-  if (mediaType) {
-    query = query.eq('media_type', mediaType);
-  }
+    return (data || []).map(media => mapDbMediaToMedia(media));
+  },
   
-  const { data, error } = await query.order('created_at', { ascending: false });
-  
-  if (error) {
-    console.error('Error fetching pending event media:', error);
-    return [];
-  }
-  
-  return data.map(mapDbMediaToMedia);
-};
-
-/**
- * Get media uploaded by a user - CLIENT VERSION
- */
-export const getUserMedia = async (
-  userId: string,
-  mediaType?: MediaType
-): Promise<Media[]> => {
-  const supabase = createClientComponentClient<Database>();
-  
-  let query = supabase
-    .from('media')
-    .select('*')
-    .eq('uploaded_by', userId);
+  getPendingEventMedia: async (eventId: string) => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('media')
+      .select('*')
+      .eq('event_id', eventId)
+      .eq('status', MediaStatus.PENDING)
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      console.error('Error fetching pending event media:', error);
+      return [];
+    }
     
-  if (mediaType) {
-    query = query.eq('media_type', mediaType);
-  }
+    return (data || []).map(media => mapDbMediaToMedia(media));
+  },
   
-  const { data, error } = await query.order('created_at', { ascending: false });
+  getRejectedEventMedia: async (eventId: string) => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('media')
+      .select('*')
+      .eq('event_id', eventId)
+      .eq('status', MediaStatus.REJECTED)
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      console.error('Error fetching rejected event media:', error);
+      return [];
+    }
+    
+    return (data || []).map(media => mapDbMediaToMedia(media));
+  },
   
-  if (error) {
-    console.error('Error fetching user media:', error);
-    return [];
-  }
+  getUserMedia: async (userId: string = '') => {
+    const supabase = createClient();
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !userData.user) {
+      console.error('Error getting user:', userError);
+      return [];
+    }
+    
+    const uid = userId || userData.user.id;
+    
+    const { data, error } = await supabase
+      .from('media')
+      .select('*')
+      .eq('uploaded_by', uid)
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      console.error('Error fetching user media:', error);
+      return [];
+    }
+    
+    return (data || []).map(media => mapDbMediaToMedia(media));
+  },
   
-  return data.map(mapDbMediaToMedia);
-};
-
-/**
- * Get a public URL for a media storage path - CLIENT VERSION
- */
-export const getMediaUrl = async (storagePath: string): Promise<string | null> => {
-  const supabase = createClientComponentClient<Database>();
+  getMediaById: async (mediaId: string) => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('media')
+      .select('*')
+      .eq('id', mediaId)
+      .single();
+      
+    if (error) {
+      console.error('Error fetching media by ID:', error);
+      return null;
+    }
+    
+    return mapDbMediaToMedia(data);
+  },
   
-  const { data } = supabase
-    .storage
-    .from('media')
-    .getPublicUrl(storagePath);
+  createMedia: async (params: CreateMediaParams) => {
+    const supabase = createClient();
+    const mediaRecord = {
+      event_id: params.eventId,
+      uploaded_by: params.userId,
+      media_type: params.mediaType,
+      storage_path: params.filePath,
+      filename: params.filename,
+      url: params.url,
+      thumbnail_url: params.thumbnailUrl,
+      title: params.title,
+      description: params.description,
+      size: params.size,
+      mime_type: params.mimeType,
+      width: params.width,
+      height: params.height,
+      duration: params.duration,
+      is_public: params.isPublic || false,
+      status: MediaStatus.PENDING,
+      metadata: params.metadata || {},
+    };
+    
+    const { data, error } = await supabase
+      .from('media')
+      .insert(mediaRecord)
+      .select()
+      .single();
+      
+    if (error) {
+      console.error('Error creating media:', error);
+      return null;
+    }
+    
+    return mapDbMediaToMedia(data);
+  },
   
-  return data.publicUrl;
-};
-
-/**
- * Get pending media for an event
- */
-export const getEventPendingMedia = async (
-  eventId: string,
-  mediaType?: MediaType
-): Promise<Media[]> => {
-  const supabase = createClient();
+  updateMedia: async (params: UpdateMediaParams) => {
+    const supabase = createClient();
+    const updateRecord: Record<string, any> = {
+      ...(params.title !== undefined && { title: params.title }),
+      ...(params.description !== undefined && { description: params.description }),
+      ...(params.status !== undefined && { status: params.status }),
+      ...(params.isPublic !== undefined && { is_public: params.isPublic }),
+      ...(params.metadata !== undefined && { metadata: params.metadata }),
+      updated_at: new Date().toISOString(),
+    };
+    
+    // If status is being updated, also update is_approved for backward compatibility
+    if (params.status !== undefined) {
+      updateRecord.is_approved = params.status === MediaStatus.APPROVED;
+    }
+    
+    const { data, error } = await supabase
+      .from('media')
+      .update(updateRecord)
+      .eq('id', params.id)
+      .select()
+      .single();
+      
+    if (error) {
+      console.error('Error updating media:', error);
+      return null;
+    }
+    
+    return mapDbMediaToMedia(data);
+  },
   
-  let query = supabase
-    .from('media')
-    .select('*')
-    .eq('event_id', eventId)
-    .eq('status', MediaStatus.PENDING)
-    .order('created_at', { ascending: false });
+  deleteMedia: async (mediaId: string) => {
+    const supabase = createClient();
+    
+    // First, get the media to find its storage path
+    const { data: mediaData, error: mediaError } = await supabase
+      .from('media')
+      .select('storage_path')
+      .eq('id', mediaId)
+      .single();
+      
+    if (mediaError) {
+      console.error('Error fetching media to delete:', mediaError);
+      return false;
+    }
+    
+    // Delete from storage if path exists
+    if (mediaData.storage_path) {
+      const { error: storageError } = await supabase
+        .storage
+        .from('media')
+        .remove([mediaData.storage_path]);
+        
+      if (storageError) {
+        console.error('Error deleting media from storage:', storageError);
+        // Continue anyway to delete the database record
+      }
+    }
+    
+    // Delete the database record
+    const { error } = await supabase
+      .from('media')
+      .delete()
+      .eq('id', mediaId);
+      
+    if (error) {
+      console.error('Error deleting media record:', error);
+      return false;
+    }
+    
+    return true;
+  },
   
-  if (mediaType) {
-    query = query.eq('media_type', mediaType);
-  }
+  uploadMedia: async (file: File, eventId: string, onProgress?: (progress: number) => void) => {
+    const supabase = createClient();
+    
+    // Generate a unique filename
+    const timestamp = new Date().getTime();
+    const safeFileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9.]/g, '-')}`;
+    const storagePath = `events/${eventId}/${file.type.startsWith('video') ? 'videos' : 'photos'}/${safeFileName}`;
+    
+    // Upload the file to Supabase Storage
+    const { data, error } = await supabase
+      .storage
+      .from('media')
+      .upload(storagePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+        // onProgress would be handled if supported by Supabase
+      });
+      
+    if (error) {
+      console.error('Error uploading media:', error);
+      return null;
+    }
+    
+    // Get the public URL for the uploaded file
+    const { data: { publicUrl } } = supabase
+      .storage
+      .from('media')
+      .getPublicUrl(storagePath);
+      
+    return {
+      path: storagePath,
+      url: publicUrl
+    };
+  },
   
-  const { data, error } = await query;
-  
-  if (error) {
-    console.error('Error fetching pending event media:', error);
-    return [];
-  }
-  
-  return data.map(mapDbMediaToMedia);
-};
-
-/**
- * Get approved media for an event
- */
-export const getEventApprovedMedia = async (
-  eventId: string,
-  mediaType?: MediaType
-): Promise<Media[]> => {
-  const supabase = createClient();
-  
-  let query = supabase
-    .from('media')
-    .select('*')
-    .eq('event_id', eventId)
-    .eq('status', MediaStatus.APPROVED)
-    .order('created_at', { ascending: false });
-  
-  if (mediaType) {
-    query = query.eq('media_type', mediaType);
-  }
-  
-  const { data, error } = await query;
-  
-  if (error) {
-    console.error('Error fetching approved event media:', error);
-    return [];
-  }
-  
-  return data.map(mapDbMediaToMedia);
-};
-
-/**
- * Get rejected media for an event
- */
-export const getEventRejectedMedia = async (
-  eventId: string,
-  mediaType?: MediaType
-): Promise<Media[]> => {
-  const supabase = createClient();
-  
-  let query = supabase
-    .from('media')
-    .select('*')
-    .eq('event_id', eventId)
-    .eq('status', MediaStatus.REJECTED)
-    .order('created_at', { ascending: false });
-  
-  if (mediaType) {
-    query = query.eq('media_type', mediaType);
-  }
-  
-  const { data, error } = await query;
-  
-  if (error) {
-    console.error('Error fetching rejected event media:', error);
-    return [];
-  }
-  
-  return data.map(mapDbMediaToMedia);
-};
-
-/**
- * Approve a media item
- */
-export const approveMediaItem = async (mediaId: string): Promise<boolean> => {
-  const supabase = createClient();
-  
-  const { error } = await supabase
-    .from('media')
-    .update({
+  approveMedia: async (mediaId: string, reason?: string) => {
+    const supabase = createClient();
+    
+    // Update media status
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError) {
+      console.error('Error getting user for moderation:', userError);
+      return null;
+    }
+    
+    // Get media info for logging
+    const { data: mediaData, error: mediaError } = await supabase
+      .from('media')
+      .select('event_id')
+      .eq('id', mediaId)
+      .single();
+      
+    if (mediaError) {
+      console.error('Error getting media for moderation log:', mediaError);
+      return null;
+    }
+    
+    // Create a moderation log
+    try {
+      const logEntry = {
+        media_id: mediaId,
+        user_id: userData.user?.id,
+        event_id: mediaData.event_id,
+        action: 'approve',
+        reason: reason || 'Media approved',
+      };
+      
+      await supabase
+        .from('moderation_logs' as any)
+        .insert(logEntry);
+    } catch (err) {
+      console.error('Error creating moderation log:', err);
+      // Continue with approval anyway
+    }
+    
+    // Update the media status
+    return await mediaService.updateMedia({
+      id: mediaId,
       status: MediaStatus.APPROVED,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', mediaId);
+      isPublic: true,
+    });
+  },
   
-  if (error) {
-    console.error('Error approving media:', error);
-    return false;
-  }
+  rejectMedia: async (mediaId: string, reason?: string) => {
+    const supabase = createClient();
+    
+    // Update media status
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError) {
+      console.error('Error getting user for moderation:', userError);
+      return null;
+    }
+    
+    // Get media info for logging
+    const { data: mediaData, error: mediaError } = await supabase
+      .from('media')
+      .select('event_id')
+      .eq('id', mediaId)
+      .single();
+      
+    if (mediaError) {
+      console.error('Error getting media for moderation log:', mediaError);
+      return null;
+    }
+    
+    // Create a moderation log
+    try {
+      const logEntry = {
+        media_id: mediaId,
+        user_id: userData.user?.id,
+        event_id: mediaData.event_id,
+        action: 'reject',
+        reason: reason || 'Media rejected',
+      };
+      
+      await supabase
+        .from('moderation_logs' as any)
+        .insert(logEntry);
+    } catch (err) {
+      console.error('Error creating moderation log:', err);
+      // Continue with rejection anyway
+    }
+    
+    // Update the media status
+    return await mediaService.updateMedia({
+      id: mediaId,
+      status: MediaStatus.REJECTED,
+      isPublic: false,
+    });
+  },
   
-  return true;
+  // Album methods
+  getEventAlbums: async (eventId: string) => {
+    const supabase = createClient();
+    try {
+      const { data, error } = await supabase
+        .from('albums' as any)
+        .select('*')
+        .eq('event_id', eventId)
+        .order('created_at', { ascending: false });
+        
+      if (error) {
+        console.error('Error fetching event albums:', error);
+        return [];
+      }
+      
+      return data as unknown as Album[] || [];
+    } catch (err) {
+      console.error('Error fetching event albums:', err);
+      return [];
+    }
+  },
+  
+  getAlbumById: async (albumId: string) => {
+    const supabase = createClient();
+    try {
+      const { data, error } = await supabase
+        .from('albums' as any)
+        .select('*')
+        .eq('id', albumId)
+        .single();
+        
+      if (error) {
+        console.error('Error fetching album by ID:', error);
+        return null;
+      }
+      
+      return data as unknown as Album;
+    } catch (err) {
+      console.error('Error fetching album by ID:', err);
+      return null;
+    }
+  },
+  
+  getAlbumMedia: async (albumId: string) => {
+    const supabase = createClient();
+    try {
+      const { data, error } = await supabase
+        .from('album_media' as any)
+        .select('media_id, sort_order')
+        .eq('album_id', albumId)
+        .order('sort_order', { ascending: true });
+        
+      if (error) {
+        console.error('Error fetching album media:', error);
+        return [];
+      }
+      
+      // No media in album
+      if (!data || data.length === 0) {
+        return [];
+      }
+      
+      // Fetch all media items in one query
+      const mediaIds = data.map((item: any) => item.media_id);
+      const { data: mediaData, error: mediaError } = await supabase
+        .from('media')
+        .select('*')
+        .in('id', mediaIds);
+        
+      if (mediaError) {
+        console.error('Error fetching media for album:', mediaError);
+        return [];
+      }
+      
+      // Map to Media objects and sort by the original sort_order
+      const mediaMap = new Map();
+      mediaData.forEach((item: any) => {
+        mediaMap.set(item.id, mapDbMediaToMedia(item));
+      });
+      
+      // Return in sort order
+      return data
+        .map((item: any) => ({ media: mediaMap.get(item.media_id), sortOrder: item.sort_order }))
+        .filter((item: any) => item.media)
+        .sort((a: any, b: any) => a.sortOrder - b.sortOrder)
+        .map((item: any) => item.media);
+    } catch (err) {
+      console.error('Error fetching album media:', err);
+      return [];
+    }
+  },
+  
+  createAlbum: async (params: CreateAlbumParams) => {
+    const supabase = createClient();
+    try {
+      const albumRecord = {
+        event_id: params.eventId,
+        title: params.title,
+        description: params.description,
+        cover_media_id: params.coverMediaId,
+        is_public: params.isPublic !== undefined ? params.isPublic : true,
+      };
+      
+      const { data, error } = await supabase
+        .from('albums' as any)
+        .insert(albumRecord)
+        .select()
+        .single();
+        
+      if (error) {
+        console.error('Error creating album:', error);
+        return null;
+      }
+      
+      return data as unknown as Album;
+    } catch (err) {
+      console.error('Error creating album:', err);
+      return null;
+    }
+  },
+  
+  updateAlbum: async (params: UpdateAlbumParams) => {
+    const supabase = createClient();
+    try {
+      const updateRecord = {
+        ...(params.title !== undefined && { title: params.title }),
+        ...(params.description !== undefined && { description: params.description }),
+        ...(params.coverMediaId !== undefined && { cover_media_id: params.coverMediaId }),
+        ...(params.isPublic !== undefined && { is_public: params.isPublic }),
+        updated_at: new Date().toISOString(),
+      };
+      
+      const { data, error } = await supabase
+        .from('albums' as any)
+        .update(updateRecord)
+        .eq('id', params.id)
+        .select()
+        .single();
+        
+      if (error) {
+        console.error('Error updating album:', error);
+        return null;
+      }
+      
+      return data as unknown as Album;
+    } catch (err) {
+      console.error('Error updating album:', err);
+      return null;
+    }
+  },
+  
+  deleteAlbum: async (albumId: string) => {
+    const supabase = createClient();
+    
+    try {
+      // Delete album media associations first
+      await supabase
+        .from('album_media' as any)
+        .delete()
+        .eq('album_id', albumId);
+        
+      // Delete the album
+      const { error } = await supabase
+        .from('albums' as any)
+        .delete()
+        .eq('id', albumId);
+        
+      if (error) {
+        console.error('Error deleting album:', error);
+        return false;
+      }
+      
+      return true;
+    } catch (err) {
+      console.error('Error deleting album:', err);
+      return false;
+    }
+  },
+  
+  addMediaToAlbum: async (albumId: string, mediaId: string) => {
+    const supabase = createClient();
+    
+    try {
+      // Check if the association already exists
+      const { data: existingData, error: existingError } = await supabase
+        .from('album_media' as any)
+        .select('id')
+        .eq('album_id', albumId)
+        .eq('media_id', mediaId)
+        .maybeSingle();
+        
+      if (existingError) {
+        console.error('Error checking album media association:', existingError);
+        return false;
+      }
+      
+      // If association exists, return success
+      if (existingData) {
+        return true;
+      }
+      
+      // Get the highest sort order
+      const { data: sortData } = await supabase
+        .from('album_media' as any)
+        .select('sort_order')
+        .eq('album_id', albumId)
+        .order('sort_order', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+        
+      // Use type assertion to avoid TypeScript errors
+      const nextSortOrder = sortData 
+        ? ((sortData as any).sort_order || 0) + 1 
+        : 1;
+      
+      // Create new association
+      const { error } = await supabase
+        .from('album_media' as any)
+        .insert({
+          album_id: albumId,
+          media_id: mediaId,
+          sort_order: nextSortOrder,
+        });
+        
+      if (error) {
+        console.error('Error adding media to album:', error);
+        return false;
+      }
+      
+      return true;
+    } catch (err) {
+      console.error('Error adding media to album:', err);
+      return false;
+    }
+  },
+  
+  removeMediaFromAlbum: async (albumId: string, mediaId: string) => {
+    const supabase = createClient();
+    
+    try {
+      const { error } = await supabase
+        .from('album_media' as any)
+        .delete()
+        .eq('album_id', albumId)
+        .eq('media_id', mediaId);
+        
+      if (error) {
+        console.error('Error removing media from album:', error);
+        return false;
+      }
+      
+      return true;
+    } catch (err) {
+      console.error('Error removing media from album:', err);
+      return false;
+    }
+  },
+  
+  reorderAlbumMedia: async (albumId: string, mediaIds: string[]) => {
+    const supabase = createClient();
+    
+    try {
+      // Create update array
+      const updates = mediaIds.map((mediaId, index) => ({
+        album_id: albumId,
+        media_id: mediaId,
+        sort_order: index,
+      }));
+      
+      // Delete existing
+      await supabase
+        .from('album_media' as any)
+        .delete()
+        .eq('album_id', albumId);
+        
+      // Insert new ordering
+      const { error } = await supabase
+        .from('album_media' as any)
+        .insert(updates as any);
+        
+      if (error) {
+        console.error('Error reordering album media:', error);
+        return false;
+      }
+      
+      return true;
+    } catch (err) {
+      console.error('Error reordering album media:', err);
+      return false;
+    }
+  },
 };
 
-/**
- * Reject a media item
- */
-export const rejectMediaItem = async (mediaId: string): Promise<boolean> => {
-  const supabase = createClient();
-  
-  const { error } = await supabase
-    .from('media')
-    .update({
-      status: MediaStatus.REJECTED,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', mediaId);
-  
-  if (error) {
-    console.error('Error rejecting media:', error);
-    return false;
-  }
-  
-  return true;
-};
+export default mediaService;
