@@ -37,15 +37,16 @@ const bulkInviteSchema = z.object({
 type SingleInviteFormValues = z.infer<typeof singleInviteSchema>;
 type BulkInviteFormValues = z.infer<typeof bulkInviteSchema>;
 
-export function CreateInvitationForm() {
+export function CreateInvitationForm({ eventId }: { eventId?: string }) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: events, isLoading: eventsLoading } = useEvents();
   
-  // Initialize forms
+  // Initialize forms with eventId if provided
   const singleForm = useForm<SingleInviteFormValues>({
     resolver: zodResolver(singleInviteSchema),
     defaultValues: {
+      eventId: eventId || '',
       message: '',
       plusOne: false,
     },
@@ -54,6 +55,7 @@ export function CreateInvitationForm() {
   const bulkForm = useForm<BulkInviteFormValues>({
     resolver: zodResolver(bulkInviteSchema),
     defaultValues: {
+      eventId: eventId || '',
       message: '',
       plusOne: false,
     },

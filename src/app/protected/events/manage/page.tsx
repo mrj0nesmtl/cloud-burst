@@ -283,44 +283,52 @@ export default async function ManageEventsPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {processedEvents.length > 0 ? (
                 processedEvents.map((event) => (
-                  <div 
-                    key={event.id}
-                    style={{
-                      borderRadius: '0.5rem', 
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)',
-                      padding: '1.25rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '1rem'
-                    }}
+                  <Link 
+                    key={event.id} 
+                    href={`/protected/events/${event.id}`}
+                    style={{ textDecoration: 'none', cursor: 'pointer' }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                          </div>
-                          {event.location && (
+                    <div 
+                      style={{
+                        borderRadius: '0.5rem', 
+                        border: '1px solid #e2e8f0',
+                        backgroundColor: 'var(--card)',
+                        padding: '1.25rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+                      }}
+                      className="hover:shadow-md hover:border-primary/20"
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
                             </div>
-                          )}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            {event.location && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              </div>
+                            )}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                        {getStatusBadge(event.status || '')}
-                        <EventActions eventId={event.id} />
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                          {getStatusBadge(event.status || '')}
+                          <EventActions eventId={event.id} mode="list" />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
@@ -340,44 +348,52 @@ export default async function ManageEventsPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {publishedEvents.length > 0 ? (
                 publishedEvents.map((event) => (
-                  <div 
-                    key={event.id}
-                    style={{
-                      borderRadius: '0.5rem', 
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)',
-                      padding: '1.25rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '1rem'
-                    }}
+                  <Link 
+                    key={event.id} 
+                    href={`/protected/events/${event.id}`}
+                    style={{ textDecoration: 'none', cursor: 'pointer' }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                          </div>
-                          {event.location && (
+                    <div 
+                      style={{
+                        borderRadius: '0.5rem', 
+                        border: '1px solid #e2e8f0',
+                        backgroundColor: 'var(--card)',
+                        padding: '1.25rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+                      }}
+                      className="hover:shadow-md hover:border-primary/20"
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
                             </div>
-                          )}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            {event.location && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              </div>
+                            )}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                        {getStatusBadge(event.status || '')}
-                        <EventActions eventId={event.id} />
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                          {getStatusBadge(event.status || '')}
+                          <EventActions eventId={event.id} mode="list" />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
@@ -397,44 +413,52 @@ export default async function ManageEventsPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {draftEvents.length > 0 ? (
                 draftEvents.map((event) => (
-                  <div 
-                    key={event.id}
-                    style={{
-                      borderRadius: '0.5rem', 
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)',
-                      padding: '1.25rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '1rem'
-                    }}
+                  <Link 
+                    key={event.id} 
+                    href={`/protected/events/${event.id}`}
+                    style={{ textDecoration: 'none', cursor: 'pointer' }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                          </div>
-                          {event.location && (
+                    <div 
+                      style={{
+                        borderRadius: '0.5rem', 
+                        border: '1px solid #e2e8f0',
+                        backgroundColor: 'var(--card)',
+                        padding: '1.25rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+                      }}
+                      className="hover:shadow-md hover:border-primary/20"
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
                             </div>
-                          )}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            {event.location && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              </div>
+                            )}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                        {getStatusBadge(event.status || '')}
-                        <EventActions eventId={event.id} />
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                          {getStatusBadge(event.status || '')}
+                          <EventActions eventId={event.id} mode="list" />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
@@ -454,44 +478,52 @@ export default async function ManageEventsPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {completedEvents.length > 0 ? (
                 completedEvents.map((event) => (
-                  <div 
-                    key={event.id}
-                    style={{
-                      borderRadius: '0.5rem', 
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)',
-                      padding: '1.25rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '1rem'
-                    }}
+                  <Link 
+                    key={event.id} 
+                    href={`/protected/events/${event.id}`}
+                    style={{ textDecoration: 'none', cursor: 'pointer' }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                          </div>
-                          {event.location && (
+                    <div 
+                      style={{
+                        borderRadius: '0.5rem', 
+                        border: '1px solid #e2e8f0',
+                        backgroundColor: 'var(--card)',
+                        padding: '1.25rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+                      }}
+                      className="hover:shadow-md hover:border-primary/20"
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
                             </div>
-                          )}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            {event.location && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              </div>
+                            )}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                        {getStatusBadge(event.status || '')}
-                        <EventActions eventId={event.id} />
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                          {getStatusBadge(event.status || '')}
+                          <EventActions eventId={event.id} mode="list" />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
@@ -511,44 +543,52 @@ export default async function ManageEventsPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {cancelledEvents.length > 0 ? (
                 cancelledEvents.map((event) => (
-                  <div 
-                    key={event.id}
-                    style={{
-                      borderRadius: '0.5rem', 
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)',
-                      padding: '1.25rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '1rem'
-                    }}
+                  <Link 
+                    key={event.id} 
+                    href={`/protected/events/${event.id}`}
+                    style={{ textDecoration: 'none', cursor: 'pointer' }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                          </div>
-                          {event.location && (
+                    <div 
+                      style={{
+                        borderRadius: '0.5rem', 
+                        border: '1px solid #e2e8f0',
+                        backgroundColor: 'var(--card)',
+                        padding: '1.25rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+                      }}
+                      className="hover:shadow-md hover:border-primary/20"
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
                             </div>
-                          )}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                            <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                            <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            {event.location && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
+                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
+                              </div>
+                            )}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
+                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
+                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                        {getStatusBadge(event.status || '')}
-                        <EventActions eventId={event.id} />
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                          {getStatusBadge(event.status || '')}
+                          <EventActions eventId={event.id} mode="list" />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>

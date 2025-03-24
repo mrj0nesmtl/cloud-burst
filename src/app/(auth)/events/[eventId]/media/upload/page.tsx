@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { MediaUploader } from '@/components/media/MediaUploader';
 import { ArrowLeft } from 'lucide-react';
+import { createServerClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 
 interface MediaUploadPageProps {
   params: {
@@ -36,6 +38,14 @@ export default async function MediaUploadPage({ params }: MediaUploadPageProps) 
     redirect('/events');
   }
   
+  // Get the current user's session
+  const supabase = await createServerClient();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  
+  if (!user || userError) {
+    redirect('/auth/signin?redirect=' + encodeURIComponent(`/events/${eventId}/media/upload`));
+  }
+  
   return (
     <div className="container max-w-5xl py-6 space-y-6">
       <div className="flex items-center gap-2">
@@ -55,7 +65,7 @@ export default async function MediaUploadPage({ params }: MediaUploadPageProps) 
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <MediaUploader eventId={eventId} />
+          <MediaUploader eventId={eventId} userId={user.id} />
         </CardContent>
         <CardFooter className="flex justify-between">
           <p className="text-sm text-muted-foreground">

@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-23T16:17:33.062Z
+Generated: 2025-03-24T03:37:48.710Z
 
 ## Overview
 
@@ -117,6 +117,7 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   ├── SESSION_28_CHECKLIST.md
 │   │   ├── SESSION_28_KICKOFF.md
 │   │   ├── SESSION_28_NARRATIVE.md
+│   │   ├── SESSION_28_RESOURCES.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
@@ -164,13 +165,18 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   ├── create_test_users_ui.md
 │   │   ├── event_management.md
 │   │   ├── invitation_system_development_plan.md
+│   │   ├── invitation_system_testing_plan.md
 │   │   ├── invited_user_flow_design_document.md
 │   │   ├── media_upload_sequence_diagram.md
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   └── README.md
+│   ├── README.md
+│   └── session-28-plan.md
 ├── merged-routes/
+├── migrations/
+│   ├── 01_create_media_table.sql
+│   └── 01_update_media_schema.sql
 ├── public/
 │   ├── images/
 │   │   ├── email/
@@ -220,6 +226,26 @@ Generated: 2025-03-23T16:17:33.062Z
 │   └── test_rbac.js
 ├── src/
 │   ├── app/
+│   │   ├── (auth)/
+│   │   │   └── events/
+│   │   │       └── [eventId]/
+│   │   │           ├── invitations/
+│   │   │           │   └── qr/
+│   │   │           │       └── page.tsx
+│   │   │           ├── media/
+│   │   │           │   ├── albums/
+│   │   │           │   │   ├── [albumId]/
+│   │   │           │   │   │   └── page.tsx
+│   │   │           │   │   ├── create/
+│   │   │           │   │   │   └── page.tsx
+│   │   │           │   │   └── page.tsx
+│   │   │           │   ├── moderation/
+│   │   │           │   │   └── page.tsx
+│   │   │           │   ├── upload/
+│   │   │           │   │   └── page.tsx
+│   │   │           │   └── page.tsx
+│   │   │           └── qr-scan/
+│   │   │               └── page.tsx
 │   │   ├── api/
 │   │   │   ├── cron/
 │   │   │   │   └── sync-templates/
@@ -237,7 +263,9 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   │   ├── invitations/
 │   │   │   │   ├── bulk-create/
 │   │   │   │   │   └── route.ts
-│   │   │   │   └── create/
+│   │   │   │   ├── create/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── validate/
 │   │   │   │       └── route.ts
 │   │   │   ├── templates/
 │   │   │   │   ├── [templateId]/
@@ -306,6 +334,8 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   │   ├── create/
 │   │   │   │   └── page.tsx
 │   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── invitation/
 │   │   │   └── page.tsx
 │   │   ├── invite/
 │   │   │   └── [token]/
@@ -496,6 +526,7 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   │   ├── role-guard.tsx
 │   │   │   └── social-auth-buttons.tsx
 │   │   ├── dashboard/
+│   │   │   ├── MediaStatsCard.tsx
 │   │   │   ├── activity-feed.tsx
 │   │   │   ├── analytics-overview.tsx
 │   │   │   ├── contact-stats.tsx
@@ -513,7 +544,6 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   │   ├── recent-events.tsx
 │   │   │   └── stats.tsx
 │   │   ├── events/
-│   │   │   ├── .qr-code-display.tsx.swp
 │   │   │   ├── add-attendee-dialog.tsx
 │   │   │   ├── attendee-management.tsx
 │   │   │   ├── enhanced-event-card.tsx
@@ -522,12 +552,15 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   │   ├── event-details.tsx
 │   │   │   ├── event-filters.tsx
 │   │   │   ├── event-form.tsx
+│   │   │   ├── event-invitation-qr.tsx
 │   │   │   ├── event-list-client.tsx
 │   │   │   ├── event-list.tsx
+│   │   │   ├── event-navigation.tsx
 │   │   │   ├── event-search.tsx
 │   │   │   ├── event-status-selector.tsx
 │   │   │   ├── image-upload.tsx
 │   │   │   ├── qr-code-display.tsx
+│   │   │   ├── qr-scanner.tsx
 │   │   │   └── theme-preview.tsx
 │   │   ├── forms/
 │   │   │   ├── avatar-upload.tsx
@@ -563,6 +596,12 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   │   ├── contact-form.tsx
 │   │   │   └── newsletter-form.tsx
 │   │   ├── media/
+│   │   │   ├── AlbumCreationForm.tsx
+│   │   │   ├── MediaCard.tsx
+│   │   │   ├── MediaGrid.tsx
+│   │   │   ├── MediaModerationGrid.tsx
+│   │   │   ├── MediaUploader.tsx
+│   │   │   ├── MediaViewer.tsx
 │   │   │   └── upload-media-button.tsx
 │   │   ├── nav/
 │   │   │   ├── logo.tsx
@@ -682,6 +721,7 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   │   ├── events.ts
 │   │   │   ├── galleries.server.ts
 │   │   │   ├── galleries.ts
+│   │   │   ├── invitations.ts
 │   │   │   ├── media.server.ts
 │   │   │   ├── media.ts
 │   │   │   ├── photos.server.ts
@@ -699,6 +739,7 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   ├── constants.ts
 │   │   ├── event-customization-server.ts
 │   │   ├── event-customization.ts
+│   │   ├── formatters.ts
 │   │   ├── index.ts
 │   │   ├── qr-code.ts
 │   │   ├── security-settings.ts
@@ -731,6 +772,7 @@ Generated: 2025-03-23T16:17:33.062Z
 │   ├── .temp/
 │   │   └── cli-latest
 │   ├── migrations/
+│   │   ├── 01_create_media_table.sql
 │   │   ├── 20240317000000_fix_role_capabilities_rls.sql
 │   │   ├── 20240317001000_standardize_role_capabilities.sql
 │   │   ├── 20240317002000_document_role_capabilities.sql
@@ -745,7 +787,9 @@ Generated: 2025-03-23T16:17:33.062Z
 │   │   ├── 20240318002000_setup_storage_buckets.sql
 │   │   ├── 20240318003000_update_media_rls_with_staff.sql
 │   │   ├── 20240318004000_setup_auth_email_templates.sql
-│   │   └── 20240318005000_create_profiles_table.sql
+│   │   ├── 20240318005000_create_profiles_table.sql
+│   │   ├── 20250323205916_update_media_schema.sql
+│   │   └── 20250323211204_update_media_schema.sql
 │   ├── templates/
 │   │   └── auth_emails/
 │   │       ├── change_email_address.html
@@ -831,16 +875,16 @@ Generated: 2025-03-23T16:17:33.062Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-182 directories, 641 files
+197 directories, 670 files
 
 ```
 
 ## File Type Breakdown
-- ts: 8330 file(s)
-- tsx: 405 file(s)
-- js: 24801 file(s)
-- json: 1855 file(s)
-- md: 1412 file(s)
+- ts: 8344 file(s)
+- tsx: 424 file(s)
+- js: 24797 file(s)
+- json: 1856 file(s)
+- md: 1417 file(s)
 - css: 23 file(s)
 - yml: 156 file(s)
 

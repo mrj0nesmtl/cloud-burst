@@ -1,14 +1,13 @@
 # events Directory Structure
-Generated: 2025-03-23T16:17:37.536Z
+Generated: 2025-03-24T03:37:52.056Z
 
 ## Overview
-This directory contains 15 component(s).
+This directory contains 18 component(s).
 
 
 ## Directory Tree
 ```
 ./src/components/events/
-├── .qr-code-display.tsx.swp
 ├── add-attendee-dialog.tsx
 ├── attendee-management.tsx
 ├── enhanced-event-card.tsx
@@ -17,20 +16,23 @@ This directory contains 15 component(s).
 ├── event-details.tsx
 ├── event-filters.tsx
 ├── event-form.tsx
+├── event-invitation-qr.tsx
 ├── event-list-client.tsx
 ├── event-list.tsx
+├── event-navigation.tsx
 ├── event-search.tsx
 ├── event-status-selector.tsx
 ├── image-upload.tsx
 ├── qr-code-display.tsx
+├── qr-scanner.tsx
 └── theme-preview.tsx
 
-1 directory, 16 files
+1 directory, 18 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 15 file(s)
+- tsx: 18 file(s)
 
 ## Ignored Patterns
 - node_modules

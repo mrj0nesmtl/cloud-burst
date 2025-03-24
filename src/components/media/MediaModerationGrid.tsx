@@ -31,7 +31,7 @@ interface MediaModerationGridProps {
 export function MediaModerationGrid({ media, eventId, className }: MediaModerationGridProps) {
   const { toast } = useToast();
   const router = useRouter();
-  const { approveMedia, rejectMedia, deleteMedia } = useMediaStore();
+  const { approveMediaItem, rejectMediaItem, deleteMediaItem } = useMediaStore();
 
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [action, setAction] = useState<"approve" | "reject" | "delete" | null>(null);
@@ -48,13 +48,15 @@ export function MediaModerationGrid({ media, eventId, className }: MediaModerati
       
       switch (action) {
         case "approve":
-          result = await approveMedia(selectedMedia.id, reason);
+          const approvedMedia = await approveMediaItem(selectedMedia.id, reason);
+          result = !!approvedMedia;
           break;
         case "reject":
-          result = await rejectMedia(selectedMedia.id, reason);
+          const rejectedMedia = await rejectMediaItem(selectedMedia.id, reason);
+          result = !!rejectedMedia;
           break;
         case "delete":
-          result = await deleteMedia(selectedMedia.id);
+          result = await deleteMediaItem(selectedMedia.id);
           break;
       }
       
@@ -102,38 +104,10 @@ export function MediaModerationGrid({ media, eventId, className }: MediaModerati
             <MediaCard
               key={item.id}
               media={item}
-              actions={
-                <div className="flex space-x-1">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 text-green-600 hover:bg-green-100 hover:text-green-700"
-                    onClick={() => openActionDialog(item, "approve")}
-                  >
-                    <CheckCircle className="h-4 w-4 mr-1" />
-                    Approve
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 text-red-600 hover:bg-red-100 hover:text-red-700"
-                    onClick={() => openActionDialog(item, "reject")}
-                  >
-                    <XCircle className="h-4 w-4 mr-1" />
-                    Reject
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 text-gray-600 hover:bg-gray-100 hover:text-gray-700"
-                    onClick={() => openActionDialog(item, "delete")}
-                  >
-                    <Ban className="h-4 w-4" />
-                  </Button>
-                </div>
-              }
+              showControls={true}
+              onApprove={() => openActionDialog(item, "approve")}
+              onReject={() => openActionDialog(item, "reject")} 
+              onDelete={() => openActionDialog(item, "delete")}
             />
           ))}
         </div>

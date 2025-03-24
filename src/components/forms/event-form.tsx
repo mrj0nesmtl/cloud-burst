@@ -126,13 +126,25 @@ export function EventForm() {
       }
       
       // Create the event
-      const createdEvent = await createEvent(eventData)
+      const response = await createEvent(eventData)
+      
+      if (response.error) {
+        throw new Error(typeof response.error === 'object' && response.error !== null 
+          ? (response.error as any).message || 'Failed to create event' 
+          : 'Failed to create event')
+      }
+      
+      const eventId = response.data?.id
+      
+      if (!eventId) {
+        throw new Error('Event was created but no ID was returned')
+      }
       
       // Generate and save QR code for the event
-      await generateAndSaveEventQRCode(createdEvent.id)
+      await generateAndSaveEventQRCode(eventId)
       
       toast.success('Event created successfully! QR code has been generated.')
-      router.push(`/protected/events/${createdEvent.id}/attendees`)
+      router.push('/protected/events/manage')
       router.refresh()
     } catch (error) {
       console.error('Error creating event:', error)

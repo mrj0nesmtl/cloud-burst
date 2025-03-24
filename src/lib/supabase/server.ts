@@ -37,6 +37,15 @@ export async function createServerClient(cookieStore?: any) {
 }
 
 /**
+ * Get a Supabase client for server components
+ * This is an alias for createServerClient for better compatibility
+ * with parts of the application using this naming convention
+ */
+export async function getServerSupabase() {
+  return createServerClient()
+}
+
+/**
  * Create a Supabase client for use in server actions
  */
 export async function createActionClient(cookieStore?: any) {

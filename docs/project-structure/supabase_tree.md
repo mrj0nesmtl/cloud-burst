@@ -1,5 +1,5 @@
 # supabase Directory Structure
-Generated: 2025-03-23T16:17:40.420Z
+Generated: 2025-03-24T03:37:52.853Z
 
 ## Overview
 
@@ -19,6 +19,7 @@ Generated: 2025-03-23T16:17:40.420Z
 ├── events.ts
 ├── galleries.server.ts
 ├── galleries.ts
+├── invitations.ts
 ├── media.server.ts
 ├── media.ts
 ├── photos.server.ts
@@ -31,12 +32,12 @@ Generated: 2025-03-23T16:17:40.420Z
 ├── verify-schema.html
 └── verify-schema.js
 
-2 directories, 21 files
+2 directories, 22 files
 
 ```
 
 ## File Type Breakdown
-- ts: 18 file(s)
+- ts: 19 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

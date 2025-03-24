@@ -1,7 +1,10 @@
+'use client'
+
 import { Metadata } from 'next'
 import { Shell } from '@/components/shell'
 import { CreateInvitationForm } from '@/components/invitations/create-invitation-form'
 import { Separator } from '@/components/ui/separator'
+import { useSearchParams } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Create Invitation',
@@ -9,6 +12,9 @@ export const metadata: Metadata = {
 }
 
 export default function CreateInvitationPage() {
+  const searchParams = useSearchParams()
+  const eventId = searchParams.get('eventId')
+  
   return (
     <Shell>
       <div className="space-y-1">
@@ -21,7 +27,7 @@ export default function CreateInvitationPage() {
       <Separator className="my-4" />
 
       <div className="mt-8">
-        <CreateInvitationForm />
+        <CreateInvitationForm eventId={eventId || undefined} />
       </div>
     </Shell>
   )
