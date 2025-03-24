@@ -13,6 +13,7 @@ import { UploadDropzone } from '@/components/gallery/upload-dropzone'
 import { QRCodeDisplay } from '@/components/events/qr-code-display'
 import { getServerSupabase } from '@/lib/supabase/server'
 import { EventStatusSelector } from '@/components/events/event-status-selector'
+import { Photo } from '@/types/events'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -21,6 +22,27 @@ interface EventPageProps {
   params: {
     id: string
   }
+}
+
+function convertDatabasePhotoToPhotoType(photo: any, eventId: string): Photo {
+  return {
+    id: photo.id,
+    event_id: photo.event_id || eventId,
+    filename: photo.filename || '',
+    storage_path: photo.storage_path || '',
+    is_approved: Boolean(photo.is_approved),
+    metadata: {},  // Initialize with empty object as fallback
+    created_at: photo.created_at || new Date().toISOString(),
+    updated_at: photo.updated_at || new Date().toISOString(),
+    uploaded_by: photo.uploaded_by || null,
+    width: photo.width || null,
+    height: photo.height || null,
+    size: photo.size || 0,
+    mime_type: photo.mime_type || '',
+    // Optional fields omitted if not present
+    ...(photo.url && { url: photo.url }),
+    ...(photo.thumbnail_url && { thumbnail_url: photo.thumbnail_url })
+  };
 }
 
 export async function generateMetadata({ params }: EventPageProps): Promise<Metadata> {
@@ -119,7 +141,7 @@ export default async function EventPage({ params }: EventPageProps) {
           </div>
         </div>
         
-        <EventActions eventId={event.id} organizerId={event.organizer_id} />
+        <EventActions eventId={event.id} organizerId={event.organizer_id || undefined} />
       </div>
       
       {event.description && (
@@ -136,6 +158,9 @@ export default async function EventPage({ params }: EventPageProps) {
       <Tabs defaultValue="overview" className="w-full">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="invitations">
+            Invitations
+          </TabsTrigger>
           <TabsTrigger value="attendees">
             Attendees ({attendees?.length || 0})
           </TabsTrigger>
@@ -162,7 +187,6 @@ export default async function EventPage({ params }: EventPageProps) {
                         <h3 className="font-medium">Date & Time</h3>
                         <p className="text-sm text-muted-foreground mt-1">
                           {eventDate}
-                          {event.time && ` at ${event.time}`}
                         </p>
                       </td>
                       <td className="p-4 bg-muted/50">
@@ -202,14 +226,48 @@ export default async function EventPage({ params }: EventPageProps) {
                 </table>
               </div>
               
-              {event.additional_info && (
+              {/* Only show additional information if description exists */}
+              {event.description && event.description.length > 100 && (
                 <div className="mt-4">
                   <h3 className="font-medium">Additional Information</h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {event.additional_info}
+                    {event.description}
                   </p>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="invitations">
+          <Card>
+            <CardHeader>
+              <CardTitle>Manage Invitations</CardTitle>
+              <CardDescription>
+                Create and manage invitations for this event
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-medium">Event Invitations</h3>
+                  <a 
+                    href={`/protected/attendees/invitations/create?eventId=${event.id}`}
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2"
+                  >
+                    Create New Invitation
+                  </a>
+                </div>
+                <Separator />
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">
+                    All invitations for this event will appear here.
+                  </p>
+                  <p className="text-muted-foreground mt-2">
+                    Click "Create New Invitation" to get started.
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -226,7 +284,7 @@ export default async function EventPage({ params }: EventPageProps) {
               <AttendeeManagement 
                 eventId={event.id} 
                 initialAttendees={attendees || []} 
-                organizerId={event.organizer_id}
+                organizerId={event.organizer_id || undefined}
               />
             </CardContent>
           </Card>
@@ -244,7 +302,10 @@ export default async function EventPage({ params }: EventPageProps) {
               <UploadDropzone eventId={event.id} />
               
               {photos && photos.length > 0 ? (
-                <GalleryGrid photos={photos} showEventName={false} />
+                <GalleryGrid 
+                  photos={photos.map(photo => convertDatabasePhotoToPhotoType(photo, event.id))}
+                  showEventName={false} 
+                />
               ) : (
                 <div className="text-center py-12">
                   <p className="text-muted-foreground">
@@ -267,8 +328,8 @@ export default async function EventPage({ params }: EventPageProps) {
             <CardContent>
               <QRCodeDisplay 
                 eventId={event.id} 
-                eventCode={event.code || event.id} 
                 eventName={event.name}
+                type="event"
               />
             </CardContent>
           </Card>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Trash, Edit, Share, QrCode, Image } from 'lucide-react'
+import { Trash, Edit, Share, QrCode, Image, Eye } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -28,9 +28,10 @@ import {
 interface EventActionsProps {
   eventId: string
   organizerId?: string
+  mode?: 'list' | 'detail'
 }
 
-export function EventActions({ eventId, organizerId }: EventActionsProps) {
+export function EventActions({ eventId, organizerId, mode = 'detail' }: EventActionsProps) {
   const router = useRouter()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -77,14 +78,14 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
       const supabase = createClient()
       const { data: event, error } = await supabase
         .from('events')
-        .select('name, code')
+        .select('name, custom_url')
         .eq('id', eventId)
         .single()
       
       if (error) throw error
       
-      // Create share URL
-      const shareUrl = `${window.location.origin}/event/${event.code}`
+      // Create share URL using custom_url if available, or fallback to ID
+      const shareUrl = `${window.location.origin}/event/${event.custom_url || eventId}`
       
       // Use Web Share API if available
       if (navigator.share) {
@@ -204,14 +205,22 @@ export function EventActions({ eventId, organizerId }: EventActionsProps) {
       gap: '0.5rem',
       justifyContent: 'flex-end'
     }}>
-      {/* Edit button - visible to event owners and admins */}
-      <PermissionGate action="update" resource="event" ownerId={organizerId}>
+      {/* Edit/View button - In list mode, show View button instead of Edit */}
+      {mode === 'list' ? (
         <ActionButton 
-          icon={Edit} 
-          label="Edit" 
-          href={`/protected/events/${eventId}/edit`} 
+          icon={Eye} 
+          label="View" 
+          href={`/protected/events/${eventId}`} 
         />
-      </PermissionGate>
+      ) : (
+        <PermissionGate action="update" resource="event" ownerId={organizerId}>
+          <ActionButton 
+            icon={Edit} 
+            label="Edit" 
+            href={`/protected/events/${eventId}/edit`} 
+          />
+        </PermissionGate>
+      )}
       
       {/* QR Code button - visible to all who can view the event */}
       <PermissionGate action="read" resource="event">

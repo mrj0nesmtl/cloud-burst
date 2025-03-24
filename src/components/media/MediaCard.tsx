@@ -3,15 +3,15 @@ import Image from 'next/image';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
-  CheckIcon, 
-  XIcon, 
-  TrashIcon, 
-  PencilIcon, 
-  EyeIcon, 
-  PlayIcon, 
-  PauseIcon,
-  DownloadIcon
-} from '@heroicons/react/24/outline';
+  Check as CheckIcon, 
+  X as XIcon, 
+  Trash as TrashIcon, 
+  Pencil as PencilIcon, 
+  Eye as EyeIcon, 
+  Play as PlayIcon, 
+  Pause as PauseIcon,
+  Download as DownloadIcon
+} from 'lucide-react';
 import { Media, MediaStatus, MediaType } from '@/types/media';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +33,7 @@ interface MediaCardProps {
   showControls?: boolean;
   showStatus?: boolean;
   className?: string;
+  actions?: React.ReactNode;
 }
 
 export function MediaCard({
@@ -51,6 +52,7 @@ export function MediaCard({
   showControls = false,
   showStatus = true,
   className,
+  actions,
 }: MediaCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);

@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-03-23T16:17:36.996Z
+Generated: 2025-03-24T03:37:51.704Z
 
 ## Overview
-This directory contains 139 component(s).
+This directory contains 149 component(s).
 
 
 ## Directory Tree
@@ -20,6 +20,7 @@ This directory contains 139 component(s).
 │   ├── role-guard.tsx
 │   └── social-auth-buttons.tsx
 ├── dashboard/
+│   ├── MediaStatsCard.tsx
 │   ├── activity-feed.tsx
 │   ├── analytics-overview.tsx
 │   ├── contact-stats.tsx
@@ -37,7 +38,6 @@ This directory contains 139 component(s).
 │   ├── recent-events.tsx
 │   └── stats.tsx
 ├── events/
-│   ├── .qr-code-display.tsx.swp
 │   ├── add-attendee-dialog.tsx
 │   ├── attendee-management.tsx
 │   ├── enhanced-event-card.tsx
@@ -46,12 +46,15 @@ This directory contains 139 component(s).
 │   ├── event-details.tsx
 │   ├── event-filters.tsx
 │   ├── event-form.tsx
+│   ├── event-invitation-qr.tsx
 │   ├── event-list-client.tsx
 │   ├── event-list.tsx
+│   ├── event-navigation.tsx
 │   ├── event-search.tsx
 │   ├── event-status-selector.tsx
 │   ├── image-upload.tsx
 │   ├── qr-code-display.tsx
+│   ├── qr-scanner.tsx
 │   └── theme-preview.tsx
 ├── forms/
 │   ├── avatar-upload.tsx
@@ -87,6 +90,12 @@ This directory contains 139 component(s).
 │   ├── contact-form.tsx
 │   └── newsletter-form.tsx
 ├── media/
+│   ├── AlbumCreationForm.tsx
+│   ├── MediaCard.tsx
+│   ├── MediaGrid.tsx
+│   ├── MediaModerationGrid.tsx
+│   ├── MediaUploader.tsx
+│   ├── MediaViewer.tsx
 │   └── upload-media-button.tsx
 ├── nav/
 │   ├── logo.tsx
@@ -172,13 +181,13 @@ This directory contains 139 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-19 directories, 145 files
+19 directories, 154 files
 
 ```
 
 ## File Type Breakdown
 - ts: 4 file(s)
-- tsx: 139 file(s)
+- tsx: 149 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

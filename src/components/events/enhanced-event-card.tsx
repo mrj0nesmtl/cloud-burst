@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   CalendarDays, 
   MapPin, 
@@ -41,6 +42,7 @@ import {
 import Link from 'next/link';
 import { EventWithCounts } from '@/types/events';
 import { formatDate } from '@/lib/utils';
+import { EventActions } from '@/components/events/event-actions';
 
 interface EnhancedEventCardProps {
   event: EventWithCounts;
@@ -59,6 +61,7 @@ export function EnhancedEventCard({
   onDelete, 
   onDuplicate 
 }: EnhancedEventCardProps) {
+  const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDuplicating, setIsDuplicating] = useState(false);
@@ -73,6 +76,18 @@ export function EnhancedEventCard({
       return () => window.removeEventListener('resize', checkMobile);
     }
   }, []);
+  
+  // Add a click handler to navigate to the event details page
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Only navigate if the click didn't happen on a button or link
+    if (
+      !(e.target as HTMLElement).closest('button') && 
+      !(e.target as HTMLElement).closest('a') &&
+      !(e.target as HTMLElement).closest('[role="menuitem"]')
+    ) {
+      router.push(`/protected/events/${event.id}`);
+    }
+  };
   
   // Handle delete action
   const handleDelete = async () => {
@@ -153,8 +168,13 @@ export function EnhancedEventCard({
         overflow: 'hidden',
         border: '1px solid var(--border)',
         borderRadius: '0.5rem', 
-        background: 'var(--card)'
-      }}>
+        background: 'var(--card)',
+        cursor: 'pointer',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+      }}
+      onClick={handleCardClick}
+      className="hover:shadow-md hover:border-primary/20"
+      >
         <CardHeader style={{ 
           padding: '1.25rem 1.25rem 0.75rem',
         }}>

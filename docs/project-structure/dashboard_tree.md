@@ -1,13 +1,14 @@
 # dashboard Directory Structure
-Generated: 2025-03-23T16:17:38.689Z
+Generated: 2025-03-24T03:37:52.513Z
 
 ## Overview
-This directory contains 15 component(s).
+This directory contains 16 component(s).
 
 
 ## Directory Tree
 ```
 ./src/components/dashboard/
+├── MediaStatsCard.tsx
 ├── activity-feed.tsx
 ├── analytics-overview.tsx
 ├── contact-stats.tsx
@@ -25,13 +26,13 @@ This directory contains 15 component(s).
 ├── recent-events.tsx
 └── stats.tsx
 
-1 directory, 16 files
+1 directory, 17 files
 
 ```
 
 ## File Type Breakdown
 - ts: 1 file(s)
-- tsx: 15 file(s)
+- tsx: 16 file(s)
 
 ## Ignored Patterns
 - node_modules

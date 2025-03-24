@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-23T16:17:33.771Z
+Generated: 2025-03-24T03:37:49.287Z
 
 ## Overview
 
@@ -9,6 +9,26 @@ Generated: 2025-03-23T16:17:33.771Z
 ```
 ./src/
 ├── app/
+│   ├── (auth)/
+│   │   └── events/
+│   │       └── [eventId]/
+│   │           ├── invitations/
+│   │           │   └── qr/
+│   │           │       └── page.tsx
+│   │           ├── media/
+│   │           │   ├── albums/
+│   │           │   │   ├── [albumId]/
+│   │           │   │   │   └── page.tsx
+│   │           │   │   ├── create/
+│   │           │   │   │   └── page.tsx
+│   │           │   │   └── page.tsx
+│   │           │   ├── moderation/
+│   │           │   │   └── page.tsx
+│   │           │   ├── upload/
+│   │           │   │   └── page.tsx
+│   │           │   └── page.tsx
+│   │           └── qr-scan/
+│   │               └── page.tsx
 │   ├── api/
 │   │   ├── cron/
 │   │   │   └── sync-templates/
@@ -26,7 +46,9 @@ Generated: 2025-03-23T16:17:33.771Z
 │   │   ├── invitations/
 │   │   │   ├── bulk-create/
 │   │   │   │   └── route.ts
-│   │   │   └── create/
+│   │   │   ├── create/
+│   │   │   │   └── route.ts
+│   │   │   └── validate/
 │   │   │       └── route.ts
 │   │   ├── templates/
 │   │   │   ├── [templateId]/
@@ -95,6 +117,8 @@ Generated: 2025-03-23T16:17:33.771Z
 │   │   ├── create/
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── invitation/
 │   │   └── page.tsx
 │   ├── invite/
 │   │   └── [token]/
@@ -285,6 +309,7 @@ Generated: 2025-03-23T16:17:33.771Z
 │   │   ├── role-guard.tsx
 │   │   └── social-auth-buttons.tsx
 │   ├── dashboard/
+│   │   ├── MediaStatsCard.tsx
 │   │   ├── activity-feed.tsx
 │   │   ├── analytics-overview.tsx
 │   │   ├── contact-stats.tsx
@@ -302,7 +327,6 @@ Generated: 2025-03-23T16:17:33.771Z
 │   │   ├── recent-events.tsx
 │   │   └── stats.tsx
 │   ├── events/
-│   │   ├── .qr-code-display.tsx.swp
 │   │   ├── add-attendee-dialog.tsx
 │   │   ├── attendee-management.tsx
 │   │   ├── enhanced-event-card.tsx
@@ -311,12 +335,15 @@ Generated: 2025-03-23T16:17:33.771Z
 │   │   ├── event-details.tsx
 │   │   ├── event-filters.tsx
 │   │   ├── event-form.tsx
+│   │   ├── event-invitation-qr.tsx
 │   │   ├── event-list-client.tsx
 │   │   ├── event-list.tsx
+│   │   ├── event-navigation.tsx
 │   │   ├── event-search.tsx
 │   │   ├── event-status-selector.tsx
 │   │   ├── image-upload.tsx
 │   │   ├── qr-code-display.tsx
+│   │   ├── qr-scanner.tsx
 │   │   └── theme-preview.tsx
 │   ├── forms/
 │   │   ├── avatar-upload.tsx
@@ -352,6 +379,12 @@ Generated: 2025-03-23T16:17:33.771Z
 │   │   ├── contact-form.tsx
 │   │   └── newsletter-form.tsx
 │   ├── media/
+│   │   ├── AlbumCreationForm.tsx
+│   │   ├── MediaCard.tsx
+│   │   ├── MediaGrid.tsx
+│   │   ├── MediaModerationGrid.tsx
+│   │   ├── MediaUploader.tsx
+│   │   ├── MediaViewer.tsx
 │   │   └── upload-media-button.tsx
 │   ├── nav/
 │   │   ├── logo.tsx
@@ -471,6 +504,7 @@ Generated: 2025-03-23T16:17:33.771Z
 │   │   ├── events.ts
 │   │   ├── galleries.server.ts
 │   │   ├── galleries.ts
+│   │   ├── invitations.ts
 │   │   ├── media.server.ts
 │   │   ├── media.ts
 │   │   ├── photos.server.ts
@@ -488,6 +522,7 @@ Generated: 2025-03-23T16:17:33.771Z
 │   ├── constants.ts
 │   ├── event-customization-server.ts
 │   ├── event-customization.ts
+│   ├── formatters.ts
 │   ├── index.ts
 │   ├── qr-code.ts
 │   ├── security-settings.ts
@@ -517,13 +552,13 @@ Generated: 2025-03-23T16:17:33.771Z
 ├── middleware.test.ts
 └── middleware.ts
 
-143 directories, 366 files
+157 directories, 387 files
 
 ```
 
 ## File Type Breakdown
-- ts: 81 file(s)
-- tsx: 266 file(s)
+- ts: 84 file(s)
+- tsx: 285 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-03-23T16:17:39.431Z
+Generated: 2025-03-24T03:37:52.684Z
 
 ## Overview
 
@@ -30,6 +30,7 @@ Generated: 2025-03-23T16:17:39.431Z
 │   ├── events.ts
 │   ├── galleries.server.ts
 │   ├── galleries.ts
+│   ├── invitations.ts
 │   ├── media.server.ts
 │   ├── media.ts
 │   ├── photos.server.ts
@@ -47,6 +48,7 @@ Generated: 2025-03-23T16:17:39.431Z
 ├── constants.ts
 ├── event-customization-server.ts
 ├── event-customization.ts
+├── formatters.ts
 ├── index.ts
 ├── qr-code.ts
 ├── security-settings.ts
@@ -54,12 +56,12 @@ Generated: 2025-03-23T16:17:39.431Z
 ├── user-sessions.ts
 └── utils.ts
 
-8 directories, 38 files
+8 directories, 40 files
 
 ```
 
 ## File Type Breakdown
-- ts: 35 file(s)
+- ts: 37 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

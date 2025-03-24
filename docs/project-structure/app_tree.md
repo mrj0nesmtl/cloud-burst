@@ -1,13 +1,33 @@
 # app Directory Structure
-Generated: 2025-03-23T16:17:35.156Z
+Generated: 2025-03-24T03:37:50.390Z
 
 ## Overview
 
-This directory contains 76 route(s).
+This directory contains 85 route(s).
 
 ## Directory Tree
 ```
 ./src/app/
+├── (auth)/
+│   └── events/
+│       └── [eventId]/
+│           ├── invitations/
+│           │   └── qr/
+│           │       └── page.tsx
+│           ├── media/
+│           │   ├── albums/
+│           │   │   ├── [albumId]/
+│           │   │   │   └── page.tsx
+│           │   │   ├── create/
+│           │   │   │   └── page.tsx
+│           │   │   └── page.tsx
+│           │   ├── moderation/
+│           │   │   └── page.tsx
+│           │   ├── upload/
+│           │   │   └── page.tsx
+│           │   └── page.tsx
+│           └── qr-scan/
+│               └── page.tsx
 ├── api/
 │   ├── cron/
 │   │   └── sync-templates/
@@ -25,7 +45,9 @@ This directory contains 76 route(s).
 │   ├── invitations/
 │   │   ├── bulk-create/
 │   │   │   └── route.ts
-│   │   └── create/
+│   │   ├── create/
+│   │   │   └── route.ts
+│   │   └── validate/
 │   │       └── route.ts
 │   ├── templates/
 │   │   ├── [templateId]/
@@ -94,6 +116,8 @@ This directory contains 76 route(s).
 │   ├── create/
 │   │   └── page.tsx
 │   ├── layout.tsx
+│   └── page.tsx
+├── invitation/
 │   └── page.tsx
 ├── invite/
 │   └── [token]/
@@ -272,13 +296,13 @@ This directory contains 76 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-109 directories, 155 files
+123 directories, 165 files
 
 ```
 
 ## File Type Breakdown
-- ts: 17 file(s)
-- tsx: 127 file(s)
+- ts: 18 file(s)
+- tsx: 136 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

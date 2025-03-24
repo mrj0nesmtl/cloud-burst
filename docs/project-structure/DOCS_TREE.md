@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-23T16:17:34.003Z
+Generated: 2025-03-24T03:37:49.452Z
 
 ## Overview
 
@@ -80,6 +80,7 @@ Generated: 2025-03-23T16:17:34.003Z
 │   ├── SESSION_28_CHECKLIST.md
 │   ├── SESSION_28_KICKOFF.md
 │   ├── SESSION_28_NARRATIVE.md
+│   ├── SESSION_28_RESOURCES.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
@@ -127,19 +128,21 @@ Generated: 2025-03-23T16:17:34.003Z
 │   ├── create_test_users_ui.md
 │   ├── event_management.md
 │   ├── invitation_system_development_plan.md
+│   ├── invitation_system_testing_plan.md
 │   ├── invited_user_flow_design_document.md
 │   ├── media_upload_sequence_diagram.md
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store
-└── README.md
+├── README.md
+└── session-28-plan.md
 
-10 directories, 116 files
+10 directories, 119 files
 
 ```
 
 ## File Type Breakdown
-- md: 110 file(s)
+- md: 113 file(s)
 
 ## Ignored Patterns
 - node_modules
