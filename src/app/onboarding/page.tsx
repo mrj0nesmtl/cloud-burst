@@ -33,8 +33,10 @@ export default async function OnboardingPage() {
   }
 
   return (
-    <Shell variant="auth">
-      <OnboardingFlow user={user} profile={profile} />
-    </Shell>
+    <div className="auth-container py-8 flex justify-center">
+      <Shell className="max-w-lg mx-auto bg-card rounded-lg shadow-md">
+        <OnboardingFlow user={user} profile={profile} />
+      </Shell>
+    </div>
   );
 }

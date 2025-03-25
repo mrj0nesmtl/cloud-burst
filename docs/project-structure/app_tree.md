@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-03-25T18:25:53.375Z
+Generated: 2025-03-25T22:22:20.314Z
 
 ## Overview
 
-This directory contains 85 route(s).
+This directory contains 80 route(s).
 
 ## Directory Tree
 ```
@@ -22,6 +22,7 @@ This directory contains 85 route(s).
 │           │   │   │   └── page.tsx
 │           │   │   └── page.tsx
 │           │   ├── moderation/
+│           │   │   ├── moderation-content.tsx
 │           │   │   └── page.tsx
 │           │   ├── upload/
 │           │   │   └── page.tsx
@@ -92,21 +93,6 @@ This directory contains 85 route(s).
 │   │   │   │   ├── moderation-content.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── event-gallery-content.tsx
-│   │   │   └── page.tsx
-│   │   ├── upload/
-│   │   │   └── page.tsx
-│   │   ├── layout.tsx
-│   │   ├── not-found.tsx
-│   │   └── page.tsx
-│   ├── [eventId].bak/
-│   │   └── gallery/
-│   │       ├── moderation/
-│   │       │   ├── moderation-content.tsx
-│   │       │   └── page.tsx
-│   │       ├── event-gallery-content.tsx
-│   │       └── page.tsx
-│   ├── [id].bak/
-│   │   ├── gallery/
 │   │   │   └── page.tsx
 │   │   ├── upload/
 │   │   │   └── page.tsx
@@ -297,13 +283,13 @@ This directory contains 85 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-123 directories, 166 files
+117 directories, 158 files
 
 ```
 
 ## File Type Breakdown
 - ts: 18 file(s)
-- tsx: 137 file(s)
+- tsx: 129 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

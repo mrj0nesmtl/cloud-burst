@@ -18,14 +18,14 @@ export default function ModerationContent({
   userId,
   isOrganizer
 }: ModerationContentProps) {
-  const { fetchEventPendingMedia } = useMediaStore()
+  const { fetchPendingEventMedia } = useMediaStore()
   
   // Load pending media on component mount
   useEffect(() => {
     if (isOrganizer) {
-      fetchEventPendingMedia(eventId)
+      fetchPendingEventMedia(eventId)
     }
-  }, [eventId, isOrganizer, fetchEventPendingMedia])
+  }, [eventId, isOrganizer, fetchPendingEventMedia])
   
   return (
     <MediaModeration

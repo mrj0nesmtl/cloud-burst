@@ -40,6 +40,101 @@ export const getImageDimensions = (file: File): Promise<{width: number, height: 
 };
 
 /**
+ * Upload and create media all in one function
+ * This uploads a file to Supabase storage and creates the corresponding media record
+ */
+export async function uploadAndCreateMedia(
+  file: File,
+  eventId: string,
+  userId: string,
+  title?: string,
+  description?: string,
+  isPublic?: boolean,
+  mediaType?: MediaType,
+  metadata?: MediaMetadata
+): Promise<Media | null> {
+  try {
+    const supabase = createClient();
+    
+    // Determine media type based on file type if not provided
+    const fileMediaType = mediaType || (file.type.startsWith('image/') 
+      ? MediaType.PHOTO 
+      : file.type.startsWith('video/') 
+        ? MediaType.VIDEO 
+        : MediaType.PHOTO);
+        
+    // Generate a unique filename
+    const timestamp = new Date().getTime();
+    const fileExtension = file.name.split('.').pop();
+    const uniqueFilename = `${timestamp}-${file.name}`;
+    
+    // Create storage path
+    const storagePath = `media/${eventId}/${uniqueFilename}`;
+    
+    // Upload the file
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('events')
+      .upload(storagePath, file, {
+        contentType: file.type,
+        cacheControl: '3600'
+      });
+      
+    if (uploadError) {
+      console.error('Error uploading file:', uploadError);
+      return null;
+    }
+    
+    // Get the public URL for the file
+    const { data: urlData } = await supabase.storage
+      .from('events')
+      .getPublicUrl(storagePath);
+      
+    const url = urlData.publicUrl;
+    
+    // Get dimensions for image files
+    let width = 0;
+    let height = 0;
+    let duration = 0;
+    
+    if (fileMediaType === MediaType.PHOTO) {
+      try {
+        const dimensions = await getImageDimensions(file);
+        width = dimensions.width;
+        height = dimensions.height;
+      } catch (e) {
+        console.error('Error getting image dimensions:', e);
+      }
+    }
+    
+    // Create the media record
+    const createParams: CreateMediaParams = {
+      eventId,
+      userId,
+      mediaType: fileMediaType,
+      filePath: storagePath,
+      url,
+      thumbnailUrl: url, // For now, use the same URL for thumbnail
+      title: title || file.name,
+      description: description || '',
+      size: file.size,
+      mimeType: file.type,
+      width,
+      height,
+      duration,
+      isPublic: isPublic || false,
+      metadata: metadata || {},
+      filename: file.name
+    };
+    
+    // Call the service to create the media record
+    return await mediaService.createMedia(createParams);
+  } catch (error) {
+    console.error('Error in uploadAndCreateMedia:', error);
+    return null;
+  }
+}
+
+/**
  * Client-side Media Service
  * Contains methods for interacting with media and albums
  */

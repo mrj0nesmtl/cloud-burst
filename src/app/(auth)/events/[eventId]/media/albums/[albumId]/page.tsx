@@ -70,9 +70,9 @@ export default async function AlbumViewPage({ params }: AlbumViewPageProps) {
       {media.length === 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>Empty Album</CardTitle>
+            <CardTitle>No media in this album</CardTitle>
             <CardDescription>
-              This album doesn't contain any media yet.
+              This album is empty. Add some media to see it here.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -86,8 +86,7 @@ export default async function AlbumViewPage({ params }: AlbumViewPageProps) {
       ) : (
         <MediaGrid 
           media={media} 
-          eventId={eventId}
-          showActions={false}
+          showControls={false}
           className="py-4"
         />
       )}

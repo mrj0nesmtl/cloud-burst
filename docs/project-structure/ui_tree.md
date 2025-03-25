@@ -1,8 +1,8 @@
 # ui Directory Structure
-Generated: 2025-03-25T18:25:55.500Z
+Generated: 2025-03-25T22:22:24.481Z
 
 ## Overview
-This directory contains 47 component(s).
+This directory contains 48 component(s).
 
 
 ## Directory Tree
@@ -21,6 +21,7 @@ This directory contains 47 component(s).
 ├── card.tsx
 ├── charts.tsx
 ├── checkbox.tsx
+├── collapsible.tsx
 ├── command.tsx
 ├── data-table.tsx
 ├── dialog.tsx
@@ -59,13 +60,13 @@ This directory contains 47 component(s).
 ├── tooltip.tsx
 └── use-toast.ts
 
-2 directories, 49 files
+2 directories, 50 files
 
 ```
 
 ## File Type Breakdown
 - ts: 2 file(s)
-- tsx: 47 file(s)
+- tsx: 48 file(s)
 
 ## Ignored Patterns
 - node_modules

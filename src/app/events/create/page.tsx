@@ -114,10 +114,11 @@ export default function CreateEventPage() {
           {
             name: values.name,
             description: values.description,
+            date: values.start_date.toISOString(),
             start_date: values.start_date.toISOString(),
             end_date: values.end_date ? values.end_date.toISOString() : null,
             location: values.location,
-            cover_image: values.cover_image,
+            cover_image_url: values.cover_image,
             is_public: values.is_public,
             user_id: user.id,
             custom_url: values.custom_url,

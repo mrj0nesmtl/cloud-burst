@@ -1,18 +1,24 @@
 # gallery Directory Structure
-Generated: 2025-03-25T18:25:55.119Z
+Generated: 2025-03-25T22:22:23.840Z
 
 ## Overview
-This directory contains 13 component(s).
+This directory contains 18 component(s).
 
 
 ## Directory Tree
 ```
 ./src/components/gallery/
+├── .MediaCard.tsx.swp
+├── GalleryHeader.tsx
+├── GalleryLayout.tsx
+├── GallerySidebar.tsx
+├── MasonryGrid.tsx
 ├── MediaCard.tsx
 ├── MediaGrid.tsx
 ├── MediaLightbox.tsx
 ├── MediaModeration.tsx
 ├── MediaUpload.tsx
+├── MediaViewer.tsx
 ├── README.md
 ├── gallery-event-card.tsx
 ├── gallery-grid.tsx
@@ -24,13 +30,13 @@ This directory contains 13 component(s).
 ├── upload-dropzone.tsx
 └── upload-with-tags.tsx
 
-1 directory, 15 files
+1 directory, 21 files
 
 ```
 
 ## File Type Breakdown
 - ts: 1 file(s)
-- tsx: 13 file(s)
+- tsx: 18 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

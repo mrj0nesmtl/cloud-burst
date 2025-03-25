@@ -1,26 +1,8 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { notFound, useParams } from "next/navigation";
-import { useMediaStore } from "@/store/media-store";
+import { notFound } from "next/navigation";
 import { Media, MediaStatus } from "@/types/media";
 import { MediaGrid } from "@/components/media/MediaGrid";
-import { MediaViewer } from "@/components/media/MediaViewer";
-import { MediaUploader } from "@/components/media/MediaUploader";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import {
   Card,
   CardContent,
@@ -30,11 +12,7 @@ import {
 } from "@/components/ui/card";
 import { 
   PlusCircle, 
-  Upload, 
-  Check, 
-  X, 
-  Clock, 
-  Search as MagnifyingGlassIcon 
+  Upload
 } from 'lucide-react';
 import { Metadata } from 'next';
 import { getEventById } from '@/lib/supabase/events.server';

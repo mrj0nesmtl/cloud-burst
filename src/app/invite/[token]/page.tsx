@@ -110,16 +110,19 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
     notFound()
   }
   
-  // Handle form submission
-  const formData = await (async () => {
+  // Create a server action for form submission
+  async function handleAcceptInvitation() {
     'use server'
     try {
-      const accepted = await acceptInvitation(params.token)
-      return { success: true, invitation: accepted }
+      await acceptInvitation(params.token)
+      // Redirect to prevent resubmission
+      redirect(`/invite/${params.token}`)
     } catch (error) {
-      return { success: false, error: (error as Error).message }
+      // Handle error
+      console.error('Failed to accept invitation:', error)
+      return { error: (error as Error).message }
     }
-  })()
+  }
   
   return (
     <Shell>
@@ -158,7 +161,7 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
               </div>
             </>
           ) : (
-            <form action={formData}>
+            <form action={handleAcceptInvitation}>
               <Button type="submit">Accept Invitation</Button>
             </form>
           )}

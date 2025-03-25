@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-25T18:25:51.653Z
+Generated: 2025-03-25T22:22:17.037Z
 
 ## Overview
 
@@ -28,7 +28,7 @@ Generated: 2025-03-25T18:25:51.653Z
 │   ├── workflows/
 │   │   └── versioning.yml
 │   └── dependabot.yml
-├── backup-routes/
+├── backup-routes.bak/
 │   ├── events-eventId-route/
 │   │   └── gallery/
 │   │       ├── moderation/
@@ -244,6 +244,22 @@ Generated: 2025-03-25T18:25:51.653Z
 │   ├── network-dev.sh
 │   └── test_rbac.js
 ├── src/
+│   ├── _backup/
+│   │   ├── [eventId].bak/
+│   │   │   └── gallery/
+│   │   │       ├── moderation/
+│   │   │       │   ├── moderation-content.tsx
+│   │   │       │   └── page.tsx
+│   │   │       ├── event-gallery-content.tsx
+│   │   │       └── page.tsx
+│   │   └── [id].bak/
+│   │       ├── gallery/
+│   │       │   └── page.tsx
+│   │       ├── upload/
+│   │       │   └── page.tsx
+│   │       ├── layout.tsx
+│   │       ├── not-found.tsx
+│   │       └── page.tsx
 │   ├── app/
 │   │   ├── (auth)/
 │   │   │   └── events/
@@ -259,6 +275,7 @@ Generated: 2025-03-25T18:25:51.653Z
 │   │   │           │   │   │   └── page.tsx
 │   │   │           │   │   └── page.tsx
 │   │   │           │   ├── moderation/
+│   │   │           │   │   ├── moderation-content.tsx
 │   │   │           │   │   └── page.tsx
 │   │   │           │   ├── upload/
 │   │   │           │   │   └── page.tsx
@@ -329,21 +346,6 @@ Generated: 2025-03-25T18:25:51.653Z
 │   │   │   │   │   │   ├── moderation-content.tsx
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── event-gallery-content.tsx
-│   │   │   │   │   └── page.tsx
-│   │   │   │   ├── upload/
-│   │   │   │   │   └── page.tsx
-│   │   │   │   ├── layout.tsx
-│   │   │   │   ├── not-found.tsx
-│   │   │   │   └── page.tsx
-│   │   │   ├── [eventId].bak/
-│   │   │   │   └── gallery/
-│   │   │   │       ├── moderation/
-│   │   │   │       │   ├── moderation-content.tsx
-│   │   │   │       │   └── page.tsx
-│   │   │   │       ├── event-gallery-content.tsx
-│   │   │   │       └── page.tsx
-│   │   │   ├── [id].bak/
-│   │   │   │   ├── gallery/
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── upload/
 │   │   │   │   │   └── page.tsx
@@ -592,11 +594,17 @@ Generated: 2025-03-25T18:25:51.653Z
 │   │   │   ├── security-form.tsx
 │   │   │   └── subscription-form.tsx
 │   │   ├── gallery/
+│   │   │   ├── .MediaCard.tsx.swp
+│   │   │   ├── GalleryHeader.tsx
+│   │   │   ├── GalleryLayout.tsx
+│   │   │   ├── GallerySidebar.tsx
+│   │   │   ├── MasonryGrid.tsx
 │   │   │   ├── MediaCard.tsx
 │   │   │   ├── MediaGrid.tsx
 │   │   │   ├── MediaLightbox.tsx
 │   │   │   ├── MediaModeration.tsx
 │   │   │   ├── MediaUpload.tsx
+│   │   │   ├── MediaViewer.tsx
 │   │   │   ├── README.md
 │   │   │   ├── gallery-event-card.tsx
 │   │   │   ├── gallery-grid.tsx
@@ -662,6 +670,7 @@ Generated: 2025-03-25T18:25:51.653Z
 │   │   │   ├── card.tsx
 │   │   │   ├── charts.tsx
 │   │   │   ├── checkbox.tsx
+│   │   │   ├── collapsible.tsx
 │   │   │   ├── command.tsx
 │   │   │   ├── data-table.tsx
 │   │   │   ├── dialog.tsx
@@ -756,6 +765,7 @@ Generated: 2025-03-25T18:25:51.653Z
 │   │   ├── utils/
 │   │   │   └── codeGenerator.ts
 │   │   ├── analytics.ts
+│   │   ├── auth.ts
 │   │   ├── constants.ts
 │   │   ├── event-customization-server.ts
 │   │   ├── event-customization.ts
@@ -824,8 +834,13 @@ Generated: 2025-03-25T18:25:51.653Z
 │   │   ├── role_capabilities_rows.csv
 │   │   └── roles_rows.csv
 │   ├── march_25/
+│   │   ├── Album Media Table Structure.csv
+│   │   ├── Check Foreign Key Relationships for Media Table.csv
+│   │   ├── Check Media Table for Media Type.csv
+│   │   ├── Data Migration Verification.csv
 │   │   ├── Event Attendees Table Structure.csv
 │   │   ├── Examine Invitations Table Structure.csv
+│   │   ├── Media Table Structure.csv
 │   │   └── Preview of Invitations.csv
 │   ├── may_22/
 │   │   └── events_rows_lucy_50_added.csv
@@ -880,18 +895,18 @@ Generated: 2025-03-25T18:25:51.653Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-197 directories, 675 files
+198 directories, 689 files
 
 ```
 
 ## File Type Breakdown
-- ts: 8341 file(s)
-- tsx: 425 file(s)
-- js: 24781 file(s)
-- json: 1853 file(s)
-- md: 1419 file(s)
-- css: 23 file(s)
-- yml: 156 file(s)
+- ts: 11054 file(s)
+- tsx: 432 file(s)
+- js: 27376 file(s)
+- json: 1894 file(s)
+- md: 1450 file(s)
+- css: 24 file(s)
+- yml: 157 file(s)
 
 ## Ignored Patterns
 - node_modules

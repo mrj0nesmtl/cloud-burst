@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { getServerSupabase } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import EventDetails from '@/components/events/event-details';
+import { Event } from '@/types/events';
 
 export default async function EventPage({ params }: { params: { id: string } }) {
   const supabase = await getServerSupabase();
@@ -23,5 +24,5 @@ export default async function EventPage({ params }: { params: { id: string } }) 
   }
   
   // Otherwise, render the event details
-  return <EventDetails event={event} />;
+  return <EventDetails event={event as unknown as Event} />;
 } 

@@ -5,7 +5,7 @@ import { getUserAuth } from '@/lib/auth/utils'
 import { getEventById } from '@/lib/supabase/events'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
-import { ModerationContent } from './moderation-content'
+import ModerationContent from './moderation-content'
 
 interface ModerationPageProps {
   params: {
@@ -38,7 +38,7 @@ export default async function ModerationPage({ params }: ModerationPageProps) {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Media Moderation</h1>
           <p className="text-muted-foreground">
-            {event.title} - Review and approve media uploads
+            {event.name} - Review and approve media uploads
           </p>
         </div>
         

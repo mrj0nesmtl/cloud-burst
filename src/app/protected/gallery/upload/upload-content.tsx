@@ -7,7 +7,7 @@ import { Info, XCircle, CheckCircle } from 'lucide-react'
 import { MediaUpload, MediaCard } from '@/components/gallery'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
-import { getEventMedia } from '@/lib/supabase/media'
+import mediaService from '@/lib/supabase/media'
 import { Button } from '@/components/ui/button'
 import { MediaType } from '@/types/media'
 
@@ -33,7 +33,7 @@ export function UploadContent({
     const loadRecentMedia = async () => {
       setLoading(true)
       try {
-        const media = await getEventMedia(eventId)
+        const media = await mediaService.getEventMedia(eventId)
         // Sort by most recent
         media.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         // Take only the 4 most recent
@@ -110,7 +110,7 @@ export function UploadContent({
             {recentMedia.map((media) => (
               <MediaCard
                 key={media.id}
-                media={media}
+                item={media}
                 aspectRatio={media.media_type === 'video' ? 'video' : 'square'}
                 showApproval={true}
               />

@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ArrowLeft } from 'lucide-react';
 import { MediaModerationGrid } from '@/components/media/MediaModerationGrid';
 import { auth } from '@/lib/auth';
+import { Event } from '@/types/events';
 
 interface ModerationPageProps {
   params: {
@@ -43,7 +44,18 @@ export default async function ModerationPage({ params }: ModerationPageProps) {
   
   // Check if the user is an organizer or staff for this event
   const isOrganizer = event.user_id === session?.user?.id;
-  const isStaff = event.staff?.some(staff => staff.user_id === session?.user?.id);
+  
+  // Safer approach checking for access rights
+  let isStaff = false;
+  
+  // Check if the event has staff property (comes from the database query)
+  // We're checking safely without assuming the shape of the data
+  const anyEvent = event as any;
+  if (anyEvent.staff && Array.isArray(anyEvent.staff)) {
+    isStaff = anyEvent.staff.some((staff: any) => 
+      staff && typeof staff === 'object' && staff.user_id === session?.user?.id
+    );
+  }
   
   if (!isOrganizer && !isStaff) {
     redirect(`/events/${eventId}/media`);

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { Film, Image as ImageIcon, Heart, ThumbsUp, ThumbsDown, MoreVertical, Tag, Clock, Eye, Play, CheckCircle, XCircle, User, Calendar } from 'lucide-react'
+import { Film, Image as ImageIcon, Heart, ThumbsUp, ThumbsDown, MoreVertical, Tag, Clock, Eye, Play, CheckCircle, XCircle, User, Calendar, MoreHorizontal, Pencil, Send } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 import { Media, MediaStatus, MediaType } from '@/types/media'
@@ -24,63 +24,116 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Input } from "@/components/ui/input"
+import { Download, Share } from "lucide-react"
+
+export interface Comment {
+  id: string;
+  text: string;
+  author: {
+    id: string;
+    name: string;
+    initials: string;
+    avatarUrl?: string;
+  };
+  createdAt: string;
+}
+
+export interface MediaItem {
+  id: string;
+  title?: string;
+  description?: string;
+  media_type: 'photo' | 'video';
+  url: string;
+  thumbnail_url?: string;
+  created_at: string;
+  width?: number;
+  height?: number;
+  duration?: number;
+  uploaded_by?: string;
+  is_approved?: boolean;
+  comments?: Comment[];
+  status?: MediaStatus;
+  metadata?: {
+    tags?: string[];
+  };
+  event?: {
+    id: string;
+    name: string;
+  };
+  event_id?: string;
+}
 
 interface MediaCardProps {
-  media: Media
-  aspectRatio?: 'square' | 'video' | 'portrait' | 'landscape'
-  width?: number
-  height?: number
-  priority?: boolean
-  showUser?: boolean
-  showDate?: boolean
-  showEvent?: boolean
-  showApproval?: boolean
-  showControls?: boolean
-  onApprove?: (media: Media) => void
-  onReject?: (media: Media) => void
-  onClick?: () => void
-  className?: string
+  item: MediaItem;
+  onClick?: (item: MediaItem) => void;
+  showComments?: boolean;
+  isPublic?: boolean;
+  aspectRatio?: number | 'square' | 'video' | 'portrait' | 'landscape';
+  onAddComment?: (mediaId: string, comment: string) => void;
+  onLike?: (mediaId: string) => void;
+  className?: string;
+  priority?: boolean;
+  showControls?: boolean;
+  showApproval?: boolean;
+  showEvent?: boolean;
+  onApprove?: (item: MediaItem) => void;
+  onReject?: (item: MediaItem) => void;
 }
 
 /**
  * MediaCard component for displaying photo or video items in the gallery
  */
 export function MediaCard({
-  media,
-  aspectRatio = 'square',
-  width = 300,
-  height = 300,
-  priority = false,
-  showUser = false,
-  showDate = true,
-  showEvent = false,
-  showApproval = false,
-  showControls = false,
-  onApprove,
-  onReject,
+  item,
   onClick,
-  className
+  showComments = false,
+  isPublic = false,
+  aspectRatio = 4/3,
+  onAddComment,
+  onLike,
+  className = "",
+  priority = false,
+  showControls = false,
+  showApproval = false,
+  showEvent = false,
+  onApprove,
+  onReject
 }: MediaCardProps) {
   const [isImageLoading, setIsImageLoading] = useState(true)
   const [isHovered, setIsHovered] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [newComment, setNewComment] = useState("")
+  const [isLiked, setIsLiked] = useState(false)
   
-  // Get actions from store
-  const { approveMedia, rejectMedia, removeMedia } = useMediaStore()
+  // Get actions from store - we'll use empty functions if not available
+  const mediaStore = useMediaStore()
+  const approveMedia = mediaStore.approveMediaItem || ((id: string) => Promise.resolve(null))
+  const rejectMedia = mediaStore.rejectMediaItem || ((id: string) => Promise.resolve(null))
+  const removeMedia = mediaStore.deleteMediaItem || ((id: string) => Promise.resolve(false))
   
   // Get aspect ratio based on media type and specified ratio
   const getAspectRatio = () => {
     if (aspectRatio === 'video') return 16 / 9
     if (aspectRatio === 'portrait') return 3 / 4
     if (aspectRatio === 'landscape') return 4 / 3
-    return 1 // square
+    if (aspectRatio === 'square') return 1
+    if (typeof aspectRatio === 'number') return aspectRatio
+    return 1 // default to square
   }
   
-  const isVideo = media.media_type === 'video'
+  const isVideo = item.media_type === 'video'
   
   // Format date
-  const formattedDate = media.created_at 
-    ? formatDistanceToNow(new Date(media.created_at), { addSuffix: true })
+  const formattedDate = item.created_at 
+    ? formatDistanceToNow(new Date(item.created_at), { addSuffix: true })
     : ''
+  
+  // Custom formatDate function
+  const formatDate = (dateString: string) => {
+    return format(new Date(dateString), 'MMM d, yyyy')
+  }
   
   // Handle image load complete
   const handleImageLoadComplete = () => {
@@ -91,9 +144,9 @@ export function MediaCard({
   const handleApprove = async (e: React.MouseEvent) => {
     e.stopPropagation()
     if (onApprove) {
-      onApprove(media)
+      onApprove(item)
     } else {
-      await approveMedia(media.id)
+      await approveMedia(item.id)
     }
   }
   
@@ -101,9 +154,9 @@ export function MediaCard({
   const handleReject = async (e: React.MouseEvent) => {
     e.stopPropagation()
     if (onReject) {
-      onReject(media)
+      onReject(item)
     } else {
-      await rejectMedia(media.id)
+      await rejectMedia(item.id)
     }
   }
   
@@ -112,7 +165,7 @@ export function MediaCard({
     e.stopPropagation()
     const confirmed = window.confirm('Are you sure you want to delete this item?')
     if (confirmed) {
-      await removeMedia(media.id)
+      await removeMedia(item.id)
     }
   }
   
@@ -120,7 +173,7 @@ export function MediaCard({
   const getStatusBadge = () => {
     if (!showApproval) return null
     
-    switch (media.status) {
+    switch (item.status) {
       case MediaStatus.APPROVED:
         return (
           <Badge variant="success" className="absolute top-2 right-2 z-10">
@@ -160,13 +213,37 @@ export function MediaCard({
     }
   }
   
+  const handleClick = () => {
+    if (onClick) {
+      onClick(item)
+    }
+  }
+  
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsLiked(!isLiked)
+    if (onLike) {
+      onLike(item.id)
+    }
+  }
+  
+  const handleCommentSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    if (newComment.trim() && onAddComment) {
+      onAddComment(item.id, newComment)
+      setNewComment("")
+    }
+  }
+  
   return (
     <Card 
       className={cn(
         "overflow-hidden group transition-all duration-200 hover:shadow-md",
         className
       )}
-      onClick={onClick}
+      onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -183,10 +260,10 @@ export function MediaCard({
           {/* Media thumbnail */}
           {isVideo ? (
             <div className="relative w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-              {media.thumbnail_url ? (
+              {item.thumbnail_url ? (
                 <Image
-                  src={media.thumbnail_url}
-                  alt={media.filename}
+                  src={item.thumbnail_url}
+                  alt={item.title || 'Video thumbnail'}
                   fill
                   className={cn(
                     "object-cover transition-opacity duration-300",
@@ -196,16 +273,16 @@ export function MediaCard({
                   priority={priority}
                 />
               ) : (
-                <Film className="w-12 h-12 text-gray-400" />
+                <Play className="w-12 h-12 text-gray-400" />
               )}
               <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                {media.duration ? `${Math.floor(media.duration / 60)}:${(media.duration % 60).toString().padStart(2, '0')}` : '0:00'}
+                {item.duration ? `${Math.floor(item.duration / 60)}:${(item.duration % 60).toString().padStart(2, '0')}` : '0:00'}
               </div>
             </div>
           ) : (
             <Image
-              src={media.url || '/images/placeholder-image.jpg'}
-              alt={media.filename}
+              src={item.url || '/images/placeholder-image.jpg'}
+              alt={item.title || 'Photo'}
               fill
               className={cn(
                 "object-cover transition-opacity duration-300 group-hover:scale-105 transition-transform",
@@ -222,28 +299,28 @@ export function MediaCard({
           {/* Media type indicator */}
           <div className="absolute bottom-2 left-2">
             <Badge variant="outline" className="bg-black/50 text-white border-none">
-              {media.media_type === MediaType.VIDEO ? (
+              {item.media_type === 'video' ? (
                 <Film className="w-3 h-3 mr-1" />
               ) : (
                 <ImageIcon className="w-3 h-3 mr-1" />
               )}
-              {media.media_type === MediaType.VIDEO ? 'Video' : 'Photo'}
+              {item.media_type === 'video' ? 'Video' : 'Photo'}
             </Badge>
           </div>
           
           {/* Tags indicator */}
-          {media.metadata?.tags?.length > 0 && (
+          {item.metadata?.tags && item.metadata.tags.length > 0 && (
             <div className="absolute top-2 right-2">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Badge variant="outline" className="bg-black/50 text-white border-none">
                     <Tag className="w-3 h-3 mr-1" />
-                    {media.metadata.tags.length}
+                    {item.metadata.tags.length}
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="text-xs">
-                    {media.metadata.tags.join(', ')}
+                    {item.metadata.tags.join(', ')}
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -253,7 +330,7 @@ export function MediaCard({
           {/* Hover overlay with actions */}
           {showControls && isHovered && (
             <div className="absolute inset-0 bg-black/60 flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              {showApproval && media.status === MediaStatus.PENDING && (
+              {showApproval && item.status === MediaStatus.PENDING && (
                 <>
                   <Button
                     variant="outline"
@@ -274,7 +351,7 @@ export function MediaCard({
                 </>
               )}
               
-              {showApproval && media.status === MediaStatus.APPROVED && (
+              {showApproval && item.status === MediaStatus.APPROVED && (
                 <Button
                   variant="outline"
                   size="icon"
@@ -285,7 +362,7 @@ export function MediaCard({
                 </Button>
               )}
               
-              {showApproval && media.status === MediaStatus.REJECTED && (
+              {showApproval && item.status === MediaStatus.REJECTED && (
                 <Button
                   variant="outline"
                   size="icon"
@@ -303,37 +380,37 @@ export function MediaCard({
                     size="icon"
                     className="h-8 w-8 rounded-full bg-white/20 border-white/50 text-white hover:bg-white hover:text-black"
                   >
-                    <MoreVertical className="h-4 w-4" />
+                    <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => window.open(media.url, '_blank')}>
+                  <DropdownMenuItem onClick={() => window.open(item.url, '_blank')}>
                     <Eye className="h-4 w-4 mr-2" />
                     View Full Size
                   </DropdownMenuItem>
-                  {showEvent && media.event && (
+                  {showEvent && item.event && (
                     <DropdownMenuItem asChild>
-                      <Link href={`/events/${media.event_id}`}>
+                      <Link href={`/events/${item.event_id}`}>
                         <Eye className="h-4 w-4 mr-2" />
                         View Event
                       </Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem onClick={() => {
-                    const url = media.url || '';
+                    const url = item.url || '';
                     const link = document.createElement('a');
                     link.href = url;
-                    link.download = media.filename;
+                    link.download = item.title || 'Untitled';
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                   }}>
-                    <Eye className="h-4 w-4 mr-2" />
+                    <Download className="h-4 w-4 mr-2" />
                     Download
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleDelete} className="text-red-500">
-                    <Eye className="h-4 w-4 mr-2" />
+                    <XCircle className="h-4 w-4 mr-2" />
                     Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -345,8 +422,8 @@ export function MediaCard({
       
       <CardFooter className="flex flex-col items-start p-3 space-y-1">
         <div className="w-full flex justify-between items-start">
-          <h3 className="text-sm font-medium truncate flex-1" title={media.filename}>
-            {media.filename}
+          <h3 className="text-sm font-medium truncate flex-1" title={item.title || 'Untitled'}>
+            {item.title || 'Untitled'}
           </h3>
         </div>
         
@@ -355,13 +432,69 @@ export function MediaCard({
             <Clock className="w-3 h-3 mr-1" />
             <span>{formattedDate}</span>
           </div>
-          {showEvent && media.event && (
-            <Link href={`/events/${media.event_id}`} className="hover:underline" onClick={(e) => e.stopPropagation()}>
-              {media.event.name}
+          {showEvent && item.event && (
+            <Link href={`/events/${item.event_id}`} className="hover:underline" onClick={(e) => e.stopPropagation()}>
+              {item.event.name}
             </Link>
           )}
         </div>
       </CardFooter>
+      
+      {showComments && (
+        <div className="px-3 mt-4 pt-4 border-t">
+          <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-medium">Comments ({item.comments?.length || 0})</h4>
+              <CollapsibleTrigger asChild onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                <Button variant="ghost" size="sm">
+                  {isExpanded ? "Hide" : "Show"}
+                </Button>
+              </CollapsibleTrigger>
+            </div>
+            
+            <CollapsibleContent className="mt-2 space-y-4">
+              {item.comments && item.comments.length > 0 ? (
+                <div className="space-y-3 max-h-[200px] overflow-y-auto pr-2">
+                  {item.comments.map(comment => (
+                    <div key={comment.id} className="flex gap-2 text-sm">
+                      <Avatar className="h-6 w-6">
+                        {comment.author.avatarUrl && (
+                          <AvatarImage src={comment.author.avatarUrl} alt={comment.author.name} />
+                        )}
+                        <AvatarFallback>{comment.author.initials}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center">
+                          <p className="text-xs font-medium">{comment.author.name}</p>
+                          <span className="text-xs text-muted-foreground ml-2">
+                            {formatDate(comment.createdAt)}
+                          </span>
+                        </div>
+                        <p className="text-sm">{comment.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">No comments yet</p>
+              )}
+              
+              <form onSubmit={handleCommentSubmit} className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                <Input 
+                  className="h-8 text-sm flex-1" 
+                  placeholder="Add a comment..." 
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <Button type="submit" size="sm" className="h-8 px-2" disabled={!newComment.trim()}>
+                  <Send className="h-4 w-4" />
+                </Button>
+              </form>
+            </CollapsibleContent>
+          </Collapsible>
+        </div>
+      )}
     </Card>
   )
 } 
