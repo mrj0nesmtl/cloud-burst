@@ -1,13 +1,13 @@
 # 📖 **User Flow Overview**  
 
 ## Cloud Burst
-📅 *Updated: March 18, 2025*  
-📊 *Version: 0.7.9*
+📅 *Updated: March 25, 2025*  
+📊 *Version: 0.8.0*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the email template system and invitation system foundation, Cloud Burst now offers a comprehensive media management platform with enhanced user verification and notification capabilities. Users can capture and share both photos and videos seamlessly through QR code check-ins that patch directly to their mobile device cameras, while receiving personalized email notifications throughout their journey. The platform now features enhanced processing for both media types, optimized streaming capabilities for video content, multiple viewing options for all media, and a complete email template system for user communications.
+Following the successful implementation of the invitation system with SendGrid integration, Cloud Burst now offers a comprehensive media management platform with enhanced user verification and notification capabilities. Users can capture and share both photos and videos seamlessly through QR code check-ins that connect directly to their mobile device camera, while receiving personalized email communications throughout their journey. The platform now features a complete invitation system with secure API endpoints, enhanced form validation with user feedback, and robust error handling. The enhanced processing for both media types, optimized streaming capabilities for video content, multiple viewing options for all media, and a complete email template system for user communications are now fully operational, providing a seamless experience across all touchpoints.
 
-The media management system is approximately 95% complete, with recent completions including email template management, authentication error handling, verification flows, and invitation system foundation. Current development focuses on finalizing post-event engagement features and optimizing the mobile experience.
+The media management system is approximately 95% complete, with recent completions including the invitation system with SendGrid integration, enhanced form validation, API endpoint security, and user guidance elements. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
 
 ## 🔄 **Core User Flows** [Updated]
 
@@ -23,7 +23,7 @@ flowchart TD
     F --> |Success| D
     F --> |Verification| G[Email Verification]
     G --> |Complete| D
-    G --> |Resend| H[Resend Email]
+    G--> |Resend| H[Resend Email]
     
     D --> I[Super Admin]
     D --> J[Admin]
@@ -46,42 +46,56 @@ flowchart TD
     K --> X[Event Creation]
     K --> Y[Attendee Management]
     K --> Z[Email Management]
+    K --> AA[Invitation Management]
     
-    L --> AA[Event Dashboard]
-    L --> AB[Basic Management]
-    L --> AC[Email Settings]
+    L --> AB[Event Dashboard]
+    L --> AC[Basic Management]
+    L --> AD[Email Settings]
+    L --> AE[Invitation System]
     
-    M --> AD[User Dashboard]
-    M --> AE[Profile Settings]
-    M --> AF[Email Preferences]
+    M --> AF[User Dashboard]
+    M --> AG[Profile Settings]
+    M --> AH[Email Preferences]
     
-    N --> AG[Gallery Access]
-    E --> AG
+    N --> AI[Gallery Access]
+    E --> AI
     
-    AG --> AH[View Gallery]
-    AG --> AI[Capture Media]
+    AI --> AJ[View Gallery]
+    AI --> AK[Capture Media]
     
-    AI --> AJ[Photo Capture]
-    AI --> AK[Video Recording]
+    AK --> AL[Photo Capture]
+    AK --> AM[Video Recording]
     
-    AH --> AL[Grid View]
-    AH --> AM[Masonry View]
-    AH --> AN[Slideshow View]
+    AJ --> AN[Grid View]
+    AJ --> AO[Masonry View]
+    AJ --> AP[Slideshow View]
     
-    AL --> AO[Media Actions]
-    AM --> AO
-    AN --> AO
+    AN --> AQ[Media Actions]
+    AO --> AQ
+    AP --> AQ
     
-    AO --> AP[Like/Comment]
-    AO --> AQ[Share]
-    AO --> AR[Download]
-    AO --> AS[Email Updates]
+    AQ --> AR[Like/Comment]
+    AQ --> AS[Share]
+    AQ --> AT[Download]
+    AQ --> AU[Email Updates]
     
-    P --> AT[Template List]
-    AT --> AU[Template Editor]
-    AU --> AV[Template Preview]
-    AU --> AW[Template Sync]
-    AW --> AX[Email Service]
+    P --> AV[Template List]
+    AV --> AW[Template Editor]
+    AW --> AX[Template Preview]
+    AW --> AY[Template Sync]
+    AY --> AZ[SendGrid Service]
+    
+    Z --> BA[Invitation Creation]
+    BA --> BB[Single Invitation]
+    BA --> BC[Bulk Invitation]
+    BB --> BD[SendGrid API]
+    BC --> BD
+    BD --> BE[Delivery Tracking]
+    
+    Y --> BF[Attendee List]
+    BF --> BG[Add Attendee]
+    BG --> BH[Invite Form]
+    BH --> BD
 ```
 
 ## 📸 **Media Capture Flow** [Enhanced]
@@ -112,6 +126,15 @@ flowchart TD
     N --> P[Share]
     N --> Q[Download]
     N --> R[Email Updates]
+    
+    M --> S[SendGrid Email]
+    S --> T[Open Tracking]
+    S --> U[Click Tracking]
+    
+    I --> V[API Endpoint]
+    V --> W[Form Validation]
+    W --> X[Error Handling]
+    X --> Y[User Feedback]
 ```
 
 ## 🔐 **Security Flow** [Enhanced]
@@ -130,7 +153,24 @@ flowchart LR
     I --> K{Session Valid}
     K -->|Yes| L[Resource]
     K -->|No| F
-    L --> M[Email Notification]
+    L --> M[API Endpoint]
+    M --> N[Validation]
+    N --> O[Processing]
+    O --> P[Response]
+    P --> Q[Error Handling]
+    Q --> R[User Feedback]
+    
+    F --> S[Auth Options]
+    S --> T[Credentials]
+    S --> U[Social Login]
+    S --> V[Magic Link]
+    S --> W[QR Code]
+    
+    T --> X[Form Validation]
+    V --> Y[Email Delivery]
+    Y --> Z[SendGrid API]
+    Z --> AA[Tracking]
+    W --> AB[Token Validation]
 ```
 
 ## 📊 **Media Type Distribution**
@@ -157,6 +197,8 @@ pie
 - ✅ Error boundaries
 - ✅ Email verification
 - ✅ Template security
+- ✅ API endpoint security
+- ✅ Form validation
 
 ### 🔐 **Authentication Layer**
 - ✅ Secure session handling
@@ -170,6 +212,8 @@ pie
 - ✅ Resource ownership verification
 - ✅ Email verification flow
 - ✅ Template-based notifications
+- ✅ SendGrid integration
+- ✅ API security
 
 ## 📝 **Introduction**  
 Cloud Burst is an **event media platform** designed to **seamlessly collect, filter, and organize event photos and videos**. The platform features comprehensive role-based access control, custom event URLs, and multiple gallery layouts to enhance the user experience.
@@ -187,22 +231,25 @@ graph LR
     A --> F[Profile Settings]
     A --> G[Template Management]
     A --> H[Email System]
+    A --> I[Invitation System]
     
-    B --> I[35% Usage]
-    C --> J[25% Usage]
-    D --> K[15% Usage]
-    E --> L[8% Usage]
-    F --> M[4% Usage]
-    G --> N[8% Usage]
-    H --> O[5% Usage]
+    B --> J[35% Usage]
+    C --> K[25% Usage]
+    D --> L[15% Usage]
+    E --> M[8% Usage]
+    F --> N[4% Usage]
+    G --> O[6% Usage]
+    H --> P[3% Usage]
+    I --> Q[4% Usage]
 
-    style I fill:#90EE90
-    style J fill:#ADD8E6
-    style K fill:#FFB6C1
-    style L fill:#DDA0DD
-    style M fill:#FFDAB9
-    style N fill:#F0E68C
-    style O fill:#98FB98
+    style J fill:#90EE90
+    style K fill:#ADD8E6
+    style L fill:#FFB6C1
+    style M fill:#DDA0DD
+    style N fill:#FFDAB9
+    style O fill:#F0E68C
+    style P fill:#98FB98
+    style Q fill:#87CEFA
 ```
 
 ## 🏷️ **Pre-Event: Ticket Confirmation & QR Code**  
@@ -214,6 +261,8 @@ graph LR
 - `<TemplatePreview>` for email rendering
 - ✅ Custom event URL integration
 - ✅ Email template customization
+- ✅ SendGrid delivery
+- ✅ Email tracking
 
 ✔️ Upon purchasing a ticket, users **receive an email** with:
   - Event details
@@ -221,6 +270,7 @@ graph LR
   - Platform instructions
   - Custom event URL
   - Branding elements
+  - Access guidance
 
 ## 🎉 **Event Arrival & Camera Integration**  
 
@@ -234,6 +284,9 @@ graph LR
 - `<MediaSelector>` for photo/video toggle
 - ✅ Role-based access control
 - ✅ Permission-based UI rendering
+- ✅ Form validation
+- ✅ Error handling
+- ✅ API security
 
 ✔️ Users can:
   - Scan QR with smartphone
@@ -242,6 +295,7 @@ graph LR
   - Toggle between photo/video modes
   - Capture media directly within app
   - Set basic preferences
+  - Receive guidance information
 
 ## 📸 **Media Management**  
 
@@ -255,12 +309,15 @@ graph LR
 - `<Toast>` for notifications
 - `<Carousel>` for media preview
 - `<Skeleton>` for loading states
+- `<Alert>` for guidance information
 - ✅ Multiple file selection
 - ✅ Direct camera integration
 - ✅ Video recording with duration limits
 - ✅ Drag-and-drop support
 - ✅ Format validation
 - ✅ Size optimization
+- ✅ API endpoint integration
+- ✅ Form validation feedback
 
 ✔️ Features include:
   - Direct camera integration
@@ -270,6 +327,7 @@ graph LR
   - Format validation
   - Error handling
   - Real-time processing
+  - User guidance information
 
 ## 🖼️ **Gallery Experience**  
 
@@ -287,6 +345,7 @@ graph LR
 - ✅ Responsive design
 - ✅ Video playback controls
 - 🟡 Download options (70% complete)
+- ✅ User guidance tooltips
 
 ✔️ Users can:
   - Browse real-time
@@ -296,6 +355,7 @@ graph LR
   - View full-screen
   - Play videos inline
   - Download favorites (in progress)
+  - Receive contextual guidance
 
 ## 📧 **Email Template Management**
 
@@ -308,14 +368,46 @@ graph LR
 - ✅ Template versioning
 - ✅ Role-based access
 - ✅ Preview with sample data
+- ✅ SendGrid integration
+- ✅ Email tracking
 
 ✔️ Admin users can:
   - Edit email templates
   - Preview with sample data
-  - Synchronize with Supabase Auth
+  - Synchronize with SendGrid
   - Manage template variables
-  - Track delivery analytics (in progress)
+  - Track delivery analytics
   - Set default templates
+  - Test delivery
+
+## 📨 **Invitation System**
+
+### 📩 **Invitation Components**
+- `<InvitationForm>` for creation
+- `<BatchUpload>` for bulk invites
+- `<EmailPreview>` for templates
+- `<QRCode>` for generation
+- `<StatusTracker>` for monitoring
+- `<Alert>` for guidance information
+- ✅ Single and bulk invitation options
+- ✅ Email template selection
+- ✅ SendGrid integration
+- ✅ Delivery tracking
+- ✅ API security
+- ✅ Form validation
+- ✅ Error handling
+- ✅ User feedback mechanisms
+
+✔️ Organizers can:
+  - Create individual invitations
+  - Import bulk attendee lists
+  - Select email templates
+  - Preview before sending
+  - Track delivery status
+  - Monitor RSVPs
+  - View analytics
+  - Resend invitations
+  - Receive guidance information
 
 ## 📩 **Post-Event Access**  
 
@@ -325,7 +417,9 @@ graph LR
 - `<Alert>` for expiry
 - `<Calendar>` for expiry countdown
 - ✅ Custom event URL for sharing
-- 🟡 Bulk download options (50% complete)
+- 🟡 Bulk download options (70% complete)
+- ✅ Follow-up email templates
+- ✅ SendGrid integration
 
 ✔️ Features include:
   - Gallery link email
@@ -334,6 +428,7 @@ graph LR
   - Expiration notices
   - Access countdown
   - Sharing capabilities
+  - Email tracking
 
 ## 🔄 **Role-Based User Journeys**
 
@@ -358,16 +453,19 @@ graph LR
 2. Manage event details
 3. Customize galleries
 4. Manage attendees
-5. Moderate photos
-6. View event analytics
+5. Send invitations
+6. Create and manage email templates
+7. Moderate photos
+8. View event analytics
 
 ### 🎭 **Event Host Journey**
 1. Create personal events
 2. Basic event management
 3. Manage attendee list
-4. Access event gallery
-5. Upload and moderate photos
-6. Share event with guests
+4. Send invitations
+5. Access event gallery
+6. Upload and moderate photos
+7. Share event with guests
 
 ### 👤 **User Journey**
 1. Access personal dashboard
@@ -376,6 +474,7 @@ graph LR
 4. Upload photos to galleries
 5. Browse and interact with photos
 6. Download favorites
+7. Manage email preferences
 
 ### 👥 **Guest Journey**
 1. Access event via QR code or URL
@@ -384,31 +483,36 @@ graph LR
 4. Upload photos (if permitted)
 5. Interact with content
 6. Receive post-event access
+7. Get follow-up communications
 
 ## 🔄 **Implementation Progress**
 
-As we approach our April 1, 2025 launch date, the media management system is approximately 90% complete. Recent implementations include:
+As we approach our April 1, 2025 launch date, the invitation system is now 100% complete with SendGrid integration. Recent implementations include:
 
 ### Key Achievements:
-- ✅ Comprehensive video support
-- ✅ Direct camera integration for seamless capture
-- ✅ Enhanced gallery layouts for mixed media
-- ✅ Optimized video processing pipeline
-- ✅ Improved mobile responsiveness
+- ✅ Complete invitation system with API integration
+- ✅ SendGrid integration for secure email delivery
+- ✅ Enhanced form validation with user feedback
+- ✅ User guidance information throughout flows
+- ✅ API endpoint security
+- ✅ Improved error handling
+- ✅ Navigation enhancements between events and guests
 
 ### Current Focus:
-- 🟡 Optimizing video processing (80% complete)
-- 🟡 Enhancing video playback controls (75% complete)
-- 🟡 Implementing advanced sharing options (70% complete)
-- 🟡 Finalizing download functionality (70% complete)
+- 🟡 Implementing gallery masonry layout (0% complete)
+- 🟡 Developing album management system (0% complete)
+- 🟡 Enhancing analytics dashboard (0% complete)
+- 🟡 Creating guest upload system (0% complete)
+- 🟡 Implementing onboarding flow (0% complete)
 
 ### Next Steps:
-1. Complete video processing optimization
-2. Enhance mobile video playback experience
-3. Finalize download functionality for all media types
-4. Implement advanced sharing options for galleries
+1. Complete gallery system with masonry layout
+2. Implement album management
+3. Enhance dashboard with analytics panels
+4. Create guest upload system
+5. Develop onboarding flow for new organizers
 
 ## 🎯 **Conclusion**  
-Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly** through both photos and videos. By integrating **role-based access control, direct camera integration, custom event URLs, multiple gallery layouts, and comprehensive video support**, Cloud Burst creates an **engaging and seamless user experience** that adapts to different user roles and media preferences. As we approach our April 1, 2025 launch date, the platform is well-positioned to deliver a polished, professional-grade solution for complete event media management.
+Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly** through both photos and videos. By integrating **role-based access control, direct camera integration, custom event URLs, multiple gallery layouts, comprehensive invitation system, and SendGrid email delivery**, Cloud Burst creates an **engaging and seamless user experience** that adapts to different user roles and media preferences. As we approach our April 1, 2025 launch date, the platform is well-positioned to deliver a polished, professional-grade solution for complete event media management.
 
 ---
