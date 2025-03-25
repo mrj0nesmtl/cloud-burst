@@ -6,7 +6,7 @@ This document outlines the standard layout approach for all protected pages in t
 
 ## IMPORTANT: Direct Style Control Approach
 
-After extensive testing, we've determined that **direct inline styles** provide the most reliable layout control across all devices. This approach has successfully resolved layout issues that persisted with class-based styling.
+After extensive testing, we've determined that **direct inline styles** provide the most reliable layout control across all devices. This approach has successfully resolved layout issues that persisted with class-based styling, particularly in complex components like our invitation system with SendGrid integration.
 
 ```jsx
 // ✅ RECOMMENDED APPROACH - Direct style control
@@ -79,6 +79,15 @@ All protected pages that are accessible from the sidebar menu should follow this
    - Place action buttons consistently (usually top-right or bottom-right)
    - Maintain consistent spacing around form elements
    - Use `width: '100%'` on form containers to ensure proper spacing
+   - Implement consistent error state visualization with clear visual indicators
+   - Use Zod for form validation with consistent error message styling
+
+6. **Error States**
+   - Use consistent error styling with `color: var(--destructive)` for error messages
+   - Provide clear visual indicators for form field errors
+   - Include helpful error recovery guidance next to each error
+   - Maintain accessibility with proper ARIA attributes for errors
+   - Ensure error states are properly handled on mobile displays
 
 ## Mobile-Specific Considerations
 
@@ -139,6 +148,46 @@ All protected pages that are accessible from the sidebar menu should follow this
    );
    ```
 
+5. **Error Handling on Mobile**
+   - Position error messages where they're clearly visible without scrolling
+   - Use concise error messages that work on smaller screens
+   - Implement touch-friendly error recovery actions
+   - Ensure error states are distinguishable on small screens
+
+6. **Loading States**
+   - Implement consistent loading indicators for slow connections
+   - Position loading states where they're clearly visible
+   - Use appropriate sizing for loading indicators on mobile devices
+   - Provide feedback for long-running operations
+   - Consider skeleton loaders for content-heavy pages
+
+   ```jsx
+   {isLoading ? (
+     <div style={{
+       width: '100%',
+       padding: isMobile ? '16px' : '24px',
+       display: 'flex',
+       justifyContent: 'center',
+       alignItems: 'center',
+       minHeight: isMobile ? '200px' : '300px'
+     }}>
+       <div style={{
+         display: 'flex',
+         flexDirection: 'column',
+         alignItems: 'center',
+         gap: '16px'
+       }}>
+         <Spinner size={isMobile ? 36 : 48} />
+         <p style={{ color: 'var(--muted-foreground)' }}>
+           Loading content...
+         </p>
+       </div>
+     </div>
+   ) : (
+     // Actual content
+   )}
+   ```
+
 ## Benefits of This Approach
 
 - **Visual Consistency**: Users experience the same layout patterns across all pages
@@ -166,6 +215,16 @@ All protected pages that are accessible from the sidebar menu should follow this
    - Always test your implementation on multiple device sizes
    - Use the direct style approach rather than relying on utility classes
 
+5. **Poor error state visibility**
+   - Ensure error messages are clearly visible
+   - Use consistent error styling with appropriate color contrast
+   - Position error messages where they will be seen immediately
+
+6. **Inconsistent loading states**
+   - Use the standard loading pattern for all asynchronous operations
+   - Ensure loading indicators are properly sized for both desktop and mobile
+   - Provide helpful loading messages for longer operations
+
 ## Examples
 
 The following pages implement this consistent layout successfully:
@@ -177,6 +236,8 @@ The following pages implement this consistent layout successfully:
 - QR Codes
 - All Media
 - Manage Invitations
+- Invitation System (with SendGrid integration)
+- Email Delivery Tracking
 
 ## Implementation Notes
 
@@ -185,5 +246,27 @@ To update a page to use the consistent layout:
 2. Implement the viewport detection code to handle mobile views
 3. Apply conditional styling based on the `isMobile` state
 4. Test the implementation across multiple device sizes
+5. Ensure proper error state visualization with consistent styling
+6. Implement appropriate loading states for asynchronous operations
+7. Include contextual help elements where appropriate, using consistent positioning and styling:
+   ```jsx
+   <div style={{ position: 'relative' }}>
+     <label style={{ 
+       display: 'flex', 
+       alignItems: 'center', 
+       gap: '8px', 
+       marginBottom: '8px' 
+     }}>
+       Field Label
+       <span 
+         style={{ cursor: 'help' }}
+         title="Helpful information about this field"
+       >
+         <InfoIcon size={16} />
+       </span>
+     </label>
+     <input style={{ width: '100%' }} />
+   </div>
+   ```
 
 This direct style control provides more consistent results across the application and is the officially recommended approach for all protected pages. 
