@@ -1,15 +1,9 @@
 'use client'
 
-import { Metadata } from 'next'
 import { Shell } from '@/components/shell'
 import { CreateInvitationForm } from '@/components/invitations/create-invitation-form'
 import { Separator } from '@/components/ui/separator'
 import { useSearchParams } from 'next/navigation'
-
-export const metadata: Metadata = {
-  title: 'Create Invitation',
-  description: 'Create a new invitation for your event',
-}
 
 export default function CreateInvitationPage() {
   const searchParams = useSearchParams()

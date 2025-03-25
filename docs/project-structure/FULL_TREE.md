@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-24T03:37:48.710Z
+Generated: 2025-03-25T15:52:25.624Z
 
 ## Overview
 
@@ -121,6 +121,7 @@ Generated: 2025-03-24T03:37:48.710Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
+│   │   ├── session-28-plan.md
 │   │   ├── session_28_prompt.md
 │   │   └── version-sync.plan
 │   ├── planning/
@@ -171,12 +172,28 @@ Generated: 2025-03-24T03:37:48.710Z
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   ├── README.md
-│   └── session-28-plan.md
+│   └── README.md
 ├── merged-routes/
 ├── migrations/
 │   ├── 01_create_media_table.sql
-│   └── 01_update_media_schema.sql
+│   ├── 01_update_media_schema.sql
+│   ├── 20240317000000_fix_role_capabilities_rls.sql
+│   ├── 20240317001000_standardize_role_capabilities.sql
+│   ├── 20240317002000_document_role_capabilities.sql
+│   ├── 20240317003000_add_profile_capabilities.sql
+│   ├── 20240317004000_align_roles_and_documentation.sql
+│   ├── 20240317004000_update_role_documentation.sql
+│   ├── 20240317004500_create_invitations_table.sql
+│   ├── 20240317005000_add_trial_fields.sql
+│   ├── 20240317005000_invited_user_capabilities.sql
+│   ├── 20240318000000_update_media_rls_policies.sql
+│   ├── 20240318001000_add_event_staff_role.sql
+│   ├── 20240318002000_setup_storage_buckets.sql
+│   ├── 20240318003000_update_media_rls_with_staff.sql
+│   ├── 20240318004000_setup_auth_email_templates.sql
+│   ├── 20240318005000_create_profiles_table.sql
+│   ├── 20250323205916_update_media_schema.sql
+│   └── 20250323211204_update_media_schema.sql
 ├── public/
 │   ├── images/
 │   │   ├── email/
@@ -410,6 +427,7 @@ Generated: 2025-03-24T03:37:48.710Z
 │   │   │   │       ├── components/
 │   │   │   │       │   └── invitations-table.tsx
 │   │   │   │       ├── create/
+│   │   │   │       │   ├── layout.tsx
 │   │   │   │       │   └── page.tsx
 │   │   │   │       ├── columns.tsx
 │   │   │   │       └── page.tsx
@@ -771,25 +789,6 @@ Generated: 2025-03-24T03:37:48.710Z
 ├── supabase/
 │   ├── .temp/
 │   │   └── cli-latest
-│   ├── migrations/
-│   │   ├── 01_create_media_table.sql
-│   │   ├── 20240317000000_fix_role_capabilities_rls.sql
-│   │   ├── 20240317001000_standardize_role_capabilities.sql
-│   │   ├── 20240317002000_document_role_capabilities.sql
-│   │   ├── 20240317003000_add_profile_capabilities.sql
-│   │   ├── 20240317004000_align_roles_and_documentation.sql
-│   │   ├── 20240317004000_update_role_documentation.sql
-│   │   ├── 20240317004500_create_invitations_table.sql
-│   │   ├── 20240317005000_add_trial_fields.sql
-│   │   ├── 20240317005000_invited_user_capabilities.sql
-│   │   ├── 20240318000000_update_media_rls_policies.sql
-│   │   ├── 20240318001000_add_event_staff_role.sql
-│   │   ├── 20240318002000_setup_storage_buckets.sql
-│   │   ├── 20240318003000_update_media_rls_with_staff.sql
-│   │   ├── 20240318004000_setup_auth_email_templates.sql
-│   │   ├── 20240318005000_create_profiles_table.sql
-│   │   ├── 20250323205916_update_media_schema.sql
-│   │   └── 20250323211204_update_media_schema.sql
 │   ├── templates/
 │   │   └── auth_emails/
 │   │       ├── change_email_address.html
@@ -822,6 +821,10 @@ Generated: 2025-03-24T03:37:48.710Z
 │   │   ├── profiles_rows.csv
 │   │   ├── role_capabilities_rows.csv
 │   │   └── roles_rows.csv
+│   ├── march_25/
+│   │   ├── Event Attendees Table Structure.csv
+│   │   ├── Examine Invitations Table Structure.csv
+│   │   └── Preview of Invitations.csv
 │   ├── may_22/
 │   │   └── events_rows_lucy_50_added.csv
 │   ├── old/
@@ -875,15 +878,15 @@ Generated: 2025-03-24T03:37:48.710Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-197 directories, 670 files
+197 directories, 673 files
 
 ```
 
 ## File Type Breakdown
-- ts: 8344 file(s)
-- tsx: 424 file(s)
-- js: 24797 file(s)
-- json: 1856 file(s)
+- ts: 8358 file(s)
+- tsx: 425 file(s)
+- js: 24897 file(s)
+- json: 1868 file(s)
 - md: 1417 file(s)
 - css: 23 file(s)
 - yml: 156 file(s)

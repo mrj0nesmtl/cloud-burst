@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-24T03:37:49.452Z
+Generated: 2025-03-25T15:52:26.362Z
 
 ## Overview
 
@@ -84,6 +84,7 @@ Generated: 2025-03-24T03:37:49.452Z
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
+│   ├── session-28-plan.md
 │   ├── session_28_prompt.md
 │   └── version-sync.plan
 ├── planning/
@@ -134,8 +135,7 @@ Generated: 2025-03-24T03:37:49.452Z
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store
-├── README.md
-└── session-28-plan.md
+└── README.md
 
 10 directories, 119 files
 
