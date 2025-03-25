@@ -1,4 +1,7 @@
 # Session 30: Implementation Resources
+## Current Version: 0.8.1
+## Last Updated: March 25, 2025, 7:00 PM
+## Session: 30 - Gallery Implementation Continuation
 
 This document provides helpful resources, code snippets, and examples for the gallery implementation in Session 30.
 
