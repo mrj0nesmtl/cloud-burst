@@ -11,7 +11,8 @@ import {
   Send, 
   QrCode, 
   Loader2, 
-  AlertCircle 
+  AlertCircle,
+  Info
 } from "lucide-react"
 
 // UI Components
@@ -26,14 +27,10 @@ import { useToast } from "@/components/ui/use-toast"
 
 // Types and utilities
 import { 
-  addEventAttendee, 
-  bulkImportAttendees 
-} from '@/lib/supabase/events'
-import { generateQRCodeDataUrl } from '@/lib/qr-code'
-import { AttendeeStatus, BulkImportAttendeesParams } from '@/types/events'
-
-// Email validation regex
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  EMAIL_REGEX,
+  AttendeeStatus, 
+  BulkImportAttendeesParams 
+} from '@/types/events'
 
 // Form schema for single invitation
 const singleInviteSchema = z.object({
@@ -96,27 +93,30 @@ export function InvitationForm({
     setIsSubmitting(true)
     
     try {
-      // Create attendee
-      const attendee = await addEventAttendee({
-        event_id: eventId,
-        name: values.name,
-        email: values.email,
-        status: 'invited',
-      })
+      // Call the API endpoint instead of directly using addEventAttendee
+      const response = await fetch('/api/invitations/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          eventId,
+          name: values.name,
+          email: values.email,
+          message: values.message,
+          plusOne: false, // Default to false for simple form
+        })
+      });
       
-      // Generate QR code for the attendee
-      const qrCodeDataUrl = await generateQRCodeDataUrl({
-        event_id: eventId,
-        type: 'attendee',
-        attendee_id: attendee.id,
-      })
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send invitation');
+      }
       
-      // In a real application, you would send an email with the QR code here
-      // For now, we'll just show a success message
-      
+      // Success response
       toast({
         title: "Invitation sent successfully!",
-        description: `An invitation has been sent to ${values.email} with a personalized QR code.`,
+        description: `An invitation has been sent to ${values.email} with a personalized access link.`,
       })
       
       // Reset form
@@ -133,7 +133,7 @@ export function InvitationForm({
       toast({
         variant: "destructive",
         title: "Failed to send invitation",
-        description: "There was an error sending the invitation. Please try again.",
+        description: error instanceof Error ? error.message : "There was an error sending the invitation. Please try again.",
       })
     } finally {
       setIsSubmitting(false)
@@ -180,24 +180,29 @@ export function InvitationForm({
         }
       })
       
-      // Bulk import attendees
-      const params: BulkImportAttendeesParams = {
-        event_id: eventId,
-        attendees: attendees.map(({ name, email }) => ({
-          name,
-          email,
-          status: 'invited' as AttendeeStatus,
-        })),
+      // Call the API endpoint for bulk invitations
+      const response = await fetch('/api/invitations/bulk-create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          eventId,
+          attendees,
+          message: values.message || '',
+          plusOne: false, // Default to false for simple form
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send invitations');
       }
       
-      await bulkImportAttendees(params)
-      
-      // In a real application, you would send emails with QR codes here
-      // For now, we'll just show a success message
-      
+      // Success response
       toast({
         title: "Invitations sent successfully!",
-        description: `${attendees.length} invitations have been sent with personalized QR codes.`,
+        description: `${attendees.length} invitations have been sent with personalized access links.`,
       })
       
       // Reset form
@@ -218,7 +223,7 @@ export function InvitationForm({
       toast({
         variant: "destructive",
         title: "Failed to send invitations",
-        description: "There was an error sending the invitations. Please check the format and try again.",
+        description: error instanceof Error ? error.message : "There was an error sending the invitations. Please check the format and try again.",
       })
     } finally {
       setIsSubmitting(false)
@@ -308,6 +313,15 @@ export function InvitationForm({
           </CardHeader>
           
           <CardContent>
+            <Alert className="mb-6">
+              <Info className="h-4 w-4" />
+              <AlertTitle>How invitations work</AlertTitle>
+              <AlertDescription>
+                When you send an invitation, the guest will receive an email with a secure link to access event details.
+                Emails are sent through SendGrid using your verified sender email.
+              </AlertDescription>
+            </Alert>
+            
             <Form {...singleForm}>
               <form onSubmit={singleForm.handleSubmit(onSingleSubmit)} className="space-y-6">
                 <FormField
@@ -404,6 +418,15 @@ export function InvitationForm({
           </CardHeader>
           
           <CardContent>
+            <Alert className="mb-6">
+              <Info className="h-4 w-4" />
+              <AlertTitle>About bulk invitations</AlertTitle>
+              <AlertDescription>
+                Each guest will receive a personalized email with their unique access link.
+                All emails are sent through SendGrid and delivery can be tracked in your SendGrid dashboard.
+              </AlertDescription>
+            </Alert>
+            
             <Form {...bulkForm}>
               <form onSubmit={bulkForm.handleSubmit(onBulkSubmit)} className="space-y-6">
                 <FormField
