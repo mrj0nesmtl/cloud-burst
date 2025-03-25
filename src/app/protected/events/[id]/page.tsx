@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
+import { Mail } from 'lucide-react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -244,18 +245,24 @@ export default async function EventPage({ params }: EventPageProps) {
             <CardHeader>
               <CardTitle>Manage Invitations</CardTitle>
               <CardDescription>
-                Create and manage invitations for this event
+                Send personalized invitations to guests for this event
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium">Event Invitations</h3>
+                  <div>
+                    <h3 className="text-lg font-medium">Event Invitations</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Invite guests with personalized emails and unique access links
+                    </p>
+                  </div>
                   <a 
                     href={`/protected/attendees/invitations/create?eventId=${event.id}`}
                     className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2"
                   >
-                    Create New Invitation
+                    <Mail className="mr-2 h-4 w-4" />
+                    Invite Guests
                   </a>
                 </div>
                 <Separator />
@@ -264,8 +271,16 @@ export default async function EventPage({ params }: EventPageProps) {
                     All invitations for this event will appear here.
                   </p>
                   <p className="text-muted-foreground mt-2">
-                    Click "Create New Invitation" to get started.
+                    Click "Invite Guests" to send personalized invitations.
                   </p>
+                  <div className="mt-4 p-4 bg-muted rounded-md max-w-md mx-auto text-left">
+                    <h4 className="font-medium text-sm">How invitations work:</h4>
+                    <ol className="mt-2 text-sm text-muted-foreground space-y-1 pl-5 list-decimal">
+                      <li>Create single invitations or upload a CSV file with multiple guests</li>
+                      <li>Each guest receives a personalized email with a unique access link</li>
+                      <li>Guests can RSVP and access the event without creating an account</li>
+                    </ol>
+                  </div>
                 </div>
               </div>
             </CardContent>

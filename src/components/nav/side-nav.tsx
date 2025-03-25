@@ -77,6 +77,13 @@ export function SideNav({ collapsed = false }: SideNavProps) {
           >
             Create New
           </NavItem>
+          {!collapsed && (
+            <div className="px-2 py-1">
+              <div className="text-xs text-muted-foreground border-l-2 border-muted-foreground/30 pl-2 ml-8">
+                Event details include invitations, guest management, and photos
+              </div>
+            </div>
+          )}
           <NavItem
             href="/protected/events/templates"
             active={pathname === "/protected/events/templates"}
@@ -101,8 +108,9 @@ export function SideNav({ collapsed = false }: SideNavProps) {
             active={pathname === "/protected/attendees/invitations"}
             icon={Users}
             collapsed={collapsed}
+            badge="All"
           >
-            Invitations
+            Event Guests
           </NavItem>
           <NavItem
             href="/protected/qr-codes"
