@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Media } from '@/types/media'
-import { MediaGrid } from '@/components/gallery'
+import { MediaGrid } from '@/components/gallery/MediaGrid'
 import { useMediaStore } from '@/store/media-store'
 import { Button } from '@/components/ui/button'
 import { RefreshCw } from 'lucide-react'
@@ -21,15 +21,15 @@ export function EventGalleryContent({
   eventId,
   userId
 }: EventGalleryContentProps) {
-  const { fetchEventMedia } = useMediaStore()
+  const { fetchEventMedia, eventMedia } = useMediaStore()
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [mediaItems, setMediaItems] = useState<Media[]>(media)
   
   const handleRefresh = async () => {
     setIsRefreshing(true)
     try {
-      const refreshedMedia = await fetchEventMedia(eventId)
-      setMediaItems(refreshedMedia)
+      await fetchEventMedia(eventId)
+      setMediaItems(eventMedia)
     } catch (error) {
       console.error('Error refreshing media:', error)
     } finally {

@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-25T18:25:52.216Z
+Generated: 2025-03-25T22:22:18.261Z
 
 ## Overview
 
@@ -8,6 +8,22 @@ Generated: 2025-03-25T18:25:52.216Z
 ## Directory Tree
 ```
 ./src/
+├── _backup/
+│   ├── [eventId].bak/
+│   │   └── gallery/
+│   │       ├── moderation/
+│   │       │   ├── moderation-content.tsx
+│   │       │   └── page.tsx
+│   │       ├── event-gallery-content.tsx
+│   │       └── page.tsx
+│   └── [id].bak/
+│       ├── gallery/
+│       │   └── page.tsx
+│       ├── upload/
+│       │   └── page.tsx
+│       ├── layout.tsx
+│       ├── not-found.tsx
+│       └── page.tsx
 ├── app/
 │   ├── (auth)/
 │   │   └── events/
@@ -23,6 +39,7 @@ Generated: 2025-03-25T18:25:52.216Z
 │   │           │   │   │   └── page.tsx
 │   │           │   │   └── page.tsx
 │   │           │   ├── moderation/
+│   │           │   │   ├── moderation-content.tsx
 │   │           │   │   └── page.tsx
 │   │           │   ├── upload/
 │   │           │   │   └── page.tsx
@@ -93,21 +110,6 @@ Generated: 2025-03-25T18:25:52.216Z
 │   │   │   │   │   ├── moderation-content.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── event-gallery-content.tsx
-│   │   │   │   └── page.tsx
-│   │   │   ├── upload/
-│   │   │   │   └── page.tsx
-│   │   │   ├── layout.tsx
-│   │   │   ├── not-found.tsx
-│   │   │   └── page.tsx
-│   │   ├── [eventId].bak/
-│   │   │   └── gallery/
-│   │   │       ├── moderation/
-│   │   │       │   ├── moderation-content.tsx
-│   │   │       │   └── page.tsx
-│   │   │       ├── event-gallery-content.tsx
-│   │   │       └── page.tsx
-│   │   ├── [id].bak/
-│   │   │   ├── gallery/
 │   │   │   │   └── page.tsx
 │   │   │   ├── upload/
 │   │   │   │   └── page.tsx
@@ -356,11 +358,17 @@ Generated: 2025-03-25T18:25:52.216Z
 │   │   ├── security-form.tsx
 │   │   └── subscription-form.tsx
 │   ├── gallery/
+│   │   ├── .MediaCard.tsx.swp
+│   │   ├── GalleryHeader.tsx
+│   │   ├── GalleryLayout.tsx
+│   │   ├── GallerySidebar.tsx
+│   │   ├── MasonryGrid.tsx
 │   │   ├── MediaCard.tsx
 │   │   ├── MediaGrid.tsx
 │   │   ├── MediaLightbox.tsx
 │   │   ├── MediaModeration.tsx
 │   │   ├── MediaUpload.tsx
+│   │   ├── MediaViewer.tsx
 │   │   ├── README.md
 │   │   ├── gallery-event-card.tsx
 │   │   ├── gallery-grid.tsx
@@ -426,6 +434,7 @@ Generated: 2025-03-25T18:25:52.216Z
 │   │   ├── card.tsx
 │   │   ├── charts.tsx
 │   │   ├── checkbox.tsx
+│   │   ├── collapsible.tsx
 │   │   ├── command.tsx
 │   │   ├── data-table.tsx
 │   │   ├── dialog.tsx
@@ -520,6 +529,7 @@ Generated: 2025-03-25T18:25:52.216Z
 │   ├── utils/
 │   │   └── codeGenerator.ts
 │   ├── analytics.ts
+│   ├── auth.ts
 │   ├── constants.ts
 │   ├── event-customization-server.ts
 │   ├── event-customization.ts
@@ -553,13 +563,13 @@ Generated: 2025-03-25T18:25:52.216Z
 ├── middleware.test.ts
 └── middleware.ts
 
-157 directories, 388 files
+158 directories, 397 files
 
 ```
 
 ## File Type Breakdown
-- ts: 84 file(s)
-- tsx: 286 file(s)
+- ts: 85 file(s)
+- tsx: 293 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
@@ -6,7 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { useMediaStore } from '@/store/media-store';
 import { Media, MediaType, MediaUploadProgress } from '@/types/media';
-import { CheckCircleIcon, XCircleIcon, XMarkIcon, ArrowUpTrayIcon, PhotoIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
+import { CheckCircle, XCircle, X, Upload, Image, Video } from 'lucide-react';
 import { formatFileSize } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
 
@@ -114,7 +116,7 @@ export function MediaUploader({
           <input {...getInputProps()} />
           
           <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10">
-            <ArrowUpTrayIcon className="h-6 w-6 text-primary" />
+            <Upload className="h-6 w-6 text-primary" />
           </div>
           
           <div className="space-y-1">
@@ -132,11 +134,11 @@ export function MediaUploader({
           
           <div className="flex flex-wrap gap-2 mt-2 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
-              <PhotoIcon className="h-3 w-3" />
+              <Image className="h-3 w-3" />
               <span>Images</span>
             </div>
             <div className="flex items-center gap-1">
-              <VideoCameraIcon className="h-3 w-3" />
+              <Video className="h-3 w-3" />
               <span>Videos</span>
             </div>
             <span>up to {formatFileSize(maxSize)}</span>
@@ -163,7 +165,7 @@ export function MediaUploader({
             {rejectedFiles.map((file, index) => (
               <div key={`${file.name}-${index}`} className="flex items-center justify-between bg-red-50 p-2 rounded-md">
                 <div className="flex items-center space-x-2 text-sm">
-                  <XCircleIcon className="h-4 w-4 text-red-500" />
+                  <XCircle className="h-4 w-4 text-red-500" />
                   <span className="truncate max-w-[200px]">{file.name}</span>
                   <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
                 </div>
@@ -173,7 +175,7 @@ export function MediaUploader({
                   className="h-6 w-6"
                   onClick={() => removeRejectedFile(file)}
                 >
-                  <XMarkIcon className="h-4 w-4" />
+                  <X className="h-4 w-4" />
                 </Button>
               </div>
             ))}
@@ -198,14 +200,14 @@ function UploadProgressItem({ upload }: UploadProgressItemProps) {
   const getStatusIcon = () => {
     switch (status) {
       case 'complete':
-        return <CheckCircleIcon className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'error':
-        return <XCircleIcon className="h-4 w-4 text-red-500" />;
+        return <XCircle className="h-4 w-4 text-red-500" />;
       default:
         return (
           file.type.startsWith('image/') 
-            ? <PhotoIcon className="h-4 w-4 text-blue-500" />
-            : <VideoCameraIcon className="h-4 w-4 text-purple-500" />
+            ? <Image className="h-4 w-4 text-blue-500" />
+            : <Video className="h-4 w-4 text-purple-500" />
         );
     }
   };
@@ -232,10 +234,9 @@ function UploadProgressItem({ upload }: UploadProgressItemProps) {
         value={progress} 
         className={cn(
           "h-1",
-          status === 'complete' ? "bg-green-100" : status === 'error' ? "bg-red-100" : "bg-blue-100"
-        )}
-        indicatorClassName={cn(
-          status === 'complete' ? "bg-green-500" : status === 'error' ? "bg-red-500" : "bg-blue-500"
+          status === 'complete' ? "bg-green-100 data-[value]:bg-green-500" : 
+          status === 'error' ? "bg-red-100 data-[value]:bg-red-500" : 
+          "bg-blue-100 data-[value]:bg-blue-500"
         )}
       />
       

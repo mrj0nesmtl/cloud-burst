@@ -13,19 +13,19 @@ interface ModerationContentProps {
 /**
  * Client-side component for the moderation page
  */
-export default function ModerationContent({
+export function ModerationContent({
   eventId,
   userId,
   isOrganizer
 }: ModerationContentProps) {
-  const { fetchEventPendingMedia } = useMediaStore()
+  const { fetchPendingEventMedia } = useMediaStore()
   
   // Load pending media on component mount
   useEffect(() => {
     if (isOrganizer) {
-      fetchEventPendingMedia(eventId)
+      fetchPendingEventMedia(eventId)
     }
-  }, [eventId, isOrganizer, fetchEventPendingMedia])
+  }, [eventId, isOrganizer, fetchPendingEventMedia])
   
   return (
     <MediaModeration

@@ -11,11 +11,11 @@ interface EventDetailsProps {
 export default function EventDetails({ event }: EventDetailsProps) {
   return (
     <div className="container py-8 space-y-8">
-      {/* Cover Image */}
-      {event.cover_image && (
+      {/* Cover Image - handle both cover_image and cover_image_url */}
+      {(event.cover_image_url || event.cover_image) && (
         <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
           <img
-            src={event.cover_image}
+            src={event.cover_image_url || event.cover_image}
             alt={event.name}
             className="object-cover w-full h-full"
           />
@@ -29,8 +29,9 @@ export default function EventDetails({ event }: EventDetailsProps) {
         <div className="flex flex-wrap gap-4 text-muted-foreground">
           <div className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            <span>{formatDate(event.start_date)}</span>
-            {event.end_date && event.end_date !== event.start_date && (
+            {/* Handle both start_date and date fields */}
+            <span>{formatDate(event.start_date || event.date)}</span>
+            {event.end_date && (event.start_date || event.date) && event.end_date !== (event.start_date || event.date) && (
               <span> - {formatDate(event.end_date)}</span>
             )}
           </div>

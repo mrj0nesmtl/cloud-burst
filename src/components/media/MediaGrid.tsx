@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { MediaCard } from './MediaCard';
 import { Media, MediaStatus, MediaType } from '@/types/media';
@@ -6,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ChevronUpIcon, ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { ChevronUp, ChevronDown, Search } from 'lucide-react';
 
 interface MediaGridProps {
   media: Media[];
@@ -173,7 +175,7 @@ export function MediaGrid({
         <div className="flex flex-col md:flex-row justify-between gap-2 p-2 bg-accent/30 rounded-md">
           <div className="flex items-center space-x-2">
             <div className="relative w-full md:w-64">
-              <MagnifyingGlassIcon className="h-4 w-4 absolute left-2.5 top-2.5 text-muted-foreground" />
+              <Search className="h-4 w-4 absolute left-2.5 top-2.5 text-muted-foreground" />
               <Input
                 placeholder="Search media..."
                 value={searchTerm}

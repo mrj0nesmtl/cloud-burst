@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${event.name} | Cloud Burst`,
     description: event.description || 'View event details and photos',
     openGraph: {
-      images: event.cover_image ? [event.cover_image] : [],
+      images: event.cover_image_url ? [event.cover_image_url] : [],
     },
   };
 }
@@ -55,10 +55,10 @@ export default async function EventByCustomUrlPage({ params }: Props) {
   return (
     <div className="container py-8 space-y-8">
       {/* Cover Image */}
-      {event.cover_image && (
+      {event.cover_image_url && (
         <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
           <img
-            src={event.cover_image}
+            src={event.cover_image_url}
             alt={event.name}
             className="object-cover w-full h-full"
           />
@@ -72,10 +72,7 @@ export default async function EventByCustomUrlPage({ params }: Props) {
         <div className="flex flex-wrap gap-4 text-muted-foreground">
           <div className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            <span>{formatDate(event.start_date)}</span>
-            {event.end_date && event.end_date !== event.start_date && (
-              <span> - {formatDate(event.end_date)}</span>
-            )}
+            <span>{formatDate(event.date)}</span>
           </div>
           
           {event.location && (

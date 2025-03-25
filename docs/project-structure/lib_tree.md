@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-03-25T18:25:56.146Z
+Generated: 2025-03-25T22:22:25.490Z
 
 ## Overview
 
@@ -45,6 +45,7 @@ Generated: 2025-03-25T18:25:56.146Z
 ├── utils/
 │   └── codeGenerator.ts
 ├── analytics.ts
+├── auth.ts
 ├── constants.ts
 ├── event-customization-server.ts
 ├── event-customization.ts
@@ -56,12 +57,12 @@ Generated: 2025-03-25T18:25:56.146Z
 ├── user-sessions.ts
 └── utils.ts
 
-8 directories, 40 files
+8 directories, 41 files
 
 ```
 
 ## File Type Breakdown
-- ts: 37 file(s)
+- ts: 38 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

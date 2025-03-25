@@ -16,20 +16,20 @@ export function mapDbPhotoToPhoto(photo: PhotoRow): Photo {
   
   return {
     id: photo.id,
-    event_id: photo.event_id,
-    filename: photo.filename,
+    event_id: photo.event_id || '',
+    filename: photo.filename || '',
     storage_path: photo.storage_path,
     // These fields are in the Photo interface but not in the database schema
     // We'll extract them from metadata or use defaults
     size: metadata.size || 0,
     mime_type: metadata.mime_type || 'image/jpeg',
-    width: metadata.width || null,
-    height: metadata.height || null,
+    width: metadata.width !== null ? metadata.width : undefined,
+    height: metadata.height !== null ? metadata.height : undefined,
     uploaded_by: photo.uploaded_by,
-    is_approved: photo.is_approved,
+    is_approved: photo.is_approved || false,
     metadata: metadata,
-    created_at: photo.created_at,
-    updated_at: photo.updated_at || photo.created_at,
+    created_at: photo.created_at || new Date().toISOString(),
+    updated_at: photo.updated_at || photo.created_at || new Date().toISOString(),
   };
 }
 
@@ -91,15 +91,20 @@ export async function uploadAndCreatePhoto(
     event_id: eventId,
     filename: file.name,
     storage_path: storagePath,
-    url: publicUrl,
     uploaded_by: userId,
     is_approved: false,
     metadata: enhancedMetadata,
   };
   
+  // For database operations that might use the URL
+  const photoRecordWithUrl = {
+    ...photoRecord,
+    url: publicUrl, // This will be used in the query but isn't part of PhotoInsert type
+  };
+  
   const { data: photoData, error: photoError } = await supabase
     .from('photos')
-    .insert(photoRecord)
+    .insert(photoRecordWithUrl)
     .select()
     .single();
   

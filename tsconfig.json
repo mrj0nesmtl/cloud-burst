@@ -41,5 +41,12 @@
     ".next/types/**/*.ts",
     "scripts/**/*"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "backup-routes",
+    "backup-routes.bak",
+    "**/*.bak",
+    "**/*.bak/**/*",
+    "src/app/events/[eventId].bak"
+  ]
 }
