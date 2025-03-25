@@ -1,156 +1,169 @@
-import { NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
-import { nanoid } from 'nanoid';
-import { sendInvitationEmail } from '@/lib/sendgrid';
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
+import crypto from 'crypto';
+import sgMail from '@sendgrid/mail';
+import { createGuestAccount, generateGuestLoginLink } from '@/lib/supabase/auth-utils';
 import type { EventWithOrganizer } from '@/types/events';
 import type { Invitation, InvitationStatus, RsvpStatus } from '@/types/invitations';
 import type { UserProfile } from '@/types/auth';
-import { createGuestAccount, generateGuestLoginLink } from '@/lib/supabase/auth-utils';
+import { sendInvitationEmail } from '@/lib/sendgrid';
+import { MailDataRequired } from '@sendgrid/mail';
 
-export async function POST(request: Request) {
+// Set SendGrid API key
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+
+export async function POST(request: NextRequest) {
   try {
-    // Initialize Supabase client
-    const supabase = await createServerClient();
-    const data = await request.json();
+    // Parse request body
+    const body = await request.json();
+    const { 
+      eventId, 
+      name, 
+      email, 
+      message, 
+      plusOne = false, 
+      dietaryPreferences = '', 
+      notes = '' 
+    } = body;
 
-    // Get event details with organizer information
-    const { data: eventData, error: eventError } = await supabase
-      .from('events')
-      .select(`
-        *,
-        organizer:profiles!organizer_id(
-          id,
-          email,
-          full_name
-        )
-      `)
-      .eq('id', data.eventId)
-      .single();
-
-    if (eventError || !eventData) {
+    // Validate required fields
+    if (!eventId || !name || !email) {
       return NextResponse.json(
-        { error: eventError?.message || 'Event not found' },
-        { status: 404 }
+        { error: 'Missing required fields' }, 
+        { status: 400 }
       );
     }
 
-    // Convert the event data to the correct type
-    const event = {
-      ...eventData,
-      start_date: eventData.date, // Use date as start_date
-      organizer: eventData.organizer as unknown as UserProfile
-    } as EventWithOrganizer;
+    // Initialize Supabase client with cookies for auth
+    const cookieStore = cookies();
+    const supabase = await createClient();
 
-    // Generate unique token for the invitation
-    const token = nanoid();
+    // Get user session for tracking who created the invitation
+    const { data: { user } } = await supabase.auth.getUser();
+    const userId = user?.id;
 
-    // Prepare metadata
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Authentication required' }, 
+        { status: 401 }
+      );
+    }
+
+    // Generate a secure token for the invitation
+    const token = crypto.randomBytes(32).toString('hex');
+
+    // Create the invitation metadata
     const metadata = {
-      notes: data.notes,
-      dietary_preferences: data.dietaryPreferences,
-      plus_one_allowed: data.plusOne,
-      plus_one_used: false,
-      message: data.message
+      message: message || '',
+      dietary_preferences: dietaryPreferences || '',
+      notes: notes || '',
     };
 
-    // Create invitation record
-    const { data: invitationData, error: invitationError } = await supabase
+    // Insert invitation record
+    const { data: invitation, error } = await supabase
       .from('invitations')
       .insert({
-        event_id: data.eventId,
-        email: data.email,
-        name: data.name,
-        status: 'pending',
-        rsvp_status: 'pending',
+        event_id: eventId,
+        name,
+        email,
         token,
-        metadata
+        status: 'pending',
+        metadata,
+        plus_one_allowed: plusOne,
+        created_by: userId,
       })
       .select()
       .single();
 
-    if (invitationError || !invitationData) {
-      console.error('Error creating invitation:', invitationError);
+    if (error) {
+      console.error('Error creating invitation:', error);
       return NextResponse.json(
-        { error: 'Failed to create invitation' },
+        { error: 'Failed to create invitation' }, 
         { status: 500 }
       );
     }
 
-    // Cast the invitation data to the correct type
-    const invitation: Invitation = {
-      ...invitationData,
-      email: invitationData.email || '',
-      name: invitationData.name,
-      status: invitationData.status as InvitationStatus,
-      rsvp_status: invitationData.rsvp_status as RsvpStatus,
-      metadata
-    };
+    // Get event details for the email
+    const { data: event, error: eventError } = await supabase
+      .from('events')
+      .select('name, date, location')
+      .eq('id', eventId)
+      .single();
 
-    // Create a guest account for the invited user
-    const { user, error: accountError } = await createGuestAccount(
-      data.email,
-      data.name,
-      data.eventId,
-      invitation.id
-    );
-
-    if (accountError) {
-      console.warn('Warning: Could not create guest account:', accountError);
-      // Continue with the invitation process even if account creation fails
+    if (eventError) {
+      console.error('Error fetching event:', eventError);
+      return NextResponse.json(
+        { error: 'Failed to fetch event details' }, 
+        { status: 500 }
+      );
     }
 
-    // Generate a magic login link if the account was created
-    let magicLink = null;
-    if (user) {
-      const { link, error: linkError } = await generateGuestLoginLink(data.email, data.eventId);
-      if (!linkError) {
-        magicLink = link;
-      } else {
-        console.warn('Warning: Could not generate magic link:', linkError);
-      }
-    }
+    // Construct the invitation URL with token
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://cloudburst.app';
+    const inviteUrl = `${baseUrl}/invite/${token}`;
 
-    // Get host information from the event's organizer
-    const hostName = event.organizer?.full_name || 'The Host';
-    const hostEmail = event.organizer?.email || 'team@cloud-burst.app';
+    // Get user profile for sender name
+    const { data: userProfile } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('id', userId)
+      .single();
 
-    // Prepare email data
-    const emailData = {
-      eventName: event.name,
-      eventDate: new Date(event.date).toLocaleString('en-US', {
-        dateStyle: 'full',
-        timeStyle: 'short'
-      }),
-      eventLocation: event.location || 'TBD',
-      invitationLink: magicLink || `${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}`,
-      recipientName: data.name,
-      hostName,
-      hostEmail,
-      galleryLink: `${process.env.NEXT_PUBLIC_APP_URL}/gallery/${event.id}`
+    const organizerName = userProfile?.full_name || 'The Event Organizer';
+
+    // Create email content - properly typed as MailDataRequired
+    const emailContent: MailDataRequired = {
+      to: email,
+      from: {
+        email: process.env.SENDGRID_FROM_EMAIL || 'noreply@cloudburst.app',
+        name: 'Cloud Burst',
+      },
+      templateId: process.env.SENDGRID_INVITATION_TEMPLATE_ID!,
+      dynamicTemplateData: {
+        invitee_name: name,
+        event_name: event.name,
+        event_date: new Date(event.date).toLocaleDateString(),
+        event_location: event.location || 'TBA',
+        custom_message: message || '',
+        invitation_url: inviteUrl,
+        organizer_name: organizerName,
+      },
+      subject: `You're invited to ${event.name}`,  // Add subject field
     };
 
-    // Send invitation email
-    await sendInvitationEmail(invitation, emailData);
+    try {
+      // Send the email
+      await sgMail.send(emailContent);
+      
+      // Update the invitation with sent timestamp
+      await supabase
+        .from('invitations')
+        .update({ sent_at: new Date().toISOString() })
+        .eq('id', invitation.id);
+      
+    } catch (emailError) {
+      console.error('Error sending invitation email:', emailError);
+      return NextResponse.json(
+        { 
+          warning: 'Invitation created but email could not be sent',
+          invitation: invitation.id
+        }, 
+        { status: 201 }
+      );
+    }
 
-    // Update invitation status to sent
-    await supabase
-      .from('invitations')
-      .update({ 
-        status: 'sent',
-        sent_at: new Date().toISOString()
-      })
-      .eq('id', invitation.id);
-
-    return NextResponse.json({
-      success: true,
-      invitation,
-      accountCreated: !!user,
-      magicLinkGenerated: !!magicLink
-    });
+    // Return success
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Invitation sent successfully',
+      invitation: invitation.id 
+    }, { status: 200 });
+    
   } catch (error) {
-    console.error('Error in invitation creation:', error);
+    console.error('Unhandled error in create invitation API:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error' }, 
       { status: 500 }
     );
   }

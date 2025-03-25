@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-24T03:37:49.287Z
+Generated: 2025-03-25T15:52:26.190Z
 
 ## Overview
 
@@ -193,6 +193,7 @@ Generated: 2025-03-24T03:37:49.287Z
 │   │   │       ├── components/
 │   │   │       │   └── invitations-table.tsx
 │   │   │       ├── create/
+│   │   │       │   ├── layout.tsx
 │   │   │       │   └── page.tsx
 │   │   │       ├── columns.tsx
 │   │   │       └── page.tsx
@@ -552,13 +553,13 @@ Generated: 2025-03-24T03:37:49.287Z
 ├── middleware.test.ts
 └── middleware.ts
 
-157 directories, 387 files
+157 directories, 388 files
 
 ```
 
 ## File Type Breakdown
 - ts: 84 file(s)
-- tsx: 285 file(s)
+- tsx: 286 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)
