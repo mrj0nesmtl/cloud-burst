@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { createClient } from '@/lib/supabase/client'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import type { Database } from '@/types/supabase'
 
 type Profile = Database['public']['Tables']['profiles']['Row']
 
 export function useProfile(userId: string | undefined) {
-  const supabase = createClient()
+  const supabase = createClientComponentClient<Database>()
 
   const query = useQuery({
     queryKey: ['profile', userId],
@@ -18,23 +18,24 @@ export function useProfile(userId: string | undefined) {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('*')
+          .select('id, email, full_name, role, created_at, updated_at, avatar_url')
           .eq('id', userId)
           .single()
 
         if (error) {
           console.error('Error fetching profile:', error)
-          throw error
+          return null
         }
         
-        console.log('Profile fetched successfully:', data?.email)
-        return data as Profile
+        return data
       } catch (error) {
         console.error('Profile fetch error:', error)
-        throw error
+        return null
       }
     },
     enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
   })
   
   return {

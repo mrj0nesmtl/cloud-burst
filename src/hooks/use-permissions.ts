@@ -45,65 +45,70 @@ export function usePermissions(role?: UserRole) {
       }
       
       try {
-        const supabase = createClientComponentClient()
-        
-        // First get the user's profile to ensure we have the correct role
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('role')
-          .single()
-        
-        // Only proceed with capabilities fetch if we have a valid role
-        if (profileData?.role) {
-          // Fetch capabilities from database
-          const { data, error: fetchError } = await supabase
-            .from('role_capabilities')
-            .select('capability')
-            .eq('role', profileData.role)
-          
-          if (fetchError) {
-            // Provide role-specific fallback capabilities
-            const fallbackCapabilities = getFallbackCapabilities(userRole)
-            setCapabilities(fallbackCapabilities)
-            
-            // Update cache with fallbacks
-            capabilitiesCache[userRole] = {
-              data: fallbackCapabilities,
-              timestamp: now
-            }
-            
-            // Don't throw error, just log it
-            console.warn('Using fallback capabilities due to fetch error:', fetchError)
-            setLoading(false)
-            return
-          }
-          
-          // Use the fetched capabilities
-          const roleCapabilities = data?.map(p => p.capability) || getFallbackCapabilities(userRole)
-          setCapabilities(roleCapabilities)
-          
-          // Update cache
-          capabilitiesCache[userRole] = {
-            data: roleCapabilities,
-            timestamp: now
-          }
-        } else {
-          // No profile found, use fallback capabilities
-          const fallbackCapabilities = getFallbackCapabilities(userRole)
-          setCapabilities(fallbackCapabilities)
+        // If we don't have the user's role yet, use fallbacks immediately
+        // This avoids unneeded API calls that might cause 403 errors
+        if (!profile?.role) {
+          console.log('Profile role not available yet, using fallbacks for:', userRole);
+          const fallbackCapabilities = getFallbackCapabilities(userRole);
+          setCapabilities(fallbackCapabilities);
           capabilitiesCache[userRole] = {
             data: fallbackCapabilities,
             timestamp: now
-          }
+          };
+          setLoading(false);
+          return;
         }
         
-        setLoading(false)
+        // Create a fresh client for each request to ensure auth is current
+        const supabase = createClientComponentClient()
+        
+        // Fetch capabilities from database - use the role we already know
+        try {
+          const { data, error: fetchError } = await supabase
+            .from('role_capabilities')
+            .select('capability')
+            .eq('role', profile.role)
+          
+          if (fetchError) {
+            console.warn('Error fetching role capabilities:', fetchError.message)
+            throw fetchError;
+          }
+          
+          // Use the fetched capabilities
+          const roleCapabilities = data?.map(p => p.capability) || [];
+          
+          // If we got empty capabilities, double-check with fallbacks
+          if (roleCapabilities.length === 0) {
+            console.warn('No capabilities found for role, using fallbacks:', profile.role);
+            const fallbackCapabilities = getFallbackCapabilities(userRole);
+            setCapabilities(fallbackCapabilities);
+            capabilitiesCache[userRole] = {
+              data: fallbackCapabilities,
+              timestamp: now
+            };
+          } else {
+            setCapabilities(roleCapabilities);
+            capabilitiesCache[userRole] = {
+              data: roleCapabilities,
+              timestamp: now
+            };
+          }
+        } catch (err) {
+          console.warn('API error fetching capabilities, using fallbacks:', err);
+          const fallbackCapabilities = getFallbackCapabilities(userRole);
+          setCapabilities(fallbackCapabilities);
+          capabilitiesCache[userRole] = {
+            data: fallbackCapabilities,
+            timestamp: now
+          };
+        }
       } catch (err) {
-        console.error('Error fetching capabilities:', err)
+        console.error('Error in permissions hook:', err)
         // Use role-specific fallback capabilities
         const fallbackCapabilities = getFallbackCapabilities(userRole)
         setCapabilities(fallbackCapabilities)
         setError(err as Error)
+      } finally {
         setLoading(false)
       }
     }

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/components/ui/use-toast';
-import { Loader2, Send, Upload, Users } from 'lucide-react';
+import { Loader2, Send, Upload, Users, CheckCircle } from 'lucide-react';
 import { useEvents } from '@/hooks/use-events';
 
 // Form validation schemas
@@ -39,6 +40,7 @@ type BulkInviteFormValues = z.infer<typeof bulkInviteSchema>;
 
 export function CreateInvitationForm({ eventId }: { eventId?: string }) {
   const { toast } = useToast();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: events, isLoading: eventsLoading } = useEvents();
   
@@ -47,8 +49,12 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
     resolver: zodResolver(singleInviteSchema),
     defaultValues: {
       eventId: eventId || '',
+      name: '',
+      email: '',
       message: '',
       plusOne: false,
+      dietaryPreferences: '',
+      notes: '',
     },
   });
 
@@ -56,6 +62,7 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
     resolver: zodResolver(bulkInviteSchema),
     defaultValues: {
       eventId: eventId || '',
+      csvFile: undefined,
       message: '',
       plusOne: false,
     },
@@ -73,18 +80,51 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) throw new Error('Failed to send invitation');
+      const responseData = await response.json();
 
-      toast({
-        title: 'Success',
-        description: 'Invitation sent successfully!',
-      });
+      if (!response.ok) {
+        console.error('Error response:', response.status, responseData);
+        
+        if (response.status === 401) {
+          toast({
+            title: 'Authentication Error',
+            description: 'Your session may have expired. Please refresh the page and try again.',
+            variant: 'destructive',
+          });
+          return;
+        }
+        
+        throw new Error(responseData.error || 'Failed to send invitation');
+      }
 
+      // Handle warnings
+      if (responseData.warning) {
+        toast({
+          title: 'Invitation Created',
+          description: responseData.warning,
+          variant: 'default',
+        });
+      } else {
+        toast({
+          title: '📧 Invitation Sent 👍',
+          description: `Successfully sent invitation to ${data.email}`,
+          variant: 'success',
+          icon: <CheckCircle className="h-4 w-4 mr-2" />,
+        });
+      }
+
+      // Reset form
       singleForm.reset();
+      
+      // Redirect back to the event page
+      if (data.eventId) {
+        router.push(`/protected/events/${data.eventId}`);
+      }
     } catch (error) {
+      console.error('Error sending invitation:', error);
       toast({
         title: 'Error',
-        description: 'Failed to send invitation. Please try again.',
+        description: error instanceof Error ? error.message : 'Failed to send invitation. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -111,11 +151,19 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
       if (!response.ok) throw new Error('Failed to send invitations');
 
       toast({
-        title: 'Success',
-        description: 'Bulk invitations sent successfully!',
+        title: '📧 Invitations Sent 👍',
+        description: 'Successfully sent bulk invitations!',
+        variant: 'success',
+        icon: <CheckCircle className="h-4 w-4 mr-2" />,
       });
 
+      // Reset form
       bulkForm.reset();
+      
+      // Redirect back to the event page
+      if (data.eventId) {
+        router.push(`/protected/events/${data.eventId}`);
+      }
     } catch (error) {
       toast({
         title: 'Error',

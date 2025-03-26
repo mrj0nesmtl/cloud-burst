@@ -15,6 +15,7 @@ import { QRCodeDisplay } from '@/components/events/qr-code-display'
 import { getServerSupabase } from '@/lib/supabase/server'
 import { EventStatusSelector } from '@/components/events/event-status-selector'
 import { Photo } from '@/types/events'
+import { Invitation } from '@/types/invitations'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -95,6 +96,13 @@ export default async function EventPage({ params }: EventPageProps) {
     .eq('event_id', params.id)
     .order('created_at', { ascending: false })
   
+  // Fetch event invitations
+  const { data: invitations } = await supabase
+    .from('invitations')
+    .select('*')
+    .eq('event_id', params.id)
+    .order('created_at', { ascending: false })
+  
   // Format event date
   const eventDate = event.date 
     ? format(new Date(event.date), 'PPP') 
@@ -160,7 +168,7 @@ export default async function EventPage({ params }: EventPageProps) {
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="invitations">
-            Invitations
+            Invitations {invitations?.length ? `(${invitations.length})` : ''}
           </TabsTrigger>
           <TabsTrigger value="attendees">
             Attendees ({attendees?.length || 0})
@@ -266,22 +274,62 @@ export default async function EventPage({ params }: EventPageProps) {
                   </a>
                 </div>
                 <Separator />
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground">
-                    All invitations for this event will appear here.
-                  </p>
-                  <p className="text-muted-foreground mt-2">
-                    Click "Invite Guests" to send personalized invitations.
-                  </p>
-                  <div className="mt-4 p-4 bg-muted rounded-md max-w-md mx-auto text-left">
-                    <h4 className="font-medium text-sm">How invitations work:</h4>
-                    <ol className="mt-2 text-sm text-muted-foreground space-y-1 pl-5 list-decimal">
-                      <li>Create single invitations or upload a CSV file with multiple guests</li>
-                      <li>Each guest receives a personalized email with a unique access link</li>
-                      <li>Guests can RSVP and access the event without creating an account</li>
-                    </ol>
+                
+                {invitations && invitations.length > 0 ? (
+                  <div className="overflow-hidden rounded-md border">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-muted/50">
+                          <th className="p-3 text-left font-medium">Guest</th>
+                          <th className="p-3 text-left font-medium">Email</th>
+                          <th className="p-3 text-left font-medium">Status</th>
+                          <th className="p-3 text-left font-medium">Sent</th>
+                          <th className="p-3 text-left font-medium">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y">
+                        {invitations.map((invitation: Invitation) => (
+                          <tr key={invitation.id} className="hover:bg-muted/50">
+                            <td className="p-3">{invitation.name}</td>
+                            <td className="p-3">{invitation.email}</td>
+                            <td className="p-3">
+                              <Badge variant={invitation.status === 'accepted' ? 'success' : 
+                                invitation.status === 'declined' ? 'destructive' : 'secondary'}>
+                                {invitation.status}
+                              </Badge>
+                            </td>
+                            <td className="p-3">
+                              {invitation.sent_at ? format(new Date(invitation.sent_at), 'MMM d, yyyy') : 'Not sent'}
+                            </td>
+                            <td className="p-3">
+                              <div className="flex items-center gap-2">
+                                <button className="text-xs text-primary hover:underline">Resend</button>
+                                <button className="text-xs text-destructive hover:underline">Cancel</button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">
+                      All invitations for this event will appear here.
+                    </p>
+                    <p className="text-muted-foreground mt-2">
+                      Click "Invite Guests" to send personalized invitations.
+                    </p>
+                    <div className="mt-4 p-4 bg-muted rounded-md max-w-md mx-auto text-left">
+                      <h4 className="font-medium text-sm">How invitations work:</h4>
+                      <ol className="mt-2 text-sm text-muted-foreground space-y-1 pl-5 list-decimal">
+                        <li>Create single invitations or upload a CSV file with multiple guests</li>
+                        <li>Each guest receives a personalized email with a unique access link</li>
+                        <li>Guests can RSVP and access the event without creating an account</li>
+                      </ol>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
