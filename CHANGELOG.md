@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2025-03-26
 ### Added in Session 30 (March 25-26, 2025)
 - **RSVP System Implementation**:
   - Public RSVP page accessible via invitation token

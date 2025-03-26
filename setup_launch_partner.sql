@@ -1,0 +1,2 @@
+-- This SQL script sets up Sandy as an event_host connected to Joel's organizer account
+-- 1. Create a profile for Sandy (assumes auth user already created)
