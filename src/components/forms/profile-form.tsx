@@ -1,6 +1,7 @@
 'use client'
 
 import * as z from 'zod'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -15,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { useUpdateProfile } from '@/hooks/use-update-profile'
+import { createClient } from '@/lib/supabase/client'
 import { Database } from '@/types/supabase'
 
 // Define Profile type based on the Database type
@@ -42,7 +43,8 @@ interface ProfileFormProps {
 
 export function ProfileForm({ profile, onSuccess }: ProfileFormProps) {
   const { toast } = useToast()
-  const { mutate: updateProfile, isPending } = useUpdateProfile(profile.id)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const supabase = createClient()
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -54,22 +56,38 @@ export function ProfileForm({ profile, onSuccess }: ProfileFormProps) {
   })
 
   async function onSubmit(data: ProfileFormValues) {
-    updateProfile(data, {
-      onSuccess: () => {
-        toast({
-          title: 'Profile updated',
-          description: 'Your profile has been updated successfully.',
+    try {
+      setIsSubmitting(true)
+      
+      // Update profile directly with Supabase
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          username: data.username,
+          full_name: data.full_name,
+          avatar_url: data.avatar_url,
+          updated_at: new Date().toISOString()
         })
-        onSuccess?.()
-      },
-      onError: (error) => {
-        toast({
-          title: 'Error',
-          description: error.message,
-          variant: 'destructive',
-        })
-      },
-    })
+        .eq('id', profile.id)
+      
+      if (error) throw error
+      
+      toast({
+        title: 'Profile updated',
+        description: 'Your profile has been updated successfully.',
+      })
+      
+      onSuccess?.()
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update profile',
+        variant: 'destructive',
+      })
+      console.error('Profile update error:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -126,8 +144,8 @@ export function ProfileForm({ profile, onSuccess }: ProfileFormProps) {
           )}
         />
 
-        <Button type="submit" disabled={isPending}>
-          {isPending ? 'Saving...' : 'Save Changes'}
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Saving...' : 'Save Changes'}
         </Button>
       </form>
     </Form>
