@@ -5,7 +5,7 @@
 
 ## Capture Every Moment
 
-[![Version](https://img.shields.io/badge/version-0.8.0-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
+[![Version](https://img.shields.io/badge/version-0.8.1-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -36,7 +36,7 @@
 
 ## Abstract 💡
 
-Cloud Burst represents the evolution of event media capture, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, and enhanced gallery functionality, our platform now offers a comprehensive solution for event media management. Deployed in beta at [https://cb-beta.replit.app](https://cb-beta.replit.app), Cloud Burst maintains exceptional performance within memory constraints while delivering a seamless user experience across devices as we approach our April 1, 2025 launch date.
+Cloud Burst represents the evolution of event media capture, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, enhanced gallery functionality, invitation system, and RSVP capabilities, our platform now offers a comprehensive solution for event media management. Deployed in beta at [https://cb-beta.replit.app](https://cb-beta.replit.app), Cloud Burst maintains exceptional performance while delivering a seamless user experience across devices as we approach our April 1, 2025 launch date.
 
 ## Crowd-Powered 🤳
 
@@ -78,6 +78,7 @@ Remember the magic of disposable cameras 📸 on wedding tables? We've reimagine
 - **Attendee Tracking**: Monitor invitation status, RSVPs, and event participation
 - **QR Code Access**: Scan event QR codes for immediate camera and gallery access
 - **Guest Authentication**: Temporary access for invited users with streamlined registration
+- **RSVP Management**: Comprehensive system for tracking responses with dietary preferences
 
 ### Security
 
@@ -85,6 +86,7 @@ Remember the magic of disposable cameras 📸 on wedding tables? We've reimagine
 - **Row Level Security**: Database-level protection for all resources
 - **Authentication Options**: Multiple secure login methods including QR code scanning
 - **Content Protection**: Ensure media is only accessible to authorized users
+- **Token-Based Authentication**: Secure access for guests without creating accounts
 
 ### Key Benefits
 
@@ -190,10 +192,11 @@ graph LR
 - Capture media directly from the event
 - View and download shared content
 - Connect with other attendees
+- Respond to invitations with RSVP
 
 ## 🔄 Current Status
 
-Cloud Burst is currently in beta (v0.8.0) with approximately 92% of core features implemented:
+Cloud Burst is currently in beta (v0.8.1) with approximately 95% of core features implemented:
 
 - ✅ Event management system
 - ✅ Role-based access control
@@ -203,22 +206,28 @@ Cloud Burst is currently in beta (v0.8.0) with approximately 92% of core feature
 - ✅ Event card navigation and interactivity
 - ✅ Mobile navigation and responsive design
 - ✅ Enhanced modal dialogs and UI components
+- ✅ RSVP system implementation
+- ✅ Public gallery access
+- ✅ Invitation management enhancements
+- ✅ Beta partner integration
+- ✅ Email system improvements
+- ✅ Profile management
 - 🟡 Media moderation (85% complete)
-- 🟡 Invitation system (75% complete)
-- 🟡 Gallery masonry layout (60% complete)
-- 🟡 Analytics dashboard (60% complete)
-- 🟡 Album management system (50% complete)
-- 🟡 Guest upload functionality (40% complete)
+- 🟡 Gallery masonry layout (80% complete)
+- 🟡 Analytics dashboard (65% complete)
+- 🟡 Album management system (25% complete)
+- 🟡 Guest upload functionality (80% complete)
 
-### Technical Debt (Session 28)
-- Masonry grid implementation and optimization
-- Token-based guest authentication for uploads
-- Analytics visualization components
-- Media type migration from photos to comprehensive media system
-- Album management interface
-- Invitation integration with upload system
+### Technical Debt (Session 30)
+- Album management interface implementation
+- Media cards and viewers completion
+- Virtualization for large media collections
+- Performance optimization for mobile devices
+- Final accessibility improvements for gallery system
+- Enhanced keyboard navigation
+- Complete documentation for new gallery components
 
-We're targeting Beta 0.9.0 for internal testing by April 1, 2025, with public launch (v1.0.0) planned for April 15, 2025.
+We're targeting Beta 0.9.0 for internal testing by March 30, 2025, with public launch (v1.0.0) planned for April 1, 2025.
 
 ## 📅 Project Timeline
 
@@ -246,23 +255,23 @@ gantt
     Authentication Repair   :done, e3, 2025-03-10, 3d
     Dashboard Implementation:done, e4, 2025-03-11, 4d
     Database Security Fixes :done, e5, 2025-03-15, 1d
-    Invitation System       :active, e6, 2025-03-16, 7d
-    Media Moderation        :e7, 2025-03-21, 5d
-    Final Optimizations     :e8, 2025-03-26, 6d
+    Invitation System       :done, e6, 2025-03-16, 7d
+    RSVP Implementation     :done, e7, 2025-03-21, 5d
+    Media Moderation        :active, e8, 2025-03-26, 3d
+    Final Optimizations     :e9, 2025-03-27, 4d
     
     section Final Preparations
-    Beta v0.9.0 Release     :milestone, b1, 2025-04-01, 0d
-    Performance Tuning      :o1, 2025-04-02, 5d
-    Security Audit          :o2, 2025-04-07, 3d
-    Public Launch (v1.0.0)  :milestone, l3, 2025-04-15, 0d
+    Beta v0.9.0 Release     :milestone, b1, 2025-03-30, 0d
+    Performance Tuning      :o1, 2025-03-31, 1d
+    Public Launch (v1.0.0)  :milestone, l3, 2025-04-01, 0d
 ```
 
 ### Key Development Phases
 
 1. **Foundation Phase** (Feb 1-15, 2025): Project setup, authentication system, database schema design
 2. **Core Functionality Phase** (Feb 16-Mar 1, 2025): Event management, basic media upload, user roles
-3. **Enhanced Features Phase** (Mar 2-31, 2025): Advanced gallery, navigation, authentication refinements, invitation system
-4. **Final Preparations Phase** (Apr 1-15, 2025): Performance tuning, security audit, public launch preparations
+3. **Enhanced Features Phase** (Mar 2-26, 2025): Advanced gallery, navigation, authentication refinements, invitation system, RSVP functionality
+4. **Final Preparations Phase** (Mar 27-Apr 1, 2025): Performance tuning, security audit, public launch preparations
 
 ## 🚀 Getting Started
 
@@ -302,20 +311,32 @@ Our documentation includes:
 
 - [Deployment Guides](./docs/deployment/)
   - [Deployment Guides](./docs/deployment/deployment_guides.md)
+  - [Deployment Fixes](./docs/deployment/deployment_fixes.md)
   - [Replit Deployment](./docs/deployment/replit_deployment.md)
+  - [Replit Quick Reference](./docs/deployment/replit-quick-reference.md)
 
 - [Design Documentation](./docs/design/)
   - [UI Components](./docs/design/UI_components.md)
   - [Style Guide](./docs/design/style.md)
+  - [Website Overview](./docs/design/website_overview.md)
+  - [Gallery Implementation](./docs/design/gallery_implementation.md)
+  - [Media Schema Migration](./docs/design/media_schema_migration.md)
+  - [Consistent Layout](./docs/design/consistent-layout.md)
+  - [Layout Troubleshooting](./docs/design/layout-troubleshooting.md)
 
 - [Development Documentation](./docs/development/)
   - [Status Notes](./docs/development/STATUS_NOTES.md)
   - [Version Control](./docs/development/VERSION_CONTROL.md)
   - [Contributing Guidelines](./docs/development/contributing.md)
+  - [Session 30 Resources](./docs/development/SESSION_30_RESOURCES.md)
 
 - [User Flows & RBAC](./docs/rbac/)
   - [Role-Based Access Control](./docs/rbac/role_based_access_control.md)
-  - [User Flow Documentation](./docs/user-flows/)
+  - [User Flow Overview](./docs/user-flows/user_flow_overview.md)
+  - [User Flow Chart](./docs/user-flows/user_flow_chart.md)
+  - [Invited User Flow](./docs/user-flows/invited_user_flow_design_document.md)
+  - [Invitation System Documentation](./docs/user-flows/invitation_system_development_plan.md)
+  - [Invitation System Testing](./docs/user-flows/invitation_system_testing_plan.md)
 
 ## 🤝 Contributing
 

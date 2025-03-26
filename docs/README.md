@@ -1,22 +1,23 @@
 # Cloud Burst Documentation
 
-> **Version:** 0.7.9   
-> **Last Updated:** March 18, 2025
+> **Version:** 0.8.1   
+> **Last Updated:** March 26, 2025
 
 ## 📌 Situational Abstract
 
-Cloud Burst has evolved significantly since its inception, with approximately 95% of planned features now implemented. Recent milestones include the successful implementation of a comprehensive email template system, enhanced authentication error handling, completed invitation system foundation, and improved verification flows. The platform maintains stable deployment at cb-beta.replit.app with optimized memory usage while delivering a seamless user experience across devices. As we approach our April 1, 2025 Beta 0.9.0 release date, current development is focused on finalizing post-event engagement features, optimizing the mobile experience, and preparing for the beta release.
+Cloud Burst has evolved significantly since its inception, with approximately 95% of planned features now implemented. Recent milestones include the successful implementation of the RSVP system, public gallery access, enhanced invitation management, and beta partner integration. The invitation system now provides complete user journeys from invitation to RSVP, with dietary preference tracking and guest plus-one management. Our public gallery implementation allows non-authenticated users to view event photos through secure links. The platform maintains stable deployment at cb-beta.replit.app with optimized memory usage while delivering a seamless user experience across devices. As we approach our April 1, 2025 Beta 0.9.0 release date, current development is focused on finalizing gallery implementation, album management, and preparing for the beta release.
 
 ## 🔄 Recent Updates
 
-- ✅ Comprehensive email template system with enhanced deliverability
-- ✅ Authentication error handling and verification flow
-- ✅ Invitation system foundation with secure QR integration
-- ✅ Enhanced mobile navigation with progressive enhancements
-- ✅ Email template asset management and storage
-- ✅ Spam prevention and deliverability optimization
-- ✅ Security and permission checks
-- ✅ Documentation updates
+- ✅ Complete RSVP system with form-based response management
+- ✅ Public gallery access for non-authenticated users
+- ✅ Enhanced invitation display and status tracking
+- ✅ Beta partner integration for launch collaborators
+- ✅ Improved email handling with graceful fallbacks
+- ✅ Fixed profile management for all user roles
+- ✅ Optimized masonry layout for gallery display
+- ✅ Enhanced security with token-based authentication
+- ✅ Comprehensive documentation updates
 
 ### 🔐 Auth System Enhancements
 
@@ -49,26 +50,31 @@ Cloud Burst has evolved significantly since its inception, with approximately 95
 ### 🎨 Design
 
 - [UI Components](design/UI_components.md)
-- [Dashboard Components](design/dashboard_components.md)
 - [Style Guide](design/style.md)
 - [Website Overview](design/website_overview.md)
+- [Consistent Layout](design/consistent-layout.md)
+- [Layout Troubleshooting](design/layout-troubleshooting.md)
+- [Gallery Implementation](design/gallery_implementation.md)
+- [Media Schema Migration](design/media_schema_migration.md)
 
 ### 💻 Development
 
 - [Status Notes](development/STATUS_NOTES.md)
 - [Version Control](development/VERSION_CONTROL.md)
 - [Version Sync Plan](development/version-sync.plan)
-- [Deployment Fix Plan](development/DEPLOYMENT_FIX_PLAN.md)
-- [Session 19 Kickoff](development/SESSION_19_KICKOFF.md)
-- [Session 19 Narrative](development/SESSION_19_NARRATIVE.md)
 - [Contributing Guidelines](development/contributing.md)
+- [Session 30 Checklist](development/SESSION_30_CHECKLIST.md)
+- [Session 30 Kickoff](development/SESSION_30_KICKOFF.md)
+- [Session 30 Opening](development/SESSION_30_OPENING.md)
+- [Session 30 Resources](development/SESSION_30_RESOURCES.md)
 
 #### 📝 Development Archive
 
 - [Session History](development/prompt_archive/)
-  - Sessions 1-19 Documentation
-  - [Additional Notes](development/prompt_archive/additional_notes.md)
-  - [Auth Debug](development/prompt_archive/auth-debug.md)
+  - Sessions 1-29 Documentation
+  - Session Checklists and Kickoffs
+  - Session Narratives and Summaries
+  - Session Resources and Plans
 
 ### 📋 Planning
 
@@ -79,7 +85,8 @@ Cloud Burst has evolved significantly since its inception, with approximately 95
 - [Product RFP](planning/request_for_product_RFP.md)
 - [Roadmap](planning/roadmap.md)
 - [Statement of Work](planning/statement_of_work.md)
-- [Pitch Deck Draft](planning/pitch_deck_draft.md)
+- [Permissions Analysis](planning/permissions-analysis.md)
+- [Deck](planning/deck.md)
 
 ### 🔧 Project Structure
 
@@ -89,10 +96,18 @@ Cloud Burst has evolved significantly since its inception, with approximately 95
   - [Source Tree](project-structure/SRC_TREE.md)
   - [App Router Tree](project-structure/app_tree.md)
   - [Components Tree](project-structure/components_tree.md)
+  - [Protected Tree](project-structure/protected_tree.md)
+  - [Events Tree](project-structure/events_tree.md)
+  - [Gallery Tree](project-structure/gallery_tree.md)
   - [Hooks Tree](project-structure/hooks_tree.md)
   - [Library Tree](project-structure/lib_tree.md)
   - [Types Tree](project-structure/types_tree.md)
   - [Store Tree](project-structure/store_tree.md)
+  - [Auth Tree](project-structure/auth_tree.md)
+  - [Dashboard Tree](project-structure/dashboard_tree.md)
+  - [Styles Tree](project-structure/styles_tree.md)
+  - [Supabase Tree](project-structure/supabase_tree.md)
+  - [UI Tree](project-structure/ui_tree.md)
 - Documentation Trees
   - [Architecture Tree](project-structure/architecture_tree.md)
   - [Development Tree](project-structure/development_tree.md)
@@ -104,13 +119,15 @@ Cloud Burst has evolved significantly since its inception, with approximately 95
 
 ### 👥 User Flows & RBAC
 
-- [RBAC Overview](rbac/README.md)
-- [Role-Based Access Control](rbac/role_based_access_control.md)
+- [RBAC Overview](rbac/role_based_access_control.md)
 - [User Flow Overview](user-flows/user_flow_overview.md)
 - [User Flow Chart](user-flows/user_flow_chart.md)
 - [Invited User Flow](user-flows/invited_user_flow_design_document.md)
-- [Photo Upload Sequence](user-flows/photo_upload_sequence_diagram.md)
+- [Photo Upload Sequence](user-flows/media_upload_sequence_diagram.md)
 - [Create Test Users UI](user-flows/create_test_users_ui.md)
+- [Event Management](user-flows/event_management.md)
+- [Invitation System Development Plan](user-flows/invitation_system_development_plan.md)
+- [Invitation System Testing Plan](user-flows/invitation_system_testing_plan.md)
 
 ## 🤝 Contributing
 
@@ -142,6 +159,8 @@ Cloud Burst uses AI pair programming to accelerate development. We've establishe
 - [Security Guidelines](architecture/security.md)
 - [Role-Based Access](rbac/role_based_access_control.md)
 - [Component Library](design/UI_components.md)
+- [Gallery Implementation](design/gallery_implementation.md)
+- [Invitation System](user-flows/invitation_system_development_plan.md)
 
 ## 🔐 Security Implementation
 
@@ -161,51 +180,50 @@ Cloud Burst uses AI pair programming to accelerate development. We've establishe
 - ✅ Email verification system
 - ✅ Template access control
 - ✅ Invitation token security
+- ✅ RSVP system security
+- ✅ Public gallery access controls
 
 ## 🎯 Current Focus
 
-- 🟡 Finalizing CDN integration (90% complete)
-- 🟡 Enhancing content moderation (85% complete)
-- 🟡 Optimizing mobile experience (90% complete)
-- 🟡 Completing post-event features (85% complete)
-- 🟡 Preparing for Beta 0.9.0 release
-- 🟡 Final UI/UX refinements
-- 🟡 Performance optimization
-- 🟡 Documentation updates
-- 🟡 Testing and quality assurance
+- 🟡 Finalizing gallery implementation (70% complete)
+- 🟡 Album management system (25% complete)
+- 🟡 Media upload components (35% complete)
+- 🟡 Guest upload system (80% complete)
+- 🟡 Masonry layout implementation (80% complete)
+- 🟡 Media cards and viewers (75% complete)
+- 🟡 Performance optimization (65% complete)
+- 🟡 Documentation updates (85% complete)
+- 🟡 Testing and quality assurance (60% complete)
 
 ## 🔄 Implementation Progress
 
 As we approach our April 1, 2025 launch date, the platform is approximately 95% complete. Recent implementations include:
 
-### Key Achievements
+### Key Achievements in Session 30
 
-- ✅ Comprehensive email template system
-- ✅ Enhanced authentication error handling
-- ✅ Verification flow improvements
-- ✅ Invitation system foundation
-- ✅ Mobile navigation enhancements
-- ✅ Video processing optimization
-- ✅ Gallery integration improvements
-- ✅ Email notification system
-- ✅ Template management capabilities
-- ✅ Security enhancements
+- ✅ RSVP System Implementation
+- ✅ Public Gallery Access
+- ✅ Invitation Enhancements
+- ✅ Beta Partner Integration
+- ✅ Email System Improvements
+- ✅ Profile Management Fixes
+- ✅ Gallery Infrastructure
 
 ### Next Milestones
 
-1. Complete all planned features (target: v0.8.0 by March 20, 2025)
-2. Comprehensive testing and bug fixes (target: v0.9.0 by March 25, 2025)
-3. Beta release to selected users (target: v0.9.5 by March 28, 2025)
+1. Complete gallery implementation and album management (target: v0.8.5 by March 28, 2025)
+2. Finalize user documentation and testing (target: v0.9.0 by March 30, 2025)
+3. Beta release to selected users (target: v0.9.5 by March 31, 2025)
 4. Public launch (target: v1.0.0 by April 1, 2025)
 
 <div align="center">
-  <img src="public/android-chrome-192x192.png" alt="Cloud Burst Logo" width="120" height="120" />
+  <img src="../public/android-chrome-192x192.png" alt="Cloud Burst Logo" width="120" height="120" />
 
 # Cloud Burst
 
 ## *Elevating Event Photography*
 
-[![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
+[![Version](https://img.shields.io/badge/version-0.8.1-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -213,7 +231,7 @@ As we approach our April 1, 2025 launch date, the platform is approximately 95% 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 📌 Abstract
-Cloud Burst represents the evolution of event photography, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, and enhanced gallery functionality, our platform now offers a comprehensive solution for event photography management. Deployed at cb-beta.replit.app, Cloud Burst maintains exceptional performance within memory constraints while delivering a seamless user experience across devices as we approach our April 1, 2025 launch date.
+Cloud Burst represents the evolution of event photography, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, enhanced gallery functionality, invitation system, and RSVP capabilities, our platform now offers a comprehensive solution for event photography management. Deployed at cb-beta.replit.app, Cloud Burst maintains exceptional performance while delivering a seamless user experience across devices as we approach our April 1, 2025 launch date.
 
 ## 🎯 Pitch
 Remember the magic of disposable cameras at wedding tables? We've reimagined that collaborative spirit for the digital age. Cloud Burst transforms every event into a living photo story, powered by AI and created by everyone who matters – your guests. No apps to download, no accounts to create – just scan, snap, and share. With enterprise-grade security, AI-enhanced photos, and real-time galleries, we're not just capturing moments; we're revolutionizing how memories are made.
