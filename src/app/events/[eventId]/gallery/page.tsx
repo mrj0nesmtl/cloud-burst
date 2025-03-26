@@ -160,7 +160,7 @@ export default function PublicGalleryPage({ params }: PublicGalleryPageProps) {
         : updatedItems.filter(item => item.media_type === activeFilter)
     );
   };
-
+  
   return (
     <GalleryLayout
       header={

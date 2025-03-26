@@ -19,10 +19,28 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 // Client-side Supabase instance (use in 'use client' components)
 export const createClient = () => {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('Missing Supabase environment variables. This will cause API errors.');
+  }
+  
   return createClientComponentClient<Database>({
-    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  })
+    supabaseUrl: supabaseUrl!,
+    supabaseKey: supabaseKey!,
+    options: {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+      global: {
+        headers: {
+          apikey: supabaseKey!,
+        },
+      },
+    }
+  });
 }
 
 // Server-side Supabase instance (use in Server Components)

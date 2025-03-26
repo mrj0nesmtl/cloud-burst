@@ -1,11 +1,14 @@
 import sgMail from '@sendgrid/mail';
 import { Invitation } from '@/types/invitations';
 
-// Initialize SendGrid with API key
-if (!process.env.SENDGRID_API_KEY) {
-  throw new Error('SENDGRID_API_KEY is not set in environment variables');
+// Initialize SendGrid with API key if available
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+if (SENDGRID_API_KEY) {
+  sgMail.setApiKey(SENDGRID_API_KEY);
+  console.log('SendGrid initialized successfully');
+} else {
+  console.warn('SENDGRID_API_KEY is not set in environment variables. Email functionality will be disabled.');
 }
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Types for email data
 export interface EmailData {
@@ -23,6 +26,7 @@ export interface InvitationEmailData {
   hostName: string;
   hostEmail: string;
   galleryLink: string;
+  message?: string;
 }
 
 /**
@@ -32,8 +36,14 @@ export interface InvitationEmailData {
  * @throws Error if email sending fails
  */
 export async function sendEmail(emailData: EmailData): Promise<boolean> {
+  if (!SENDGRID_API_KEY) {
+    console.warn('Cannot send email: SENDGRID_API_KEY is not set');
+    return false;
+  }
+  
   if (!process.env.SENDGRID_FROM_EMAIL) {
-    throw new Error('SENDGRID_FROM_EMAIL is not set in environment variables');
+    console.warn('Cannot send email: SENDGRID_FROM_EMAIL is not set');
+    return false;
   }
 
   try {
@@ -63,13 +73,20 @@ export async function sendInvitationEmail(
   invitation: Invitation,
   emailData: InvitationEmailData
 ): Promise<boolean> {
-  if (!process.env.SENDGRID_TEMPLATE_ID) {
-    throw new Error('SENDGRID_TEMPLATE_ID is not set in environment variables');
+  if (!SENDGRID_API_KEY) {
+    console.warn('Cannot send invitation email: SENDGRID_API_KEY is not set');
+    return false;
+  }
+  
+  const templateId = process.env.SENDGRID_TEMPLATE_ID;
+  if (!templateId) {
+    console.warn('Cannot send invitation email: SENDGRID_TEMPLATE_ID is not set');
+    return false;
   }
 
   const data: EmailData = {
     to: invitation.email,
-    templateId: process.env.SENDGRID_TEMPLATE_ID,
+    templateId: templateId,
     dynamicTemplateData: {
       eventName: emailData.eventName,
       eventDate: emailData.eventDate,
@@ -80,6 +97,7 @@ export async function sendInvitationEmail(
       hostName: emailData.hostName,
       hostEmail: emailData.hostEmail,
       galleryLink: emailData.galleryLink,
+      message: emailData.message || '',
     },
   };
 
