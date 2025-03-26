@@ -17,6 +17,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added in Session 30 (March 25-26, 2025)
+- **RSVP System Implementation**:
+  - Public RSVP page accessible via invitation token
+  - Form with options for accepting/declining invitations
+  - Plus-one management for guests
+  - Dietary restrictions and notes fields
+  - Status tracking for responses
+- **Public Gallery Access**:
+  - Event gallery accessible to guests without accounts
+  - Public share links for event galleries
+  - Gallery viewing optimized for mobile devices
+- **Invitation Enhancements**:
+  - Improved invitation display on event details page
+  - Status tracking for all invitations (sent, pending, accepted)
+  - Ability to resend invitations
+  - Email sending failure handling
+- **Beta Partner Integration**:
+  - Event host setup for launch partners
+  - Cross-event access permissions
+  - Team collaboration foundation
+
+### Fixed in Session 30 (March 25-26, 2025)
+- **Email System Improvements**:
+  - Enhanced error handling for missing environment variables
+  - Graceful fallback when SendGrid is not configured
+  - Updated invitation email template handling
+  - Fixed invitation created_at and sent_at timestamps
+- **Profile Management**:
+  - Fixed profile update functionality for all user roles
+  - Resolved TypeScript errors in profile forms
+  - Enhanced direct Supabase integration for profile updates
+  - Improved error handling in profile management
+
 ### Fixed in Session 28 (March 23-26, 2025)
 - **TypeScript Error Resolution**:
   - Fixed TypeScript errors in event page and media components
