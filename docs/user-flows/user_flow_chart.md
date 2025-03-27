@@ -1,13 +1,13 @@
 # 🔄 User Flow Chart
 
 ## Cloud Burst
-📅 *Updated: March 25, 2025*  
-📊 *Version: 0.8.0*
+📅 *Updated: March 27, 2025*  
+📊 *Version: 0.8.2*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the invitation system with SendGrid integration, Cloud Burst now offers a complete media management solution with enhanced user verification and notification capabilities. The platform features comprehensive email template management with SendGrid integration, secure API endpoints, direct camera integration through QR code scanning, and robust authentication flows. With enhanced processing capabilities for both photos and videos, optimized gallery displays for mixed media, and comprehensive email notifications with delivery tracking, Cloud Burst provides an intuitive and engaging experience for all users.
+Following the successful implementation of the invitation system with SendGrid integration and the recent resolution of critical Next.js 14 App Router architecture issues, Cloud Burst now offers a complete media management solution with enhanced user verification and notification capabilities. The platform features comprehensive email template management with SendGrid integration, secure API endpoints, direct camera integration through QR code scanning, and robust authentication flows. We've implemented proper client/server component separation, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. With enhanced processing capabilities for both photos and videos, optimized gallery displays for mixed media, and comprehensive email notifications with delivery tracking, Cloud Burst provides an intuitive and engaging experience for all users.
 
-The media management system is approximately 95% complete, with recent completions including the invitation system with SendGrid integration, enhanced form validation, API endpoint security, and user guidance elements. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
+The media management system is approximately 40% complete, with recent completions including client/server component architecture fixes, authentication flow improvements, type mapping corrections, and proper server-side data fetching. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
 
 ```mermaid
 flowchart TD
@@ -182,6 +182,7 @@ flowchart TD
 - ✅ API endpoint security
 - ✅ Form validation
 - ✅ Error recovery mechanisms
+- ✅ Client/server authentication flow
 
 ### 📹 **Video Capture System**
 - ✅ In-app recording interface
@@ -219,6 +220,7 @@ flowchart TD
 - ✅ API endpoint security
 - ✅ Form data validation
 - ✅ Input sanitization
+- ✅ Server-side authentication context
 
 ### 🖼️ **Gallery System**
 - ✅ Multiple layouts (Grid, Masonry, Slideshow)
@@ -227,12 +229,16 @@ flowchart TD
 - ✅ Tag-based filtering
 - ✅ Media type filtering
 - ✅ Responsive design
-- 🟡 Download options (70% complete)
+- 🟡 Download options (40% complete)
 - ✅ Upload functionality
 - ✅ Progress indicators
 - ✅ Error handling
-- 🟡 Sharing options (70% complete)
+- 🟡 Sharing options (40% complete)
 - ✅ User guidance information
+- ✅ Client/server component separation
+- ✅ Proper 'use client' directives
+- ✅ Database-UI type mapping
+- ✅ Server-side data fetching
 
 ### 📨 **Invitation System**
 - ✅ Single invitation creation (100% complete)
@@ -248,7 +254,7 @@ flowchart TD
 
 ## 🔄 **Implementation Progress**
 
-As we approach our April 1, 2025 launch date, the invitation system is now 100% complete with SendGrid integration. Recent implementations include:
+As we approach our April 1, 2025 launch date, the invitation system is now 100% complete with SendGrid integration, and we've resolved critical Next.js 14 App Router architecture issues in our gallery implementation.
 
 ### Key Achievements:
 - ✅ Complete invitation system with API integration
@@ -257,13 +263,16 @@ As we approach our April 1, 2025 launch date, the invitation system is now 100% 
 - ✅ User guidance information throughout flows
 - ✅ API endpoint security
 - ✅ Improved error handling
-- ✅ Navigation enhancements between events and guests
+- ✅ Next.js 14 client/server component separation
+- ✅ Authentication flow fixes for gallery pages
+- ✅ Proper type mapping between database and UI components
+- ✅ Server-side data fetching implementation
 
 ### Current Focus:
-- 🟡 Implementing gallery masonry layout (0% complete)
-- 🟡 Developing album management system (0% complete)
+- 🟡 Implementing gallery masonry layout (40% complete)
+- 🟡 Developing album management system (10% complete)
 - 🟡 Enhancing analytics dashboard (0% complete)
-- 🟡 Creating guest upload system (0% complete)
+- 🟡 Creating guest upload system (20% complete)
 - 🟡 Implementing onboarding flow (0% complete)
 
 ### Next Steps:

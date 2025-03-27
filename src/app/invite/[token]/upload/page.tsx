@@ -3,7 +3,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { Shell } from '@/components/shell'
-import { UploadMediaButton } from '@/components/media/upload-media-button'
+import { GuestUploadDropzone } from '@/components/gallery/guest-upload-dropzone'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatDate } from '@/lib/utils'
 
@@ -69,7 +69,7 @@ export default async function InvitationUploadPage({ params }: InvitationUploadP
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="prose dark:prose-invert">
               <p>
                 Welcome! You can upload your photos and videos from {invitation.event.name} here.
@@ -80,12 +80,20 @@ export default async function InvitationUploadPage({ params }: InvitationUploadP
               )}
             </div>
             
-            <div className="flex justify-center">
-              <UploadMediaButton
+            <div className="w-full">
+              <GuestUploadDropzone
                 eventId={invitation.event.id}
                 invitationToken={invitation.token}
-                className="w-full sm:w-auto"
+                maxFiles={20}
+                maxSize={50 * 1024 * 1024} // 50MB
               />
+            </div>
+            
+            <div className="mt-6 text-sm text-muted-foreground">
+              <p>
+                <strong>Guidelines:</strong> Please only upload photos and videos from this event.
+                All uploads will be reviewed by the event organizer before being approved.
+              </p>
             </div>
           </div>
         </CardContent>

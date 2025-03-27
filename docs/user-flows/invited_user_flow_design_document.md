@@ -1,13 +1,13 @@
 # 🎟️ **Invited Guest - User Flow Design Document**  
 
 ## 📂 *Cloud Burst Platform - User Flows*
-📅 *Last Updated: March 25, 2025*
-📊 *Version: 0.8.0*
+📅 *Last Updated: March 27, 2025*
+📊 *Version: 0.8.2*
 
 ## 📌 Situational Abstract
-Cloud Burst has successfully implemented a comprehensive invitation system with SendGrid integration, secure API endpoints, enhanced form validation, and robust error handling. The platform features a complete email template system with high deliverability standards, proper API error recovery, direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching with TanStack Query, and state management with Zustand. This document details the fully implemented invited guest flow, which seamlessly connects event planning and attendance while maintaining our streamlined approach for the April 1, 2025 launch.
+Cloud Burst has successfully implemented a comprehensive invitation system with SendGrid integration, secure API endpoints, enhanced form validation, and robust error handling. The platform has also resolved critical Next.js 14 App Router architecture issues in our gallery implementation, ensuring proper client/server component separation and authentication flows. The platform features a complete email template system with high deliverability standards, proper API error recovery, direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching with TanStack Query, and state management with Zustand. The recent architectural improvements in Next.js 14 App Router implementation include proper separation of client and server components, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. This document details the fully implemented invited guest flow, which seamlessly connects event planning and attendance while maintaining our streamlined approach for the April 1, 2025 launch.
 
-The invited guest flow is now 100% complete, with robust support for both photo and video content. Recent completions include SendGrid integration for email delivery, API endpoint security, enhanced form validation with user feedback, contextual guidance information, and improved navigation between events and guests. Our current development now focuses on implementing the gallery system with masonry layout and album management.
+The invited guest flow is now 100% complete, with robust support for both photo and video content. The gallery implementation is currently at 40% completion, with recent achievements including client/server component architecture fixes, authentication flow improvements, type mapping corrections, and proper server-side data fetching. Our current development now focuses on implementing the gallery system with masonry layout and album management.
 
 ## 🔍 Introduction  
 Cloud Burst is an **event media platform** that enables guests to capture, upload, and share photos and videos at **live events** such as weddings, parties, and corporate gatherings.  
@@ -31,6 +31,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Verification flow security
 - ✅ API endpoint security
 - ✅ Form data validation
+- ✅ Server-side authentication context
 
 ### 🔐 **Guest Authentication** [Implementation Status: 100%]
 - ✅ Secure session handling
@@ -45,6 +46,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Error handling and recovery
 - ✅ SendGrid email delivery
 - ✅ Form validation feedback
+- ✅ Client/server authentication flow
 
 ### ⚙️ **User Settings**
 - ✅ Profile customization
@@ -125,6 +127,8 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Guest session management
 - ✅ Form validation feedback
 - ✅ API error handling
+- ✅ Server-side authentication context
+- ✅ Client/server component separation
 
 ### 📷 **Step 5: Media Capture & Upload**  
 ✅ **Camera Integration** provides direct access to device camera
@@ -149,6 +153,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Media attribution to user/guest
 - ✅ Offline capture with sync
 - ✅ User guidance tooltips
+- 🟡 Media upload system (40% complete)
 
 ### 🖼️ **Step 6: Live Media Gallery**  
 ✅ A **real-time media wall** updates as guests upload photos and videos
@@ -166,8 +171,12 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Responsive design for all devices
 - ✅ Inline video playback
 - ✅ Real-time updates
-- 🟡 Download functionality (70% complete)
+- 🟡 Download functionality (40% complete)
 - ✅ User guidance information
+- ✅ Client/server component separation
+- ✅ Proper 'use client' directives
+- ✅ Server-side data fetching
+- ✅ Type-safe media mapping
 
 ### ⏳ **Step 7: Post-Event Access & Engagement**  
 ✅ Event media remains available **for a limited time (1-4 weeks)**
@@ -181,7 +190,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Account conversion flow
 - ✅ Media attribution linking
 - ✅ Personalized follow-up emails
-- 🟡 Bulk download options (70% complete)
+- 🟡 Bulk download options (40% complete)
 
 ---
 
@@ -218,6 +227,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Invitation recognition
 - ✅ Secure token management
 - ✅ Form validation feedback
+- ✅ Server-side authentication context
 
 ### 📷 **Media Capture Page**  
 ✅ Integrated **camera interface** for photos and videos
@@ -240,6 +250,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Error handling
 - ✅ Offline capabilities
 - ✅ User guidance tooltips
+- 🟡 Upload system (40% complete)
 
 ### 🏆 **Live Gallery (Media Wall)**  
 ✅ **Dynamic grid layout** with uploaded photos and videos
@@ -257,20 +268,24 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Tag-based filtering
 - ✅ Playback controls
 - ✅ User attribution display
-- 🟡 Download options (70% complete)
+- 🟡 Download options (40% complete)
 - ✅ User guidance information
+- ✅ Client/server component separation
+- ✅ Proper 'use client' directives
+- ✅ Server-side data fetching
+- ✅ Type-safe media rendering
 
 ### 📨 **Post-Event Page**  
 ✅ **Reminder & persistent gallery link**
-🟡 **Download & sharing options** for all media types (70% complete)
+🟡 **Download & sharing options** for all media types (40% complete)
 - `<Card>` for download options
 - `<Button>` for actions
 - `<Alert>` for expiry notices
 - `<ConversionCTA>` for account creation
 - ✅ Custom event URL
 - ✅ Social sharing integration
-- 🟡 Bulk download functionality (70% complete)
-- 🟡 Media album creation (50% complete)
+- 🟡 Bulk download functionality (40% complete)
+- 🟡 Media album creation (10% complete)
 - ✅ Follow-up email notifications
 
 ### ⚙️ **Settings Page**
@@ -310,6 +325,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 ✅ **Post-Event Conversion** – From guest to registered user
 ✅ **Secure Email Delivery** – Reliable invitation receipt with tracking
 ✅ **Contextual Guidance** – Helpful information throughout the process
+✅ **Proper Architecture** – Client/server component separation in Next.js 14
 
 ---
 
@@ -329,6 +345,8 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ API endpoint security
 - ✅ Form data validation
 - ✅ Input sanitization
+- ✅ Server-side authentication context
+- ✅ Client/server component authentication
 
 ### 🎨 UI/UX Considerations
 - ✅ Mobile-first design
@@ -343,6 +361,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Guest-specific UI adaptations
 - ✅ Contextual help information
 - ✅ Error state visualization
+- ✅ Proper client/server component rendering
 
 ### ⚡ Performance Optimizations
 - ✅ Media lazy loading
@@ -357,6 +376,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Connection-aware uploading
 - ✅ API response caching
 - ✅ Error recovery mechanisms
+- ✅ Server-side data fetching
 
 ### 📊 Database Relationships
 ```mermaid
@@ -384,8 +404,10 @@ erDiagram
 - ✅ Error handling - **100% complete**
 - ✅ Invitation management - **100% complete**
 - ✅ Post-event engagement - **100% complete**
-- 🟡 Media upload - **85% complete**
-- 🟡 Gallery display - **80% complete**
+- ✅ Client/server architecture - **100% complete**
+- 🟡 Media upload - **40% complete**
+- 🟡 Gallery display - **40% complete**
+- 🟡 Album management - **10% complete**
 
 ---
 
@@ -396,9 +418,10 @@ erDiagram
 | **Database Foundation** | Schema updates, relationships | April 2025 | ✅ Complete |
 | **Invitation System** | Email templates, QR codes | April 2025 | ✅ Complete |
 | **Authentication Flow** | Guest access, token handling | April 2025 | ✅ Complete |
-| **Media Capture** | Camera integration, uploads | May 2025 | 🟡 In Progress (85%) |
+| **Next.js Architecture** | Client/server separation | April 2025 | ✅ Complete |
+| **Media Capture** | Camera integration, uploads | May 2025 | 🟡 In Progress (40%) |
 | **Post-Event Engagement** | Follow-ups, conversions | May 2025 | ✅ Complete |
-| **Gallery System** | Masonry layout, albums | May 2025 | 🟡 Planned (0%) |
+| **Gallery System** | Masonry layout, albums | May 2025 | 🟡 In Progress (40%) |
 
 ---
 

@@ -9,11 +9,10 @@ import { useToast } from '@/components/ui/use-toast'
 import { uploadAndCreateMedia } from '@/lib/supabase/media'
 import { formatFileSize } from '@/lib/utils'
 import { MediaType } from '@/types/media'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-interface UploadDropzoneProps {
+interface GuestUploadDropzoneProps {
   eventId: string
-  albumId?: string
+  invitationToken: string
   onUploadComplete?: () => void
   maxFiles?: number
   maxSize?: number // in bytes
@@ -30,9 +29,9 @@ interface UploadFile {
   type: 'image' | 'video'
 }
 
-export function UploadDropzone({
+export function GuestUploadDropzone({
   eventId,
-  albumId,
+  invitationToken,
   onUploadComplete,
   maxFiles = 10,
   maxSize = 10 * 1024 * 1024, // 10MB
@@ -40,7 +39,7 @@ export function UploadDropzone({
     'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
     'video/*': ['.mp4', '.mov', '.webm']
   }
-}: UploadDropzoneProps) {
+}: GuestUploadDropzoneProps) {
   const [files, setFiles] = useState<UploadFile[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const { toast } = useToast()
@@ -125,19 +124,6 @@ export function UploadDropzone({
     let completed = 0
     let hasErrors = false
     
-    // Get current user
-    const supabase = createClientComponentClient()
-    const { data: userData } = await supabase.auth.getUser()
-    if (!userData.user) {
-      toast({
-        title: 'Authentication required',
-        description: 'You must be logged in to upload files.',
-        variant: 'destructive'
-      })
-      setIsUploading(false)
-      return
-    }
-    
     // Process each file
     for (const fileObj of files) {
       if (fileObj.status === 'success') {
@@ -154,15 +140,20 @@ export function UploadDropzone({
         // Determine media type
         const mediaType = fileObj.type === 'image' ? MediaType.PHOTO : MediaType.VIDEO
         
-        // Upload the file
+        // Upload the file with invitation token in metadata
         const media = await uploadAndCreateMedia(
           fileObj.file,
           eventId,
-          userData.user.id,
+          'auth.uid()', // This will be replaced by RLS with actual user ID or null for guests
           fileObj.file.name, // Use filename as title
           '', // No description
           true, // Is public
-          mediaType
+          mediaType,
+          {
+            invitation_token: invitationToken,
+            original_filename: fileObj.file.name,
+            upload_source: 'invitation'
+          }
         )
         
         // Update progress to 100%

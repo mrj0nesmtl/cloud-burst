@@ -1,8 +1,8 @@
-# 🏛️ **System Architecture Flowchart (Beta v0.8.0)**  
+# 🏛️ **System Architecture Flowchart (Beta v0.8.2)**  
 
 ## Cloud Burst  
-📅 *Updated: March 25, 2025*  
-📊 *Version: 0.8.0*
+📅 *Updated: March 27, 2025*  
+📊 *Version: 0.8.2*
 
 ---
 
@@ -25,6 +25,8 @@ flowchart TD
         ErrorPages[❌ Error Pages]
         VerificationFlow[✅ Verification Flow]
         EmailDelivery[📧 Email Delivery]
+        ClientComponents[👤 Client Components]
+        ServerComponents[🖥️ Server Components]
     end
 
     subgraph Auth[🔑 Authentication Layer]
@@ -38,6 +40,8 @@ flowchart TD
         ErrorHandler[❌ Error Handler]
         TokenManager[🔑 Token Manager]
         SendGrid[📨 SendGrid Integration]
+        ClientSideAuth[👤 Client-side Auth]
+        ServerSideAuth[🖥️ Server-side Auth]
     end
 
     subgraph Data[💾 Data Layer]
@@ -55,46 +59,56 @@ flowchart TD
         EmailLogsDB[📋 Email Delivery Logs]
     end
 
-    WebApp -->|1. Auth Request| AuthForms
-    AuthForms -->|2. Credentials| SupaAuth
-    SupaAuth -->|3. Validate| Session
-    Session -->|4. Create| Roles
-    Roles -->|5. Define| Permissions
-    Permissions -->|6. Check| RBAC
-    RBAC -->|7. Control| Protected
-    Protected -->|8. Load| Dashboard
-    Protected -->|8. Load| Gallery
-    Protected -->|8. Load| Analytics
-    Protected -->|8. Load| Invitations
-    Roles -->|9. Access| Database
-    Roles -->|9. Access| Storage
-    TanStack -->|10. Cache| Data
-    Zustand -->|11. State| Protected
-    Templates -->|12. Manage| TemplateDB
-    Templates -->|13. Sync| SupaAuth
-    Events -->|14. Manage| EventsDB
-    Events -->|15. Manage| AttendeeDB
-    Gallery -->|16. Display| MediaDB
-    Analytics -->|17. Visualize| AnalyticsDB
-    Forms -->|18. Validate| Data
-    Invitations -->|19. Manage| InvitationsDB
-    Invitations -->|20. Send| EmailDelivery
-    EmailDelivery -->|21. Process| SendGrid
-    SendGrid -->|22. Log| EmailLogsDB
-    QRScanner -->|23. Authenticate| InviteAuth
-    InviteAuth -->|24. Validate| InvitationsDB
-    ErrorPages -->|25. Handle| ErrorHandler
-    VerificationFlow -->|26. Process| EmailAuth
-    EmailAuth -->|27. Templates| EmailTemplatesDB
-    EmailAuth -->|28. Assets| EmailAssetsDB
-    TokenManager -->|29. Manage| Session
+    WebApp -->|1. Renders| ServerComponents
+    WebApp -->|2. Hydrates| ClientComponents
+    ClientComponents -->|3. Auth Request| AuthForms
+    AuthForms -->|4. Credentials| ClientSideAuth
+    ClientSideAuth -->|5. Authenticate| SupaAuth
+    ServerComponents -->|6. Auth Request| ServerSideAuth
+    ServerSideAuth -->|7. Session| SupaAuth
+    SupaAuth -->|8. Validate| Session
+    Session -->|9. Create| Roles
+    Roles -->|10. Define| Permissions
+    Permissions -->|11. Check| RBAC
+    RBAC -->|12. Control| Protected
+    Protected -->|13. Load| Dashboard
+    Protected -->|13. Load| Gallery
+    Protected -->|13. Load| Analytics
+    Protected -->|13. Load| Invitations
+    Roles -->|14. Access| Database
+    Roles -->|14. Access| Storage
+    TanStack -->|15. Cache| Data
+    Zustand -->|16. State| ClientComponents
+    Templates -->|17. Manage| TemplateDB
+    Templates -->|18. Sync| SupaAuth
+    Events -->|19. Manage| EventsDB
+    Events -->|20. Manage| AttendeeDB
+    Gallery -->|21. Display| MediaDB
+    Analytics -->|22. Visualize| AnalyticsDB
+    Forms -->|23. Validate| Data
+    Invitations -->|24. Manage| InvitationsDB
+    Invitations -->|25. Send| EmailDelivery
+    EmailDelivery -->|26. Process| SendGrid
+    SendGrid -->|27. Log| EmailLogsDB
+    QRScanner -->|28. Authenticate| InviteAuth
+    InviteAuth -->|29. Validate| InvitationsDB
+    ErrorPages -->|30. Handle| ErrorHandler
+    VerificationFlow -->|31. Process| EmailAuth
+    EmailAuth -->|32. Templates| EmailTemplatesDB
+    EmailAuth -->|33. Assets| EmailAssetsDB
+    TokenManager -->|34. Manage| Session
 ```
 
-## 🛠️ **Beta Components (v0.8.0)**  
+## 🛠️ **Beta Components (v0.8.2)**  
 
 ### 📱 **Client Layer**
 - Next.js 14 App Router
 - TypeScript + React
+- Client/Server Component Architecture
+- React Hooks in Client Components
+- Server-Side Data Fetching
+- Server Components for Static Content
+- Client Components for Interactivity
 - Shadcn/ui Components
 - TanStack Query Integration
 - Protected Route System
@@ -113,6 +127,8 @@ flowchart TD
 - SendGrid Email Integration
 
 ### 🔑 **Authentication Layer**
+- Client-side Auth for Interactive Components
+- Server-side Auth for Data Fetching
 - Supabase Auth
 - Enhanced Session Management
 - Role-based Access Control
@@ -146,11 +162,13 @@ flowchart TD
 
 ---
 
-## 📐 **Beta System Overview (v0.8.0)**  
+## 📐 **Beta System Overview (v0.8.2)**  
 
 ```mermaid
 graph TD
     Client["📱 Client Device"] -->|"🔗 HTTPS Request"| WebApp["🌐 Web App (Next.js)"]
+    WebApp -->|"📄 Server Components"| ServerComp["🖥️ Server Components"]
+    WebApp -->|"📄 Client Components"| ClientComp["👤 Client Components"]
     WebApp -->|"🔌 API Calls"| Supabase["🗄️ Supabase"]
     WebApp -->|"📊 Dashboard"| Dashboard["📊 Dashboard System"]
     WebApp -->|"📧 Template Management"| Templates["📋 Template System"]
@@ -162,6 +180,8 @@ graph TD
     WebApp -->|"🔒 Access Control"| RBAC["🔒 RBAC System"]
     WebApp -->|"📨 Invitation System"| Invitations["📨 Invitation System"]
     WebApp -->|"📱 QR Scanning"| QRScanner["📱 QR Scanner"]
+    ServerComp -->|"🔄 Data Fetch"| Supabase
+    ClientComp -->|"🔄 State"| Supabase
     Dashboard -->|"🔄 Load"| Supabase
     Templates -->|"🔄 Sync"| Supabase
     Events -->|"🔄 CRUD"| Supabase
@@ -180,7 +200,7 @@ graph TD
     Supabase --> Email["📧 Email"]
 ```
 
-## 🔒 **Security (v0.8.0)**  
+## 🔒 **Security (v0.8.2)**  
 ✅ **Complete Auth** – Email/password & social login  
 ✅ **Enhanced RLS** – Role-based data protection  
 ✅ **Route Guards** – Protected routes with role verification  
@@ -196,200 +216,132 @@ graph TD
 ✅ **Form Validation** – Zod schema validation for all inputs  
 ✅ **Error Handling** – Comprehensive error states and recovery  
 ✅ **Email Delivery** – Secure SendGrid integration with tracking
+✅ **Server/Client Auth** – Proper authentication for both contexts
 
 ## 🎯 **Next Steps (v0.9.0)**  
-1. 🖼️ Polish Gallery masonry layout and advanced filtering
+1. 🖼️ Complete Gallery system with masonry layout and advanced filtering
 2. 📊 Finalize Analytics dashboard with real-time metrics
-3. 📤 Complete performance optimization for bulk uploads
+3. 📤 Implement performance optimization for bulk uploads
 4. 🚀 Conduct pre-launch security and performance audit
 5. 📱 Finalize mobile experience and responsive design
 6. 📚 Complete user documentation and guides
 
-## 📨 **Invitation System Architecture**
+## 📨 **Client/Server Component Architecture**
 
 ```mermaid
 flowchart TD
-    subgraph UserInterface[📱 User Interface]
-        InvitePage[📝 Invitation Management Page]
-        EmailEditor[✉️ Email Template Editor]
-        QRPreview[📱 QR Code Preview]
-        BatchUploader[📁 Batch Upload Component]
-        StatusDashboard[📊 Status Dashboard]
-        InviteForm[📝 Invitation Form]
-        QRScanner[📱 QR Code Scanner]
-        GuestPortal[👤 Guest Portal]
-        FormFeedback[✅ Form Feedback]
-        ContextNav[🧭 Contextual Navigation]
+    subgraph NextApp[Next.js 14 App Router]
+        ServerComp[Server Components]
+        ClientComp[Client Components]
     end
 
-    subgraph API[🔌 API Layer]
-        InviteAPI[📧 Invitation API]
-        EmailAPI[✉️ Email API]
-        QRCodeAPI[📱 QR Code API]
-        TrackingAPI[📊 Tracking API]
-        AuthAPI[🔑 Authentication API]
-        ErrorHandling[❌ Error Handling]
+    subgraph ServerFeatures[Server Component Features]
+        DataFetching[Initial Data Fetching]
+        SEO[SEO & Metadata]
+        StaticContent[Static Content Rendering]
+        AuthContext[Server-side Auth Context]
+        ComponentStructure[Page Structure]
     end
 
-    subgraph Services[⚙️ Service Layer]
-        TokenGenerator[🔑 Token Generator]
-        EmailSender[📧 Email Sender]
-        QRGenerator[📱 QR Generator]
-        InviteProcessor[📋 Invitation Processor]
-        AuthValidator[✅ Auth Validator]
-        MetricsCalculator[📊 Metrics Calculator]
-        SendGridService[📧 SendGrid Service]
+    subgraph ClientFeatures[Client Component Features]
+        ReactHooks[React Hooks]
+        StateManagement[Client-side State]
+        Interactivity[User Interactivity]
+        ClientSideAuth[Client-side Auth]
+        EventHandlers[Event Handlers]
     end
 
-    subgraph Data[💾 Data Layer]
-        InvitationsDB[📧 Invitations Table]
-        EmailTemplatesDB[✉️ Email Templates]
-        TokensDB[🔑 Security Tokens]
-        EventsDB[📅 Events]
-        AttendeesDB[👥 Attendees]
-        TrackingDB[📊 Tracking Data]
-        DeliveryLogsDB[📋 Delivery Logs]
-    end
-
-    InvitePage -->|Manage| InviteForm
-    InvitePage -->|Display| StatusDashboard
-    InviteForm -->|Create| InviteAPI
-    InviteForm -->|Feedback| FormFeedback
-    EmailEditor -->|Design| EmailAPI
-    QRPreview -->|Display| QRCodeAPI
-    BatchUploader -->|Upload CSV| InviteAPI
-    StatusDashboard -->|Fetch| TrackingAPI
-    QRScanner -->|Scan| QRCodeAPI
-    QRScanner -->|Authenticate| AuthAPI
-    GuestPortal -->|Access| AuthAPI
-    ContextNav -->|Navigate| InvitePage
+    ServerComp -->|Renders| DataFetching
+    ServerComp -->|Manages| SEO
+    ServerComp -->|Provides| StaticContent
+    ServerComp -->|Handles| AuthContext
+    ServerComp -->|Defines| ComponentStructure
     
-    InviteAPI -->|Process| InviteProcessor
-    InviteAPI -->|Generate| TokenGenerator
-    InviteAPI -->|Handle Errors| ErrorHandling
-    EmailAPI -->|Send| EmailSender
-    QRCodeAPI -->|Generate| QRGenerator
-    QRCodeAPI -->|Validate| AuthValidator
-    TrackingAPI -->|Calculate| MetricsCalculator
-    AuthAPI -->|Validate| AuthValidator
+    ClientComp -->|Uses| ReactHooks
+    ClientComp -->|Manages| StateManagement
+    ClientComp -->|Enables| Interactivity
+    ClientComp -->|Handles| ClientSideAuth
+    ClientComp -->|Provides| EventHandlers
     
-    InviteProcessor -->|Store| InvitationsDB
-    InviteProcessor -->|Associate| EventsDB
-    TokenGenerator -->|Store| TokensDB
-    EmailSender -->|Use| EmailTemplatesDB
-    EmailSender -->|Send Via| SendGridService
-    EmailSender -->|Update| InvitationsDB
-    SendGridService -->|Log| DeliveryLogsDB
-    EmailSender -->|Track| TrackingDB
-    QRGenerator -->|Read| TokensDB
-    AuthValidator -->|Verify| TokensDB
-    AuthValidator -->|Create| AttendeesDB
-    MetricsCalculator -->|Read| TrackingDB
-    MetricsCalculator -->|Read| InvitationsDB
+    ServerComp -->|Passes Props To| ClientComp
+    ClientComp -->|Hydrates From| ServerComp
+    
+    NextApp -->|Routes| ServerComp
+    NextApp -->|Hydrates| ClientComp
 ```
 
-## 💻 **Session 28 Implementation Focus**
+## 💻 **Session 30 Implementation Focus**
 
 ```mermaid
 flowchart TD
-    subgraph Invitations[📨 Invitation System Completion]
-        APIEndpoints[🔌 API Endpoint Integration]
-        SendGridIntegration[📧 SendGrid Integration]
-        ErrorHandling[❌ Enhanced Error Handling]
-        UserFeedback[✅ User Feedback Mechanisms]
-        NavigationFlow[🧭 Context-Aware Navigation]
-        SecurityEnhancements[🔒 Security Improvements]
+    subgraph NextJSFixes[Next.js App Router Fixes]
+        ClientDirectives[Add 'use client' Directives]
+        ComponentSeparation[Client/Server Component Separation]
+        AuthFixes[Authentication Flow Fixes]
+        DataFetchingFixes[Server-side Data Fetching]
+        MediaMapping[Media Item Type Mapping]
     end
 
-    subgraph User[👤 User Experience]
-        SidebarNav[🧭 Sidebar Navigation Improvements]
-        ContextGuidance[💬 Contextual Guidance]
-        EventSpecific[📅 Event-Specific Invitations]
-        InvitationForms[📝 Improved Forms]
-        ErrorStates[⚠️ Error State Visualization]
-        SuccessStates[✅ Success Confirmation]
+    subgraph GalleryComponents[Gallery Component Implementation]
+        MasonryLayout[Masonry Grid Layout]
+        MediaCards[Media Card Components]
+        Responsive[Responsive Design]
+        TypeSafety[Type Safety Improvements]
+        ErrorHandling[Error Handling]
     end
 
-    subgraph Technical[⚙️ Technical Implementation]
-        APIEndpointSecurity[🔐 API Security]
-        FormValidation[✅ Enhanced Form Validation]
-        TokenGeneration[🔑 Secure Token Generation]
-        EmailDelivery[📧 Email Delivery]
-        ErrorRecovery[🔄 Error Recovery]
-        PerformanceOptimization[⚡ Performance]
+    subgraph Documentation[Documentation & Testing]
+        ArchitectureDocs[Architecture Documentation]
+        LessonsLearned[Client/Server Lessons Learned]
+        BestPractices[Next.js Best Practices]
+        TypeGuide[TypeScript Type Guide]
     end
 
-    subgraph Documentation[📚 Documentation & QA]
-        ArchitectureUpdates[🏛️ Architecture Documentation]
-        SecurityGuidelines[🔒 Security Documentation]
-        EndToEndTesting[🧪 E2E Testing]
-        ErrorTesting[❌ Error Case Testing]
-        MobileValidation[📱 Mobile Testing]
-    end
-
-    Invitations -->|Implemented| APIEndpoints
-    Invitations -->|Integrated| SendGridIntegration
-    Invitations -->|Enhanced| ErrorHandling
-    Invitations -->|Improved| UserFeedback
-    Invitations -->|Optimized| NavigationFlow
-    Invitations -->|Secured| SecurityEnhancements
+    NextJSFixes -->|Implemented| ClientDirectives
+    NextJSFixes -->|Fixed| ComponentSeparation
+    NextJSFixes -->|Corrected| AuthFixes
+    NextJSFixes -->|Optimized| DataFetchingFixes
+    NextJSFixes -->|Enhanced| MediaMapping
     
-    User -->|Redesigned| SidebarNav
-    User -->|Added| ContextGuidance
-    User -->|Implemented| EventSpecific
-    User -->|Enhanced| InvitationForms
-    User -->|Improved| ErrorStates
-    User -->|Added| SuccessStates
+    GalleryComponents -->|Completed| MasonryLayout
+    GalleryComponents -->|Built| MediaCards
+    GalleryComponents -->|Optimized| Responsive
+    GalleryComponents -->|Improved| TypeSafety
+    GalleryComponents -->|Enhanced| ErrorHandling
     
-    Technical -->|Secured| APIEndpointSecurity
-    Technical -->|Enhanced| FormValidation
-    Technical -->|Improved| TokenGeneration
-    Technical -->|Integrated| EmailDelivery
-    Technical -->|Implemented| ErrorRecovery
-    Technical -->|Optimized| PerformanceOptimization
+    Documentation -->|Created| ArchitectureDocs
+    Documentation -->|Documented| LessonsLearned
+    Documentation -->|Defined| BestPractices
+    Documentation -->|Enhanced| TypeGuide
     
-    Documentation -->|Updated| ArchitectureUpdates
-    Documentation -->|Enhanced| SecurityGuidelines
-    Documentation -->|Conducted| EndToEndTesting
-    Documentation -->|Validated| ErrorTesting
-    Documentation -->|Verified| MobileValidation
+    NextJSFixes --> GalleryComponents
+    GalleryComponents --> Documentation
 ```
 
 ## 4. CHANGELOG Update
 
 ```markdown
 # Changelog
-All notable changes to Cloud Burst will be documented in this file.
 
-## [0.8.0] - 2025-03-25
-### Added
-- Complete invitation system with SendGrid integration
-- Enhanced form validation and error handling
-- Contextual navigation between events and guest management
-- Improved user guidance for invitation workflows
-- Email delivery tracking and confirmation
-- Security enhancements for invitation tokens
+## [0.8.2] - 2025-03-27
+### Fixed in Session 30
+- **Next.js App Router Architecture Fixes**:
+  - Added `'use client'` directives to interactive components using React hooks
+  - Fixed components: `GalleryHeader.tsx`, `MasonryGrid.tsx`, and `MediaViewer.tsx`
+  - Ensured proper client-side hydration for components with state management
+  - Fixed gallery page authentication by switching from client-side to server-side data fetching
+  - Replaced `getUserGalleries()` with `getUserGalleriesServer()` in gallery event pages
+  - Ensured proper access to user authentication context in server components
+- **Gallery Page Implementation**:
+  - Fixed media item mapping to properly display photos in MasonryGrid
+  - Added event data to media items for better context
+  - Improved error handling in gallery pages
+  - Enhanced type safety throughout gallery implementation
+  - Created proper mapping between database types and component types
 
-### Changed
-- Streamlined sidebar navigation structure for better UX
-- Improved invitation forms with clear feedback mechanisms
-- Enhanced error handling for API endpoints
-- Updated documentation for invitation system
-- Clarified event-guest relationship in UI
-- Optimized API endpoint integration
-
-### Fixed
-- API endpoint connection for sending invitations
-- Email delivery integration with SendGrid
-- Navigation context between events and attendees
-- Error handling for form submissions
-- Success confirmation and redirection flow
-- Form validation and user feedback
-
-### Technical
-- Integration with SendGrid email service
-- Enhanced token security for invitations
-- Improved error recovery mechanisms
-- Optimized invitation database schema
-- Performance improvements for email processing
-- API security enhancements
+### Added in Session 30
+- **Development Documentation**:
+  - Created SESSION_30_CLOSING.md with detailed documentation of fixes
+  - Documented key architectural patterns for Next.js App Router
+  - Added lessons learned about client/server component separation
+  - Documented authentication handling in Next.js server components

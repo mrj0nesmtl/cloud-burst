@@ -5,8 +5,8 @@ alwaysApply: false
 ---
 # Core development standards for Cloud Burst, including TypeScript, code style, and documentation
 
-> **Version:** 0.8.0  
-> **Last Updated:** March 18, 2025
+> **Version:** 0.8.1  
+> **Last Updated:** March 27, 2025
 
 ```json
 {
@@ -56,7 +56,9 @@ alwaysApply: false
           "stores",
           "utils",
           "types",
-          "styles"
+          "styles",
+          "gallery",
+          "media"
         ]
       }
     },
@@ -152,7 +154,9 @@ alwaysApply: false
               "events": "Event management routes",
               "settings": "User settings routes",
               "gallery": "Gallery management routes",
-              "analytics": "Analytics and reporting routes"
+              "analytics": "Analytics and reporting routes",
+              "invitation": "RSVP and invitation routes",
+              "gallery": "Public gallery access routes"
             },
             "components": {
               "auth": "Authentication components",
@@ -162,7 +166,9 @@ alwaysApply: false
               "forms": "Form components",
               "gallery": "Gallery components",
               "analytics": "Analytics components",
-              "mobile": "Mobile-specific components"
+              "mobile": "Mobile-specific components",
+              "invitations": "Invitation and RSVP components",
+              "upload": "Media upload components"
             },
             "lib": {
               "utils": "Utility functions",
@@ -351,7 +357,6 @@ The specialized TypeScript rules define the following naming conventions:
   6. Stores
   7. Utilities
   8. Types
-  9. Styles
 
 ```typescript
 // Good import order example

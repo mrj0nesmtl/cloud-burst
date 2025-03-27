@@ -3,6 +3,8 @@ import { Upload } from 'lucide-react'
 import { getUserAuth } from '@/lib/auth/utils'
 import { getEventById } from '@/lib/supabase/events.server'
 import { UploadContent } from './upload-content'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 
 interface UploadPageProps {
   searchParams: {
@@ -22,15 +24,36 @@ export default async function UploadPage({
   
   // Check if eventId is provided
   if (!searchParams.eventId) {
-    redirect('/protected/gallery')
+    redirect('/protected/gallery/events')
+  }
+  
+  let eventId = searchParams.eventId
+  
+  // Handle the 'recent' special value for eventId
+  if (eventId === 'recent') {
+    // Get the most recent event for this user
+    const supabase = createServerComponentClient({ cookies })
+    const { data: events } = await supabase
+      .from('events')
+      .select('id, name, date')
+      .eq('organizer_id', user.id)
+      .order('date', { ascending: false })
+      .limit(1)
+    
+    if (!events || events.length === 0) {
+      // No events found, redirect to create one
+      redirect('/protected/events/create?from=upload')
+    }
+    
+    eventId = events[0].id
   }
   
   // Get the event data
-  const event = await getEventById(searchParams.eventId)
+  const event = await getEventById(eventId)
   
   // If event not found, redirect to gallery
   if (!event) {
-    redirect('/protected/gallery')
+    redirect('/protected/gallery/events')
   }
   
   return (

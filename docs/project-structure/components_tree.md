@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-03-25T22:22:23.051Z
+Generated: 2025-03-27T18:13:25.626Z
 
 ## Overview
-This directory contains 155 component(s).
+This directory contains 156 component(s).
 
 
 ## Directory Tree
@@ -66,7 +66,7 @@ This directory contains 155 component(s).
 │   ├── security-form.tsx
 │   └── subscription-form.tsx
 ├── gallery/
-│   ├── .MediaCard.tsx.swp
+│   ├── .MediaViewer.tsx.swp
 │   ├── GalleryHeader.tsx
 │   ├── GalleryLayout.tsx
 │   ├── GallerySidebar.tsx
@@ -82,6 +82,7 @@ This directory contains 155 component(s).
 │   ├── gallery-grid.tsx
 │   ├── gallery-settings-form.tsx
 │   ├── gallery-tabs.tsx
+│   ├── guest-upload-dropzone.tsx
 │   ├── index.ts
 │   ├── optimized-image.tsx
 │   ├── photo-lightbox.tsx
@@ -188,13 +189,13 @@ This directory contains 155 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-19 directories, 161 files
+19 directories, 162 files
 
 ```
 
 ## File Type Breakdown
 - ts: 4 file(s)
-- tsx: 155 file(s)
+- tsx: 156 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

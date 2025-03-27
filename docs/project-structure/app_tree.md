@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-03-25T22:22:20.314Z
+Generated: 2025-03-27T18:13:22.045Z
 
 ## Overview
 
-This directory contains 80 route(s).
+This directory contains 82 route(s).
 
 ## Directory Tree
 ```
@@ -103,7 +103,13 @@ This directory contains 80 route(s).
 │   │   └── page.tsx
 │   ├── layout.tsx
 │   └── page.tsx
+├── gallery/
+│   └── [eventId]/
+│       └── page.tsx
 ├── invitation/
+│   ├── [token]/
+│   │   ├── page.tsx
+│   │   └── rsvp-form.tsx
 │   └── page.tsx
 ├── invite/
 │   └── [token]/
@@ -283,13 +289,13 @@ This directory contains 80 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-117 directories, 158 files
+120 directories, 161 files
 
 ```
 
 ## File Type Breakdown
 - ts: 18 file(s)
-- tsx: 129 file(s)
+- tsx: 132 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

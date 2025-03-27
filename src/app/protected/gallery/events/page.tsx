@@ -155,24 +155,33 @@ export default async function EventGalleriesPage() {
                 }
               />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-                {galleryData.map(({ gallery, event, photoCount }) => (
-                  <div key={gallery.id} className="w-full h-full">
-                    <GalleryEventCard
-                      id={gallery.id}
-                      eventId={event.id}
-                      name={event.name || "Unnamed Event"}
-                      date={event.date}
-                      thumbnailUrl={event.cover_image_url}
-                      logoUrl={event.logo_url}
-                      photoCount={photoCount || 0}
-                      status={event.status || "draft"}
-                      settings={gallery.settings || { layout: 'grid' }}
-                      organizerId={event.organizer_id}
-                    />
-                  </div>
-                ))}
-              </div>
+              <>
+                <div className="flex justify-end mb-4">
+                  <Button asChild>
+                    <Link href="/protected/gallery/upload?eventId=recent">
+                      Upload Media
+                    </Link>
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                  {galleryData.map(({ gallery, event, photoCount }) => (
+                    <div key={gallery.id} className="w-full h-full">
+                      <GalleryEventCard
+                        id={gallery.id}
+                        eventId={event.id}
+                        name={event.name || "Unnamed Event"}
+                        date={event.date}
+                        thumbnailUrl={event.cover_image_url}
+                        logoUrl={event.logo_url}
+                        photoCount={photoCount || 0}
+                        status={event.status || "draft"}
+                        settings={gallery.settings || { layout: 'grid' }}
+                        organizerId={event.organizer_id}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </CardContent>
         </Card>

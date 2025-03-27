@@ -1,13 +1,13 @@
 # 📖 **User Flow Overview**  
 
 ## Cloud Burst
-📅 *Updated: March 25, 2025*  
-📊 *Version: 0.8.0*
+📅 *Updated: March 27, 2025*  
+📊 *Version: 0.8.2*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the invitation system with SendGrid integration, Cloud Burst now offers a comprehensive media management platform with enhanced user verification and notification capabilities. Users can capture and share both photos and videos seamlessly through QR code check-ins that connect directly to their mobile device camera, while receiving personalized email communications throughout their journey. The platform now features a complete invitation system with secure API endpoints, enhanced form validation with user feedback, and robust error handling. The enhanced processing for both media types, optimized streaming capabilities for video content, multiple viewing options for all media, and a complete email template system for user communications are now fully operational, providing a seamless experience across all touchpoints.
+Following the successful implementation of the invitation system with SendGrid integration and the recent resolution of critical Next.js 14 App Router architecture issues, Cloud Burst now offers a comprehensive media management platform with enhanced user verification and notification capabilities. The platform has resolved key architectural challenges by implementing proper client/server component separation, fixing authentication flows in gallery pages, and ensuring correct type mapping between database and UI components. Users can capture and share both photos and videos seamlessly through QR code check-ins that connect directly to their mobile device camera, while receiving personalized email communications throughout their journey. The platform now features a complete invitation system with secure API endpoints, enhanced form validation with user feedback, robust error handling, and proper Next.js 14 App Router implementation. The enhanced processing for both media types, optimized streaming capabilities for video content, multiple viewing options for all media, and a complete email template system for user communications are now fully operational, providing a seamless experience across all touchpoints.
 
-The media management system is approximately 95% complete, with recent completions including the invitation system with SendGrid integration, enhanced form validation, API endpoint security, and user guidance elements. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
+The media management system is approximately 40% complete, with recent completions including client/server component architecture fixes, authentication flow improvements, type mapping corrections, and proper server-side data fetching. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
 
 ## 🔄 **Core User Flows** [Updated]
 
@@ -214,6 +214,7 @@ pie
 - ✅ Template-based notifications
 - ✅ SendGrid integration
 - ✅ API security
+- ✅ Client/server component authentication
 
 ## 📝 **Introduction**  
 Cloud Burst is an **event media platform** designed to **seamlessly collect, filter, and organize event photos and videos**. The platform features comprehensive role-based access control, custom event URLs, and multiple gallery layouts to enhance the user experience.
@@ -344,8 +345,11 @@ graph LR
 - ✅ Media type filtering
 - ✅ Responsive design
 - ✅ Video playback controls
-- 🟡 Download options (70% complete)
+- 🟡 Download options (40% complete)
 - ✅ User guidance tooltips
+- ✅ Client/server component separation
+- ✅ Proper 'use client' directives
+- ✅ Server-side data fetching
 
 ✔️ Users can:
   - Browse real-time
@@ -417,7 +421,7 @@ graph LR
 - `<Alert>` for expiry
 - `<Calendar>` for expiry countdown
 - ✅ Custom event URL for sharing
-- 🟡 Bulk download options (70% complete)
+- 🟡 Bulk download options (40% complete)
 - ✅ Follow-up email templates
 - ✅ SendGrid integration
 
@@ -487,7 +491,7 @@ graph LR
 
 ## 🔄 **Implementation Progress**
 
-As we approach our April 1, 2025 launch date, the invitation system is now 100% complete with SendGrid integration. Recent implementations include:
+As we approach our April 1, 2025 launch date, the invitation system is now 100% complete with SendGrid integration, and we've resolved critical Next.js 14 App Router architecture issues in our gallery implementation.
 
 ### Key Achievements:
 - ✅ Complete invitation system with API integration
@@ -496,13 +500,16 @@ As we approach our April 1, 2025 launch date, the invitation system is now 100% 
 - ✅ User guidance information throughout flows
 - ✅ API endpoint security
 - ✅ Improved error handling
-- ✅ Navigation enhancements between events and guests
+- ✅ Next.js 14 client/server component separation
+- ✅ Authentication flow fixes for gallery pages
+- ✅ Proper type mapping between database and UI components
+- ✅ Server-side data fetching implementation
 
 ### Current Focus:
-- 🟡 Implementing gallery masonry layout (0% complete)
-- 🟡 Developing album management system (0% complete)
+- 🟡 Implementing gallery masonry layout (40% complete)
+- 🟡 Developing album management system (10% complete)
 - 🟡 Enhancing analytics dashboard (0% complete)
-- 🟡 Creating guest upload system (0% complete)
+- 🟡 Creating guest upload system (20% complete)
 - 🟡 Implementing onboarding flow (0% complete)
 
 ### Next Steps:
@@ -513,6 +520,6 @@ As we approach our April 1, 2025 launch date, the invitation system is now 100% 
 5. Develop onboarding flow for new organizers
 
 ## 🎯 **Conclusion**  
-Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly** through both photos and videos. By integrating **role-based access control, direct camera integration, custom event URLs, multiple gallery layouts, comprehensive invitation system, and SendGrid email delivery**, Cloud Burst creates an **engaging and seamless user experience** that adapts to different user roles and media preferences. As we approach our April 1, 2025 launch date, the platform is well-positioned to deliver a polished, professional-grade solution for complete event media management.
+Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly** through both photos and videos. By integrating **role-based access control, direct camera integration, custom event URLs, multiple gallery layouts, comprehensive invitation system, and SendGrid email delivery**, Cloud Burst creates an **engaging and seamless user experience** that adapts to different user roles and media preferences. With the recent resolution of Next.js 14 App Router architecture issues, including proper client/server component separation and authentication flow improvements, the platform is now more robust and better positioned to deliver a polished, professional-grade solution for complete event media management as we approach our April 1, 2025 launch date.
 
 ---

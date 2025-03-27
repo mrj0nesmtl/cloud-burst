@@ -17,6 +17,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2025-03-27
+### Fixed in Session 30 (March 27, 2025)
+- **Next.js App Router Architecture Fixes**:
+  - Added `'use client'` directives to interactive components using React hooks
+  - Fixed components: `GalleryHeader.tsx`, `MasonryGrid.tsx`, and `MediaViewer.tsx`
+  - Ensured proper client-side hydration for components with state management
+  - Fixed gallery page authentication by switching from client-side to server-side data fetching
+  - Replaced `getUserGalleries()` with `getUserGalleriesServer()` in gallery event pages
+  - Ensured proper access to user authentication context in server components
+- **Gallery Page Implementation**:
+  - Fixed media item mapping to properly display photos in MasonryGrid
+  - Added event data to media items for better context
+  - Improved error handling in gallery pages
+  - Enhanced type safety throughout gallery implementation
+  - Created proper mapping between database types and component types
+
+### Added in Session 30 (March 27, 2025)
+- **Development Documentation**:
+  - Created SESSION_30_CLOSING.md with detailed documentation of fixes
+  - Documented key architectural patterns for Next.js App Router
+  - Added lessons learned about client/server component separation
+  - Documented authentication handling in Next.js server components
+
 ## [0.8.1] - 2025-03-26
 ### Added in Session 30 (March 25-26, 2025)
 - **RSVP System Implementation**:

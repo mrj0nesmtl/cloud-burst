@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-25T22:22:18.593Z
+Generated: 2025-03-27T18:13:19.487Z
 
 ## Overview
 
@@ -28,7 +28,6 @@ Generated: 2025-03-25T22:22:18.593Z
 ├── development/
 │   ├── prompt_archive/
 │   │   ├── .DS_Store
-│   │   ├── Archive.zip
 │   │   ├── SESSION_25_CHECKLIST.md
 │   │   ├── SESSION_25_KICKOFF.md
 │   │   ├── SESSION_25_NARRATIVE.md
@@ -36,9 +35,16 @@ Generated: 2025-03-25T22:22:18.593Z
 │   │   ├── SESSION_26_NARRATIVE.md
 │   │   ├── SESSION_27_CHECKLIST.md
 │   │   ├── SESSION_27_KICKOFF.md
+│   │   ├── SESSION_27_MOBILE_AUDIT.md
 │   │   ├── SESSION_27_NARRATIVE.md
-│   │   ├── additional_notes.md
-│   │   ├── auth-debug.md
+│   │   ├── SESSION_28_CHECKLIST.md
+│   │   ├── SESSION_28_KICKOFF.md
+│   │   ├── SESSION_28_NARRATIVE.md
+│   │   ├── SESSION_28_RESOURCES.md
+│   │   ├── SESSION_29_CHECKLIST.md
+│   │   ├── SESSION_29_NARRATIVE.md
+│   │   ├── session-28-plan.md
+│   │   ├── session_1.md
 │   │   ├── session_10.md
 │   │   ├── session_11_checklist.md
 │   │   ├── session_11_kickoff.md
@@ -69,6 +75,8 @@ Generated: 2025-03-25T22:22:18.593Z
 │   │   ├── session_24_narrative.md
 │   │   ├── session_24_part2_kickoff_prompt.md
 │   │   ├── session_27_prompt.md
+│   │   ├── session_28_prompt.md
+│   │   ├── session_3.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -76,18 +84,14 @@ Generated: 2025-03-25T22:22:18.593Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
-│   ├── SESSION_27_MOBILE_AUDIT.md
-│   ├── SESSION_28_CHECKLIST.md
-│   ├── SESSION_28_KICKOFF.md
-│   ├── SESSION_28_NARRATIVE.md
-│   ├── SESSION_28_RESOURCES.md
-│   ├── SESSION_29_CHECKLIST.md
-│   ├── SESSION_29_NARRATIVE.md
+│   ├── SESSION_30_CHECKLIST.md
+│   ├── SESSION_30_CLOSING.md
+│   ├── SESSION_30_KICKOFF.md
+│   ├── SESSION_30_OPENING.md
+│   ├── SESSION_30_RESOURCES.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session-28-plan.md
-│   ├── session_28_prompt.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
@@ -139,12 +143,12 @@ Generated: 2025-03-25T22:22:18.593Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 121 files
+10 directories, 125 files
 
 ```
 
 ## File Type Breakdown
-- md: 115 file(s)
+- md: 120 file(s)
 
 ## Ignored Patterns
 - node_modules

@@ -6,12 +6,16 @@ import { usePathname } from 'next/navigation'
 
 export function GalleryTabs() {
   const pathname = usePathname()
-  const activeTab = pathname.split('/').pop() || 'all'
+  const activeTab = pathname.split('/').pop() || ''
+  
+  // Special case for the root gallery path
+  const isRoot = pathname === '/protected/gallery'
+  const effectiveTab = isRoot ? 'all' : activeTab
 
   return (
-    <Tabs defaultValue={activeTab} className="w-full">
+    <Tabs defaultValue={effectiveTab} className="w-full">
       <TabsList>
-        <Link href="/protected/gallery/all" passHref>
+        <Link href="/protected/gallery" passHref>
           <TabsTrigger
             value="all"
             asChild
