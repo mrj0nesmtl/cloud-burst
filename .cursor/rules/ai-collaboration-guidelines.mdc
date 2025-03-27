@@ -5,8 +5,8 @@ alwaysApply: false
 ---
 # AI Collaboration Guidelines
 
-> **Version:** 0.8.0  
-> **Last Updated:** March 18, 2025
+> **Version:** 0.8.1  
+> **Last Updated:** March 27, 2025
 
 ```json
 {
@@ -105,17 +105,21 @@ alwaysApply: false
         "useAccessibleControls": true,
         "useMobileResponsive": true,
         "useOfflineSupport": true,
-        "useAnalytics": true
+        "useAnalytics": true,
+        "useSupabaseStorage": true,
+        "useMediaTypes": true,
+        "useAlbumManagement": true,
+        "useUploadSystem": true
       },
-      "patterns": {
-        "useInfiniteScroll": true,
-        "useLazyLoading": true,
-        "usePreloading": true,
-        "usePlaceholders": true,
-        "useErrorBoundaries": true,
-        "useLoadingStates": true,
-        "useGestureControls": true,
-        "useKeyboardControls": true
+      "mediaManagement": {
+        "useOptimizedUploads": true,
+        "useBatchProcessing": true,
+        "useProgressTracking": true,
+        "useErrorHandling": true,
+        "useThumbnailGeneration": true,
+        "useMetadataPreservation": true,
+        "usePermissionControl": true,
+        "useVersioning": true
       }
     },
     "mobile": {
@@ -160,6 +164,28 @@ alwaysApply: false
         "useErrorHandling": true,
         "useDataValidation": true,
         "useSecureTransport": true
+      }
+    },
+    "rsvpSystem": {
+      "implementation": {
+        "useTokenAuthentication": true,
+        "useGuestAccess": true,
+        "useFormValidation": true,
+        "useResponseTracking": true,
+        "useEmailIntegration": true,
+        "useGalleryAccess": true,
+        "useResponsiveDesign": true,
+        "useAccessibility": true
+      },
+      "patterns": {
+        "usePublicRoutes": true,
+        "useZodValidation": true,
+        "useStatefulForms": true,
+        "useErrorHandling": true,
+        "useToastNotifications": true,
+        "useConditionalRendering": true,
+        "useShadcnComponents": true,
+        "useSupabaseIntegration": true
       }
     }
   }
@@ -325,6 +351,56 @@ const AnalyticsDashboard = () => {
         exportable
       />
     </div>
+  );
+};
+```
+
+### RSVP Form Component
+```typescript
+const RsvpForm = ({ invitationToken }: { invitationToken: string }) => {
+  const form = useForm<RsvpFormValues>({
+    resolver: zodResolver(rsvpFormSchema),
+    defaultValues: {
+      status: 'pending',
+      plusOne: false,
+      dietaryRestrictions: '',
+      notes: ''
+    }
+  });
+  
+  const { mutate, isLoading } = useSubmitRsvp();
+  
+  const onSubmit = (values: RsvpFormValues) => {
+    mutate({ token: invitationToken, ...values });
+  };
+  
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Will you attend?</FormLabel>
+              <RadioGroup
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
+                <RadioItem value="accepted">Yes, I'll be there</RadioItem>
+                <RadioItem value="declined">No, I can't make it</RadioItem>
+              </RadioGroup>
+            </FormItem>
+          )}
+        />
+        
+        {/* Additional form fields */}
+        
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Submitting..." : "Submit RSVP"}
+        </Button>
+      </form>
+    </Form>
   );
 };
 ```

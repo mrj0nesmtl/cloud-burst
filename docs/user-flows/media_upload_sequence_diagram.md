@@ -1,13 +1,13 @@
 # 📹 **Media Upload Sequence Diagram**  
 
 ## Cloud Burst  
-📅 *Updated: March 25, 2025*  
-📊 *Version: 0.8.0*
+📅 *Updated: March 27, 2025*  
+📊 *Version: 0.8.2*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the invitation system with SendGrid integration, Cloud Burst's media upload process has been enhanced with improved authentication flows, secure API endpoints, and robust error handling. The implementation leverages Zustand for state management, TanStack Query for optimized data fetching, and now includes comprehensive email notifications and template-based status updates through SendGrid. The invitation system is now fully integrated with the media upload process, allowing for seamless user experiences from invitation to media contribution.
+Following the successful implementation of the invitation system with SendGrid integration and the recent resolution of critical Next.js 14 App Router architecture issues, Cloud Burst's media upload process has been enhanced with improved authentication flows, secure API endpoints, and robust error handling. The implementation leverages Zustand for state management, TanStack Query for optimized data fetching, and includes comprehensive email notifications and template-based status updates through SendGrid. The platform has resolved key architectural challenges by implementing proper client/server component separation, fixing authentication flows in gallery pages, and ensuring correct type mapping between database and UI components. The invitation system is now fully integrated with the media upload process, allowing for seamless user experiences from invitation to media contribution.
 
-The media upload process is approximately 95% complete, with robust support for both photo and video content. Recent completions include the invitation system with SendGrid integration, enhanced form validation with user feedback, API endpoint security, and contextual user guidance elements. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
+The media upload process is approximately 40% complete, with robust support for both photo and video content. Recent completions include client/server component architecture fixes, authentication flow improvements, type mapping corrections, and proper server-side data fetching. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
 
 ---
 
@@ -121,6 +121,7 @@ sequenceDiagram
 - ✅ SendGrid integration
 - ✅ API endpoint security
 - ✅ Form validation
+- ✅ Client/server component authentication
 
 ### 🔍 **2. Pre-Upload Checks**
 - ✅ Client-side validation
@@ -133,7 +134,7 @@ sequenceDiagram
 - ✅ Form validation
 - ✅ Error state handling
 - ✅ User guidance elements
-- 🟡 Duplicate detection (85% complete)
+- 🟡 Duplicate detection (40% complete)
 
 ### 🖼️ **3. Photo Processing Pipeline**
 - ✅ Image optimization
@@ -144,7 +145,7 @@ sequenceDiagram
 - ✅ SendGrid integration
 - ✅ Delivery tracking
 - ✅ Tag-based categorization
-- 🟡 NSFW content filtering (85% complete)
+- 🟡 NSFW content filtering (40% complete)
 - ⏸️ AI enhancements (Planned for post-launch)
 
 ### 🎬 **4. Video Processing Pipeline**
@@ -157,7 +158,7 @@ sequenceDiagram
 - ✅ Email notifications
 - ✅ SendGrid integration
 - ✅ Delivery tracking
-- 🟡 Content moderation (85% complete)
+- 🟡 Content moderation (40% complete)
 
 ### ☁️ **5. Storage & Database**
 - ✅ Secure storage upload
@@ -171,6 +172,7 @@ sequenceDiagram
 - ✅ Email preference tracking
 - ✅ Email delivery logging
 - ✅ SendGrid tracking integration
+- ✅ Server-side data fetching
 
 ### 📱 **6. User Feedback**
 - ✅ Upload progress indication
@@ -184,6 +186,7 @@ sequenceDiagram
 - ✅ User guidance information
 - ✅ Contextual help elements
 - ✅ Form validation feedback
+- ✅ Client/server component messaging
 
 ---
 
@@ -202,6 +205,7 @@ sequenceDiagram
 - ✅ API endpoint security
 - ✅ Form data validation
 - ✅ Input sanitization
+- ✅ Server-side authentication context
 
 ### ⚡ **Performance Optimizations**
 - ✅ Client-side compression
@@ -212,10 +216,11 @@ sequenceDiagram
 - ✅ Email batch processing
 - ✅ SendGrid delivery optimization
 - ✅ API response caching
-- 🟡 CDN delivery (90% complete)
+- 🟡 CDN delivery (40% complete)
 - ✅ Lazy loading
 - ✅ Optimized asset delivery
 - ✅ Error recovery mechanisms
+- ✅ Server-side data fetching
 
 ### 🎯 **Quality Assurance**
 - ✅ Format validation
@@ -229,6 +234,7 @@ sequenceDiagram
 - ✅ Email delivery tracking
 - ✅ SendGrid analytics integration
 - ✅ User feedback collection
+- ✅ Proper type mapping
 
 ---
 
@@ -242,9 +248,9 @@ sequenceDiagram
 - ✅ Database Service (PostgreSQL)
 - ✅ Email Template Service
 - ✅ SendGrid Email Delivery
-- 🟡 CDN Network (90% complete)
+- 🟡 CDN Network (40% complete)
 - ✅ Event Management System
-- ✅ Gallery System
+- 🟡 Gallery System (40% complete)
 - ✅ Invitation System
 - ✅ Email Tracking System
 
@@ -261,12 +267,13 @@ sequenceDiagram
 10. Gallery Refresh
 11. Event Association
 12. Tag Categorization
+13. Client/Server Component Handling
 
 ---
 
 ## 🔄 **Implementation Progress**
 
-As we approach our April 1, 2025 launch date, the invitation system is now 100% complete with SendGrid integration. Recent implementations include:
+As we approach our April 1, 2025 launch date, the invitation system is now 100% complete with SendGrid integration, and we've resolved critical Next.js 14 App Router architecture issues in our gallery implementation.
 
 ### Key Achievements:
 - ✅ Complete invitation system with API integration
@@ -275,16 +282,18 @@ As we approach our April 1, 2025 launch date, the invitation system is now 100% 
 - ✅ User guidance information throughout flows
 - ✅ API endpoint security
 - ✅ Improved error handling
-- ✅ Navigation enhancements between events and guests
-- ✅ Email delivery tracking and analytics
+- ✅ Next.js 14 client/server component separation
+- ✅ Authentication flow fixes for gallery pages
+- ✅ Proper type mapping between database and UI components
+- ✅ Server-side data fetching implementation
 
 ### Current Focus:
-- 🟡 Implementing gallery masonry layout (0% complete)
-- 🟡 Developing album management system (0% complete)
+- 🟡 Implementing gallery masonry layout (40% complete)
+- 🟡 Developing album management system (10% complete)
 - 🟡 Enhancing analytics dashboard (0% complete)
-- 🟡 Creating guest upload system (0% complete)
+- 🟡 Creating guest upload system (20% complete)
 - 🟡 Implementing onboarding flow (0% complete)
-- 🟡 Finalizing CDN integration (90% complete)
+- 🟡 Finalizing CDN integration (40% complete)
 
 ### Next Steps:
 1. Complete gallery system with masonry layout
@@ -297,6 +306,6 @@ As we approach our April 1, 2025 launch date, the invitation system is now 100% 
 ---
 
 ## 🎯 **Conclusion**  
-This structured **media upload process** ensures a **secure, efficient, and enhanced** experience for event photography and videography. With **optimized processing, secure storage, and real-time updates**, Cloud Burst delivers a seamless media management solution that integrates smoothly with the event experience and gallery system. The direct camera integration through QR code scanning, combined with the comprehensive invitation system and SendGrid email delivery, creates an intuitive and frictionless experience for capturing and sharing both photos and videos.
+This structured **media upload process** ensures a **secure, efficient, and enhanced** experience for event photography and videography. With **optimized processing, secure storage, and real-time updates**, Cloud Burst delivers a seamless media management solution that integrates smoothly with the event experience and gallery system. The direct camera integration through QR code scanning, combined with the comprehensive invitation system and SendGrid email delivery, creates an intuitive and frictionless experience for capturing and sharing both photos and videos. The recent resolution of Next.js 14 App Router architecture issues, including proper client/server component separation and authentication flow improvements, has provided a solid foundation for completing the gallery and media upload systems.
 
 ---

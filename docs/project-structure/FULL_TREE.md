@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-25T22:22:17.037Z
+Generated: 2025-03-27T18:13:18.435Z
 
 ## Overview
 
@@ -65,7 +65,6 @@ Generated: 2025-03-25T22:22:17.037Z
 │   ├── development/
 │   │   ├── prompt_archive/
 │   │   │   ├── .DS_Store
-│   │   │   ├── Archive.zip
 │   │   │   ├── SESSION_25_CHECKLIST.md
 │   │   │   ├── SESSION_25_KICKOFF.md
 │   │   │   ├── SESSION_25_NARRATIVE.md
@@ -73,9 +72,16 @@ Generated: 2025-03-25T22:22:17.037Z
 │   │   │   ├── SESSION_26_NARRATIVE.md
 │   │   │   ├── SESSION_27_CHECKLIST.md
 │   │   │   ├── SESSION_27_KICKOFF.md
+│   │   │   ├── SESSION_27_MOBILE_AUDIT.md
 │   │   │   ├── SESSION_27_NARRATIVE.md
-│   │   │   ├── additional_notes.md
-│   │   │   ├── auth-debug.md
+│   │   │   ├── SESSION_28_CHECKLIST.md
+│   │   │   ├── SESSION_28_KICKOFF.md
+│   │   │   ├── SESSION_28_NARRATIVE.md
+│   │   │   ├── SESSION_28_RESOURCES.md
+│   │   │   ├── SESSION_29_CHECKLIST.md
+│   │   │   ├── SESSION_29_NARRATIVE.md
+│   │   │   ├── session-28-plan.md
+│   │   │   ├── session_1.md
 │   │   │   ├── session_10.md
 │   │   │   ├── session_11_checklist.md
 │   │   │   ├── session_11_kickoff.md
@@ -106,6 +112,8 @@ Generated: 2025-03-25T22:22:17.037Z
 │   │   │   ├── session_24_narrative.md
 │   │   │   ├── session_24_part2_kickoff_prompt.md
 │   │   │   ├── session_27_prompt.md
+│   │   │   ├── session_28_prompt.md
+│   │   │   ├── session_3.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -113,18 +121,14 @@ Generated: 2025-03-25T22:22:17.037Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
-│   │   ├── SESSION_27_MOBILE_AUDIT.md
-│   │   ├── SESSION_28_CHECKLIST.md
-│   │   ├── SESSION_28_KICKOFF.md
-│   │   ├── SESSION_28_NARRATIVE.md
-│   │   ├── SESSION_28_RESOURCES.md
-│   │   ├── SESSION_29_CHECKLIST.md
-│   │   ├── SESSION_29_NARRATIVE.md
+│   │   ├── SESSION_30_CHECKLIST.md
+│   │   ├── SESSION_30_CLOSING.md
+│   │   ├── SESSION_30_KICKOFF.md
+│   │   ├── SESSION_30_OPENING.md
+│   │   ├── SESSION_30_RESOURCES.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session-28-plan.md
-│   │   ├── session_28_prompt.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
@@ -356,7 +360,13 @@ Generated: 2025-03-25T22:22:17.037Z
 │   │   │   │   └── page.tsx
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
+│   │   ├── gallery/
+│   │   │   └── [eventId]/
+│   │   │       └── page.tsx
 │   │   ├── invitation/
+│   │   │   ├── [token]/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── rsvp-form.tsx
 │   │   │   └── page.tsx
 │   │   ├── invite/
 │   │   │   └── [token]/
@@ -594,7 +604,7 @@ Generated: 2025-03-25T22:22:17.037Z
 │   │   │   ├── security-form.tsx
 │   │   │   └── subscription-form.tsx
 │   │   ├── gallery/
-│   │   │   ├── .MediaCard.tsx.swp
+│   │   │   ├── .MediaViewer.tsx.swp
 │   │   │   ├── GalleryHeader.tsx
 │   │   │   ├── GalleryLayout.tsx
 │   │   │   ├── GallerySidebar.tsx
@@ -610,6 +620,7 @@ Generated: 2025-03-25T22:22:17.037Z
 │   │   │   ├── gallery-grid.tsx
 │   │   │   ├── gallery-settings-form.tsx
 │   │   │   ├── gallery-tabs.tsx
+│   │   │   ├── guest-upload-dropzone.tsx
 │   │   │   ├── index.ts
 │   │   │   ├── optimized-image.tsx
 │   │   │   ├── photo-lightbox.tsx
@@ -841,7 +852,21 @@ Generated: 2025-03-25T22:22:17.037Z
 │   │   ├── Event Attendees Table Structure.csv
 │   │   ├── Examine Invitations Table Structure.csv
 │   │   ├── Media Table Structure.csv
-│   │   └── Preview of Invitations.csv
+│   │   ├── Preview of Invitations.csv
+│   │   ├── events_rows (1).csv
+│   │   ├── events_rows.csv
+│   │   ├── events_rows_mar_23.csv
+│   │   ├── galleries_rows.csv
+│   │   ├── invitations_rows (1).csv
+│   │   ├── invitations_rows.csv
+│   │   ├── invitations_rows_mar_23.csv
+│   │   ├── profiles_rows (1).csv
+│   │   ├── profiles_rows.csv
+│   │   └── profiles_rows_mar_23.csv
+│   ├── march_27/
+│   │   ├── events_rows.csv
+│   │   ├── galleries_rows.csv
+│   │   └── profiles_rows.csv
 │   ├── may_22/
 │   │   └── events_rows_lucy_50_added.csv
 │   ├── old/
@@ -871,10 +896,7 @@ Generated: 2025-03-25T22:22:17.037Z
 │   │   ├── supabase_logs (3).csv
 │   │   ├── supabase_logs.csv
 │   │   └── supabase_logs_for_one_login.csv
-│   ├── .DS_Store
-│   ├── events_rows_mar_23.csv
-│   ├── invitations_rows_mar_23.csv
-│   └── profiles_rows_mar_23.csv
+│   └── .DS_Store
 ├── .DS_Store
 ├── .gitignore
 ├── .replit
@@ -891,21 +913,22 @@ Generated: 2025-03-25T22:22:17.037Z
 ├── package.json
 ├── postcss.config.js
 ├── postcss.config.mjs
+├── setup_launch_partner.sql
 ├── tailwind.config.ts
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-198 directories, 689 files
+202 directories, 708 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11054 file(s)
-- tsx: 432 file(s)
-- js: 27376 file(s)
-- json: 1894 file(s)
-- md: 1450 file(s)
-- css: 24 file(s)
+- ts: 10968 file(s)
+- tsx: 436 file(s)
+- js: 27560 file(s)
+- json: 1927 file(s)
+- md: 1458 file(s)
+- css: 25 file(s)
 - yml: 157 file(s)
 
 ## Ignored Patterns

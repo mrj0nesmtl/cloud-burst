@@ -1,7 +1,10 @@
 # Cloud Burst: Invitation System Testing Plan
 
 ## Overview
-This document outlines the complete testing workflow for Cloud Burst's invitation system, specifically focusing on event creation, invitation delivery through SendGrid, guest authentication, QR code scanning, gallery access functionality, API endpoint security, and form validation.
+📅 *Last Updated: March 27, 2025*  
+📊 *Version: 0.8.2*
+
+This document outlines the complete testing workflow for Cloud Burst's invitation system, specifically focusing on event creation, invitation delivery through SendGrid, guest authentication, QR code scanning, gallery access functionality, API endpoint security, form validation, and Next.js 14 App Router architecture implementation.
 
 ## Prerequisites
 - Access to a Cloud Burst organizer account
@@ -10,6 +13,7 @@ This document outlines the complete testing workflow for Cloud Burst's invitatio
 - Ideally a second device to display QR codes for testing
 - Access to SendGrid dashboard for delivery verification
 - API testing tools (like Postman) for endpoint validation
+- Testing environment with Next.js 14 App Router configuration
 
 ## Testing Workflow
 
@@ -161,6 +165,30 @@ This document outlines the complete testing workflow for Cloud Burst's invitatio
    - Error recovery mechanisms allow for correction and resubmission
    - Backend logs show appropriate error handling
 
+### Phase 12: Next.js App Router Architecture Testing
+1. Test the client/server component separation:
+   - Verify all interactive components are marked with "use client" directive
+   - Confirm server components are properly handling data fetching
+   - Test that client components don't unnecessarily fetch data in the browser
+2. Test authentication flow in gallery pages:
+   - Verify the session is properly maintained when navigating between pages
+   - Test authentication status is correctly checked on both client and server
+   - Confirm protected routes correctly redirect unauthorized users
+3. Test type mapping between database and UI:
+   - Verify that data from database is correctly mapped to UI components
+   - Ensure enums and other type definitions are consistently used
+   - Check that form submissions correctly map UI data back to database types
+4. Test server-side data fetching:
+   - Verify appropriate use of server actions when needed
+   - Confirm data loading states display correctly
+   - Test error handling during server-side data fetching
+5. **Expected outcome**:
+   - No hydration errors in the console
+   - Authentication state is consistent throughout the application
+   - Type-safe operations without runtime type errors
+   - Optimized data fetching with minimal client-side requests
+   - Proper error boundaries catch and display issues gracefully
+
 ## Error Handling Verification
 Throughout testing, verify these error scenarios:
 - Invalid email address handling (immediate form validation)
@@ -171,6 +199,9 @@ Throughout testing, verify these error scenarios:
 - API rate limiting (clear feedback on waiting period)
 - SendGrid delivery failures (retry mechanism and notification)
 - Permission boundary violations (clear explanation of limitations)
+- Hydration errors from mismatched client/server rendering (should be none)
+- Authentication flow interruptions (proper recovery and retry)
+- Type mismatches between UI and database (proper validation and correction)
 
 ## Bug Reporting Format
 When reporting issues, please include:
@@ -181,8 +212,7 @@ When reporting issues, please include:
 5. Device/browser information
 6. API response details (if applicable)
 7. SendGrid error codes (if related to email delivery)
+8. React component stack trace (if related to rendering issues)
+9. Next.js architecture context (client vs. server component)
 
 ---
-
-*Document version: 2.0*  
-*Last updated: March 25, 2025*

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Info, XCircle, CheckCircle } from 'lucide-react'
 
-import { MediaUpload, MediaCard } from '@/components/gallery'
+import { MediaCard } from '@/components/gallery'
+import { UploadDropzone } from '@/components/gallery/upload-dropzone'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import mediaService from '@/lib/supabase/media'
@@ -72,17 +73,15 @@ export function UploadContent({
           <div className="mb-4 space-y-2">
             <h2 className="text-xl font-semibold">Upload Media</h2>
             <p className="text-muted-foreground">
-              Drag and drop files or click to browse. You can upload up to 100 files at once.
+              Drag and drop files or click to browse. You can upload photos and videos.
             </p>
           </div>
           
-          <MediaUpload
+          <UploadDropzone
             eventId={eventId}
-            userId={userId}
             onUploadComplete={handleUploadComplete}
-            acceptedMediaTypes={[MediaType.PHOTO, MediaType.VIDEO]}
-            maxFileSizeMB={50}
-            maxFiles={100}
+            maxFiles={20}
+            maxSize={50 * 1024 * 1024} // 50MB
           />
         </CardContent>
       </Card>

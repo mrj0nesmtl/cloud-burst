@@ -42,7 +42,7 @@ export function GallerySidebar({
             <Button 
               variant="ghost" 
               className="w-full justify-start"
-              onClick={() => handleNavigation("/gallery/all")}
+              onClick={() => handleNavigation("/protected/gallery")}
             >
               <ImageIcon className="mr-2 h-4 w-4" />
               All Media
@@ -50,7 +50,7 @@ export function GallerySidebar({
             <Button 
               variant="ghost" 
               className="w-full justify-start"
-              onClick={() => handleNavigation("/gallery/albums")}
+              onClick={() => handleNavigation("/protected/gallery/albums")}
             >
               <FolderIcon className="mr-2 h-4 w-4" />
               Albums
@@ -58,7 +58,7 @@ export function GallerySidebar({
             <Button 
               variant="ghost" 
               className="w-full justify-start"
-              onClick={() => handleNavigation("/gallery/events")}
+              onClick={() => handleNavigation("/protected/gallery/events")}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               Events
@@ -74,7 +74,7 @@ export function GallerySidebar({
               <Button 
                 variant="ghost" 
                 className="w-full justify-start"
-                onClick={() => handleNavigation("/gallery/upload")}
+                onClick={() => handleNavigation("/protected/gallery/upload")}
               >
                 <UploadIcon className="mr-2 h-4 w-4" />
                 Upload Media
@@ -82,7 +82,7 @@ export function GallerySidebar({
               <Button 
                 variant="ghost" 
                 className="w-full justify-start"
-                onClick={() => handleNavigation("/gallery/moderate")}
+                onClick={() => handleNavigation("/protected/gallery/moderate")}
               >
                 <ShieldCheckIcon className="mr-2 h-4 w-4" />
                 Moderation
@@ -90,7 +90,7 @@ export function GallerySidebar({
               <Button 
                 variant="ghost" 
                 className="w-full justify-start"
-                onClick={() => handleNavigation("/gallery/settings")}
+                onClick={() => handleNavigation("/protected/gallery/settings")}
               >
                 <SettingsIcon className="mr-2 h-4 w-4" />
                 Gallery Settings
@@ -132,7 +132,7 @@ export function GallerySidebar({
                   key={album.id} 
                   variant="ghost" 
                   className="w-full justify-start"
-                  onClick={() => handleNavigation(`/gallery/albums/${album.id}`)}
+                  onClick={() => handleNavigation(`/protected/gallery/albums/${album.id}`)}
                 >
                   <FolderIcon className="mr-2 h-4 w-4" />
                   {album.name}
@@ -142,7 +142,7 @@ export function GallerySidebar({
                 <Button 
                   variant="ghost" 
                   className="w-full justify-start text-muted-foreground"
-                  onClick={() => handleNavigation("/gallery/albums/create")}
+                  onClick={() => handleNavigation("/protected/gallery/albums/create")}
                 >
                   <PlusCircleIcon className="mr-2 h-4 w-4" />
                   Create Album
@@ -162,7 +162,7 @@ export function GallerySidebar({
                   key={event.id} 
                   variant="ghost" 
                   className="w-full justify-start"
-                  onClick={() => handleNavigation(`/gallery/events/${event.id}`)}
+                  onClick={() => handleNavigation(`/protected/gallery/events/${event.id}`)}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {event.name}

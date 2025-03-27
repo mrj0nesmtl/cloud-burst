@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState, useRef } from "react";
 import { MediaCard, MediaItem, Comment } from "./MediaCard";
 import { MediaStatus } from "@/types/media";

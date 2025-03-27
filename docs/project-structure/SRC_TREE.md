@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-25T22:22:18.261Z
+Generated: 2025-03-27T18:13:19.193Z
 
 ## Overview
 
@@ -120,7 +120,13 @@ Generated: 2025-03-25T22:22:18.261Z
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
 │   │   └── page.tsx
+│   ├── gallery/
+│   │   └── [eventId]/
+│   │       └── page.tsx
 │   ├── invitation/
+│   │   ├── [token]/
+│   │   │   ├── page.tsx
+│   │   │   └── rsvp-form.tsx
 │   │   └── page.tsx
 │   ├── invite/
 │   │   └── [token]/
@@ -358,7 +364,7 @@ Generated: 2025-03-25T22:22:18.261Z
 │   │   ├── security-form.tsx
 │   │   └── subscription-form.tsx
 │   ├── gallery/
-│   │   ├── .MediaCard.tsx.swp
+│   │   ├── .MediaViewer.tsx.swp
 │   │   ├── GalleryHeader.tsx
 │   │   ├── GalleryLayout.tsx
 │   │   ├── GallerySidebar.tsx
@@ -374,6 +380,7 @@ Generated: 2025-03-25T22:22:18.261Z
 │   │   ├── gallery-grid.tsx
 │   │   ├── gallery-settings-form.tsx
 │   │   ├── gallery-tabs.tsx
+│   │   ├── guest-upload-dropzone.tsx
 │   │   ├── index.ts
 │   │   ├── optimized-image.tsx
 │   │   ├── photo-lightbox.tsx
@@ -563,13 +570,13 @@ Generated: 2025-03-25T22:22:18.261Z
 ├── middleware.test.ts
 └── middleware.ts
 
-158 directories, 397 files
+161 directories, 401 files
 
 ```
 
 ## File Type Breakdown
 - ts: 85 file(s)
-- tsx: 293 file(s)
+- tsx: 297 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)
