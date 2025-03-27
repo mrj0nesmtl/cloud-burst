@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,6 +30,23 @@ export function QRCodeDisplay({
   const [qrCodeUrl, setQrCodeUrl] = useState<string>(url || '')
   const [isLoading, setIsLoading] = useState(!url)
   const [isGenerating, setIsGenerating] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  
+  // Check if viewport is mobile size
+  useEffect(() => {
+    const checkMobileView = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    
+    // Initial check
+    checkMobileView();
+    
+    // Listen for resize
+    window.addEventListener('resize', checkMobileView);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobileView);
+  }, []);
   
   // Generate QR code on mount if no URL is provided
   useEffect(() => {
@@ -115,62 +132,142 @@ export function QRCodeDisplay({
     }
   }
   
+  const qrCodeSize = isMobile ? 150 : size;
+  
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <p className="text-sm text-muted-foreground">{description}</p>
+    <Card style={{ 
+      width: '100%', 
+      maxWidth: '400px', 
+      margin: '0 auto',
+      border: '2px solid var(--border)',
+      borderRadius: '8px',
+      overflow: 'hidden',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+    }}>
+      <CardHeader style={{ 
+        padding: '16px',
+        borderBottom: '2px solid var(--border)'
+      }}>
+        <CardTitle style={{ 
+          fontSize: '18px',
+          fontWeight: '600',
+          marginBottom: '4px'
+        }}>{title}</CardTitle>
+        <p style={{ 
+          fontSize: '14px',
+          color: 'var(--muted-foreground)'
+        }}>{description}</p>
       </CardHeader>
       
-      <CardContent className="flex justify-center">
+      <CardContent style={{ 
+        padding: '16px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'var(--background)'
+      }}>
         {isLoading ? (
-          <Skeleton className="w-[300px] h-[300px]" />
+          <Skeleton style={{ 
+            width: `${qrCodeSize}px`, 
+            height: `${qrCodeSize}px`,
+            borderRadius: '8px'
+          }} />
         ) : (
-          <div className="relative w-[300px] h-[300px] bg-white p-4 rounded-lg">
+          <div style={{ 
+            width: `${qrCodeSize}px`,
+            height: `${qrCodeSize}px`,
+            position: 'relative',
+            backgroundColor: 'white',
+            padding: '12px',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            border: '2px solid #e0e0e0'
+          }}>
             <Image
               src={qrCodeUrl}
               alt="QR Code"
               fill
-              className="object-contain"
+              style={{ 
+                objectFit: 'contain'
+              }}
               priority
             />
           </div>
         )}
       </CardContent>
       
-      <CardFooter className="flex justify-between">
+      <CardFooter style={{ 
+        padding: '12px 16px',
+        borderTop: '2px solid var(--border)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: '8px',
+        flexWrap: 'wrap',
+        backgroundColor: 'var(--card)'
+      }}>
         <Button
           variant="outline"
           size="sm"
-          className="flex items-center gap-1"
+          style={{ 
+            height: '36px',
+            padding: '0 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            borderRadius: '6px',
+            border: '1px solid var(--border)',
+            backgroundColor: 'transparent',
+            transition: 'all 0.2s ease'
+          }}
           onClick={handleRegenerate}
           disabled={isGenerating}
         >
-          <RefreshCw className="h-4 w-4" />
-          <span>Regenerate</span>
+          <RefreshCw style={{ height: '14px', width: '14px' }} />
+          <span>{isMobile ? '' : 'Regenerate'}</span>
         </Button>
         
-        <div className="flex gap-2">
+        <div style={{ 
+          display: 'flex', 
+          gap: '8px'
+        }}>
           <Button
             variant="outline"
             size="sm"
-            className="flex items-center gap-1"
+            style={{ 
+              height: '36px',
+              padding: '0 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              borderRadius: '6px',
+              border: '1px solid var(--border)',
+              backgroundColor: 'transparent',
+              transition: 'all 0.2s ease'
+            }}
             onClick={handleDownload}
             disabled={isLoading || !qrCodeUrl}
           >
-            <Download className="h-4 w-4" />
-            <span>Download</span>
+            <Download style={{ height: '14px', width: '14px' }} />
+            <span>{isMobile ? '' : 'Download'}</span>
           </Button>
           
           <Button
             variant="default"
             size="sm"
-            className="flex items-center gap-1"
+            style={{ 
+              height: '36px',
+              padding: '0 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              borderRadius: '6px',
+              transition: 'all 0.2s ease'
+            }}
             onClick={handleShare}
             disabled={isLoading || !qrCodeUrl}
           >
-            <Share2 className="h-4 w-4" />
-            <span>Share</span>
+            <Share2 style={{ height: '14px', width: '14px' }} />
+            <span>{isMobile ? '' : 'Share'}</span>
           </Button>
         </div>
       </CardFooter>

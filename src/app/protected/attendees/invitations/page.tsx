@@ -68,64 +68,157 @@ export default async function ManageInvitationsPage() {
 
   return (
     <Shell>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">All Guest Invitations</h1>
-          <p className="text-muted-foreground">
-            View and manage all invitations across your events
-          </p>
-        </div>
+      <div style={{ marginBottom: '16px' }}>
+        <h1 style={{ 
+          fontSize: '1.5rem', 
+          fontWeight: 'bold', 
+          lineHeight: '1.2', 
+          marginBottom: '8px'
+        }}>
+          All Guest Invitations
+        </h1>
+        <p style={{ 
+          fontSize: '0.875rem', 
+          color: 'var(--muted-foreground)'
+        }}>
+          View and manage all invitations across your events
+        </p>
       </div>
 
-      <Alert className="my-4">
+      <Alert className="my-3 sm:my-4 text-sm">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Recommended Workflow</AlertTitle>
-        <AlertDescription>
+        <AlertTitle className="text-sm font-medium">Recommended Workflow</AlertTitle>
+        <AlertDescription className="text-xs sm:text-sm">
           For the best experience, create invitations directly from the specific event page. 
           This ensures guests are properly associated with the correct event.
         </AlertDescription>
       </Alert>
 
-      <div className="grid gap-4 md:grid-cols-2 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Access</CardTitle>
-            <CardDescription>
+      {/* Apply direct style approach for better mobile layout */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: '1fr',
+        gap: '16px',
+        width: '100%',
+        marginBottom: '24px'
+      }}>
+        <Card style={{ 
+          overflow: 'hidden', 
+          border: '1px solid var(--border)',
+          borderRadius: '8px',
+          width: '100%'
+        }}>
+          <CardHeader style={{ padding: '16px' }}>
+            <CardTitle style={{ 
+              fontSize: '1.125rem', 
+              fontWeight: '600',
+              marginBottom: '4px'
+            }}>
+              Quick Access
+            </CardTitle>
+            <CardDescription style={{ 
+              fontSize: '0.875rem',
+              color: 'var(--muted-foreground)'
+            }}>
               Send invitations from your recent events
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {recentEvents.map(event => (
-                <li key={event.id} className="flex items-center justify-between border-b pb-2">
-                  <div className="flex items-center">
-                    <CalendarDays className="h-4 w-4 mr-2 text-muted-foreground" />
-                    <span>{event.name}</span>
-                  </div>
-                  <Link href={`/protected/events/${event.id}`} passHref>
-                    <Button variant="outline" size="sm">
-                      <Mail className="h-3 w-3 mr-1" />
-                      Invite Guests
-                    </Button>
-                  </Link>
+          <CardContent style={{ padding: '16px', paddingTop: '0' }}>
+            <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {recentEvents.length > 0 ? (
+                recentEvents.map(event => (
+                  <li key={event.id} style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    borderBottom: '1px solid var(--border)',
+                    paddingBottom: '12px',
+                    gap: '8px',
+                    width: '100%'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <CalendarDays style={{ 
+                        height: '16px', 
+                        width: '16px', 
+                        marginRight: '8px', 
+                        color: 'var(--muted-foreground)',
+                        flexShrink: 0 
+                      }} />
+                      <span style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: '500',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        {event.name}
+                      </span>
+                    </div>
+                    <Link href={`/protected/events/${event.id}`} style={{ width: '100%' }} passHref>
+                      <Button variant="outline" size="sm" style={{ 
+                        height: '44px',
+                        width: '100%', 
+                        fontSize: '0.875rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '0 16px'
+                      }}>
+                        <Mail style={{ height: '14px', width: '14px', marginRight: '8px' }} />
+                        Invite Guests
+                      </Button>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li style={{ 
+                  fontSize: '0.875rem', 
+                  color: 'var(--muted-foreground)',
+                  padding: '16px',
+                  textAlign: 'center' 
+                }}>
+                  No recent events found
                 </li>
-              ))}
+              )}
             </ul>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader>
-            <CardTitle>Guest Management</CardTitle>
-            <CardDescription>
+        <Card style={{ 
+          overflow: 'hidden', 
+          border: '1px solid var(--border)',
+          borderRadius: '8px',
+          width: '100%'
+        }}>
+          <CardHeader style={{ padding: '16px' }}>
+            <CardTitle style={{ 
+              fontSize: '1.125rem', 
+              fontWeight: '600',
+              marginBottom: '4px'
+            }}>
+              Guest Management
+            </CardTitle>
+            <CardDescription style={{ 
+              fontSize: '0.875rem',
+              color: 'var(--muted-foreground)'
+            }}>
               This dashboard shows all invitations across all events
             </CardDescription>
           </CardHeader>
-          <CardContent className="prose prose-sm">
-            <p>
+          <CardContent style={{ padding: '16px', paddingTop: '0' }}>
+            <p style={{ 
+              fontSize: '0.875rem',
+              marginBottom: '12px'  
+            }}>
               From this page, you can:
             </p>
-            <ul className="list-disc pl-5 space-y-1">
+            <ul style={{ 
+              listStyleType: 'disc', 
+              paddingLeft: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              fontSize: '0.875rem'
+            }}>
               <li>View invitation status across all events</li>
               <li>Track RSVPs and guest responses</li>
               <li>Manage existing invitations</li>
@@ -135,7 +228,7 @@ export default async function ManageInvitationsPage() {
         </Card>
       </div>
 
-      <Separator className="my-4" />
+      <Separator className="my-3 sm:my-4" />
 
       <InvitationsTable invitations={invitations} />
     </Shell>

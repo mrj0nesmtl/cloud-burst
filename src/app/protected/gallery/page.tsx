@@ -100,8 +100,20 @@ export default function GalleryPage() {
   const [selectedMediaIndex, setSelectedMediaIndex] = useState<number>(-1);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Simulate data fetching
   useEffect(() => {
@@ -213,6 +225,7 @@ export default function GalleryPage() {
           onNavigate={handleNavigation}
         />
       }
+      isPublic={false} // Set to false to keep sidebar functionality for logged-in users
     >
       <MasonryGrid
         items={filteredItems}
@@ -220,6 +233,7 @@ export default function GalleryPage() {
         showComments={true}
         onAddComment={handleAddComment}
         onLike={handleLike}
+        isPublic={isMobile} // Treat as "public" view on mobile for simpler display
       />
       
       {isViewerOpen && selectedMediaIndex >= 0 && (

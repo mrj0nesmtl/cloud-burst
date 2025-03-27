@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Trash, Edit, Share, QrCode, Image, Eye } from 'lucide-react'
+import { Trash, Edit, Share, QrCode, Image, Eye, MoreVertical } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -24,6 +24,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface EventActionsProps {
   eventId: string
@@ -37,10 +43,10 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
   const [isDeleting, setIsDeleting] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   
-  // Check if we're on a mobile device
+  // Check if we're on a mobile device - using 640px (sm) breakpoint
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
+      const checkIfMobile = () => setIsMobile(window.innerWidth < 640)
       checkIfMobile()
       window.addEventListener('resize', checkIfMobile)
       return () => window.removeEventListener('resize', checkIfMobile)
@@ -106,157 +112,185 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
     }
   }
 
-  // Action button with responsive text
-  const ActionButton = ({ 
-    icon: Icon, 
-    label, 
-    onClick, 
-    href, 
-    variant = "outline" 
-  }: { 
-    icon: React.ComponentType<any>, 
-    label: string, 
-    onClick?: () => void, 
-    href?: string,
-    variant?: "outline" | "destructive" | "ghost" | "default" 
-  }) => {
-    const baseButtonStyles = {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '2rem',
-      gap: '0.25rem',
-      padding: '0 0.5rem',
-      fontSize: '0.875rem',
-      fontWeight: '500',
-      borderRadius: '0.375rem',
-      cursor: 'pointer',
-      whiteSpace: 'nowrap' as const,
-      border: variant === 'outline' ? '1px solid var(--border)' : 'none',
-      background: variant === 'destructive' 
-        ? 'var(--destructive)' 
-        : variant === 'default' 
-          ? 'var(--primary)' 
-          : 'transparent',
-      color: variant === 'destructive' 
-        ? 'var(--destructive-foreground)' 
-        : variant === 'default' 
-          ? 'var(--primary-foreground)' 
-          : 'currentColor',
-    }
-    
-    const iconStyles = {
-      height: '1rem',
-      width: '1rem',
-      marginRight: isMobile ? '0' : '0.25rem'
-    }
-    
-    const content = (
-      <button 
-        type="button"
-        onClick={onClick}
-        style={baseButtonStyles}
-      >
-        <Icon style={iconStyles} />
-        {!isMobile && <span>{label}</span>}
-      </button>
+  // Mobile dropdown menu with all actions
+  if (isMobile) {
+    return (
+      <>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="outline" 
+              style={{
+                width: '100%',
+                height: '1.75rem',
+                padding: '0 0.5rem',
+                fontSize: '0.7rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.25rem'
+              }}
+            >
+              <span>Actions</span>
+              <MoreVertical style={{ height: '0.7rem', width: '0.7rem' }} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" style={{ width: '9rem', fontSize: '0.75rem' }}>
+            {mode === 'list' ? (
+              <DropdownMenuItem asChild>
+                <Link href={`/protected/events/${eventId}`} style={{ width: '100%', display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.35rem', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
+                  <Eye style={{ height: '0.7rem', width: '0.7rem' }} />
+                  View Event
+                </Link>
+              </DropdownMenuItem>
+            ) : (
+              <PermissionGate action="update" resource="event" ownerId={organizerId}>
+                <DropdownMenuItem asChild>
+                  <Link href={`/protected/events/${eventId}/edit`} style={{ width: '100%', display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.35rem', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
+                    <Edit style={{ height: '0.7rem', width: '0.7rem' }} />
+                    Edit Event
+                  </Link>
+                </DropdownMenuItem>
+              </PermissionGate>
+            )}
+            
+            <PermissionGate action="read" resource="event">
+              <DropdownMenuItem asChild>
+                <Link href={`/protected/events/${eventId}/qr`} style={{ width: '100%', display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.35rem', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
+                  <QrCode style={{ height: '0.7rem', width: '0.7rem' }} />
+                  QR Code
+                </Link>
+              </DropdownMenuItem>
+            </PermissionGate>
+            
+            <PermissionGate action="read" resource="event">
+              <DropdownMenuItem asChild>
+                <Link href={`/events/${eventId}/gallery`} style={{ width: '100%', display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.35rem', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
+                  <Image style={{ height: '0.7rem', width: '0.7rem' }} />
+                  Gallery
+                </Link>
+              </DropdownMenuItem>
+            </PermissionGate>
+            
+            <PermissionGate action="read" resource="event">
+              <DropdownMenuItem onClick={handleShare} style={{ width: '100%', cursor: 'pointer', display: 'flex', gap: '0.35rem', alignItems: 'center', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
+                <Share style={{ height: '0.7rem', width: '0.7rem' }} />
+                Share
+              </DropdownMenuItem>
+            </PermissionGate>
+            
+            <PermissionGate action="delete" resource="event" ownerId={organizerId}>
+              <DropdownMenuItem 
+                onClick={() => setIsDeleteDialogOpen(true)} 
+                style={{ color: 'var(--destructive)', width: '100%', cursor: 'pointer', display: 'flex', gap: '0.35rem', alignItems: 'center', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}
+              >
+                <Trash style={{ height: '0.7rem', width: '0.7rem' }} />
+                Delete
+              </DropdownMenuItem>
+            </PermissionGate>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        
+        {/* Delete confirmation dialog */}
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the event
+                and all associated data including photos and attendee information.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleDelete} 
+                disabled={isDeleting}
+                className="bg-destructive text-destructive-foreground"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </>
     );
+  }
 
-    // For mobile, provide tooltips since we're hiding text
-    const wrappedContent = (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            {content}
-          </TooltipTrigger>
-          <TooltipContent style={{
-            display: isMobile ? 'block' : 'none',
-            padding: '0.25rem 0.5rem',
-            fontSize: '0.75rem',
-            background: 'var(--popover)',
-            color: 'var(--popover-foreground)',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-            borderRadius: '0.25rem',
-            maxWidth: '12rem',
-            zIndex: 50
-          }}>
-            {label}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    );
-
-    if (href) {
-      return (
-        <Link href={href} style={{ textDecoration: 'none' }}>
-          {wrappedContent}
-        </Link>
-      );
-    }
-
-    return wrappedContent;
-  };
-
+  // Desktop version with individual buttons
   return (
-    <div style={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      gap: '0.5rem',
-      justifyContent: 'flex-end'
+    <div style={{ 
+      display: 'flex', 
+      flexWrap: 'wrap', 
+      alignItems: 'center', 
+      gap: '0.35rem', 
+      justifyContent: 'flex-end',
+      width: '100%'
     }}>
       {/* Edit/View button - In list mode, show View button instead of Edit */}
       {mode === 'list' ? (
-        <ActionButton 
-          icon={Eye} 
-          label="View" 
-          href={`/protected/events/${eventId}`} 
-        />
+        <Button variant="outline" size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
+          <Link href={`/protected/events/${eventId}`}>
+            <Eye style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+            View
+          </Link>
+        </Button>
       ) : (
         <PermissionGate action="update" resource="event" ownerId={organizerId}>
-          <ActionButton 
-            icon={Edit} 
-            label="Edit" 
-            href={`/protected/events/${eventId}/edit`} 
-          />
+          <Button variant="outline" size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
+            <Link href={`/protected/events/${eventId}/edit`}>
+              <Edit style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+              Edit
+            </Link>
+          </Button>
         </PermissionGate>
       )}
       
       {/* QR Code button - visible to all who can view the event */}
       <PermissionGate action="read" resource="event">
-        <ActionButton 
-          icon={QrCode} 
-          label="QR Code" 
-          href={`/protected/events/${eventId}/qr`} 
-        />
+        <Button variant="outline" size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
+          <Link href={`/protected/events/${eventId}/qr`}>
+            <QrCode style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+            QR
+          </Link>
+        </Button>
       </PermissionGate>
       
       {/* View Gallery button - visible to all who can view the event */}
       <PermissionGate action="read" resource="event">
-        <ActionButton 
-          icon={Image} 
-          label="Gallery" 
-          href={`/events/${eventId}/gallery`} 
-        />
+        <Button variant="outline" size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
+          <Link href={`/events/${eventId}/gallery`}>
+            <Image style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+            Gallery
+          </Link>
+        </Button>
       </PermissionGate>
       
       {/* Share button - visible to all who can view the event */}
       <PermissionGate action="read" resource="event">
-        <ActionButton 
-          icon={Share} 
-          label="Share" 
-          onClick={handleShare} 
-        />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleShare}
+          style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}
+        >
+          <Share style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+          Share
+        </Button>
       </PermissionGate>
       
       {/* Delete button - visible only to organizers and admins */}
       <PermissionGate action="delete" resource="event" ownerId={organizerId}>
-        <ActionButton 
-          icon={Trash} 
-          label="Delete" 
+        <Button 
+          variant="outline" 
+          size="sm"
           onClick={() => setIsDeleteDialogOpen(true)} 
-          variant="destructive" 
-        />
+          className="text-destructive hover:bg-destructive/10"
+          style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}
+        >
+          <Trash style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+          Delete
+        </Button>
       </PermissionGate>
       
       {/* Delete confirmation dialog */}
@@ -274,10 +308,7 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
             <AlertDialogAction 
               onClick={handleDelete} 
               disabled={isDeleting}
-              style={{
-                background: 'var(--destructive)',
-                color: 'var(--destructive-foreground)'
-              }}
+              className="bg-destructive text-destructive-foreground"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
