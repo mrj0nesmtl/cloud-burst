@@ -1,13 +1,31 @@
 # Session 30: Implementation Resources
 ## Current Version: 0.8.1
-## Last Updated: March 25, 2025, 7:00 PM
+## Last Updated: March 27, 2025, 9:00 AM
 ## Session: 30 - Gallery Implementation Continuation
 
-This document provides helpful resources, code snippets, and examples for the gallery implementation in Session 30.
+This document provides helpful resources, code snippets, and examples for the gallery implementation in Session 30. As we've confirmed that the database structure is complete but tables are empty, our focus will be on implementing the upload and display components to populate and visualize media content.
+
+## Database Schema Status
+
+Database schema migration is 100% complete. The following tables have been created:
+
+- `media` - Core table for storing photos, videos, and audio
+- `albums` - For organizing media into collections
+- `album_media` - Junction table for associating media with albums
+- `media_upload_tokens` - For tracking guest upload permissions
+
+All appropriate indexes and RLS policies are in place. The tables are currently empty and ready for implementation.
+
+## Implementation Priorities
+
+1. **Upload Components** - To populate the media table
+2. **Display Components** - To visualize the uploaded content
+3. **Album Management** - To organize media
+4. **Guest Upload System** - To allow event attendees to contribute
 
 ## Database Schema
 
-### Media Table
+### Media Table (✅ Implemented)
 
 ```sql
 CREATE TYPE media_type AS ENUM ('photo', 'video', 'audio');
@@ -88,7 +106,7 @@ CREATE INDEX media_upload_tokens_token_idx ON media_upload_tokens(token);
 CREATE INDEX media_upload_tokens_event_id_idx ON media_upload_tokens(event_id);
 ```
 
-### Album Table
+### Album Table (✅ Implemented)
 
 ```sql
 CREATE TABLE albums (
@@ -136,7 +154,7 @@ CREATE POLICY albums_public_policy ON albums
   );
 ```
 
-## TypeScript Interfaces
+## TypeScript Interfaces (✅ Implemented)
 
 ### Media Types
 
@@ -255,9 +273,489 @@ export type AlbumInsert = Database['public']['Tables']['albums']['Insert'];
 export type AlbumUpdate = Database['public']['Tables']['albums']['Update'];
 ```
 
-## Component Examples
+## Priority Implementation Components
 
-### Media Card Component
+### 1. Upload Dropzone Component (Priority)
+
+This should be our first implementation focus to start populating the media table:
+
+```tsx
+// src/components/gallery/upload-dropzone.tsx
+'use client';
+
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { 
+  Upload, 
+  FileUp,
+  AlertCircle, 
+  X,
+  Image as ImageIcon,
+  Film
+} from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/components/ui/use-toast';
+import { uploadMedia } from '@/lib/supabase/media';
+
+// Maximum file size (10MB)
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+// Allowed file types
+const ACCEPTED_FILE_TYPES = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+  'image/webp': ['.webp'],
+  'image/heic': ['.heic'],
+  'video/mp4': ['.mp4'],
+  'video/quicktime': ['.mov'],
+};
+
+interface UploadFile extends File {
+  id: string;
+  preview: string;
+  progress: number;
+  error?: string;
+  uploaded?: boolean;
+}
+
+interface UploadDropzoneProps {
+  eventId: string;
+  albumId?: string;
+  onUploadComplete?: (files: any[]) => void;
+  maxFiles?: number;
+  className?: string;
+}
+
+export function UploadDropzone({
+  eventId,
+  albumId,
+  onUploadComplete,
+  maxFiles = 20,
+  className = '',
+}: UploadDropzoneProps) {
+  const [files, setFiles] = useState<UploadFile[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const { toast } = useToast();
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    // Limit the number of files
+    const totalFiles = files.length + acceptedFiles.length;
+    
+    if (totalFiles > maxFiles) {
+      toast({
+        title: "Too many files",
+        description: `You can only upload a maximum of ${maxFiles} files at once.`,
+        variant: "destructive",
+      });
+      
+      // Only take what we can handle
+      acceptedFiles = acceptedFiles.slice(0, maxFiles - files.length);
+    }
+    
+    // Process accepted files
+    const newFiles = acceptedFiles.map(file => {
+      // Generate preview for images
+      const preview = URL.createObjectURL(file);
+      
+      return {
+        ...file,
+        id: Math.random().toString(36).substring(2, 11),
+        preview,
+        progress: 0,
+      };
+    });
+    
+    setFiles(prev => [...prev, ...newFiles]);
+  }, [files, maxFiles, toast]);
+
+  const { 
+    getRootProps, 
+    getInputProps, 
+    isDragActive,
+    isDragAccept,
+    isDragReject
+  } = useDropzone({
+    onDrop,
+    accept: ACCEPTED_FILE_TYPES,
+    maxSize: MAX_FILE_SIZE,
+    maxFiles: maxFiles - files.length,
+    disabled: isUploading || files.length >= maxFiles,
+  });
+
+  const removeFile = (fileId: string) => {
+    setFiles(prev => {
+      const newFiles = prev.filter(f => f.id !== fileId);
+      const fileToRemove = prev.find(f => f.id === fileId);
+      
+      // Revoke object URL to prevent memory leaks
+      if (fileToRemove?.preview) {
+        URL.revokeObjectURL(fileToRemove.preview);
+      }
+      
+      return newFiles;
+    });
+  };
+
+  const uploadFiles = async () => {
+    if (files.length === 0) return;
+    
+    setIsUploading(true);
+    const uploadedFiles = [];
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      try {
+        // Upload logic with progress tracking
+        const mediaType = file.type.startsWith('video/') ? 'video' : 'photo';
+        
+        // Start upload and track progress
+        await uploadMedia({
+          file,
+          eventId,
+          albumId,
+          mediaType,
+          onProgress: (progress) => {
+            setFiles(prev => prev.map(f => 
+              f.id === file.id ? { ...f, progress } : f
+            ));
+          }
+        });
+        
+        // Mark as uploaded
+        setFiles(prev => prev.map(f => 
+          f.id === file.id ? { ...f, uploaded: true } : f
+        ));
+        
+        // Add to uploaded files
+        uploadedFiles.push(file);
+      } catch (error) {
+        console.error("Upload error:", error);
+        setFiles(prev => prev.map(f => 
+          f.id === file.id ? { ...f, error: 'Failed to upload file' } : f
+        ));
+      }
+    }
+    
+    setIsUploading(false);
+    
+    if (uploadedFiles.length > 0 && onUploadComplete) {
+      onUploadComplete(uploadedFiles);
+    }
+    
+    toast({
+      title: "Upload complete",
+      description: `Successfully uploaded ${uploadedFiles.length} files.`,
+    });
+  };
+
+  return (
+    <div className={cn("space-y-4", className)}>
+      <div 
+        {...getRootProps()} 
+        className={cn(
+          "border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors",
+          isDragActive && !isDragReject && "border-primary bg-primary/10",
+          isDragReject && "border-destructive bg-destructive/10",
+          isUploading && "opacity-50 cursor-not-allowed",
+          (isUploading || files.length >= maxFiles) && "pointer-events-none"
+        )}
+      >
+        <input {...getInputProps()} />
+        
+        <div className="flex flex-col items-center justify-center space-y-3 py-4">
+          {isDragActive ? (
+            <Upload className="h-10 w-10 text-primary animate-bounce" />
+          ) : (
+            <FileUp className="h-10 w-10 text-muted-foreground" />
+          )}
+          
+          <div className="space-y-1 text-center">
+            <p className="text-sm font-medium">
+              {isDragActive 
+                ? isDragAccept 
+                  ? "Drop the files here" 
+                  : "This file type is not supported"
+                : "Drag & drop files here or click to browse"
+              }
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Supported formats: JPG, PNG, WEBP, HEIC, MP4, MOV (up to 10MB)
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              {files.length} / {maxFiles} files selected
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      {files.length > 0 && (
+        <div className="space-y-2">
+          <div className="font-medium text-sm">Upload queue</div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {files.map(file => (
+              <div 
+                key={file.id} 
+                className={cn(
+                  "relative group rounded-md overflow-hidden border",
+                  file.error ? "border-destructive" : "border-border"
+                )}
+              >
+                <div className="aspect-square relative">
+                  <img 
+                    src={file.preview} 
+                    alt={file.name}
+                    className="w-full h-full object-cover"
+                    onLoad={() => URL.revokeObjectURL(file.preview)}
+                  />
+                  
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    {file.type.startsWith('video/') ? (
+                      <Film className="h-8 w-8 text-white" />
+                    ) : (
+                      <ImageIcon className="h-8 w-8 text-white" />
+                    )}
+                  </div>
+                  
+                  {!isUploading && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/50 text-white hover:bg-black/70"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFile(file.id);
+                      }}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  )}
+                  
+                  {isUploading && file.progress < 100 && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1">
+                      <Progress value={file.progress} className="h-1" />
+                    </div>
+                  )}
+                  
+                  {file.uploaded && (
+                    <div className="absolute bottom-1 right-1 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                      Uploaded
+                    </div>
+                  )}
+                </div>
+                
+                <div className="p-2 space-y-1">
+                  <p className="text-xs font-medium truncate">{file.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {(file.size / 1024 / 1024).toFixed(1)} MB
+                  </p>
+                </div>
+                
+                {file.error && (
+                  <div className="absolute inset-0 bg-background/90 flex items-center justify-center p-4">
+                    <div className="text-center space-y-2">
+                      <AlertCircle className="h-6 w-6 text-destructive mx-auto" />
+                      <p className="text-xs text-destructive">{file.error}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          
+          <div className="flex justify-end space-x-2 mt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setFiles([]);
+              }}
+              disabled={isUploading}
+            >
+              Clear All
+            </Button>
+            <Button
+              size="sm"
+              onClick={uploadFiles}
+              disabled={isUploading || files.length === 0}
+            >
+              {isUploading ? 'Uploading...' : 'Upload Files'}
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### 2. Media Upload Implementation
+
+Create the necessary backend functions to handle uploads:
+
+```typescript
+// src/lib/supabase/media.ts
+'use client';
+
+import { v4 as uuidv4 } from 'uuid';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/types/supabase';
+import { Media, MediaType, MediaUploadResult } from '@/types/media';
+import { generateStoragePath } from '@/lib/utils/media-helpers';
+
+interface UploadMediaParams {
+  file: File;
+  eventId: string;
+  albumId?: string;
+  mediaType: MediaType;
+  title?: string;
+  description?: string;
+  onProgress?: (progress: number) => void;
+}
+
+/**
+ * Upload media to Supabase storage and create a record in the media table
+ */
+export async function uploadMedia({
+  file,
+  eventId,
+  albumId,
+  mediaType,
+  title,
+  description,
+  onProgress = () => {},
+}: UploadMediaParams): Promise<MediaUploadResult> {
+  const supabase = createClientComponentClient<Database>();
+  
+  // Get the current user
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) {
+    throw new Error('Authentication required to upload media');
+  }
+  
+  // Generate a unique ID for this media
+  const mediaId = uuidv4();
+  
+  // Generate storage path
+  const storage_path = generateStoragePath(eventId, user.id, file.name, mediaType);
+  
+  // Start upload with progress tracking
+  onProgress(10);
+  
+  // Upload to Supabase Storage
+  const { data: storageData, error: storageError } = await supabase.storage
+    .from('media')
+    .upload(storage_path, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type,
+      duplex: 'half',
+    });
+  
+  if (storageError) {
+    throw new Error(`Error uploading to storage: ${storageError.message}`);
+  }
+  
+  onProgress(60);
+  
+  // Get the public URL
+  const { data: { publicUrl } } = supabase.storage
+    .from('media')
+    .getPublicUrl(storage_path);
+  
+  // Create thumbnail for videos if needed
+  let thumbnailUrl = undefined;
+  if (mediaType === 'video') {
+    // This would be a call to create a thumbnail
+    // For now, we'll use a placeholder
+    thumbnailUrl = '/placeholders/video-thumbnail.jpg';
+  }
+  
+  onProgress(70);
+  
+  // Extract metadata
+  let width = null;
+  let height = null;
+  let duration = null;
+  
+  if (mediaType === 'photo') {
+    // For images, create a temporary URL and get dimensions
+    const img = new Image();
+    const imgPromise = new Promise<void>((resolve) => {
+      img.onload = () => {
+        width = img.width;
+        height = img.height;
+        resolve();
+      };
+      img.onerror = () => {
+        resolve();
+      };
+    });
+    
+    img.src = URL.createObjectURL(file);
+    await imgPromise;
+    URL.revokeObjectURL(img.src);
+  } else if (mediaType === 'video') {
+    // For videos, we would extract dimensions and duration
+    // This would require more complex processing
+    duration = 0; // Placeholder
+  }
+  
+  onProgress(80);
+  
+  // Create record in the media table
+  const { data: mediaData, error: mediaError } = await supabase
+    .from('media')
+    .insert({
+      id: mediaId,
+      event_id: eventId,
+      album_id: albumId || null,
+      user_id: user.id,
+      media_type: mediaType,
+      title: title || file.name,
+      description: description || null,
+      storage_path,
+      original_filename: file.name,
+      content_type: file.type,
+      size_bytes: file.size,
+      width,
+      height,
+      duration,
+      is_approved: false, // Default to unapproved until reviewed
+      is_featured: false,
+      metadata: {},
+      tags: [],
+    })
+    .select()
+    .single();
+  
+  if (mediaError) {
+    // Clean up the storage if media record creation fails
+    await supabase.storage.from('media').remove([storage_path]);
+    throw new Error(`Error creating media record: ${mediaError.message}`);
+  }
+  
+  onProgress(100);
+  
+  // Return the created media with URLs
+  return {
+    media: {
+      ...mediaData,
+      url: publicUrl,
+      thumbnail_url: thumbnailUrl,
+    } as Media,
+    url: publicUrl,
+    thumbnail_url: thumbnailUrl,
+  };
+}
+
+// Other media-related functions will go here
+```
+
+### 3. Media Card Component (For Display)
 
 ```tsx
 // src/components/gallery/MediaCard.tsx
@@ -431,584 +929,14 @@ export function MediaCard({
 }
 ```
 
-### Masonry Grid Component
+## Next Steps
 
-```tsx
-// src/components/gallery/MasonryGrid.tsx
-'use client';
+1. First implement the upload components and test that they properly populate the media table
+2. Add server-side functions for retrieving and displaying media
+3. Implement the masonry layout for viewing uploaded content
+4. Add album management functionality
+5. Implement the guest upload system
 
-import React, { useEffect, useState, useRef } from 'react';
-import { useResizeObserver } from '@/hooks/use-resize-observer';
-import { Media } from '@/types/media';
-import { MediaCard } from './MediaCard';
+## Critical Note
 
-interface MasonryGridProps {
-  items: Media[];
-  columnWidth?: number;
-  gap?: number;
-  className?: string;
-  onMediaSelect?: (media: Media) => void;
-  onMediaView?: (media: Media) => void;
-  selectedItems?: string[];
-  isSelectable?: boolean;
-}
-
-export function MasonryGrid({
-  items,
-  columnWidth = 300,
-  gap = 16,
-  className = '',
-  onMediaSelect,
-  onMediaView,
-  selectedItems = [],
-  isSelectable = false
-}: MasonryGridProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { width: containerWidth } = useResizeObserver(containerRef);
-  const [columns, setColumns] = useState(3);
-
-  // Calculate number of columns based on container width
-  useEffect(() => {
-    if (!containerWidth) return;
-    
-    const calculatedColumns = Math.max(1, Math.floor(containerWidth / columnWidth));
-    setColumns(calculatedColumns);
-  }, [containerWidth, columnWidth]);
-
-  // Distribute items into columns
-  const getColumnItems = () => {
-    const columnItems: Media[][] = Array.from({ length: columns }, () => []);
-    
-    // Simple distribution: assign to shortest column
-    items.forEach((item) => {
-      // Find index of shortest column
-      const columnHeights = columnItems.map(column => 
-        column.reduce((height, media) => {
-          // Calculate approximate height based on aspect ratio
-          const aspectRatio = 
-            media.media_type === 'video' ? 16/9 :
-            (media.width && media.height) ? media.width / media.height : 
-            1; // Default to square if dimensions unknown
-          
-          return height + (columnWidth / aspectRatio) + gap;
-        }, 0)
-      );
-      
-      const shortestColumnIndex = columnHeights.indexOf(Math.min(...columnHeights));
-      columnItems[shortestColumnIndex].push(item);
-    });
-    
-    return columnItems;
-  };
-
-  const columnItems = getColumnItems();
-
-  return (
-    <div 
-      ref={containerRef}
-      className={`w-full ${className}`}
-    >
-      <div 
-        className="flex"
-        style={{ gap: `${gap}px` }}
-      >
-        {columnItems.map((column, columnIndex) => (
-          <div 
-            key={`column-${columnIndex}`}
-            className="flex flex-col"
-            style={{ 
-              gap: `${gap}px`, 
-              width: `${100 / columns}%` 
-            }}
-          >
-            {column.map((item) => (
-              <MediaCard 
-                key={item.id}
-                media={item}
-                aspectRatio="auto"
-                width={columnWidth}
-                onSelect={onMediaSelect}
-                onView={onMediaView}
-                isSelected={selectedItems.includes(item.id)}
-                isSelectable={isSelectable}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Upload Dropzone Component
-
-```tsx
-// src/components/gallery/upload-dropzone.tsx
-'use client';
-
-import React, { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { 
-  Upload, 
-  FileUp,
-  AlertCircle, 
-  X,
-  Image as ImageIcon,
-  Film
-} from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { cn } from '@/lib/utils';
-import { useToast } from '@/components/ui/use-toast';
-
-// Maximum file size (10MB)
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-// Allowed file types
-const ACCEPTED_FILE_TYPES = {
-  'image/jpeg': ['.jpg', '.jpeg'],
-  'image/png': ['.png'],
-  'image/webp': ['.webp'],
-  'image/heic': ['.heic'],
-  'video/mp4': ['.mp4'],
-  'video/quicktime': ['.mov'],
-};
-
-interface UploadFile extends File {
-  id: string;
-  preview: string;
-  progress: number;
-  error?: string;
-  uploaded?: boolean;
-}
-
-interface UploadDropzoneProps {
-  eventId: string;
-  albumId?: string;
-  onUploadComplete?: (files: any[]) => void;
-  maxFiles?: number;
-  className?: string;
-}
-
-export function UploadDropzone({
-  eventId,
-  albumId,
-  onUploadComplete,
-  maxFiles = 20,
-  className = '',
-}: UploadDropzoneProps) {
-  const [files, setFiles] = useState<UploadFile[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
-  const { toast } = useToast();
-
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    // Limit the number of files
-    const totalFiles = files.length + acceptedFiles.length;
-    
-    if (totalFiles > maxFiles) {
-      toast({
-        title: "Too many files",
-        description: `You can only upload a maximum of ${maxFiles} files at once.`,
-        variant: "destructive",
-      });
-      
-      // Only take what we can handle
-      acceptedFiles = acceptedFiles.slice(0, maxFiles - files.length);
-    }
-    
-    // Process accepted files
-    const newFiles = acceptedFiles.map(file => {
-      // Generate preview for images
-      const preview = URL.createObjectURL(file);
-      
-      return {
-        ...file,
-        id: Math.random().toString(36).substring(2, 11),
-        preview,
-        progress: 0,
-      };
-    });
-    
-    setFiles(prev => [...prev, ...newFiles]);
-  }, [files, maxFiles, toast]);
-
-  const { 
-    getRootProps, 
-    getInputProps, 
-    isDragActive,
-    isDragAccept,
-    isDragReject
-  } = useDropzone({
-    onDrop,
-    accept: ACCEPTED_FILE_TYPES,
-    maxSize: MAX_FILE_SIZE,
-    maxFiles: maxFiles - files.length,
-    disabled: isUploading || files.length >= maxFiles,
-  });
-
-  const removeFile = (fileId: string) => {
-    setFiles(prev => {
-      const newFiles = prev.filter(f => f.id !== fileId);
-      const fileToRemove = prev.find(f => f.id === fileId);
-      
-      // Revoke object URL to prevent memory leaks
-      if (fileToRemove?.preview) {
-        URL.revokeObjectURL(fileToRemove.preview);
-      }
-      
-      return newFiles;
-    });
-  };
-
-  const uploadFiles = async () => {
-    if (files.length === 0) return;
-    
-    setIsUploading(true);
-    const uploadedFiles = [];
-    
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      
-      try {
-        // Upload logic will go here
-        await new Promise(resolve => {
-          // Simulate upload progress
-          let progress = 0;
-          const interval = setInterval(() => {
-            progress += 5;
-            setFiles(prev => prev.map(f => 
-              f.id === file.id ? { ...f, progress } : f
-            ));
-            
-            if (progress >= 100) {
-              clearInterval(interval);
-              // Mark as uploaded
-              setFiles(prev => prev.map(f => 
-                f.id === file.id ? { ...f, uploaded: true } : f
-              ));
-              resolve(null);
-            }
-          }, 100);
-        });
-        
-        // Add to uploaded files
-        uploadedFiles.push(file);
-      } catch (error) {
-        console.error("Upload error:", error);
-        setFiles(prev => prev.map(f => 
-          f.id === file.id ? { ...f, error: 'Failed to upload file' } : f
-        ));
-      }
-    }
-    
-    setIsUploading(false);
-    
-    if (uploadedFiles.length > 0 && onUploadComplete) {
-      onUploadComplete(uploadedFiles);
-    }
-    
-    toast({
-      title: "Upload complete",
-      description: `Successfully uploaded ${uploadedFiles.length} files.`,
-    });
-  };
-
-  return (
-    <div className={cn("space-y-4", className)}>
-      <div 
-        {...getRootProps()} 
-        className={cn(
-          "border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors",
-          isDragActive && !isDragReject && "border-primary bg-primary/10",
-          isDragReject && "border-destructive bg-destructive/10",
-          isUploading && "opacity-50 cursor-not-allowed",
-          (isUploading || files.length >= maxFiles) && "pointer-events-none"
-        )}
-      >
-        <input {...getInputProps()} />
-        
-        <div className="flex flex-col items-center justify-center space-y-3 py-4">
-          {isDragActive ? (
-            <Upload className="h-10 w-10 text-primary animate-bounce" />
-          ) : (
-            <FileUp className="h-10 w-10 text-muted-foreground" />
-          )}
-          
-          <div className="space-y-1 text-center">
-            <p className="text-sm font-medium">
-              {isDragActive 
-                ? isDragAccept 
-                  ? "Drop the files here" 
-                  : "This file type is not supported"
-                : "Drag & drop files here or click to browse"
-              }
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Supported formats: JPG, PNG, WEBP, HEIC, MP4, MOV (up to 10MB)
-            </p>
-            <p className="text-xs text-muted-foreground mt-2">
-              {files.length} / {maxFiles} files selected
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      {files.length > 0 && (
-        <div className="space-y-2">
-          <div className="font-medium text-sm">Upload queue</div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {files.map(file => (
-              <div 
-                key={file.id} 
-                className={cn(
-                  "relative group rounded-md overflow-hidden border",
-                  file.error ? "border-destructive" : "border-border"
-                )}
-              >
-                <div className="aspect-square relative">
-                  <img 
-                    src={file.preview} 
-                    alt={file.name}
-                    className="w-full h-full object-cover"
-                    onLoad={() => URL.revokeObjectURL(file.preview)}
-                  />
-                  
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    {file.type.startsWith('video/') ? (
-                      <Film className="h-8 w-8 text-white" />
-                    ) : (
-                      <ImageIcon className="h-8 w-8 text-white" />
-                    )}
-                  </div>
-                  
-                  {!isUploading && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/50 text-white hover:bg-black/70"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeFile(file.id);
-                      }}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  )}
-                  
-                  {isUploading && file.progress < 100 && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1">
-                      <Progress value={file.progress} className="h-1" />
-                    </div>
-                  )}
-                  
-                  {file.uploaded && (
-                    <div className="absolute bottom-1 right-1 bg-primary text-white text-xs px-2 py-1 rounded-full">
-                      Uploaded
-                    </div>
-                  )}
-                </div>
-                
-                <div className="p-2 space-y-1">
-                  <p className="text-xs font-medium truncate">{file.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {(file.size / 1024 / 1024).toFixed(1)} MB
-                  </p>
-                </div>
-                
-                {file.error && (
-                  <div className="absolute inset-0 bg-background/90 flex items-center justify-center p-4">
-                    <div className="text-center space-y-2">
-                      <AlertCircle className="h-6 w-6 text-destructive mx-auto" />
-                      <p className="text-xs text-destructive">{file.error}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          
-          <div className="flex justify-end space-x-2 mt-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setFiles([]);
-              }}
-              disabled={isUploading}
-            >
-              Clear All
-            </Button>
-            <Button
-              size="sm"
-              onClick={uploadFiles}
-              disabled={isUploading || files.length === 0}
-            >
-              {isUploading ? 'Uploading...' : 'Upload Files'}
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-```
-
-## Helper Functions for Media Operations
-
-```typescript
-// src/lib/utils/media-helpers.ts
-
-/**
- * Generate storage path for a media item
- */
-export function generateStoragePath(
-  eventId: string, 
-  userId: string, 
-  fileName: string, 
-  mediaType: 'photo' | 'video' | 'audio' = 'photo'
-): string {
-  const timestamp = new Date().getTime();
-  const fileExt = fileName.split('.').pop();
-  const safeFileName = `${timestamp}-${fileName.replace(/[^a-zA-Z0-9]/g, '-')}`;
-  
-  return `events/${eventId}/${mediaType}s/${userId}/${safeFileName}`;
-}
-
-/**
- * Calculate dimensions for responsive images
- */
-export function calculateResponsiveSize(
-  originalWidth: number, 
-  originalHeight: number, 
-  containerWidth: number
-): { width: number; height: number } {
-  const aspectRatio = originalWidth / originalHeight;
-  
-  const width = Math.min(originalWidth, containerWidth);
-  const height = width / aspectRatio;
-  
-  return { width, height };
-}
-
-/**
- * Generate thumbnail URL from a media item
- */
-export function getThumbnailUrl(
-  mediaId: string, 
-  supabaseUrl: string, 
-  storagePath: string
-): string {
-  // For videos, we'll use a specific thumbnail endpoint
-  if (storagePath.includes('/videos/')) {
-    return `/api/media/${mediaId}/thumbnail`;
-  }
-  
-  // For images, we append a size parameter to the Supabase URL
-  return `${supabaseUrl}/storage/v1/object/public/media/${storagePath}?width=400`;
-}
-
-/**
- * Extract metadata from EXIF data
- */
-export async function extractExifData(file: File): Promise<Record<string, any>> {
-  // This would use a library like exifr in a real implementation
-  // For now, we'll return a placeholder
-  return {
-    exif: {
-      make: 'Unknown',
-      model: 'Unknown',
-      exposureTime: null,
-      fNumber: null,
-      iso: null,
-      focalLength: null,
-      timestamp: new Date().toISOString(),
-    }
-  };
-}
-```
-
-## Migration Script Example
-
-```typescript
-// src/scripts/migrate-photos-to-media.ts
-
-import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing Supabase credentials');
-  process.exit(1);
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-async function migratePhotosToMedia() {
-  console.log('Starting migration...');
-  
-  // Get all photos
-  const { data: photos, error } = await supabase
-    .from('photos')
-    .select('*');
-    
-  if (error) {
-    console.error('Error fetching photos:', error);
-    process.exit(1);
-  }
-  
-  console.log(`Found ${photos.length} photos to migrate`);
-  
-  // Process each photo
-  for (const photo of photos) {
-    console.log(`Migrating photo ${photo.id}`);
-    
-    try {
-      // Insert into new media table
-      const { data, error: insertError } = await supabase
-        .from('media')
-        .insert({
-          id: photo.id, // Preserve the same ID
-          event_id: photo.event_id,
-          user_id: photo.uploaded_by,
-          media_type: 'photo',
-          title: null,
-          description: null,
-          storage_path: photo.storage_path,
-          original_filename: photo.filename,
-          content_type: photo.metadata?.mime_type || 'image/jpeg',
-          size_bytes: photo.metadata?.size || 0,
-          width: photo.metadata?.width || null,
-          height: photo.metadata?.height || null,
-          is_approved: photo.is_approved,
-          is_featured: false,
-          metadata: photo.metadata || {},
-          tags: [],
-          created_at: photo.created_at,
-          updated_at: photo.updated_at || photo.created_at,
-        })
-        .select();
-        
-      if (insertError) {
-        console.error(`Error migrating photo ${photo.id}:`, insertError);
-        continue;
-      }
-      
-      console.log(`Successfully migrated photo ${photo.id} to media ${data[0].id}`);
-    } catch (e) {
-      console.error(`Exception migrating photo ${photo.id}:`, e);
-    }
-  }
-  
-  console.log('Migration completed');
-}
-
-migratePhotosToMedia().catch(console.error);
-```
-
-These resources should provide a strong foundation for implementing the gallery features in Session 30. 
+Since our tables are empty, it's important to create a robust upload functionality first, then build the display components to show the uploaded content. By following this order, we can incrementally build and test the entire gallery system. 
