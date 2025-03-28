@@ -16,6 +16,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
+- Guest Onboarding & RSVP Flow implementation
+- Magic Link authentication for guests
+- RSVP form with preference collection
+- Enhanced Analytics dashboard
+- Advanced camera integration for QR code scanning
+
+## [0.8.3] - 2025-04-15
+### Added in Session 31 (March 27, 2025)
+- **Mobile Responsive Optimization**:
+  - Implemented mobile-first responsive design across dashboard pages
+  - Created responsive stacking for Gallery Event Cards
+  - Enhanced touch targets for better mobile interaction
+  - Added viewport detection for adaptive layouts
+  - Implemented responsive Masonry Grid for gallery views
+  - Created API endpoint for gallery events data
+
+### Fixed in Session 31 (March 27, 2025)
+- **Mobile Layout Improvements**:
+  - Fixed overflow issues in Gallery (All Media) page
+  - Resolved layout inconsistencies in mobile views
+  - Enhanced responsive design of event details pages
+  - Fixed runtime errors in gallery components
+  - Improved tab navigation on mobile devices
+  - Resolved TypeScript linting errors for D3.js and Supabase libraries
+  - Fixed client/server component separation in gallery pages
+  - Enhanced QR code display for mobile devices
+
+### Changed in Session 31 (March 27, 2025)
+- **User Experience Enhancements**:
+  - Improved mobile navigation patterns
+  - Enhanced dashboard card layout for smaller screens
+  - Optimized form layouts for touch interaction
+  - Simplified interaction patterns for mobile users
+  - Improved scrolling experience on long pages
+
+### Documentation
+- Added SESSION_31_CHECKLIST.md with mobile responsiveness focus
+- Created comprehensive planning for Session 32
+- Updated roadmap with timelines for Guest Onboarding & RSVP Flow
+- Enhanced developer documentation for responsive design patterns
 
 ## [0.8.2] - 2025-03-27
 ### Fixed in Session 30 (March 27, 2025)

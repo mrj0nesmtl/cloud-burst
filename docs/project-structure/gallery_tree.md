@@ -1,5 +1,5 @@
 # gallery Directory Structure
-Generated: 2025-03-27T18:13:25.856Z
+Generated: 2025-03-28T02:28:54.795Z
 
 ## Overview
 This directory contains 19 component(s).
@@ -8,7 +8,6 @@ This directory contains 19 component(s).
 ## Directory Tree
 ```
 ./src/components/gallery/
-├── .MediaViewer.tsx.swp
 ├── GalleryHeader.tsx
 ├── GalleryLayout.tsx
 ├── GallerySidebar.tsx
@@ -31,7 +30,7 @@ This directory contains 19 component(s).
 ├── upload-dropzone.tsx
 └── upload-with-tags.tsx
 
-1 directory, 22 files
+1 directory, 21 files
 
 ```
 

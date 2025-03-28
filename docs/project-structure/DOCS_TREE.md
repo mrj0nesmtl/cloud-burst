@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-27T18:13:19.487Z
+Generated: 2025-03-28T02:28:50.872Z
 
 ## Overview
 
@@ -43,6 +43,15 @@ Generated: 2025-03-27T18:13:19.487Z
 │   │   ├── SESSION_28_RESOURCES.md
 │   │   ├── SESSION_29_CHECKLIST.md
 │   │   ├── SESSION_29_NARRATIVE.md
+│   │   ├── SESSION_30_CHECKLIST.md
+│   │   ├── SESSION_30_CLOSING.md
+│   │   ├── SESSION_30_KICKOFF.md
+│   │   ├── SESSION_30_OPENING.md
+│   │   ├── SESSION_30_RESOURCES.md
+│   │   ├── SESSION_31_CHECKLIST.md
+│   │   ├── SESSION_31_KICKOFF_PROMPT.md
+│   │   ├── SESSION_31_NARRATIVE.md
+│   │   ├── SESSION_31_RESOURCES.md
 │   │   ├── session-28-plan.md
 │   │   ├── session_1.md
 │   │   ├── session_10.md
@@ -84,11 +93,10 @@ Generated: 2025-03-27T18:13:19.487Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
-│   ├── SESSION_30_CHECKLIST.md
-│   ├── SESSION_30_CLOSING.md
-│   ├── SESSION_30_KICKOFF.md
-│   ├── SESSION_30_OPENING.md
-│   ├── SESSION_30_RESOURCES.md
+│   ├── SESSION_32_CHECKLIST.md
+│   ├── SESSION_32_KICKOFF.md
+│   ├── SESSION_32_NARRATIVE.md
+│   ├── SESSION_32_RESOURCES.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
@@ -143,12 +151,12 @@ Generated: 2025-03-27T18:13:19.487Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 125 files
+10 directories, 133 files
 
 ```
 
 ## File Type Breakdown
-- md: 120 file(s)
+- md: 128 file(s)
 
 ## Ignored Patterns
 - node_modules

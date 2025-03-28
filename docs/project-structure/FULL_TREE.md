@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-27T18:13:18.435Z
+Generated: 2025-03-28T02:28:49.683Z
 
 ## Overview
 
@@ -80,6 +80,15 @@ Generated: 2025-03-27T18:13:18.435Z
 │   │   │   ├── SESSION_28_RESOURCES.md
 │   │   │   ├── SESSION_29_CHECKLIST.md
 │   │   │   ├── SESSION_29_NARRATIVE.md
+│   │   │   ├── SESSION_30_CHECKLIST.md
+│   │   │   ├── SESSION_30_CLOSING.md
+│   │   │   ├── SESSION_30_KICKOFF.md
+│   │   │   ├── SESSION_30_OPENING.md
+│   │   │   ├── SESSION_30_RESOURCES.md
+│   │   │   ├── SESSION_31_CHECKLIST.md
+│   │   │   ├── SESSION_31_KICKOFF_PROMPT.md
+│   │   │   ├── SESSION_31_NARRATIVE.md
+│   │   │   ├── SESSION_31_RESOURCES.md
 │   │   │   ├── session-28-plan.md
 │   │   │   ├── session_1.md
 │   │   │   ├── session_10.md
@@ -121,11 +130,10 @@ Generated: 2025-03-27T18:13:18.435Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
-│   │   ├── SESSION_30_CHECKLIST.md
-│   │   ├── SESSION_30_CLOSING.md
-│   │   ├── SESSION_30_KICKOFF.md
-│   │   ├── SESSION_30_OPENING.md
-│   │   ├── SESSION_30_RESOURCES.md
+│   │   ├── SESSION_32_CHECKLIST.md
+│   │   ├── SESSION_32_KICKOFF.md
+│   │   ├── SESSION_32_NARRATIVE.md
+│   │   ├── SESSION_32_RESOURCES.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
@@ -300,6 +308,9 @@ Generated: 2025-03-27T18:13:18.435Z
 │   │   │   │       └── route.ts
 │   │   │   ├── extract-colors/
 │   │   │   │   └── route.ts
+│   │   │   ├── galleries/
+│   │   │   │   └── events/
+│   │   │   │       └── route.ts
 │   │   │   ├── invitations/
 │   │   │   │   ├── bulk-create/
 │   │   │   │   │   └── route.ts
@@ -487,6 +498,7 @@ Generated: 2025-03-27T18:13:18.435Z
 │   │   │   │   │   │   ├── settings/
 │   │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── page-metadata.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── moderate/
 │   │   │   │   │   └── page.tsx
@@ -604,7 +616,6 @@ Generated: 2025-03-27T18:13:18.435Z
 │   │   │   ├── security-form.tsx
 │   │   │   └── subscription-form.tsx
 │   │   ├── gallery/
-│   │   │   ├── .MediaViewer.tsx.swp
 │   │   │   ├── GalleryHeader.tsx
 │   │   │   ├── GalleryLayout.tsx
 │   │   │   ├── GallerySidebar.tsx
@@ -800,7 +811,6 @@ Generated: 2025-03-27T18:13:18.435Z
 │   │   ├── auth.ts
 │   │   ├── events.ts
 │   │   ├── gallery.ts
-│   │   ├── invisation.ts
 │   │   ├── invitations.ts
 │   │   ├── media.ts
 │   │   ├── notifications.ts
@@ -918,18 +928,18 @@ Generated: 2025-03-27T18:13:18.435Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-202 directories, 708 files
+204 directories, 716 files
 
 ```
 
 ## File Type Breakdown
-- ts: 10968 file(s)
-- tsx: 436 file(s)
-- js: 27560 file(s)
-- json: 1927 file(s)
-- md: 1458 file(s)
+- ts: 11650 file(s)
+- tsx: 437 file(s)
+- js: 27629 file(s)
+- json: 2006 file(s)
+- md: 1456 file(s)
 - css: 25 file(s)
-- yml: 157 file(s)
+- yml: 164 file(s)
 
 ## Ignored Patterns
 - node_modules

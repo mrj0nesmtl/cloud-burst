@@ -1,5 +1,5 @@
 # components Directory Structure
-Generated: 2025-03-27T18:13:25.626Z
+Generated: 2025-03-28T02:28:54.545Z
 
 ## Overview
 This directory contains 156 component(s).
@@ -66,7 +66,6 @@ This directory contains 156 component(s).
 │   ├── security-form.tsx
 │   └── subscription-form.tsx
 ├── gallery/
-│   ├── .MediaViewer.tsx.swp
 │   ├── GalleryHeader.tsx
 │   ├── GalleryLayout.tsx
 │   ├── GallerySidebar.tsx
@@ -189,7 +188,7 @@ This directory contains 156 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-19 directories, 162 files
+19 directories, 161 files
 
 ```
 
