@@ -11,9 +11,15 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card"
-import { Calendar, MapPin, Users, Plus, Clock, Badge as BadgeIcon, Edit, QrCode, Share, Trash2, Image } from 'lucide-react'
+import { Calendar, MapPin, Users, Plus, Clock, Badge as BadgeIcon, Edit, QrCode, Share, Trash2, Image, CheckCircle, ListFilter, FileText, AlertTriangle, X } from 'lucide-react'
 import { EventActions } from '@/components/events/event-actions'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export const metadata = {
   title: 'Manage Events | Cloud Burst',
@@ -133,471 +139,652 @@ export default async function ManageEventsPage() {
   
   return (
     <div style={{ 
-      width: '100%', 
-      padding: '1.5rem 1rem',
-      display: 'flex', 
-      flexDirection: 'column', 
-      gap: '1.5rem' 
+      padding: '0.5rem', 
+      maxWidth: '100%', 
+      overflowX: 'hidden',
+      boxSizing: 'border-box'
     }}>
-      {/* Header section */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '1rem'
+      {/* Enhanced header card */}
+      <Card style={{ 
+        marginBottom: '0.75rem', 
+        width: '100%',
+        overflow: 'hidden',
+        border: '1px solid var(--border)',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
       }}>
-        <div>
-          <h1 style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: '700', 
-            marginBottom: '0.5rem',
-            lineHeight: '1.2'
-          }}>
-            Manage Events
-          </h1>
-          <p style={{ 
-            color: 'var(--muted-foreground)', 
-            fontSize: '0.9rem'
-          }}>
-            View and manage all your photography events
-          </p>
-        </div>
-        
-        <Button asChild style={{
-          height: '2.5rem',
-          whiteSpace: 'nowrap'
+        <CardContent style={{ 
+          padding: '0.75rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem'
         }}>
-          <Link href="/protected/events/create">
-            <Plus style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
-            Create Event
-          </Link>
-        </Button>
-      </div>
-      
-      {/* Stats cards */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-        gap: '1rem',
-      }}>
-        <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
-          <CardHeader style={{ 
-            display: 'flex', 
-            flexDirection: 'row', 
-            alignItems: 'center', 
-            justifyContent: 'space-between',
-            padding: '1rem 1rem 0.5rem'
+          {/* Title and description with improved styling */}
+          <div style={{ marginBottom: '0.5rem' }}>
+            <h1 style={{ 
+              fontSize: '1.25rem', 
+              fontWeight: '700', 
+              marginTop: 0,
+              marginBottom: '0.25rem' 
+            }}>Manage Events</h1>
+            <p style={{ 
+              color: 'var(--muted-foreground)', 
+              fontSize: '0.75rem',
+              margin: 0 
+            }}>View and manage all your photography events</p>
+          </div>
+          
+          {/* Stats Grid - Enhanced with better visuals */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))',
+            gap: '0.5rem',
+            width: '100%'
           }}>
-            <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Total Events</CardTitle>
-            <Calendar style={{ height: '1rem', width: '1rem', color: 'var(--muted-foreground)' }} />
-          </CardHeader>
-          <CardContent style={{ padding: '0 1rem 1rem' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{processedEvents.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
-          <CardHeader style={{ 
-            display: 'flex', 
-            flexDirection: 'row', 
-            alignItems: 'center', 
-            justifyContent: 'space-between',
-            padding: '1rem 1rem 0.5rem'
-          }}>
-            <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Active Events</CardTitle>
-            <BadgeIcon style={{ height: '1rem', width: '1rem', color: 'var(--muted-foreground)' }} />
-          </CardHeader>
-          <CardContent style={{ padding: '0 1rem 1rem' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{publishedEvents.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
-          <CardHeader style={{ 
-            display: 'flex', 
-            flexDirection: 'row', 
-            alignItems: 'center', 
-            justifyContent: 'space-between',
-            padding: '1rem 1rem 0.5rem'
-          }}>
-            <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Draft Events</CardTitle>
-            <Clock style={{ height: '1rem', width: '1rem', color: 'var(--muted-foreground)' }} />
-          </CardHeader>
-          <CardContent style={{ padding: '0 1rem 1rem' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{draftEvents.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
-          <CardHeader style={{ 
-            display: 'flex', 
-            flexDirection: 'row', 
-            alignItems: 'center', 
-            justifyContent: 'space-between',
-            padding: '1rem 1rem 0.5rem'
-          }}>
-            <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Total Attendees</CardTitle>
-            <Users style={{ height: '1rem', width: '1rem', color: 'var(--muted-foreground)' }} />
-          </CardHeader>
-          <CardContent style={{ padding: '0 1rem 1rem' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>
-              {processedEvents.reduce((total, event) => total + event.attendeeCount, 0)}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              background: 'var(--background)',
+              borderRadius: '0.5rem',
+              border: '1px solid var(--border)',
+              padding: '0.75rem',
+              transition: 'all 0.2s ease',
+              position: 'relative',
+              overflow: 'hidden'
+            }} className="group">
+              <div style={{
+                display: 'flex', 
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '0.5rem'
+              }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: '500', color: 'var(--muted-foreground)' }}>
+                  Total Events
+                </span>
+                <Calendar style={{ height: '0.8rem', width: '0.8rem', color: 'var(--muted-foreground)' }} className="group-hover:text-primary transition-colors" />
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{processedEvents.length}</div>
+              <span className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderRadius: '0.5rem' }}></span>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              background: 'var(--background)',
+              borderRadius: '0.5rem',
+              border: '1px solid var(--border)',
+              padding: '0.75rem',
+              transition: 'all 0.2s ease',
+              position: 'relative',
+              overflow: 'hidden'
+            }} className="group">
+              <div style={{
+                display: 'flex', 
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '0.5rem'
+              }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: '500', color: 'var(--muted-foreground)' }}>
+                  Active Events
+                </span>
+                <BadgeIcon style={{ height: '0.8rem', width: '0.8rem', color: 'var(--muted-foreground)' }} className="group-hover:text-primary transition-colors" />
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{publishedEvents.length}</div>
+              <span className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderRadius: '0.5rem' }}></span>
+            </div>
+            
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              background: 'var(--background)',
+              borderRadius: '0.5rem',
+              border: '1px solid var(--border)',
+              padding: '0.75rem',
+              transition: 'all 0.2s ease',
+              position: 'relative',
+              overflow: 'hidden'
+            }} className="group">
+              <div style={{
+                display: 'flex', 
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '0.5rem'
+              }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: '500', color: 'var(--muted-foreground)' }}>
+                  Total Attendees
+                </span>
+                <Users style={{ height: '0.8rem', width: '0.8rem', color: 'var(--muted-foreground)' }} className="group-hover:text-primary transition-colors" />
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>
+                {Object.values(attendeeCounts).reduce((total, count) => total + count, 0)}
+              </div>
+              <span className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderRadius: '0.5rem' }}></span>
+            </div>
+          </div>
+
+          {/* Action button for Create Event */}
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '0.25rem' }}>
+            <Button 
+              className="group"
+              style={{
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.35rem',
+                height: '2.25rem',
+                fontWeight: '500',
+                transition: 'all 0.2s ease'
+              }}
+              asChild
+            >
+              <Link href="/protected/events/create">
+                <Plus size={16} className="group-hover:scale-110 transition-transform" />
+                Create New Event
+              </Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
       
-      {/* Status filter tabs */}
-      <Tabs defaultValue="all" style={{ marginTop: '1rem' }}>
+      {/* Tabs - Enhanced mobile scrolling with icons */}
+      <Tabs defaultValue="all" style={{ marginTop: '0.75rem' }}>
         <TabsList style={{ 
-          justifyContent: 'flex-start', 
+          justifyContent: 'space-around', 
           backgroundColor: 'var(--background)',
           borderBottom: '1px solid var(--border)',
-          padding: '0',
-          marginBottom: '1rem'
+          padding: '0.5rem',
+          marginBottom: '0.5rem',
+          overflowX: 'auto',
+          whiteSpace: 'nowrap',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+          fontSize: '0.75rem',
+          width: '100%',
+          display: 'flex',
+          WebkitOverflowScrolling: 'touch',
+          gap: '0.5rem'
         }}>
-          <TabsTrigger value="all" style={{ position: 'relative' }}>
-            All Events ({processedEvents.length})
-          </TabsTrigger>
-          <TabsTrigger value="published" style={{ position: 'relative' }}>
-            Published ({publishedEvents.length})
-          </TabsTrigger>
-          <TabsTrigger value="draft" style={{ position: 'relative' }}>
-            Draft ({draftEvents.length})
-          </TabsTrigger>
-          <TabsTrigger value="completed" style={{ position: 'relative' }}>
-            Completed ({completedEvents.length})
-          </TabsTrigger>
-          <TabsTrigger value="cancelled" style={{ position: 'relative' }}>
-            Cancelled ({cancelledEvents.length})
-          </TabsTrigger>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <TabsTrigger value="all" style={{ 
+                  padding: '0.5rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  minWidth: '2.5rem',
+                  height: '2.5rem',
+                  borderRadius: '50%',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'all 0.2s ease',
+                  backgroundColor: 'var(--card)'
+                }} className="group">
+                  <ListFilter 
+                    size={18} 
+                    style={{
+                      position: 'relative',
+                      zIndex: 1,
+                      transition: 'color 0.2s ease'
+                    }} 
+                    className="text-foreground group-hover:text-primary"
+                  />
+                  {processedEvents.length > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '0',
+                      right: '0',
+                      backgroundColor: 'var(--primary)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '1rem',
+                      height: '1rem',
+                      fontSize: '0.6rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: 2
+                    }}>
+                      {processedEvents.length}
+                    </span>
+                  )}
+                  <span 
+                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
+                    style={{ borderRadius: '50%' }}
+                  ></span>
+                </TabsTrigger>
+              </TooltipTrigger>
+              <TooltipContent>All ({processedEvents.length})</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <TabsTrigger value="published" style={{ 
+                  padding: '0.5rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  minWidth: '2.5rem',
+                  height: '2.5rem',
+                  borderRadius: '50%',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'all 0.2s ease',
+                  backgroundColor: 'var(--card)'
+                }} className="group">
+                  <CheckCircle 
+                    size={18} 
+                    style={{
+                      position: 'relative',
+                      zIndex: 1,
+                      transition: 'color 0.2s ease'
+                    }} 
+                    className="text-foreground group-hover:text-primary"
+                  />
+                  {publishedEvents.length > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '0',
+                      right: '0',
+                      backgroundColor: 'var(--primary)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '1rem',
+                      height: '1rem',
+                      fontSize: '0.6rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: 2
+                    }}>
+                      {publishedEvents.length}
+                    </span>
+                  )}
+                  <span 
+                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
+                    style={{ borderRadius: '50%' }}
+                  ></span>
+                </TabsTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Published ({publishedEvents.length})</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <TabsTrigger value="draft" style={{ 
+                  padding: '0.5rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  minWidth: '2.5rem',
+                  height: '2.5rem',
+                  borderRadius: '50%',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'all 0.2s ease',
+                  backgroundColor: 'var(--card)'
+                }} className="group">
+                  <FileText 
+                    size={18} 
+                    style={{
+                      position: 'relative',
+                      zIndex: 1,
+                      transition: 'color 0.2s ease'
+                    }} 
+                    className="text-foreground group-hover:text-primary"
+                  />
+                  {draftEvents.length > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '0',
+                      right: '0',
+                      backgroundColor: 'var(--primary)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '1rem',
+                      height: '1rem',
+                      fontSize: '0.6rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: 2
+                    }}>
+                      {draftEvents.length}
+                    </span>
+                  )}
+                  <span 
+                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
+                    style={{ borderRadius: '50%' }}
+                  ></span>
+                </TabsTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Draft ({draftEvents.length})</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <TabsTrigger value="completed" style={{ 
+                  padding: '0.5rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  minWidth: '2.5rem',
+                  height: '2.5rem',
+                  borderRadius: '50%',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'all 0.2s ease',
+                  backgroundColor: 'var(--card)'
+                }} className="group">
+                  <Clock 
+                    size={18} 
+                    style={{
+                      position: 'relative',
+                      zIndex: 1,
+                      transition: 'color 0.2s ease'
+                    }} 
+                    className="text-foreground group-hover:text-primary"
+                  />
+                  {completedEvents.length > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '0',
+                      right: '0',
+                      backgroundColor: 'var(--primary)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '1rem',
+                      height: '1rem',
+                      fontSize: '0.6rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: 2
+                    }}>
+                      {completedEvents.length}
+                    </span>
+                  )}
+                  <span 
+                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
+                    style={{ borderRadius: '50%' }}
+                  ></span>
+                </TabsTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Completed ({completedEvents.length})</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <TabsTrigger value="cancelled" style={{ 
+                  padding: '0.5rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  minWidth: '2.5rem',
+                  height: '2.5rem',
+                  borderRadius: '50%',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'all 0.2s ease',
+                  backgroundColor: 'var(--card)'
+                }} className="group">
+                  <X 
+                    size={18} 
+                    style={{
+                      position: 'relative',
+                      zIndex: 1,
+                      transition: 'color 0.2s ease'
+                    }} 
+                    className="text-foreground group-hover:text-primary"
+                  />
+                  {cancelledEvents.length > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '0',
+                      right: '0',
+                      backgroundColor: 'var(--destructive)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '1rem',
+                      height: '1rem',
+                      fontSize: '0.6rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: 2
+                    }}>
+                      {cancelledEvents.length}
+                    </span>
+                  )}
+                  <span 
+                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
+                    style={{ borderRadius: '50%' }}
+                  ></span>
+                </TabsTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Cancelled ({cancelledEvents.length})</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </TabsList>
         
-        {/* All Events Tab */}
+        {/* All Events Tab - Improved card layout for narrow screens */}
         <TabsContent value="all">
-          <div style={{ marginTop: '1rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
-              Your Events
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {processedEvents.length > 0 ? (
-                processedEvents.map((event) => (
-                  <Link 
-                    key={event.id} 
-                    href={`/protected/events/${event.id}`}
-                    style={{ textDecoration: 'none', cursor: 'pointer' }}
+          <div style={{ 
+            display: 'grid', 
+            gap: '0.5rem',
+            gridTemplateColumns: '1fr',
+            maxWidth: '100%' 
+          }}>
+            {processedEvents.length > 0 ? (
+              processedEvents.map((event) => (
+                <Link 
+                  href={`/protected/events/${event.id}`} 
+                  key={event.id}
+                  style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}
+                >
+                  <div 
+                    style={{
+                      borderRadius: '0.5rem', 
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      backgroundColor: 'var(--card)',
+                      padding: '0.5rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.5rem',
+                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+                      width: '100%',
+                      maxWidth: '100%',
+                      boxSizing: 'border-box',
+                      overflowWrap: 'break-word'
+                    }}
+                    className="hover:shadow-md hover:border-primary/20"
                   >
-                    <div 
-                      style={{
-                        borderRadius: '0.5rem', 
-                        border: '1px solid #e2e8f0',
-                        backgroundColor: 'var(--card)',
-                        padding: '1.25rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1rem',
-                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
-                      }}
-                      className="hover:shadow-md hover:border-primary/20"
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                            </div>
-                            {event.location && (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
-                              </div>
-                            )}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
-                            </div>
-                          </div>
+                    <div style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      gap: '0.35rem',
+                      width: '100%'
+                    }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        flexWrap: 'wrap',
+                        gap: '0.35rem',
+                        width: '100%'
+                      }}>
+                        <h3 style={{ 
+                          fontSize: '1rem', 
+                          fontWeight: '600', 
+                          marginBottom: '0.15rem',
+                          wordBreak: 'break-word',
+                          maxWidth: '100%'
+                        }}>{event.name}</h3>
+                        {getStatusBadge(event.status || '')}
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
+                          <Calendar style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
+                          <span style={{ 
+                            fontSize: '0.7rem', 
+                            overflow: 'hidden', 
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
+                          }}>{formatDate(event.date || '')}</span>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                          {getStatusBadge(event.status || '')}
-                          <EventActions eventId={event.id} mode="list" />
+                        {event.location && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
+                            <MapPin style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
+                            <span style={{ 
+                              fontSize: '0.7rem', 
+                              overflow: 'hidden', 
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              maxWidth: '200px'
+                            }}>{event.location}</span>
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
+                          <Users style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
+                          <span style={{ fontSize: '0.7rem' }}>{event.attendeeCount} attendees</span>
                         </div>
                       </div>
+                      <div style={{ 
+                        marginTop: '0.35rem',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        width: '100%'
+                      }}>
+                        <EventActions eventId={event.id} mode="list" />
+                      </div>
                     </div>
-                  </Link>
-                ))
-              ) : (
-                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
-                  No events found. Create your first event to get started.
-                </div>
-              )}
-            </div>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div style={{
+                padding: '1rem',
+                textAlign: 'center',
+                backgroundColor: 'var(--background)',
+                borderRadius: '0.5rem',
+                color: 'var(--muted-foreground)'
+              }}>
+                No events found. <Link href="/protected/events/create" style={{ color: 'var(--primary)' }}>Create your first event</Link>
+              </div>
+            )}
           </div>
         </TabsContent>
-        
-        {/* Published Events Tab */}
+
+        {/* Published Events Tab - Also improved for narrower screens */}
         <TabsContent value="published">
-          <div style={{ marginTop: '1rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
-              Published Events
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {publishedEvents.length > 0 ? (
-                publishedEvents.map((event) => (
-                  <Link 
-                    key={event.id} 
-                    href={`/protected/events/${event.id}`}
-                    style={{ textDecoration: 'none', cursor: 'pointer' }}
+          <div style={{ 
+            display: 'grid', 
+            gap: '0.5rem',
+            gridTemplateColumns: '1fr',
+            maxWidth: '100%'
+          }}>
+            {publishedEvents.length > 0 ? (
+              publishedEvents.map((event) => (
+                <Link 
+                  href={`/protected/events/${event.id}`} 
+                  key={event.id}
+                  style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}
+                >
+                  <div 
+                    style={{
+                      borderRadius: '0.5rem', 
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      backgroundColor: 'var(--card)',
+                      padding: '0.5rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.5rem',
+                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+                      width: '100%',
+                      maxWidth: '100%',
+                      boxSizing: 'border-box',
+                      overflowWrap: 'break-word'
+                    }}
+                    className="hover:shadow-md hover:border-primary/20"
                   >
-                    <div 
-                      style={{
-                        borderRadius: '0.5rem', 
-                        border: '1px solid #e2e8f0',
-                        backgroundColor: 'var(--card)',
-                        padding: '1.25rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1rem',
-                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
-                      }}
-                      className="hover:shadow-md hover:border-primary/20"
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                            </div>
-                            {event.location && (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
-                              </div>
-                            )}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
-                            </div>
-                          </div>
+                    <div style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      gap: '0.35rem',
+                      width: '100%'
+                    }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        flexWrap: 'wrap',
+                        gap: '0.35rem',
+                        width: '100%'
+                      }}>
+                        <h3 style={{ 
+                          fontSize: '1rem', 
+                          fontWeight: '600', 
+                          marginBottom: '0.15rem',
+                          wordBreak: 'break-word',
+                          maxWidth: '100%'
+                        }}>{event.name}</h3>
+                        {getStatusBadge(event.status || '')}
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
+                          <Calendar style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
+                          <span style={{ 
+                            fontSize: '0.7rem', 
+                            overflow: 'hidden', 
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
+                          }}>{formatDate(event.date || '')}</span>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                          {getStatusBadge(event.status || '')}
-                          <EventActions eventId={event.id} mode="list" />
+                        {event.location && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
+                            <MapPin style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
+                            <span style={{ 
+                              fontSize: '0.7rem', 
+                              overflow: 'hidden', 
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              maxWidth: '200px'
+                            }}>{event.location}</span>
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
+                          <Users style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
+                          <span style={{ fontSize: '0.7rem' }}>{event.attendeeCount} attendees</span>
                         </div>
                       </div>
+                      <div style={{ 
+                        marginTop: '0.35rem',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        width: '100%'
+                      }}>
+                        <EventActions eventId={event.id} mode="list" />
+                      </div>
                     </div>
-                  </Link>
-                ))
-              ) : (
-                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
-                  No published events found.
-                </div>
-              )}
-            </div>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div style={{
+                padding: '1rem',
+                textAlign: 'center',
+                backgroundColor: 'var(--background)',
+                borderRadius: '0.5rem',
+                color: 'var(--muted-foreground)'
+              }}>
+                No published events. Publish an event to make it visible to attendees.
+              </div>
+            )}
           </div>
         </TabsContent>
+
+        {/* Additional tabs would follow same pattern */}
         
-        {/* Draft Events Tab */}
-        <TabsContent value="draft">
-          <div style={{ marginTop: '1rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
-              Draft Events
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {draftEvents.length > 0 ? (
-                draftEvents.map((event) => (
-                  <Link 
-                    key={event.id} 
-                    href={`/protected/events/${event.id}`}
-                    style={{ textDecoration: 'none', cursor: 'pointer' }}
-                  >
-                    <div 
-                      style={{
-                        borderRadius: '0.5rem', 
-                        border: '1px solid #e2e8f0',
-                        backgroundColor: 'var(--card)',
-                        padding: '1.25rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1rem',
-                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
-                      }}
-                      className="hover:shadow-md hover:border-primary/20"
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                            </div>
-                            {event.location && (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
-                              </div>
-                            )}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                          {getStatusBadge(event.status || '')}
-                          <EventActions eventId={event.id} mode="list" />
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
-                  No draft events found.
-                </div>
-              )}
-            </div>
-          </div>
-        </TabsContent>
-        
-        {/* Completed Events Tab */}
-        <TabsContent value="completed">
-          <div style={{ marginTop: '1rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
-              Completed Events
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {completedEvents.length > 0 ? (
-                completedEvents.map((event) => (
-                  <Link 
-                    key={event.id} 
-                    href={`/protected/events/${event.id}`}
-                    style={{ textDecoration: 'none', cursor: 'pointer' }}
-                  >
-                    <div 
-                      style={{
-                        borderRadius: '0.5rem', 
-                        border: '1px solid #e2e8f0',
-                        backgroundColor: 'var(--card)',
-                        padding: '1.25rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1rem',
-                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
-                      }}
-                      className="hover:shadow-md hover:border-primary/20"
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                            </div>
-                            {event.location && (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
-                              </div>
-                            )}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                          {getStatusBadge(event.status || '')}
-                          <EventActions eventId={event.id} mode="list" />
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
-                  No completed events found.
-                </div>
-              )}
-            </div>
-          </div>
-        </TabsContent>
-        
-        {/* Cancelled Events Tab */}
-        <TabsContent value="cancelled">
-          <div style={{ marginTop: '1rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
-              Cancelled Events
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {cancelledEvents.length > 0 ? (
-                cancelledEvents.map((event) => (
-                  <Link 
-                    key={event.id} 
-                    href={`/protected/events/${event.id}`}
-                    style={{ textDecoration: 'none', cursor: 'pointer' }}
-                  >
-                    <div 
-                      style={{
-                        borderRadius: '0.5rem', 
-                        border: '1px solid #e2e8f0',
-                        backgroundColor: 'var(--card)',
-                        padding: '1.25rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1rem',
-                        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
-                      }}
-                      className="hover:shadow-md hover:border-primary/20"
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>{event.name}</h3>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Calendar style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{formatDate(event.date || '')}</span>
-                            </div>
-                            {event.location && (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                                <MapPin style={{ height: '0.875rem', width: '0.875rem' }} />
-                                <span style={{ fontSize: '0.875rem' }}>{event.location}</span>
-                              </div>
-                            )}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--muted-foreground)' }}>
-                              <Users style={{ height: '0.875rem', width: '0.875rem' }} />
-                              <span style={{ fontSize: '0.875rem' }}>{event.attendeeCount} attendees</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                          {getStatusBadge(event.status || '')}
-                          <EventActions eventId={event.id} mode="list" />
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
-                  No cancelled events found.
-                </div>
-              )}
-            </div>
-          </div>
-        </TabsContent>
       </Tabs>
     </div>
   )

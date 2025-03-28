@@ -52,10 +52,12 @@ export default async function QRCodesPage() {
   return (
     <div style={{ 
       width: '100%', 
-      padding: '1.5rem 1rem',
+      padding: '24px',
       display: 'flex', 
       flexDirection: 'column', 
-      gap: '1.5rem' 
+      gap: '24px',
+      maxWidth: '1600px',
+      margin: '0 auto'
     }}>
       {/* Header section */}
       <div style={{ 
@@ -63,80 +65,182 @@ export default async function QRCodesPage() {
         justifyContent: 'space-between', 
         alignItems: 'center',
         flexWrap: 'wrap',
-        gap: '1rem'
+        gap: '16px',
+        marginBottom: '8px'
       }}>
         <div>
           <h1 style={{ 
-            fontSize: '1.5rem', 
+            fontSize: '24px', 
             fontWeight: '700', 
-            marginBottom: '0.5rem',
+            marginBottom: '8px',
             lineHeight: '1.2'
           }}>
             QR Codes
           </h1>
           <p style={{ 
             color: 'var(--muted-foreground)', 
-            fontSize: '0.9rem'
+            fontSize: '14px'
           }}>
             Access your event QR codes for easy check-in
           </p>
         </div>
         
         <Button asChild style={{
-          height: '2.5rem',
+          height: '40px',
           whiteSpace: 'nowrap'
         }}>
           <Link href="/protected/events/create">
-            <Plus style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
+            <Plus style={{ height: '16px', width: '16px', marginRight: '8px' }} />
             Create Event
           </Link>
         </Button>
       </div>
       
       {/* QR Codes section */}
-      <div style={{ marginTop: '1rem' }}>
+      <div>
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
-          gap: '1.5rem'
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
+          gap: '24px',
+          width: '100%'
         }}>
           {events && events.length > 0 ? (
             events.map(event => (
               <Card key={event.id} style={{ 
-                border: '1px solid var(--border)', 
+                border: '2px solid var(--border)', 
                 background: 'var(--card)',
                 height: '100%',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                overflow: 'hidden',
+                borderRadius: '8px',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                margin: '4px'
               }}>
-                <CardHeader style={{ padding: '1rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
-                    <CardTitle style={{ fontSize: '1.1rem', fontWeight: '600' }}>{event.name}</CardTitle>
+                <CardHeader style={{ 
+                  padding: '16px',
+                  borderBottom: '2px solid var(--border)'
+                }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'flex-start', 
+                    gap: '8px' 
+                  }}>
+                    <CardTitle style={{ 
+                      fontSize: '18px', 
+                      fontWeight: '600',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      {event.name}
+                    </CardTitle>
                     {getStatusBadge(event.status)}
                   </div>
                 </CardHeader>
-                <CardContent style={{ padding: '0 1rem 1rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                
+                <CardContent style={{ 
+                  padding: '16px', 
+                  flex: '1', 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  minHeight: '200px',
+                  backgroundColor: 'var(--background)'
+                }}>
                   {event.qr_code_url ? (
-                    <div style={{ width: '100%', height: '300px', position: 'relative' }}>
-                      <QRCodeDisplay url={event.qr_code_url} eventId={event.id} />
+                    <div style={{ 
+                      width: '100%', 
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}>
+                      <div style={{ 
+                        width: 'calc(min(100%, 200px))', 
+                        height: 'calc(min(100%, 200px))',
+                        position: 'relative',
+                        background: 'white',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        border: '2px solid #e0e0e0'
+                      }}>
+                        <img 
+                          src={event.qr_code_url} 
+                          alt={`QR code for ${event.name}`}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain'
+                          }}
+                        />
+                      </div>
                     </div>
                   ) : (
                     <div style={{ 
-                      padding: '1rem', 
-                      border: '1px dashed var(--border)', 
-                      borderRadius: '0.5rem',
+                      padding: '16px', 
+                      border: '2px dashed var(--border)', 
+                      borderRadius: '8px',
                       backgroundColor: 'var(--muted)',
                       textAlign: 'center',
-                      color: 'var(--muted-foreground)'
+                      color: 'var(--muted-foreground)',
+                      width: '100%'
                     }}>
                       QR code not available
                     </div>
                   )}
                 </CardContent>
-                <CardFooter style={{ padding: '0 1rem 1rem', justifyContent: 'center' }}>
-                  <Button asChild size="sm" variant="outline" style={{ width: '100%' }}>
+                
+                <CardFooter style={{ 
+                  padding: '12px 16px',
+                  borderTop: '2px solid var(--border)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  gap: '8px',
+                  flexWrap: 'wrap',
+                  backgroundColor: 'var(--card)'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    gap: '8px'
+                  }}>
+                    <Button size="sm" variant="outline" style={{
+                      borderRadius: '6px',
+                      border: '1px solid var(--border)',
+                      height: '36px',
+                      minWidth: '36px',
+                      backgroundColor: 'transparent',
+                      transition: 'all 0.2s ease'
+                    }}>
+                      <span style={{ display: 'flex', alignItems: 'center' }}>
+                        Regenerate
+                      </span>
+                    </Button>
+                    <Button size="sm" variant="outline" style={{
+                      borderRadius: '6px',
+                      border: '1px solid var(--border)',
+                      height: '36px',
+                      minWidth: '36px',
+                      backgroundColor: 'transparent',
+                      transition: 'all 0.2s ease'
+                    }}>
+                      <span style={{ display: 'flex', alignItems: 'center' }}>
+                        Download
+                      </span>
+                    </Button>
+                  </div>
+                  <Button asChild size="sm" variant="default" style={{
+                    borderRadius: '6px',
+                    height: '36px',
+                    minWidth: '36px',
+                    transition: 'all 0.2s ease'
+                  }}>
                     <Link href={`/protected/events/${event.id}`}>
-                      View Event
+                      <span style={{ display: 'flex', alignItems: 'center' }}>
+                        Share
+                      </span>
                     </Link>
                   </Button>
                 </CardFooter>
@@ -146,9 +250,11 @@ export default async function QRCodesPage() {
             <Card style={{ 
               border: '1px solid var(--border)', 
               background: 'var(--card)',
-              gridColumn: '1 / -1'
+              gridColumn: '1 / -1',
+              borderRadius: '8px',
+              overflow: 'hidden'
             }}>
-              <CardContent style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted-foreground)' }}>
+              <CardContent style={{ padding: '32px', textAlign: 'center', color: 'var(--muted-foreground)' }}>
                 No events found. Create your first event to generate QR codes.
               </CardContent>
             </Card>
@@ -158,21 +264,24 @@ export default async function QRCodesPage() {
       
       {/* Information card */}
       <Card style={{ 
-        border: '1px solid var(--border)', 
+        border: '2px solid var(--border)', 
         background: 'var(--card)',
-        marginTop: '1rem'
+        borderRadius: '8px',
+        overflow: 'hidden',
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
       }}>
-        <CardHeader>
-          <CardTitle>How QR Codes Work</CardTitle>
-          <CardDescription>Use these QR codes to streamline your event check-in process</CardDescription>
+        <CardHeader style={{ padding: '16px', borderBottom: '2px solid var(--border)' }}>
+          <CardTitle style={{ fontSize: '18px', fontWeight: '600' }}>How QR Codes Work</CardTitle>
+          <CardDescription style={{ fontSize: '14px' }}>Use these QR codes to streamline your event check-in process</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent style={{ padding: '16px' }}>
           <ul style={{ 
             listStyle: 'disc', 
-            paddingLeft: '1.5rem', 
+            paddingLeft: '24px', 
             display: 'flex', 
             flexDirection: 'column', 
-            gap: '0.5rem' 
+            gap: '8px',
+            fontSize: '14px'
           }}>
             <li>Share the QR code with your event staff for easy check-in</li>
             <li>Attendees can scan the QR code to access event details</li>

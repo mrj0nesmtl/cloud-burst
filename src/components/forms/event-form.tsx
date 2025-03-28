@@ -156,29 +156,51 @@ export function EventForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" style={{ maxWidth: '100%' }}>
         <Tabs defaultValue="basic" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="basic">Basic Information</TabsTrigger>
-            <TabsTrigger value="advanced">Advanced Settings</TabsTrigger>
-          </TabsList>
+          <div className="overflow-hidden rounded-md mb-3" style={{ border: '1px solid var(--border)' }}>
+            <TabsList className="w-full flex bg-muted" style={{ 
+              padding: 0, 
+              height: 'auto', 
+              borderRadius: 0
+            }}>
+              <TabsTrigger 
+                value="basic" 
+                className="flex-1 text-xs py-2 px-2 rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none"
+              >
+                Basic Info
+              </TabsTrigger>
+              <TabsTrigger 
+                value="advanced" 
+                className="flex-1 text-xs py-2 px-2 rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none"
+              >
+                Advanced
+              </TabsTrigger>
+            </TabsList>
+          </div>
           
           {/* Basic Information Tab */}
-          <TabsContent value="basic" className="space-y-6 pt-6">
+          <TabsContent value="basic" className="space-y-3 mt-0">
             {/* Event Name */}
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Event Name</FormLabel>
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-xs font-medium">
+                    Event Name
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="Summer Wedding 2024" {...field} />
+                    <Input 
+                      placeholder="Summer Wedding 2024" 
+                      {...field} 
+                      className="h-8 text-xs px-2" 
+                    />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription className="text-[10px] text-muted-foreground">
                     The name of your event as it will appear to attendees
                   </FormDescription>
-                  <FormMessage />
+                  <FormMessage className="text-[10px]" />
                 </FormItem>
               )}
             />
@@ -188,24 +210,23 @@ export function EventForm() {
               control={form.control}
               name="date"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Event Date</FormLabel>
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-xs font-medium">
+                    Event Date
+                  </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
+                          className="w-full h-8 px-2 text-xs justify-between font-normal"
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "MMM d, yyyy")
                           ) : (
-                            <span>Pick a date</span>
+                            <span className="text-muted-foreground text-xs">Pick a date</span>
                           )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          <CalendarIcon className="h-3 w-3 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -215,13 +236,14 @@ export function EventForm() {
                         selected={field.value}
                         onSelect={field.onChange}
                         initialFocus
+                        className="rounded-md border"
                       />
                     </PopoverContent>
                   </Popover>
-                  <FormDescription>
+                  <FormDescription className="text-[10px] text-muted-foreground">
                     The date when your event will take place
                   </FormDescription>
-                  <FormMessage />
+                  <FormMessage className="text-[10px]" />
                 </FormItem>
               )}
             />
@@ -231,18 +253,24 @@ export function EventForm() {
               control={form.control}
               name="location"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Location</FormLabel>
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-xs font-medium">
+                    Location
+                  </FormLabel>
                   <FormControl>
                     <div className="flex items-center">
-                      <MapPinIcon className="w-4 h-4 mr-2 text-muted-foreground" />
-                      <Input placeholder="123 Main St, City, State" {...field} />
+                      <MapPinIcon className="w-3 h-3 mr-1.5 text-muted-foreground flex-shrink-0" />
+                      <Input 
+                        placeholder="123 Main St, City, State" 
+                        {...field} 
+                        className="h-8 text-xs px-2" 
+                      />
                     </div>
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription className="text-[10px] text-muted-foreground">
                     Where will the event take place?
                   </FormDescription>
-                  <FormMessage />
+                  <FormMessage className="text-[10px]" />
                 </FormItem>
               )}
             />
@@ -252,172 +280,190 @@ export function EventForm() {
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-xs font-medium">
+                    Description
+                  </FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder="Provide details about your event..." 
-                      className="min-h-[120px]" 
+                      className="min-h-[80px] text-xs px-2 py-1.5" 
                       {...field} 
                     />
                   </FormControl>
-                  <FormDescription className="flex items-center">
-                    <InfoIcon className="w-4 h-4 mr-2" />
-                    Describe your event to help attendees understand what to expect
+                  <FormDescription className="flex items-start text-[10px] text-muted-foreground">
+                    <InfoIcon className="w-2.5 h-2.5 mr-1 mt-0.5 flex-shrink-0" />
+                    <span>Describe your event to help attendees understand what to expect</span>
                   </FormDescription>
-                  <FormMessage />
+                  <FormMessage className="text-[10px]" />
                 </FormItem>
               )}
             />
           </TabsContent>
           
           {/* Advanced Settings Tab */}
-          <TabsContent value="advanced" className="space-y-6 pt-6">
-            <Card>
-              <CardContent className="pt-6 space-y-6">
-                {/* Event Status */}
-                <FormField
-                  control={form.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Event Status</FormLabel>
-                      <Select 
-                        onValueChange={field.onChange} 
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a status" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="draft">Draft</SelectItem>
-                          <SelectItem value="published">Published</SelectItem>
-                          <SelectItem value="completed">Completed</SelectItem>
-                          <SelectItem value="cancelled">Cancelled</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>
-                        Draft events are only visible to you
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Maximum Attendees */}
-                <FormField
-                  control={form.control}
-                  name="max_attendees"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Maximum Attendees</FormLabel>
-                      <FormControl>
-                        <div className="flex items-center">
-                          <UsersIcon className="w-4 h-4 mr-2 text-muted-foreground" />
-                          <Input 
-                            type="number" 
-                            placeholder="Leave empty for unlimited" 
-                            {...field}
-                            value={field.value || ""}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              field.onChange(value === "" ? undefined : parseInt(value));
-                            }}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormDescription>
-                        Limit the number of people who can attend your event
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Cover Image URL */}
-                <FormField
-                  control={form.control}
-                  name="cover_image_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Cover Image URL</FormLabel>
-                      <FormControl>
-                        <div className="flex items-center">
-                          <ImageIcon className="w-4 h-4 mr-2 text-muted-foreground" />
-                          <Input placeholder="https://example.com/image.jpg" {...field} />
-                        </div>
-                      </FormControl>
-                      <FormDescription>
-                        Add a cover image to make your event stand out
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Custom URL */}
-                <FormField
-                  control={form.control}
-                  name="custom_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Custom URL</FormLabel>
-                      <FormControl>
-                        <div className="flex items-center">
-                          <span className="text-muted-foreground mr-2">cloud-burst.com/e/</span>
-                          <Input placeholder="my-event" {...field} />
-                        </div>
-                      </FormControl>
-                      <FormDescription>
-                        Create a custom URL for your event (optional)
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Public Event Toggle */}
-                <FormField
-                  control={form.control}
-                  name="is_public"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base">Public Event</FormLabel>
-                        <FormDescription>
-                          {field.value
-                            ? "Anyone can view and join this event"
-                            : "Only invited attendees can view this event"}
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+          <TabsContent value="advanced" className="space-y-3 mt-0">
+            {/* Event Status */}
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-xs font-medium">
+                    Event Status
+                  </FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder="Select a status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="draft" className="text-xs">Draft</SelectItem>
+                      <SelectItem value="published" className="text-xs">Published</SelectItem>
+                      <SelectItem value="completed" className="text-xs">Completed</SelectItem>
+                      <SelectItem value="cancelled" className="text-xs">Cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription className="text-[10px] text-muted-foreground">
+                    Draft events are only visible to you
+                  </FormDescription>
+                  <FormMessage className="text-[10px]" />
+                </FormItem>
+              )}
+            />
+            
+            {/* Maximum Attendees */}
+            <FormField
+              control={form.control}
+              name="max_attendees"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-xs font-medium">
+                    Maximum Attendees
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex items-center">
+                      <UsersIcon className="w-3 h-3 mr-1.5 text-muted-foreground flex-shrink-0" />
+                      <Input 
+                        type="number" 
+                        placeholder="Leave empty for unlimited" 
+                        className="h-8 text-xs px-2"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? undefined : parseInt(value));
+                        }}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormDescription className="text-[10px] text-muted-foreground">
+                    Limit the number of people who can attend your event
+                  </FormDescription>
+                  <FormMessage className="text-[10px]" />
+                </FormItem>
+              )}
+            />
+            
+            {/* Cover Image URL */}
+            <FormField
+              control={form.control}
+              name="cover_image_url"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-xs font-medium">
+                    Cover Image URL
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex items-center">
+                      <ImageIcon className="w-3 h-3 mr-1.5 text-muted-foreground flex-shrink-0" />
+                      <Input 
+                        placeholder="https://example.com/image.jpg" 
+                        {...field} 
+                        className="h-8 text-xs px-2"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormDescription className="text-[10px] text-muted-foreground">
+                    Add a cover image to make your event stand out
+                  </FormDescription>
+                  <FormMessage className="text-[10px]" />
+                </FormItem>
+              )}
+            />
+            
+            {/* Custom URL */}
+            <FormField
+              control={form.control}
+              name="custom_url"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-xs font-medium">
+                    Custom URL
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex flex-col w-full">
+                      <div className="text-[10px] text-muted-foreground mb-1">cloud-burst.com/e/</div>
+                      <Input 
+                        placeholder="my-event" 
+                        {...field} 
+                        className="h-8 text-xs px-2"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormDescription className="text-[10px] text-muted-foreground">
+                    Create a custom URL for your event (optional)
+                  </FormDescription>
+                  <FormMessage className="text-[10px]" />
+                </FormItem>
+              )}
+            />
+            
+            {/* Public Event Toggle */}
+            <FormField
+              control={form.control}
+              name="is_public"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between p-2 border rounded-md">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-xs font-medium">Public Event</FormLabel>
+                    <FormDescription className="text-[10px] text-muted-foreground">
+                      {field.value
+                        ? "Anyone can view and join this event"
+                        : "Only invited attendees can view this event"}
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className="scale-75 data-[state=checked]:bg-primary"
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </TabsContent>
         </Tabs>
         
         {/* Form Actions */}
-        <div className="flex justify-end gap-4 pt-4 border-t">
+        <div className="flex justify-end gap-2 pt-3 border-t mt-4">
           <Button 
             type="button" 
             variant="outline" 
             onClick={() => router.back()}
+            className="text-xs h-7 px-2"
           >
             Cancel
           </Button>
           <Button 
             type="submit" 
             disabled={isSubmitting}
+            className="text-xs h-7 px-3"
           >
             {isSubmitting ? 'Creating...' : 'Create Event'}
           </Button>

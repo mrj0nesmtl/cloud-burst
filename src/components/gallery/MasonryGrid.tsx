@@ -24,19 +24,24 @@ export function MasonryGrid({
   const [columns, setColumns] = useState(3);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Handle resize to determine number of columns
+  // Handle resize to determine number of columns - improved breakpoints for better mobile experience
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       
-      if (width < 640) {
-        setColumns(1);
+      // Adjusted breakpoints for better mobile responsiveness
+      if (width < 480) {
+        setColumns(1); // Single column for very small devices
+      } else if (width < 640) {
+        setColumns(1); // Single column for mobile phones
+      } else if (width < 768) {
+        setColumns(2); // Two columns for larger phones/small tablets
       } else if (width < 1024) {
-        setColumns(2);
-      } else if (width < 1536) {
-        setColumns(3);
+        setColumns(2); // Two columns for tablets
+      } else if (width < 1280) {
+        setColumns(3); // Three columns for small desktops
       } else {
-        setColumns(4);
+        setColumns(4); // Four columns for large desktops
       }
     };
     
@@ -44,6 +49,25 @@ export function MasonryGrid({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  
+  // Direct styling for improved responsiveness
+  const getGridStyle = () => {
+    // Use CSS Grid for larger screens, stack for very small screens
+    if (columns === 1) {
+      return {
+        display: 'flex',
+        flexDirection: 'column' as 'column', // TypeScript needs this casting
+        gap: '16px'
+      };
+    }
+    
+    // For multi-column layouts, use grid
+    return {
+      display: 'grid',
+      gridTemplateColumns: `repeat(${columns}, 1fr)`,
+      gap: '16px'
+    };
+  };
   
   // Distribute items into columns
   const columnItems = Array.from({ length: columns }, () => [] as MediaItem[]);
@@ -80,28 +104,40 @@ export function MasonryGrid({
     <div 
       ref={containerRef}
       className="w-full p-4"
+      style={{ maxWidth: '100%', overflowX: 'hidden' }}
     >
-      <div 
-        className="grid gap-4"
-        style={{ 
-          gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        }}
-      >
-        {columnItems.map((columnItems, columnIndex) => (
-          <div key={columnIndex} className="flex flex-col gap-4">
-            {columnItems.map((item) => (
-              <MediaCard
-                key={item.id}
-                item={item}
-                onClick={onItemClick}
-                showComments={showComments}
-                isPublic={isPublic}
-                onAddComment={onAddComment}
-                onLike={onLike}
-              />
-            ))}
-          </div>
-        ))}
+      <div style={getGridStyle()}>
+        {columns === 1 ? (
+          // Single column layout (mobile) - flat list of items
+          items.map((item) => (
+            <MediaCard
+              key={item.id}
+              item={item}
+              onClick={onItemClick}
+              showComments={showComments}
+              isPublic={isPublic}
+              onAddComment={onAddComment}
+              onLike={onLike}
+            />
+          ))
+        ) : (
+          // Multi-column layout
+          columnItems.map((columnItems, columnIndex) => (
+            <div key={columnIndex} className="flex flex-col gap-4">
+              {columnItems.map((item) => (
+                <MediaCard
+                  key={item.id}
+                  item={item}
+                  onClick={onItemClick}
+                  showComments={showComments}
+                  isPublic={isPublic}
+                  onAddComment={onAddComment}
+                  onLike={onLike}
+                />
+              ))}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
