@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-27T18:13:19.193Z
+Generated: 2025-03-28T02:28:50.561Z
 
 ## Overview
 
@@ -60,6 +60,9 @@ Generated: 2025-03-27T18:13:19.193Z
 │   │   │       └── route.ts
 │   │   ├── extract-colors/
 │   │   │   └── route.ts
+│   │   ├── galleries/
+│   │   │   └── events/
+│   │   │       └── route.ts
 │   │   ├── invitations/
 │   │   │   ├── bulk-create/
 │   │   │   │   └── route.ts
@@ -247,6 +250,7 @@ Generated: 2025-03-27T18:13:19.193Z
 │   │   │   │   │   ├── settings/
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── page-metadata.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── moderate/
 │   │   │   │   └── page.tsx
@@ -364,7 +368,6 @@ Generated: 2025-03-27T18:13:19.193Z
 │   │   ├── security-form.tsx
 │   │   └── subscription-form.tsx
 │   ├── gallery/
-│   │   ├── .MediaViewer.tsx.swp
 │   │   ├── GalleryHeader.tsx
 │   │   ├── GalleryLayout.tsx
 │   │   ├── GallerySidebar.tsx
@@ -560,7 +563,6 @@ Generated: 2025-03-27T18:13:19.193Z
 │   ├── auth.ts
 │   ├── events.ts
 │   ├── gallery.ts
-│   ├── invisation.ts
 │   ├── invitations.ts
 │   ├── media.ts
 │   ├── notifications.ts
@@ -570,13 +572,13 @@ Generated: 2025-03-27T18:13:19.193Z
 ├── middleware.test.ts
 └── middleware.ts
 
-161 directories, 401 files
+163 directories, 401 files
 
 ```
 
 ## File Type Breakdown
 - ts: 85 file(s)
-- tsx: 297 file(s)
+- tsx: 298 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)
