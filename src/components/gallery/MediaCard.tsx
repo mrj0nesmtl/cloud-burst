@@ -240,7 +240,7 @@ export function MediaCard({
   return (
     <Card 
       className={cn(
-        "overflow-hidden group transition-all duration-200 hover:shadow-md",
+        "overflow-hidden group transition-all duration-200 hover:shadow-md w-full max-w-full",
         className
       )}
       onClick={handleClick}
@@ -248,253 +248,246 @@ export function MediaCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardContent className="p-0">
-        <div className={cn(
-          "relative w-full overflow-hidden", 
-          getAspectRatioClass()
-        )}>
-          {/* Skeleton while loading */}
-          {isImageLoading && (
-            <Skeleton className="absolute inset-0 z-0" />
-          )}
+        <div className="relative">
+          {getStatusBadge()}
           
-          {/* Media thumbnail */}
           {isVideo ? (
-            <div className="relative w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-              {item.thumbnail_url ? (
-                <Image
-                  src={item.thumbnail_url}
-                  alt={item.title || 'Video thumbnail'}
-                  fill
-                  className={cn(
-                    "object-cover transition-opacity duration-300",
-                    isImageLoading ? "opacity-0" : "opacity-100"
-                  )}
-                  onLoadingComplete={handleImageLoadComplete}
-                  priority={priority}
-                />
-              ) : (
-                <Play className="w-12 h-12 text-gray-400" />
-              )}
-              <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                {item.duration ? `${Math.floor(item.duration / 60)}:${(item.duration % 60).toString().padStart(2, '0')}` : '0:00'}
+            // Video thumbnail with play button
+            <div className="relative">
+              <div className={cn(getAspectRatioClass(), "bg-muted/30 overflow-hidden")}>
+                {item.thumbnail_url ? (
+                  <Image
+                    src={item.thumbnail_url}
+                    alt={item.title || "Video thumbnail"}
+                    fill
+                    className="object-cover"
+                    onLoadingComplete={handleImageLoadComplete}
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                    priority={priority}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full w-full bg-muted">
+                    <Film className="h-12 w-12 text-muted-foreground/50" />
+                  </div>
+                )}
+                
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="rounded-full bg-black/50 p-3">
+                    <Play className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                
+                {/* Duration badge */}
+                {item.duration && (
+                  <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-1.5 py-0.5 rounded">
+                    {Math.floor(item.duration / 60)}:{(item.duration % 60).toString().padStart(2, '0')}
+                  </div>
+                )}
               </div>
             </div>
           ) : (
-            <Image
-              src={item.url || '/images/placeholder-image.jpg'}
-              alt={item.title || 'Photo'}
-              fill
-              className={cn(
-                "object-cover transition-opacity duration-300 group-hover:scale-105 transition-transform",
-                isImageLoading ? "opacity-0" : "opacity-100"
-              )}
-              onLoadingComplete={handleImageLoadComplete}
-              priority={priority}
-            />
-          )}
-          
-          {/* Approval status indicator */}
-          {getStatusBadge()}
-          
-          {/* Media type indicator */}
-          <div className="absolute bottom-2 left-2">
-            <Badge variant="outline" className="bg-black/50 text-white border-none">
-              {item.media_type === 'video' ? (
-                <Film className="w-3 h-3 mr-1" />
-              ) : (
-                <ImageIcon className="w-3 h-3 mr-1" />
-              )}
-              {item.media_type === 'video' ? 'Video' : 'Photo'}
-            </Badge>
-          </div>
-          
-          {/* Tags indicator */}
-          {item.metadata?.tags && item.metadata.tags.length > 0 && (
-            <div className="absolute top-2 right-2">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge variant="outline" className="bg-black/50 text-white border-none">
-                    <Tag className="w-3 h-3 mr-1" />
-                    {item.metadata.tags.length}
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div className="text-xs">
-                    {item.metadata.tags.join(', ')}
-                  </div>
-                </TooltipContent>
-              </Tooltip>
+            // Image display
+            <div className={cn(getAspectRatioClass(), "bg-muted/30 overflow-hidden")}>
+              <Image
+                src={item.url}
+                alt={item.title || "Media image"}
+                fill
+                className="object-cover"
+                onLoadingComplete={handleImageLoadComplete}
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                priority={priority}
+              />
             </div>
           )}
           
-          {/* Hover overlay with actions */}
-          {showControls && isHovered && (
-            <div className="absolute inset-0 bg-black/60 flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              {showApproval && item.status === MediaStatus.PENDING && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8 rounded-full bg-green-500/20 border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
-                    onClick={handleApprove}
-                  >
-                    <CheckCircle className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8 rounded-full bg-red-500/20 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-                    onClick={handleReject}
-                  >
-                    <XCircle className="h-4 w-4" />
-                  </Button>
-                </>
-              )}
-              
-              {showApproval && item.status === MediaStatus.APPROVED && (
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 rounded-full bg-red-500/20 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-                  onClick={handleReject}
-                >
-                  <XCircle className="h-4 w-4" />
+          {isImageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-background/80">
+              <Skeleton className={cn(getAspectRatioClass(), "w-full h-full")} />
+            </div>
+          )}
+        </div>
+        
+        <div className="p-3">
+          <div className="flex justify-between items-start mb-1 gap-2">
+            <div className="flex-1 min-w-0"> {/* Added min-width to prevent text from expanding container */}
+              <h3 className="font-medium text-sm truncate">
+                {item.title || "Untitled"}
+              </h3>
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                <span>{formattedDate}</span>
+              </p>
+            </div>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <MoreVertical className="h-4 w-4" />
                 </Button>
-              )}
-              
-              {showApproval && item.status === MediaStatus.REJECTED && (
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 rounded-full bg-green-500/20 border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
-                  onClick={handleApprove}
-                >
-                  <CheckCircle className="h-4 w-4" />
-                </Button>
-              )}
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8 rounded-full bg-white/20 border-white/50 text-white hover:bg-white hover:text-black"
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => window.open(item.url, '_blank')}>
-                    <Eye className="h-4 w-4 mr-2" />
-                    View Full Size
-                  </DropdownMenuItem>
-                  {showEvent && item.event && (
-                    <DropdownMenuItem asChild>
-                      <Link href={`/events/${item.event_id}`}>
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Event
-                      </Link>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[160px]">
+                {!isPublic && (
+                  <>
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Download className="mr-2 h-4 w-4" />
+                      Download
                     </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem onClick={() => {
-                    const url = item.url || '';
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = item.title || 'Untitled';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                  }}>
-                    <Download className="h-4 w-4 mr-2" />
-                    Download
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleDelete} className="text-red-500">
-                    <XCircle className="h-4 w-4 mr-2" />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Share className="mr-2 h-4 w-4" />
+                      Share
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      className="cursor-pointer text-destructive focus:text-destructive"
+                      onClick={handleDelete}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          
+          {/* Show event name if present and enabled */}
+          {showEvent && item.event && (
+            <div className="mt-1 mb-2">
+              <Badge variant="outline" className="text-xs">
+                {item.event.name}
+              </Badge>
+            </div>
+          )}
+          
+          {/* Conditional approval buttons */}
+          {showApproval && item.status === MediaStatus.PENDING && (
+            <div className="flex gap-2 mt-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1 h-8"
+                onClick={handleApprove}
+              >
+                <CheckCircle className="h-4 w-4 mr-1" />
+                Approve
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1 h-8 text-destructive border-destructive hover:bg-destructive/10"
+                onClick={handleReject}
+              >
+                <XCircle className="h-4 w-4 mr-1" />
+                Reject
+              </Button>
             </div>
           )}
         </div>
       </CardContent>
       
-      <CardFooter className="flex flex-col items-start p-3 space-y-1">
-        <div className="w-full flex justify-between items-start">
-          <h3 className="text-sm font-medium truncate flex-1" title={item.title || 'Untitled'}>
-            {item.title || 'Untitled'}
-          </h3>
-        </div>
-        
-        <div className="w-full flex justify-between items-center text-xs text-muted-foreground">
-          <div className="flex items-center">
-            <Clock className="w-3 h-3 mr-1" />
-            <span>{formattedDate}</span>
-          </div>
-          {showEvent && item.event && (
-            <Link href={`/events/${item.event_id}`} className="hover:underline" onClick={(e) => e.stopPropagation()}>
-              {item.event.name}
-            </Link>
-          )}
-        </div>
-      </CardFooter>
-      
       {showComments && (
-        <div className="px-3 mt-4 pt-4 border-t">
-          <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium">Comments ({item.comments?.length || 0})</h4>
-              <CollapsibleTrigger asChild onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                <Button variant="ghost" size="sm">
-                  {isExpanded ? "Hide" : "Show"}
-                </Button>
-              </CollapsibleTrigger>
-            </div>
-            
-            <CollapsibleContent className="mt-2 space-y-4">
-              {item.comments && item.comments.length > 0 ? (
-                <div className="space-y-3 max-h-[200px] overflow-y-auto pr-2">
-                  {item.comments.map(comment => (
-                    <div key={comment.id} className="flex gap-2 text-sm">
-                      <Avatar className="h-6 w-6">
-                        {comment.author.avatarUrl && (
-                          <AvatarImage src={comment.author.avatarUrl} alt={comment.author.name} />
-                        )}
-                        <AvatarFallback>{comment.author.initials}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center">
-                          <p className="text-xs font-medium">{comment.author.name}</p>
-                          <span className="text-xs text-muted-foreground ml-2">
-                            {formatDate(comment.createdAt)}
-                          </span>
-                        </div>
-                        <p className="text-sm">{comment.text}</p>
-                      </div>
+        <Collapsible 
+          open={isExpanded} 
+          onOpenChange={setIsExpanded}
+          className="border-t"
+        >
+          <CollapsibleTrigger asChild className="w-full">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full flex justify-between p-3 h-auto rounded-none text-muted-foreground"
+            >
+              <span>
+                Comments ({item.comments?.length || 0})
+              </span>
+              <span className="text-xs">
+                {isExpanded ? 'Hide' : 'Show'}
+              </span>
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="border-t px-3 py-2 max-h-[300px] overflow-y-auto space-y-3">
+            {/* Comments list */}
+            {item.comments && item.comments.length > 0 ? (
+              item.comments.map(comment => (
+                <div key={comment.id} className="flex gap-2">
+                  <Avatar className="h-6 w-6">
+                    {comment.author.avatarUrl && (
+                      <AvatarImage src={comment.author.avatarUrl} />
+                    )}
+                    <AvatarFallback className="text-[10px]">
+                      {comment.author.initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 overflow-hidden">
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-medium text-xs truncate">
+                        {comment.author.name}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        {formatDistanceToNow(new Date(comment.createdAt), {
+                          addSuffix: true,
+                        })}
+                      </span>
                     </div>
-                  ))}
+                    <p className="text-xs break-words">
+                      {comment.text}
+                    </p>
+                  </div>
                 </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">No comments yet</p>
-              )}
-              
-              <form onSubmit={handleCommentSubmit} className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                <Input 
-                  className="h-8 text-sm flex-1" 
-                  placeholder="Add a comment..." 
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                />
-                <Button type="submit" size="sm" className="h-8 px-2" disabled={!newComment.trim()}>
-                  <Send className="h-4 w-4" />
-                </Button>
-              </form>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
+              ))
+            ) : (
+              <div className="text-xs text-muted-foreground text-center py-2">
+                No comments yet.
+              </div>
+            )}
+            
+            {/* Comment form */}
+            <form onSubmit={handleCommentSubmit} className="flex gap-2 pt-2 items-center">
+              <Input
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Add a comment..."
+                className="h-8 text-xs flex-1 max-w-full"
+                onClick={(e) => e.stopPropagation()}
+              />
+              <Button 
+                type="submit" 
+                size="icon" 
+                className="h-8 w-8"
+                disabled={!newComment.trim()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
+          </CollapsibleContent>
+        </Collapsible>
       )}
+      
+      <CardFooter className="p-3 pt-0 gap-1">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className={cn(
+            "h-8 w-8",
+            isLiked && "text-red-500"
+          )}
+          onClick={handleLike}
+        >
+          <Heart className={cn("h-4 w-4", isLiked && "fill-current")} />
+        </Button>
+        
+        {/* Quick controls */}
+        {showControls && !isPublic && (
+          <div className="flex justify-end flex-1 gap-1">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Share className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Download className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </CardFooter>
     </Card>
   )
 } 
