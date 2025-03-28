@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { GallerySettings } from '@/types/gallery'
+import { cn } from '@/lib/utils'
 
 export interface GalleryEventCardProps {
   id: string
@@ -21,6 +22,7 @@ export interface GalleryEventCardProps {
   status?: string
   settings?: Partial<GallerySettings>
   organizerId?: string
+  className?: string
 }
 
 export function GalleryEventCard({
@@ -32,7 +34,8 @@ export function GalleryEventCard({
   logoUrl,
   photoCount,
   status = 'draft',
-  settings = { layout: 'grid', useLogoAsThumbnail: false }
+  settings = { layout: 'grid', useLogoAsThumbnail: false },
+  className
 }: GalleryEventCardProps) {
   // Determine which image to use as thumbnail
   const imageUrl = settings?.useLogoAsThumbnail && logoUrl ? logoUrl : thumbnailUrl
@@ -48,7 +51,10 @@ export function GalleryEventCard({
     'bg-orange-500/20 text-orange-500 hover:bg-orange-500/20';
 
   return (
-    <Card className="group overflow-hidden border bg-card shadow-sm hover:shadow-md flex flex-col h-full w-full">
+    <Card className={cn(
+      "group overflow-hidden border bg-card shadow-sm hover:shadow-md flex flex-col w-full",
+      className
+    )}>
       {/* Image Container with 4:3 Aspect Ratio */}
       <div className="relative bg-muted w-full" style={{ paddingTop: "75%" }}>
         {imageUrl ? (
@@ -76,7 +82,7 @@ export function GalleryEventCard({
         {/* Bottom gradient and title */}
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent">
           <div className="absolute bottom-0 left-0 right-0 p-4">
-            <h3 className="font-medium text-lg text-white mb-1 line-clamp-1">
+            <h3 className="font-medium text-base sm:text-lg text-white mb-1 line-clamp-1">
               {name || 'Unnamed Event'}
             </h3>
             <div className="flex items-center">
@@ -90,30 +96,30 @@ export function GalleryEventCard({
       </div>
       
       {/* Card content */}
-      <div className="p-5 flex-1 flex flex-col justify-between">
+      <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between">
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Settings className="mr-2 h-4 w-4" />
+          <div className="flex flex-wrap items-center justify-between mb-3 sm:mb-4 gap-2">
+            <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
+              <Settings className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               {settings?.layout || 'Grid'} Layout
             </div>
-            <Badge className={`px-2 py-0.5 ${statusColor}`} variant="outline">
+            <Badge className={`px-2 py-0.5 text-xs ${statusColor}`} variant="outline">
               {status || 'Draft'}
             </Badge>
           </div>
         </div>
         
-        <div className="flex gap-3 mt-4">
-          <Button className="flex-1" variant="default" size="sm" asChild>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-3 sm:mt-4">
+          <Button className="w-full" variant="default" size="sm" asChild>
             <Link href={`/protected/gallery/events/${id}`} prefetch={false}>
               <ExternalLink className="mr-2 h-4 w-4" />
-              View Gallery
+              <span className="whitespace-nowrap">View Gallery</span>
             </Link>
           </Button>
-          <Button variant="outline" size="sm" asChild>
+          <Button className="w-full" variant="outline" size="sm" asChild>
             <Link href={`/protected/gallery/events/${id}/settings`}>
               <Settings className="mr-2 h-4 w-4" />
-              Settings
+              <span className="whitespace-nowrap">Settings</span>
             </Link>
           </Button>
         </div>

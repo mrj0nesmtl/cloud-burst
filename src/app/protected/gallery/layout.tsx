@@ -31,18 +31,16 @@ export default async function GalleryLayout({ children }: GalleryLayoutProps) {
     if (!session) redirect('/auth/signin?returnTo=/protected/gallery/all')
 
     return (
-      <div style={{ width: '100%', padding: '24px' }}>
-        <div style={{ marginBottom: '24px' }}>
-          <div className="flex flex-col space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight">Gallery</h1>
-            <p className="text-muted-foreground">
+      <div className="w-full px-2 sm:px-4 md:px-6 py-4">
+        <div className="mb-6">
+          <div className="flex flex-col space-y-2 mb-4">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Gallery</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
               Manage your event media, galleries and albums
             </p>
           </div>
           
-          <div style={{ marginTop: '24px' }} className="flex flex-wrap items-center gap-2">
-            <GalleryTabs />
-          </div>
+          <GalleryTabs />
         </div>
 
         {children}

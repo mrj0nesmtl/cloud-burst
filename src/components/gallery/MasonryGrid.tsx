@@ -57,7 +57,9 @@ export function MasonryGrid({
       return {
         display: 'flex',
         flexDirection: 'column' as 'column', // TypeScript needs this casting
-        gap: '16px'
+        gap: '16px',
+        width: '100%', // Ensure full width
+        maxWidth: '100%' // Prevent overflow
       };
     }
     
@@ -65,7 +67,9 @@ export function MasonryGrid({
     return {
       display: 'grid',
       gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      gap: '16px'
+      gap: '16px',
+      width: '100%', // Ensure full width
+      maxWidth: '100%' // Prevent overflow
     };
   };
   
@@ -103,8 +107,12 @@ export function MasonryGrid({
   return (
     <div 
       ref={containerRef}
-      className="w-full p-4"
-      style={{ maxWidth: '100%', overflowX: 'hidden' }}
+      className="w-full px-2 sm:px-4" // Reduce padding on mobile
+      style={{ 
+        maxWidth: '100%', 
+        overflowX: 'hidden',
+        boxSizing: 'border-box' // Ensure padding is included in width calculation
+      }}
     >
       <div style={getGridStyle()}>
         {columns === 1 ? (
@@ -118,12 +126,13 @@ export function MasonryGrid({
               isPublic={isPublic}
               onAddComment={onAddComment}
               onLike={onLike}
+              className="w-full max-w-full" // Ensure cards don't overflow
             />
           ))
         ) : (
           // Multi-column layout
           columnItems.map((columnItems, columnIndex) => (
-            <div key={columnIndex} className="flex flex-col gap-4">
+            <div key={columnIndex} className="flex flex-col gap-4 w-full">
               {columnItems.map((item) => (
                 <MediaCard
                   key={item.id}
@@ -133,6 +142,7 @@ export function MasonryGrid({
                   isPublic={isPublic}
                   onAddComment={onAddComment}
                   onLike={onLike}
+                  className="w-full"
                 />
               ))}
             </div>

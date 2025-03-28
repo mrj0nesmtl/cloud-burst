@@ -80,6 +80,12 @@
   "devDependencies": {
     "@eslint/eslintrc": "^2.1.4",
     "@tanstack/react-query-devtools": "^5.66.9",
+    "@types/d3": "^7.4.3",
+    "@types/d3-ease": "^3.0.2",
+    "@types/d3-interpolate": "^3.0.4",
+    "@types/d3-scale": "^4.0.9",
+    "@types/d3-time": "^3.0.4",
+    "@types/d3-timer": "^3.0.2",
     "@types/node": "^20.11.5",
     "@types/qrcode": "^1.5.5",
     "@types/react": "18.2.48",
