@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { formatDistance } from "date-fns"
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
+import { Users, Image as ImageIcon, ArrowUpRight } from "lucide-react"
 
 interface Event {
   id: string
@@ -24,15 +25,15 @@ export function RecentEvents({ events }: RecentEventsProps) {
         alignItems: 'center',
         justifyContent: 'center',
         border: '1px dashed var(--border)',
-        borderRadius: '6px'
+        borderRadius: '8px'
       }}>
-        <p style={{ fontSize: '12px', color: 'var(--muted-foreground)' }}>No recent events</p>
+        <p style={{ fontSize: '14px', color: 'var(--muted-foreground)' }}>No recent events</p>
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
       {events.map((event) => {
         const eventDate = new Date(event.date)
         const initials = event.name
@@ -49,14 +50,27 @@ export function RecentEvents({ events }: RecentEventsProps) {
             style={{ display: 'block', touchAction: 'manipulation', width: '100%' }}
           >
             <Card style={{ 
-              padding: '8px', 
-              transition: 'background 0.2s',
+              padding: '16px', 
+              transition: 'all 0.2s',
               cursor: 'pointer',
-              width: '100%'
+              width: '100%',
+              border: 'none',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+              background: 'var(--card)',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', width: '100%' }}>
-                <Avatar style={{ width: '32px', height: '32px', flexShrink: 0 }}>
-                  <AvatarFallback style={{ fontSize: '10px' }}>{initials}</AvatarFallback>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', width: '100%' }}>
+                <Avatar style={{ 
+                  width: '48px', 
+                  height: '48px', 
+                  flexShrink: 0, 
+                  backgroundColor: 'var(--primary)', 
+                  color: 'white',
+                  fontSize: '18px',
+                  fontWeight: 'bold'
+                }}>
+                  <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
                 <div style={{ flex: '1 1 auto', minWidth: 0, width: '100%' }}>
                   <div style={{ 
@@ -65,17 +79,20 @@ export function RecentEvents({ events }: RecentEventsProps) {
                     width: '100%',
                     gap: '4px'
                   }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <p style={{ 
+                        fontSize: '16px', 
+                        fontWeight: 600, 
+                        margin: 0,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        width: '100%'
+                      }}>{event.name}</p>
+                      <ArrowUpRight className="h-4 w-4 text-muted-foreground flex-shrink-0 ml-2" />
+                    </div>
                     <p style={{ 
-                      fontSize: '12px', 
-                      fontWeight: 500, 
-                      margin: 0,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      width: '100%'
-                    }}>{event.name}</p>
-                    <p style={{ 
-                      fontSize: '10px', 
+                      fontSize: '14px', 
                       color: 'var(--muted-foreground)',
                       margin: 0
                     }}>
@@ -85,23 +102,33 @@ export function RecentEvents({ events }: RecentEventsProps) {
                   <div style={{ 
                     display: 'flex', 
                     flexWrap: 'wrap', 
-                    gap: '4px', 
-                    marginTop: '4px' 
+                    gap: '8px', 
+                    marginTop: '8px' 
                   }}>
                     <span style={{ 
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
                       backgroundColor: 'var(--muted)', 
-                      padding: '2px 6px', 
+                      padding: '4px 8px', 
                       borderRadius: '4px', 
-                      fontSize: '10px' 
+                      fontSize: '12px',
+                      fontWeight: '500'
                     }}>
+                      <Users className="h-3 w-3 opacity-70" />
                       {event.attendeeCount} attendees
                     </span>
                     <span style={{ 
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
                       backgroundColor: 'var(--muted)', 
-                      padding: '2px 6px', 
+                      padding: '4px 8px', 
                       borderRadius: '4px', 
-                      fontSize: '10px' 
+                      fontSize: '12px',
+                      fontWeight: '500'
                     }}>
+                      <ImageIcon className="h-3 w-3 opacity-70" />
                       {event.photoCount} photos
                     </span>
                   </div>
