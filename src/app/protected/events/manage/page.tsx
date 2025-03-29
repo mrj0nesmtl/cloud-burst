@@ -11,7 +11,27 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card"
-import { Calendar, MapPin, Users, Plus, Clock, Badge as BadgeIcon, Edit, QrCode, Share, Trash2, Image, CheckCircle, ListFilter, FileText, AlertTriangle, X } from 'lucide-react'
+import { 
+  Calendar, 
+  MapPin, 
+  Users, 
+  Plus, 
+  Clock, 
+  Badge as BadgeIcon, 
+  Edit, 
+  QrCode, 
+  Share, 
+  Trash2, 
+  Image, 
+  CheckCircle, 
+  ListFilter, 
+  FileText, 
+  AlertTriangle, 
+  X,
+  CalendarIcon,
+  Activity,
+  Eye
+} from 'lucide-react'
 import { EventActions } from '@/components/events/event-actions'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
@@ -20,6 +40,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Suspense } from 'react'
 
 export const metadata = {
   title: 'Manage Events | Cloud Burst',
@@ -38,13 +59,13 @@ interface Event {
 const getStatusBadge = (status: string) => {
   switch (status?.toLowerCase()) {
     case 'draft':
-      return <Badge variant="outline" className="bg-amber-500/20 text-amber-500 hover:bg-amber-500/20">Draft</Badge>
+      return <Badge className="bg-amber-500/20 text-amber-600 hover:bg-amber-500/20 border-none">Draft</Badge>
     case 'published':
-      return <Badge variant="default" className="bg-green-500">Published</Badge>
+      return <Badge className="bg-green-500/90 hover:bg-green-500/90 border-none">Published</Badge>
     case 'completed':
-      return <Badge variant="secondary">Completed</Badge>
+      return <Badge className="bg-blue-500/90 hover:bg-blue-500/90 border-none">Completed</Badge>
     case 'cancelled':
-      return <Badge variant="destructive">Cancelled</Badge>
+      return <Badge className="bg-red-500/90 hover:bg-red-500/90 border-none">Cancelled</Badge>
     default:
       return <Badge variant="outline">{status || 'Unknown'}</Badge>
   }
@@ -139,653 +160,413 @@ export default async function ManageEventsPage() {
   
   return (
     <div style={{ 
-      padding: '0.5rem', 
-      maxWidth: '100%', 
-      overflowX: 'hidden',
-      boxSizing: 'border-box'
+      width: '100%', 
+      minHeight: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      backgroundColor: 'var(--background)'
     }}>
-      {/* Enhanced header card */}
-      <Card style={{ 
-        marginBottom: '0.75rem', 
-        width: '100%',
-        overflow: 'hidden',
-        border: '1px solid var(--border)',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-      }}>
-        <CardContent style={{ 
-          padding: '0.75rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.75rem'
+      <div style={{ width: '100%', padding: '24px', flex: '1 1 auto' }}>
+        {/* Header and Create Event Button */}
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'row', 
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '16px', 
+          marginBottom: '24px',
+          flexWrap: 'wrap'
         }}>
-          {/* Title and description with improved styling */}
-          <div style={{ marginBottom: '0.5rem' }}>
-            <h1 style={{ 
-              fontSize: '1.25rem', 
-              fontWeight: '700', 
-              marginTop: 0,
-              marginBottom: '0.25rem' 
-            }}>Manage Events</h1>
-            <p style={{ 
-              color: 'var(--muted-foreground)', 
-              fontSize: '0.75rem',
-              margin: 0 
-            }}>View and manage all your photography events</p>
+          <div>
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '4px' }}>Manage Events</h1>
+            <p style={{ color: 'var(--muted-foreground)', fontSize: '14px' }}>
+              View and manage all your photography events
+            </p>
           </div>
+          <Link href="/protected/events/create">
+            <Button size="sm" className="w-full sm:w-auto h-10" style={{ 
+              background: 'var(--primary)',
+              borderRadius: '6px',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
+            }}>
+              <Plus className="mr-2 h-4 w-4" />
+              Create New Event
+            </Button>
+          </Link>
+        </div>
+        
+        {/* Stats Cards */}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
+          gap: '16px',
+          marginBottom: '24px',
+          padding: '16px',
+          borderRadius: '8px',
+          border: '1px solid var(--border)',
+          background: 'var(--background)',
+        }}>
+          <Card className="overflow-hidden border-none shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
+              <CardTitle className="text-base font-medium">Total Events</CardTitle>
+              <div className="h-8 w-8 rounded-md bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <CalendarIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 pt-2">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{processedEvents.length}</div>
+              <p className="text-sm text-muted-foreground">Events created</p>
+            </CardContent>
+          </Card>
           
-          {/* Stats Grid - Enhanced with better visuals */}
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))',
-            gap: '0.5rem',
-            width: '100%'
-          }}>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              background: 'var(--background)',
-              borderRadius: '0.5rem',
-              border: '1px solid var(--border)',
-              padding: '0.75rem',
-              transition: 'all 0.2s ease',
-              position: 'relative',
-              overflow: 'hidden'
-            }} className="group">
-              <div style={{
-                display: 'flex', 
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '0.5rem'
-              }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: '500', color: 'var(--muted-foreground)' }}>
-                  Total Events
-                </span>
-                <Calendar style={{ height: '0.8rem', width: '0.8rem', color: 'var(--muted-foreground)' }} className="group-hover:text-primary transition-colors" />
+          <Card className="overflow-hidden border-none shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
+              <CardTitle className="text-base font-medium">Active Events</CardTitle>
+              <div className="h-8 w-8 rounded-md bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{processedEvents.length}</div>
-              <span className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderRadius: '0.5rem' }}></span>
-            </div>
-            
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              background: 'var(--background)',
-              borderRadius: '0.5rem',
-              border: '1px solid var(--border)',
-              padding: '0.75rem',
-              transition: 'all 0.2s ease',
-              position: 'relative',
-              overflow: 'hidden'
-            }} className="group">
-              <div style={{
-                display: 'flex', 
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '0.5rem'
-              }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: '500', color: 'var(--muted-foreground)' }}>
-                  Active Events
-                </span>
-                <BadgeIcon style={{ height: '0.8rem', width: '0.8rem', color: 'var(--muted-foreground)' }} className="group-hover:text-primary transition-colors" />
+            </CardHeader>
+            <CardContent className="p-4 pt-2">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">{publishedEvents.length}</div>
+              <p className="text-sm text-muted-foreground">Currently running</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="overflow-hidden border-none shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
+              <CardTitle className="text-base font-medium">Total Attendees</CardTitle>
+              <div className="h-8 w-8 rounded-md bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                <Users className="h-4 w-4 text-purple-600 dark:text-purple-400" />
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{publishedEvents.length}</div>
-              <span className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderRadius: '0.5rem' }}></span>
-            </div>
-            
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              background: 'var(--background)',
-              borderRadius: '0.5rem',
-              border: '1px solid var(--border)',
-              padding: '0.75rem',
-              transition: 'all 0.2s ease',
-              position: 'relative',
-              overflow: 'hidden'
-            }} className="group">
-              <div style={{
-                display: 'flex', 
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '0.5rem'
-              }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: '500', color: 'var(--muted-foreground)' }}>
-                  Total Attendees
-                </span>
-                <Users style={{ height: '0.8rem', width: '0.8rem', color: 'var(--muted-foreground)' }} className="group-hover:text-primary transition-colors" />
-              </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>
+            </CardHeader>
+            <CardContent className="p-4 pt-2">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                 {Object.values(attendeeCounts).reduce((total, count) => total + count, 0)}
               </div>
-              <span className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderRadius: '0.5rem' }}></span>
+              <p className="text-sm text-muted-foreground">Event participants</p>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Tabs */}
+        <Card className="border-none shadow-sm overflow-hidden">
+          <CardHeader className="p-4 pb-0">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg">Event List</CardTitle>
+                <CardDescription className="text-sm">
+                  Manage and monitor your events
+                </CardDescription>
+              </div>
             </div>
-          </div>
-
-          {/* Action button for Create Event */}
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '0.25rem' }}>
-            <Button 
-              className="group"
-              style={{
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '0.35rem',
-                height: '2.25rem',
-                fontWeight: '500',
-                transition: 'all 0.2s ease'
-              }}
-              asChild
-            >
-              <Link href="/protected/events/create">
-                <Plus size={16} className="group-hover:scale-110 transition-transform" />
-                Create New Event
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-      
-      {/* Tabs - Enhanced mobile scrolling with icons */}
-      <Tabs defaultValue="all" style={{ marginTop: '0.75rem' }}>
-        <TabsList style={{ 
-          justifyContent: 'space-around', 
-          backgroundColor: 'var(--background)',
-          borderBottom: '1px solid var(--border)',
-          padding: '0.5rem',
-          marginBottom: '0.5rem',
-          overflowX: 'auto',
-          whiteSpace: 'nowrap',
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
-          fontSize: '0.75rem',
-          width: '100%',
-          display: 'flex',
-          WebkitOverflowScrolling: 'touch',
-          gap: '0.5rem'
-        }}>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="all" style={{ 
-                  padding: '0.5rem', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  minWidth: '2.5rem',
-                  height: '2.5rem',
-                  borderRadius: '50%',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.2s ease',
-                  backgroundColor: 'var(--card)'
-                }} className="group">
-                  <ListFilter 
-                    size={18} 
-                    style={{
-                      position: 'relative',
-                      zIndex: 1,
-                      transition: 'color 0.2s ease'
-                    }} 
-                    className="text-foreground group-hover:text-primary"
-                  />
-                  {processedEvents.length > 0 && (
-                    <span style={{
-                      position: 'absolute',
-                      top: '0',
-                      right: '0',
-                      backgroundColor: 'var(--primary)',
-                      color: 'white',
-                      borderRadius: '50%',
-                      width: '1rem',
-                      height: '1rem',
-                      fontSize: '0.6rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      zIndex: 2
-                    }}>
-                      {processedEvents.length}
-                    </span>
-                  )}
-                  <span 
-                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
-                    style={{ borderRadius: '50%' }}
-                  ></span>
+          </CardHeader>
+          <CardContent className="p-4">
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList className="grid grid-cols-5 mb-4">
+                <TabsTrigger value="all" className="flex items-center justify-center gap-2">
+                  <ListFilter className="h-4 w-4" />
+                  <span>All ({processedEvents.length})</span>
                 </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>All ({processedEvents.length})</TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="published" style={{ 
-                  padding: '0.5rem', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  minWidth: '2.5rem',
-                  height: '2.5rem',
-                  borderRadius: '50%',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.2s ease',
-                  backgroundColor: 'var(--card)'
-                }} className="group">
-                  <CheckCircle 
-                    size={18} 
-                    style={{
-                      position: 'relative',
-                      zIndex: 1,
-                      transition: 'color 0.2s ease'
-                    }} 
-                    className="text-foreground group-hover:text-primary"
-                  />
-                  {publishedEvents.length > 0 && (
-                    <span style={{
-                      position: 'absolute',
-                      top: '0',
-                      right: '0',
-                      backgroundColor: 'var(--primary)',
-                      color: 'white',
-                      borderRadius: '50%',
-                      width: '1rem',
-                      height: '1rem',
-                      fontSize: '0.6rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      zIndex: 2
-                    }}>
-                      {publishedEvents.length}
-                    </span>
-                  )}
-                  <span 
-                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
-                    style={{ borderRadius: '50%' }}
-                  ></span>
+                <TabsTrigger value="published" className="flex items-center justify-center gap-2">
+                  <CheckCircle className="h-4 w-4" />
+                  <span>Published ({publishedEvents.length})</span>
                 </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Published ({publishedEvents.length})</TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="draft" style={{ 
-                  padding: '0.5rem', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  minWidth: '2.5rem',
-                  height: '2.5rem',
-                  borderRadius: '50%',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.2s ease',
-                  backgroundColor: 'var(--card)'
-                }} className="group">
-                  <FileText 
-                    size={18} 
-                    style={{
-                      position: 'relative',
-                      zIndex: 1,
-                      transition: 'color 0.2s ease'
-                    }} 
-                    className="text-foreground group-hover:text-primary"
-                  />
-                  {draftEvents.length > 0 && (
-                    <span style={{
-                      position: 'absolute',
-                      top: '0',
-                      right: '0',
-                      backgroundColor: 'var(--primary)',
-                      color: 'white',
-                      borderRadius: '50%',
-                      width: '1rem',
-                      height: '1rem',
-                      fontSize: '0.6rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      zIndex: 2
-                    }}>
-                      {draftEvents.length}
-                    </span>
-                  )}
-                  <span 
-                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
-                    style={{ borderRadius: '50%' }}
-                  ></span>
+                <TabsTrigger value="draft" className="flex items-center justify-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  <span>Draft ({draftEvents.length})</span>
                 </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Draft ({draftEvents.length})</TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="completed" style={{ 
-                  padding: '0.5rem', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  minWidth: '2.5rem',
-                  height: '2.5rem',
-                  borderRadius: '50%',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.2s ease',
-                  backgroundColor: 'var(--card)'
-                }} className="group">
-                  <Clock 
-                    size={18} 
-                    style={{
-                      position: 'relative',
-                      zIndex: 1,
-                      transition: 'color 0.2s ease'
-                    }} 
-                    className="text-foreground group-hover:text-primary"
-                  />
-                  {completedEvents.length > 0 && (
-                    <span style={{
-                      position: 'absolute',
-                      top: '0',
-                      right: '0',
-                      backgroundColor: 'var(--primary)',
-                      color: 'white',
-                      borderRadius: '50%',
-                      width: '1rem',
-                      height: '1rem',
-                      fontSize: '0.6rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      zIndex: 2
-                    }}>
-                      {completedEvents.length}
-                    </span>
-                  )}
-                  <span 
-                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
-                    style={{ borderRadius: '50%' }}
-                  ></span>
+                <TabsTrigger value="completed" className="flex items-center justify-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  <span>Completed ({completedEvents.length})</span>
                 </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Completed ({completedEvents.length})</TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="cancelled" style={{ 
-                  padding: '0.5rem', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  minWidth: '2.5rem',
-                  height: '2.5rem',
-                  borderRadius: '50%',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.2s ease',
-                  backgroundColor: 'var(--card)'
-                }} className="group">
-                  <X 
-                    size={18} 
-                    style={{
-                      position: 'relative',
-                      zIndex: 1,
-                      transition: 'color 0.2s ease'
-                    }} 
-                    className="text-foreground group-hover:text-primary"
-                  />
-                  {cancelledEvents.length > 0 && (
-                    <span style={{
-                      position: 'absolute',
-                      top: '0',
-                      right: '0',
-                      backgroundColor: 'var(--destructive)',
-                      color: 'white',
-                      borderRadius: '50%',
-                      width: '1rem',
-                      height: '1rem',
-                      fontSize: '0.6rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      zIndex: 2
-                    }}>
-                      {cancelledEvents.length}
-                    </span>
-                  )}
-                  <span 
-                    className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" 
-                    style={{ borderRadius: '50%' }}
-                  ></span>
+                <TabsTrigger value="cancelled" className="flex items-center justify-center gap-2">
+                  <X className="h-4 w-4" />
+                  <span>Cancelled ({cancelledEvents.length})</span>
                 </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Cancelled ({cancelledEvents.length})</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </TabsList>
-        
-        {/* All Events Tab - Improved card layout for narrow screens */}
-        <TabsContent value="all">
-          <div style={{ 
-            display: 'grid', 
-            gap: '0.5rem',
-            gridTemplateColumns: '1fr',
-            maxWidth: '100%' 
-          }}>
-            {processedEvents.length > 0 ? (
-              processedEvents.map((event) => (
-                <Link 
-                  href={`/protected/events/${event.id}`} 
-                  key={event.id}
-                  style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}
-                >
-                  <div 
-                    style={{
-                      borderRadius: '0.5rem', 
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      backgroundColor: 'var(--card)',
-                      padding: '0.5rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.5rem',
-                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-                      width: '100%',
-                      maxWidth: '100%',
-                      boxSizing: 'border-box',
-                      overflowWrap: 'break-word'
-                    }}
-                    className="hover:shadow-md hover:border-primary/20"
-                  >
-                    <div style={{ 
-                      display: 'flex', 
-                      flexDirection: 'column',
-                      gap: '0.35rem',
-                      width: '100%'
-                    }}>
-                      <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-start',
-                        flexWrap: 'wrap',
-                        gap: '0.35rem',
-                        width: '100%'
-                      }}>
-                        <h3 style={{ 
-                          fontSize: '1rem', 
-                          fontWeight: '600', 
-                          marginBottom: '0.15rem',
-                          wordBreak: 'break-word',
-                          maxWidth: '100%'
-                        }}>{event.name}</h3>
-                        {getStatusBadge(event.status || '')}
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
-                          <Calendar style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
-                          <span style={{ 
-                            fontSize: '0.7rem', 
-                            overflow: 'hidden', 
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                          }}>{formatDate(event.date || '')}</span>
-                        </div>
-                        {event.location && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
-                            <MapPin style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
-                            <span style={{ 
-                              fontSize: '0.7rem', 
-                              overflow: 'hidden', 
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              maxWidth: '200px'
-                            }}>{event.location}</span>
+              </TabsList>
+              
+              {/* All Events Tab */}
+              <TabsContent value="all" className="mt-0">
+                <div className="space-y-4">
+                  {processedEvents.length > 0 ? (
+                    processedEvents.map((event) => (
+                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="text-base font-semibold">{event.name}</h3>
+                                {getStatusBadge(event.status || '')}
+                              </div>
+                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
+                                  <span>{formatDate(event.date || '')}</span>
+                                </div>
+                                {event.location && (
+                                  <div className="flex items-center gap-2">
+                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
+                                    <span>{event.location}</span>
+                                  </div>
+                                )}
+                                <div className="flex items-center gap-2">
+                                  <Users className="h-4 w-4 text-muted-foreground/70" />
+                                  <span>{event.attendeeCount} attendees</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" asChild className="h-8">
+                                <Link href={`/protected/events/${event.id}`}>
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View
+                                </Link>
+                              </Button>
+                              <EventActions eventId={event.id} mode="list" />
+                            </div>
                           </div>
-                        )}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
-                          <Users style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
-                          <span style={{ fontSize: '0.7rem' }}>{event.attendeeCount} attendees</span>
-                        </div>
-                      </div>
-                      <div style={{ 
-                        marginTop: '0.35rem',
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        width: '100%'
-                      }}>
-                        <EventActions eventId={event.id} mode="list" />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <div style={{
-                padding: '1rem',
-                textAlign: 'center',
-                backgroundColor: 'var(--background)',
-                borderRadius: '0.5rem',
-                color: 'var(--muted-foreground)'
-              }}>
-                No events found. <Link href="/protected/events/create" style={{ color: 'var(--primary)' }}>Create your first event</Link>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        {/* Published Events Tab - Also improved for narrower screens */}
-        <TabsContent value="published">
-          <div style={{ 
-            display: 'grid', 
-            gap: '0.5rem',
-            gridTemplateColumns: '1fr',
-            maxWidth: '100%'
-          }}>
-            {publishedEvents.length > 0 ? (
-              publishedEvents.map((event) => (
-                <Link 
-                  href={`/protected/events/${event.id}`} 
-                  key={event.id}
-                  style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}
-                >
-                  <div 
-                    style={{
-                      borderRadius: '0.5rem', 
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      backgroundColor: 'var(--card)',
-                      padding: '0.5rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.5rem',
-                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-                      width: '100%',
-                      maxWidth: '100%',
-                      boxSizing: 'border-box',
-                      overflowWrap: 'break-word'
-                    }}
-                    className="hover:shadow-md hover:border-primary/20"
-                  >
-                    <div style={{ 
-                      display: 'flex', 
-                      flexDirection: 'column',
-                      gap: '0.35rem',
-                      width: '100%'
-                    }}>
-                      <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-start',
-                        flexWrap: 'wrap',
-                        gap: '0.35rem',
-                        width: '100%'
-                      }}>
-                        <h3 style={{ 
-                          fontSize: '1rem', 
-                          fontWeight: '600', 
-                          marginBottom: '0.15rem',
-                          wordBreak: 'break-word',
-                          maxWidth: '100%'
-                        }}>{event.name}</h3>
-                        {getStatusBadge(event.status || '')}
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
-                          <Calendar style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
-                          <span style={{ 
-                            fontSize: '0.7rem', 
-                            overflow: 'hidden', 
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                          }}>{formatDate(event.date || '')}</span>
-                        </div>
-                        {event.location && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
-                            <MapPin style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
-                            <span style={{ 
-                              fontSize: '0.7rem', 
-                              overflow: 'hidden', 
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              maxWidth: '200px'
-                            }}>{event.location}</span>
+                        </CardContent>
+                        <div className="h-px w-full bg-border" />
+                      </Card>
+                    ))
+                  ) : (
+                    <Card className="border-dashed bg-muted/40">
+                      <CardContent className="flex flex-col items-center justify-center py-8">
+                        <CalendarIcon className="h-12 w-12 text-muted-foreground/50 mb-4" />
+                        <p className="text-muted-foreground text-center mb-4">No events found</p>
+                        <Button size="sm" asChild>
+                          <Link href="/protected/events/create">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Create your first event
+                          </Link>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </TabsContent>
+              
+              {/* Published Events Tab */}
+              <TabsContent value="published" className="mt-0">
+                <div className="space-y-4">
+                  {publishedEvents.length > 0 ? (
+                    publishedEvents.map((event) => (
+                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="text-base font-semibold">{event.name}</h3>
+                                {getStatusBadge(event.status || '')}
+                              </div>
+                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
+                                  <span>{formatDate(event.date || '')}</span>
+                                </div>
+                                {event.location && (
+                                  <div className="flex items-center gap-2">
+                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
+                                    <span>{event.location}</span>
+                                  </div>
+                                )}
+                                <div className="flex items-center gap-2">
+                                  <Users className="h-4 w-4 text-muted-foreground/70" />
+                                  <span>{event.attendeeCount} attendees</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" asChild className="h-8">
+                                <Link href={`/protected/events/${event.id}`}>
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View
+                                </Link>
+                              </Button>
+                              <EventActions eventId={event.id} mode="list" />
+                            </div>
                           </div>
-                        )}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--muted-foreground)' }}>
-                          <Users style={{ height: '0.7rem', width: '0.7rem', flexShrink: 0 }} />
-                          <span style={{ fontSize: '0.7rem' }}>{event.attendeeCount} attendees</span>
-                        </div>
-                      </div>
-                      <div style={{ 
-                        marginTop: '0.35rem',
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        width: '100%'
-                      }}>
-                        <EventActions eventId={event.id} mode="list" />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <div style={{
-                padding: '1rem',
-                textAlign: 'center',
-                backgroundColor: 'var(--background)',
-                borderRadius: '0.5rem',
-                color: 'var(--muted-foreground)'
-              }}>
-                No published events. Publish an event to make it visible to attendees.
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        {/* Additional tabs would follow same pattern */}
-        
-      </Tabs>
+                        </CardContent>
+                        <div className="h-px w-full bg-border" />
+                      </Card>
+                    ))
+                  ) : (
+                    <Card className="border-dashed bg-muted/40">
+                      <CardContent className="flex flex-col items-center justify-center py-8">
+                        <CheckCircle className="h-12 w-12 text-muted-foreground/50 mb-4" />
+                        <p className="text-muted-foreground text-center mb-4">No published events</p>
+                        <Button size="sm" asChild>
+                          <Link href="/protected/events/create">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Create new event
+                          </Link>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </TabsContent>
+              
+              {/* Draft Events Tab */}
+              <TabsContent value="draft" className="mt-0">
+                <div className="space-y-4">
+                  {draftEvents.length > 0 ? (
+                    draftEvents.map((event) => (
+                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="text-base font-semibold">{event.name}</h3>
+                                {getStatusBadge(event.status || '')}
+                              </div>
+                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
+                                  <span>{formatDate(event.date || '')}</span>
+                                </div>
+                                {event.location && (
+                                  <div className="flex items-center gap-2">
+                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
+                                    <span>{event.location}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" asChild className="h-8">
+                                <Link href={`/protected/events/${event.id}`}>
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View
+                                </Link>
+                              </Button>
+                              <EventActions eventId={event.id} mode="list" />
+                            </div>
+                          </div>
+                        </CardContent>
+                        <div className="h-px w-full bg-border" />
+                      </Card>
+                    ))
+                  ) : (
+                    <Card className="border-dashed bg-muted/40">
+                      <CardContent className="flex flex-col items-center justify-center py-8">
+                        <FileText className="h-12 w-12 text-muted-foreground/50 mb-4" />
+                        <p className="text-muted-foreground text-center">No draft events</p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </TabsContent>
+              
+              {/* Completed Events Tab */}
+              <TabsContent value="completed" className="mt-0">
+                <div className="space-y-4">
+                  {completedEvents.length > 0 ? (
+                    completedEvents.map((event) => (
+                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="text-base font-semibold">{event.name}</h3>
+                                {getStatusBadge(event.status || '')}
+                              </div>
+                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
+                                  <span>{formatDate(event.date || '')}</span>
+                                </div>
+                                {event.location && (
+                                  <div className="flex items-center gap-2">
+                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
+                                    <span>{event.location}</span>
+                                  </div>
+                                )}
+                                <div className="flex items-center gap-2">
+                                  <Users className="h-4 w-4 text-muted-foreground/70" />
+                                  <span>{event.attendeeCount} attendees</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" asChild className="h-8">
+                                <Link href={`/protected/events/${event.id}`}>
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View
+                                </Link>
+                              </Button>
+                              <EventActions eventId={event.id} mode="list" />
+                            </div>
+                          </div>
+                        </CardContent>
+                        <div className="h-px w-full bg-border" />
+                      </Card>
+                    ))
+                  ) : (
+                    <Card className="border-dashed bg-muted/40">
+                      <CardContent className="flex flex-col items-center justify-center py-8">
+                        <Clock className="h-12 w-12 text-muted-foreground/50 mb-4" />
+                        <p className="text-muted-foreground text-center">No completed events</p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </TabsContent>
+              
+              {/* Cancelled Events Tab */}
+              <TabsContent value="cancelled" className="mt-0">
+                <div className="space-y-4">
+                  {cancelledEvents.length > 0 ? (
+                    cancelledEvents.map((event) => (
+                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="text-base font-semibold">{event.name}</h3>
+                                {getStatusBadge(event.status || '')}
+                              </div>
+                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
+                                  <span>{formatDate(event.date || '')}</span>
+                                </div>
+                                {event.location && (
+                                  <div className="flex items-center gap-2">
+                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
+                                    <span>{event.location}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" asChild className="h-8">
+                                <Link href={`/protected/events/${event.id}`}>
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View
+                                </Link>
+                              </Button>
+                              <EventActions eventId={event.id} mode="list" />
+                            </div>
+                          </div>
+                        </CardContent>
+                        <div className="h-px w-full bg-border" />
+                      </Card>
+                    ))
+                  ) : (
+                    <Card className="border-dashed bg-muted/40">
+                      <CardContent className="flex flex-col items-center justify-center py-8">
+                        <X className="h-12 w-12 text-muted-foreground/50 mb-4" />
+                        <p className="text-muted-foreground text-center">No cancelled events</p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
