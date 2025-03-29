@@ -1,133 +1,196 @@
-import { Metadata } from 'next'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle, Tags, Search, Filter, Clock, LayoutList } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+"use client"
 
-export const metadata: Metadata = {
-  title: 'Smart Tagging | AI Features | Cloud Burst',
-  description: 'Automated content tagging and organization powered by AI',
-}
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { AlertCircle, Tags, Search, Filter, Clock, LayoutList, ListFilter, InfoIcon, Tag, Layers, FolderSearch, Heart, Users, Camera, TreePine } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 export default function SmartTaggingPage() {
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start gap-4 flex-col sm:flex-row">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Smart Tagging</h2>
-          <p className="text-muted-foreground mt-2">
-            Automated content tagging and organization powered by AI
-          </p>
+    <div className="container py-6 space-y-8">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Smart Tagging</h1>
+            <p className="text-muted-foreground">
+              Automated content tagging and organization powered by AI
+            </p>
+          </div>
+          <Badge className="bg-blue-500">Beta</Badge>
         </div>
-        <Badge variant="outline" className="bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 border-blue-200 dark:border-blue-800">
-          Beta
-        </Badge>
+        
+        <Alert className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
+          <InfoIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <AlertTitle>Beta Feature</AlertTitle>
+          <AlertDescription>
+            Smart Tagging is currently in beta. We're actively improving the accuracy and feature set.
+          </AlertDescription>
+        </Alert>
       </div>
-      
-      <Alert>
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Beta Feature</AlertTitle>
-        <AlertDescription>
-          Smart Tagging is currently in beta. While fully functional, we're actively improving its accuracy and adding new capabilities.
-          We welcome your feedback to help us refine this feature.
-        </AlertDescription>
-      </Alert>
-      
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+        gap: '24px',
+        width: '100%' 
+      }}>
+        <Card className="bg-card hover:bg-accent/40 transition-colors">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Tags className="h-5 w-5 text-primary" />
-              Feature Overview
-            </CardTitle>
+            <CardTitle>Intelligent Content Organization</CardTitle>
             <CardDescription>
-              How our smart tagging technology works
+              Automatically tag and categorize photos and videos
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              Cloud Burst's Smart Tagging uses computer vision and machine learning to automatically
-              analyze and tag photos and videos from your events. The system can:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Recognize objects, scenes, and activities</li>
-              <li>Identify colors, styles, and compositions</li>
-              <li>Detect emotions and expressions</li>
-              <li>Recognize event-specific elements (cake cutting, first dance, etc.)</li>
-              <li>Create custom tags based on your event details</li>
-            </ul>
+          <CardContent className="space-y-2">
+            <div className="rounded-md bg-primary/10 p-4">
+              <div className="font-semibold">Advanced Recognition</div>
+              <p className="text-sm text-muted-foreground mt-1">
+                Our AI can recognize objects, scenes, activities, and even emotions in your content
+              </p>
+            </div>
+            <div className="rounded-md bg-primary/10 p-4">
+              <div className="font-semibold">Searchable Collections</div>
+              <p className="text-sm text-muted-foreground mt-1">
+                Find exactly what you're looking for with powerful tag-based search functionality
+              </p>
+            </div>
           </CardContent>
+          <CardFooter>
+            <Button variant="outline" asChild>
+              <Link href="/protected/ai/smart-tagging/demo">
+                Try the beta
+              </Link>
+            </Button>
+          </CardFooter>
         </Card>
-        
-        <Card>
+
+        <Card className="bg-card hover:bg-accent/40 transition-colors">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <LayoutList className="h-5 w-5 text-primary" />
-              Tag Categories
-            </CardTitle>
+            <CardTitle>Tag Categories</CardTitle>
             <CardDescription>
-              The types of tags our system can generate
+              Our smart tagging system recognizes multiple categories
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              Smart Tagging automatically categorizes content with various tag types:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Content Tags - what's in the photo (people, objects, activities)</li>
-              <li>Technical Tags - qualities of the photo (lighting, composition, quality)</li>
-              <li>Emotional Tags - mood and feeling of the photo (joyful, intimate, exciting)</li>
-              <li>Event Tags - event-specific moments (speech, performance, group photo)</li>
-              <li>Custom Tags - based on your specific event details</li>
-            </ul>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <div className="mr-3 h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Camera className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Objects & Scenes</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Identify common objects, locations, and scene compositions
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <div className="mr-3 h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Heart className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Emotions & Expressions</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Detect emotional expressions to find those perfect moments
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <div className="mr-3 h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <TreePine className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Custom Tags</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Train the system to recognize event-specific elements
+                  </p>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
-      
-      <h3 className="text-xl font-semibold mt-8">Key Benefits</h3>
-      
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Search className="h-5 w-5 text-primary" />
-              Enhanced Searchability
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">
-              Find exactly what you're looking for with powerful semantic search across all your media.
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" />
-              Time Savings
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">
-              Eliminate the need for manual tagging while maintaining comprehensive organization.
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Filter className="h-5 w-5 text-primary" />
-              Smart Filtering
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">
-              Create powerful filtered views and collections based on automatically generated tags.
-            </p>
-          </CardContent>
-        </Card>
+
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Key Benefits</h2>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+          gap: '16px',
+          width: '100%' 
+        }}>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Time Saving</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Automatically organize large collections of photos without manual tagging
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Enhanced Discoverability</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Make it easy for clients to find specific photos within event collections
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Improved Workflow</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Streamline your post-event processing with intelligent content organization
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <div className="bg-muted p-6 rounded-lg">
+        <h3 className="text-xl font-semibold mb-4">Smart Tagging Usage</h3>
+        <ol className="space-y-2 list-decimal list-inside text-sm">
+          <li className="text-muted-foreground">Upload your content to Cloud Burst</li>
+          <li className="text-muted-foreground">Enable Smart Tagging in your event settings</li>
+          <li className="text-muted-foreground">Our AI will process and tag your content automatically</li>
+          <li className="text-muted-foreground">Review and adjust tags as needed</li>
+          <li className="text-muted-foreground">Enjoy powerful search and filtering capabilities</li>
+        </ol>
+        <div className="mt-4">
+          <Button asChild>
+            <Link href="/protected/events">
+              Try on your events
+            </Link>
+          </Button>
+        </div>
       </div>
     </div>
   )

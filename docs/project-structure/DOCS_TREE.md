@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-28T02:28:50.872Z
+Generated: 2025-03-29T23:29:42.581Z
 
 ## Overview
 
@@ -9,6 +9,7 @@ Generated: 2025-03-28T02:28:50.872Z
 ```
 ./docs/
 ├── architecture/
+│   ├── ai_implementation.md
 │   ├── application_design_document.md
 │   ├── security.md
 │   └── system_architecture_flowchart.md
@@ -151,12 +152,12 @@ Generated: 2025-03-28T02:28:50.872Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 133 files
+10 directories, 134 files
 
 ```
 
 ## File Type Breakdown
-- md: 128 file(s)
+- md: 129 file(s)
 
 ## Ignored Patterns
 - node_modules

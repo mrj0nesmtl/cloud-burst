@@ -1,13 +1,14 @@
 # gallery Directory Structure
-Generated: 2025-03-28T02:28:54.795Z
+Generated: 2025-03-29T23:29:46.659Z
 
 ## Overview
-This directory contains 19 component(s).
+This directory contains 20 component(s).
 
 
 ## Directory Tree
 ```
 ./src/components/gallery/
+├── EventGallery.tsx
 ├── GalleryHeader.tsx
 ├── GalleryLayout.tsx
 ├── GallerySidebar.tsx
@@ -25,18 +26,19 @@ This directory contains 19 component(s).
 ├── gallery-tabs.tsx
 ├── guest-upload-dropzone.tsx
 ├── index.ts
+├── mock-data.ts
 ├── optimized-image.tsx
 ├── photo-lightbox.tsx
 ├── upload-dropzone.tsx
 └── upload-with-tags.tsx
 
-1 directory, 21 files
+1 directory, 23 files
 
 ```
 
 ## File Type Breakdown
-- ts: 1 file(s)
-- tsx: 19 file(s)
+- ts: 2 file(s)
+- tsx: 20 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

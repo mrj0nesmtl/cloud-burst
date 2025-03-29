@@ -1,55 +1,106 @@
 'use client';
 
-import { Card, CardContent, CardTitle, CardHeader } from '@/components/ui/card';
-import { MapPin, Loader2 } from 'lucide-react';
-import { mockEventLocations } from '@/components/maps/mock-data';
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function EventsMapClientWrapper() {
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  // Mock location data
+  const locations = [
+    { id: 'loc1', name: 'Central Park', status: 'completed', lat: 40.7812, lng: -73.9665 },
+    { id: 'loc2', name: 'Convention Center', status: 'active', lat: 37.7749, lng: -122.4194 },
+    { id: 'loc3', name: 'Grand Hotel', status: 'upcoming', lat: 41.8781, lng: -87.6298 },
+    { id: 'loc4', name: 'Tech Campus', status: 'cancelled', lat: 47.6062, lng: -122.3321 },
+  ];
+  
+  // Get status color
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return '#3b82f6'; // blue
+      case 'active': return '#22c55e';    // green
+      case 'upcoming': return '#f59e0b';  // amber
+      case 'cancelled': return '#ef4444'; // red
+      default: return '#6b7280';          // gray
+    }
+  };
+
   return (
-    <Card className="overflow-hidden border shadow-sm h-full">
-      <CardHeader className="p-4 pb-2 flex flex-row justify-between items-center">
+    <Card style={{
+      width: '100%',
+      height: isMobile ? '300px' : '400px',
+      overflow: 'hidden',
+      border: '1px solid var(--border)',
+      borderRadius: '8px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      <CardHeader className="p-4 pb-2">
         <CardTitle className="text-base font-medium">Event Locations</CardTitle>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span>View and filter event locations by status</span>
-        </div>
       </CardHeader>
-      <CardContent className="p-0 relative h-[260px] bg-muted/20">
-        {/* Map placeholder - will be replaced with actual Leaflet map */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-          <div className="w-full h-full relative overflow-hidden rounded-md bg-card border border-border">
-            {/* Montreal-like map placeholder */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-gray-800 opacity-80"></div>
-            
-            {/* Map grid lines */}
-            <div className="absolute inset-0 grid grid-cols-8 grid-rows-6">
-              {Array.from({ length: 48 }).map((_, i) => (
-                <div key={i} className="border-[0.5px] border-gray-700/30"></div>
-              ))}
-            </div>
-            
-            {/* Location markers */}
-            {mockEventLocations.map((location, index) => (
-              <div 
-                key={index}
-                className={`absolute w-3 h-3 rounded-full flex items-center justify-center 
-                  ${location.status === 'completed' ? 'bg-blue-500/80' : 
-                    location.status === 'active' ? 'bg-green-500/80' : 
-                    location.status === 'upcoming' ? 'bg-amber-500/80' : 'bg-red-500/80'}`}
-                style={{
-                  // Random positions for the mockup
-                  left: `${20 + (index * 15)}%`,
-                  top: `${30 + ((index % 3) * 20)}%`,
-                  transform: 'translate(-50%, -50%)',
-                  boxShadow: '0 0 0 4px rgba(255,255,255,0.1)'
-                }}
-              >
-              </div>
-            ))}
-            
-            <div className="absolute bottom-3 left-3 flex items-center gap-2 text-xs text-white bg-black/30 px-2 py-1 rounded-md">
-              <MapPin className="h-3 w-3" /> Map data coming soon
-            </div>
-          </div>
+      <CardContent style={{
+        padding: '0',
+        flex: '1',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Placeholder for map */}
+        <div style={{
+          width: '100%',
+          height: '100%',
+          background: 'linear-gradient(to bottom right, #f3f4f6, #e5e7eb)',
+          backgroundSize: '20px 20px',
+          backgroundImage: 'linear-gradient(to right, #e5e7eb 1px, transparent 1px), linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)',
+          position: 'relative'
+        }}>
+          {/* Location markers */}
+          {locations.map((location) => (
+            <div
+              key={location.id}
+              style={{
+                position: 'absolute',
+                top: `${Math.random() * 70 + 10}%`,
+                left: `${Math.random() * 70 + 10}%`,
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                backgroundColor: getStatusColor(location.status),
+                border: '2px solid white',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 10
+              }}
+              title={location.name}
+            />
+          ))}
+        </div>
+        
+        {/* Message at bottom of map */}
+        <div style={{
+          position: 'absolute',
+          bottom: '0',
+          left: '0',
+          right: '0',
+          padding: '8px 16px',
+          textAlign: 'center',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          borderTop: '1px solid var(--border)',
+          fontSize: '12px',
+          color: 'var(--muted-foreground)'
+        }}>
+          Map data will be available soon
         </div>
       </CardContent>
     </Card>

@@ -1,9 +1,9 @@
 # protected Directory Structure
-Generated: 2025-03-28T02:28:52.678Z
+Generated: 2025-03-29T23:29:44.817Z
 
 ## Overview
 
-This directory contains 44 route(s).
+This directory contains 50 route(s).
 
 ## Directory Tree
 ```
@@ -39,6 +39,25 @@ This directory contains 44 route(s).
 │   ├── layout.tsx
 │   ├── loading.tsx
 │   └── page.tsx
+├── ai/
+│   ├── enhancements/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── facial-recognition/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── product-placements/
+│   │   ├── .page.tsx.swp
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── smart-tagging/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── studio/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── layout.tsx
+│   └── metadata.ts
 ├── analytics/
 │   ├── engagement/
 │   │   ├── loading.tsx
@@ -68,6 +87,8 @@ This directory contains 44 route(s).
 │   │   ├── edit/
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── gallery/
+│   │   │   └── page.tsx
 │   │   ├── qr/
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
@@ -80,7 +101,9 @@ This directory contains 44 route(s).
 │   │   └── page_tsx.swp
 │   ├── manage/
 │   │   ├── loading.tsx
-│   │   └── page.tsx
+│   │   ├── map-client-wrapper.tsx
+│   │   ├── page.tsx
+│   │   └── stats-map-wrapper.tsx
 │   ├── migrations/
 │   │   ├── README.md
 │   │   └── add_event_fields.sql
@@ -147,12 +170,13 @@ This directory contains 44 route(s).
 │   └── page.tsx
 └── layout.tsx
 
-51 directories, 88 files
+58 directories, 104 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 79 file(s)
+- ts: 1 file(s)
+- tsx: 93 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

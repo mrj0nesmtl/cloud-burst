@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-28T02:28:50.561Z
+Generated: 2025-03-29T23:29:42.364Z
 
 ## Overview
 
@@ -192,6 +192,25 @@ Generated: 2025-03-28T02:28:50.561Z
 │   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
+│   │   ├── ai/
+│   │   │   ├── enhancements/
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── facial-recognition/
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── product-placements/
+│   │   │   │   ├── .page.tsx.swp
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── smart-tagging/
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── studio/
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   └── metadata.ts
 │   │   ├── analytics/
 │   │   │   ├── engagement/
 │   │   │   │   ├── loading.tsx
@@ -221,6 +240,8 @@ Generated: 2025-03-28T02:28:50.561Z
 │   │   │   │   ├── edit/
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── gallery/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── qr/
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
@@ -233,7 +254,9 @@ Generated: 2025-03-28T02:28:50.561Z
 │   │   │   │   └── page_tsx.swp
 │   │   │   ├── manage/
 │   │   │   │   ├── loading.tsx
-│   │   │   │   └── page.tsx
+│   │   │   │   ├── map-client-wrapper.tsx
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── stats-map-wrapper.tsx
 │   │   │   ├── migrations/
 │   │   │   │   ├── README.md
 │   │   │   │   └── add_event_fields.sql
@@ -368,6 +391,7 @@ Generated: 2025-03-28T02:28:50.561Z
 │   │   ├── security-form.tsx
 │   │   └── subscription-form.tsx
 │   ├── gallery/
+│   │   ├── EventGallery.tsx
 │   │   ├── GalleryHeader.tsx
 │   │   ├── GalleryLayout.tsx
 │   │   ├── GallerySidebar.tsx
@@ -385,6 +409,7 @@ Generated: 2025-03-28T02:28:50.561Z
 │   │   ├── gallery-tabs.tsx
 │   │   ├── guest-upload-dropzone.tsx
 │   │   ├── index.ts
+│   │   ├── mock-data.ts
 │   │   ├── optimized-image.tsx
 │   │   ├── photo-lightbox.tsx
 │   │   ├── upload-dropzone.tsx
@@ -394,6 +419,10 @@ Generated: 2025-03-28T02:28:50.561Z
 │   ├── layout/
 │   │   ├── dashboard-layout.tsx
 │   │   └── main-nav.tsx
+│   ├── maps/
+│   │   ├── EventMap.tsx
+│   │   ├── EventsMapSection.tsx
+│   │   └── mock-data.ts
 │   ├── marketing/
 │   │   ├── contact-form.tsx
 │   │   └── newsletter-form.tsx
@@ -442,6 +471,7 @@ Generated: 2025-03-28T02:28:50.561Z
 │   │   ├── button.tsx
 │   │   ├── calendar.tsx
 │   │   ├── card.tsx
+│   │   ├── chart.tsx
 │   │   ├── charts.tsx
 │   │   ├── checkbox.tsx
 │   │   ├── collapsible.tsx
@@ -483,6 +513,7 @@ Generated: 2025-03-28T02:28:50.561Z
 │   │   ├── tooltip.tsx
 │   │   └── use-toast.ts
 │   ├── app-sidebar.tsx
+│   ├── area_chart_interactive.tsx
 │   ├── cookie-consent.tsx
 │   ├── debug-info.tsx
 │   ├── error-boundary.tsx
@@ -572,13 +603,13 @@ Generated: 2025-03-28T02:28:50.561Z
 ├── middleware.test.ts
 └── middleware.ts
 
-163 directories, 401 files
+171 directories, 424 files
 
 ```
 
 ## File Type Breakdown
-- ts: 85 file(s)
-- tsx: 298 file(s)
+- ts: 88 file(s)
+- tsx: 317 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

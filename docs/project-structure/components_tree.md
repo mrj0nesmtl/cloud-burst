@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-03-28T02:28:54.545Z
+Generated: 2025-03-29T23:29:46.406Z
 
 ## Overview
-This directory contains 156 component(s).
+This directory contains 161 component(s).
 
 
 ## Directory Tree
@@ -66,6 +66,7 @@ This directory contains 156 component(s).
 │   ├── security-form.tsx
 │   └── subscription-form.tsx
 ├── gallery/
+│   ├── EventGallery.tsx
 │   ├── GalleryHeader.tsx
 │   ├── GalleryLayout.tsx
 │   ├── GallerySidebar.tsx
@@ -83,6 +84,7 @@ This directory contains 156 component(s).
 │   ├── gallery-tabs.tsx
 │   ├── guest-upload-dropzone.tsx
 │   ├── index.ts
+│   ├── mock-data.ts
 │   ├── optimized-image.tsx
 │   ├── photo-lightbox.tsx
 │   ├── upload-dropzone.tsx
@@ -92,6 +94,10 @@ This directory contains 156 component(s).
 ├── layout/
 │   ├── dashboard-layout.tsx
 │   └── main-nav.tsx
+├── maps/
+│   ├── EventMap.tsx
+│   ├── EventsMapSection.tsx
+│   └── mock-data.ts
 ├── marketing/
 │   ├── contact-form.tsx
 │   └── newsletter-form.tsx
@@ -140,6 +146,7 @@ This directory contains 156 component(s).
 │   ├── button.tsx
 │   ├── calendar.tsx
 │   ├── card.tsx
+│   ├── chart.tsx
 │   ├── charts.tsx
 │   ├── checkbox.tsx
 │   ├── collapsible.tsx
@@ -181,6 +188,7 @@ This directory contains 156 component(s).
 │   ├── tooltip.tsx
 │   └── use-toast.ts
 ├── app-sidebar.tsx
+├── area_chart_interactive.tsx
 ├── cookie-consent.tsx
 ├── debug-info.tsx
 ├── error-boundary.tsx
@@ -188,13 +196,13 @@ This directory contains 156 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-19 directories, 161 files
+20 directories, 168 files
 
 ```
 
 ## File Type Breakdown
-- ts: 4 file(s)
-- tsx: 156 file(s)
+- ts: 6 file(s)
+- tsx: 161 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

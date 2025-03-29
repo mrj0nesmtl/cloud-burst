@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-28T02:28:49.683Z
+Generated: 2025-03-29T23:29:41.576Z
 
 ## Overview
 
@@ -46,6 +46,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │       └── page.tsx
 ├── docs/
 │   ├── architecture/
+│   │   ├── ai_implementation.md
 │   │   ├── application_design_document.md
 │   │   ├── security.md
 │   │   └── system_architecture_flowchart.md
@@ -440,6 +441,25 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── ai/
+│   │   │   │   ├── enhancements/
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── facial-recognition/
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── product-placements/
+│   │   │   │   │   ├── .page.tsx.swp
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── smart-tagging/
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── studio/
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── metadata.ts
 │   │   │   ├── analytics/
 │   │   │   │   ├── engagement/
 │   │   │   │   │   ├── loading.tsx
@@ -469,6 +489,8 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   │   │   ├── edit/
 │   │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── gallery/
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── qr/
 │   │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   │   └── page.tsx
@@ -481,7 +503,9 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   │   │   └── page_tsx.swp
 │   │   │   │   ├── manage/
 │   │   │   │   │   ├── loading.tsx
-│   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── map-client-wrapper.tsx
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── stats-map-wrapper.tsx
 │   │   │   │   ├── migrations/
 │   │   │   │   │   ├── README.md
 │   │   │   │   │   └── add_event_fields.sql
@@ -616,6 +640,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   ├── security-form.tsx
 │   │   │   └── subscription-form.tsx
 │   │   ├── gallery/
+│   │   │   ├── EventGallery.tsx
 │   │   │   ├── GalleryHeader.tsx
 │   │   │   ├── GalleryLayout.tsx
 │   │   │   ├── GallerySidebar.tsx
@@ -633,6 +658,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   ├── gallery-tabs.tsx
 │   │   │   ├── guest-upload-dropzone.tsx
 │   │   │   ├── index.ts
+│   │   │   ├── mock-data.ts
 │   │   │   ├── optimized-image.tsx
 │   │   │   ├── photo-lightbox.tsx
 │   │   │   ├── upload-dropzone.tsx
@@ -642,6 +668,10 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   ├── layout/
 │   │   │   ├── dashboard-layout.tsx
 │   │   │   └── main-nav.tsx
+│   │   ├── maps/
+│   │   │   ├── EventMap.tsx
+│   │   │   ├── EventsMapSection.tsx
+│   │   │   └── mock-data.ts
 │   │   ├── marketing/
 │   │   │   ├── contact-form.tsx
 │   │   │   └── newsletter-form.tsx
@@ -690,6 +720,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   ├── button.tsx
 │   │   │   ├── calendar.tsx
 │   │   │   ├── card.tsx
+│   │   │   ├── chart.tsx
 │   │   │   ├── charts.tsx
 │   │   │   ├── checkbox.tsx
 │   │   │   ├── collapsible.tsx
@@ -731,6 +762,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   ├── tooltip.tsx
 │   │   │   └── use-toast.ts
 │   │   ├── app-sidebar.tsx
+│   │   ├── area_chart_interactive.tsx
 │   │   ├── cookie-consent.tsx
 │   │   ├── debug-info.tsx
 │   │   ├── error-boundary.tsx
@@ -875,6 +907,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   └── profiles_rows_mar_23.csv
 │   ├── march_27/
 │   │   ├── events_rows.csv
+│   │   ├── events_rows_mar_29.csv
 │   │   ├── galleries_rows.csv
 │   │   └── profiles_rows.csv
 │   ├── may_22/
@@ -928,17 +961,17 @@ Generated: 2025-03-28T02:28:49.683Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-204 directories, 716 files
+212 directories, 741 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11650 file(s)
-- tsx: 437 file(s)
-- js: 27629 file(s)
-- json: 2006 file(s)
-- md: 1456 file(s)
-- css: 25 file(s)
+- ts: 11714 file(s)
+- tsx: 456 file(s)
+- js: 27937 file(s)
+- json: 2051 file(s)
+- md: 1464 file(s)
+- css: 26 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns

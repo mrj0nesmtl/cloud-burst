@@ -1,575 +1,416 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card"
+import { Badge } from '@/components/ui/badge'
 import { 
-  Calendar, 
-  MapPin, 
-  Users, 
-  Plus, 
-  Clock, 
-  Badge as BadgeIcon, 
-  Edit, 
-  QrCode, 
-  Share, 
-  Trash2, 
-  Image, 
-  CheckCircle, 
-  ListFilter, 
-  FileText, 
-  AlertTriangle, 
-  X,
-  CalendarIcon,
-  Activity,
-  Eye
-} from 'lucide-react'
-import { EventActions } from '@/components/events/event-actions'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { Suspense } from 'react'
+  CalendarIcon, 
+  FileEditIcon, 
+  EyeIcon, 
+  AlertTriangleIcon, 
+  Activity, 
+  Users 
+} from 'lucide-react';
 import { EventsMapClientWrapper } from './map-client-wrapper'
+import { StatsMapWrapper } from './stats-map-wrapper'
 
-export const metadata = {
-  title: 'Manage Events | Cloud Burst',
-  description: 'Manage your photography events',
-}
-
-interface Event {
-  id: string
-  name: string
-  date?: string
-  location?: string
-  organizer_id?: string
-}
-
-// Helper function to get status badge
-const getStatusBadge = (status: string) => {
-  switch (status?.toLowerCase()) {
-    case 'draft':
-      return <Badge className="bg-amber-500/20 text-amber-600 hover:bg-amber-500/20 border-none">Draft</Badge>
-    case 'published':
-      return <Badge className="bg-green-500/90 hover:bg-green-500/90 border-none">Published</Badge>
-    case 'completed':
-      return <Badge className="bg-blue-500/90 hover:bg-blue-500/90 border-none">Completed</Badge>
-    case 'cancelled':
-      return <Badge className="bg-red-500/90 hover:bg-red-500/90 border-none">Cancelled</Badge>
-    default:
-      return <Badge variant="outline">{status || 'Unknown'}</Badge>
-  }
-}
-
-// Format date to readable string
-const formatDate = (dateString: string) => {
-  if (!dateString) return 'No date'
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  })
-}
-
-// Define interfaces for our data
-interface EventAttendee {
-  event_id: string;
-}
+// Define event types for type safety
+type EventStatus = 'published' | 'draft' | 'completed' | 'cancelled';
 
 interface EventData {
   id: string;
   name: string;
-  description?: string;
-  location?: string;
-  date?: string;
-  status?: string;
-  organizer_id?: string;
-  user_id?: string;
-  is_public?: boolean;
-  type?: string;
-}
-
-interface ProcessedEvent extends EventData {
+  date: string;
+  location: string;
+  status: EventStatus;
   attendeeCount: number;
 }
 
+// The rest of the component will be imported from a client component
+// The StatsAndMapWrapper is moved to a separate file
+
 export default async function ManageEventsPage() {
-  const cookieStore = cookies()
-  const supabase = createServerComponentClient({ cookies: () => cookieStore })
-  
-  // Get the current user
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  // Get the user's profile to check their role
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user?.id)
-    .single()
-  
-  // Fetch events
-  const { data: events, error } = await supabase
-    .from('events')
-    .select('*')
-  
-  // Post-query filtering based on role if needed
-  let filteredEvents: EventData[] = events || [];
-  if (profile?.role !== 'super_admin' && profile?.role !== 'admin') {
-    filteredEvents = filteredEvents.filter(event => 
-      event.organizer_id === user?.id || 
-      event.user_id === user?.id || 
-      event.is_public === true
-    );
-  }
-  
-  // Fetch event attendees in a separate query to properly count
-  const { data: attendees } = await supabase
-    .from('event_attendees')
-    .select('event_id')
-  
-  // Create a map of event IDs to attendee counts
-  const attendeeCounts: Record<string, number> = {};
-  attendees?.forEach((attendee: EventAttendee) => {
-    if (attendee.event_id) {
-      attendeeCounts[attendee.event_id] = (attendeeCounts[attendee.event_id] || 0) + 1;
-    }
-  });
-  
-  // Process events data to include attendee counts
-  const processedEvents: ProcessedEvent[] = filteredEvents.map(event => ({
-    ...event,
-    attendeeCount: event.id && attendeeCounts[event.id] ? attendeeCounts[event.id] : 0
-  }));
-  
-  // Group events by status
-  const draftEvents = processedEvents.filter(event => event.status === 'draft');
+  // This is a mock function that would be replaced with actual data fetching
+  const getMockEvents = (): EventData[] => {
+    return [
+      {
+        id: "evt-001",
+        name: "Summer Music Festival",
+        date: "2025-06-15",
+        location: "Central Park, New York",
+        status: "published",
+        attendeeCount: 1500
+      },
+      {
+        id: "evt-002",
+        name: "Corporate Tech Conference",
+        date: "2025-07-10",
+        location: "Convention Center, San Francisco",
+        status: "published",
+        attendeeCount: 850
+      },
+      {
+        id: "evt-003",
+        name: "Charity Gala Dinner",
+        date: "2025-05-28",
+        location: "Grand Hotel, Chicago",
+        status: "completed",
+        attendeeCount: 350
+      },
+      {
+        id: "evt-004",
+        name: "Product Launch Event",
+        date: "2025-08-20",
+        location: "Tech Campus, Seattle",
+        status: "draft",
+        attendeeCount: 0
+      },
+      {
+        id: "evt-005",
+        name: "Wedding Expo",
+        date: "2025-09-05",
+        location: "Wedding Venue, Los Angeles",
+        status: "draft",
+        attendeeCount: 0
+      },
+      {
+        id: "evt-006",
+        name: "Annual Shareholder Meeting",
+        date: "2025-04-30",
+        location: "Corporate HQ, Boston",
+        status: "cancelled",
+        attendeeCount: 0
+      },
+      {
+        id: "evt-007",
+        name: "Photography Workshop",
+        date: "2025-06-25",
+        location: "Art Gallery, Portland",
+        status: "published",
+        attendeeCount: 45
+      },
+      {
+        id: "evt-008",
+        name: "Fashion Show",
+        date: "2025-08-12",
+        location: "Fashion District, New York",
+        status: "draft",
+        attendeeCount: 0
+      },
+    ];
+  };
+
+  const mockEvents = getMockEvents();
+  const processedEvents = mockEvents;
+
+  // Filter for published events
   const publishedEvents = processedEvents.filter(event => event.status === 'published');
-  const completedEvents = processedEvents.filter(event => event.status === 'completed');
-  const cancelledEvents = processedEvents.filter(event => event.status === 'cancelled');
   
+  // Get attendee counts by event ID
+  const attendeeCounts = processedEvents.reduce((acc, event) => {
+    acc[event.id] = event.attendeeCount;
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Format the date for display
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
+
+  // Get status badge color
+  const getStatusBadge = (status: EventStatus) => {
+    switch (status) {
+      case 'published':
+        return <Badge className="bg-green-500">Published</Badge>;
+      case 'draft':
+        return <Badge variant="outline">Draft</Badge>;
+      case 'completed':
+        return <Badge className="bg-blue-500">Completed</Badge>;
+      case 'cancelled':
+        return <Badge className="bg-red-500">Cancelled</Badge>;
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  };
+
   return (
-    <div style={{ 
-      width: '100%', 
-      minHeight: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      backgroundColor: 'var(--background)'
-    }}>
-      <div style={{ width: '100%', padding: '24px', flex: '1 1 auto' }}>
-        {/* Header and Create Event Button */}
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'row', 
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '16px', 
-          marginBottom: '24px',
-          flexWrap: 'wrap'
-        }}>
-          <div>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '4px' }}>Manage Events</h1>
-            <p style={{ color: 'var(--muted-foreground)', fontSize: '14px' }}>
-              View and manage all your photography events
-            </p>
-          </div>
-          <Link href="/protected/events/create">
-            <Button size="sm" className="w-full sm:w-auto h-10 font-medium" style={{ 
-              background: 'var(--primary)',
-              borderRadius: '6px',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-              padding: '0 16px'
-            }}>
-              <Plus className="mr-2 h-4 w-4" />
-              Create New Event
-            </Button>
-          </Link>
-        </div>
-        
-        {/* Map and Stats Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          {/* Map Section */}
-          <div className="lg:col-span-2">
-            <EventsMapClientWrapper />
-          </div>
-          
-          {/* Stats Cards */}
-          <div className="flex flex-col gap-4 p-4 bg-card/50 rounded-lg border shadow-sm">
-            <h3 className="text-sm font-medium mb-1">Quick Stats</h3>
-            
-            <Card className="overflow-hidden shadow-sm bg-background">
-              <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-                <CardTitle className="text-base font-medium">Total Events</CardTitle>
-                <div className="h-8 w-8 rounded-md bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                  <CalendarIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                </div>
-              </CardHeader>
-              <CardContent className="p-4 pt-2">
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{processedEvents.length}</div>
-                <p className="text-sm text-muted-foreground">Events created</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="overflow-hidden shadow-sm bg-background">
-              <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-                <CardTitle className="text-base font-medium">Active Events</CardTitle>
-                <div className="h-8 w-8 rounded-md bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                  <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
-                </div>
-              </CardHeader>
-              <CardContent className="p-4 pt-2">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">{publishedEvents.length}</div>
-                <p className="text-sm text-muted-foreground">Currently running</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="overflow-hidden shadow-sm bg-background">
-              <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-                <CardTitle className="text-base font-medium">Total Attendees</CardTitle>
-                <div className="h-8 w-8 rounded-md bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                  <Users className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                </div>
-              </CardHeader>
-              <CardContent className="p-4 pt-2">
-                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                  {Object.values(attendeeCounts).reduce((total, count) => total + count, 0)}
-                </div>
-                <p className="text-sm text-muted-foreground">Event participants</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-        
-        {/* Tabs */}
-        <Card className="border-none shadow-sm overflow-hidden">
-          <CardHeader className="p-4 pb-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-lg">Event List</CardTitle>
-                <CardDescription className="text-sm">
-                  Manage and monitor your events
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="p-4">
-            <Tabs defaultValue="all" className="w-full">
-              <TabsList className="grid grid-cols-5 mb-4">
-                <TabsTrigger value="all" className="flex items-center justify-center gap-2">
-                  <ListFilter className="h-4 w-4" />
-                  <span>All ({processedEvents.length})</span>
-                </TabsTrigger>
-                <TabsTrigger value="published" className="flex items-center justify-center gap-2">
-                  <CheckCircle className="h-4 w-4" />
-                  <span>Published ({publishedEvents.length})</span>
-                </TabsTrigger>
-                <TabsTrigger value="draft" className="flex items-center justify-center gap-2">
-                  <FileText className="h-4 w-4" />
-                  <span>Draft ({draftEvents.length})</span>
-                </TabsTrigger>
-                <TabsTrigger value="completed" className="flex items-center justify-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span>Completed ({completedEvents.length})</span>
-                </TabsTrigger>
-                <TabsTrigger value="cancelled" className="flex items-center justify-center gap-2">
-                  <X className="h-4 w-4" />
-                  <span>Cancelled ({cancelledEvents.length})</span>
-                </TabsTrigger>
-              </TabsList>
-              
-              {/* All Events Tab */}
-              <TabsContent value="all" className="mt-0">
-                <div className="space-y-4">
-                  {processedEvents.length > 0 ? (
-                    processedEvents.map((event) => (
-                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <h3 className="text-base font-semibold">{event.name}</h3>
-                                {getStatusBadge(event.status || '')}
-                              </div>
-                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
-                                  <span>{formatDate(event.date || '')}</span>
-                                </div>
-                                {event.location && (
-                                  <div className="flex items-center gap-2">
-                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
-                                    <span>{event.location}</span>
-                                  </div>
-                                )}
-                                <div className="flex items-center gap-2">
-                                  <Users className="h-4 w-4 text-muted-foreground/70" />
-                                  <span>{event.attendeeCount} attendees</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" asChild className="h-8">
-                                <Link href={`/protected/events/${event.id}`}>
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  View
-                                </Link>
-                              </Button>
-                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
-                            </div>
-                          </div>
-                        </CardContent>
-                        <div className="h-px w-full bg-border" />
-                      </Card>
-                    ))
-                  ) : (
-                    <Card className="border-dashed bg-muted/40">
-                      <CardContent className="flex flex-col items-center justify-center py-8">
-                        <CalendarIcon className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                        <p className="text-muted-foreground text-center mb-4">No events found</p>
-                        <Button size="sm" asChild>
-                          <Link href="/protected/events/create">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Create your first event
-                          </Link>
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              </TabsContent>
-              
-              {/* Published Events Tab */}
-              <TabsContent value="published" className="mt-0">
-                <div className="space-y-4">
-                  {publishedEvents.length > 0 ? (
-                    publishedEvents.map((event) => (
-                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <h3 className="text-base font-semibold">{event.name}</h3>
-                                {getStatusBadge(event.status || '')}
-                              </div>
-                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
-                                  <span>{formatDate(event.date || '')}</span>
-                                </div>
-                                {event.location && (
-                                  <div className="flex items-center gap-2">
-                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
-                                    <span>{event.location}</span>
-                                  </div>
-                                )}
-                                <div className="flex items-center gap-2">
-                                  <Users className="h-4 w-4 text-muted-foreground/70" />
-                                  <span>{event.attendeeCount} attendees</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" asChild className="h-8">
-                                <Link href={`/protected/events/${event.id}`}>
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  View
-                                </Link>
-                              </Button>
-                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
-                            </div>
-                          </div>
-                        </CardContent>
-                        <div className="h-px w-full bg-border" />
-                      </Card>
-                    ))
-                  ) : (
-                    <Card className="border-dashed bg-muted/40">
-                      <CardContent className="flex flex-col items-center justify-center py-8">
-                        <CheckCircle className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                        <p className="text-muted-foreground text-center mb-4">No published events</p>
-                        <Button size="sm" asChild>
-                          <Link href="/protected/events/create">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Create new event
-                          </Link>
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              </TabsContent>
-              
-              {/* Draft Events Tab */}
-              <TabsContent value="draft" className="mt-0">
-                <div className="space-y-4">
-                  {draftEvents.length > 0 ? (
-                    draftEvents.map((event) => (
-                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <h3 className="text-base font-semibold">{event.name}</h3>
-                                {getStatusBadge(event.status || '')}
-                              </div>
-                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
-                                  <span>{formatDate(event.date || '')}</span>
-                                </div>
-                                {event.location && (
-                                  <div className="flex items-center gap-2">
-                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
-                                    <span>{event.location}</span>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" asChild className="h-8">
-                                <Link href={`/protected/events/${event.id}`}>
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  View
-                                </Link>
-                              </Button>
-                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
-                            </div>
-                          </div>
-                        </CardContent>
-                        <div className="h-px w-full bg-border" />
-                      </Card>
-                    ))
-                  ) : (
-                    <Card className="border-dashed bg-muted/40">
-                      <CardContent className="flex flex-col items-center justify-center py-8">
-                        <FileText className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                        <p className="text-muted-foreground text-center">No draft events</p>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              </TabsContent>
-              
-              {/* Completed Events Tab */}
-              <TabsContent value="completed" className="mt-0">
-                <div className="space-y-4">
-                  {completedEvents.length > 0 ? (
-                    completedEvents.map((event) => (
-                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <h3 className="text-base font-semibold">{event.name}</h3>
-                                {getStatusBadge(event.status || '')}
-                              </div>
-                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
-                                  <span>{formatDate(event.date || '')}</span>
-                                </div>
-                                {event.location && (
-                                  <div className="flex items-center gap-2">
-                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
-                                    <span>{event.location}</span>
-                                  </div>
-                                )}
-                                <div className="flex items-center gap-2">
-                                  <Users className="h-4 w-4 text-muted-foreground/70" />
-                                  <span>{event.attendeeCount} attendees</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" asChild className="h-8">
-                                <Link href={`/protected/events/${event.id}`}>
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  View
-                                </Link>
-                              </Button>
-                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
-                            </div>
-                          </div>
-                        </CardContent>
-                        <div className="h-px w-full bg-border" />
-                      </Card>
-                    ))
-                  ) : (
-                    <Card className="border-dashed bg-muted/40">
-                      <CardContent className="flex flex-col items-center justify-center py-8">
-                        <Clock className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                        <p className="text-muted-foreground text-center">No completed events</p>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              </TabsContent>
-              
-              {/* Cancelled Events Tab */}
-              <TabsContent value="cancelled" className="mt-0">
-                <div className="space-y-4">
-                  {cancelledEvents.length > 0 ? (
-                    cancelledEvents.map((event) => (
-                      <Card key={event.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <h3 className="text-base font-semibold">{event.name}</h3>
-                                {getStatusBadge(event.status || '')}
-                              </div>
-                              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4 text-muted-foreground/70" />
-                                  <span>{formatDate(event.date || '')}</span>
-                                </div>
-                                {event.location && (
-                                  <div className="flex items-center gap-2">
-                                    <MapPin className="h-4 w-4 text-muted-foreground/70" />
-                                    <span>{event.location}</span>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" asChild className="h-8">
-                                <Link href={`/protected/events/${event.id}`}>
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  View
-                                </Link>
-                              </Button>
-                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
-                            </div>
-                          </div>
-                        </CardContent>
-                        <div className="h-px w-full bg-border" />
-                      </Card>
-                    ))
-                  ) : (
-                    <Card className="border-dashed bg-muted/40">
-                      <CardContent className="flex flex-col items-center justify-center py-8">
-                        <X className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                        <p className="text-muted-foreground text-center">No cancelled events</p>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+    <div className="flex flex-col space-y-6 p-4 sm:p-6">
+      <div className="flex flex-col space-y-1">
+        <h1 className="text-3xl font-bold tracking-tight">Manage Events</h1>
+        <p className="text-muted-foreground">
+          Create, update, and manage your events all in one place.
+        </p>
       </div>
+
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <Button asChild>
+            <Link href="/protected/events/create">
+              <CalendarIcon className="h-4 w-4 mr-2" />
+              Create New Event
+            </Link>
+          </Button>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center text-muted-foreground text-sm">
+            <AlertTriangleIcon className="h-4 w-4 mr-2 text-yellow-500" />
+            Use the map view to visualize event locations
+          </div>
+        </div>
+      </div>
+      
+      {/* Stats and Map Section */}
+      <StatsMapWrapper 
+        processedEvents={processedEvents}
+        publishedEvents={publishedEvents}
+        attendeeCounts={attendeeCounts}
+        mapComponent={<EventsMapClientWrapper />}
+      />
+      
+      {/* Tabs */}
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="all">All Events</TabsTrigger>
+          <TabsTrigger value="published">Published</TabsTrigger>
+          <TabsTrigger value="draft">Draft</TabsTrigger>
+          <TabsTrigger value="completed">Completed</TabsTrigger>
+          <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+        </TabsList>
+        
+        {/* All Events Tab */}
+        <TabsContent value="all">
+          <div className="rounded-md border">
+            {processedEvents.map((event, index) => (
+              <div key={event.id}>
+                {index > 0 && <div className="border-t border-border" />}
+                <div className="flex flex-col md:flex-row p-4">
+                  <div className="flex-1 md:w-1/3 mb-2 md:mb-0">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-semibold">{event.name}</h3>
+                      {getStatusBadge(event.status)}
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">
+                      <time dateTime={event.date}>{formatDate(event.date)}</time>
+                    </div>
+                  </div>
+                  <div className="flex-1 md:w-1/4 mb-2 md:mb-0">
+                    <div className="text-sm text-muted-foreground">Location</div>
+                    <div className="font-medium">{event.location}</div>
+                  </div>
+                  <div className="flex-1 md:w-1/6 mb-2 md:mb-0">
+                    <div className="text-sm text-muted-foreground">Attendees</div>
+                    <div className="font-medium">{event.attendeeCount > 0 ? event.attendeeCount : 'N/A'}</div>
+                  </div>
+                  <div className="flex-none md:w-1/4 flex items-center justify-start md:justify-end gap-2">
+                    <Button size="sm" variant="outline" asChild>
+                      <Link href={`/protected/events/${event.id}`}>
+                        <EyeIcon className="h-4 w-4 mr-1" />
+                        View
+                      </Link>
+                    </Button>
+                    <Button size="sm" asChild>
+                      <Link href={`/protected/events/${event.id}/edit`}>
+                        <FileEditIcon className="h-4 w-4 mr-1" />
+                        Manage
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </TabsContent>
+        
+        {/* Published Tab */}
+        <TabsContent value="published">
+          <div className="rounded-md border">
+            {processedEvents
+              .filter(event => event.status === 'published')
+              .map((event, index, filteredArray) => (
+                <div key={event.id}>
+                  {index > 0 && <div className="border-t border-border" />}
+                  <div className="flex flex-col md:flex-row p-4">
+                    <div className="flex-1 md:w-1/3 mb-2 md:mb-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold">{event.name}</h3>
+                        {getStatusBadge(event.status)}
+                      </div>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        <time dateTime={event.date}>{formatDate(event.date)}</time>
+                      </div>
+                    </div>
+                    <div className="flex-1 md:w-1/4 mb-2 md:mb-0">
+                      <div className="text-sm text-muted-foreground">Location</div>
+                      <div className="font-medium">{event.location}</div>
+                    </div>
+                    <div className="flex-1 md:w-1/6 mb-2 md:mb-0">
+                      <div className="text-sm text-muted-foreground">Attendees</div>
+                      <div className="font-medium">{event.attendeeCount}</div>
+                    </div>
+                    <div className="flex-none md:w-1/4 flex items-center justify-start md:justify-end gap-2">
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={`/protected/events/${event.id}`}>
+                          <EyeIcon className="h-4 w-4 mr-1" />
+                          View
+                        </Link>
+                      </Button>
+                      <Button size="sm" asChild>
+                        <Link href={`/protected/events/${event.id}/edit`}>
+                          <FileEditIcon className="h-4 w-4 mr-1" />
+                          Manage
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </TabsContent>
+        
+        {/* Draft Tab */}
+        <TabsContent value="draft">
+          <div className="rounded-md border">
+            {processedEvents
+              .filter(event => event.status === 'draft')
+              .map((event, index, filteredArray) => (
+                <div key={event.id}>
+                  {index > 0 && <div className="border-t border-border" />}
+                  <div className="flex flex-col md:flex-row p-4">
+                    <div className="flex-1 md:w-1/3 mb-2 md:mb-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold">{event.name}</h3>
+                        {getStatusBadge(event.status)}
+                      </div>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        <time dateTime={event.date}>{formatDate(event.date)}</time>
+                      </div>
+                    </div>
+                    <div className="flex-1 md:w-1/4 mb-2 md:mb-0">
+                      <div className="text-sm text-muted-foreground">Location</div>
+                      <div className="font-medium">{event.location}</div>
+                    </div>
+                    <div className="flex-1 md:w-1/6 mb-2 md:mb-0">
+                      <div className="text-sm text-muted-foreground">Attendees</div>
+                      <div className="font-medium">N/A</div>
+                    </div>
+                    <div className="flex-none md:w-1/4 flex items-center justify-start md:justify-end gap-2">
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={`/protected/events/${event.id}`}>
+                          <EyeIcon className="h-4 w-4 mr-1" />
+                          View
+                        </Link>
+                      </Button>
+                      <Button size="sm" asChild>
+                        <Link href={`/protected/events/${event.id}/edit`}>
+                          <FileEditIcon className="h-4 w-4 mr-1" />
+                          Manage
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </TabsContent>
+        
+        {/* Completed Tab */}
+        <TabsContent value="completed">
+          <div className="rounded-md border">
+            {processedEvents
+              .filter(event => event.status === 'completed')
+              .map((event, index, filteredArray) => (
+                <div key={event.id}>
+                  {index > 0 && <div className="border-t border-border" />}
+                  <div className="flex flex-col md:flex-row p-4">
+                    <div className="flex-1 md:w-1/3 mb-2 md:mb-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold">{event.name}</h3>
+                        {getStatusBadge(event.status)}
+                      </div>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        <time dateTime={event.date}>{formatDate(event.date)}</time>
+                      </div>
+                    </div>
+                    <div className="flex-1 md:w-1/4 mb-2 md:mb-0">
+                      <div className="text-sm text-muted-foreground">Location</div>
+                      <div className="font-medium">{event.location}</div>
+                    </div>
+                    <div className="flex-1 md:w-1/6 mb-2 md:mb-0">
+                      <div className="text-sm text-muted-foreground">Attendees</div>
+                      <div className="font-medium">{event.attendeeCount}</div>
+                    </div>
+                    <div className="flex-none md:w-1/4 flex items-center justify-start md:justify-end gap-2">
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={`/protected/events/${event.id}`}>
+                          <EyeIcon className="h-4 w-4 mr-1" />
+                          View
+                        </Link>
+                      </Button>
+                      <Button size="sm" asChild>
+                        <Link href={`/protected/events/${event.id}/edit`}>
+                          <FileEditIcon className="h-4 w-4 mr-1" />
+                          Manage
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </TabsContent>
+        
+        {/* Cancelled Tab */}
+        <TabsContent value="cancelled">
+          <div className="rounded-md border">
+            {processedEvents
+              .filter(event => event.status === 'cancelled')
+              .map((event, index, filteredArray) => (
+                <div key={event.id}>
+                  {index > 0 && <div className="border-t border-border" />}
+                  <div className="flex flex-col md:flex-row p-4">
+                    <div className="flex-1 md:w-1/3 mb-2 md:mb-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold">{event.name}</h3>
+                        {getStatusBadge(event.status)}
+                      </div>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        <time dateTime={event.date}>{formatDate(event.date)}</time>
+                      </div>
+                    </div>
+                    <div className="flex-1 md:w-1/4 mb-2 md:mb-0">
+                      <div className="text-sm text-muted-foreground">Location</div>
+                      <div className="font-medium">{event.location}</div>
+                    </div>
+                    <div className="flex-1 md:w-1/6 mb-2 md:mb-0">
+                      <div className="text-sm text-muted-foreground">Attendees</div>
+                      <div className="font-medium">N/A</div>
+                    </div>
+                    <div className="flex-none md:w-1/4 flex items-center justify-start md:justify-end gap-2">
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={`/protected/events/${event.id}`}>
+                          <EyeIcon className="h-4 w-4 mr-1" />
+                          View
+                        </Link>
+                      </Button>
+                      <Button size="sm" asChild>
+                        <Link href={`/protected/events/${event.id}/edit`}>
+                          <FileEditIcon className="h-4 w-4 mr-1" />
+                          Manage
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
-  )
+  );
 }
