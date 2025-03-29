@@ -1,22 +1,22 @@
 import { Metadata } from 'next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle, Cpu, UserSearch, Tag, Users, Shield } from 'lucide-react'
+import { AlertCircle, ShoppingBag, ImageDown, BarChart3, DollarSign, Target } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 export const metadata: Metadata = {
-  title: 'Facial Recognition | AI Features | Cloud Burst',
-  description: 'Intelligent face detection and recognition for your event photos',
+  title: 'Product Placements | AI Features | Cloud Burst',
+  description: 'Smart product placement and brand integration for event photos',
 }
 
-export default function FacialRecognitionPage() {
+export default function ProductPlacementsPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-start gap-4 flex-col sm:flex-row">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Facial Recognition</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Product Placements</h2>
           <p className="text-muted-foreground mt-2">
-            Intelligent face detection and recognition for your event photos
+            Smart product placement and brand integration for event photos
           </p>
         </div>
         <Badge variant="outline" className="bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800">
@@ -37,24 +37,24 @@ export default function FacialRecognitionPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Cpu className="h-5 w-5 text-primary" />
+              <ShoppingBag className="h-5 w-5 text-primary" />
               Feature Overview
             </CardTitle>
             <CardDescription>
-              How our facial recognition technology works
+              How our product placement technology works
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p>
-              Cloud Burst's facial recognition system uses advanced AI algorithms to detect,
-              analyze, and identify faces in your event photos. The system can:
+              Cloud Burst's product placement technology uses AI to seamlessly integrate branded 
+              products into your event photos. The system can:
             </p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Automatically detect faces in photos</li>
-              <li>Group similar faces across multiple photos</li>
-              <li>Match faces to your attendee list</li>
-              <li>Create searchable tags for people</li>
-              <li>Respect privacy settings and consent</li>
+              <li>Identify optimal placement locations in photos</li>
+              <li>Naturally integrate sponsor products</li>
+              <li>Replace existing products with sponsored alternatives</li>
+              <li>Add branded overlays and watermarks</li>
+              <li>Track engagement with placed products</li>
             </ul>
           </CardContent>
         </Card>
@@ -62,23 +62,23 @@ export default function FacialRecognitionPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-primary" />
-              Privacy & Security
+              <Target className="h-5 w-5 text-primary" />
+              Placement Options
             </CardTitle>
             <CardDescription>
-              How we protect your data and respect privacy
+              Flexible integration options for sponsors
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p>
-              We take privacy and security seriously. Our facial recognition system:
+              Choose from various placement strategies:
             </p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Only processes photos you explicitly select</li>
-              <li>Requires opt-in consent from event attendees</li>
-              <li>Stores facial data securely and encrypted</li>
-              <li>Allows users to delete their facial data at any time</li>
-              <li>Complies with privacy regulations like GDPR and CCPA</li>
+              <li>Natural Integration - blend products into scenes</li>
+              <li>Surface Replacement - replace existing surfaces with branding</li>
+              <li>Background Placement - add branded elements to backgrounds</li>
+              <li>Digital Overlays - add digital effects with sponsor branding</li>
+              <li>Custom Watermarks - subtle branded watermarking</li>
             </ul>
           </CardContent>
         </Card>
@@ -90,13 +90,13 @@ export default function FacialRecognitionPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
-              <UserSearch className="h-5 w-5 text-primary" />
-              Simplified Search
+              <DollarSign className="h-5 w-5 text-primary" />
+              New Revenue Streams
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm">
-              Quickly find all photos containing specific people without manual tagging.
+              Create additional monetization opportunities by offering branded photo content to sponsors.
             </p>
           </CardContent>
         </Card>
@@ -104,13 +104,13 @@ export default function FacialRecognitionPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
-              <Tag className="h-5 w-5 text-primary" />
-              Automated Tagging
+              <ImageDown className="h-5 w-5 text-primary" />
+              Non-Intrusive Advertising
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm">
-              Save hours of manual work with AI-powered face detection and tagging.
+              Deliver advertising value without disrupting the authentic feel of event photos.
             </p>
           </CardContent>
         </Card>
@@ -118,13 +118,13 @@ export default function FacialRecognitionPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
-              Attendee Insights
+              <BarChart3 className="h-5 w-5 text-primary" />
+              Performance Analytics
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm">
-              Gain insights into attendee participation and engagement through photo presence.
+              Track engagement metrics on product placements to demonstrate ROI to sponsors.
             </p>
           </CardContent>
         </Card>

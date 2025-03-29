@@ -1,6 +1,5 @@
 'use client'
 
-import { Metadata } from 'next'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -13,11 +12,6 @@ import {
   ChevronLeft
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
-export const metadata: Metadata = {
-  title: 'AI Features | Cloud Burst',
-  description: 'Advanced AI tools for photo and video analysis and enhancement',
-}
 
 interface AILayoutProps {
   children: React.ReactNode
