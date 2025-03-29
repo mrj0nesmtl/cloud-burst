@@ -41,6 +41,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Suspense } from 'react'
+import { EventsMapClientWrapper } from './map-client-wrapper'
 
 export const metadata = {
   title: 'Manage Events | Cloud Burst',
@@ -184,10 +185,11 @@ export default async function ManageEventsPage() {
             </p>
           </div>
           <Link href="/protected/events/create">
-            <Button size="sm" className="w-full sm:w-auto h-10" style={{ 
+            <Button size="sm" className="w-full sm:w-auto h-10 font-medium" style={{ 
               background: 'var(--primary)',
               borderRadius: '6px',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
+              boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+              padding: '0 16px'
             }}>
               <Plus className="mr-2 h-4 w-4" />
               Create New Event
@@ -195,57 +197,58 @@ export default async function ManageEventsPage() {
           </Link>
         </div>
         
-        {/* Stats Cards */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
-          gap: '16px',
-          marginBottom: '24px',
-          padding: '16px',
-          borderRadius: '8px',
-          border: '1px solid var(--border)',
-          background: 'var(--background)',
-        }}>
-          <Card className="overflow-hidden border-none shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-              <CardTitle className="text-base font-medium">Total Events</CardTitle>
-              <div className="h-8 w-8 rounded-md bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <CalendarIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              </div>
-            </CardHeader>
-            <CardContent className="p-4 pt-2">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{processedEvents.length}</div>
-              <p className="text-sm text-muted-foreground">Events created</p>
-            </CardContent>
-          </Card>
+        {/* Map and Stats Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Map Section */}
+          <div className="lg:col-span-2">
+            <EventsMapClientWrapper />
+          </div>
           
-          <Card className="overflow-hidden border-none shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-              <CardTitle className="text-base font-medium">Active Events</CardTitle>
-              <div className="h-8 w-8 rounded-md bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
-              </div>
-            </CardHeader>
-            <CardContent className="p-4 pt-2">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">{publishedEvents.length}</div>
-              <p className="text-sm text-muted-foreground">Currently running</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="overflow-hidden border-none shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-              <CardTitle className="text-base font-medium">Total Attendees</CardTitle>
-              <div className="h-8 w-8 rounded-md bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                <Users className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-              </div>
-            </CardHeader>
-            <CardContent className="p-4 pt-2">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {Object.values(attendeeCounts).reduce((total, count) => total + count, 0)}
-              </div>
-              <p className="text-sm text-muted-foreground">Event participants</p>
-            </CardContent>
-          </Card>
+          {/* Stats Cards */}
+          <div className="flex flex-col gap-4 p-4 bg-card/50 rounded-lg border shadow-sm">
+            <h3 className="text-sm font-medium mb-1">Quick Stats</h3>
+            
+            <Card className="overflow-hidden shadow-sm bg-background">
+              <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
+                <CardTitle className="text-base font-medium">Total Events</CardTitle>
+                <div className="h-8 w-8 rounded-md bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <CalendarIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 pt-2">
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{processedEvents.length}</div>
+                <p className="text-sm text-muted-foreground">Events created</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden shadow-sm bg-background">
+              <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
+                <CardTitle className="text-base font-medium">Active Events</CardTitle>
+                <div className="h-8 w-8 rounded-md bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                  <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 pt-2">
+                <div className="text-2xl font-bold text-green-600 dark:text-green-400">{publishedEvents.length}</div>
+                <p className="text-sm text-muted-foreground">Currently running</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden shadow-sm bg-background">
+              <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
+                <CardTitle className="text-base font-medium">Total Attendees</CardTitle>
+                <div className="h-8 w-8 rounded-md bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                  <Users className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 pt-2">
+                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                  {Object.values(attendeeCounts).reduce((total, count) => total + count, 0)}
+                </div>
+                <p className="text-sm text-muted-foreground">Event participants</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
         
         {/* Tabs */}
@@ -322,7 +325,7 @@ export default async function ManageEventsPage() {
                                   View
                                 </Link>
                               </Button>
-                              <EventActions eventId={event.id} mode="list" />
+                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
                             </div>
                           </div>
                         </CardContent>
@@ -383,7 +386,7 @@ export default async function ManageEventsPage() {
                                   View
                                 </Link>
                               </Button>
-                              <EventActions eventId={event.id} mode="list" />
+                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
                             </div>
                           </div>
                         </CardContent>
@@ -440,7 +443,7 @@ export default async function ManageEventsPage() {
                                   View
                                 </Link>
                               </Button>
-                              <EventActions eventId={event.id} mode="list" />
+                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
                             </div>
                           </div>
                         </CardContent>
@@ -495,7 +498,7 @@ export default async function ManageEventsPage() {
                                   View
                                 </Link>
                               </Button>
-                              <EventActions eventId={event.id} mode="list" />
+                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
                             </div>
                           </div>
                         </CardContent>
@@ -546,7 +549,7 @@ export default async function ManageEventsPage() {
                                   View
                                 </Link>
                               </Button>
-                              <EventActions eventId={event.id} mode="list" />
+                              <EventActions eventId={event.id} organizerId={event.organizer_id} mode="list" />
                             </div>
                           </div>
                         </CardContent>

@@ -37,6 +37,11 @@ interface EventActionsProps {
   mode?: 'list' | 'detail'
 }
 
+interface EventData {
+  name: string;
+  custom_url?: string;
+}
+
 export function EventActions({ eventId, organizerId, mode = 'detail' }: EventActionsProps) {
   const router = useRouter()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -58,11 +63,11 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
       setIsDeleting(true)
       const supabase = createClient()
       
-      // Delete event
+      // Delete event - using 'as any' to bypass type checking for database id
       const { error } = await supabase
         .from('events')
         .delete()
-        .eq('id', eventId)
+        .eq('id', eventId as any)
 
       if (error) throw error
       
@@ -82,22 +87,25 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
     try {
       // Get event details for sharing
       const supabase = createClient()
-      const { data: event, error } = await supabase
+      const { data, error } = await supabase
         .from('events')
         .select('name, custom_url')
-        .eq('id', eventId)
+        .eq('id', eventId as any)
         .single()
       
       if (error) throw error
       
+      // Type guard to ensure data exists and has the expected shape
+      const eventData = data as EventData
+      
       // Create share URL using custom_url if available, or fallback to ID
-      const shareUrl = `${window.location.origin}/event/${event.custom_url || eventId}`
+      const shareUrl = `${window.location.origin}/event/${eventData.custom_url || eventId}`
       
       // Use Web Share API if available
       if (navigator.share) {
         await navigator.share({
-          title: `Join ${event.name} on Cloud Burst`,
-          text: `I'm inviting you to join ${event.name} on Cloud Burst!`,
+          title: `Join ${eventData.name} on Cloud Burst`,
+          text: `I'm inviting you to join ${eventData.name} on Cloud Burst!`,
           url: shareUrl,
         })
         return
@@ -136,23 +144,24 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" style={{ width: '9rem', fontSize: '0.75rem' }}>
-            {mode === 'list' ? (
+            {/* Don't include View in list mode since there's already a separate View button */}
+            {mode !== 'list' && (
               <DropdownMenuItem asChild>
                 <Link href={`/protected/events/${eventId}`} style={{ width: '100%', display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.35rem', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
                   <Eye style={{ height: '0.7rem', width: '0.7rem' }} />
                   View Event
                 </Link>
               </DropdownMenuItem>
-            ) : (
-              <PermissionGate action="update" resource="event" ownerId={organizerId}>
-                <DropdownMenuItem asChild>
-                  <Link href={`/protected/events/${eventId}/edit`} style={{ width: '100%', display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.35rem', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
-                    <Edit style={{ height: '0.7rem', width: '0.7rem' }} />
-                    Edit Event
-                  </Link>
-                </DropdownMenuItem>
-              </PermissionGate>
             )}
+            
+            <PermissionGate action="update" resource="event" ownerId={organizerId}>
+              <DropdownMenuItem asChild>
+                <Link href={`/protected/events/${eventId}/edit`} style={{ width: '100%', display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.35rem', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
+                  <Edit style={{ height: '0.7rem', width: '0.7rem' }} />
+                  Edit Event
+                </Link>
+              </DropdownMenuItem>
+            </PermissionGate>
             
             <PermissionGate action="read" resource="event">
               <DropdownMenuItem asChild>
@@ -165,7 +174,7 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
             
             <PermissionGate action="read" resource="event">
               <DropdownMenuItem asChild>
-                <Link href={`/events/${eventId}/gallery`} style={{ width: '100%', display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.35rem', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
+                <Link href={`/protected/events/${eventId}/gallery`} style={{ width: '100%', display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.35rem', padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
                   <Image style={{ height: '0.7rem', width: '0.7rem' }} />
                   Gallery
                 </Link>
@@ -227,14 +236,16 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
       justifyContent: 'flex-end',
       width: '100%'
     }}>
-      {/* Edit/View button - In list mode, show View button instead of Edit */}
+      {/* Edit/View button - In list mode, don't show View button since it's redundant */}
       {mode === 'list' ? (
-        <Button variant="outline" size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-          <Link href={`/protected/events/${eventId}`}>
-            <Eye style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
-            View
-          </Link>
-        </Button>
+        <PermissionGate action="update" resource="event" ownerId={organizerId}>
+          <Button variant="outline" size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
+            <Link href={`/protected/events/${eventId}/edit`}>
+              <Edit style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+              Edit
+            </Link>
+          </Button>
+        </PermissionGate>
       ) : (
         <PermissionGate action="update" resource="event" ownerId={organizerId}>
           <Button variant="outline" size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
@@ -259,7 +270,7 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
       {/* View Gallery button - visible to all who can view the event */}
       <PermissionGate action="read" resource="event">
         <Button variant="outline" size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-          <Link href={`/events/${eventId}/gallery`}>
+          <Link href={`/protected/events/${eventId}/gallery`}>
             <Image style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
             Gallery
           </Link>

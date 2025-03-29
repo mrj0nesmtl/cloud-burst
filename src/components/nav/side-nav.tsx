@@ -14,7 +14,12 @@ import {
   Album,
   BarChart,
   LineChart,
-  Settings
+  Settings,
+  Cpu,
+  Sparkles,
+  ShoppingBag,
+  Tags,
+  BrainCircuit
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
@@ -167,6 +172,59 @@ export function SideNav({ collapsed = false }: SideNavProps) {
           </>
         )}
       </div>
+
+      {/* AI Features Section - New */}
+      {canManageEvents && (
+        <div className="space-y-1">
+          {!collapsed && (
+            <h4 className="px-2 text-xs font-semibold text-muted-foreground">
+              AI Features
+            </h4>
+          )}
+          <NavItem
+            href="/protected/ai/facial-recognition"
+            active={pathname === "/protected/ai/facial-recognition"}
+            icon={Cpu}
+            collapsed={collapsed}
+          >
+            Facial Recognition
+          </NavItem>
+          <NavItem
+            href="/protected/ai/enhancements"
+            active={pathname === "/protected/ai/enhancements"}
+            icon={Sparkles}
+            collapsed={collapsed}
+          >
+            Enhancements
+          </NavItem>
+          <NavItem
+            href="/protected/ai/product-placements"
+            active={pathname === "/protected/ai/product-placements"}
+            icon={ShoppingBag}
+            collapsed={collapsed}
+          >
+            Product Placements
+          </NavItem>
+          <NavItem
+            href="/protected/ai/smart-tagging"
+            active={pathname === "/protected/ai/smart-tagging"}
+            icon={Tags}
+            collapsed={collapsed}
+            badge="Beta"
+          >
+            Smart Tagging
+          </NavItem>
+          <NavItem
+            href="/protected/ai/studio"
+            active={pathname === "/protected/ai/studio"}
+            icon={BrainCircuit}
+            collapsed={collapsed}
+            badge="New"
+          >
+            AI Studio
+          </NavItem>
+        </div>
+      )}
 
       {/* Analytics Section */}
       {(isOrganizer || canManageEvents) && (
