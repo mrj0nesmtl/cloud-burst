@@ -132,7 +132,7 @@ export function SideNav({ collapsed = false }: SideNavProps) {
         )}
         <NavItem
           href="/protected/gallery"
-          active={pathname.startsWith("/protected/gallery")}
+          active={pathname === "/protected/gallery" || (pathname.startsWith("/protected/gallery") && pathname.split("/").pop() === "all")}
           icon={Image}
           collapsed={collapsed}
         >
@@ -142,7 +142,7 @@ export function SideNav({ collapsed = false }: SideNavProps) {
           <>
             <NavItem
               href="/protected/gallery/events"
-              active={pathname === "/protected/gallery/events"}
+              active={pathname === "/protected/gallery/events" || pathname.includes("/protected/gallery/events/")}
               icon={FolderOpen}
               collapsed={collapsed}
             >
@@ -150,7 +150,7 @@ export function SideNav({ collapsed = false }: SideNavProps) {
             </NavItem>
             <NavItem
               href="/protected/gallery/moderate"
-              active={pathname === "/protected/gallery/moderate"}
+              active={pathname === "/protected/gallery/moderate" || pathname.includes("/protected/gallery/moderate/")}
               icon={Shield}
               collapsed={collapsed}
             >
@@ -158,7 +158,7 @@ export function SideNav({ collapsed = false }: SideNavProps) {
             </NavItem>
             <NavItem
               href="/protected/gallery/albums"
-              active={pathname === "/protected/gallery/albums"}
+              active={pathname === "/protected/gallery/albums" || pathname.includes("/protected/gallery/albums/")}
               icon={Album}
               collapsed={collapsed}
             >
