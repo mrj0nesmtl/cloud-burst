@@ -4,7 +4,7 @@ import { GalleryLayout } from '@/components/gallery/GalleryLayout';
 import { EventGallery } from '@/components/gallery/EventGallery';
 import { Skeleton } from '@/components/ui/skeleton';
 import { mockGalleries } from '@/components/gallery/mock-data';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Camera, Filter, Download, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -18,7 +18,7 @@ export const metadata = {
 
 interface PageProps {
   params: {
-    galleryId: string;
+    id: string;
   }
 }
 
@@ -30,18 +30,18 @@ export default async function EventGalleryPage({ params }: PageProps) {
   const { data: event } = await supabase
     .from('events')
     .select('id, name, date, location, description, status')
-    .eq('id', params.galleryId)
+    .eq('id', params.id)
     .single();
   
   // Fallback to mock data if no real event data found
   if (!event) {
-    const mockGallery = mockGalleries[params.galleryId];
+    const mockGallery = mockGalleries[params.id];
     if (!mockGallery) {
       return notFound();
     }
     
     return (
-      <MockGalleryPage eventId={params.galleryId} />
+      <MockGalleryPage eventId={params.id} />
     );
   }
   
@@ -49,11 +49,11 @@ export default async function EventGalleryPage({ params }: PageProps) {
   const { data: photos } = await supabase
     .from('photos')
     .select('*')
-    .eq('event_id', params.galleryId)
+    .eq('event_id', params.id)
     .order('created_at', { ascending: false });
   
   // If no photos found, use mock photos instead
-  const mockGallery = mockGalleries[params.galleryId] || mockGalleries['1']; // Fallback to first gallery if no match
+  const mockGallery = mockGalleries[params.id] || mockGalleries['1']; // Fallback to first gallery if no match
   const galleryPhotos = photos?.length ? 
     photos.map(photo => ({
       id: photo.id,
@@ -61,7 +61,7 @@ export default async function EventGalleryPage({ params }: PageProps) {
       thumbnail: photo.thumbnail_url || photo.url || mockGallery.photos[0].thumbnail,
       title: photo.title || `Photo ${photo.id}`,
       description: photo.description || '',
-      tags: photo.tags?.split(',') || [],
+      tags: photo.tags ? photo.tags.split(',') : [],
       dateUploaded: photo.created_at,
       views: photo.view_count || 0,
       likes: photo.like_count || 0,
@@ -72,7 +72,7 @@ export default async function EventGalleryPage({ params }: PageProps) {
   
   const header = (
     <div className="flex items-center justify-between w-full">
-      <Link href="/protected/events" className="flex items-center">
+      <Link href={`/protected/events/${params.id}`} className="flex items-center">
         <Button variant="ghost" size="icon" className="mr-2 h-8 w-8">
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -158,7 +158,7 @@ function MockGalleryPage({ eventId }: { eventId: string }) {
   
   const header = (
     <div className="flex items-center justify-between w-full">
-      <Link href="/protected/events" className="flex items-center">
+      <Link href={`/protected/events/${eventId}`} className="flex items-center">
         <Button variant="ghost" size="icon" className="mr-2 h-8 w-8">
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -181,8 +181,9 @@ function MockGalleryPage({ eventId }: { eventId: string }) {
     <div className="p-4 space-y-4">
       <div>
         <h3 className="font-medium text-sm mb-2">Event Info</h3>
-        <p className="text-sm text-muted-foreground mb-1">Demo Event</p>
-        <p className="text-sm text-muted-foreground mb-1">Sample Location</p>
+        <p className="text-sm text-muted-foreground mb-1">{new Date(mockGallery.eventDate).toLocaleDateString()}</p>
+        <p className="text-sm text-muted-foreground mb-1">{mockGallery.location}</p>
+        <p className="text-sm text-muted-foreground line-clamp-3">{mockGallery.description}</p>
       </div>
       
       <div>

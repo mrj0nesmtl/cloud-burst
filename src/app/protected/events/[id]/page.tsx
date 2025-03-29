@@ -1,8 +1,9 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
-import { Mail, UserPlus, Upload, Eye, Printer, Download, Info, Users, QrCode, Image, FileText, Calendar, MapPin } from 'lucide-react'
+import * as LucideIcons from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -98,11 +99,14 @@ export default async function EventPage({ params }: EventPageProps) {
     .eq('event_id', params.id)
   
   // Fetch event photos
-  const { data: photos } = await supabase
+  const { data: dbPhotos } = await supabase
     .from('photos')
     .select('*')
     .eq('event_id', params.id)
     .order('created_at', { ascending: false })
+  
+  // Convert database photos to Photo type with proper url property
+  const photos = dbPhotos?.map(photo => convertDatabasePhotoToPhotoType(photo, params.id)) || []
   
   // Fetch event invitations
   const { data: invitations } = await supabase
@@ -200,7 +204,7 @@ export default async function EventPage({ params }: EventPageProps) {
               gap: '0.35rem', 
               color: 'var(--muted-foreground)'
             }}>
-              <Calendar style={{ height: '0.8rem', width: '0.8rem', flexShrink: 0 }} />
+              <LucideIcons.Calendar style={{ height: '0.8rem', width: '0.8rem', flexShrink: 0 }} />
               <p style={{ 
                 fontSize: '0.75rem', 
                 margin: 0,
@@ -217,7 +221,7 @@ export default async function EventPage({ params }: EventPageProps) {
                 gap: '0.35rem', 
                 color: 'var(--muted-foreground)'
               }}>
-                <MapPin style={{ height: '0.8rem', width: '0.8rem', flexShrink: 0 }} />
+                <LucideIcons.MapPin style={{ height: '0.8rem', width: '0.8rem', flexShrink: 0 }} />
                 <p style={{ 
                   fontSize: '0.75rem', 
                   margin: 0,
@@ -288,7 +292,7 @@ export default async function EventPage({ params }: EventPageProps) {
                   overflow: 'hidden',
                   backgroundColor: 'var(--card)'
                 }} className="group">
-                  <FileText 
+                  <LucideIcons.FileText 
                     size={18} 
                     style={{
                       position: 'relative',
@@ -321,7 +325,7 @@ export default async function EventPage({ params }: EventPageProps) {
                   overflow: 'hidden',
                   backgroundColor: 'var(--card)'
                 }} className="group">
-                  <Mail 
+                  <LucideIcons.Mail 
                     size={18} 
                     style={{
                       position: 'relative',
@@ -330,7 +334,7 @@ export default async function EventPage({ params }: EventPageProps) {
                     }} 
                     className="text-foreground group-hover:text-primary"
                   />
-                  {invitations?.length > 0 && (
+                  {invitations && invitations.length > 0 && (
                     <span style={{
                       position: 'absolute',
                       top: '0',
@@ -346,7 +350,7 @@ export default async function EventPage({ params }: EventPageProps) {
                       justifyContent: 'center',
                       zIndex: 2
                     }}>
-                      {invitations?.length}
+                      {invitations.length}
                     </span>
                   )}
                   <span 
@@ -373,7 +377,7 @@ export default async function EventPage({ params }: EventPageProps) {
                   overflow: 'hidden',
                   backgroundColor: 'var(--card)'
                 }} className="group">
-                  <Users 
+                  <LucideIcons.Users 
                     size={18} 
                     style={{
                       position: 'relative',
@@ -382,7 +386,7 @@ export default async function EventPage({ params }: EventPageProps) {
                     }} 
                     className="text-foreground group-hover:text-primary"
                   />
-                  {attendees?.length > 0 && (
+                  {attendees && attendees.length > 0 && (
                     <span style={{
                       position: 'absolute',
                       top: '0',
@@ -398,7 +402,7 @@ export default async function EventPage({ params }: EventPageProps) {
                       justifyContent: 'center',
                       zIndex: 2
                     }}>
-                      {attendees?.length}
+                      {attendees.length}
                     </span>
                   )}
                   <span 
@@ -425,7 +429,7 @@ export default async function EventPage({ params }: EventPageProps) {
                   overflow: 'hidden',
                   backgroundColor: 'var(--card)'
                 }} className="group">
-                  <Image 
+                  <LucideIcons.Image 
                     size={18} 
                     style={{
                       position: 'relative',
@@ -434,7 +438,7 @@ export default async function EventPage({ params }: EventPageProps) {
                     }} 
                     className="text-foreground group-hover:text-primary"
                   />
-                  {photos?.length > 0 && (
+                  {photos && photos.length > 0 && (
                     <span style={{
                       position: 'absolute',
                       top: '0',
@@ -450,7 +454,7 @@ export default async function EventPage({ params }: EventPageProps) {
                       justifyContent: 'center',
                       zIndex: 2
                     }}>
-                      {photos?.length}
+                      {photos.length}
                     </span>
                   )}
                   <span 
@@ -477,7 +481,7 @@ export default async function EventPage({ params }: EventPageProps) {
                   overflow: 'hidden',
                   backgroundColor: 'var(--card)'
                 }} className="group">
-                  <QrCode 
+                  <LucideIcons.QrCode 
                     size={18} 
                     style={{
                       position: 'relative',
@@ -627,7 +631,7 @@ export default async function EventPage({ params }: EventPageProps) {
               <CardTitle style={{ fontSize: '0.875rem' }}>Invitations</CardTitle>
               <Link href={`/protected/attendees/invitations?eventId=${event.id}`}>
                 <Button variant="outline" size="sm" style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-                  <Mail style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} /> 
+                  <LucideIcons.Mail style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} /> 
                   Send Invitations
                 </Button>
               </Link>
@@ -664,7 +668,7 @@ export default async function EventPage({ params }: EventPageProps) {
             }}>
               <CardTitle style={{ fontSize: '0.875rem' }}>Attendees</CardTitle>
               <Button variant="outline" size="sm" style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-                <UserPlus style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+                <LucideIcons.UserPlus style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
                 Add Attendee
               </Button>
             </CardHeader>
@@ -687,52 +691,74 @@ export default async function EventPage({ params }: EventPageProps) {
           </Card>
         </TabsContent>
 
-        <TabsContent value="gallery">
-          <Card style={{ width: '100%' }}>
-            <CardHeader style={{ 
-              padding: '0.5rem', 
-              display: 'flex', 
-              flexDirection: 'row', 
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '0.35rem'
-            }}>
-              <CardTitle style={{ fontSize: '0.875rem' }}>Gallery</CardTitle>
-              <div style={{ display: 'flex', gap: '0.35rem' }}>
-                <Button variant="outline" size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-                  <Link href={`/events/${event.id}/upload`}>
-                    <Upload style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
-                    Upload
-                  </Link>
+        <TabsContent value="gallery" className="mt-6 space-y-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Gallery</CardTitle>
+                <CardDescription>
+                  Upload and manage event photos
+                </CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <LucideIcons.Upload className="mr-2 h-4 w-4" />
+                  Upload Photos
                 </Button>
-                
-                <Button size="sm" asChild style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-                  <Link href={`/events/${event.id}/gallery`}>
-                    <Eye style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
-                    View
+                <Button size="sm" asChild>
+                  <Link href={`/protected/events/${params.id}/gallery`}>
+                    <LucideIcons.Eye className="mr-2 h-4 w-4" />
+                    View Gallery
                   </Link>
                 </Button>
               </div>
             </CardHeader>
-            <CardContent style={{ padding: '0.5rem' }}>
+            <CardContent>
               {photos && photos.length > 0 ? (
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))', 
-                  gap: '0.35rem',
-                  width: '100%'
-                }}>
-                  {/* Photo thumbnails would go here */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {photos.slice(0, 8).map((photo, index) => (
+                    <div key={index} className="aspect-square relative overflow-hidden rounded-md border">
+                      <div className="relative w-full h-full">
+                        <img
+                          src={photo.url || photo.storage_path || ''}
+                          alt={`Event photo ${index + 1}`}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  {photos.length > 8 && (
+                    <Link
+                      href={`/protected/events/${params.id}/gallery`}
+                      className="aspect-square flex items-center justify-center rounded-md border bg-muted/50 hover:bg-muted"
+                    >
+                      <div className="text-center">
+                        <LucideIcons.Plus className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
+                        <span className="text-sm font-medium">
+                          View {photos.length - 8} more
+                        </span>
+                      </div>
+                    </Link>
+                  )}
                 </div>
               ) : (
-                <div style={{ 
-                  textAlign: 'center', 
-                  padding: '0.75rem', 
-                  color: 'var(--muted-foreground)',
-                  fontSize: '0.75rem'
-                }}>
-                  No photos have been uploaded for this event yet.
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <LucideIcons.Camera className="h-12 w-12 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No photos uploaded yet</h3>
+                  <p className="text-muted-foreground mb-4 max-w-md">
+                    Upload photos of your event to create a gallery that attendees can view and interact with.
+                  </p>
+                  <div className="flex gap-3">
+                    <Button variant="outline" asChild>
+                      <Link href={`/protected/events/${params.id}/gallery`}>
+                        Browse Gallery
+                      </Link>
+                    </Button>
+                    <Button>
+                      <LucideIcons.Upload className="mr-2 h-4 w-4" />
+                      Upload Photos
+                    </Button>
+                  </div>
                 </div>
               )}
             </CardContent>
@@ -775,11 +801,11 @@ export default async function EventPage({ params }: EventPageProps) {
               </div>
               <div style={{ display: 'flex', gap: '0.35rem' }}>
                 <Button variant="outline" size="sm" style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-                  <Printer style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+                  <LucideIcons.Printer style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
                   Print
                 </Button>
                 <Button variant="outline" size="sm" style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-                  <Download style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+                  <LucideIcons.Download style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
                   Download
                 </Button>
               </div>
