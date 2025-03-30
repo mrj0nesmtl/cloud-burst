@@ -37,12 +37,12 @@ Cloud Burst has completed the implementation of an interactive map interface dur
 | Chart Components | 100% | 0.8.3 |
 | AI Features Framework | 100% | 0.8.3 |
 | Interactive Map Implementation | 100% | 0.8.4 |
-| Photo Upload & Storage | 80% | 0.9.0 |
-| Album Management | 60% | 0.9.0 |
-| Content Moderation Workflow | 75% | 0.9.0 |
-| Analytics Dashboard | 30% | 0.9.0 |
-| Guest Onboarding & RSVP Flow | 10% | 0.9.0 |
-| AI Integration | 15% | 0.9.0 |
+| Photo Upload & Storage | 80% | 0.8.5 |
+| Album Management | 60% | 0.8.5 |
+| Content Moderation Workflow | 75% | 0.8.5 |
+| Analytics Dashboard | 30% | 0.8.5 |
+| Guest Onboarding & RSVP Flow | 10% | 0.8.5 |
+| AI Integration | 15% | 0.9.5 |
 
 ## Recent Achievements (Session 32)
 - Implemented Leaflet-based interactive map with dark theme
@@ -57,7 +57,7 @@ Cloud Burst has completed the implementation of an interactive map interface dur
 - Created reusable map component for potential use elsewhere in the application
 
 ## Current Focus (v0.9.0)
-1. Complete Guest Onboarding & RSVP Flow (10% → 100%)
+1. Complete Guest Onboarding & RSVP Flow (20% → 100%)
    - Design RSVP user flow with state diagram
    - Enhance invitation database schema for RSVP tracking
    - Create RSVP form component with Zod validation
