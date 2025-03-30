@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-29T23:29:41.576Z
+Generated: 2025-03-30T00:42:13.169Z
 
 ## Overview
 
@@ -217,6 +217,10 @@ Generated: 2025-03-29T23:29:41.576Z
 │   │   ├── .DS_Store
 │   │   ├── fallback-hero.jpg
 │   │   └── pexels-themo1-bg.jpg
+│   ├── leaflet/
+│   │   ├── marker-icon-2x.png
+│   │   ├── marker-icon.png
+│   │   └── marker-shadow.png
 │   ├── .DS_Store
 │   ├── android-chrome-192x192.png
 │   ├── android-chrome-512x512.png
@@ -502,6 +506,7 @@ Generated: 2025-03-29T23:29:41.576Z
 │   │   │   │   │   ├── page.tsx
 │   │   │   │   │   └── page_tsx.swp
 │   │   │   │   ├── manage/
+│   │   │   │   │   ├── leaflet-map.tsx
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   ├── map-client-wrapper.tsx
 │   │   │   │   │   ├── page.tsx
@@ -874,6 +879,13 @@ Generated: 2025-03-29T23:29:41.576Z
 │   │   ├── role_capabilities_rows.csv
 │   │   ├── roles_rows (1).csv
 │   │   └── roles_rows.csv
+│   ├── mar-29/
+│   │   ├── Snippet Event Details Query.csv
+│   │   ├── Snippet Event and Gallery Overview.csv
+│   │   ├── events_rows (1).csv
+│   │   ├── events_rows.csv
+│   │   ├── galleries_rows (1).csv
+│   │   └── galleries_rows.csv
 │   ├── mar_18/
 │   │   ├── Supabase Snippet Detailed Table Definitions.csv
 │   │   ├── Supabase Snippet Retrieve Invitations.csv
@@ -961,17 +973,17 @@ Generated: 2025-03-29T23:29:41.576Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-212 directories, 741 files
+214 directories, 751 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11714 file(s)
-- tsx: 456 file(s)
-- js: 27937 file(s)
-- json: 2051 file(s)
+- ts: 11700 file(s)
+- tsx: 457 file(s)
+- js: 27833 file(s)
+- json: 2022 file(s)
 - md: 1464 file(s)
-- css: 26 file(s)
+- css: 27 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns

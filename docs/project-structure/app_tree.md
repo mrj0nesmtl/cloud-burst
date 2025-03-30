@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-03-29T23:29:44.277Z
+Generated: 2025-03-30T00:42:15.386Z
 
 ## Overview
 
@@ -236,6 +236,7 @@ This directory contains 88 route(s).
 │   │   │   ├── page.tsx
 │   │   │   └── page_tsx.swp
 │   │   ├── manage/
+│   │   │   ├── leaflet-map.tsx
 │   │   │   ├── loading.tsx
 │   │   │   ├── map-client-wrapper.tsx
 │   │   │   ├── page.tsx
@@ -316,13 +317,13 @@ This directory contains 88 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-129 directories, 179 files
+129 directories, 180 files
 
 ```
 
 ## File Type Breakdown
 - ts: 20 file(s)
-- tsx: 147 file(s)
+- tsx: 148 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

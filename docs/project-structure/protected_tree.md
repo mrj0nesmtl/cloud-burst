@@ -1,5 +1,5 @@
 # protected Directory Structure
-Generated: 2025-03-29T23:29:44.817Z
+Generated: 2025-03-30T00:42:15.733Z
 
 ## Overview
 
@@ -100,6 +100,7 @@ This directory contains 50 route(s).
 │   │   ├── page.tsx
 │   │   └── page_tsx.swp
 │   ├── manage/
+│   │   ├── leaflet-map.tsx
 │   │   ├── loading.tsx
 │   │   ├── map-client-wrapper.tsx
 │   │   ├── page.tsx
@@ -170,13 +171,13 @@ This directory contains 50 route(s).
 │   └── page.tsx
 └── layout.tsx
 
-58 directories, 104 files
+58 directories, 105 files
 
 ```
 
 ## File Type Breakdown
 - ts: 1 file(s)
-- tsx: 93 file(s)
+- tsx: 94 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns
