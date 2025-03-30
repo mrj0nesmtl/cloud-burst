@@ -37,72 +37,74 @@ export function EventsMapClientWrapper() {
   };
 
   return (
-    <Card style={{
-      width: '100%',
-      height: isMobile ? '300px' : '400px',
-      overflow: 'hidden',
-      border: '1px solid var(--border)',
-      borderRadius: '8px',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-      display: 'flex',
-      flexDirection: 'column'
-    }}>
-      <CardHeader className="p-4 pb-2">
-        <CardTitle className="text-base font-medium">Event Locations</CardTitle>
-      </CardHeader>
-      <CardContent style={{
-        padding: '0',
-        flex: '1',
-        position: 'relative',
-        overflow: 'hidden'
+    <div style={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
+      <Card style={{
+        width: '100%',
+        height: isMobile ? '300px' : '400px',
+        overflow: 'hidden',
+        border: '1px solid var(--border)',
+        borderRadius: '8px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
-        {/* Placeholder for map */}
-        <div style={{
-          width: '100%',
-          height: '100%',
-          background: 'linear-gradient(to bottom right, #f3f4f6, #e5e7eb)',
-          backgroundSize: '20px 20px',
-          backgroundImage: 'linear-gradient(to right, #e5e7eb 1px, transparent 1px), linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)',
-          position: 'relative'
+        <CardHeader className="p-4 pb-2">
+          <CardTitle className="text-base font-medium">Event Locations</CardTitle>
+        </CardHeader>
+        <CardContent style={{
+          padding: '0',
+          flex: '1',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
-          {/* Location markers */}
-          {locations.map((location) => (
-            <div
-              key={location.id}
-              style={{
-                position: 'absolute',
-                top: `${Math.random() * 70 + 10}%`,
-                left: `${Math.random() * 70 + 10}%`,
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
-                backgroundColor: getStatusColor(location.status),
-                border: '2px solid white',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 10
-              }}
-              title={location.name}
-            />
-          ))}
-        </div>
-        
-        {/* Message at bottom of map */}
-        <div style={{
-          position: 'absolute',
-          bottom: '0',
-          left: '0',
-          right: '0',
-          padding: '8px 16px',
-          textAlign: 'center',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          borderTop: '1px solid var(--border)',
-          fontSize: '12px',
-          color: 'var(--muted-foreground)'
-        }}>
-          Map data will be available soon
-        </div>
-      </CardContent>
-    </Card>
+          {/* Placeholder for map */}
+          <div style={{
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(to bottom right, #f3f4f6, #e5e7eb)',
+            backgroundSize: '20px 20px',
+            backgroundImage: 'linear-gradient(to right, #e5e7eb 1px, transparent 1px), linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)',
+            position: 'relative'
+          }}>
+            {/* Location markers */}
+            {locations.map((location) => (
+              <div
+                key={location.id}
+                style={{
+                  position: 'absolute',
+                  top: `${Math.random() * 70 + 10}%`,
+                  left: `${Math.random() * 70 + 10}%`,
+                  width: '12px',
+                  height: '12px',
+                  borderRadius: '50%',
+                  backgroundColor: getStatusColor(location.status),
+                  border: '2px solid white',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: 10
+                }}
+                title={location.name}
+              />
+            ))}
+          </div>
+          
+          {/* Message at bottom of map */}
+          <div style={{
+            position: 'absolute',
+            bottom: '0',
+            left: '0',
+            right: '0',
+            padding: '8px 16px',
+            textAlign: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            borderTop: '1px solid var(--border)',
+            fontSize: '12px',
+            color: 'var(--muted-foreground)'
+          }}>
+            Map data will be available soon
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 } 

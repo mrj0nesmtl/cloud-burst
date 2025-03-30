@@ -127,7 +127,7 @@ export default async function DashboardPage() {
           gap: '16px',
           marginBottom: '24px'
         }}>
-          <Card className="overflow-hidden border-none shadow-sm">
+          <Card className="overflow-hidden border border-blue-100 dark:border-blue-900/30 shadow-sm hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800/50 transition-all bg-blue-50/50 dark:bg-blue-900/10">
             <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
               <CardTitle className="text-base font-medium">Total Events</CardTitle>
               <div className="h-8 w-8 rounded-md bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
@@ -140,7 +140,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
           
-          <Card className="overflow-hidden border-none shadow-sm">
+          <Card className="overflow-hidden border border-green-100 dark:border-green-900/30 shadow-sm hover:shadow-md hover:border-green-200 dark:hover:border-green-800/50 transition-all bg-green-50/50 dark:bg-green-900/10">
             <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
               <CardTitle className="text-base font-medium">Total Attendees</CardTitle>
               <div className="h-8 w-8 rounded-md bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -153,7 +153,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
           
-          <Card className="overflow-hidden border-none shadow-sm">
+          <Card className="overflow-hidden border border-amber-100 dark:border-amber-900/30 shadow-sm hover:shadow-md hover:border-amber-200 dark:hover:border-amber-800/50 transition-all bg-amber-50/50 dark:bg-amber-900/10">
             <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
               <CardTitle className="text-base font-medium">Active Events</CardTitle>
               <div className="h-8 w-8 rounded-md bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
@@ -166,7 +166,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
           
-          <Card className="overflow-hidden border-none shadow-sm">
+          <Card className="overflow-hidden border border-purple-100 dark:border-purple-900/30 shadow-sm hover:shadow-md hover:border-purple-200 dark:hover:border-purple-800/50 transition-all bg-purple-50/50 dark:bg-purple-900/10">
             <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
               <CardTitle className="text-base font-medium">Total Photos</CardTitle>
               <div className="h-8 w-8 rounded-md bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
@@ -185,10 +185,11 @@ export default async function DashboardPage() {
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 600px), 1fr))', 
           gap: '24px',
-          marginBottom: '24px' 
+          marginBottom: '24px',
+          alignItems: 'stretch' 
         }}>
           {/* Chart Card */}
-          <Card className="border-none shadow-sm">
+          <Card className="border-none shadow-sm h-full flex flex-col">
             <CardHeader className="p-6 pb-2">
               <div className="flex items-center justify-between">
                 <div>
@@ -200,8 +201,8 @@ export default async function DashboardPage() {
                 <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
               </div>
             </CardHeader>
-            <CardContent className="p-6 pt-2">
-              <div style={{ height: '300px' }}>
+            <CardContent className="p-6 pt-2 flex-1">
+              <div style={{ height: '450px' }}>
                 <Suspense fallback={<div className="h-full w-full flex items-center justify-center">Loading chart...</div>}>
                   <OverviewChart />
                 </Suspense>
@@ -210,7 +211,7 @@ export default async function DashboardPage() {
           </Card>
           
           {/* Recent Events Card */}
-          <Card className="border-none shadow-sm">
+          <Card className="border-none shadow-sm h-full flex flex-col">
             <CardHeader className="p-6 pb-2">
               <div className="flex items-center justify-between">
                 <div>
@@ -227,7 +228,7 @@ export default async function DashboardPage() {
                 </Link>
               </div>
             </CardHeader>
-            <CardContent className="p-6 pt-4">
+            <CardContent className="p-6 pt-4 flex-1">
               <RecentEvents events={recentEvents} />
             </CardContent>
           </Card>
