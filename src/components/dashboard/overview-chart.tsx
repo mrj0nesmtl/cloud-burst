@@ -179,7 +179,7 @@ export function OverviewChart() {
               top: 10, 
               right: 10, 
               left: isMobile ? -5 : 0, 
-              bottom: 0 
+              bottom: 40 
             }}
           >
             <CartesianGrid 

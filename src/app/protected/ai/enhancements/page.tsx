@@ -1,21 +1,31 @@
-import { Metadata } from 'next'
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle, Sparkles, Wand2, ImagePlus, Palette, FileVideo2 } from 'lucide-react'
+import { AlertCircle, Sparkles, Wand2, ImagePlus, Palette, FileVideo2, ImageIcon, Settings } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-
-export const metadata: Metadata = {
-  title: 'AI Enhancements | AI Features | Cloud Burst',
-  description: 'Automated photo and video enhancement powered by AI',
-}
+import { useState, useEffect } from 'react'
 
 export default function EnhancementsPage() {
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start gap-4 flex-col sm:flex-row">
+    <div style={{ width: '100%', padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexDirection: isMobile ? 'column' : 'row' }}>
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">AI Enhancements</h2>
-          <p className="text-muted-foreground mt-2">
+          <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', lineHeight: '1.25', letterSpacing: '-0.025em' }}>AI Enhancements</h2>
+          <p style={{ color: 'var(--muted-foreground)', marginTop: '8px' }}>
             Automated photo and video enhancement powered by AI
           </p>
         </div>
@@ -33,62 +43,97 @@ export default function EnhancementsPage() {
         </AlertDescription>
       </Alert>
       
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+        gap: '24px',
+        width: '100%'
+      }}>
+        <Card style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
+              <ImageIcon className="h-5 w-5 text-primary" />
               Feature Overview
             </CardTitle>
             <CardDescription>
               How our AI enhancement technology works
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '16px', flexGrow: 1 }}>
             <p>
-              Cloud Burst's enhancement technology uses advanced AI algorithms to automatically improve
-              the quality of your photos and videos. The system can:
+              Cloud Burst's AI enhancement system uses advanced neural networks to automatically
+              improve your event photos. The system can:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Enhance lighting and contrast</li>
-              <li>Improve sharpness and detail</li>
+            <ul style={{ listStyleType: 'disc', paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <li>Adjust lighting and exposure</li>
+              <li>Enhance colors and contrast</li>
               <li>Reduce noise in low-light photos</li>
-              <li>Stabilize shaky video footage</li>
-              <li>Apply intelligent color correction</li>
+              <li>Sharpen details and improve clarity</li>
+              <li>Apply artistic filters and styles</li>
             </ul>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Wand2 className="h-5 w-5 text-primary" />
+              <Settings className="h-5 w-5 text-primary" />
               Enhancement Options
             </CardTitle>
             <CardDescription>
-              Choose from various enhancement styles
+              Available AI-powered enhancement tools
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              Customize your enhancements with various preset styles:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Natural - subtle improvements that look authentic</li>
-              <li>Vivid - enhanced colors and contrast for impactful visuals</li>
-              <li>Artistic - stylized enhancements for creative looks</li>
-              <li>Professional - calibrated for print and professional use</li>
-              <li>Custom - fine-tune settings to your exact preferences</li>
-            </ul>
+          <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '16px', flexGrow: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h4 style={{ fontWeight: '500' }}>Auto-Enhance</h4>
+                  <Badge>Ready</Badge>
+                </div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                  One-click enhancement for lighting, color, and clarity
+                </p>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h4 style={{ fontWeight: '500' }}>Advanced Adjustments</h4>
+                  <Badge variant="outline">Coming Soon</Badge>
+                </div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                  Fine-tune enhancement parameters manually
+                </p>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h4 style={{ fontWeight: '500' }}>Artistic Filters</h4>
+                  <Badge variant="outline">Coming Soon</Badge>
+                </div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                  Apply professional styles and creative effects
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
       
-      <h3 className="text-xl font-semibold mt-8">Key Benefits</h3>
+      <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginTop: '16px' }}>Key Benefits</h3>
       
-      <div className="grid gap-4 md:grid-cols-3">
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile 
+          ? '1fr' 
+          : isMobile === false && window.innerWidth < 1024 
+            ? 'repeat(2, 1fr)' 
+            : 'repeat(3, 1fr)',
+        gap: '16px',
+        width: '100%'
+      }}>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '8px' }}>
             <CardTitle className="text-lg flex items-center gap-2">
               <ImagePlus className="h-5 w-5 text-primary" />
               Batch Processing
@@ -102,7 +147,7 @@ export default function EnhancementsPage() {
         </Card>
         
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '8px' }}>
             <CardTitle className="text-lg flex items-center gap-2">
               <Palette className="h-5 w-5 text-primary" />
               Style Matching
@@ -116,7 +161,7 @@ export default function EnhancementsPage() {
         </Card>
         
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '8px' }}>
             <CardTitle className="text-lg flex items-center gap-2">
               <FileVideo2 className="h-5 w-5 text-primary" />
               Video Enhancement

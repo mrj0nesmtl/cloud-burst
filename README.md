@@ -24,6 +24,7 @@
   - [Invitation System](#invitation-system)
   - [Security](#security)
   - [Key Benefits](#key-benefits)
+  - [AI Features](#ai-features)
 - [System Architecture](#-system-architecture)
 - [User Roles](#-user-roles)
 - [User Experience](#-user-experience)
@@ -36,7 +37,7 @@
 
 ## Abstract 💡
 
-Cloud Burst represents the evolution of event media capture, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, enhanced gallery functionality, invitation system, and RSVP capabilities, our platform now offers a comprehensive solution for event media management. Deployed in beta at [https://cb-beta.replit.app](https://cb-beta.replit.app), Cloud Burst maintains exceptional performance while delivering a seamless user experience across devices as we approach our April 1, 2025 launch date.
+Cloud Burst represents the evolution of event media capture, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, enhanced gallery functionality, invitation system, RSVP capabilities, and AI-powered features, our platform now offers a comprehensive solution for event media management. Deployed in beta at [https://cb-beta.replit.app](https://cb-beta.replit.app), Cloud Burst maintains exceptional performance while delivering a seamless user experience across devices as we approach our April 30, 2025 beta release date.
 
 ## Crowd-Powered 🤳
 
@@ -88,6 +89,14 @@ Remember the magic of disposable cameras 📸 on wedding tables? We've reimagine
 - **Content Protection**: Ensure media is only accessible to authorized users
 - **Token-Based Authentication**: Secure access for guests without creating accounts
 
+### AI Features
+
+- **Facial Recognition**: Intelligent face detection and recognition for easy photo organization and search
+- **Photo Enhancements**: Automated photo and video enhancement with customizable styles
+- **Product Placements**: Smart product placement and brand integration for event photos
+- **Smart Tagging**: Automated content tagging and organization powered by AI
+- **AI Studio**: Advanced workspace for custom photo and video transformations using cutting-edge models
+
 ### Key Benefits
 
 - **Instant Access**: One QR code connects all your guests
@@ -113,6 +122,7 @@ graph TD
     WebApp -->|"User Settings"| Settings["⚙️ Settings System"]
     WebApp -->|"Analytics"| Analytics["📈 Analytics System"]
     WebApp -->|"Access Control"| RBAC["🔒 RBAC System"]
+    WebApp -->|"AI Features"| AI["🧠 AI System"]
     
     Dashboard -->|"Load"| Supabase
     Templates -->|"Sync"| Supabase
@@ -122,6 +132,7 @@ graph TD
     Settings -->|"CRUD"| Supabase
     Analytics -->|"Query"| Supabase
     RBAC -->|"Verify"| Supabase
+    AI -->|"Process"| Supabase
     
     Supabase --> Auth["🔑 Auth"]
     Supabase --> Database["💾 Database"]
@@ -134,6 +145,7 @@ graph TD
     style Storage fill:#7E22CE,stroke:#333,color:#fff
     style Analytics fill:#DC2626,stroke:#333,color:#fff
     style Gallery fill:#2563EB,stroke:#333,color:#fff
+    style AI fill:#6D28D9,stroke:#333,color:#fff
 ```
 
 ## 👥 User Roles
@@ -178,13 +190,15 @@ graph LR
 - Monitor event analytics
 - Review and approve media uploads
 - Generate event QR codes
+- Access AI features for media enhancement
 
 ### For Photographers
 - Upload and organize media
 - Create albums and galleries
-- Edit and enhance content
+- Edit and enhance content with AI tools
 - Share with event participants
 - Track engagement metrics
+- Apply automated tagging and organization
 
 ### For Invited Guests
 - Receive personalized invitations
@@ -193,6 +207,7 @@ graph LR
 - View and download shared content
 - Connect with other attendees
 - Respond to invitations with RSVP
+- Enjoy AI-enhanced photos and videos
 
 ## 🔄 Current Status
 
@@ -213,14 +228,17 @@ Cloud Burst is currently in beta (v0.8.3) with approximately 95% of core feature
 - ✅ Email system improvements
 - ✅ Profile management
 - ✅ Mobile responsiveness optimization
-- 🟡 Guest Onboarding & RSVP Flow (0% complete)
+- ✅ Chart components for data visualization
+- ✅ AI Features framework
+- 🟡 Guest Onboarding & RSVP Flow (10% complete)
 - 🟡 Media moderation (85% complete)
 - 🟡 Gallery masonry layout (95% complete)
 - 🟡 Analytics dashboard (65% complete)
 - 🟡 Album management system (60% complete)
 - 🟡 Camera implementation (30% complete)
+- 🟡 AI integration with media processing (10% complete)
 
-### Technical Debt (Session 32)
+### Technical Debt (Session 33)
 - Guest Onboarding & RSVP Flow implementation
 - Magic Link authentication for guests
 - RSVP form with preference collection
@@ -228,7 +246,8 @@ Cloud Burst is currently in beta (v0.8.3) with approximately 95% of core feature
 - QR code scanner and camera enhancements
 - Final accessibility improvements
 - Enhanced keyboard navigation
-- Complete documentation for new RSVP components
+- TensorFlow.js integration for client-side AI processing
+- Complete documentation for new components
 
 We're targeting Beta 0.9.0 for internal testing by April 30, 2025, with public launch (v1.0.0) planned for May 15, 2025.
 
@@ -260,21 +279,24 @@ gantt
     Database Security Fixes :done, e5, 2025-03-15, 1d
     Invitation System       :done, e6, 2025-03-16, 7d
     RSVP Implementation     :done, e7, 2025-03-21, 5d
-    Media Moderation        :active, e8, 2025-03-26, 3d
-    Final Optimizations     :e9, 2025-03-27, 4d
+    Media Moderation        :done, e8, 2025-03-26, 3d
+    Mobile Responsiveness   :done, e9, 2025-04-15, 4d
+    AI Features Framework   :active, e10, 2025-04-17, 5d
+    RSVP Flow Completion    :e11, 2025-04-22, 8d
     
     section Final Preparations
-    Beta v0.9.0 Release     :milestone, b1, 2025-03-30, 0d
-    Performance Tuning      :o1, 2025-03-31, 1d
-    Public Launch (v1.0.0)  :milestone, l3, 2025-04-01, 0d
+    Beta v0.9.0 Release     :milestone, b1, 2025-04-30, 0d
+    Performance Tuning      :o1, 2025-05-01, 7d
+    Security Audit          :o2, 2025-05-08, 7d
+    Public Launch (v1.0.0)  :milestone, l3, 2025-05-15, 0d
 ```
 
 ### Key Development Phases
 
 1. **Foundation Phase** (Feb 1-15, 2025): Project setup, authentication system, database schema design
 2. **Core Functionality Phase** (Feb 16-Mar 1, 2025): Event management, basic media upload, user roles
-3. **Enhanced Features Phase** (Mar 2-26, 2025): Advanced gallery, navigation, authentication refinements, invitation system, RSVP functionality
-4. **Final Preparations Phase** (Mar 27-Apr 1, 2025): Performance tuning, security audit, public launch preparations
+3. **Enhanced Features Phase** (Mar 2-Apr 22, 2025): Advanced gallery, navigation, authentication refinements, invitation system, RSVP functionality, AI features
+4. **Final Preparations Phase** (Apr 23-May 15, 2025): Performance tuning, security audit, public launch preparations
 
 ## 🚀 Getting Started
 
@@ -326,12 +348,14 @@ Our documentation includes:
   - [Media Schema Migration](./docs/design/media_schema_migration.md)
   - [Consistent Layout](./docs/design/consistent-layout.md)
   - [Layout Troubleshooting](./docs/design/layout-troubleshooting.md)
+  - [AI Features Implementation](./docs/design/ai_features_implementation.md)
+  - [Chart Components](./docs/design/chart_components.md)
 
 - [Development Documentation](./docs/development/)
   - [Status Notes](./docs/development/STATUS_NOTES.md)
   - [Version Control](./docs/development/VERSION_CONTROL.md)
   - [Contributing Guidelines](./docs/development/contributing.md)
-  - [Session 30 Resources](./docs/development/SESSION_30_RESOURCES.md)
+  - [Session 33 Resources](./docs/development/SESSION_33_RESOURCES.md)
 
 - [User Flows & RBAC](./docs/rbac/)
   - [Role-Based Access Control](./docs/rbac/role_based_access_control.md)
@@ -340,6 +364,7 @@ Our documentation includes:
   - [Invited User Flow](./docs/user-flows/invited_user_flow_design_document.md)
   - [Invitation System Documentation](./docs/user-flows/invitation_system_development_plan.md)
   - [Invitation System Testing](./docs/user-flows/invitation_system_testing_plan.md)
+  - [RSVP System Design](./docs/user-flows/rsvp_system_design.md)
 
 ## 🤝 Contributing
 

@@ -54,12 +54,16 @@ export function RecentEvents({ events }: RecentEventsProps) {
               transition: 'all 0.2s',
               cursor: 'pointer',
               width: '100%',
-              border: 'none',
+              border: '1px solid var(--border)',
+              borderRadius: '8px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
               background: 'var(--card)',
               position: 'relative',
-              overflow: 'hidden'
-            }}>
+              overflow: 'hidden',
+              marginBottom: '2px'
+            }}
+            className="hover:bg-accent/50"
+            >
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', width: '100%' }}>
                 <Avatar style={{ 
                   width: '48px', 

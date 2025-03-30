@@ -1,21 +1,31 @@
-import { Metadata } from 'next'
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle, BrainCircuit, Layers, Code, PenTool, Share2 } from 'lucide-react'
+import { AlertCircle, BrainCircuit, Layers, Code, PenTool, Share2, Dices } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-
-export const metadata: Metadata = {
-  title: 'AI Studio | AI Features | Cloud Burst',
-  description: 'Advanced AI workspace for custom photo and video transformations',
-}
+import { useState, useEffect } from 'react'
 
 export default function AIStudioPage() {
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start gap-4 flex-col sm:flex-row">
+    <div style={{ width: '100%', padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexDirection: isMobile ? 'column' : 'row' }}>
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">AI Studio</h2>
-          <p className="text-muted-foreground mt-2">
+          <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', lineHeight: '1.25', letterSpacing: '-0.025em' }}>AI Studio</h2>
+          <p style={{ color: 'var(--muted-foreground)', marginTop: '8px' }}>
             Advanced AI workspace for custom photo and video transformations
           </p>
         </div>
@@ -33,62 +43,97 @@ export default function AIStudioPage() {
         </AlertDescription>
       </Alert>
       
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+        gap: '24px',
+        width: '100%'
+      }}>
+        <Card style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <BrainCircuit className="h-5 w-5 text-primary" />
+              <Layers className="h-5 w-5 text-primary" />
               Feature Overview
             </CardTitle>
             <CardDescription>
-              What you can do in AI Studio
+              How our AI Studio works
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '16px', flexGrow: 1 }}>
             <p>
-              AI Studio is a creative workspace where you can experiment with advanced 
-              AI transformations for your event media. The studio enables you to:
+              Cloud Burst's AI Studio is an advanced workspace for custom AI transformations
+              of your event photos and videos. The studio can:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Create custom AI workflows for media processing</li>
-              <li>Experiment with cutting-edge generative AI techniques</li>
-              <li>Design and save custom enhancement presets</li>
-              <li>Batch process media with custom transformations</li>
-              <li>Preview transformations before applying them</li>
+            <ul style={{ listStyleType: 'disc', paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <li>Create custom AI workflows</li>
+              <li>Experiment with generative AI techniques</li>
+              <li>Apply advanced style transfers</li>
+              <li>Batch process media with AI</li>
+              <li>Save and share custom AI presets</li>
             </ul>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Layers className="h-5 w-5 text-primary" />
+              <Dices className="h-5 w-5 text-primary" />
               Available Models
             </CardTitle>
             <CardDescription>
-              AI models available in the studio
+              AI models ready for your creative work
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              AI Studio provides access to various models for different use cases:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Image Enhancement - upscaling, noise reduction, clarity</li>
-              <li>Style Transfer - apply artistic styles to event photos</li>
-              <li>Background Manipulation - replace or enhance backgrounds</li>
-              <li>Text-to-Image - generate custom elements from descriptions</li>
-              <li>Inpainting - intelligently repair or modify image sections</li>
-            </ul>
+          <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '16px', flexGrow: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h4 style={{ fontWeight: '500' }}>Style Transfer</h4>
+                  <Badge variant="outline">Coming Soon</Badge>
+                </div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                  Transform photos with artistic style references
+                </p>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h4 style={{ fontWeight: '500' }}>Image Expansion</h4>
+                  <Badge variant="outline">Coming Soon</Badge>
+                </div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                  Extend photo backgrounds with AI generation
+                </p>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h4 style={{ fontWeight: '500' }}>Object Generation</h4>
+                  <Badge variant="outline">Coming Soon</Badge>
+                </div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                  Add AI-generated objects to your photos
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
       
-      <h3 className="text-xl font-semibold mt-8">Key Benefits</h3>
+      <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginTop: '16px' }}>Key Benefits</h3>
       
-      <div className="grid gap-4 md:grid-cols-3">
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile 
+          ? '1fr' 
+          : isMobile === false && window.innerWidth < 1024 
+            ? 'repeat(2, 1fr)' 
+            : 'repeat(3, 1fr)',
+        gap: '16px',
+        width: '100%'
+      }}>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '8px' }}>
             <CardTitle className="text-lg flex items-center gap-2">
               <Code className="h-5 w-5 text-primary" />
               Workflow Automation
@@ -102,7 +147,7 @@ export default function AIStudioPage() {
         </Card>
         
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '8px' }}>
             <CardTitle className="text-lg flex items-center gap-2">
               <PenTool className="h-5 w-5 text-primary" />
               Creative Control
@@ -116,7 +161,7 @@ export default function AIStudioPage() {
         </Card>
         
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '8px' }}>
             <CardTitle className="text-lg flex items-center gap-2">
               <Share2 className="h-5 w-5 text-primary" />
               Preset Sharing

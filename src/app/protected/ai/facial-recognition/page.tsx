@@ -1,21 +1,31 @@
-import { Metadata } from 'next'
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle, Cpu, UserSearch, Tag, Users, Shield } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-
-export const metadata: Metadata = {
-  title: 'Facial Recognition | AI Features | Cloud Burst',
-  description: 'Intelligent face detection and recognition for your event photos',
-}
+import { useState, useEffect } from 'react'
 
 export default function FacialRecognitionPage() {
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start gap-4 flex-col sm:flex-row">
+    <div style={{ width: '100%', padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexDirection: isMobile ? 'column' : 'row' }}>
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Facial Recognition</h2>
-          <p className="text-muted-foreground mt-2">
+          <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', lineHeight: '1.25', letterSpacing: '-0.025em' }}>Facial Recognition</h2>
+          <p style={{ color: 'var(--muted-foreground)', marginTop: '8px' }}>
             Intelligent face detection and recognition for your event photos
           </p>
         </div>
@@ -33,8 +43,13 @@ export default function FacialRecognitionPage() {
         </AlertDescription>
       </Alert>
       
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+        gap: '24px',
+        width: '100%'
+      }}>
+        <Card style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
@@ -44,12 +59,12 @@ export default function FacialRecognitionPage() {
               How our facial recognition technology works
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '16px', flexGrow: 1 }}>
             <p>
               Cloud Burst's facial recognition system uses advanced AI algorithms to detect,
               analyze, and identify faces in your event photos. The system can:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
+            <ul style={{ listStyleType: 'disc', paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <li>Automatically detect faces in photos</li>
               <li>Group similar faces across multiple photos</li>
               <li>Match faces to your attendee list</li>
@@ -59,7 +74,7 @@ export default function FacialRecognitionPage() {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-primary" />
@@ -69,11 +84,11 @@ export default function FacialRecognitionPage() {
               How we protect your data and respect privacy
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '16px', flexGrow: 1 }}>
             <p>
               We take privacy and security seriously. Our facial recognition system:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
+            <ul style={{ listStyleType: 'disc', paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <li>Only processes photos you explicitly select</li>
               <li>Requires opt-in consent from event attendees</li>
               <li>Stores facial data securely and encrypted</li>
@@ -84,11 +99,20 @@ export default function FacialRecognitionPage() {
         </Card>
       </div>
       
-      <h3 className="text-xl font-semibold mt-8">Key Benefits</h3>
+      <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginTop: '16px' }}>Key Benefits</h3>
       
-      <div className="grid gap-4 md:grid-cols-3">
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile 
+          ? '1fr' 
+          : isMobile === false && window.innerWidth < 1024 
+            ? 'repeat(2, 1fr)' 
+            : 'repeat(3, 1fr)',
+        gap: '16px',
+        width: '100%'
+      }}>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '8px' }}>
             <CardTitle className="text-lg flex items-center gap-2">
               <UserSearch className="h-5 w-5 text-primary" />
               Simplified Search
@@ -102,7 +126,7 @@ export default function FacialRecognitionPage() {
         </Card>
         
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '8px' }}>
             <CardTitle className="text-lg flex items-center gap-2">
               <Tag className="h-5 w-5 text-primary" />
               Automated Tagging
@@ -116,7 +140,7 @@ export default function FacialRecognitionPage() {
         </Card>
         
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader style={{ paddingBottom: '8px' }}>
             <CardTitle className="text-lg flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
               Attendee Insights

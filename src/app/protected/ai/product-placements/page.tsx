@@ -1,133 +1,194 @@
-import { Metadata } from 'next'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle, ShoppingBag, ImageDown, BarChart3, DollarSign, Target } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+"use client"
 
-export const metadata: Metadata = {
-  title: 'Product Placements | AI Features | Cloud Burst',
-  description: 'Smart product placement and brand integration for event photos',
-}
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { AlertCircle, ArrowRight, Loader2, ShoppingCart, Sparkles, TrendingUp } from 'lucide-react'
 
 export default function ProductPlacementsPage() {
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false)
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkScreenSize()
+    window.addEventListener('resize', checkScreenSize)
+    return () => window.removeEventListener('resize', checkScreenSize)
+  }, [])
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start gap-4 flex-col sm:flex-row">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Product Placements</h2>
-          <p className="text-muted-foreground mt-2">
-            Smart product placement and brand integration for event photos
-          </p>
+    <div className="container py-6 space-y-8">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Product Placements</h1>
+            <p className="text-muted-foreground">
+              Smart product placement and brand integration for your event photos
+            </p>
+          </div>
+          <Badge className="bg-yellow-500">Coming Soon</Badge>
         </div>
-        <Badge variant="outline" className="bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800">
-          Coming Soon
-        </Badge>
+        
+        <Alert variant="warning" className="bg-yellow-50 dark:bg-yellow-950 border-yellow-300 dark:border-yellow-800">
+          <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+          <AlertTitle>In Development</AlertTitle>
+          <AlertDescription>
+            The Product Placements feature is currently in development and will be available soon.
+          </AlertDescription>
+        </Alert>
       </div>
-      
-      <Alert>
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Feature in development</AlertTitle>
-        <AlertDescription>
-          This feature is currently in development and will be available in an upcoming release.
-          Join our beta program to get early access.
-        </AlertDescription>
-      </Alert>
-      
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+        gap: '24px',
+        width: '100%' 
+      }}>
+        <Card className="bg-card hover:bg-accent/40 transition-colors">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ShoppingBag className="h-5 w-5 text-primary" />
-              Feature Overview
-            </CardTitle>
+            <CardTitle>AI-Powered Product Placement</CardTitle>
             <CardDescription>
-              How our product placement technology works
+              Seamlessly integrate sponsored products into your event photographs
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              Cloud Burst's product placement technology uses AI to seamlessly integrate branded 
-              products into your event photos. The system can:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Identify optimal placement locations in photos</li>
-              <li>Naturally integrate sponsor products</li>
-              <li>Replace existing products with sponsored alternatives</li>
-              <li>Add branded overlays and watermarks</li>
-              <li>Track engagement with placed products</li>
-            </ul>
+          <CardContent className="space-y-2">
+            <div className="rounded-md bg-primary/10 p-4">
+              <div className="font-semibold">Smart Technology</div>
+              <p className="text-sm text-muted-foreground mt-1">
+                Our AI identifies optimal placement opportunities that look natural and on-brand
+              </p>
+            </div>
+            <div className="rounded-md bg-primary/10 p-4">
+              <div className="font-semibold">Revenue Opportunities</div>
+              <p className="text-sm text-muted-foreground mt-1">
+                Create new sponsorship tiers and revenue streams for your events
+              </p>
+            </div>
           </CardContent>
+          <CardFooter>
+            <Button variant="outline" disabled>
+              Learn implementation details
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </CardFooter>
         </Card>
-        
-        <Card>
+
+        <Card className="bg-card hover:bg-accent/40 transition-colors">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-primary" />
-              Placement Options
-            </CardTitle>
+            <CardTitle>Placement Options</CardTitle>
             <CardDescription>
-              Flexible integration options for sponsors
+              Multiple ways to integrate sponsored products into your event media
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              Choose from various placement strategies:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Natural Integration - blend products into scenes</li>
-              <li>Surface Replacement - replace existing surfaces with branding</li>
-              <li>Background Placement - add branded elements to backgrounds</li>
-              <li>Digital Overlays - add digital effects with sponsor branding</li>
-              <li>Custom Watermarks - subtle branded watermarking</li>
-            </ul>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <div className="mr-3 h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <ShoppingCart className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Product Integration</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Natural placement of sponsor products in appropriate contexts
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <div className="mr-3 h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Branded Elements</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Add branded decorative elements that complement the event theme
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <div className="mr-3 h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Engagement Analytics</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Track view and interaction metrics for each product placement
+                  </p>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
-      
-      <h3 className="text-xl font-semibold mt-8">Key Benefits</h3>
-      
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-primary" />
-              New Revenue Streams
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">
-              Create additional monetization opportunities by offering branded photo content to sponsors.
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <ImageDown className="h-5 w-5 text-primary" />
-              Non-Intrusive Advertising
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">
-              Deliver advertising value without disrupting the authentic feel of event photos.
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-primary" />
-              Performance Analytics
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">
-              Track engagement metrics on product placements to demonstrate ROI to sponsors.
-            </p>
-          </CardContent>
-        </Card>
+
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Key Benefits</h2>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+          gap: '16px',
+          width: '100%' 
+        }}>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">New Revenue Stream</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Create additional income by offering product placement packages to sponsors and partners.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Natural Integration</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                AI ensures products are placed in contextually appropriate and visually pleasing ways.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Measurable Results</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Comprehensive analytics help you demonstrate ROI to sponsors and optimize future placements.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <div className="mt-8 flex justify-center">
+        <Button disabled className="gap-2">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Feature Coming Soon
+        </Button>
+      </div>
+
+      <div className="bg-muted p-4 rounded-lg text-sm text-muted-foreground">
+        <p>
+          Interested in learning more about this upcoming feature?{' '}
+          <Link href="/protected/contact" className="text-primary underline underline-offset-4">
+            Contact our team
+          </Link>{' '}
+          for more information.
+        </p>
       </div>
     </div>
   )

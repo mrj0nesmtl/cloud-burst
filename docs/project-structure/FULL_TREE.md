@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-28T02:28:49.683Z
+Generated: 2025-03-30T00:42:13.169Z
 
 ## Overview
 
@@ -46,6 +46,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │       └── page.tsx
 ├── docs/
 │   ├── architecture/
+│   │   ├── ai_implementation.md
 │   │   ├── application_design_document.md
 │   │   ├── security.md
 │   │   └── system_architecture_flowchart.md
@@ -216,6 +217,10 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   ├── .DS_Store
 │   │   ├── fallback-hero.jpg
 │   │   └── pexels-themo1-bg.jpg
+│   ├── leaflet/
+│   │   ├── marker-icon-2x.png
+│   │   ├── marker-icon.png
+│   │   └── marker-shadow.png
 │   ├── .DS_Store
 │   ├── android-chrome-192x192.png
 │   ├── android-chrome-512x512.png
@@ -440,6 +445,25 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── ai/
+│   │   │   │   ├── enhancements/
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── facial-recognition/
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── product-placements/
+│   │   │   │   │   ├── .page.tsx.swp
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── smart-tagging/
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── studio/
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── metadata.ts
 │   │   │   ├── analytics/
 │   │   │   │   ├── engagement/
 │   │   │   │   │   ├── loading.tsx
@@ -469,6 +493,8 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   │   │   ├── edit/
 │   │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── gallery/
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── qr/
 │   │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   │   └── page.tsx
@@ -480,8 +506,11 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   │   │   ├── page.tsx
 │   │   │   │   │   └── page_tsx.swp
 │   │   │   │   ├── manage/
+│   │   │   │   │   ├── leaflet-map.tsx
 │   │   │   │   │   ├── loading.tsx
-│   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── map-client-wrapper.tsx
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── stats-map-wrapper.tsx
 │   │   │   │   ├── migrations/
 │   │   │   │   │   ├── README.md
 │   │   │   │   │   └── add_event_fields.sql
@@ -616,6 +645,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   ├── security-form.tsx
 │   │   │   └── subscription-form.tsx
 │   │   ├── gallery/
+│   │   │   ├── EventGallery.tsx
 │   │   │   ├── GalleryHeader.tsx
 │   │   │   ├── GalleryLayout.tsx
 │   │   │   ├── GallerySidebar.tsx
@@ -633,6 +663,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   ├── gallery-tabs.tsx
 │   │   │   ├── guest-upload-dropzone.tsx
 │   │   │   ├── index.ts
+│   │   │   ├── mock-data.ts
 │   │   │   ├── optimized-image.tsx
 │   │   │   ├── photo-lightbox.tsx
 │   │   │   ├── upload-dropzone.tsx
@@ -642,6 +673,10 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   ├── layout/
 │   │   │   ├── dashboard-layout.tsx
 │   │   │   └── main-nav.tsx
+│   │   ├── maps/
+│   │   │   ├── EventMap.tsx
+│   │   │   ├── EventsMapSection.tsx
+│   │   │   └── mock-data.ts
 │   │   ├── marketing/
 │   │   │   ├── contact-form.tsx
 │   │   │   └── newsletter-form.tsx
@@ -690,6 +725,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   ├── button.tsx
 │   │   │   ├── calendar.tsx
 │   │   │   ├── card.tsx
+│   │   │   ├── chart.tsx
 │   │   │   ├── charts.tsx
 │   │   │   ├── checkbox.tsx
 │   │   │   ├── collapsible.tsx
@@ -731,6 +767,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   │   ├── tooltip.tsx
 │   │   │   └── use-toast.ts
 │   │   ├── app-sidebar.tsx
+│   │   ├── area_chart_interactive.tsx
 │   │   ├── cookie-consent.tsx
 │   │   ├── debug-info.tsx
 │   │   ├── error-boundary.tsx
@@ -842,6 +879,13 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   ├── role_capabilities_rows.csv
 │   │   ├── roles_rows (1).csv
 │   │   └── roles_rows.csv
+│   ├── mar-29/
+│   │   ├── Snippet Event Details Query.csv
+│   │   ├── Snippet Event and Gallery Overview.csv
+│   │   ├── events_rows (1).csv
+│   │   ├── events_rows.csv
+│   │   ├── galleries_rows (1).csv
+│   │   └── galleries_rows.csv
 │   ├── mar_18/
 │   │   ├── Supabase Snippet Detailed Table Definitions.csv
 │   │   ├── Supabase Snippet Retrieve Invitations.csv
@@ -875,6 +919,7 @@ Generated: 2025-03-28T02:28:49.683Z
 │   │   └── profiles_rows_mar_23.csv
 │   ├── march_27/
 │   │   ├── events_rows.csv
+│   │   ├── events_rows_mar_29.csv
 │   │   ├── galleries_rows.csv
 │   │   └── profiles_rows.csv
 │   ├── may_22/
@@ -928,17 +973,17 @@ Generated: 2025-03-28T02:28:49.683Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-204 directories, 716 files
+214 directories, 751 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11650 file(s)
-- tsx: 437 file(s)
-- js: 27629 file(s)
-- json: 2006 file(s)
-- md: 1456 file(s)
-- css: 25 file(s)
+- ts: 11700 file(s)
+- tsx: 457 file(s)
+- js: 27833 file(s)
+- json: 2022 file(s)
+- md: 1464 file(s)
+- css: 27 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns
