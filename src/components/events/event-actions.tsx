@@ -14,6 +14,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { PermissionGate } from '@/components/auth/permission-gate'
@@ -45,6 +46,7 @@ interface EventData {
 export function EventActions({ eventId, organizerId, mode = 'detail' }: EventActionsProps) {
   const router = useRouter()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isDesktopDeleteDialogOpen, setIsDesktopDeleteDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   
@@ -80,6 +82,7 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
     } finally {
       setIsDeleting(false)
       setIsDeleteDialogOpen(false)
+      setIsDesktopDeleteDialogOpen(false)
     }
   }
 
@@ -204,21 +207,27 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
+              <h2 className="text-lg font-semibold">Are you sure?</h2>
+              <p className="text-sm text-muted-foreground">
                 This action cannot be undone. This will permanently delete the event
                 and all associated data including photos and attendee information.
-              </AlertDialogDescription>
+              </p>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-              <AlertDialogAction 
+              <Button 
+                variant="outline" 
+                onClick={() => setIsDeleteDialogOpen(false)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button 
                 onClick={handleDelete} 
                 disabled={isDeleting}
                 className="bg-destructive text-destructive-foreground"
               >
                 {isDeleting ? 'Deleting...' : 'Delete'}
-              </AlertDialogAction>
+              </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -233,7 +242,7 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
       flexWrap: 'wrap', 
       alignItems: 'center', 
       gap: '0.35rem', 
-      justifyContent: 'flex-end',
+      justifyContent: 'flex-end', 
       width: '100%'
     }}>
       {/* Edit/View button - In list mode, don't show View button since it's redundant */}
@@ -292,40 +301,45 @@ export function EventActions({ eventId, organizerId, mode = 'detail' }: EventAct
       
       {/* Delete button - visible only to organizers and admins */}
       <PermissionGate action="delete" resource="event" ownerId={organizerId}>
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={() => setIsDeleteDialogOpen(true)} 
-          className="text-destructive hover:bg-destructive/10"
-          style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}
-        >
-          <Trash style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
-          Delete
-        </Button>
-      </PermissionGate>
-      
-      {/* Delete confirmation dialog */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the event
-              and all associated data including photos and attendee information.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={handleDelete} 
-              disabled={isDeleting}
-              className="bg-destructive text-destructive-foreground"
+        <AlertDialog open={isDesktopDeleteDialogOpen} onOpenChange={setIsDesktopDeleteDialogOpen}>
+          <AlertDialogTrigger asChild>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-destructive hover:bg-destructive/10"
+              style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}
             >
-              {isDeleting ? 'Deleting...' : 'Delete'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+              <Trash style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
+              Delete
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <h2 className="text-lg font-semibold">Are you sure?</h2>
+              <p className="text-sm text-muted-foreground">
+                This action cannot be undone. This will permanently delete the event
+                and all associated data including photos and attendee information.
+              </p>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <Button 
+                variant="outline" 
+                onClick={() => setIsDesktopDeleteDialogOpen(false)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleDelete} 
+                disabled={isDeleting}
+                className="bg-destructive text-destructive-foreground"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </PermissionGate>
     </div>
   )
 } 
