@@ -1,7 +1,16 @@
 "use client"
 
+// Chart component for displaying area charts with interactive filters
 import * as React from "react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { 
+  Area, 
+  AreaChart, 
+  CartesianGrid, 
+  XAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from "recharts"
 
 import {
   Card,
@@ -230,7 +239,7 @@ export function Component() {
               cursor={false}
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => {
+                  labelFormatter={(value: string) => {
                     return new Date(value).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
