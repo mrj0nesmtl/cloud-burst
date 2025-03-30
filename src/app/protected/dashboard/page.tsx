@@ -252,7 +252,7 @@ export default async function DashboardPage() {
               gap: '16px', 
               gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))'
             }}>
-              <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
+              <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all hover:scale-[1.02]">
                 <Link href="/protected/attendees/qr-codes" className="flex items-start">
                   <div className="mr-3 h-10 w-10 rounded-md bg-blue-100 dark:bg-blue-800/30 flex items-center justify-center">
                     <QrCode className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -264,7 +264,7 @@ export default async function DashboardPage() {
                 </Link>
               </Button>
               
-              <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors">
+              <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 transition-all hover:scale-[1.02]">
                 <Link href="/protected/attendees/manage" className="flex items-start">
                   <div className="mr-3 h-10 w-10 rounded-md bg-green-100 dark:bg-green-800/30 flex items-center justify-center">
                     <UserPlus className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -276,7 +276,7 @@ export default async function DashboardPage() {
                 </Link>
               </Button>
               
-              <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors">
+              <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-all hover:scale-[1.02]">
                 <Link href="/protected/gallery/moderate" className="flex items-start">
                   <div className="mr-3 h-10 w-10 rounded-md bg-purple-100 dark:bg-purple-800/30 flex items-center justify-center">
                     <Camera className="h-5 w-5 text-purple-600 dark:text-purple-400" />
@@ -288,7 +288,7 @@ export default async function DashboardPage() {
                 </Link>
               </Button>
               
-              <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors">
+              <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-all hover:scale-[1.02]">
                 <Link href="/protected/analytics/engagement" className="flex items-start">
                   <div className="mr-3 h-10 w-10 rounded-md bg-amber-100 dark:bg-amber-800/30 flex items-center justify-center">
                     <BarChart className="h-5 w-5 text-amber-600 dark:text-amber-400" />
