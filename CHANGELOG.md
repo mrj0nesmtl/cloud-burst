@@ -22,6 +22,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced Analytics dashboard
 - Advanced camera integration for QR code scanning
 
+## [0.8.4] - 2025-03-31
+### Added
+- Complete RSVP system implementation with database schema and API routes
+- RSVP form with Zod validation for form submissions
+- Confirmation pages for accepted and declined RSVPs
+- Expired invitation page for handling outdated invitations
+- API endpoints for invitation validation and RSVP submission
+- TypeScript types and validation schemas for RSVP functionality
+
+### Fixed
+- Resolved TypeScript errors in form validation schemas
+- Fixed type compatibility issues between database and UI interfaces
+- Improved error handling in RSVP form submission process
+
 ## [0.8.3] - 2025-03-29
 ### Added in Session 32 (March 29, 2025)
 - **Interactive Map Implementation**:

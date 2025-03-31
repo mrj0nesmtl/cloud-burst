@@ -487,6 +487,7 @@ export type Database = {
           event_id: string
           expires_at: string | null
           id: string
+          message: string | null
           metadata: Json | null
           name: string | null
           plus_one_allowed: boolean | null
@@ -505,6 +506,7 @@ export type Database = {
           event_id: string
           expires_at?: string | null
           id?: string
+          message?: string | null
           metadata?: Json | null
           name?: string | null
           plus_one_allowed?: boolean | null
@@ -523,6 +525,7 @@ export type Database = {
           event_id?: string
           expires_at?: string | null
           id?: string
+          message?: string | null
           metadata?: Json | null
           name?: string | null
           plus_one_allowed?: boolean | null
@@ -912,6 +915,54 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      rsvps: {
+        Row: {
+          created_at: string
+          dietary_restrictions: string | null
+          guest_count: number
+          id: string
+          invitation_id: string
+          notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          dietary_restrictions?: string | null
+          guest_count?: number
+          id?: string
+          invitation_id: string
+          notes?: string | null
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          dietary_restrictions?: string | null
+          guest_count?: number
+          id?: string
+          invitation_id?: string
+          notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_invitation"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rsvps_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       security_settings: {
         Row: {

@@ -1,15 +1,20 @@
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createServerClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
+import { Database } from '@/types/supabase'
+import { Invitation, RSVP } from '@/types/rsvp'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { RsvpForm } from './rsvp-form'
+import { Badge } from '@/components/ui/badge'
+import { Calendar, MapPin, Clock, User } from 'lucide-react'
+import { formatDate } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -21,7 +26,8 @@ interface InvitationPageProps {
 }
 
 export async function generateMetadata({ params }: InvitationPageProps): Promise<Metadata> {
-  const supabase = createServerComponentClient({ cookies })
+  const cookieStore = cookies()
+  const supabase = await createServerClient({ cookies: () => cookieStore })
   
   const { data: invitation } = await supabase
     .from('invitations')
@@ -46,144 +52,210 @@ export async function generateMetadata({ params }: InvitationPageProps): Promise
 
 export default async function InvitationPage({ params }: InvitationPageProps) {
   const { token } = params
-  const supabase = createServerComponentClient({ cookies })
   
-  // Get invitation with event data
+  if (!token) {
+    return notFound()
+  }
+  
+  // Validate the invitation token
+  const cookieStore = cookies()
+  const supabase = await createServerClient({ cookies: () => cookieStore })
+  
+  // Set token in app.settings for RLS policies
+  await (supabase as any).rpc('set_invitation_token', {
+    token: token
+  })
+  
+  // Get invitation details
   const { data: invitation, error } = await supabase
     .from('invitations')
-    .select(`
-      *,
-      events:event_id(
-        id,
-        name,
-        description,
-        date,
-        location,
-        organizer_id,
-        profiles:organizer_id(full_name, email)
-      )
-    `)
+    .select('id, event_id, email, name, status, rsvp_status, expires_at, metadata, created_at, sent_at, updated_at, rsvp_date')
     .eq('token', token)
     .single()
   
   if (error || !invitation) {
-    console.error('Error fetching invitation:', error)
-    notFound()
+    console.error('Invitation not found:', error)
+    return notFound()
   }
-
-  const event = invitation.events
-  const organizer = event?.profiles
-  const eventDate = event?.date ? format(new Date(event.date), 'EEEE, MMMM d, yyyy') : 'Date to be announced'
+  
+  // Check if invitation has expired
+  const now = new Date()
+  const expiresAt = invitation.expires_at ? new Date(invitation.expires_at) : null
+  
+  if (invitation.status === 'expired' || (expiresAt && now > expiresAt)) {
+    return redirect(`/invitation/expired?token=${token}`)
+  }
+  
+  // Mark invitation as opened if not already opened
+  await supabase
+    .from('invitations')
+    .update({ status: 'opened' })
+    .eq('id', invitation.id)
+  
+  // Get event details
+  const { data: event, error: eventError } = await supabase
+    .from('events')
+    .select('id, name, date, location, description, cover_image_url, organizer_id')
+    .eq('id', invitation.event_id)
+    .single()
+  
+  if (eventError || !event) {
+    console.error('Event not found:', eventError)
+    return notFound()
+  }
+  
+  // Get event organizer
+  const { data: organizer } = await supabase
+    .from('profiles')
+    .select('id, full_name')
+    .eq('id', event.organizer_id || '')
+    .single()
+  
+  // Get RSVP data if exists
+  const { data: rsvp } = await supabase
+    .from('rsvps')
+    .select('*')
+    .eq('invitation_id', invitation.id)
+    .maybeSingle()
+  
+  // Format event date
+  const eventDate = event.date ? formatDate(event.date) : 'Date to be determined'
   
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* Header */}
-      <header className="flex h-16 items-center border-b px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Cloud Burst" width={36} height={36} />
-          <span className="text-lg font-semibold">Cloud Burst</span>
-        </Link>
-      </header>
-      
-      {/* Main content */}
-      <main className="flex-1 py-12 md:py-16 lg:py-20">
-        <div className="container px-4 md:px-6">
-          <div className="mx-auto max-w-2xl space-y-8">
-            {/* Invitation card */}
-            <Card className="border-2 border-primary/10 shadow-lg">
-              <CardHeader className="bg-muted/50 text-center">
-                <CardTitle className="text-2xl font-bold text-primary">
-                  You're invited to {event?.name}!
-                </CardTitle>
-                <CardDescription>
-                  {invitation.name}, please respond to your invitation
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6 pb-2 space-y-6">
-                {/* Event details */}
-                <div className="space-y-4">
-                  <div className="rounded-lg border bg-card px-4 py-3 text-center">
-                    <h3 className="font-semibold">{event?.name}</h3>
-                    <p className="text-sm text-muted-foreground">{eventDate}</p>
-                    {event?.location && (
-                      <p className="text-sm text-muted-foreground">{event.location}</p>
-                    )}
-                  </div>
-                  
-                  {event?.description && (
-                    <div>
-                      <p className="text-sm mb-2">
-                        {event.description}
-                      </p>
-                    </div>
-                  )}
-                  
-                  {invitation.metadata?.message && (
-                    <div className="border-l-4 border-primary/20 pl-4 py-2 italic">
-                      <p className="text-sm">"{invitation.metadata.message}"</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        — {organizer?.full_name || 'Your host'}
-                      </p>
-                    </div>
-                  )}
-                </div>
-                
-                <Separator />
-                
-                {/* RSVP Form */}
-                <RsvpForm invitation={invitation} />
-              </CardContent>
-              <CardFooter className="flex flex-col space-y-2 text-center text-xs text-muted-foreground border-t bg-muted/30 px-6 py-4">
-                <p>
-                  This is a personal invitation for {invitation.name}.
-                </p>
-                <p>
-                  Questions? Contact the event organizer at{' '}
-                  <a 
-                    href={`mailto:${organizer?.email || 'contact@cloudburst.app'}`}
-                    className="text-primary underline"
-                  >
-                    {organizer?.email || 'contact@cloudburst.app'}
-                  </a>
-                </p>
-              </CardFooter>
-            </Card>
-            
-            {/* Gallery access card - show if event has a gallery */}
-            {invitation.status === 'accepted' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Event Gallery</CardTitle>
-                  <CardDescription>
-                    Access photos from this event
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <Link href={`/gallery/${event?.id}`} passHref>
-                    <Button>
-                      View Event Gallery
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
+    <div className="container max-w-4xl mx-auto py-8 px-4">
+      <Card className="overflow-hidden">
+        {event.cover_image_url && (
+          <div className="relative w-full h-40 md:h-60">
+            <Image
+              src={event.cover_image_url}
+              alt={event.name || ''}
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
-        </div>
-      </main>
-      
-      {/* Footer */}
-      <footer className="border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-20 md:flex-row">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Cloud Burst. All rights reserved.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <a href="/privacy" className="underline">Privacy Policy</a>
-            {' • '}
-            <a href="/terms" className="underline">Terms of Service</a>
-          </p>
-        </div>
-      </footer>
+        )}
+        
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-2xl md:text-3xl">{event.name}</CardTitle>
+              <CardDescription>
+                You've been invited by {organizer?.full_name || 'the event organizer'}
+              </CardDescription>
+            </div>
+            <Badge variant="outline" className="ml-2">
+              {invitation.rsvp_status === 'accepted' 
+                ? 'Accepted' 
+                : invitation.rsvp_status === 'declined' 
+                ? 'Declined' 
+                : 'Awaiting Response'}
+            </Badge>
+          </div>
+        </CardHeader>
+        
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <div>
+                  <h4 className="font-medium">Date</h4>
+                  <p className="text-sm text-muted-foreground">{eventDate}</p>
+                </div>
+              </div>
+              
+              {event.location && (
+                <div className="flex items-start space-x-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <h4 className="font-medium">Location</h4>
+                    <p className="text-sm text-muted-foreground">{event.location}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="space-y-4">
+              {invitation.name && (
+                <div className="flex items-start space-x-3">
+                  <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <h4 className="font-medium">Invited Guest</h4>
+                    <p className="text-sm text-muted-foreground">{invitation.name}</p>
+                  </div>
+                </div>
+              )}
+              
+              {expiresAt && (
+                <div className="flex items-start space-x-3">
+                  <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <h4 className="font-medium">RSVP Deadline</h4>
+                    <p className="text-sm text-muted-foreground">
+                      {expiresAt ? formatDate(expiresAt.toISOString()) : ''}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {event.description && (
+            <div>
+              <h4 className="font-medium mb-2">Event Details</h4>
+              <p className="text-sm text-muted-foreground whitespace-pre-line">
+                {event.description}
+              </p>
+            </div>
+          )}
+          
+          <Separator className="my-6" />
+          
+          <div>
+            <h3 className="text-xl font-semibold text-center mb-4">RSVP</h3>
+            <RsvpForm 
+              invitation={{
+                id: invitation.id,
+                event_id: invitation.event_id,
+                email: invitation.email || '',
+                name: invitation.name || '',
+                token: token,
+                status: invitation.status as any,
+                rsvp_status: invitation.rsvp_status as any,
+                expires_at: invitation.expires_at,
+                metadata: {
+                  notes: (invitation.metadata as any)?.notes,
+                  dietary_preferences: (invitation.metadata as any)?.dietary_preferences,
+                  plus_one_allowed: (invitation.metadata as any)?.plus_one_allowed || false,
+                  plus_one_used: (invitation.metadata as any)?.plus_one_used || false,
+                  magic_link: (invitation.metadata as any)?.magic_link
+                },
+                created_at: invitation.created_at,
+                sent_at: invitation.sent_at || null,
+                updated_at: invitation.updated_at || invitation.created_at,
+                rsvp_date: invitation.rsvp_date as any
+              }}
+              token={token}
+              rsvp={rsvp ? {
+                id: rsvp.id,
+                status: rsvp.status,
+                guest_count: rsvp.guest_count,
+                dietary_restrictions: rsvp.dietary_restrictions || undefined,
+                notes: rsvp.notes || undefined
+              } : null}
+            />
+          </div>
+        </CardContent>
+        
+        <CardFooter className="flex flex-col space-y-2 text-center text-xs text-muted-foreground">
+          <p>This invitation was sent to {invitation.email}</p>
+          {expiresAt && (
+            <p>This invitation expires on {formatDate(expiresAt.toISOString())}</p>
+          )}
+          <p>Powered by Cloud Burst</p>
+        </CardFooter>
+      </Card>
     </div>
   )
 } 
