@@ -1,28 +1,41 @@
 import { Database } from './supabase';
 
 // Invitation Types
-export type InvitationStatus = 'pending' | 'sent' | 'accepted' | 'declined' | 'expired' | 'active' | 'used' | 'confirmed';
-export type RsvpStatus = 'pending' | 'yes' | 'no' | 'maybe';
+export enum InvitationStatus {
+  SENT = 'sent',
+  OPENED = 'opened',
+  EXPIRED = 'expired'
+}
+
+export enum RsvpStatus {
+  ACCEPTED = 'accepted',
+  DECLINED = 'declined',
+  PENDING = 'pending'
+}
+
+export interface InvitationMetadata {
+  notes?: string;
+  dietary_preferences?: string;
+  plus_one_allowed?: boolean;
+  plus_one_used?: boolean;
+  plus_one_name?: string;
+  magic_link?: string;
+}
 
 export interface Invitation {
   id: string;
   event_id: string;
   email: string;
-  name: string | null;
-  status: InvitationStatus;
-  rsvp_status: RsvpStatus;
+  name: string;
   token: string;
+  status: InvitationStatus | string;
+  rsvp_status: RsvpStatus | string | null;
+  rsvp_date?: string | null;
+  expires_at: string | null;
+  metadata: InvitationMetadata | null;
   created_at: string;
   updated_at: string;
   sent_at: string | null;
-  expires_at: string | null;
-  metadata: {
-    notes?: string;
-    dietary_preferences?: string;
-    plus_one_allowed?: boolean;
-    plus_one_used?: boolean;
-    magic_link?: string;
-  } | null;
 }
 
 export interface InvitationWithEvent extends Invitation {
