@@ -1,5 +1,265 @@
 # Session 34: Technical Resources
 
+## 📚 Table of Contents
+
+1. [Project Structure](#-project-structure)
+2. [Documentation Links](#-documentation-links)
+3. [Technical Implementation](#-technical-implementation)
+4. [Component Examples](#-component-examples)
+5. [Database & API](#-database--api)
+6. [Testing Resources](#-testing-resources)
+
+## 📂 Project Structure
+
+### Core Project Organization
+- `src/app`: Next.js 14 App Router pages and routes
+- `src/app/protected`: Authenticated routes requiring login
+- `src/components/gallery`: Gallery system components
+- `src/components/events`: Event management components
+- `src/lib/supabase`: Supabase integration and data access
+- `src/store`: Zustand state management
+- `src/hooks`: Custom React hooks
+
+### Important Project Trees
+- [Full Project Tree](../project-structure/FULL_TREE.md)
+- [Source Tree](../project-structure/SRC_TREE.md)
+- [App Router Tree](../project-structure/app_tree.md)
+- [Components Tree](../project-structure/components_tree.md)
+
+### Feature-Specific Trees
+- [Events Tree](../project-structure/events_tree.md)
+- [Gallery Tree](../project-structure/gallery_tree.md)
+- [Auth Tree](../project-structure/auth_tree.md)
+- [Protected Tree](../project-structure/protected_tree.md)
+
+### Utility Trees
+- [Hooks Tree](../project-structure/hooks_tree.md)
+- [Library Tree](../project-structure/lib_tree.md)
+- [Types Tree](../project-structure/types_tree.md)
+- [Store Tree](../project-structure/store_tree.md)
+- [UI Tree](../project-structure/ui_tree.md)
+
+## 📚 Documentation Links
+
+### Architecture
+- [Application Design](../architecture/application_design_document.md)
+- [System Architecture](../architecture/system_architecture_flowchart.md)
+- [Security Architecture](../architecture/security.md)
+- [AI Implementation](../architecture/ai_implementation.md)
+
+### User Flows
+- [RSVP Implementation Guide](../user-flows/RSVP_IMPLEMENTATION_GUIDE.md)
+- [Invitation System Plan](../user-flows/invitation_system_development_plan.md)
+- [User Flow Overview](../user-flows/user_flow_overview.md)
+- [Invited User Flow](../user-flows/invited_user_flow_design_document.md)
+
+### Design & Layout
+- [UI Components](../design/UI_components.md)
+- [Style Guide](../design/style.md)
+- [Layout Troubleshooting](../design/layout-troubleshooting.md)
+- [Gallery Implementation](../design/gallery_implementation.md)
+
+## 💻 Technical Implementation
+
+### Magic Link Authentication
+
+```typescript
+// src/lib/auth/magic-link.ts
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { toast } from '@/components/ui/use-toast';
+
+export async function sendMagicLink(email: string, redirectTo: string) {
+  const supabase = createClientComponentClient();
+  
+  try {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: redirectTo,
+      },
+    });
+    
+    if (error) throw error;
+    
+    toast({
+      title: 'Magic link sent',
+      description: 'Check your email for a magic link to sign in.',
+      variant: 'default',
+    });
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending magic link:', error);
+    
+    toast({
+      title: 'Failed to send magic link',
+      description: 'Please try again later.',
+      variant: 'destructive',
+    });
+    
+    return { success: false, error };
+  }
+}
+```
+
+[View full implementation details](#magic-link-authentication)
+
+### Camera Integration
+
+```typescript
+// src/hooks/useCamera.ts
+'use client'
+
+import { useState, useEffect, useRef } from 'react';
+
+interface UseCameraOptions {
+  videoConstraints?: MediaTrackConstraints;
+  onError?: (error: Error) => void;
+}
+
+export function useCamera({ 
+  videoConstraints = { 
+    facingMode: 'environment',
+    width: { ideal: 1280 },
+    height: { ideal: 720 }
+  }, 
+  onError 
+}: UseCameraOptions = {}) {
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [permission, setPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
+  const [error, setError] = useState<Error | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  
+  const startCamera = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: videoConstraints,
+        audio: false
+      });
+      
+      setStream(mediaStream);
+      setPermission('granted');
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+      }
+      
+      return mediaStream;
+    } catch (err) {
+      const error = err as Error;
+      setError(error);
+      setPermission('denied');
+      
+      if (onError) {
+        onError(error);
+      }
+      
+      return null;
+    }
+  };
+  
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+  };
+  
+  const takePhoto = () => {
+    if (!videoRef.current || !stream) return null;
+    
+    const canvas = document.createElement('canvas');
+    const video = videoRef.current;
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+    
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Convert to blob for upload
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error('Failed to create photo blob'));
+        }
+      }, 'image/jpeg', 0.95);
+    });
+  };
+  
+  useEffect(() => {
+    return () => {
+      stopCamera();
+    };
+  }, []);
+  
+  return {
+    videoRef,
+    stream,
+    permission,
+    error,
+    startCamera,
+    stopCamera,
+    takePhoto
+  };
+}
+```
+
+[View full implementation details](#camera-integration)
+
+### RSVP Form Schema
+
+```typescript
+// src/lib/validations/rsvp.schema.ts
+import { z } from 'zod';
+
+export const rsvpFormSchema = z.object({
+  status: z.enum(['accepted', 'declined', 'pending']),
+  guestCount: z.number().min(1).max(10),
+  plusOne: z.boolean().default(false),
+  plusOneName: z.string().optional(),
+  dietaryRestrictions: z.string().optional(),
+  notes: z.string().optional()
+});
+```
+
+[View full implementation details](#rsvp-form)
+
+## 🧩 Component Examples
+
+### RSVP Form Component
+[View implementation](#rsvp-form-component)
+
+### Camera Capture Component
+[View implementation](#camera-component-example)
+
+### Analytics Dashboard Component
+[View implementation](#analytics-dashboard-component)
+
+## 🗄️ Database & API
+
+### RSVP Table Migration
+[View implementation](#rsvp-table-migration)
+
+### API Endpoints
+[View implementation](#api-endpoints)
+
+## 🧪 Testing Resources
+
+### Test Invitation Generator
+[View implementation](#test-invitation-generator)
+
+### End-to-End Flow Example
+[View implementation](#end-to-end-flow-example)
+
+---
+
+[Original technical implementations follow below...]
+
 ## 📚 Technical Resources for RSVP System & Invited User Flow
 
 This document provides technical references, code snippets, and implementation examples for completing the RSVP system and invited user flow in Session 34.
