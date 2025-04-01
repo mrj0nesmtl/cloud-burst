@@ -90,8 +90,8 @@ export function SideNav({ collapsed = false }: SideNavProps) {
             </div>
           )}
           <NavItem
-            href="/protected/events/templates"
-            active={pathname === "/protected/events/templates"}
+            href="/protected/templates"
+            active={pathname === "/protected/templates"}
             icon={FileText}
             collapsed={collapsed}
           >

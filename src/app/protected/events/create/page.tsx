@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { EventForm } from "@/components/forms/event-form"
 
 export const metadata: Metadata = {
@@ -12,63 +11,34 @@ export default function CreateEventPage() {
     <div style={{ 
       width: '100%', 
       maxWidth: '100%',
-      padding: '0.75rem',
+      padding: '24px',
       boxSizing: 'border-box',
-      overflowX: 'hidden',
       margin: '0 auto'
     }}>
       <div style={{ 
-        marginBottom: '0.75rem'
+        marginBottom: '24px',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
         <h1 style={{ 
-          fontSize: '1.25rem', 
+          fontSize: '28px', 
           fontWeight: 'bold', 
-          marginBottom: '0.25rem',
-          wordBreak: 'break-word',
-          lineHeight: 1.3
+          marginBottom: '8px',
+          lineHeight: 1.2,
+          color: 'var(--foreground)'
         }}>
           Create Event
         </h1>
         <p style={{ 
           color: 'var(--muted-foreground)',
-          fontSize: '0.75rem',
-          lineHeight: 1.4
+          fontSize: '16px',
+          lineHeight: 1.5
         }}>
           Enter the details for your new event
         </p>
       </div>
       
-      <Card style={{
-        width: '100%',
-        maxWidth: '100%',
-        borderRadius: '0.375rem',
-        overflow: 'hidden',
-        border: '1px solid var(--border)',
-        boxSizing: 'border-box'
-      }}>
-        <CardHeader style={{ 
-          padding: '0.75rem 0.75rem 0.5rem'
-        }}>
-          <CardTitle style={{ 
-            fontSize: '1rem',
-            lineHeight: 1.3
-          }}>
-            Event Details
-          </CardTitle>
-          <CardDescription style={{ 
-            fontSize: '0.75rem',
-            lineHeight: 1.4 
-          }}>
-            Enter the details for your new event.
-          </CardDescription>
-        </CardHeader>
-        <CardContent style={{ 
-          padding: '0 0.75rem 0.75rem',
-          maxWidth: '100%'
-        }}>
-          <EventForm />
-        </CardContent>
-      </Card>
+      <EventForm />
     </div>
   )
 }

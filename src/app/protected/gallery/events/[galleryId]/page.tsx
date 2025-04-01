@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { mockGalleries } from '@/components/gallery/mock-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Camera, Filter, Download, ChevronLeft } from 'lucide-react';
+import { Camera, Filter, Download, ChevronLeft, Upload, ImagePlus } from 'lucide-react';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -27,22 +27,37 @@ export default async function EventGalleryPage({ params }: PageProps) {
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
   
   // Try to fetch event data from database
-  const { data: event } = await supabase
+  const { data: event, error: eventError } = await supabase
     .from('events')
     .select('id, name, date, location, description, status')
     .eq('id', params.galleryId)
     .single();
   
-  // Fallback to mock data if no real event data found
+  if (eventError) {
+    console.error('Error fetching event:', eventError);
+  }
+  
+  // If no event data, check if gallery record exists first
   if (!event) {
-    const mockGallery = mockGalleries[params.galleryId];
-    if (!mockGallery) {
-      return notFound();
-    }
+    const { data: gallery, error: galleryError } = await supabase
+      .from('galleries')
+      .select('id, event_id')
+      .eq('event_id', params.galleryId)
+      .single();
     
-    return (
-      <MockGalleryPage eventId={params.galleryId} />
-    );
+    if (galleryError || !gallery) {
+      // If no gallery or event exists, try mock data
+      const mockGallery = mockGalleries[params.galleryId];
+      if (!mockGallery) {
+        return (
+          <EmptyGalleryPage galleryId={params.galleryId} />
+        );
+      }
+      
+      return (
+        <MockGalleryPage eventId={params.galleryId} />
+      );
+    }
   }
   
   // Fetch photos for this event
@@ -68,15 +83,20 @@ export default async function EventGalleryPage({ params }: PageProps) {
       downloads: photo.download_count || 0,
       featured: photo.is_featured || false
     })) : 
-    mockGallery.photos;
+    [];
+  
+  const eventName = event?.name || 'Event Gallery';
+  const eventDate = event?.date ? new Date(event.date).toLocaleDateString() : 'No date';
+  const eventLocation = event?.location || '';
+  const eventDescription = event?.description || '';
   
   const header = (
     <div className="flex items-center justify-between w-full">
-      <Link href="/protected/events" className="flex items-center">
+      <Link href="/protected/gallery/events" className="flex items-center">
         <Button variant="ghost" size="icon" className="mr-2 h-8 w-8">
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <h1 className="text-xl font-bold truncate">{event.name}</h1>
+        <h1 className="text-xl font-bold truncate">{eventName}</h1>
       </Link>
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm" className="h-8">
@@ -95,12 +115,12 @@ export default async function EventGalleryPage({ params }: PageProps) {
     <div className="p-4 space-y-4">
       <div>
         <h3 className="font-medium text-sm mb-2">Event Info</h3>
-        <p className="text-sm text-muted-foreground mb-1">{event.date ? new Date(event.date).toLocaleDateString() : 'No date'}</p>
-        {event.location && (
-          <p className="text-sm text-muted-foreground mb-1">{event.location}</p>
+        <p className="text-sm text-muted-foreground mb-1">{eventDate}</p>
+        {eventLocation && (
+          <p className="text-sm text-muted-foreground mb-1">{eventLocation}</p>
         )}
-        {event.description && (
-          <p className="text-sm text-muted-foreground line-clamp-3">{event.description}</p>
+        {eventDescription && (
+          <p className="text-sm text-muted-foreground line-clamp-3">{eventDescription}</p>
         )}
       </div>
       
@@ -141,14 +161,76 @@ export default async function EventGalleryPage({ params }: PageProps) {
     <GalleryLayout header={header} sidebar={sidebar}>
       <div className="p-4">
         <Suspense fallback={<GallerySkeleton />}>
-          <EventGallery 
-            eventId={event.id}
-            eventName={event.name}
-            photos={galleryPhotos}
-          />
+          {galleryPhotos.length > 0 ? (
+            <EventGallery 
+              eventId={params.galleryId}
+              eventName={eventName}
+              photos={galleryPhotos}
+            />
+          ) : (
+            <EmptyGalleryContent galleryId={params.galleryId} />
+          )}
         </Suspense>
       </div>
     </GalleryLayout>
+  );
+}
+
+// Empty gallery content with upload prompt
+function EmptyGalleryContent({ galleryId }: { galleryId: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
+      <div className="bg-primary/10 p-6 rounded-full mb-6">
+        <ImagePlus className="h-12 w-12 text-primary" />
+      </div>
+      <h2 className="text-2xl font-bold mb-2">No photos yet</h2>
+      <p className="text-muted-foreground mb-8 max-w-md">
+        This gallery is empty. Start by uploading photos to create memorable experiences from your event.
+      </p>
+      <Button asChild>
+        <Link href={`/protected/gallery/upload?eventId=${galleryId}`}>
+          <Upload className="mr-2 h-4 w-4" />
+          Upload Photos
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
+// Empty gallery page (fallback for non-existent galleries)
+function EmptyGalleryPage({ galleryId }: { galleryId: string }) {
+  return (
+    <div className="container max-w-4xl mx-auto py-16 px-4">
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Gallery Not Found</CardTitle>
+          <CardDescription>
+            We couldn't find a gallery for this event
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center pb-8">
+          <div className="bg-muted/40 p-6 rounded-full mb-6">
+            <ImagePlus className="h-12 w-12 text-muted-foreground/60" />
+          </div>
+          <p className="text-center text-muted-foreground mb-8 max-w-md">
+            The gallery you're looking for doesn't exist or you don't have permission to view it.
+          </p>
+          <div className="flex gap-4">
+            <Button variant="outline" asChild>
+              <Link href="/protected/gallery/events">
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Back to Galleries
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link href={`/protected/events/manage`}>
+                View Events
+              </Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
@@ -158,7 +240,7 @@ function MockGalleryPage({ eventId }: { eventId: string }) {
   
   const header = (
     <div className="flex items-center justify-between w-full">
-      <Link href="/protected/events" className="flex items-center">
+      <Link href="/protected/gallery/events" className="flex items-center">
         <Button variant="ghost" size="icon" className="mr-2 h-8 w-8">
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -248,9 +330,9 @@ function GallerySkeleton() {
         {Array.from({ length: 8 }).map((_, i) => (
           <Card key={i} className="overflow-hidden">
             <Skeleton className="aspect-[3/2] w-full" />
-            <div className="p-3">
-              <Skeleton className="h-5 w-3/4 mb-2" />
-              <Skeleton className="h-4 w-1/2" />
+            <div className="p-2">
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-3 w-24" />
             </div>
           </Card>
         ))}

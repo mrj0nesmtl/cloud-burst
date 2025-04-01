@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { 
   CalendarDays, 
   MapPin, 
   Users, 
-  Image, 
+  Image as ImageIcon, 
   MoreHorizontal, 
   Edit, 
   Trash, 
@@ -175,6 +176,38 @@ export function EnhancedEventCard({
       onClick={handleCardClick}
       className="hover:shadow-md hover:border-primary/20"
       >
+        {/* Thumbnail Image */}
+        {event.cover_image_url && (
+          <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '160px',
+            overflow: 'hidden'
+          }}>
+            <Image
+              src={event.cover_image_url}
+              alt={event.name}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{ 
+                objectFit: 'cover',
+                transition: 'transform 0.3s ease'
+              }}
+              className="hover:scale-105"
+            />
+            {/* Status badge overlay */}
+            <div style={{
+              position: 'absolute',
+              top: '12px',
+              right: '12px',
+              zIndex: 10
+            }}>
+              {renderStatusBadge()}
+            </div>
+          </div>
+        )}
+
         <CardHeader style={{ 
           padding: '1.25rem 1.25rem 0.75rem',
         }}>
@@ -236,7 +269,7 @@ export function EnhancedEventCard({
               alignItems: 'center',
               gap: '0.5rem'
             }}>
-              {renderStatusBadge()}
+              {!event.cover_image_url && renderStatusBadge()}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
@@ -391,7 +424,7 @@ export function EnhancedEventCard({
               alignItems: 'center', 
               fontSize: '0.875rem'
             }}>
-              <Image style={{ 
+              <ImageIcon style={{ 
                 marginRight: '0.375rem', 
                 height: '1rem', 
                 width: '1rem', 
@@ -455,23 +488,20 @@ export function EnhancedEventCard({
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Are you sure you want to delete this event?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the event "{event.name}" and all associated data.
-              This action cannot be undone.
+              This action cannot be undone. This will permanently delete the event
+              and all associated data.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={isDeleting}
-              style={{
-                backgroundColor: 'var(--destructive)',
-                color: 'var(--destructive-foreground)'
-              }}
             >
-              {isDeleting ? 'Deleting...' : 'Delete Event'}
+              {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

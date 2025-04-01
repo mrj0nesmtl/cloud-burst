@@ -33,6 +33,11 @@ async function getDashboardData() {
   const supabase = await createServerClient()
   
   try {
+    // Use Next.js cache control to ensure fresh data
+    const options = {
+      cache: 'no-store' as const
+    }
+    
     // Fetch all required data concurrently
     const [
       eventsCount,
@@ -57,7 +62,7 @@ async function getDashboardData() {
           event_attendees(count),
           photos(count)
         `)
-        .order('date', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(5),
     ])
 
@@ -109,11 +114,7 @@ export default async function DashboardPage() {
             </p>
           </div>
           <Link href="/protected/events/create">
-            <Button size="sm" className="w-full sm:w-auto h-10" style={{ 
-              background: 'var(--primary)',
-              borderRadius: '6px',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-            }}>
+            <Button size="sm" className="w-full sm:w-auto h-10">
               <Plus className="mr-2 h-4 w-4" />
               Create Event
             </Button>
@@ -220,7 +221,7 @@ export default async function DashboardPage() {
                     Your latest events
                   </CardDescription>
                 </div>
-                <Link href="/protected/events">
+                <Link href="/protected/events/manage">
                   <Button variant="ghost" size="sm" className="h-8 gap-1">
                     View all
                     <ArrowUpRight className="h-3 w-3" />
@@ -253,19 +254,19 @@ export default async function DashboardPage() {
               gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))'
             }}>
               <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all hover:scale-[1.02]">
-                <Link href="/protected/attendees/qr-codes" className="flex items-start">
+                <Link href="/protected/qr-codes" className="flex items-start">
                   <div className="mr-3 h-10 w-10 rounded-md bg-blue-100 dark:bg-blue-800/30 flex items-center justify-center">
                     <QrCode className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div className="flex flex-col text-left">
-                    <span className="text-sm font-medium">Generate QR Codes</span>
+                    <span className="text-sm font-medium">QR Codes</span>
                     <span className="text-xs text-muted-foreground mt-1">Create check-in codes for events</span>
                   </div>
                 </Link>
               </Button>
               
               <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 transition-all hover:scale-[1.02]">
-                <Link href="/protected/attendees/manage" className="flex items-start">
+                <Link href="/protected/attendees/invitations" className="flex items-start">
                   <div className="mr-3 h-10 w-10 rounded-md bg-green-100 dark:bg-green-800/30 flex items-center justify-center">
                     <UserPlus className="h-5 w-5 text-green-600 dark:text-green-400" />
                   </div>

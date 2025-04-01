@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
-import { CalendarIcon, Loader2, Upload, X, Instagram, Facebook, Twitter, Globe, Users, Palette } from 'lucide-react'
+import { CalendarIcon, Loader2, Upload, X, Instagram, Facebook, Twitter, Globe, Users, Palette, ImageIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -39,6 +39,10 @@ import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 import { ThemePreview } from '@/components/events/theme-preview'
 import { HexColorPicker } from "react-colorful"
+import { Switch } from "@/components/ui/switch"
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { Event } from "@/types/events"
 
 // Form schema
 const formSchema = z.object({
@@ -59,12 +63,14 @@ const formSchema = z.object({
   website_url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
   accent_color: z.string().default('#3b82f6'),
   status: z.enum(['draft', 'published', 'scheduled']).default('draft'),
+  cover_image_url: z.string().url().optional().or(z.literal('')),
+  thumbnail_image: z.any().optional(),
 })
 
 type FormValues = z.infer<typeof formSchema>
 
 interface EventFormProps {
-  initialData?: any
+  initialData?: Event
   userId: string
   mode?: 'create' | 'edit'
 }
@@ -75,7 +81,40 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [logoPreview, setLogoPreview] = useState<string | null>(initialData?.logo_url || null)
   const [isUploading, setIsUploading] = useState(false)
+  const [customUrl, setCustomUrl] = useState("")
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null)
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
+  const [isExistingThumbnail, setIsExistingThumbnail] = useState(false)
   
+  // Detect viewport size for responsiveness
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
+    }
+    
+    handleResize() // Check on initial load
+    window.addEventListener('resize', handleResize)
+    
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  // Initialize form with existing data
+  useEffect(() => {
+    if (initialData && mode === 'edit') {
+      // Set the thumbnail preview if the event has a cover image
+      if (initialData.cover_image_url) {
+        setThumbnailPreview(initialData.cover_image_url)
+        setIsExistingThumbnail(true)
+        setCustomUrl(initialData.custom_url || "")
+      }
+    }
+  }, [initialData, mode])
+
   // Default values
   const defaultValues: Partial<FormValues> = {
     name: initialData?.name || '',
@@ -93,6 +132,7 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
     website_url: initialData?.website_url || '',
     accent_color: initialData?.accent_color || '#3b82f6',
     status: initialData?.status || 'draft',
+    cover_image_url: initialData?.cover_image_url || '',
   }
   
   // Initialize form
@@ -164,6 +204,45 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
     setLogoFile(null)
     setLogoPreview(null)
     form.setValue('logo_url', '')
+  }
+  
+  // Function to handle thumbnail image upload
+  const handleThumbnailUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Check if file is an image
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file')
+      return
+    }
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be less than 5MB')
+      return
+    }
+
+    // Create a preview URL
+    const previewUrl = URL.createObjectURL(file)
+    setThumbnailPreview(previewUrl)
+    setThumbnailFile(file)
+    setIsExistingThumbnail(false)
+    
+    // Update form value
+    form.setValue('thumbnail_image', file)
+  }
+
+  // Clear the thumbnail
+  const clearThumbnail = () => {
+    if (thumbnailPreview && !isExistingThumbnail) {
+      URL.revokeObjectURL(thumbnailPreview)
+    }
+    setThumbnailPreview(null)
+    setThumbnailFile(null)
+    setIsExistingThumbnail(false)
+    form.setValue('thumbnail_image', undefined)
+    form.setValue('cover_image_url', '')
   }
   
   // Submit handler
@@ -758,6 +837,64 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
             </FormItem>
           )}
         />
+        
+        {/* Event Thumbnail */}
+        <div className="space-y-3">
+          <FormLabel>Event Thumbnail</FormLabel>
+          <div className="flex items-center gap-6">
+            {thumbnailPreview ? (
+              <div className="relative h-24 w-24 rounded-md overflow-hidden border">
+                <Image 
+                  src={thumbnailPreview} 
+                  alt="Event thumbnail preview"
+                  fill
+                  className="object-cover"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-0 right-0 h-6 w-6 rounded-full"
+                  onClick={clearThumbnail}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex h-24 w-24 items-center justify-center rounded-md border border-dashed">
+                <ImageIcon className="h-10 w-10 text-muted-foreground" />
+              </div>
+            )}
+            <div>
+              <Input
+                id="thumbnail-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleThumbnailUpload}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => document.getElementById('thumbnail-upload')?.click()}
+                disabled={isSubmitting}
+                className="mr-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Uploading...
+                  </>
+                ) : (
+                  <>Select Thumbnail</>
+                )}
+              </Button>
+              <p className="text-sm text-muted-foreground mt-2">
+                Recommended size: 1:1 ratio, at least 200x200px
+              </p>
+            </div>
+          </div>
+        </div>
         
         {/* Form Actions - Improved layout */}
         <div className="flex justify-end space-x-4 pt-4 border-t">
