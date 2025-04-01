@@ -16,27 +16,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
-- Guest Onboarding & RSVP Flow implementation
+- Advanced AI Features integration with TensorFlow.js
+- Complete RSVP form with dynamic fields and validation
 - Magic Link authentication for guests
-- RSVP form with preference collection
-- Enhanced Analytics dashboard
-- Advanced camera integration for QR code scanning
+- Enhanced Analytics dashboard with real-time metrics
+
+## [0.8.5] - 2025-04-01 (Upcoming)
+### Planned
+- Complete Guest Onboarding & RSVP Flow implementation
+- Enhance camera integration for QR code scanning
+- Finalize Analytics dashboard with data visualization
+- Implement invitation analytics and tracking
+- Complete final mobile optimizations
+- Prepare for Beta 0.9.0 Release Candidate
 
 ## [0.8.4] - 2025-03-31
-### Added
-- Complete RSVP system implementation with database schema and API routes
-- RSVP form with Zod validation for form submissions
-- Confirmation pages for accepted and declined RSVPs
-- Expired invitation page for handling outdated invitations
-- API endpoints for invitation validation and RSVP submission
-- TypeScript types and validation schemas for RSVP functionality
+### Added in Session 33 (March 31, 2025)
+- **Enhanced Dark Mode Experience**:
+  - Improved border contrast and UI visibility in dark theme
+  - Added vibrant color feedback for interactive elements
+  - Enhanced status badges with better visibility in dark mode
+  - Added refined hover states for all interactive components
+  - Improved tab navigation styling and visual feedback
 
-### Fixed
-- Resolved TypeScript errors in form validation schemas
-- Fixed type compatibility issues between database and UI interfaces
-- Improved error handling in RSVP form submission process
+- **Visual Consistency Improvements**:
+  - Standardized styling across stat cards in Manage Events
+  - Added consistent hover effects with subtle animations
+  - Enhanced color coding for event status throughout UI
+  - Improved mobile responsiveness for event items
+  - Refined iconography with proper color contrast
+  - Added border box styling for better element separation
+  - Enhanced shadows and depth perception in dark mode
+  
+- **RSVP System Foundation**:
+  - Added template creation and management pages
+  - Created template display structure
+  - Improved validation for event forms supporting invitation data
+  - Enhanced email template framework
+  - Prepared groundwork for invitation and RSVP tracking
 
-## [0.8.3] - 2025-03-29
+### Fixed in Session 33 (March 31, 2025)
+- **Dark Mode Visibility Issues**:
+  - Resolved low-contrast borders in dark theme
+  - Fixed faded text in status indicators
+  - Enhanced element visibility with proper contrast ratios
+  - Improved hover state feedback in dark mode
+  - Fixed inconsistent shadowing in card components
+
+- **UI Refinements**:
+  - Corrected padding and spacing in stat cards
+  - Fixed overflow issues in mobile layouts
+  - Enhanced accessibility of clickable elements
+  - Improved visual separation between elements
+  - Added proper visual hierarchy to dashboard elements
+
 ### Added in Session 32 (March 29, 2025)
 - **Interactive Map Implementation**:
   - Replaced placeholder grid with real Leaflet-based map
