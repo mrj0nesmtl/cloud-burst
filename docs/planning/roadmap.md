@@ -340,8 +340,8 @@ gantt
 
 ```mermaid
 pie title Feature Completion Status
-    "Completed" : 92
-    "In Progress" : 8
+    "Completed" : 94
+    "In Progress" : 6
     "Planned" : 0
 ```
 
