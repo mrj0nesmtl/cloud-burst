@@ -161,7 +161,7 @@ export default function ManageEventsPage() {
     };
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
-  
+
   const getStatusBadge = (status: EventStatus) => {
     // Style configuration for different statuses
     const getStatusStyle = (status: EventStatus) => {
@@ -604,10 +604,10 @@ export default function ManageEventsPage() {
             color: 'var(--muted-foreground)',
             margin: 0
           }}>
-            Create, update, and manage your events all in one place.
-          </p>
-        </div>
-        
+          Create, update, and manage your events all in one place.
+        </p>
+      </div>
+
         <Button asChild style={{
           width: isMobile ? '100%' : 'auto',
           flexShrink: 0
@@ -621,20 +621,20 @@ export default function ManageEventsPage() {
             }}
           >
             <CalendarIcon style={{ width: '16px', height: '16px', marginRight: '8px' }} />
-            Create New Event
-          </Link>
-        </Button>
+              Create New Event
+            </Link>
+          </Button>
       </div>
       
       {/* Stats and Map section */}
       <div style={{ width: '100%', overflowX: 'hidden' }}>
         {user && (
-          <StatsMapWrapper 
+      <StatsMapWrapper 
             processedEvents={events}
-            publishedEvents={publishedEvents}
-            attendeeCounts={attendeeCounts}
-            mapComponent={<EventsMapClientWrapper />}
-          />
+        publishedEvents={publishedEvents}
+        attendeeCounts={attendeeCounts}
+        mapComponent={<EventsMapClientWrapper />}
+      />
         )}
       </div>
       
@@ -767,7 +767,7 @@ export default function ManageEventsPage() {
                 {cancelledEvents.length}
               </span>
             </TabsTrigger>
-          </TabsList>
+        </TabsList>
         </div>
         
         <div style={{ marginTop: '16px', width: '100%', overflowX: 'hidden' }}>
@@ -779,8 +779,8 @@ export default function ManageEventsPage() {
             ) : (
               renderEmptyState("")
             )}
-          </TabsContent>
-          
+        </TabsContent>
+        
           <TabsContent value="published" style={{ width: '100%' }}>
             {loading ? (
               renderSkeletons()
@@ -789,8 +789,8 @@ export default function ManageEventsPage() {
             ) : (
               renderEmptyState("published")
             )}
-          </TabsContent>
-          
+        </TabsContent>
+        
           <TabsContent value="draft" style={{ width: '100%' }}>
             {loading ? (
               renderSkeletons()
@@ -799,8 +799,8 @@ export default function ManageEventsPage() {
             ) : (
               renderEmptyState("draft")
             )}
-          </TabsContent>
-          
+        </TabsContent>
+        
           <TabsContent value="completed" style={{ width: '100%' }}>
             {loading ? (
               renderSkeletons()
@@ -809,8 +809,8 @@ export default function ManageEventsPage() {
             ) : (
               renderEmptyState("completed")
             )}
-          </TabsContent>
-          
+        </TabsContent>
+        
           <TabsContent value="cancelled" style={{ width: '100%' }}>
             {loading ? (
               renderSkeletons()
@@ -820,7 +820,7 @@ export default function ManageEventsPage() {
               renderEmptyState("cancelled")
             )}
           </TabsContent>
-        </div>
+          </div>
       </Tabs>
     </div>
   );

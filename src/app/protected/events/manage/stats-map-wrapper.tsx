@@ -20,10 +20,10 @@ interface StatsMapWrapperProps {
   mapComponent: React.ReactNode;
 }
 
-export function StatsMapWrapper({
-  processedEvents,
-  publishedEvents,
-  attendeeCounts,
+export function StatsMapWrapper({ 
+  processedEvents, 
+  publishedEvents, 
+  attendeeCounts, 
   mapComponent
 }: StatsMapWrapperProps) {
   // Mobile detection
@@ -173,7 +173,7 @@ export function StatsMapWrapper({
             Across {Object.keys(attendeeCounts).length} events
           </p>
         </div>
-      </div>
+              </div>
       
       {/* Average Attendees Card - Amber */}
       <div style={{
@@ -234,7 +234,7 @@ export function StatsMapWrapper({
             {totalAttendees > 0 ? '+0.1% from last month' : 'No historical data'}
           </p>
         </div>
-      </div>
+              </div>
       
       {/* Event Locations Card - Purple */}
       <div style={{
@@ -293,8 +293,8 @@ export function StatsMapWrapper({
               <path d="M3.6 15h16.8" />
               <path d="M12 3a4.5 4.5 0 0 0 0 18 4.5 4.5 0 0 0 0-18Z" />
             </svg>
-          </div>
-        </div>
+              </div>
+              </div>
         <div style={{
           paddingBottom: '16px',
           paddingLeft: '16px',
@@ -335,7 +335,7 @@ export function StatsMapWrapper({
           borderBottomRightRadius: '8px',
           width: '100%'
         }}>
-          {mapComponent}
+        {mapComponent}
         </div>
       </div>
     </div>
