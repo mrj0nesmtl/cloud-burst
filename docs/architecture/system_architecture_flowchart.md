@@ -1,8 +1,8 @@
-# 🏛️ **System Architecture Flowchart (Beta v0.8.3)**  
+# 🏛️ **System Architecture Flowchart (Beta v0.8.4)**  
 
 ## Cloud Burst  
-📅 *Updated: March 29, 2025*  
-📊 *Version: 0.8.3*
+📅 *Updated: April 1, 2025*  
+📊 *Version: 0.8.4*
 
 ---
 
@@ -126,7 +126,7 @@ flowchart TD
     TokenManager -->|43. Manage| Session
 ```
 
-## 🛠️ **Beta Components (v0.8.3)**  
+## 🛠️ **Beta Components (v0.8.4)**  
 
 ### 📱 **Client Layer**
 - Next.js 14 App Router
@@ -136,7 +136,7 @@ flowchart TD
 - Server-Side Data Fetching
 - Server Components for Static Content
 - Client Components for Interactivity
-- Shadcn/ui Components
+- Shadcn/ui Components with Dark Mode
 - TanStack Query Integration
 - Protected Route System
 - Dashboard Components
@@ -146,6 +146,8 @@ flowchart TD
 - Gallery Components (Photos & Videos)
 - Analytics Components
 - Chart Components for Data Visualization
+- Interactive Map with Leaflet
+- Dark Mode Enhancement
 - Invitation System UI (Complete)
 - RSVP System UI (In Progress)
 - AI Features Framework (Complete)
@@ -180,7 +182,7 @@ flowchart TD
 - Storage Integration
 - Enhanced RLS Policies
 - Template Configurations Table
-- Events Database
+- Events Database with Geolocation
 - Media Database (Photos & Videos)
 - Attendees Database
 - Analytics Database

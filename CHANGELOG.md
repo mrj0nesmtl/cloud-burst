@@ -21,14 +21,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Magic Link authentication for guests
 - Enhanced Analytics dashboard with real-time metrics
 
-## [0.8.5] - 2025-04-01 (Upcoming)
-### Planned
-- Complete Guest Onboarding & RSVP Flow implementation
-- Enhance camera integration for QR code scanning
-- Finalize Analytics dashboard with data visualization
-- Implement invitation analytics and tracking
-- Complete final mobile optimizations
-- Prepare for Beta 0.9.0 Release Candidate
+## [0.8.5] - 2025-04-07 (Upcoming)
+### Planned for Session 34
+- **RSVP System Core Implementation**:
+  - Complete RSVP user flow with state diagram
+  - Finalize invitation database schema enhancements
+  - Build responsive RSVP form component
+  - Implement magic link authentication for invitees
+  - Create API endpoints for RSVP management
+  - Add form validation with Zod
+  - Implement email notifications for RSVP status changes
+
+- **AI Features Integration**:
+  - Set up backend architecture for AI processing
+  - Initialize TensorFlow.js integration
+  - Create image analysis utilities
+  - Implement prototype facial detection
+  - Establish media enhancement pipeline foundation
+
+- **Camera Integration Enhancement**:
+  - Complete token validation for QR codes
+  - Implement camera access hook
+  - Create photo capture UI for mobile
+  - Add real-time QR code validation
+  - Implement secure media upload pipeline
 
 ## [0.8.4] - 2025-03-31
 ### Added in Session 33 (March 31, 2025)

@@ -1,16 +1,16 @@
 # 🎨 **Application Design Document**  
 
 ## Cloud Burst
-📅 *Updated: March 29, 2025*  
-📊 *Version: 0.8.3*
+📅 *Updated: March 31, 2025*  
+📊 *Version: 0.8.4*
 
 ## 📌 Situational Abstract
 
-Cloud Burst has achieved all milestones for our Enhanced Features phase and has now entered a critical phase with the implementation of the AI Features framework in version 0.8.3. As of April 17, 2025, we have successfully implemented the complete invitation system with SendGrid integration, streamlined authentication flows, enhanced event-specific guest management, resolved critical Next.js 14 App Router architecture issues, optimized mobile responsiveness across all dashboard pages, and established a solid foundation for artificial intelligence capabilities that will enhance the platform's media processing functionality.
+Cloud Burst has achieved significant milestones with the implementation of dark mode enhancements and RSVP system foundation in version 0.8.4, building upon the AI Features framework established in version 0.8.3. As of March 31, 2025, we have successfully implemented comprehensive dark mode improvements, enhanced UI consistency across themes, integrated real-time map visualization with Leaflet, optimized mobile responsiveness across all dashboard pages, and established a solid foundation for the RSVP system with template management capabilities.
 
-The platform now offers a comprehensive event management experience with secure invitation flows, proper email delivery, intuitive user guidance for managing event attendees, and a framework for AI-powered features. Recent enhancements include the creation of the AI Features section in the sidebar, development of placeholder pages for five key AI capabilities (Facial Recognition, Enhancements, Product Placements, Smart Tagging, and AI Studio), and implementation of chart components for data visualization with proper TypeScript support.
+The platform now offers a robust event management experience with proper role-based access control, enhanced navigation patterns, secure authentication flows, fully responsive layouts across all pages, a complete invitation system with SendGrid integration, a comprehensive framework for AI features, an interactive map displaying actual event locations, and now a refined dark mode experience with consistent UI patterns. Recent achievements include the enhancement of dark mode visibility, standardization of UI components, improvement of visual feedback for interactive elements, and addition of template creation and management pages as part of the RSVP system foundation.
 
-Our focus for version 0.9.0 centers on completing the Guest Onboarding & RSVP Flow implementation, integrating TensorFlow.js for client-side AI processing, finalizing the analytics dashboard with real-time metrics, and performing pre-launch optimization. These refinements will ensure a comprehensive and performant solution for our beta release.
+Our focus for version 0.9.0 centers on completing the Guest Onboarding & RSVP Flow implementation while beginning the integration of AI capabilities with the media processing pipeline. These features are critical for our upcoming Beta 0.9.0 Release Candidate 1 scheduled for April 7, 2025. Our immediate priority is delivering these key features while maintaining the platform's stability, performance, and visual consistency across both light and dark themes.
 
 The platform's architecture continues to demonstrate exceptional resilience and adaptability, keeping us firmly on track for our April 30, 2025 Beta 0.9.0 release target. The team's commitment to excellence is evident in the successful resolution of complex technical challenges while maintaining superior code quality and user experience.
 
@@ -39,7 +39,9 @@ The platform's architecture continues to demonstrate exceptional resilience and 
 | 📊 Chart Components | ✅ Done | P1 | Analytics | 100% |
 | 🖼️ Gallery System | 🟢 Active | P0 | Storage | 95% |
 | 📨 Invitation System | ✅ Done | P0 | Events | 100% |
-| 📝 RSVP System | 🟢 Active | P0 | Invitations | 10% |
+| 📝 RSVP System | 🟢 Active | P0 | Invitations | 25% |
+| 🗺️ Map Integration | ✅ Done | P1 | Events | 100% |
+| 🌙 Dark Mode | ✅ Done | P1 | UI | 100% |
 
 ### 🎯 Sprint Progress
 
@@ -58,9 +60,11 @@ The platform's architecture continues to demonstrate exceptional resilience and 
 | 11 | 📱 Mobile Responsiveness | ✅ Done | Apr 2024 | 100% |
 | 12 | 🤖 AI Features Framework | ✅ Done | Apr 2024 | 100% |
 | 13 | 📊 Chart Components | ✅ Done | Apr 2024 | 100% |
-| 14 | 📝 RSVP System | 🟢 Active | Apr 2024 | 10% |
-| 15 | 🤖 AI Integration | 🟢 Active | Apr 2024 | 15% |
-| 16 | 🚀 Launch Prep | 🟡 Planned | May 2025 | 0% |
+| 14 | 🗺️ Map Integration | ✅ Done | Apr 2024 | 100% |
+| 15 | 🌙 Dark Mode Enhancement | ✅ Done | Apr 2024 | 100% |
+| 16 | 📝 RSVP System | 🟢 Active | Apr 2024 | 25% |
+| 17 | 🤖 AI Integration | 🟢 Active | Apr 2024 | 15% |
+| 18 | 🚀 Launch Prep | 🟡 Planned | May 2025 | 0% |
 
 ---
 
