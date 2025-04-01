@@ -1,128 +1,111 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
-import { cookies } from 'next/headers';
-import { InvitationMetadata } from '@/types/rsvp';
+import { NextRequest, NextResponse } from "next/server";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import { z } from "zod";
+
+import { Database } from "@/types/supabase";
+
+const statusRequestSchema = z.object({
+  token: z.string().min(1, "Invitation token is required"),
+});
 
 /**
  * API route handler for getting RSVP status information
  */
 export async function GET(request: NextRequest) {
   try {
-    // Extract token from query params
-    const token = request.nextUrl.searchParams.get('token');
+    const supabase = createRouteHandlerClient<Database>({ cookies });
+    const token = request.nextUrl.searchParams.get("token");
     
     if (!token) {
       return NextResponse.json(
-        { error: 'Missing invitation token' },
+        { error: "Missing invitation token" },
         { status: 400 }
       );
     }
     
-    // Initialize Supabase server client
-    const cookieStore = cookies();
-    const supabase = await createServerClient(cookieStore);
+    // Validate token
+    const parsedParams = statusRequestSchema.safeParse({ token });
     
-    // Look up the invitation by token
+    if (!parsedParams.success) {
+      return NextResponse.json(
+        { error: "Invalid token format" },
+        { status: 400 }
+      );
+    }
+    
+    // Find the invitation by token
     const { data: invitation, error: invitationError } = await supabase
-      .from('invitations')
-      .select('id, event_id, email, name, status, rsvp_status, rsvp_date, expires_at, metadata')
-      .eq('token', token)
+      .from("invitations")
+      .select("id, name, email, event_id, status, rsvp_status, rsvp_date, metadata")
+      .eq("token", token)
       .single();
     
     if (invitationError || !invitation) {
-      console.error('Invitation lookup error:', invitationError);
       return NextResponse.json(
-        { error: 'Invalid invitation token' },
+        { error: "Invalid or expired invitation token" },
         { status: 404 }
       );
     }
-    
-    // Check if invitation is valid and not expired
-    const now = new Date();
-    const expiresAt = invitation.expires_at ? new Date(invitation.expires_at) : null;
-    
-    if (
-      invitation.status === 'expired' || 
-      (expiresAt && now > expiresAt)
-    ) {
-      return NextResponse.json(
-        { 
-          error: 'Invitation has expired',
-          expired: true,
-          invitation: {
-            id: invitation.id,
-            event_id: invitation.event_id,
-            status: 'expired'
-          }
-        },
-        { status: 410 }
-      );
-    }
-    
-    // Get RSVP information
-    const { data: rsvp, error: rsvpError } = await supabase
-      .from('rsvps')
-      .select('*')
-      .eq('invitation_id', invitation.id)
-      .maybeSingle();
     
     // Get event details
     const { data: event, error: eventError } = await supabase
-      .from('events')
-      .select('id, name, date, location, organizer_id')
-      .eq('id', invitation.event_id)
+      .from("events")
+      .select("id, name, description, date, location")
+      .eq("id", invitation.event_id)
       .single();
     
     if (eventError || !event) {
-      console.error('Event lookup error:', eventError);
       return NextResponse.json(
-        { error: 'Event not found' },
-        { status: 404 }
+        { error: "Failed to retrieve event details" },
+        { status: 500 }
       );
     }
     
-    // Get event organizer details with null handling
-    const { data: organizer, error: organizerError } = await supabase
-      .from('profiles')
-      .select('id, full_name')
-      .eq('id', event.organizer_id || '')
-      .single();
+    // Get RSVP details if available
+    const { data: rsvp } = await supabase
+      .from("rsvps")
+      .select("id, status, guest_count, dietary_restrictions, notes, created_at")
+      .eq("invitation_id", invitation.id)
+      .maybeSingle();
     
-    // Fix metadata access with type casting
-    const metadata = invitation.metadata as unknown as InvitationMetadata;
+    // Cast metadata to appropriate type for safer access
+    const metadata = invitation.metadata as Record<string, any> || {};
     
-    // Return combined data
     return NextResponse.json({
+      status: "success",
       invitation: {
-        id: invitation.id,
-        event_id: invitation.event_id,
         name: invitation.name,
         email: invitation.email,
         status: invitation.status,
         rsvp_status: invitation.rsvp_status,
         rsvp_date: invitation.rsvp_date,
-        expires_at: invitation.expires_at,
-        plus_one_allowed: metadata?.plus_one_allowed || false,
-        plus_one_used: metadata?.plus_one_used || false,
-        plus_one_name: metadata?.plus_one_name || null,
+        plus_one: {
+          available: metadata.plus_one_enabled || false,
+          used: metadata.plus_one_used || false,
+          name: metadata.plus_one_name || null,
+        },
       },
-      rsvp: rsvp || null,
       event: {
         id: event.id,
         name: event.name,
+        description: event.description,
         date: event.date,
         location: event.location,
-        organizer: organizer ? {
-          id: organizer.id,
-          name: organizer.full_name,
-        } : null,
       },
+      rsvp: rsvp ? {
+        status: rsvp.status,
+        guest_count: rsvp.guest_count,
+        dietary_restrictions: rsvp.dietary_restrictions,
+        notes: rsvp.notes,
+        created_at: rsvp.created_at,
+      } : null,
     });
-    
   } catch (error) {
-    console.error('RSVP status error:', error);
+    console.error("Error checking RSVP status:", error);
+    
     return NextResponse.json(
-      { error: 'Failed to get RSVP status' },
+      { error: "Failed to retrieve RSVP status" },
       { status: 500 }
     );
   }

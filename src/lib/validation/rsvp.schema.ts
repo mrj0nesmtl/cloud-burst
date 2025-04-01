@@ -1,16 +1,19 @@
 import { z } from 'zod';
-import { RsvpFormValues } from '@/types/rsvp';
+import { RsvpStatus } from '@/types/invitations';
 
 /**
  * RSVP form validation schema
  */
 export const rsvpFormSchema = z.object({
   // Basic RSVP fields
-  status: z.enum(['accepted', 'declined', 'pending']),
+  status: z.enum([RsvpStatus.ACCEPTED, RsvpStatus.DECLINED, RsvpStatus.PENDING], {
+    required_error: "Please select your response",
+  }),
   
+  // Guest count is derived from plusOne selection
   guestCount: z.number().min(1).default(1),
   
-  // Conditional fields based on acceptance
+  // Optional fields
   dietaryRestrictions: z.string().optional(),
   notes: z.string().optional(),
   
@@ -19,7 +22,7 @@ export const rsvpFormSchema = z.object({
   plusOneName: z.string().optional(),
 }).superRefine((data, ctx) => {
   // Check if plusOne is true but no name provided
-  if (data.plusOne && (!data.plusOneName || data.plusOneName.length === 0)) {
+  if (data.plusOne && (!data.plusOneName || data.plusOneName.trim().length === 0)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: "Please provide your guest's name",
@@ -32,13 +35,13 @@ export const rsvpFormSchema = z.object({
  * Convert form values to database insert values
  */
 export const formValuesToRsvpInsert = (
-  formValues: RsvpFormValues, 
+  formValues: z.infer<typeof rsvpFormSchema>,
   invitationId: string
-): { 
-  invitation_id: string; 
-  status: string; 
-  guest_count: number; 
-  dietary_restrictions?: string; 
+): {
+  invitation_id: string;
+  status: RsvpStatus;
+  guest_count: number;
+  dietary_restrictions?: string;
   notes?: string;
 } => {
   return {
