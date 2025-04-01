@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-03-30T00:42:14.073Z
+Generated: 2025-04-01T03:43:47.109Z
 
 ## Overview
 
@@ -53,6 +53,10 @@ Generated: 2025-03-30T00:42:14.073Z
 │   │   ├── SESSION_31_KICKOFF_PROMPT.md
 │   │   ├── SESSION_31_NARRATIVE.md
 │   │   ├── SESSION_31_RESOURCES.md
+│   │   ├── SESSION_32_CHECKLIST.md
+│   │   ├── SESSION_32_KICKOFF.md
+│   │   ├── SESSION_32_NARRATIVE.md
+│   │   ├── SESSION_32_RESOURCES.md
 │   │   ├── session-28-plan.md
 │   │   ├── session_1.md
 │   │   ├── session_10.md
@@ -94,10 +98,9 @@ Generated: 2025-03-30T00:42:14.073Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
-│   ├── SESSION_32_CHECKLIST.md
-│   ├── SESSION_32_KICKOFF.md
-│   ├── SESSION_32_NARRATIVE.md
-│   ├── SESSION_32_RESOURCES.md
+│   ├── SESSION_33_CHECKLIST.md
+│   ├── SESSION_33_KICKOFF.md
+│   ├── SESSION_33_RESOURCES.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
@@ -141,6 +144,7 @@ Generated: 2025-03-30T00:42:14.073Z
 ├── rbac/
 │   └── role_based_access_control.md
 ├── user-flows/
+│   ├── RSVP_IMPLEMENTATION_GUIDE.md
 │   ├── create_test_users_ui.md
 │   ├── event_management.md
 │   ├── invitation_system_development_plan.md
@@ -152,12 +156,12 @@ Generated: 2025-03-30T00:42:14.073Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 134 files
+10 directories, 138 files
 
 ```
 
 ## File Type Breakdown
-- md: 129 file(s)
+- md: 133 file(s)
 
 ## Ignored Patterns
 - node_modules

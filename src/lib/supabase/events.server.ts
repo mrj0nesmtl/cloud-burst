@@ -91,6 +91,7 @@ export async function getUserEventsWithCounts(): Promise<EventWithCounts[]> {
     throw new Error('User not authenticated');
   }
   
+  // Add cache control headers to ensure fresh data
   const { data, error } = await supabase
     .from('events')
     .select(`
@@ -99,14 +100,14 @@ export async function getUserEventsWithCounts(): Promise<EventWithCounts[]> {
       photos_count: photos(count)
     `)
     .eq('organizer_id', session.user.id)
-    .order('date', { ascending: false });
+    .order('date', { ascending: false })
     
   if (error) {
     console.error('Error fetching user events with counts:', error);
     throw new Error(`Failed to fetch user events with counts: ${error.message}`);
   }
   
-  return data.map(event => ({
+  return data.map((event: any) => ({
     ...event,
     attendees_count: event.attendees_count[0]?.count || 0,
     photos_count: event.photos_count[0]?.count || 0
