@@ -1,9 +1,9 @@
 # protected Directory Structure
-Generated: 2025-03-30T00:42:15.733Z
+Generated: 2025-04-01T03:43:49.173Z
 
 ## Overview
 
-This directory contains 50 route(s).
+This directory contains 52 route(s).
 
 ## Directory Tree
 ```
@@ -47,7 +47,6 @@ This directory contains 50 route(s).
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── product-placements/
-│   │   ├── .page.tsx.swp
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── smart-tagging/
@@ -168,16 +167,23 @@ This directory contains 50 route(s).
 ├── subscription/
 │   └── page.tsx
 ├── templates/
+│   ├── [id]/
+│   │   ├── layout.tsx
+│   │   ├── loading.tsx
+│   │   ├── not-found.tsx
+│   │   └── page.tsx
+│   ├── create/
+│   │   └── page.tsx
 │   └── page.tsx
 └── layout.tsx
 
-58 directories, 105 files
+60 directories, 109 files
 
 ```
 
 ## File Type Breakdown
 - ts: 1 file(s)
-- tsx: 94 file(s)
+- tsx: 99 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

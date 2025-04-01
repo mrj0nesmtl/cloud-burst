@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-03-30T00:42:13.841Z
+Generated: 2025-04-01T03:43:46.851Z
 
 ## Overview
 
@@ -64,11 +64,19 @@ Generated: 2025-03-30T00:42:13.841Z
 │   │   │   └── events/
 │   │   │       └── route.ts
 │   │   ├── invitations/
+│   │   │   ├── [token]/
+│   │   │   │   └── validate/
+│   │   │   │       └── route.ts
 │   │   │   ├── bulk-create/
 │   │   │   │   └── route.ts
 │   │   │   ├── create/
 │   │   │   │   └── route.ts
 │   │   │   └── validate/
+│   │   │       └── route.ts
+│   │   ├── rsvp/
+│   │   │   ├── status/
+│   │   │   │   └── route.ts
+│   │   │   └── submit/
 │   │   │       └── route.ts
 │   │   ├── templates/
 │   │   │   ├── [templateId]/
@@ -128,8 +136,15 @@ Generated: 2025-03-30T00:42:13.841Z
 │   │       └── page.tsx
 │   ├── invitation/
 │   │   ├── [token]/
+│   │   │   ├── confirmation/
+│   │   │   │   ├── accepted/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── declined/
+│   │   │   │       └── page.tsx
 │   │   │   ├── page.tsx
 │   │   │   └── rsvp-form.tsx
+│   │   ├── expired/
+│   │   │   └── page.tsx
 │   │   └── page.tsx
 │   ├── invite/
 │   │   └── [token]/
@@ -200,7 +215,6 @@ Generated: 2025-03-30T00:42:13.841Z
 │   │   │   │   ├── layout.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── product-placements/
-│   │   │   │   ├── .page.tsx.swp
 │   │   │   │   ├── layout.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── smart-tagging/
@@ -321,6 +335,13 @@ Generated: 2025-03-30T00:42:13.841Z
 │   │   ├── subscription/
 │   │   │   └── page.tsx
 │   │   ├── templates/
+│   │   │   ├── [id]/
+│   │   │   │   ├── layout.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   ├── not-found.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── create/
+│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
 │   ├── verify/
@@ -570,6 +591,8 @@ Generated: 2025-03-30T00:42:13.841Z
 │   │   └── verify-schema.js
 │   ├── utils/
 │   │   └── codeGenerator.ts
+│   ├── validation/
+│   │   └── rsvp.schema.ts
 │   ├── analytics.ts
 │   ├── auth.ts
 │   ├── constants.ts
@@ -593,24 +616,26 @@ Generated: 2025-03-30T00:42:13.841Z
 │   └── layout.css
 ├── types/
 │   ├── auth.ts
+│   ├── custom.d.ts
 │   ├── events.ts
 │   ├── gallery.ts
 │   ├── invitations.ts
 │   ├── media.ts
 │   ├── notifications.ts
+│   ├── rsvp.ts
 │   ├── search.ts
 │   └── supabase.ts
 ├── .DS_Store
 ├── middleware.test.ts
 └── middleware.ts
 
-171 directories, 425 files
+183 directories, 438 files
 
 ```
 
 ## File Type Breakdown
-- ts: 88 file(s)
-- tsx: 318 file(s)
+- ts: 94 file(s)
+- tsx: 326 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

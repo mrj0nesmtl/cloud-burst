@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-03-30T00:42:13.169Z
+Generated: 2025-04-01T03:43:45.866Z
 
 ## Overview
 
@@ -90,6 +90,10 @@ Generated: 2025-03-30T00:42:13.169Z
 │   │   │   ├── SESSION_31_KICKOFF_PROMPT.md
 │   │   │   ├── SESSION_31_NARRATIVE.md
 │   │   │   ├── SESSION_31_RESOURCES.md
+│   │   │   ├── SESSION_32_CHECKLIST.md
+│   │   │   ├── SESSION_32_KICKOFF.md
+│   │   │   ├── SESSION_32_NARRATIVE.md
+│   │   │   ├── SESSION_32_RESOURCES.md
 │   │   │   ├── session-28-plan.md
 │   │   │   ├── session_1.md
 │   │   │   ├── session_10.md
@@ -131,10 +135,9 @@ Generated: 2025-03-30T00:42:13.169Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
-│   │   ├── SESSION_32_CHECKLIST.md
-│   │   ├── SESSION_32_KICKOFF.md
-│   │   ├── SESSION_32_NARRATIVE.md
-│   │   ├── SESSION_32_RESOURCES.md
+│   │   ├── SESSION_33_CHECKLIST.md
+│   │   ├── SESSION_33_KICKOFF.md
+│   │   ├── SESSION_33_RESOURCES.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
@@ -178,6 +181,7 @@ Generated: 2025-03-30T00:42:13.169Z
 │   ├── rbac/
 │   │   └── role_based_access_control.md
 │   ├── user-flows/
+│   │   ├── RSVP_IMPLEMENTATION_GUIDE.md
 │   │   ├── create_test_users_ui.md
 │   │   ├── event_management.md
 │   │   ├── invitation_system_development_plan.md
@@ -208,7 +212,9 @@ Generated: 2025-03-30T00:42:13.169Z
 │   ├── 20240318004000_setup_auth_email_templates.sql
 │   ├── 20240318005000_create_profiles_table.sql
 │   ├── 20250323205916_update_media_schema.sql
-│   └── 20250323211204_update_media_schema.sql
+│   ├── 20250323211204_update_media_schema.sql
+│   ├── 20250331_create_rsvps_table.sql
+│   └── setup_launch_partner.sql
 ├── public/
 │   ├── images/
 │   │   ├── email/
@@ -317,11 +323,19 @@ Generated: 2025-03-30T00:42:13.169Z
 │   │   │   │   └── events/
 │   │   │   │       └── route.ts
 │   │   │   ├── invitations/
+│   │   │   │   ├── [token]/
+│   │   │   │   │   └── validate/
+│   │   │   │   │       └── route.ts
 │   │   │   │   ├── bulk-create/
 │   │   │   │   │   └── route.ts
 │   │   │   │   ├── create/
 │   │   │   │   │   └── route.ts
 │   │   │   │   └── validate/
+│   │   │   │       └── route.ts
+│   │   │   ├── rsvp/
+│   │   │   │   ├── status/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── submit/
 │   │   │   │       └── route.ts
 │   │   │   ├── templates/
 │   │   │   │   ├── [templateId]/
@@ -381,8 +395,15 @@ Generated: 2025-03-30T00:42:13.169Z
 │   │   │       └── page.tsx
 │   │   ├── invitation/
 │   │   │   ├── [token]/
+│   │   │   │   ├── confirmation/
+│   │   │   │   │   ├── accepted/
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   └── declined/
+│   │   │   │   │       └── page.tsx
 │   │   │   │   ├── page.tsx
 │   │   │   │   └── rsvp-form.tsx
+│   │   │   ├── expired/
+│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── invite/
 │   │   │   └── [token]/
@@ -453,7 +474,6 @@ Generated: 2025-03-30T00:42:13.169Z
 │   │   │   │   │   ├── layout.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── product-placements/
-│   │   │   │   │   ├── .page.tsx.swp
 │   │   │   │   │   ├── layout.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── smart-tagging/
@@ -574,6 +594,13 @@ Generated: 2025-03-30T00:42:13.169Z
 │   │   │   ├── subscription/
 │   │   │   │   └── page.tsx
 │   │   │   ├── templates/
+│   │   │   │   ├── [id]/
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   ├── not-found.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── create/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
 │   │   ├── verify/
@@ -823,6 +850,8 @@ Generated: 2025-03-30T00:42:13.169Z
 │   │   │   └── verify-schema.js
 │   │   ├── utils/
 │   │   │   └── codeGenerator.ts
+│   │   ├── validation/
+│   │   │   └── rsvp.schema.ts
 │   │   ├── analytics.ts
 │   │   ├── auth.ts
 │   │   ├── constants.ts
@@ -846,11 +875,13 @@ Generated: 2025-03-30T00:42:13.169Z
 │   │   └── layout.css
 │   ├── types/
 │   │   ├── auth.ts
+│   │   ├── custom.d.ts
 │   │   ├── events.ts
 │   │   ├── gallery.ts
 │   │   ├── invitations.ts
 │   │   ├── media.ts
 │   │   ├── notifications.ts
+│   │   ├── rsvp.ts
 │   │   ├── search.ts
 │   │   └── supabase.ts
 │   ├── .DS_Store
@@ -951,7 +982,11 @@ Generated: 2025-03-30T00:42:13.169Z
 │   │   ├── supabase_logs (3).csv
 │   │   ├── supabase_logs.csv
 │   │   └── supabase_logs_for_one_login.csv
-│   └── .DS_Store
+│   ├── .DS_Store
+│   ├── RSVPs Table Structure.csv
+│   ├── Supabase Snippet List RLS Policies for RSVPs Table.csv
+│   ├── events_rows.csv
+│   └── galleries_rows.csv
 ├── .DS_Store
 ├── .gitignore
 ├── .replit
@@ -968,21 +1003,20 @@ Generated: 2025-03-30T00:42:13.169Z
 ├── package.json
 ├── postcss.config.js
 ├── postcss.config.mjs
-├── setup_launch_partner.sql
 ├── tailwind.config.ts
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-214 directories, 751 files
+226 directories, 773 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11700 file(s)
-- tsx: 457 file(s)
-- js: 27833 file(s)
-- json: 2022 file(s)
-- md: 1464 file(s)
+- ts: 11756 file(s)
+- tsx: 465 file(s)
+- js: 27914 file(s)
+- json: 2045 file(s)
+- md: 1468 file(s)
 - css: 27 file(s)
 - yml: 164 file(s)
 

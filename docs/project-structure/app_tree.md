@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-03-30T00:42:15.386Z
+Generated: 2025-04-01T03:43:48.635Z
 
 ## Overview
 
-This directory contains 88 route(s).
+This directory contains 93 route(s).
 
 ## Directory Tree
 ```
@@ -47,11 +47,19 @@ This directory contains 88 route(s).
 │   │   └── events/
 │   │       └── route.ts
 │   ├── invitations/
+│   │   ├── [token]/
+│   │   │   └── validate/
+│   │   │       └── route.ts
 │   │   ├── bulk-create/
 │   │   │   └── route.ts
 │   │   ├── create/
 │   │   │   └── route.ts
 │   │   └── validate/
+│   │       └── route.ts
+│   ├── rsvp/
+│   │   ├── status/
+│   │   │   └── route.ts
+│   │   └── submit/
 │   │       └── route.ts
 │   ├── templates/
 │   │   ├── [templateId]/
@@ -111,8 +119,15 @@ This directory contains 88 route(s).
 │       └── page.tsx
 ├── invitation/
 │   ├── [token]/
+│   │   ├── confirmation/
+│   │   │   ├── accepted/
+│   │   │   │   └── page.tsx
+│   │   │   └── declined/
+│   │   │       └── page.tsx
 │   │   ├── page.tsx
 │   │   └── rsvp-form.tsx
+│   ├── expired/
+│   │   └── page.tsx
 │   └── page.tsx
 ├── invite/
 │   └── [token]/
@@ -183,7 +198,6 @@ This directory contains 88 route(s).
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
 │   │   ├── product-placements/
-│   │   │   ├── .page.tsx.swp
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
 │   │   ├── smart-tagging/
@@ -304,6 +318,13 @@ This directory contains 88 route(s).
 │   ├── subscription/
 │   │   └── page.tsx
 │   ├── templates/
+│   │   ├── [id]/
+│   │   │   ├── layout.tsx
+│   │   │   ├── loading.tsx
+│   │   │   ├── not-found.tsx
+│   │   │   └── page.tsx
+│   │   ├── create/
+│   │   │   └── page.tsx
 │   │   └── page.tsx
 │   └── layout.tsx
 ├── verify/
@@ -317,13 +338,13 @@ This directory contains 88 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-129 directories, 180 files
+140 directories, 190 files
 
 ```
 
 ## File Type Breakdown
-- ts: 20 file(s)
-- tsx: 148 file(s)
+- ts: 23 file(s)
+- tsx: 156 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 
