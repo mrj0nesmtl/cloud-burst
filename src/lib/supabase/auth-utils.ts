@@ -1,6 +1,7 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import type { User } from '@supabase/supabase-js';
 import { createServerClient } from './server';
+import crypto from 'crypto';
 
 // Global cache for user authentication to reduce redundant API calls
 interface AuthCache {
@@ -17,6 +18,7 @@ const AUTH_CACHE_DURATION_MS = 60000; // 1 minute cache duration
 
 /**
  * Securely gets the current user with proper authentication
+ * Uses supabase.auth.getUser() as recommended by Supabase for secure authentication
  * Returns null for unauthenticated users without throwing errors
  */
 export async function getAuthenticatedUser() {
@@ -29,6 +31,7 @@ export async function getAuthenticatedUser() {
   }
   
   try {
+    // Use getUser() instead of getSession() for secure authentication
     const { data, error } = await supabase.auth.getUser();
     
     // If there's no user or session, return null without error
@@ -68,11 +71,19 @@ export async function createGuestAccount(
   const supabase = createClientComponentClient()
   
   try {
-    // Generate a temporary random password
-    const tempPassword = Math.random().toString(36).slice(-10) +
-      Math.random().toString(36).slice(-10).toUpperCase() +
-      Math.random().toString(36).slice(-10).replace(/[a-zA-Z]/g, n => 
-        String.fromCharCode(n.charCodeAt(0) + (Math.floor(Math.random() * 10))))
+    // Generate a secure random password using crypto
+    const generateSecureString = (length: number): string => {
+      const bytes = crypto.randomBytes(length);
+      return bytes.toString('base64').slice(0, length);
+    };
+    
+    // Create a strong password with different character types
+    const lowercasePart = generateSecureString(10);
+    const uppercasePart = generateSecureString(10).toUpperCase();
+    const numbersPart = crypto.randomBytes(5).toString('hex').slice(0, 10);
+    
+    // Combine the parts into a secure password
+    const tempPassword = lowercasePart + uppercasePart + numbersPart;
     
     // Create user with auto-confirm enabled
     const { data: { user }, error: createError } = await supabase.auth.admin.createUser({
