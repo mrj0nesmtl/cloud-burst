@@ -72,14 +72,27 @@ export function QrScanner({
       if (!manualStart) return;
       
       try {
+        // Debug message
+        console.log('Starting camera initialization...');
+        
         // Request camera permissions
-        await scanner.startCamera();
+        const cameraStarted = await scanner.startCamera();
+        console.log('Camera start result:', cameraStarted ? 'Success' : 'Failed');
         
         if (scanner.permission === 'granted') {
+          console.log('Camera permission granted, setting hasPermission to true');
           setHasPermission(true);
-          scanner.startScanning();
+          
+          // Add a small delay before starting scanning to ensure video is ready
+          setTimeout(() => {
+            console.log('Starting scanner after delay');
+            scanner.startScanning();
+          }, 500);
         } else if (scanner.permission === 'denied') {
+          console.log('Camera permission denied');
           setHasPermission(false);
+        } else {
+          console.log('Camera permission state:', scanner.permission);
         }
       } catch (error) {
         console.error('Error starting QR scanner:', error);
@@ -87,10 +100,14 @@ export function QrScanner({
       }
     };
     
-    requestPermissionsAndStartScanner();
+    if (manualStart) {
+      console.log('Manual start triggered, requesting permissions');
+      requestPermissionsAndStartScanner();
+    }
     
     // Clean up scanner when component unmounts
     return () => {
+      console.log('Unmounting QR scanner component, cleaning up');
       scanner.stopScanning();
       scanner.stopCamera();
     };
@@ -98,10 +115,17 @@ export function QrScanner({
   
   // Toggle scanner on/off
   const toggleScanner = () => {
+    console.log('Toggle scanner called, current state:', scanner.isScanning);
     if (scanner.isScanning) {
       scanner.stopScanning();
     } else {
-      setManualStart(true);
+      if (!manualStart) {
+        console.log('Setting manual start to true');
+        setManualStart(true);
+      } else {
+        console.log('Manual start already true, just starting scanner');
+        scanner.startScanning();
+      }
       setScanSuccess(false);
     }
   };
@@ -133,6 +157,11 @@ export function QrScanner({
           className="w-full h-full object-cover"
           playsInline
           muted
+          onLoadedMetadata={() => {
+            console.log('Video metadata loaded, dimensions:', 
+              scanner.videoRef.current?.videoWidth, 
+              scanner.videoRef.current?.videoHeight);
+          }}
         />
         
         {/* Scanner Overlay - shows red when no permission, else scanning animation */}

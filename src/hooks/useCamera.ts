@@ -49,7 +49,23 @@ export function useCamera(options: CameraOptions = {}) {
   useEffect(() => {
     if (typeof navigator === 'undefined') return;
     
+    // Check if we're in a secure context (required for camera access)
+    const isSecureContext = window.isSecureContext;
+    if (!isSecureContext) {
+      console.warn('Camera API requires a secure context (HTTPS or localhost)');
+      // We'll still attempt to use the camera on localhost
+      if (window.location.hostname !== 'localhost') {
+        setError({
+          type: 'not_supported',
+          message: 'Camera requires a secure connection (HTTPS)'
+        });
+        setIsCameraSupported(false);
+        return;
+      }
+    }
+    
     const isSupported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+    console.log('Camera support check:', isSupported ? 'Supported' : 'Not supported');
     setIsCameraSupported(isSupported);
     
     if (!isSupported) {
@@ -117,7 +133,11 @@ export function useCamera(options: CameraOptions = {}) {
 
   // Start camera stream
   const startCamera = useCallback(async (deviceId?: string) => {
-    if (!isCameraSupported) return null;
+    console.log('startCamera called with deviceId:', deviceId || 'none');
+    if (!isCameraSupported) {
+      console.error('Camera not supported, aborting startCamera');
+      return null;
+    }
     
     // Prevent multiple simultaneous initialization attempts
     if (initializingRef.current) {
@@ -132,6 +152,7 @@ export function useCamera(options: CameraOptions = {}) {
     
     // Check if we've exceeded retry limit
     if (retryCount >= MAX_RETRIES) {
+      console.warn(`Exceeded maximum retries (${MAX_RETRIES}), aborting camera initialization`);
       setError({
         type: 'unknown',
         message: 'Failed to initialize camera after multiple attempts'
@@ -147,6 +168,7 @@ export function useCamera(options: CameraOptions = {}) {
     setError(null);
 
     try {
+      console.log('Preparing to request camera with constraints');
       // If a specific device is requested, use that, otherwise use constraints based on options
       const constraints: MediaStreamConstraints = {
         video: deviceId
@@ -160,12 +182,19 @@ export function useCamera(options: CameraOptions = {}) {
         audio: false,
       };
 
+      console.log('Camera constraints:', JSON.stringify(constraints));
+
       // Stop any existing stream first to avoid conflicts
       if (stream) {
+        console.log('Stopping existing camera stream');
         stream.getTracks().forEach(track => track.stop());
       }
 
+      console.log('Calling getUserMedia...');
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+      console.log('getUserMedia succeeded, track count:', mediaStream.getTracks().length);
+      console.log('Video track settings:', mediaStream.getVideoTracks()[0]?.getSettings());
+      
       setStream(mediaStream);
       
       if (deviceId) {
@@ -174,6 +203,7 @@ export function useCamera(options: CameraOptions = {}) {
       
       // If we got a stream but don't have devices list yet, fetch them
       if (devices.length === 0) {
+        console.log('Fetching camera devices');
         getDevices();
       }
       
@@ -182,29 +212,36 @@ export function useCamera(options: CameraOptions = {}) {
 
       // Connect stream to video element if ref exists
       if (videoRef.current) {
+        console.log('Setting video element srcObject');
         videoRef.current.srcObject = mediaStream;
         
         // Wait for video to be ready with better error handling
         await new Promise<void>((resolve, reject) => {
           const videoElement = videoRef.current;
           if (!videoElement) {
+            console.warn('Video element no longer available');
             resolve();
             return;
           }
           
           // If video is already loaded, resolve immediately
           if (videoElement.readyState >= 2) {
+            console.log('Video already ready (readyState>=2)');
             resolve();
             return;
           }
           
+          console.log('Waiting for video element to load...');
+          
           // Set up event listeners for both success and failure
           const handleLoaded = () => {
+            console.log('Video loadeddata event fired');
             videoElement.removeEventListener('loadeddata', handleLoaded);
             resolve();
           };
           
           const handleError = (e: Event) => {
+            console.error('Video element error event:', e);
             videoElement.removeEventListener('error', handleError);
             reject(new Error('Video element encountered an error'));
           };
@@ -215,23 +252,23 @@ export function useCamera(options: CameraOptions = {}) {
           // Try to play the video with a more robust approach
           let playAttempt;
           try {
+            console.log('Attempting to play video...');
             playAttempt = videoElement.play();
             
             // Modern browsers return a promise from play()
             if (playAttempt !== undefined) {
               playAttempt
                 .then(() => {
-                  // Play started successfully
+                  console.log('Video play() succeeded');
                 })
                 .catch(e => {
-                  // This error is expected in some cases and we'll handle it
-                  console.warn('Initial play attempt was rejected:', e.name);
+                  console.warn('Initial play attempt was rejected:', e.name, e.message);
                   
                   // If play was interrupted specifically, we can try again once on user interaction
                   if (e.name === 'AbortError' || e.name === 'NotAllowedError') {
+                    console.log('Play will require user interaction');
                     // We'll still consider this initialization successful,
                     // but will rely on user interaction to start playing
-                    console.log('Play will require user interaction');
                   }
                 });
             }
@@ -243,16 +280,21 @@ export function useCamera(options: CameraOptions = {}) {
           // Set a timeout to resolve anyway after a reasonable time
           // This prevents hanging if play() is perpetually pending
           setTimeout(() => {
+            console.log('Resolving video initialization due to timeout');
+            if (videoElement.readyState < 2) {
+              console.warn('Video not fully ready after timeout, but continuing anyway');
+            }
             resolve();
-          }, 2000);
+          }, 3000);
         });
       }
 
+      console.log('Camera initialization completed successfully');
       setIsInitializing(false);
       initializingRef.current = false;
       return mediaStream;
     } catch (err: any) {
-      console.error('Error starting camera:', err);
+      console.error('Error starting camera:', err.name, err.message);
 
       // Handle different error types
       let errorType: CameraError['type'] = 'unknown';
@@ -283,6 +325,7 @@ export function useCamera(options: CameraOptions = {}) {
           startCamera(deviceId);
         }, 1000); // 1 second delay between retries
       } else {
+        console.warn('Maximum retry attempts reached, giving up');
         setIsInitializing(false);
         initializingRef.current = false;
       }
