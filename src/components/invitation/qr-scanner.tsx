@@ -28,6 +28,9 @@ export function QrScanner({
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanSuccess, setScanSuccess] = useState(false);
   const [manualStart, setManualStart] = useState(false);
+  const [initializationAttempts, setInitializationAttempts] = useState(0);
+  const [cameraInitialized, setCameraInitialized] = useState(false);
+  const maxAttempts = 3;
   
   // Initialize scanner with callback for detected QR codes
   const scanner = useQrScanner({
@@ -68,26 +71,48 @@ export function QrScanner({
   
   // Request camera permissions and start scanning
   useEffect(() => {
+    let isMounted = true;
+    let timeoutId: NodeJS.Timeout;
+    
     const requestPermissionsAndStartScanner = async () => {
-      if (!manualStart) return;
+      if (!manualStart || !isMounted) return;
+      
+      // Don't try more than the maximum number of attempts
+      if (initializationAttempts >= maxAttempts) {
+        console.log(`Exceeded maximum initialization attempts (${maxAttempts}), stopping`);
+        return;
+      }
       
       try {
         // Debug message
-        console.log('Starting camera initialization...');
+        console.log(`Camera initialization attempt ${initializationAttempts + 1}/${maxAttempts}`);
+        
+        // Increment initialization attempts
+        setInitializationAttempts(prev => prev + 1);
         
         // Request camera permissions
         const cameraStarted = await scanner.startCamera();
+        
+        if (!isMounted) return; // Check if component is still mounted
+        
         console.log('Camera start result:', cameraStarted ? 'Success' : 'Failed');
         
         if (scanner.permission === 'granted') {
           console.log('Camera permission granted, setting hasPermission to true');
           setHasPermission(true);
           
-          // Add a small delay before starting scanning to ensure video is ready
-          setTimeout(() => {
-            console.log('Starting scanner after delay');
-            scanner.startScanning();
-          }, 500);
+          if (cameraStarted) {
+            // Mark as initialized to prevent further attempts
+            setCameraInitialized(true);
+            
+            // Add a small delay before starting scanning to ensure video is ready
+            timeoutId = setTimeout(() => {
+              if (isMounted && !scanner.isScanning) {
+                console.log('Starting scanner after delay');
+                scanner.startScanning();
+              }
+            }, 1000);
+          }
         } else if (scanner.permission === 'denied') {
           console.log('Camera permission denied');
           setHasPermission(false);
@@ -100,18 +125,20 @@ export function QrScanner({
       }
     };
     
-    if (manualStart) {
+    if (manualStart && !cameraInitialized) {
       console.log('Manual start triggered, requesting permissions');
       requestPermissionsAndStartScanner();
     }
     
-    // Clean up scanner when component unmounts
+    // Clean up function
     return () => {
+      isMounted = false;
+      if (timeoutId) clearTimeout(timeoutId);
       console.log('Unmounting QR scanner component, cleaning up');
       scanner.stopScanning();
       scanner.stopCamera();
     };
-  }, [scanner, manualStart]);
+  }, [scanner, manualStart, initializationAttempts, maxAttempts, cameraInitialized]);
   
   // Toggle scanner on/off
   const toggleScanner = () => {
@@ -122,9 +149,14 @@ export function QrScanner({
       if (!manualStart) {
         console.log('Setting manual start to true');
         setManualStart(true);
-      } else {
-        console.log('Manual start already true, just starting scanner');
+      } else if (cameraInitialized) {
+        console.log('Camera already initialized, just starting scanner');
         scanner.startScanning();
+      } else {
+        console.log('Resetting initialization count and retrying');
+        setInitializationAttempts(0);
+        setCameraInitialized(false);
+        setManualStart(true);
       }
       setScanSuccess(false);
     }
@@ -157,10 +189,18 @@ export function QrScanner({
           className="w-full h-full object-cover"
           playsInline
           muted
+          autoPlay // Add autoPlay attribute to help with browser policies
           onLoadedMetadata={() => {
             console.log('Video metadata loaded, dimensions:', 
               scanner.videoRef.current?.videoWidth, 
               scanner.videoRef.current?.videoHeight);
+            
+            // Try to play the video when metadata is loaded
+            if (scanner.videoRef.current) {
+              scanner.videoRef.current.play().catch(e => {
+                console.warn('Error playing video on metadata load:', e);
+              });
+            }
           }}
         />
         
@@ -189,6 +229,21 @@ export function QrScanner({
         {/* Status Indicator */}
         <div className="absolute top-0 inset-x-0 p-2 bg-black/70 text-white text-center">
           {getStatusText()}
+          {initializationAttempts >= maxAttempts && !cameraInitialized && (
+            <div className="text-red-400 text-xs mt-1">
+              Unable to initialize camera after multiple attempts.
+              <button 
+                className="ml-2 underline text-blue-400" 
+                onClick={() => {
+                  setInitializationAttempts(0);
+                  setCameraInitialized(false);
+                  setManualStart(true);
+                }}
+              >
+                Retry
+              </button>
+            </div>
+          )}
         </div>
         
         {/* Controls */}
@@ -226,8 +281,9 @@ export function QrScanner({
             <h3 className="text-white text-lg font-bold mb-2">Camera Error</h3>
             <p className="text-white/70 text-center mb-4">{scanner.error.message}</p>
             <Button onClick={() => {
+              setInitializationAttempts(0);
+              setCameraInitialized(false);
               setManualStart(true);
-              scanner.startCamera();
             }}>
               Retry
             </Button>

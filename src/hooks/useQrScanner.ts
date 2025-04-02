@@ -164,27 +164,51 @@ export function useQrScanner(options: ScannerOptions = {}) {
   
   // Start scanning for QR codes at regular intervals
   const startScanning = useCallback(async () => {
-    // Start the camera if it's not already running
-    if (!camera.stream) {
-      await camera.startCamera();
+    console.log('startScanning called, camera stream status:', !!camera.stream);
+    
+    // Don't start scanning if already scanning
+    if (isScanning) {
+      console.log('Already scanning, ignoring startScanning call');
+      return;
     }
     
+    // Start the camera if it's not already running
+    if (!camera.stream) {
+      console.log('No camera stream, attempting to start camera');
+      const streamStarted = await camera.startCamera();
+      console.log('Camera start result:', streamStarted ? 'Success' : 'Failed');
+      
+      if (!streamStarted) {
+        console.warn('Failed to start camera, cannot scan');
+        return;
+      }
+    }
+    
+    console.log('Setting isScanning to true');
     setIsScanning(true);
-  }, [camera]);
+  }, [camera, isScanning]);
   
   // Stop scanning for QR codes
   const stopScanning = useCallback(() => {
+    console.log('stopScanning called');
     setIsScanning(false);
   }, []);
 
   // Scan loop using requestAnimationFrame for better performance
   useEffect(() => {
-    if (!isScanning || !jsQR) return;
+    if (!isScanning || !jsQR) {
+      console.log('Scan loop not starting: isScanning =', isScanning, 'jsQR =', !!jsQR);
+      return;
+    }
     
-    let animationFrameId: number;
+    console.log('Starting scan loop');
+    let animationFrameId: number | null = null;
     let lastScanTime = 0;
+    let isActive = true;
     
     const scanLoop = (timestamp: number) => {
+      if (!isActive) return;
+      
       // Only scan if video is properly loaded and has dimensions
       const videoElement = camera.videoRef.current;
       const isVideoReady = videoElement && 
@@ -195,31 +219,53 @@ export function useQrScanner(options: ScannerOptions = {}) {
       if (isVideoReady && timestamp - lastScanTime > scanInterval) {
         lastScanTime = timestamp;
         
-        const code = analyzeFrame();
-        if (code) {
-          processQrCode(code);
-          setScanCount(count => count + 1);
+        try {
+          const code = analyzeFrame();
+          if (code) {
+            console.log('QR code detected:', code.data);
+            processQrCode(code);
+            setScanCount(count => count + 1);
+          }
+        } catch (err) {
+          console.error('Error in QR scan loop:', err);
         }
       }
       
-      animationFrameId = requestAnimationFrame(scanLoop);
+      if (isActive) {
+        animationFrameId = requestAnimationFrame(scanLoop);
+      }
     };
     
     animationFrameId = requestAnimationFrame(scanLoop);
     
     return () => {
+      console.log('Cleaning up scan loop');
+      isActive = false;
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
       }
     };
   }, [isScanning, jsQR, analyzeFrame, processQrCode, scanInterval, camera.videoRef]);
   
+  // Expose additional methods for better control
+  const toggleScanning = useCallback(() => {
+    if (isScanning) {
+      stopScanning();
+    } else {
+      startScanning();
+    }
+  }, [isScanning, startScanning, stopScanning]);
+  
   // Clean up when component unmounts
   useEffect(() => {
     return () => {
+      if (isScanning) {
+        stopScanning();
+      }
       camera.stopCamera();
     };
-  }, [camera]);
+  }, [camera, isScanning, stopScanning]);
   
   return {
     ...camera,
@@ -228,6 +274,7 @@ export function useQrScanner(options: ScannerOptions = {}) {
     lastResult,
     startScanning,
     stopScanning,
+    toggleScanning,
   };
 }
 

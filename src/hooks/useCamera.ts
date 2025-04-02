@@ -162,6 +162,12 @@ export function useCamera(options: CameraOptions = {}) {
       return null;
     }
     
+    // If we already have a stream, just return it to avoid reinitializing
+    if (stream && videoRef.current && videoRef.current.srcObject === stream) {
+      console.log('Camera stream already exists, using existing stream');
+      return stream;
+    }
+    
     setIsLoading(true);
     setIsInitializing(true);
     initializingRef.current = true;
@@ -187,13 +193,28 @@ export function useCamera(options: CameraOptions = {}) {
       // Stop any existing stream first to avoid conflicts
       if (stream) {
         console.log('Stopping existing camera stream');
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach(track => {
+          track.stop();
+          console.log(`Stopped track: ${track.kind}, enabled: ${track.enabled}, state: ${track.readyState}`);
+        });
+        
+        // Clear video source before requesting new stream
+        if (videoRef.current) {
+          videoRef.current.srcObject = null;
+          console.log('Cleared video srcObject');
+        }
       }
 
       console.log('Calling getUserMedia...');
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
       console.log('getUserMedia succeeded, track count:', mediaStream.getTracks().length);
-      console.log('Video track settings:', mediaStream.getVideoTracks()[0]?.getSettings());
+      
+      const videoTrack = mediaStream.getVideoTracks()[0];
+      if (videoTrack) {
+        console.log('Video track settings:', videoTrack.getSettings());
+        console.log('Video track constraints:', videoTrack.getConstraints());
+        console.log('Video track capabilities:', videoTrack.getCapabilities ? videoTrack.getCapabilities() : 'Not supported');
+      }
       
       setStream(mediaStream);
       
@@ -213,6 +234,12 @@ export function useCamera(options: CameraOptions = {}) {
       // Connect stream to video element if ref exists
       if (videoRef.current) {
         console.log('Setting video element srcObject');
+        
+        // Mute the video to avoid audio feedback
+        videoRef.current.muted = true;
+        videoRef.current.volume = 0;
+        
+        // Set the stream as source
         videoRef.current.srcObject = mediaStream;
         
         // Wait for video to be ready with better error handling
@@ -250,25 +277,40 @@ export function useCamera(options: CameraOptions = {}) {
           videoElement.addEventListener('error', handleError);
           
           // Try to play the video with a more robust approach
-          let playAttempt;
+          let playPromise;
           try {
             console.log('Attempting to play video...');
-            playAttempt = videoElement.play();
+            playPromise = videoElement.play();
             
             // Modern browsers return a promise from play()
-            if (playAttempt !== undefined) {
-              playAttempt
+            if (playPromise !== undefined) {
+              playPromise
                 .then(() => {
                   console.log('Video play() succeeded');
                 })
                 .catch(e => {
                   console.warn('Initial play attempt was rejected:', e.name, e.message);
                   
-                  // If play was interrupted specifically, we can try again once on user interaction
+                  // Don't treat this as a failure - many browsers require user interaction
                   if (e.name === 'AbortError' || e.name === 'NotAllowedError') {
                     console.log('Play will require user interaction');
-                    // We'll still consider this initialization successful,
-                    // but will rely on user interaction to start playing
+                    // We'll rely on user interaction to start playing
+                    
+                    // Try to restart playback on next user interaction
+                    const resumePlayback = () => {
+                      if (videoElement) {
+                        videoElement.play().catch(err => {
+                          console.warn('Failed to play on user interaction:', err);
+                        });
+                      }
+                      // Remove the listeners after first interaction
+                      document.removeEventListener('click', resumePlayback);
+                      document.removeEventListener('touchstart', resumePlayback);
+                    };
+                    
+                    // Add listeners for user interaction
+                    document.addEventListener('click', resumePlayback, { once: true });
+                    document.addEventListener('touchstart', resumePlayback, { once: true });
                   }
                 });
             }
@@ -320,6 +362,9 @@ export function useCamera(options: CameraOptions = {}) {
       if (currentRetryCount < MAX_RETRIES) {
         console.log(`Retrying camera initialization (attempt ${currentRetryCount + 1} of ${MAX_RETRIES})...`);
         
+        // Clear the initializing flag before retrying
+        initializingRef.current = false;
+        
         // Wait before retrying
         setTimeout(() => {
           startCamera(deviceId);
@@ -338,13 +383,18 @@ export function useCamera(options: CameraOptions = {}) {
 
   // Stop camera stream
   const stopCamera = useCallback(() => {
+    console.log('stopCamera called');
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach(track => {
+        track.stop();
+        console.log(`Stopped track: ${track.kind}`);
+      });
       setStream(null);
     }
 
     if (videoRef.current) {
       videoRef.current.srcObject = null;
+      console.log('Cleared video srcObject');
     }
   }, [stream]);
 
