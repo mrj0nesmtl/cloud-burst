@@ -1,7 +1,8 @@
 # src Directory Structure
-Generated: 2025-04-02T01:36:05.002Z
+Generated: 2025-04-02T19:36:18.894Z
 
 ## Overview
+
 
 
 
@@ -62,6 +63,9 @@ Generated: 2025-04-02T01:36:05.002Z
 │   │   │   └── route.ts
 │   │   ├── galleries/
 │   │   │   └── events/
+│   │   │       └── route.ts
+│   │   ├── invitation/
+│   │   │   └── lookup/
 │   │   │       └── route.ts
 │   │   ├── invitations/
 │   │   │   ├── [token]/
@@ -351,6 +355,8 @@ Generated: 2025-04-02T01:36:05.002Z
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
+│   ├── scan/
+│   │   └── page.tsx
 │   ├── verify/
 │   │   └── page.tsx
 │   ├── components.css
@@ -373,6 +379,8 @@ Generated: 2025-04-02T01:36:05.002Z
 │   │   ├── resend-verification-form.tsx
 │   │   ├── role-guard.tsx
 │   │   └── social-auth-buttons.tsx
+│   ├── camera/
+│   │   └── index.tsx
 │   ├── dashboard/
 │   │   ├── MediaStatsCard.tsx
 │   │   ├── activity-feed.tsx
@@ -445,6 +453,9 @@ Generated: 2025-04-02T01:36:05.002Z
 │   │   ├── photo-lightbox.tsx
 │   │   ├── upload-dropzone.tsx
 │   │   └── upload-with-tags.tsx
+│   ├── invitation/
+│   │   ├── qr-scanner.tsx
+│   │   └── scanner-overlay.tsx
 │   ├── invitations/
 │   │   └── create-invitation-form.tsx
 │   ├── layout/
@@ -562,7 +573,10 @@ Generated: 2025-04-02T01:36:05.002Z
 │   ├── use-profile.ts
 │   ├── use-toast.ts
 │   ├── use-update-profile.ts
-│   └── use-user.ts
+│   ├── use-user.ts
+│   ├── useCamera.ts
+│   ├── useQrScanner.ts
+│   └── useSecureAuth.ts
 ├── lib/
 │   ├── ai/
 │   │   ├── color-extraction.ts
@@ -599,7 +613,8 @@ Generated: 2025-04-02T01:36:05.002Z
 │   │   ├── verify-schema.html
 │   │   └── verify-schema.js
 │   ├── utils/
-│   │   └── codeGenerator.ts
+│   │   ├── codeGenerator.ts
+│   │   └── qr-utils.ts
 │   ├── validation/
 │   │   └── rsvp.schema.ts
 │   ├── validations/
@@ -641,13 +656,13 @@ Generated: 2025-04-02T01:36:05.002Z
 ├── middleware.test.ts
 └── middleware.ts
 
-187 directories, 446 files
+192 directories, 455 files
 
 ```
 
 ## File Type Breakdown
-- ts: 97 file(s)
-- tsx: 331 file(s)
+- ts: 102 file(s)
+- tsx: 335 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

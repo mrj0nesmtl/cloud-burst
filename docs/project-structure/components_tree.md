@@ -1,8 +1,9 @@
 # components Directory Structure
-Generated: 2025-04-02T01:36:07.545Z
+Generated: 2025-04-02T19:36:23.962Z
 
 ## Overview
-This directory contains 163 component(s).
+This directory contains 165 component(s).
+
 
 
 ## Directory Tree
@@ -19,6 +20,8 @@ This directory contains 163 component(s).
 │   ├── resend-verification-form.tsx
 │   ├── role-guard.tsx
 │   └── social-auth-buttons.tsx
+├── camera/
+│   └── index.tsx
 ├── dashboard/
 │   ├── MediaStatsCard.tsx
 │   ├── activity-feed.tsx
@@ -91,6 +94,9 @@ This directory contains 163 component(s).
 │   ├── photo-lightbox.tsx
 │   ├── upload-dropzone.tsx
 │   └── upload-with-tags.tsx
+├── invitation/
+│   ├── qr-scanner.tsx
+│   └── scanner-overlay.tsx
 ├── invitations/
 │   └── create-invitation-form.tsx
 ├── layout/
@@ -198,13 +204,13 @@ This directory contains 163 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-20 directories, 170 files
+22 directories, 173 files
 
 ```
 
 ## File Type Breakdown
 - ts: 6 file(s)
-- tsx: 163 file(s)
+- tsx: 166 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

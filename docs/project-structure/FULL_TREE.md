@@ -1,7 +1,8 @@
 # full Directory Structure
-Generated: 2025-04-02T01:36:04.353Z
+Generated: 2025-04-02T19:36:17.705Z
 
 ## Overview
+
 
 
 
@@ -131,6 +132,9 @@ Generated: 2025-04-02T01:36:04.353Z
 │   │   │   ├── session_27_prompt.md
 │   │   │   ├── session_28_prompt.md
 │   │   │   ├── session_3.md
+│   │   │   ├── session_34_checklist.md
+│   │   │   ├── session_34_kickoff.md
+│   │   │   ├── session_34_resources.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -141,10 +145,13 @@ Generated: 2025-04-02T01:36:04.353Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_34_checklist.md
-│   │   ├── session_34_kickoff.md
-│   │   ├── session_34_resources.md
+│   │   ├── session_35_checklist.md
+│   │   ├── session_35_kickoff.md
+│   │   ├── session_35_resources.md
 │   │   └── version-sync.plan
+│   ├── features/
+│   │   ├── qr-scan-components.md
+│   │   └── qr-scanner-types.md
 │   ├── planning/
 │   │   ├── auth-cleanup.md
 │   │   ├── business_proposition.md
@@ -220,6 +227,8 @@ Generated: 2025-04-02T01:36:04.353Z
 │   ├── 20250331_create_rsvps_table.sql
 │   └── setup_launch_partner.sql
 ├── public/
+│   ├── audio/
+│   │   └── success-beep.mp3
 │   ├── images/
 │   │   ├── email/
 │   │   │   ├── logo.png
@@ -325,6 +334,9 @@ Generated: 2025-04-02T01:36:04.353Z
 │   │   │   │   └── route.ts
 │   │   │   ├── galleries/
 │   │   │   │   └── events/
+│   │   │   │       └── route.ts
+│   │   │   ├── invitation/
+│   │   │   │   └── lookup/
 │   │   │   │       └── route.ts
 │   │   │   ├── invitations/
 │   │   │   │   ├── [token]/
@@ -614,6 +626,8 @@ Generated: 2025-04-02T01:36:04.353Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
+│   │   ├── scan/
+│   │   │   └── page.tsx
 │   │   ├── verify/
 │   │   │   └── page.tsx
 │   │   ├── components.css
@@ -636,6 +650,8 @@ Generated: 2025-04-02T01:36:04.353Z
 │   │   │   ├── resend-verification-form.tsx
 │   │   │   ├── role-guard.tsx
 │   │   │   └── social-auth-buttons.tsx
+│   │   ├── camera/
+│   │   │   └── index.tsx
 │   │   ├── dashboard/
 │   │   │   ├── MediaStatsCard.tsx
 │   │   │   ├── activity-feed.tsx
@@ -708,6 +724,9 @@ Generated: 2025-04-02T01:36:04.353Z
 │   │   │   ├── photo-lightbox.tsx
 │   │   │   ├── upload-dropzone.tsx
 │   │   │   └── upload-with-tags.tsx
+│   │   ├── invitation/
+│   │   │   ├── qr-scanner.tsx
+│   │   │   └── scanner-overlay.tsx
 │   │   ├── invitations/
 │   │   │   └── create-invitation-form.tsx
 │   │   ├── layout/
@@ -825,7 +844,10 @@ Generated: 2025-04-02T01:36:04.353Z
 │   │   ├── use-profile.ts
 │   │   ├── use-toast.ts
 │   │   ├── use-update-profile.ts
-│   │   └── use-user.ts
+│   │   ├── use-user.ts
+│   │   ├── useCamera.ts
+│   │   ├── useQrScanner.ts
+│   │   └── useSecureAuth.ts
 │   ├── lib/
 │   │   ├── ai/
 │   │   │   ├── color-extraction.ts
@@ -862,7 +884,8 @@ Generated: 2025-04-02T01:36:04.353Z
 │   │   │   ├── verify-schema.html
 │   │   │   └── verify-schema.js
 │   │   ├── utils/
-│   │   │   └── codeGenerator.ts
+│   │   │   ├── codeGenerator.ts
+│   │   │   └── qr-utils.ts
 │   │   ├── validation/
 │   │   │   └── rsvp.schema.ts
 │   │   ├── validations/
@@ -1021,20 +1044,21 @@ Generated: 2025-04-02T01:36:04.353Z
 ├── package.json
 ├── postcss.config.js
 ├── postcss.config.mjs
+├── tailwind.config.js
 ├── tailwind.config.ts
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-230 directories, 787 files
+237 directories, 803 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11742 file(s)
-- tsx: 470 file(s)
-- js: 27794 file(s)
+- ts: 11746 file(s)
+- tsx: 474 file(s)
+- js: 27761 file(s)
 - json: 2012 file(s)
-- md: 1472 file(s)
+- md: 1477 file(s)
 - css: 26 file(s)
 - yml: 164 file(s)
 

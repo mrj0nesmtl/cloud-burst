@@ -21,14 +21,20 @@ const dirs = [
   './src/app/protected/dashboard',    // protected_dashboard_tree
   './src/app/auth',                   // auth_tree
   './src/app/events',                 // public_events_tree
+  './src/app/scan',                   // qr_scan_page_tree
+  './src/app/invitation',             // invitation_tree
+  './src/app/api/invitation',         // invitation_api_tree
   './src/components',                 // components_tree
   './src/components/gallery',         // gallery_components_tree
   './src/components/events',          // event_components_tree
   './src/components/ui',              // ui_components_tree
   './src/components/auth',            // auth_components_tree
   './src/components/dashboard',       // dashboard_components_tree
+  './src/components/invitation',      // invitation_components_tree
+  './src/components/camera',          // camera_components_tree
   './src/lib',                        // lib_tree
   './src/lib/supabase',               // supabase_tree
+  './src/lib/utils',                  // utils_tree
   './src/store',                      // store_tree
   './src/types',                      // types_tree
   './src/styles',                     // styles_tree
@@ -125,6 +131,21 @@ async function generateTree(dir) {
       }
     }
     
+    // Calculate QR/Scanning related files
+    let qrScanCount = 0;
+    if (dir.includes('/hooks') || dir.includes('/components/invitation') || dir.includes('/components/camera') || dir.includes('/app/scan') || dir.includes('/lib/utils')) {
+      try {
+        qrScanCount = parseInt(
+          execSync(
+            `find ${dir} -type f -name "*.ts*" | grep -E 'camera|qr|scan' | wc -l`,
+            { maxBuffer: 1024 * 1024 }
+          ).toString().trim()
+        );
+      } catch (e) {
+        qrScanCount = 0;
+      }
+    }
+    
     // Ensure lowercase filename (except for README)
     const filename = basename(dir)
       .toLowerCase()
@@ -144,6 +165,7 @@ Generated: ${new Date().toISOString()}
 ## Overview
 ${dir.includes('/components') ? `This directory contains ${componentCount} component(s).` : ''}
 ${dir.includes('/app') ? `This directory contains ${routeCount} route(s).` : ''}
+${qrScanCount > 0 ? `This directory contains ${qrScanCount} QR/Camera scanning related file(s).` : ''}
 
 ## Directory Tree
 \`\`\`
@@ -189,6 +211,17 @@ This directory contains components related to event management, including:
 - Event details views
 - Event creation interfaces
 - Attendee management
+`;
+    } else if (dir.includes('/camera') || dir.includes('/hooks') && qrScanCount > 0 || dir.includes('/scan') || (dir.includes('/invitation') && qrScanCount > 0)) {
+      content += `
+## QR Scanning Components
+This directory contains components related to QR code scanning and camera functionality, including:
+- Camera access hooks and utilities
+- QR code scanner components
+- Scanner overlay and visual feedback
+- Permission handling
+- QR code generation and validation utilities
+- QR scanning page and navigation
 `;
     }
 
@@ -238,6 +271,18 @@ function generateIndex(successfulDirs) {
       .map(dir => {
         const parts = dir.split('/');
         return parts[parts.length-1].toLowerCase() || 'documentation';
+      }),
+    'QR/Camera Features': successfulDirs
+      .filter(dir => 
+        dir.includes('/hooks') || 
+        dir.includes('/scan') || 
+        dir.includes('/camera') || 
+        (dir.includes('/invitation') && !dir.includes('/api')) ||
+        (dir.includes('/utils'))
+      )
+      .map(dir => {
+        const parts = dir.split('/');
+        return parts[parts.length-1].toLowerCase() || parts[parts.length-2].toLowerCase();
       })
   };
 
@@ -263,6 +308,11 @@ ${items.map(item => {
 - \`src/lib/supabase\`: Supabase integration and data access
 - \`src/store\`: Zustand state management
 - \`src/hooks\`: Custom React hooks
+- \`src/hooks/useCamera.ts\`: Camera access hook
+- \`src/hooks/useQrScanner.ts\`: QR code scanning hook
+- \`src/lib/utils/qr-utils.ts\`: QR code utilities
+- \`src/components/invitation/qr-scanner.tsx\`: QR scanner component
+- \`src/app/scan\`: QR code scanning page
 
 ## File Type Coverage
 ${includePatterns.map(pattern => `- ${pattern}`).join('\n')}
@@ -276,6 +326,7 @@ npm run generate:structure
 - Browse components by functional area (gallery, events, auth)
 - Explore protected routes to understand user workflows
 - Review utility libraries in the lib section
+- Examine QR and camera features in the dedicated section
 `;
 
   writeFileSync(
