@@ -52,15 +52,20 @@ export async function POST(request: NextRequest) {
     });
     
     return NextResponse.json({
-      invitations: validInvitations.map(invitation => ({
-        id: invitation.id,
-        token: invitation.token,
-        eventId: invitation.event_id,
-        status: invitation.status,
-        rsvpStatus: invitation.rsvp_status,
-        eventName: invitation.events?.name,
-        eventDate: invitation.events?.date,
-      })),
+      invitations: validInvitations.map(invitation => {
+        // Supabase returns foreign tables as arrays, even for one-to-one relations
+        const event = Array.isArray(invitation.events) ? invitation.events[0] : invitation.events;
+        
+        return {
+          id: invitation.id,
+          token: invitation.token,
+          eventId: invitation.event_id,
+          status: invitation.status,
+          rsvpStatus: invitation.rsvp_status,
+          eventName: event?.name,
+          eventDate: event?.date,
+        };
+      }),
     });
   } catch (error) {
     console.error('Error in invitation lookup:', error);
