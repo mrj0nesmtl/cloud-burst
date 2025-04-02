@@ -7,9 +7,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from '@/components/ui/use-toast'
-import { Eye, EyeOff, Mail, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Eye, EyeOff, Mail, ArrowRight, CheckCircle2, AlertCircle, ArrowLeft, QrCode, Send } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
 
 enum InvitationState {
   LOADING = 'loading',
@@ -19,6 +25,20 @@ enum InvitationState {
   AUTHENTICATED = 'authenticated',
   ERROR = 'error'
 }
+
+// Validation schema for the invitation token
+const tokenSchema = z.object({
+  token: z.string().min(6, {
+    message: 'Invitation code must be at least 6 characters',
+  }).max(100),
+})
+
+// Validation schema for the email
+const emailSchema = z.object({
+  email: z.string().email({
+    message: 'Please enter a valid email address',
+  }),
+})
 
 export default function InvitationPage() {
   const searchParams = useSearchParams()
@@ -34,6 +54,23 @@ export default function InvitationPage() {
   const [password, setPassword] = useState<string>('')
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Form for token input
+  const tokenForm = useForm<z.infer<typeof tokenSchema>>({
+    resolver: zodResolver(tokenSchema),
+    defaultValues: {
+      token: '',
+    },
+  })
+  
+  // Form for email input
+  const emailForm = useForm<z.infer<typeof emailSchema>>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: {
+      email: '',
+    },
+  })
   
   // Validate the invitation token
   useEffect(() => {
@@ -229,6 +266,76 @@ export default function InvitationPage() {
         variant: 'destructive'
       })
       setIsLoggingIn(false)
+    }
+  }
+  
+  // Handle token form submission
+  const onTokenSubmit = (values: z.infer<typeof tokenSchema>) => {
+    setIsSubmitting(true)
+    
+    // Validate the token format
+    if (!/^[a-zA-Z0-9_-]+$/.test(values.token)) {
+      toast({
+        title: 'Invalid token format',
+        description: 'The invitation code contains invalid characters',
+        variant: 'destructive',
+      })
+      setIsSubmitting(false)
+      return
+    }
+    
+    // Redirect to the invitation page
+    router.push(`/invitation/${values.token}`)
+  }
+  
+  // Handle email form submission
+  const onEmailSubmit = async (values: z.infer<typeof emailSchema>) => {
+    setIsSubmitting(true)
+    
+    try {
+      // Call API to lookup invitations by email
+      const response = await fetch('/api/invitation/lookup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: values.email }),
+      })
+      
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to lookup invitation')
+      }
+      
+      if (!data.invitations || data.invitations.length === 0) {
+        toast({
+          title: 'No invitations found',
+          description: 'We couldn\'t find any invitations for this email address',
+          variant: 'destructive',
+        })
+        setIsSubmitting(false)
+        return
+      }
+      
+      // If only one invitation, redirect directly
+      if (data.invitations.length === 1) {
+        router.push(`/invitation/${data.invitations[0].token}`)
+        return
+      }
+      
+      // If multiple invitations, provide a selection UI or redirect to a list page
+      // For now, redirect to the first one
+      router.push(`/invitation/${data.invitations[0].token}`)
+      
+    } catch (error) {
+      console.error('Error looking up invitation:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to lookup invitation. Please try again.',
+        variant: 'destructive',
+      })
+      setIsSubmitting(false)
     }
   }
   
@@ -430,21 +537,128 @@ export default function InvitationPage() {
   }
   
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-12">
-      <div className="mb-8">
-        <Image
-          src="/logo.png"
-          alt="Cloud Burst"
-          width={160}
-          height={40}
-          priority
-        />
-      </div>
+    <div className="container max-w-md mx-auto py-8 px-4">
+      <header className="mb-6">
+        <Link href="/" className="inline-block mb-4">
+          <Button variant="ghost" size="sm" className="gap-1">
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        </Link>
+        <h1 className="text-2xl font-bold text-center">Find Your Invitation</h1>
+      </header>
       
-      <Card className="w-full max-w-md mx-auto">
-        <CardContent className="p-0">
-          {renderContent()}
+      <Card>
+        <CardHeader>
+          <CardTitle>Access Your Invitation</CardTitle>
+          <CardDescription>
+            Enter your invitation code or use your email address to find your invitation.
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent>
+          <Tabs defaultValue="code" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="code">Invitation Code</TabsTrigger>
+              <TabsTrigger value="email">Email Address</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="code" className="mt-4">
+              <Form {...tokenForm}>
+                <form onSubmit={tokenForm.handleSubmit(onTokenSubmit)} className="space-y-4">
+                  <FormField
+                    control={tokenForm.control}
+                    name="token"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Invitation Code</FormLabel>
+                        <FormControl>
+                          <div className="flex items-center space-x-2">
+                            <Input placeholder="Enter your invitation code" {...field} />
+                          </div>
+                        </FormControl>
+                        <FormDescription>
+                          The code from your invitation email or QR code
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center">
+                        <div className="mr-2 h-4 w-4 animate-spin rounded-full border-t-2 border-background"></div>
+                        Checking...
+                      </span>
+                    ) : (
+                      <span className="flex items-center justify-center">
+                        <Send className="mr-2 h-4 w-4" />
+                        View Invitation
+                      </span>
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </TabsContent>
+            
+            <TabsContent value="email" className="mt-4">
+              <Form {...emailForm}>
+                <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-4">
+                  <FormField
+                    control={emailForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <div className="flex items-center space-x-2">
+                            <Input placeholder="Enter your email address" type="email" {...field} />
+                          </div>
+                        </FormControl>
+                        <FormDescription>
+                          The email address your invitation was sent to
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center">
+                        <div className="mr-2 h-4 w-4 animate-spin rounded-full border-t-2 border-background"></div>
+                        Looking Up...
+                      </span>
+                    ) : (
+                      <span className="flex items-center justify-center">
+                        <Mail className="mr-2 h-4 w-4" />
+                        Find My Invitation
+                      </span>
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </TabsContent>
+          </Tabs>
         </CardContent>
+        
+        <CardFooter className="flex justify-center">
+          <Button variant="outline" asChild className="mt-2">
+            <Link href="/scan" className="flex items-center">
+              <QrCode className="mr-2 h-4 w-4" />
+              Scan QR Code
+            </Link>
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   )

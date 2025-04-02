@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+  --font-geist-sans: 'GeistSans', system-ui, sans-serif;
+  
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
@@ -144,5 +146,53 @@
       radial-gradient(at 10% 29%, hsl(var(--chart-4) / 0.15) 0px, transparent 50%),
       radial-gradient(at 97% 96%, hsl(var(--chart-5) / 0.15) 0px, transparent 50%);
     filter: blur(100px) saturate(150%);
+  }
+}
+
+/* QR Scanner animations */
+@keyframes scannerLine {
+  0% {
+    top: 0%;
+  }
+  50% {
+    top: 100%;
+  }
+  50.1% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounceGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@layer utilities {
+  .animate-scanner-line {
+    animation: scannerLine 2s infinite linear;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .animate-bounce-gentle {
+    animation: bounceGentle 1.5s infinite ease-in-out;
   }
 }

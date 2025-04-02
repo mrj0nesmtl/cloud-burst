@@ -1,6 +1,6 @@
 # Cloud Burst Project Structure Documentation
 
-Generated on: 2025-04-02T01:36:09.681Z
+Generated on: 2025-04-02T19:36:28.033Z
 
 
 ## Core Project
@@ -20,6 +20,9 @@ Generated on: 2025-04-02T01:36:09.681Z
 - [dashboard](dashboard_tree.md)
 - [auth](auth_tree.md)
 - [events](events_tree.md)
+- [scan](scan_tree.md)
+- [invitation](invitation_tree.md)
+- [invitation](invitation_tree.md)
 
 
 ## Protected Routes
@@ -36,11 +39,14 @@ Generated on: 2025-04-02T01:36:09.681Z
 - [ui](ui_tree.md)
 - [auth](auth_tree.md)
 - [dashboard](dashboard_tree.md)
+- [invitation](invitation_tree.md)
+- [camera](camera_tree.md)
 
 
 ## Utilities & Configuration
 - [lib](lib_tree.md)
 - [supabase](supabase_tree.md)
+- [utils](utils_tree.md)
 - [store](store_tree.md)
 - [types](types_tree.md)
 - [styles](styles_tree.md)
@@ -53,6 +59,15 @@ Generated on: 2025-04-02T01:36:09.681Z
 - [planning](planning_tree.md)
 
 
+## QR/Camera Features
+- [scan](scan_tree.md)
+- [invitation](invitation_tree.md)
+- [invitation](invitation_tree.md)
+- [camera](camera_tree.md)
+- [utils](utils_tree.md)
+- [hooks](hooks_tree.md)
+
+
 ## Important Project Paths
 - `src/app`: Next.js 14 App Router pages and routes
 - `src/app/protected`: Authenticated routes requiring login
@@ -61,6 +76,11 @@ Generated on: 2025-04-02T01:36:09.681Z
 - `src/lib/supabase`: Supabase integration and data access
 - `src/store`: Zustand state management
 - `src/hooks`: Custom React hooks
+- `src/hooks/useCamera.ts`: Camera access hook
+- `src/hooks/useQrScanner.ts`: QR code scanning hook
+- `src/lib/utils/qr-utils.ts`: QR code utilities
+- `src/components/invitation/qr-scanner.tsx`: QR scanner component
+- `src/app/scan`: QR code scanning page
 
 ## File Type Coverage
 - *.ts
@@ -84,3 +104,4 @@ npm run generate:structure
 - Browse components by functional area (gallery, events, auth)
 - Explore protected routes to understand user workflows
 - Review utility libraries in the lib section
+- Examine QR and camera features in the dedicated section

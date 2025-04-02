@@ -39,7 +39,7 @@
     "next-env.d.ts", 
     "**/*.ts", 
     "**/*.tsx", 
-    ".next/types/**/*.ts",
+    ".next/types/app/api/**/*.ts",
     "scripts/**/*",
     "src/types/**/*.d.ts"
   ],
@@ -49,6 +49,10 @@
     "backup-routes.bak",
     "**/*.bak",
     "**/*.bak/**/*",
-    "src/app/events/[eventId].bak"
+    "src/app/events/[eventId].bak",
+    ".next/types/app/invitation/page.ts",
+    ".next/types/app/layout.ts",
+    ".next/types/app/page.ts",
+    ".next/types/app/scan/page.ts"
   ]
 }

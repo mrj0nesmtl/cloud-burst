@@ -175,6 +175,17 @@ export function SiteHeader() {
                   Contact
                 </Link>
               </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link
+                  href="/scan"
+                  className={cn(
+                    "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    pathname === "/scan" && "bg-accent/50 font-semibold"
+                  )}
+                >
+                  Scan QR
+                </Link>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -290,14 +301,14 @@ export function SiteHeader() {
                         Pricing
                       </Link>
                       <Link 
-                        href="/marketing/contact"
+                        href="/scan"
                         className={cn(
                           "flex items-center py-2 text-base hover:text-primary transition-colors",
-                          pathname === "/marketing/contact" && "text-primary font-medium"
+                          pathname === "/scan" && "text-primary font-medium"
                         )}
                         onClick={() => setIsOpen(false)}
                       >
-                        Contact
+                        Scan QR
                       </Link>
                     </div>
 

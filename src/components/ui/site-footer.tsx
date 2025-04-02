@@ -46,7 +46,7 @@ export function SiteFooter() {
               <span className="text-xl font-bold">Cloud Burst</span>
             </Link>
             <p className="text-muted-foreground text-sm">
-              Capture, store, and share your event memories with our professional photography platform.
+              Capture, store, and share your event memories with our professional media platform.
             </p>
           </div>
 

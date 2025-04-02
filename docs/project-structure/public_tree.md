@@ -1,13 +1,16 @@
 # public Directory Structure
-Generated: 2025-04-02T01:36:05.638Z
+Generated: 2025-04-02T19:36:19.917Z
 
 ## Overview
+
 
 
 
 ## Directory Tree
 ```
 ./public/
+├── audio/
+│   └── success-beep.mp3
 ├── images/
 │   ├── email/
 │   │   ├── logo.png
@@ -46,7 +49,7 @@ Generated: 2025-04-02T01:36:05.638Z
 ├── vercel.svg
 └── window.svg
 
-4 directories, 34 files
+5 directories, 35 files
 
 ```
 
