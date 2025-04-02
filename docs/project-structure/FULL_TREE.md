@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-01T03:43:45.866Z
+Generated: 2025-04-02T01:36:04.353Z
 
 ## Overview
 
@@ -94,6 +94,9 @@ Generated: 2025-04-01T03:43:45.866Z
 │   │   │   ├── SESSION_32_KICKOFF.md
 │   │   │   ├── SESSION_32_NARRATIVE.md
 │   │   │   ├── SESSION_32_RESOURCES.md
+│   │   │   ├── SESSION_33_CHECKLIST.md
+│   │   │   ├── SESSION_33_KICKOFF.md
+│   │   │   ├── SESSION_33_RESOURCES.md
 │   │   │   ├── session-28-plan.md
 │   │   │   ├── session_1.md
 │   │   │   ├── session_10.md
@@ -135,19 +138,19 @@ Generated: 2025-04-01T03:43:45.866Z
 │   │   │   ├── session_8.md
 │   │   │   └── session_9.md
 │   │   ├── .DS_Store
-│   │   ├── SESSION_33_CHECKLIST.md
-│   │   ├── SESSION_33_KICKOFF.md
-│   │   ├── SESSION_33_RESOURCES.md
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
+│   │   ├── session_34_checklist.md
+│   │   ├── session_34_kickoff.md
+│   │   ├── session_34_resources.md
 │   │   └── version-sync.plan
 │   ├── planning/
 │   │   ├── auth-cleanup.md
 │   │   ├── business_proposition.md
-│   │   ├── ca-en-merchant-fees-15-oct-2024.pdf
+│   │   ├── ca-en-merchant-fees-2024.pdf
 │   │   ├── deck.md
-│   │   ├── payment_subscription_design_document.md
+│   │   ├── payment_subscription_design.md
 │   │   ├── permissions-analysis.md
 │   │   ├── project_budget_overview.md
 │   │   ├── request_for_product_RFP.md
@@ -184,6 +187,7 @@ Generated: 2025-04-01T03:43:45.866Z
 │   │   ├── RSVP_IMPLEMENTATION_GUIDE.md
 │   │   ├── create_test_users_ui.md
 │   │   ├── event_management.md
+│   │   ├── invitation and RSVP system flow.md
 │   │   ├── invitation_system_development_plan.md
 │   │   ├── invitation_system_testing_plan.md
 │   │   ├── invited_user_flow_design_document.md
@@ -330,7 +334,9 @@ Generated: 2025-04-01T03:43:45.866Z
 │   │   │   │   │   └── route.ts
 │   │   │   │   ├── create/
 │   │   │   │   │   └── route.ts
-│   │   │   │   └── validate/
+│   │   │   │   ├── validate/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── verify/
 │   │   │   │       └── route.ts
 │   │   │   ├── rsvp/
 │   │   │   │   ├── status/
@@ -400,7 +406,10 @@ Generated: 2025-04-01T03:43:45.866Z
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   └── declined/
 │   │   │   │   │       └── page.tsx
+│   │   │   │   ├── details/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── page.tsx
+│   │   │   │   ├── rsvp-details.tsx
 │   │   │   │   └── rsvp-form.tsx
 │   │   │   ├── expired/
 │   │   │   │   └── page.tsx
@@ -517,6 +526,8 @@ Generated: 2025-04-01T03:43:45.866Z
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── qr/
 │   │   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── rsvps/
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
@@ -661,6 +672,8 @@ Generated: 2025-04-01T03:43:45.866Z
 │   │   │   ├── image-upload.tsx
 │   │   │   ├── qr-code-display.tsx
 │   │   │   ├── qr-scanner.tsx
+│   │   │   ├── rsvp-dashboard.tsx
+│   │   │   ├── rsvp-tab-trigger.tsx
 │   │   │   └── theme-preview.tsx
 │   │   ├── forms/
 │   │   │   ├── avatar-upload.tsx
@@ -852,6 +865,9 @@ Generated: 2025-04-01T03:43:45.866Z
 │   │   │   └── codeGenerator.ts
 │   │   ├── validation/
 │   │   │   └── rsvp.schema.ts
+│   │   ├── validations/
+│   │   │   ├── event.ts
+│   │   │   └── rsvp.ts
 │   │   ├── analytics.ts
 │   │   ├── auth.ts
 │   │   ├── constants.ts
@@ -983,7 +999,9 @@ Generated: 2025-04-01T03:43:45.866Z
 │   │   ├── supabase_logs.csv
 │   │   └── supabase_logs_for_one_login.csv
 │   ├── .DS_Store
+│   ├── Invitations Table Schema.csv
 │   ├── RSVPs Table Structure.csv
+│   ├── Retrieve Foreign Key Constraints.csv
 │   ├── Supabase Snippet List RLS Policies for RSVPs Table.csv
 │   ├── events_rows.csv
 │   └── galleries_rows.csv
@@ -1007,17 +1025,17 @@ Generated: 2025-04-01T03:43:45.866Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-226 directories, 773 files
+230 directories, 787 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11756 file(s)
-- tsx: 465 file(s)
-- js: 27914 file(s)
-- json: 2045 file(s)
-- md: 1468 file(s)
-- css: 27 file(s)
+- ts: 11742 file(s)
+- tsx: 470 file(s)
+- js: 27794 file(s)
+- json: 2012 file(s)
+- md: 1472 file(s)
+- css: 26 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns

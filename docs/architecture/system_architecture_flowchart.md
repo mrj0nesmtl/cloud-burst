@@ -1,8 +1,8 @@
-# 🏛️ **System Architecture Flowchart (Beta v0.8.4)**  
+# 🏛️ **System Architecture Flowchart (Beta v0.8.5)**  
 
 ## Cloud Burst  
-📅 *Updated: April 1, 2025*  
-📊 *Version: 0.8.4*
+📅 *Updated: April 2, 2025*  
+📊 *Version: 0.8.5*
 
 ---
 

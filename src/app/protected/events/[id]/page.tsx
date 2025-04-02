@@ -16,6 +16,7 @@ import { UploadDropzone } from '@/components/gallery/upload-dropzone'
 import { QRCodeDisplay } from '@/components/events/qr-code-display'
 import { getServerSupabase } from '@/lib/supabase/server'
 import { EventStatusSelector } from '@/components/events/event-status-selector'
+import { RsvpTabTrigger } from '@/components/events/rsvp-tab-trigger'
 import { Photo } from '@/types/events'
 import { Invitation } from '@/types/invitations'
 import { Button } from '@/components/ui/button'
@@ -25,6 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { RsvpDashboard } from '@/components/events/rsvp-dashboard'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -154,7 +156,8 @@ export default async function EventPage({ params }: EventPageProps) {
       width: '100%', 
       maxWidth: '100%', 
       overflowX: 'hidden',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      marginBottom: '4rem'
     }}>
       {/* Redesigned event header section */}
       <Card style={{ 
@@ -162,7 +165,8 @@ export default async function EventPage({ params }: EventPageProps) {
         width: '100%',
         overflow: 'hidden',
         border: '1px solid var(--border)',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+        boxShadow: 'var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08))',
+        borderRadius: '0.75rem',
       }}>
         <CardContent style={{ 
           padding: '0.75rem',
@@ -259,22 +263,21 @@ export default async function EventPage({ params }: EventPageProps) {
         </Card>
       )}
       
-      <Tabs defaultValue="overview" style={{ width: '100%' }}>
+      <Tabs defaultValue="overview" style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
         <TabsList style={{ 
-          width: '100%', 
-          overflowX: 'auto', 
           display: 'flex', 
-          whiteSpace: 'nowrap',
-          padding: '0.5rem',
-          marginBottom: '0.5rem',
-          fontSize: '0.75rem',
+          flexWrap: 'wrap', 
+          justifyContent: 'center',
+          gap: '0.5rem',
+          padding: '0.75rem 0.5rem',
+          backgroundColor: 'transparent',
+          border: 'none',
+          marginBottom: '0.75rem',
+          maxWidth: '100%',
+          overflowX: 'auto',
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
-          WebkitOverflowScrolling: 'touch',
-          justifyContent: 'space-around',
-          gap: '0.5rem',
-          backgroundColor: 'var(--background)',
-          borderBottom: '1px solid var(--border)'
+          WebkitOverflowScrolling: 'touch'
         }}>
           <TooltipProvider>
             <Tooltip>
@@ -466,6 +469,8 @@ export default async function EventPage({ params }: EventPageProps) {
               <TooltipContent>Gallery ({photos?.length || 0})</TooltipContent>
             </Tooltip>
             
+            <RsvpTabTrigger eventId={params.id} />
+            
             <Tooltip>
               <TooltipTrigger asChild>
                 <TabsTrigger value="qrcode" style={{ 
@@ -502,117 +507,639 @@ export default async function EventPage({ params }: EventPageProps) {
         </TabsList>
         
         <TabsContent value="overview" style={{ width: '100%' }}>
-          <Card style={{ width: '100%' }}>
-            <CardHeader style={{ padding: '0.5rem' }}>
-              <CardTitle style={{ fontSize: '0.875rem' }}>Event Details</CardTitle>
-              <CardDescription style={{ fontSize: '0.75rem' }}>
+          <Card style={{ 
+            width: '100%',
+            border: '1px solid var(--border)',
+            borderRadius: '0.75rem',
+            overflow: 'hidden',
+            boxShadow: 'var(--card-shadow, 0 2px 8px rgba(0,0,0,0.08))',
+          }}>
+            <CardHeader style={{ 
+              padding: '1rem', 
+              borderBottom: '1px solid var(--border)',
+              backgroundColor: 'var(--card-header-bg, rgba(0,0,0,0.02))'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                <LucideIcons.Info size={16} className="text-primary" />
+                <CardTitle style={{ fontSize: '1rem', margin: 0 }}>Event Details</CardTitle>
+              </div>
+              <CardDescription style={{ fontSize: '0.8rem', marginTop: '0.25rem' }}>
                 Complete information about this event
               </CardDescription>
             </CardHeader>
-            <CardContent style={{ padding: '0 0.5rem 0.5rem' }}>
-              {/* Mobile-friendly grid layout optimized for narrow screens */}
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: '1fr', 
-                gap: '0.5rem',
-                width: '100%' 
+            
+            <CardContent style={{ 
+              padding: '0',
+            }}>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                gap: '1px',
+                backgroundColor: 'var(--border)',
+                width: '100%'
               }}>
-                <div style={{ 
-                  padding: '0.5rem', 
-                  backgroundColor: 'var(--muted)', 
-                  opacity: '0.5', 
-                  borderRadius: '0.375rem'
+                {/* Event Logo/Thumbnail Section */}
+                <div style={{
+                  padding: '1.25rem',
+                  backgroundColor: 'var(--card)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
                 }}>
-                  <h3 style={{ fontWeight: '500', fontSize: '0.75rem' }}>Date & Time</h3>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginTop: '0.25rem' }}>
-                    {eventDate}
-                  </p>
-                </div>
-                
-                <div style={{ 
-                  padding: '0.5rem', 
-                  backgroundColor: 'var(--muted)', 
-                  opacity: '0.5', 
-                  borderRadius: '0.375rem'
-                }}>
-                  <h3 style={{ fontWeight: '500', fontSize: '0.75rem' }}>Location</h3>
-                  <p style={{ 
-                    fontSize: '0.7rem', 
-                    color: 'var(--muted-foreground)', 
-                    marginTop: '0.25rem',
-                    wordBreak: 'break-word' 
+                  <h3 style={{ 
+                    fontSize: '0.875rem', 
+                    fontWeight: '600', 
+                    color: 'var(--primary)',
+                    margin: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
                   }}>
-                    {event.location || 'No location set'}
-                  </p>
-                </div>
-                
-                <div style={{ 
-                  padding: '0.5rem', 
-                  backgroundColor: 'var(--muted)', 
-                  opacity: '0.5', 
-                  borderRadius: '0.375rem'
-                }}>
-                  <h3 style={{ fontWeight: '500', fontSize: '0.75rem' }}>Capacity</h3>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginTop: '0.25rem' }}>
-                    {event.max_attendees ? `${event.max_attendees} maximum attendees` : 'Unlimited'}
-                  </p>
-                </div>
-                
-                <div style={{ 
-                  padding: '0.5rem', 
-                  border: '1px solid var(--border)', 
-                  borderRadius: '0.375rem'
-                }}>
-                  <h3 style={{ fontWeight: '500', fontSize: '0.75rem' }}>Attendees</h3>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginTop: '0.25rem' }}>
-                    {attendees?.length || 0} registered
-                  </p>
-                </div>
-                
-                <div style={{ 
-                  padding: '0.5rem', 
-                  border: '1px solid var(--border)', 
-                  borderRadius: '0.375rem'
-                }}>
-                  <h3 style={{ fontWeight: '500', fontSize: '0.75rem' }}>Photos</h3>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginTop: '0.25rem' }}>
-                    {photos?.length || 0} uploaded
-                  </p>
-                </div>
-                
-                <div style={{ 
-                  padding: '0.5rem', 
-                  border: '1px solid var(--border)', 
-                  borderRadius: '0.375rem'
-                }}>
-                  <h3 style={{ fontWeight: '500', fontSize: '0.75rem' }}>Custom URL</h3>
-                  <p style={{ 
-                    fontSize: '0.7rem', 
-                    color: 'var(--muted-foreground)', 
-                    marginTop: '0.25rem',
+                    <LucideIcons.Image size={14} className="text-primary" />
+                    Event Logo
+                  </h3>
+                  
+                  <div style={{
+                    width: '100%',
+                    height: '160px',
+                    backgroundColor: 'var(--muted)',
+                    borderRadius: '0.375rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    wordBreak: 'break-word'
+                    border: '1px solid var(--border)'
                   }}>
-                    {event.custom_url || 'Not set'}
-                  </p>
+                    {event.logo_url ? (
+                      <img 
+                        src={event.logo_url} 
+                        alt={`${event.name} logo`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    ) : (
+                      <LucideIcons.Camera size={32} style={{ color: 'var(--muted-foreground)', opacity: 0.7 }} />
+                    )}
+                  </div>
                 </div>
+                
+                {/* Basic Info */}
+                <div style={{
+                  padding: '1.25rem',
+                  backgroundColor: 'var(--card)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                }}>
+                  <h3 style={{ 
+                    fontSize: '0.875rem', 
+                    fontWeight: '600', 
+                    color: 'var(--primary)',
+                    margin: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <LucideIcons.FileText size={14} className="text-primary" />
+                    Basic Information
+                  </h3>
+                  
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem'
+                  }}>
+                    {/* Name */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                        Event Name
+                      </div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: '500' }}>
+                        {event.name}
+                      </div>
+                    </div>
+                    
+                    {/* Description */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                        Description
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: 'normal',
+                        whiteSpace: 'pre-wrap',
+                        overflow: 'auto',
+                        maxHeight: '120px',
+                        borderRadius: '0.25rem',
+                        padding: '0.5rem',
+                        backgroundColor: 'var(--secondary-foreground-5, rgba(0,0,0,0.02))'
+                      }}>
+                        {event.description || 'No description provided'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Time & Location */}
+                <div style={{
+                  padding: '1.25rem',
+                  backgroundColor: 'var(--card)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                }}>
+                  <h3 style={{ 
+                    fontSize: '0.875rem', 
+                    fontWeight: '600', 
+                    color: 'var(--primary)',
+                    margin: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <LucideIcons.CalendarClock size={14} className="text-primary" />
+                    When & Where
+                  </h3>
+                  
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem'
+                  }}>
+                    {/* Date */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                        Date
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem' 
+                      }}>
+                        <LucideIcons.Calendar size={14} className="text-muted-foreground" />
+                        {eventDate}
+                      </div>
+                    </div>
+                    
+                    {/* Time */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                        Time
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem' 
+                      }}>
+                        <LucideIcons.Clock size={14} className="text-muted-foreground" />
+                        {(event as any).time_string || (event as any).start_time || 'No specific time set'}
+                      </div>
+                    </div>
+                    
+                    {/* Location */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                        Location
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.5rem' 
+                      }}>
+                        <LucideIcons.MapPin size={14} className="text-muted-foreground" style={{ marginTop: '0.2rem' }} />
+                        <span style={{ lineHeight: 1.5 }}>{event.location || 'No location set'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Capacity & Settings */}
+                <div style={{
+                  padding: '1.25rem',
+                  backgroundColor: 'var(--card)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                }}>
+                  <h3 style={{ 
+                    fontSize: '0.875rem', 
+                    fontWeight: '600', 
+                    color: 'var(--primary)',
+                    margin: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <LucideIcons.Settings size={14} className="text-primary" />
+                    Capacity & Settings
+                  </h3>
+                  
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem'
+                  }}>
+                    {/* Max Attendees */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                        Maximum Attendees
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem' 
+                      }}>
+                        <LucideIcons.Users size={14} className="text-muted-foreground" />
+                        {event.max_attendees ? `${event.max_attendees} people` : 'Unlimited'}
+                      </div>
+                    </div>
+                    
+                    {/* Status */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                        Status
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem' 
+                      }}>
+                        <Badge variant={
+                          event.status === 'published' ? 'default' :
+                          event.status === 'draft' ? 'secondary' :
+                          event.status === 'cancelled' ? 'destructive' :
+                          'outline'
+                        }>
+                          {(event.status || 'draft').charAt(0).toUpperCase() + (event.status || 'draft').slice(1)}
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    {/* Visibility */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                        Visibility
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem' 
+                      }}>
+                        {event.is_public ? (
+                          <>
+                            <LucideIcons.Globe size={14} className="text-muted-foreground" />
+                            <span>Public</span>
+                          </>
+                        ) : (
+                          <>
+                            <LucideIcons.Lock size={14} className="text-muted-foreground" />
+                            <span>Private (Invitation Only)</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Branding & Customization */}
+                <div style={{
+                  padding: '1.25rem',
+                  backgroundColor: 'var(--card)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                }}>
+                  <h3 style={{ 
+                    fontSize: '0.875rem', 
+                    fontWeight: '600', 
+                    color: 'var(--primary)',
+                    margin: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <LucideIcons.Palette size={14} className="text-primary" />
+                    Branding & Customization
+                  </h3>
+                  
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem'
+                  }}>
+                    {/* Custom URL */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                        Custom URL
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem' 
+                      }}>
+                        <LucideIcons.Link size={14} className="text-muted-foreground" />
+                        {event.custom_url || 'No custom URL set'}
+                      </div>
+                    </div>
+                    
+                    {/* Gallery Color */}
+                    {event.accent_color && (
+                      <div>
+                        <div style={{ fontSize: '0.75rem', fontWeight: '500', marginBottom: '0.25rem', color: 'var(--muted-foreground)' }}>
+                          Gallery Color
+                        </div>
+                        <div style={{ 
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}>
+                          <div style={{
+                            width: '1.5rem',
+                            height: '1.5rem',
+                            borderRadius: '50%',
+                            backgroundColor: event.accent_color,
+                            border: '1px solid var(--border)'
+                          }}></div>
+                          <span style={{ fontSize: '0.75rem' }}>{event.accent_color}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Stats & Activity */}
+                <div style={{
+                  padding: '1.25rem',
+                  backgroundColor: 'var(--card)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                }}>
+                  <h3 style={{ 
+                    fontSize: '0.875rem', 
+                    fontWeight: '600', 
+                    color: 'var(--primary)',
+                    margin: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <LucideIcons.BarChart size={14} className="text-primary" />
+                    Stats & Activity
+                  </h3>
+                  
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                    gap: '0.75rem'
+                  }}>
+                    {/* Attendees */}
+                    <div style={{
+                      padding: '0.75rem',
+                      backgroundColor: 'var(--secondary-foreground-5, rgba(0,0,0,0.02))',
+                      borderRadius: '0.375rem',
+                      textAlign: 'center',
+                      border: '1px solid var(--border)',
+                      boxShadow: 'var(--stat-card-shadow, 0 1px 3px rgba(0,0,0,0.08))'
+                    }}>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
+                        Attendees
+                      </div>
+                      <div style={{ 
+                        fontSize: '1.25rem', 
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.25rem'
+                      }}>
+                        <LucideIcons.Users size={14} className="text-muted-foreground" />
+                        {attendees?.length || 0}
+                      </div>
+                    </div>
+                    
+                    {/* Invitations */}
+                    <div style={{
+                      padding: '0.75rem',
+                      backgroundColor: 'var(--secondary-foreground-5, rgba(0,0,0,0.02))',
+                      borderRadius: '0.375rem',
+                      textAlign: 'center',
+                      border: '1px solid var(--border)',
+                      boxShadow: 'var(--stat-card-shadow, 0 1px 3px rgba(0,0,0,0.08))'
+                    }}>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
+                        Invitations
+                      </div>
+                      <div style={{ 
+                        fontSize: '1.25rem', 
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.25rem'
+                      }}>
+                        <LucideIcons.Mail size={14} className="text-muted-foreground" />
+                        {invitations?.length || 0}
+                      </div>
+                    </div>
+                    
+                    {/* Photos */}
+                    <div style={{
+                      padding: '0.75rem',
+                      backgroundColor: 'var(--secondary-foreground-5, rgba(0,0,0,0.02))',
+                      borderRadius: '0.375rem',
+                      textAlign: 'center',
+                      border: '1px solid var(--border)',
+                      boxShadow: 'var(--stat-card-shadow, 0 1px 3px rgba(0,0,0,0.08))'
+                    }}>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
+                        Photos
+                      </div>
+                      <div style={{ 
+                        fontSize: '1.25rem', 
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.25rem'
+                      }}>
+                        <LucideIcons.Image size={14} className="text-muted-foreground" />
+                        {photos?.length || 0}
+                      </div>
+                    </div>
+                    
+                    {/* Created Date */}
+                    <div style={{
+                      padding: '0.75rem',
+                      backgroundColor: 'var(--secondary-foreground-5, rgba(0,0,0,0.02))',
+                      borderRadius: '0.375rem',
+                      textAlign: 'center',
+                      border: '1px solid var(--border)',
+                      boxShadow: 'var(--stat-card-shadow, 0 1px 3px rgba(0,0,0,0.08))'
+                    }}>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
+                        Created
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.75rem', 
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.25rem'
+                      }}>
+                        {event.created_at ? format(new Date(event.created_at), 'MMM d, yyyy') : 'Unknown'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Social Media Links */}
+                {(event.website_url || event.facebook_url || event.instagram_url || event.twitter_url) && (
+                  <div style={{
+                    padding: '1.25rem',
+                    backgroundColor: 'var(--card)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.75rem',
+                    gridColumn: '1 / -1',
+                    border: '1px solid var(--border)',
+                    boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                  }}>
+                    <h3 style={{ 
+                      fontSize: '0.875rem', 
+                      fontWeight: '600', 
+                      color: 'var(--primary)',
+                      margin: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}>
+                      <LucideIcons.Share2 size={14} className="text-primary" />
+                      Social Media & Links
+                    </h3>
+                    
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '1rem'
+                    }}>
+                      {event.website_url && (
+                        <a 
+                          href={event.website_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            textDecoration: 'none',
+                            color: 'var(--foreground)',
+                            fontSize: '0.875rem',
+                            fontWeight: '500'
+                          }}
+                        >
+                          <LucideIcons.Globe size={16} className="text-primary" />
+                          Website
+                        </a>
+                      )}
+                      
+                      {event.facebook_url && (
+                        <a 
+                          href={event.facebook_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            textDecoration: 'none',
+                            color: 'var(--foreground)',
+                            fontSize: '0.875rem',
+                            fontWeight: '500'
+                          }}
+                        >
+                          <LucideIcons.Facebook size={16} className="text-primary" />
+                          Facebook
+                        </a>
+                      )}
+                      
+                      {event.instagram_url && (
+                        <a 
+                          href={event.instagram_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            textDecoration: 'none',
+                            color: 'var(--foreground)',
+                            fontSize: '0.875rem',
+                            fontWeight: '500'
+                          }}
+                        >
+                          <LucideIcons.Instagram size={16} className="text-primary" />
+                          Instagram
+                        </a>
+                      )}
+                      
+                      {event.twitter_url && (
+                        <a 
+                          href={event.twitter_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            textDecoration: 'none',
+                            color: 'var(--foreground)',
+                            fontSize: '0.875rem',
+                            fontWeight: '500'
+                          }}
+                        >
+                          <LucideIcons.Twitter size={16} className="text-primary" />
+                          Twitter
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-              
-              {/* Only show additional information if description exists */}
-              {event.description && event.description.length > 100 && (
-                <div style={{ marginTop: '0.75rem' }}>
-                  <h3 style={{ fontWeight: '500', fontSize: '0.75rem' }}>Additional Information</h3>
-                  <p style={{ 
-                    fontSize: '0.7rem', 
-                    color: 'var(--muted-foreground)', 
-                    marginTop: '0.25rem',
-                    wordBreak: 'break-word' 
-                  }}>
-                    {event.description}
-                  </p>
-                </div>
-              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -765,7 +1292,31 @@ export default async function EventPage({ params }: EventPageProps) {
           </Card>
         </TabsContent>
 
-        <TabsContent value="qrcode">
+        <TabsContent value="rsvps">
+          <Card style={{ width: '100%' }}>
+            <CardHeader style={{ 
+              padding: '0.5rem', 
+              display: 'flex', 
+              flexDirection: 'row', 
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '0.35rem'
+            }}>
+              <div>
+                <CardTitle style={{ fontSize: '0.875rem' }}>RSVP Management</CardTitle>
+                <CardDescription style={{ fontSize: '0.75rem' }}>
+                  Track and manage RSVPs for {event.name}
+                </CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent style={{ padding: '0.5rem' }}>
+              <RsvpDashboard eventId={params.id} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="qrcode" className="mt-2 space-y-4">
           <Card style={{ width: '100%' }}>
             <CardHeader style={{ padding: '0.5rem' }}>
               <CardTitle style={{ fontSize: '0.875rem' }}>QR Code</CardTitle>

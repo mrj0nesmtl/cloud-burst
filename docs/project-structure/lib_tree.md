@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-04-01T03:43:52.125Z
+Generated: 2025-04-02T01:36:08.498Z
 
 ## Overview
 
@@ -46,6 +46,9 @@ Generated: 2025-04-01T03:43:52.125Z
 │   └── codeGenerator.ts
 ├── validation/
 │   └── rsvp.schema.ts
+├── validations/
+│   ├── event.ts
+│   └── rsvp.ts
 ├── analytics.ts
 ├── auth.ts
 ├── constants.ts
@@ -59,12 +62,12 @@ Generated: 2025-04-01T03:43:52.125Z
 ├── user-sessions.ts
 └── utils.ts
 
-9 directories, 42 files
+10 directories, 44 files
 
 ```
 
 ## File Type Breakdown
-- ts: 39 file(s)
+- ts: 41 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

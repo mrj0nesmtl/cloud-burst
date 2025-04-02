@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-04-01T03:43:50.604Z
+Generated: 2025-04-02T01:36:07.545Z
 
 ## Overview
-This directory contains 161 component(s).
+This directory contains 163 component(s).
 
 
 ## Directory Tree
@@ -55,6 +55,8 @@ This directory contains 161 component(s).
 │   ├── image-upload.tsx
 │   ├── qr-code-display.tsx
 │   ├── qr-scanner.tsx
+│   ├── rsvp-dashboard.tsx
+│   ├── rsvp-tab-trigger.tsx
 │   └── theme-preview.tsx
 ├── forms/
 │   ├── avatar-upload.tsx
@@ -196,13 +198,13 @@ This directory contains 161 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-20 directories, 168 files
+20 directories, 170 files
 
 ```
 
 ## File Type Breakdown
 - ts: 6 file(s)
-- tsx: 161 file(s)
+- tsx: 163 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

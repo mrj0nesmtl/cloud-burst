@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-01T03:43:47.109Z
+Generated: 2025-04-02T01:36:05.189Z
 
 ## Overview
 
@@ -57,6 +57,9 @@ Generated: 2025-04-01T03:43:47.109Z
 │   │   ├── SESSION_32_KICKOFF.md
 │   │   ├── SESSION_32_NARRATIVE.md
 │   │   ├── SESSION_32_RESOURCES.md
+│   │   ├── SESSION_33_CHECKLIST.md
+│   │   ├── SESSION_33_KICKOFF.md
+│   │   ├── SESSION_33_RESOURCES.md
 │   │   ├── session-28-plan.md
 │   │   ├── session_1.md
 │   │   ├── session_10.md
@@ -98,19 +101,19 @@ Generated: 2025-04-01T03:43:47.109Z
 │   │   ├── session_8.md
 │   │   └── session_9.md
 │   ├── .DS_Store
-│   ├── SESSION_33_CHECKLIST.md
-│   ├── SESSION_33_KICKOFF.md
-│   ├── SESSION_33_RESOURCES.md
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
+│   ├── session_34_checklist.md
+│   ├── session_34_kickoff.md
+│   ├── session_34_resources.md
 │   └── version-sync.plan
 ├── planning/
 │   ├── auth-cleanup.md
 │   ├── business_proposition.md
-│   ├── ca-en-merchant-fees-15-oct-2024.pdf
+│   ├── ca-en-merchant-fees-2024.pdf
 │   ├── deck.md
-│   ├── payment_subscription_design_document.md
+│   ├── payment_subscription_design.md
 │   ├── permissions-analysis.md
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
@@ -147,6 +150,7 @@ Generated: 2025-04-01T03:43:47.109Z
 │   ├── RSVP_IMPLEMENTATION_GUIDE.md
 │   ├── create_test_users_ui.md
 │   ├── event_management.md
+│   ├── invitation and RSVP system flow.md
 │   ├── invitation_system_development_plan.md
 │   ├── invitation_system_testing_plan.md
 │   ├── invited_user_flow_design_document.md
@@ -156,12 +160,12 @@ Generated: 2025-04-01T03:43:47.109Z
 ├── .DS_Store
 └── README.md
 
-10 directories, 138 files
+10 directories, 142 files
 
 ```
 
 ## File Type Breakdown
-- md: 133 file(s)
+- md: 137 file(s)
 
 ## Ignored Patterns
 - node_modules

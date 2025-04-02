@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-01T03:43:46.851Z
+Generated: 2025-04-02T01:36:05.002Z
 
 ## Overview
 
@@ -71,7 +71,9 @@ Generated: 2025-04-01T03:43:46.851Z
 │   │   │   │   └── route.ts
 │   │   │   ├── create/
 │   │   │   │   └── route.ts
-│   │   │   └── validate/
+│   │   │   ├── validate/
+│   │   │   │   └── route.ts
+│   │   │   └── verify/
 │   │   │       └── route.ts
 │   │   ├── rsvp/
 │   │   │   ├── status/
@@ -141,7 +143,10 @@ Generated: 2025-04-01T03:43:46.851Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   └── declined/
 │   │   │   │       └── page.tsx
+│   │   │   ├── details/
+│   │   │   │   └── page.tsx
 │   │   │   ├── page.tsx
+│   │   │   ├── rsvp-details.tsx
 │   │   │   └── rsvp-form.tsx
 │   │   ├── expired/
 │   │   │   └── page.tsx
@@ -258,6 +263,8 @@ Generated: 2025-04-01T03:43:46.851Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── qr/
 │   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── rsvps/
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
@@ -402,6 +409,8 @@ Generated: 2025-04-01T03:43:46.851Z
 │   │   ├── image-upload.tsx
 │   │   ├── qr-code-display.tsx
 │   │   ├── qr-scanner.tsx
+│   │   ├── rsvp-dashboard.tsx
+│   │   ├── rsvp-tab-trigger.tsx
 │   │   └── theme-preview.tsx
 │   ├── forms/
 │   │   ├── avatar-upload.tsx
@@ -593,6 +602,9 @@ Generated: 2025-04-01T03:43:46.851Z
 │   │   └── codeGenerator.ts
 │   ├── validation/
 │   │   └── rsvp.schema.ts
+│   ├── validations/
+│   │   ├── event.ts
+│   │   └── rsvp.ts
 │   ├── analytics.ts
 │   ├── auth.ts
 │   ├── constants.ts
@@ -629,13 +641,13 @@ Generated: 2025-04-01T03:43:46.851Z
 ├── middleware.test.ts
 └── middleware.ts
 
-183 directories, 438 files
+187 directories, 446 files
 
 ```
 
 ## File Type Breakdown
-- ts: 94 file(s)
-- tsx: 326 file(s)
+- ts: 97 file(s)
+- tsx: 331 file(s)
 - js: 3 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

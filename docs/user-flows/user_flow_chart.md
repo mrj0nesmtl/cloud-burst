@@ -1,285 +1,370 @@
 # 🔄 User Flow Chart
 
 ## Cloud Burst
-📅 *Updated: March 27, 2025*  
-📊 *Version: 0.8.2*
+📅 *Updated: April 2, 2025*  
+📊 *Version: 0.8.5*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the invitation system with SendGrid integration and the recent resolution of critical Next.js 14 App Router architecture issues, Cloud Burst now offers a complete media management solution with enhanced user verification and notification capabilities. The platform features comprehensive email template management with SendGrid integration, secure API endpoints, direct camera integration through QR code scanning, and robust authentication flows. We've implemented proper client/server component separation, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. With enhanced processing capabilities for both photos and videos, optimized gallery displays for mixed media, and comprehensive email notifications with delivery tracking, Cloud Burst provides an intuitive and engaging experience for all users.
 
-The media management system is approximately 40% complete, with recent completions including client/server component architecture fixes, authentication flow improvements, type mapping corrections, and proper server-side data fetching. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
+Cloud Burst is an event media platform currently at version 0.8.5, with significant progress in the RSVP system integration. The platform now includes a comprehensive RSVP dashboard within the event management interface, providing organizers with a centralized location to track and manage guest responses. We've successfully implemented tab-based navigation for seamless RSVP management, improved card styling for better visibility in both light and dark modes, and optimized layouts for both desktop and mobile views.
 
-```mermaid
-flowchart TD
-    A[User Arrives] --> B[Auth Check]
-    B --> |No Auth| C[Landing Page]
-    B --> |Has Auth| D[Role Check]
-    B --> |QR Code/Event URL| E[Camera Integration]
-    
-    C --> |Sign Up| F[Auth Form]
-    C --> |Sign In| F
-    C --> |Event URL| G[Event Gallery]
-    
-    F --> |Success| D
-    F --> |Verification| H[Email Verification]
-    H --> |Complete| D
-    H --> |Resend| I[Resend Email]
-    
-    E --> J[Camera Access]
-    J --> K{Media Type}
-    K --> |Photo| L[Photo Capture]
-    K --> |Video| M[Video Recording]
-    
-    L --> N[Upload Process]
-    M --> N
-    N --> O[Processing]
-    O --> P[Gallery Update]
-    P --> G
-    P --> Q[Email Notification]
-    Q --> R[SendGrid API]
-    R --> S[Delivery Tracking]
-    
-    D --> |Super Admin| T[Admin Dashboard]
-    D --> |Admin| U[Admin Dashboard]
-    D --> |Organizer| V[Event Dashboard]
-    D --> |Event Host| W[Event Dashboard]
-    D --> |User| X[User Dashboard]
-    D --> |Guest| Y[Gallery Access]
-    
-    T --> Z[User Management]
-    T --> AA[System Settings]
-    T --> AB[Template Management]
-    T --> AC[Role Management]
-    
-    U --> AD[Event Management]
-    U --> AE[Media Moderation]
-    U --> AF[Template Access]
-    
-    V --> AG[Event Creation]
-    V --> AH[Event Management]
-    V --> AI[Attendee Management]
-    V --> AJ[Media Moderation]
-    V --> AK[Invitation System]
-    
-    W --> AL[Event Creation]
-    W --> AM[Basic Management]
-    W --> AN[Attendee List]
-    W --> AO[Invitation Management]
-    
-    X --> AP[Profile Settings]
-    X --> AQ[Event Access]
-    X --> AR[Email Preferences]
-    
-    Y --> G
-    G --> AS[View Media]
-    G --> |Auth Check| AT[Capture Media]
-    
-    AB --> AU[Template List]
-    AU --> AV[Template Editor]
-    AV --> AW[Template Preview]
-    AV --> AX[Template Sync]
-    AX --> AY[SendGrid Service]
-    
-    AG --> AZ[Event Form]
-    AZ --> BA[Event Detail]
-    BA --> BB[QR Code]
-    BA --> BC[Gallery Setup]
-    BA --> BD[Email Setup]
-    
-    AS --> BE[Grid View]
-    AS --> BF[Masonry View]
-    AS --> BG[Slideshow View]
-    
-    BE --> BH[Media Actions]
-    BF --> BH
-    BG --> BH
-    
-    BH --> BI[Like/Comment]
-    BH --> BJ[Share]
-    BH --> BK[Download]
-    BH --> BL[Email Updates]
-    
-    AK --> BM[Invitation Creation]
-    BM --> BN[Single Invitation]
-    BM --> BO[Bulk Upload]
-    BN --> BP[SendGrid API]
-    BO --> BP
-    BP --> BQ[Delivery Tracking]
-    
-    AI --> BR[Attendee List]
-    BR --> BS[Add Attendee]
-    BS --> BT[Email Invitation]
-    BT --> BP
-```
+The RSVP system is now 50% complete, with the organizer-facing components fully implemented and integrated into the event dashboard. Our focus for Session 35 is on developing the public-facing aspects of the system, including the invitation landing page, RSVP form, and guest authentication flow. We're also advancing the camera integration for QR code scanning to enhance the on-site check-in experience.
 
-## 📹 **Media Capture Flow**
+The platform continues to feature comprehensive role-based access control, custom event URLs, direct camera integration, multiple gallery layouts, and a complete invitation system with SendGrid integration. With these enhancements, Cloud Burst is well-positioned to deliver a polished, professional-grade solution for complete event media management.
 
-```mermaid
-flowchart LR
-    A[User] --> B[Scan QR Code]
-    B --> C[Camera Access]
-    C --> D{Media Type Selection}
-    D --> E[Photo Mode]
-    D --> F[Video Mode]
-    
-    E --> G[Capture Photo]
-    F --> H[Record Video]
-    H --> I[Stop Recording]
-    
-    G --> J[Review Media]
-    I --> J
-    
-    J --> K{Approve}
-    K -->|Yes| L[Upload Process]
-    K -->|No| M[Discard]
-    M --> D
-    
-    L --> N[Form Validation]
-    N --> O[API Endpoint]
-    O --> P[Processing]
-    P --> Q[Gallery Update]
-    Q --> R[Media Actions]
-    Q --> S[Email Notification]
-    S --> T[SendGrid API]
-    T --> U[Delivery Tracking]
-    
-    R --> V[View]
-    R --> W[Like]
-    R --> X[Share]
-    R --> Y[Download]
-```
-
-## 📸 **Video Processing Flow**
+## 🔄 **Primary User Flow Chart**
 
 ```mermaid
 flowchart TD
-    A[Video Upload] --> B[Initial Validation]
-    B --> C[Metadata Extraction]
-    C --> D[Format Check]
-    D --> E[Compression]
-    E --> F[Thumbnail Generation]
-    F --> G[Various Resolution Creation]
-    G --> H[Storage Upload]
-    H --> I[Database Update]
-    I --> J[Gallery Refresh]
-    J --> K[Video Playback Ready]
-    I --> L[Email Notification]
-    L --> M[SendGrid API]
-    M --> N[Delivery Tracking]
+    A[User Landing] --> B{Authentication}
+    B -->|Unauthenticated| C[Login/Register]
+    B -->|Authenticated| D[Dashboard]
+    B -->|QR/URL Access| E[Event Gallery]
+    C --> F[Auth Process]
+    F --> D
+    
+    D --> G{Role Check}
+    G -->|Super Admin| H[Admin Panel]
+    G -->|Admin| I[Admin Dashboard]
+    G -->|Organizer| J[Organizer Dashboard]
+    G -->|Event Host| K[Host Dashboard]
+    G -->|User| L[User Dashboard]
+    G -->|Guest| M[Guest View]
+    
+    H --> N[User Management]
+    H --> O[Role Management]
+    H --> P[System Settings]
+    H --> Q[Template Management]
+    
+    I --> R[Event Management]
+    I --> S[Content Moderation]
+    I --> T[User Support]
+    I --> U[Basic Analytics]
+    
+    J --> V[Event Dashboard]
+    J --> W[Event Creation]
+    J --> X[Attendee Management]
+    J --> Y[RSVP Dashboard]
+    J --> Z[Analytics]
+    J --> AA[Email Templates]
+    
+    K --> AB[Event Dashboard]
+    K --> AC[Basic Management]
+    K --> AD[Attendee List]
+    K --> AE[RSVP Overview]
+    
+    L --> AF[Profile Management]
+    L --> AG[Media Access]
+    L --> AH[Notification Settings]
+    
+    E --> AI[Gallery View]
+    AI --> AJ[Media Grid]
+    AI --> AK[Media Upload]
+    AJ --> AL[View Actions]
+    AK --> AM[Upload Process]
+    AM --> AN[Processing]
+    AN --> AO[Gallery Update]
+    AL --> AP[Download]
+    AL --> AQ[Share]
+    AL --> AR[Like/Comment]
+    
+    V --> AS[Event Details]
+    AS --> AT[Gallery Management]
+    AS --> AU[Invitation System]
+    AS --> AV[RSVP Management]
+    AT --> AW[Media Moderation]
+    AT --> AX[Layout Selection]
+    AU --> AY[Create Invitations]
+    AU --> AZ[Send Invitations]
+    AZ --> BA[Email Delivery]
+    BA --> BB[Tracking]
+    
+    AY --> BC[Single Invitation]
+    AY --> BD[Bulk Invitation]
+    BC --> BE[Form Input]
+    BD --> BF[CSV Upload]
+    BE --> BG[Validation]
+    BF --> BG
+    BG --> AZ
+    
+    AV --> BH[RSVP Dashboard]
+    BH --> BI[Response List]
+    BH --> BJ[Status Metrics]
+    BI --> BK[Filter Options]
+    BI --> BL[Detail View]
+    BL --> BM[Guest Info]
+    BL --> BN[Status Management]
+    BJ --> BO[Charts]
+    BJ --> BP[Export]
+    
+    M --> BQ[Event Access]
+    BQ --> BR[Gallery View]
+    BQ --> BS[Upload Option]
+    BR --> BT[View Media]
+    BR --> BU[Interactions]
+    BS --> BV[Camera Access]
+    BV --> BW[Photo Capture]
+    BV --> BX[Video Capture]
+    BW --> BY[Preview]
+    BX --> BY
+    BY --> BZ[Submit]
+    BZ --> CA[API Endpoint]
+    CA --> CB[Validation]
+    CB --> CC[Storage]
+    CC --> CD[Gallery Update]
+    
+    AA --> CE[Template List]
+    CE --> CF[Template Editor]
+    CF --> CG[Template Preview]
+    CF --> CH[Save Template]
+    CH --> CI[Template Store]
+    CG --> CJ[Sample Data]
+    
+    Y --> CK[Response Overview]
+    CK --> CL[Status Categories]
+    CL --> CM[Accepted]
+    CL --> CN[Declined]
+    CL --> CO[Pending]
+    CL --> CP[Maybe]
+    CM --> CQ[Details]
+    CN --> CQ
+    CO --> CQ
+    CP --> CQ
+    CQ --> CR[Dietary Info]
+    CQ --> CS[Plus-One]
+    CQ --> CT[Notes]
+    CQ --> CU[Status Management]
+    
+    style BH fill:#66cc99
+    style BI fill:#66cc99
+    style BJ fill:#66cc99
+    style BK fill:#66cc99
+    style BL fill:#66cc99
+    style BM fill:#66cc99
+    style BN fill:#66cc99
+    style BO fill:#66cc99
+    style BP fill:#66cc99
+    style Y fill:#66cc99
+    style AV fill:#66cc99
+    style CK fill:#66cc99
+    style CL fill:#66cc99
+    style CM fill:#66cc99
+    style CN fill:#66cc99
+    style CO fill:#66cc99
+    style CP fill:#66cc99
+    style CQ fill:#66cc99
+    style CR fill:#66cc99
+    style CS fill:#66cc99
+    style CT fill:#66cc99
+    style CU fill:#66cc99
 ```
 
-## 🎯 **Key Components**  
+## 🔄 **Invitation & RSVP Flow**
 
-### 🔐 **Enhanced Authentication**
-- ✅ Rate limiting protection
-- ✅ Security headers
-- ✅ Session management
-- ✅ Cookie security
-- ✅ Error handling
-- ✅ Role verification
-- ✅ Permission-based access
-- ✅ Row Level Security
-- ✅ API endpoint security
-- ✅ Form validation
-- ✅ Error recovery mechanisms
-- ✅ Client/server authentication flow
+```mermaid
+flowchart TD
+    A[Organizer] --> B[Create Invitation]
+    B --> C[Single Invitation]
+    B --> D[Bulk Import]
+    C --> E[Form Input]
+    D --> F[CSV Upload]
+    E --> G[Validation]
+    F --> G
+    G --> H[Send Invitation]
+    H --> I[Email Delivery]
+    I --> J[Tracking]
+    I --> K[Guest Receives]
+    
+    K --> L[RSVP Link]
+    L --> M[Landing Page]
+    M --> N[Token Validation]
+    N --> O{User Exists?}
+    O -->|No| P[Quick Registration]
+    O -->|Yes| Q[RSVP Form]
+    P --> Q
+    
+    Q --> R{Response Type}
+    R -->|Accept| S[Accept Form]
+    R -->|Decline| T[Decline Form]
+    R -->|Maybe| U[Maybe Form]
+    
+    S --> V[Dietary Preferences]
+    S --> W[Plus-One Options]
+    S --> X[Special Requests]
+    T --> Y[Brief Reason]
+    U --> Z[Future Option]
+    
+    V --> AA[Submit Response]
+    W --> AA
+    X --> AA
+    Y --> AA
+    Z --> AA
+    
+    AA --> AB[Validation]
+    AB --> AC[Create RSVP Record]
+    AC --> AD[Update Status]
+    AD --> AE[Confirmation Page]
+    AE --> AF[Confirmation Email]
+    AD --> AG[Update Dashboard]
+    
+    AG --> AH[Organizer View]
+    AH --> AI[RSVP Dashboard]
+    AI --> AJ[Response List]
+    AI --> AK[Status Charts]
+    AJ --> AL[Filter Options]
+    AJ --> AM[Detail View]
+    AM --> AN[Guest Information]
+    AM --> AO[Status Management]
+    AM --> AP[Dietary Info]
+    AM --> AQ[Plus-One Details]
+    
+    style AI fill:#66cc99
+    style AJ fill:#66cc99
+    style AK fill:#66cc99
+    style AL fill:#66cc99
+    style AM fill:#66cc99
+    style AN fill:#66cc99
+    style AO fill:#66cc99
+    style AP fill:#66cc99
+    style AQ fill:#66cc99
+    style AH fill:#66cc99
+    style AG fill:#66cc99
+    
+    style M fill:#ffcc66
+    style N fill:#ffcc66
+    style O fill:#ffcc66
+    style P fill:#ffcc66
+    style Q fill:#ffcc66
+    style R fill:#ffcc66
+    style S fill:#ffcc66
+    style T fill:#ffcc66
+    style U fill:#ffcc66
+    style V fill:#ffcc66
+    style W fill:#ffcc66
+    style X fill:#ffcc66
+    style Y fill:#ffcc66
+    style Z fill:#ffcc66
+    style AA fill:#ffcc66
+    style AB fill:#ffcc66
+    style AC fill:#ffcc66
+    style AD fill:#ffcc66
+    style AE fill:#ffcc66
+    style AF fill:#ffcc66
+```
 
-### 📹 **Video Capture System**
-- ✅ In-app recording interface
-- ✅ Duration controls
-- ✅ Quality settings
-- ✅ Preview generation
-- ✅ Processing indicator
-- ✅ Format optimization
-- ✅ Error recovery
-- ✅ User guidance information
-- 🟡 Advanced editing options (50% complete)
+## 🖥️ **Media Capture Flow**
 
-### ⚙️ **Settings System**
-- ✅ Profile management
-- ✅ User preferences
-- ✅ Theme selection (light/dark/system)
-- ✅ Language options
-- ✅ Media quality preferences
-- ✅ Notification settings (100% complete)
-- ✅ Template preferences
-- ✅ Real-time updates
-- ✅ Form validation
-- ✅ Email delivery options
-- ✅ Contextual help preferences
+```mermaid
+flowchart TD
+    A[Guest] --> B[Event Access]
+    B --> C[QR Code Scan]
+    B --> D[Custom URL]
+    C --> E[Camera Permission]
+    D --> F[Gallery Access]
+    E --> G[Device Camera]
+    F --> H[Upload Option]
+    G --> I{Capture Type}
+    H --> J[File Selection]
+    I -->|Photo| K[Take Photo]
+    I -->|Video| L[Record Video]
+    K --> M[Preview]
+    L --> M
+    J --> M
+    
+    M --> N{Approve?}
+    N -->|Yes| O[Upload Process]
+    N -->|No| I
+    O --> P[API Endpoint]
+    P --> Q[Validation]
+    Q --> R[Processing]
+    R --> S[Storage]
+    S --> T[Gallery Update]
+    T --> U[View in Gallery]
+    T --> V[Notification]
+    
+    U --> W[Grid View]
+    U --> X[Masonry View]
+    U --> Y[Slideshow]
+    W --> Z[Media Actions]
+    X --> Z
+    Y --> Z
+    Z --> AA[Like/Comment]
+    Z --> AB[Share]
+    Z --> AC[Download]
+    
+    V --> AD[Email Notification]
+    AD --> AE[SendGrid API]
+    AE --> AF[Delivery Tracking]
+```
 
-### 📊 **Secure Operations**
-- ✅ Protected endpoints
-- ✅ Rate limited APIs
-- ✅ Session refresh
-- ✅ Error boundaries
-- ✅ Role-based access
-- ✅ Template security
-- ✅ Permission hooks
-- ✅ Conditional UI rendering
-- ✅ API endpoint security
-- ✅ Form data validation
-- ✅ Input sanitization
-- ✅ Server-side authentication context
+## 📊 **Implementation Status**
 
-### 🖼️ **Gallery System**
-- ✅ Multiple layouts (Grid, Masonry, Slideshow)
-- ✅ Mixed media support (photos and videos)
-- ✅ Inline video playback
-- ✅ Tag-based filtering
-- ✅ Media type filtering
-- ✅ Responsive design
-- 🟡 Download options (40% complete)
-- ✅ Upload functionality
-- ✅ Progress indicators
-- ✅ Error handling
-- 🟡 Sharing options (40% complete)
-- ✅ User guidance information
-- ✅ Client/server component separation
-- ✅ Proper 'use client' directives
-- ✅ Database-UI type mapping
-- ✅ Server-side data fetching
+| Feature Area | Status | Notes |
+|--------------|--------|-------|
+| Authentication | 100% | Complete with Email, Password & Magic Links |
+| Dashboard UI | 90% | Main layouts complete, analytics in progress |
+| Event Management | 95% | Core functionality complete |
+| User Management | 100% | RBAC fully implemented |
+| Media Upload | 70% | Core functionality working, optimizations in progress |
+| Gallery Views | 40% | Basic grid complete, masonry layout in development |
+| Email Templates | 100% | Complete with SendGrid integration |
+| Notification System | 85% | Real-time updates complete, email notifications in testing |
+| Mobile Responsiveness | 80% | Core layouts responsive, fine-tuning in progress |
+| Invitation System | 100% | Complete with tracking and analytics |
+| RSVP System | 50% | Dashboard complete, public components in development |
+| Camera Integration | 30% | Basic functionality works, QR scanning in development |
+| Analytics | 40% | Basic metrics implemented, advanced charts in progress |
 
-### 📨 **Invitation System**
-- ✅ Single invitation creation (100% complete)
-- ✅ Bulk invitation upload (100% complete)
-- ✅ Email template selection (100% complete)
-- ✅ SendGrid integration (100% complete)
-- ✅ Delivery tracking (100% complete)
-- ✅ API endpoint security (100% complete)
-- ✅ Form validation (100% complete)
-- ✅ Error handling (100% complete)
-- ✅ User guidance information (100% complete)
-- ✅ Email notification (100% complete)
+## 🎯 **User Flow Progress**
 
-## 🔄 **Implementation Progress**
+### Completed Flows
+- ✅ User Registration & Authentication
+- ✅ Event Creation & Management
+- ✅ Basic Media Upload
+- ✅ Email Template Management
+- ✅ Invitation System
+- ✅ RSVP Dashboard for Organizers
 
-As we approach our April 1, 2025 launch date, the invitation system is now 100% complete with SendGrid integration, and we've resolved critical Next.js 14 App Router architecture issues in our gallery implementation.
+### In Progress Flows
+- 🟡 Public RSVP System (0%)
+- 🟡 QR Code Scanning for Event Access (30%)
+- 🟡 Advanced Media Management (40%)
+- 🟡 Gallery Masonry Layout (40%)
+- 🟡 Analytics Dashboard (40%)
 
-### Key Achievements:
-- ✅ Complete invitation system with API integration
-- ✅ SendGrid integration for secure email delivery
-- ✅ Enhanced form validation with user feedback
-- ✅ User guidance information throughout flows
-- ✅ API endpoint security
-- ✅ Improved error handling
-- ✅ Next.js 14 client/server component separation
-- ✅ Authentication flow fixes for gallery pages
-- ✅ Proper type mapping between database and UI components
-- ✅ Server-side data fetching implementation
+### Planned Flows
+- ⏱️ Advanced Filtering & Searching
+- ⏱️ AI-Powered Media Organization
+- ⏱️ Facial Recognition for Photo Grouping
+- ⏱️ Automated Album Creation
+- ⏱️ Custom Branding Options
 
-### Current Focus:
-- 🟡 Implementing gallery masonry layout (40% complete)
-- 🟡 Developing album management system (10% complete)
-- 🟡 Enhancing analytics dashboard (0% complete)
-- 🟡 Creating guest upload system (20% complete)
-- 🟡 Implementing onboarding flow (0% complete)
+## 🔒 **Security Flow Integration**
 
-### Next Steps:
-1. Complete gallery system with masonry layout
-2. Implement album management
-3. Enhance dashboard with analytics panels
-4. Create guest upload system
-5. Develop onboarding flow for new organizers
+All user flows implement the following security measures:
+- Rate limiting on authentication endpoints
+- Token validation for all protected routes
+- Role-based access control for UI elements and API endpoints
+- Data validation on both client and server
+- Proper error handling with secure messaging
+- XSS protection through content security policies
+- CSRF protection on all forms
+- Secure cookie handling with proper flags
+- Row Level Security in Supabase for data access
+
+## 🔄 **Flow Navigation Patterns**
+
+- Breadcrumb navigation for nested views
+- Consistent back buttons with state preservation
+- Tab-based navigation for related content
+- Modal dialogs for focused interactions
+- Toast notifications for system feedback
+- Loading states with Skeletons
+- Error boundaries with fallback UIs
+- Responsive navigation adjustments for mobile
+- Keyboard shortcuts for power users
+- Context-aware action buttons
+- Dynamic form validation
+- Progressive disclosure patterns
 
 ---

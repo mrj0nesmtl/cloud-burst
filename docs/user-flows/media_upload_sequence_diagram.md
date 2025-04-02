@@ -1,13 +1,16 @@
 # 📹 **Media Upload Sequence Diagram**  
 
 ## Cloud Burst  
-📅 *Updated: March 27, 2025*  
-📊 *Version: 0.8.2*
+📅 *Updated: April 2, 2025*  
+📊 *Version: 0.8.5*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the invitation system with SendGrid integration and the recent resolution of critical Next.js 14 App Router architecture issues, Cloud Burst's media upload process has been enhanced with improved authentication flows, secure API endpoints, and robust error handling. The implementation leverages Zustand for state management, TanStack Query for optimized data fetching, and includes comprehensive email notifications and template-based status updates through SendGrid. The platform has resolved key architectural challenges by implementing proper client/server component separation, fixing authentication flows in gallery pages, and ensuring correct type mapping between database and UI components. The invitation system is now fully integrated with the media upload process, allowing for seamless user experiences from invitation to media contribution.
 
-The media upload process is approximately 40% complete, with robust support for both photo and video content. Recent completions include client/server component architecture fixes, authentication flow improvements, type mapping corrections, and proper server-side data fetching. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
+Following the integration of the RSVP dashboard in version 0.8.5, Cloud Burst continues to enhance its media management capabilities while strengthening the connection between the RSVP system and media uploads. The platform now offers a more streamlined experience for organizers to track attendees who have contributed media to an event, with the RSVP dashboard providing visibility into guest participation across both attendance and media contributions.
+
+The media upload process remains a core feature of Cloud Burst, supporting both photos and videos with optimized processing for each media type. The platform maintains proper client/server component separation, ensuring type safety between database and UI components, and providing robust error handling throughout the upload sequence.
+
+As we prepare for Session 35, our focus will expand to include camera integration for QR code scanning, which will enhance the media upload experience by allowing seamless authentication and direct camera access through QR codes. This will integrate closely with the public-facing RSVP system being developed, creating a cohesive end-to-end flow from invitation to RSVP to on-site participation and media capture.
 
 ---
 
