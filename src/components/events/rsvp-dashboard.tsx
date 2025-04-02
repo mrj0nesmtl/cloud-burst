@@ -50,7 +50,8 @@ import {
   AlertCircle,
   Filter,
   RefreshCw,
-  Search
+  Search,
+  MessageCircle
 } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/components/ui/use-toast'
@@ -60,16 +61,20 @@ import { RsvpStatus } from '@/types/invitations'
 import { Database } from '@/types/supabase'
 
 type Invitation = {
-  id: string
-  name: string
-  email: string
-  status: string
-  rsvp_status: RsvpStatus | null
-  rsvp_date: string | null
-  sent_at: string | null
-  metadata: any
-  plus_one_used: boolean
-  plus_one_name: string | null
+  id: string;
+  name: string | null;
+  email: string | null;
+  status: string;
+  rsvp_status: RsvpStatus | null;
+  rsvp_date: string | null;
+  sent_at: string | null;
+  metadata: {
+    plus_one_used?: boolean;
+    plus_one_name?: string | null;
+    [key: string]: any;
+  } | null;
+  plus_one_used: boolean;
+  plus_one_name: string | null;
 }
 
 type RsvpDetail = {
@@ -102,8 +107,10 @@ export function RsvpDashboard({ eventId }: RsvpDashboardProps) {
   
   // Load invitations and RSVPs
   useEffect(() => {
+    // Ensure loading is set to true at the start of data fetch
+    setLoading(true);
+    
     async function loadData() {
-      setLoading(true)
       try {
         // Fetch invitations
         const { data: invitationsData, error: invitationsError } = await supabase
@@ -119,11 +126,15 @@ export function RsvpDashboard({ eventId }: RsvpDashboardProps) {
         // Process invitations with metadata
         const processedInvitations = invitationsData.map(invitation => ({
           ...invitation,
-          plus_one_used: invitation.metadata?.plus_one_used || false,
-          plus_one_name: invitation.metadata?.plus_one_name || null
+          plus_one_used: invitation.metadata && typeof invitation.metadata === 'object' && !Array.isArray(invitation.metadata)
+            ? (invitation.metadata as Record<string, any>).plus_one_used || false 
+            : false,
+          plus_one_name: invitation.metadata && typeof invitation.metadata === 'object' && !Array.isArray(invitation.metadata)
+            ? (invitation.metadata as Record<string, any>).plus_one_name || null 
+            : null
         }))
         
-        setInvitations(processedInvitations)
+        setInvitations(processedInvitations as Invitation[])
         
         // Fetch RSVP details
         const invitationIds = processedInvitations.map(inv => inv.id)
@@ -138,7 +149,10 @@ export function RsvpDashboard({ eventId }: RsvpDashboardProps) {
             throw rsvpsError
           }
           
-          setRsvps(rsvpsData || [])
+          setRsvps(rsvpsData ? rsvpsData.map(rsvp => ({
+            ...rsvp,
+            status: rsvp.status as RsvpStatus
+          })) : [])
         }
       } catch (error) {
         console.error('Error loading RSVP data:', error)
@@ -293,12 +307,15 @@ export function RsvpDashboard({ eventId }: RsvpDashboardProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>RSVP Dashboard</CardTitle>
-          <CardDescription>Loading RSVP data...</CardDescription>
+          <CardTitle className="flex items-center gap-2">
+            <RefreshCw className="h-4 w-4 animate-spin text-primary" />
+            Loading RSVP Dashboard
+          </CardTitle>
+          <CardDescription>Please wait while we fetch the RSVP data...</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-8">
-          <div className="flex flex-col items-center space-y-4">
-            <RefreshCw className="h-10 w-10 animate-spin text-primary opacity-70" />
+          <div className="flex flex-col items-center space-y-4 w-full max-w-md">
+            <Progress value={45} className="w-full" />
             <p className="text-sm text-muted-foreground">Loading invitation and RSVP data...</p>
           </div>
         </CardContent>
@@ -307,220 +324,489 @@ export function RsvpDashboard({ eventId }: RsvpDashboardProps) {
   }
   
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>RSVP Dashboard</CardTitle>
-        <CardDescription>Manage and track event RSVPs</CardDescription>
+    <Card style={{
+      width: '100%',
+      overflow: 'hidden',
+      border: '1px solid var(--border)',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+    }}>
+      <CardHeader style={{
+        padding: '0.75rem',
+        borderBottom: '1px solid var(--border)'
+      }}>
+        <CardTitle style={{
+          fontSize: '1rem', 
+          display: 'flex', 
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}>
+          <MessageCircle className="h-4 w-4 text-primary" />
+          RSVP Dashboard
+        </CardTitle>
+        <CardDescription style={{
+          fontSize: '0.75rem'
+        }}>
+          Manage and track event RSVPs
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent style={{
+        padding: '0.75rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem'
+      }}>
         {/* RSVP Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-sm font-medium text-muted-foreground">Total Invited</p>
-                <h3 className="text-3xl font-bold mt-1">{totalInvitations}</h3>
-              </div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gap: '0.75rem',
+          width: '100%'
+        }}>
+          <Card style={{
+            border: '1px solid var(--border)',
+            backgroundColor: 'var(--card)',
+            boxShadow: 'none'
+          }}>
+            <CardContent style={{ 
+              padding: '0.75rem',
+              textAlign: 'center'
+            }}>
+              <p style={{ 
+                fontSize: '0.75rem',
+                fontWeight: '500',
+                color: 'var(--muted-foreground)',
+                marginBottom: '0.25rem'
+              }}>Total Invited</p>
+              <h3 style={{
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                margin: 0
+              }}>{totalInvitations}</h3>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-sm font-medium text-muted-foreground">Accepted</p>
-                <h3 className="text-3xl font-bold mt-1 text-green-500">{acceptedCount}</h3>
-              </div>
+          <Card style={{
+            border: '1px solid var(--border)',
+            backgroundColor: 'var(--card)',
+            boxShadow: 'none'
+          }}>
+            <CardContent style={{ 
+              padding: '0.75rem',
+              textAlign: 'center'
+            }}>
+              <p style={{ 
+                fontSize: '0.75rem',
+                fontWeight: '500',
+                color: 'var(--muted-foreground)',
+                marginBottom: '0.25rem'
+              }}>Accepted</p>
+              <h3 style={{
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                margin: 0,
+                color: 'var(--green-500, #10b981)'
+              }}>{acceptedCount}</h3>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-sm font-medium text-muted-foreground">Declined</p>
-                <h3 className="text-3xl font-bold mt-1 text-red-500">{declinedCount}</h3>
-              </div>
+          <Card style={{
+            border: '1px solid var(--border)',
+            backgroundColor: 'var(--card)',
+            boxShadow: 'none'
+          }}>
+            <CardContent style={{ 
+              padding: '0.75rem',
+              textAlign: 'center'
+            }}>
+              <p style={{ 
+                fontSize: '0.75rem',
+                fontWeight: '500',
+                color: 'var(--muted-foreground)',
+                marginBottom: '0.25rem'
+              }}>Declined</p>
+              <h3 style={{
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                margin: 0,
+                color: 'var(--red-500, #ef4444)'
+              }}>{declinedCount}</h3>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-sm font-medium text-muted-foreground">Expected Guests</p>
-                <h3 className="text-3xl font-bold mt-1">{totalExpectedGuests}</h3>
-              </div>
+          <Card style={{
+            border: '1px solid var(--border)',
+            backgroundColor: 'var(--card)',
+            boxShadow: 'none'
+          }}>
+            <CardContent style={{ 
+              padding: '0.75rem',
+              textAlign: 'center'
+            }}>
+              <p style={{ 
+                fontSize: '0.75rem',
+                fontWeight: '500',
+                color: 'var(--muted-foreground)',
+                marginBottom: '0.25rem'
+              }}>Expected Guests</p>
+              <h3 style={{
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                margin: 0
+              }}>{totalExpectedGuests}</h3>
             </CardContent>
           </Card>
         </div>
         
         {/* Response Progress */}
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm font-medium mb-2">Response Rate</p>
-            <Progress value={(acceptedCount + declinedCount) / totalInvitations * 100} className="h-2" />
-            <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-              <span>{((acceptedCount + declinedCount) / totalInvitations * 100).toFixed(0)}% responded</span>
-              <span>{pendingCount} pending</span>
-            </div>
-          </CardContent>
+        <Card style={{
+          border: '1px solid var(--border)',
+          backgroundColor: 'var(--card-background, var(--background))',
+          boxShadow: 'none',
+          padding: '0.75rem'
+        }}>
+          <p style={{ 
+            fontSize: '0.75rem',
+            fontWeight: '500',
+            marginBottom: '0.5rem'
+          }}>Response Rate</p>
+          <Progress 
+            value={(acceptedCount + declinedCount) / totalInvitations * 100} 
+            className="h-2" 
+          />
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: '0.5rem'
+          }}>
+            <span style={{
+              fontSize: '0.7rem',
+              color: 'var(--muted-foreground)'
+            }}>{((acceptedCount + declinedCount) / totalInvitations * 100).toFixed(0)}% responded</span>
+            <span style={{
+              fontSize: '0.7rem',
+              color: 'var(--muted-foreground)'
+            }}>{pendingCount} pending</span>
+          </div>
         </Card>
         
         {/* Filters and Search */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem',
+          width: '100%'
+        }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem',
+            width: '100%'
+          }}>
+            <div style={{
+              position: 'relative',
+              width: '100%'
+            }}>
+              <Search style={{
+                position: 'absolute',
+                left: '0.75rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                height: '0.875rem',
+                width: '0.875rem',
+                color: 'var(--muted-foreground)'
+              }} />
               <Input 
                 placeholder="Search by name or email..." 
-                className="pl-9 w-full sm:w-[300px]"
+                style={{
+                  paddingLeft: '2.25rem',
+                  width: '100%',
+                  height: '2.25rem',
+                  fontSize: '0.75rem'
+                }}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <Tabs 
-                defaultValue="all" 
-                value={statusFilter} 
-                onValueChange={(value) => setStatusFilter(value as RsvpStatus | 'all')}
-                className="w-full"
-              >
-                <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="accepted">Accepted</TabsTrigger>
-                  <TabsTrigger value="declined">Declined</TabsTrigger>
-                  <TabsTrigger value="pending">Pending</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
             
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleExportCsv}
-              title="Export to CSV"
-            >
-              <Download className="h-4 w-4" />
-            </Button>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              gap: '0.5rem'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                flex: 1
+              }}>
+                <Filter style={{
+                  height: '0.875rem',
+                  width: '0.875rem',
+                  color: 'var(--muted-foreground)'
+                }} />
+                <Tabs 
+                  defaultValue="all" 
+                  value={statusFilter} 
+                  onValueChange={(value) => setStatusFilter(value as RsvpStatus | 'all')}
+                  style={{
+                    width: '100%'
+                  }}
+                >
+                  <TabsList style={{
+                    width: '100%',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    padding: '0.25rem',
+                    backgroundColor: 'var(--muted)'
+                  }}>
+                    <TabsTrigger value="all" style={{fontSize: '0.7rem'}}>All</TabsTrigger>
+                    <TabsTrigger value="accepted" style={{fontSize: '0.7rem'}}>Accepted</TabsTrigger>
+                    <TabsTrigger value="declined" style={{fontSize: '0.7rem'}}>Declined</TabsTrigger>
+                    <TabsTrigger value="pending" style={{fontSize: '0.7rem'}}>Pending</TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
+              
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleExportCsv}
+                title="Export to CSV"
+                style={{
+                  height: '2.25rem',
+                  width: '2.25rem',
+                  minWidth: '2.25rem',
+                  padding: '0'
+                }}
+              >
+                <Download style={{
+                  height: '0.875rem',
+                  width: '0.875rem'
+                }} />
+              </Button>
+            </div>
           </div>
         </div>
         
         {/* RSVP Table */}
         {filteredInvitations.length === 0 ? (
-          <div className="border rounded-lg p-8 text-center bg-muted/10">
-            <AlertCircle className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium">No RSVPs found</h3>
-            <p className="text-sm text-muted-foreground mt-1 mb-4">
-              {searchTerm || statusFilter !== 'all' ? 
-                'Try adjusting your filters to see more results.' : 
-                'Send invitations to start tracking RSVPs.'}
-            </p>
+          <div style={{
+            border: '1px solid var(--border)',
+            borderRadius: '0.375rem',
+            padding: '2rem 1rem',
+            textAlign: 'center',
+            backgroundColor: 'var(--muted-background, var(--muted))',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.75rem'
+          }}>
+            <AlertCircle style={{
+              height: '2rem',
+              width: '2rem',
+              color: 'var(--muted-foreground)',
+              opacity: 0.5
+            }} />
+            <div>
+              <h3 style={{
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                marginBottom: '0.25rem'
+              }}>No RSVPs found</h3>
+              <p style={{
+                fontSize: '0.75rem',
+                color: 'var(--muted-foreground)',
+                maxWidth: '20rem',
+                margin: '0 auto 1rem'
+              }}>
+                {searchTerm || statusFilter !== 'all' ? 
+                  'Try adjusting your filters to see more results.' : 
+                  'Send invitations to start tracking RSVPs.'}
+              </p>
+            </div>
             {!searchTerm && statusFilter === 'all' && (
               <Button 
                 onClick={() => router.push(`/protected/events/${eventId}/attendees?tab=invitations`)}
+                size="sm"
+                style={{
+                  fontSize: '0.75rem',
+                  height: '2rem'
+                }}
               >
-                <UserPlus className="h-4 w-4 mr-2" />
+                <UserPlus style={{
+                  height: '0.875rem',
+                  width: '0.875rem',
+                  marginRight: '0.375rem'
+                }} />
                 Send Invitations
               </Button>
             )}
           </div>
         ) : (
-          <div className="border rounded-lg overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Guest</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Response Date</TableHead>
-                  <TableHead>Plus One</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredInvitations.map((invitation) => {
-                  const rsvpData = rsvps.find(r => r.invitation_id === invitation.id)
-                  
-                  return (
-                    <TableRow key={invitation.id}>
-                      <TableCell className="font-medium">{invitation.name}</TableCell>
-                      <TableCell>{invitation.email}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1.5">
-                          {getStatusIcon(invitation.rsvp_status)}
-                          <Badge variant={
-                            invitation.rsvp_status === 'accepted' ? 'success' :
-                            invitation.rsvp_status === 'declined' ? 'destructive' :
-                            'secondary'
-                          } className="ml-1">
-                            {invitation.rsvp_status === 'accepted' ? 'Accepted' :
-                             invitation.rsvp_status === 'declined' ? 'Declined' :
-                             'Pending'}
-                          </Badge>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {formatDate(invitation.rsvp_date)}
-                      </TableCell>
-                      <TableCell>
-                        {invitation.plus_one_used ? (
-                          <span title={invitation.plus_one_name || undefined}>Yes</span>
-                        ) : "No"}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => {
-                                if (rsvpData) {
-                                  // View RSVP details
-                                  toast({
-                                    title: "RSVP Details",
-                                    description: `
-                                    Status: ${rsvpData.status}
-                                    Guests: ${rsvpData.guest_count}
-                                    ${rsvpData.dietary_restrictions ? `Dietary: ${rsvpData.dietary_restrictions}` : ''}
-                                    ${rsvpData.notes ? `Notes: ${rsvpData.notes}` : ''}
-                                    `,
-                                  })
-                                } else {
-                                  toast({
-                                    title: "No RSVP Details",
-                                    description: "This guest hasn't submitted RSVP details yet."
-                                  })
-                                }
-                              }}
-                            >
-                              <FileText className="h-4 w-4 mr-2" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleResendInvitation(invitation.id)}
-                              disabled={isResending}
-                            >
-                              <Mail className="h-4 w-4 mr-2" />
-                              Resend Invitation
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
+          <div style={{
+            border: '1px solid var(--border)',
+            borderRadius: '0.375rem',
+            overflow: 'hidden',
+            width: '100%'
+          }}>
+            <div style={{
+              overflowX: 'auto',
+              width: '100%'
+            }}>
+              <Table style={{
+                width: '100%'
+              }}>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead style={{fontSize: '0.7rem', fontWeight: '600'}}>Guest</TableHead>
+                    <TableHead style={{fontSize: '0.7rem', fontWeight: '600'}}>Email</TableHead>
+                    <TableHead style={{fontSize: '0.7rem', fontWeight: '600'}}>Status</TableHead>
+                    <TableHead style={{fontSize: '0.7rem', fontWeight: '600'}}>Response Date</TableHead>
+                    <TableHead style={{fontSize: '0.7rem', fontWeight: '600'}}>Plus One</TableHead>
+                    <TableHead style={{fontSize: '0.7rem', fontWeight: '600', textAlign: 'right'}}>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredInvitations.map((invitation) => {
+                    const rsvpData = rsvps.find(r => r.invitation_id === invitation.id)
+                    
+                    return (
+                      <TableRow key={invitation.id}>
+                        <TableCell style={{
+                          fontSize: '0.75rem',
+                          fontWeight: '500',
+                          padding: '0.5rem 1rem'
+                        }}>{invitation.name}</TableCell>
+                        <TableCell style={{
+                          fontSize: '0.75rem',
+                          padding: '0.5rem 1rem'
+                        }}>{invitation.email}</TableCell>
+                        <TableCell style={{
+                          padding: '0.5rem 1rem'
+                        }}>
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.25rem'
+                          }}>
+                            {getStatusIcon(invitation.rsvp_status)}
+                            <Badge variant={
+                              invitation.rsvp_status === 'accepted' ? 'success' :
+                              invitation.rsvp_status === 'declined' ? 'destructive' :
+                              'secondary'
+                            } style={{
+                              fontSize: '0.65rem',
+                              padding: '0.125rem 0.375rem'
+                            }}>
+                              {invitation.rsvp_status === 'accepted' ? 'Accepted' :
+                               invitation.rsvp_status === 'declined' ? 'Declined' :
+                               'Pending'}
+                            </Badge>
+                          </div>
+                        </TableCell>
+                        <TableCell style={{
+                          fontSize: '0.75rem',
+                          padding: '0.5rem 1rem'
+                        }}>
+                          {formatDate(invitation.rsvp_date)}
+                        </TableCell>
+                        <TableCell style={{
+                          fontSize: '0.75rem',
+                          padding: '0.5rem 1rem'
+                        }}>
+                          {invitation.plus_one_used ? (
+                            <span title={invitation.plus_one_name || undefined}>Yes</span>
+                          ) : "No"}
+                        </TableCell>
+                        <TableCell style={{
+                          textAlign: 'right',
+                          padding: '0.5rem 1rem'
+                        }}>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" style={{
+                                height: '1.75rem',
+                                width: '1.75rem'
+                              }}>
+                                <MoreHorizontal style={{
+                                  height: '0.875rem',
+                                  width: '0.875rem'
+                                }} />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  if (rsvpData) {
+                                    // View RSVP details
+                                    toast({
+                                      title: "RSVP Details",
+                                      description: `
+                                      Status: ${rsvpData.status}
+                                      Guests: ${rsvpData.guest_count}
+                                      ${rsvpData.dietary_restrictions ? `Dietary: ${rsvpData.dietary_restrictions}` : ''}
+                                      ${rsvpData.notes ? `Notes: ${rsvpData.notes}` : ''}
+                                      `,
+                                    })
+                                  } else {
+                                    toast({
+                                      title: "No RSVP Details",
+                                      description: "This guest hasn't submitted RSVP details yet."
+                                    })
+                                  }
+                                }}
+                                style={{
+                                  fontSize: '0.75rem',
+                                  padding: '0.5rem 1rem'
+                                }}
+                              >
+                                <FileText style={{
+                                  height: '0.875rem',
+                                  width: '0.875rem',
+                                  marginRight: '0.5rem'
+                                }} />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleResendInvitation(invitation.id)}
+                                disabled={isResending}
+                                style={{
+                                  fontSize: '0.75rem',
+                                  padding: '0.5rem 1rem'
+                                }}
+                              >
+                                <Mail style={{
+                                  height: '0.875rem',
+                                  width: '0.875rem',
+                                  marginRight: '0.5rem'
+                                }} />
+                                Resend Invitation
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
+      <CardFooter style={{
+        padding: '0.75rem',
+        borderTop: '1px solid var(--border)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <p style={{
+          fontSize: '0.75rem',
+          color: 'var(--muted-foreground)'
+        }}>
           Showing {filteredInvitations.length} of {invitations.length} invitations
         </p>
       </CardFooter>

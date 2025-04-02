@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-04-01T03:43:48.635Z
+Generated: 2025-04-02T01:36:06.186Z
 
 ## Overview
 
-This directory contains 93 route(s).
+This directory contains 95 route(s).
 
 ## Directory Tree
 ```
@@ -54,7 +54,9 @@ This directory contains 93 route(s).
 │   │   │   └── route.ts
 │   │   ├── create/
 │   │   │   └── route.ts
-│   │   └── validate/
+│   │   ├── validate/
+│   │   │   └── route.ts
+│   │   └── verify/
 │   │       └── route.ts
 │   ├── rsvp/
 │   │   ├── status/
@@ -124,7 +126,10 @@ This directory contains 93 route(s).
 │   │   │   │   └── page.tsx
 │   │   │   └── declined/
 │   │   │       └── page.tsx
+│   │   ├── details/
+│   │   │   └── page.tsx
 │   │   ├── page.tsx
+│   │   ├── rsvp-details.tsx
 │   │   └── rsvp-form.tsx
 │   ├── expired/
 │   │   └── page.tsx
@@ -242,6 +247,8 @@ This directory contains 93 route(s).
 │   │   │   ├── qr/
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── rsvps/
+│   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── create/
@@ -338,13 +345,13 @@ This directory contains 93 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-140 directories, 190 files
+143 directories, 194 files
 
 ```
 
 ## File Type Breakdown
-- ts: 23 file(s)
-- tsx: 156 file(s)
+- ts: 24 file(s)
+- tsx: 159 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

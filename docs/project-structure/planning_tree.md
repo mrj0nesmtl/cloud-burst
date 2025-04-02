@@ -1,5 +1,5 @@
 # planning Directory Structure
-Generated: 2025-04-01T03:43:53.710Z
+Generated: 2025-04-02T01:36:09.677Z
 
 ## Overview
 
@@ -10,9 +10,9 @@ Generated: 2025-04-01T03:43:53.710Z
 ./docs/planning/
 ├── auth-cleanup.md
 ├── business_proposition.md
-├── ca-en-merchant-fees-15-oct-2024.pdf
+├── ca-en-merchant-fees-2024.pdf
 ├── deck.md
-├── payment_subscription_design_document.md
+├── payment_subscription_design.md
 ├── permissions-analysis.md
 ├── project_budget_overview.md
 ├── request_for_product_RFP.md

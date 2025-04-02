@@ -1,8 +1,8 @@
 # events Directory Structure
-Generated: 2025-04-01T03:43:51.032Z
+Generated: 2025-04-02T01:36:07.864Z
 
 ## Overview
-This directory contains 18 component(s).
+This directory contains 20 component(s).
 
 
 ## Directory Tree
@@ -25,14 +25,16 @@ This directory contains 18 component(s).
 ├── image-upload.tsx
 ├── qr-code-display.tsx
 ├── qr-scanner.tsx
+├── rsvp-dashboard.tsx
+├── rsvp-tab-trigger.tsx
 └── theme-preview.tsx
 
-1 directory, 18 files
+1 directory, 20 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 18 file(s)
+- tsx: 20 file(s)
 
 ## Ignored Patterns
 - node_modules
