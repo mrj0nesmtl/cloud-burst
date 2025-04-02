@@ -13,15 +13,10 @@ import { TooltipProvider } from '@/components/providers/tooltip-provider'
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Toaster as UIToaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
-import { Inter } from 'next/font/google'
 import Script from 'next/script'
 
 // Configure fonts
-const inter = Inter({ 
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-})
+const fontSans = GeistSans
 
 // Comprehensive hydration error suppression for production
 if (process.env.NODE_ENV === 'production') {
@@ -74,7 +69,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={inter.variable}>
+    <html lang="en" suppressHydrationWarning className={fontSans.className}>
       <head>
         <Script id="theme-script" strategy="beforeInteractive">
           {`
