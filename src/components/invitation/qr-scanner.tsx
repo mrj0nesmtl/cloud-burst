@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQrScanner } from '@/hooks/useQrScanner';
 import { Camera, CameraOff, RotateCcw, ZapOff, Scan, RefreshCw } from 'lucide-react';
@@ -14,190 +14,197 @@ import { Loader2, QrCode } from 'lucide-react';
 import { Camera as CameraComponent } from '@/components/camera';
 
 interface QrScannerProps {
-  onScanSuccess?: (token: string) => void;
+  onScanSuccess?: (result: string) => void;
   autoRedirect?: boolean;
-  className?: string;
+  visible?: boolean;
 }
 
 export function QrScanner({ 
-  onScanSuccess,
-  autoRedirect = true, 
-  className 
+  onScanSuccess, 
+  autoRedirect = true,
+  visible = true 
 }: QrScannerProps) {
   const router = useRouter();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanSuccess, setScanSuccess] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [manualStart, setManualStart] = useState(false);
   
-  // Initialize QR scanner with callback
-  const {
-    videoRef,
-    startScanning,
-    stopScanning,
-    isScanning,
-    error,
-    toggleFacingMode,
-    lastResult,
-    requestPermission,
-    permission
-  } = useQrScanner({
-    scanInterval: 300,
+  // Initialize scanner with callback for detected QR codes
+  const scanner = useQrScanner({
+    scanInterval: 500,
+    autoStart: false,
     onDetected: (result) => handleSuccessfulScan(result),
-    autoStart: false
   });
   
-  // Function to handle successful scan
-  const handleSuccessfulScan = (token: string) => {
-    if (scanSuccess) return; // Prevent multiple triggers
+  // Handle successful scan results
+  const handleSuccessfulScan = (result: string) => {
+    // Stop scanning once we've found a valid QR code
+    scanner.stopScanning();
+    setScanSuccess(true);
     
     // Play success sound
-    if (audioRef.current) {
-      audioRef.current.play().catch(err => {
-        console.error('Error playing sound:', err);
-      });
-    }
-    
-    // Visual feedback
-    setScanSuccess(true);
-    stopScanning();
+    const audio = new Audio('/audio/success-beep.mp3');
+    audio.play().catch(err => console.warn('Could not play success sound:', err));
     
     // Show toast notification
     toast({
-      title: 'QR Code detected!',
-      description: 'Invitation found successfully',
-      variant: 'default'
+      title: "QR Code Scanned",
+      description: "Successfully scanned invitation code",
+      variant: "success",
     });
     
-    // Call callback if provided
+    // Call provided callback
     if (onScanSuccess) {
-      onScanSuccess(token);
+      onScanSuccess(result);
     }
     
-    // Redirect to invitation page if enabled
+    // Redirect to invitation page if auto-redirect is enabled
     if (autoRedirect) {
       setTimeout(() => {
-        router.push(`/invitation/${token}`);
-      }, 1500);
+        router.push(`/invitation/${result}`);
+      }, 1000);
     }
   };
   
-  // Request permission and start scanner on mount
+  // Request camera permissions and start scanning
   useEffect(() => {
-    const initializeScanner = async () => {
-      // Attempt to get camera permission
-      const hasPermission = await requestPermission();
-      setHasPermission(hasPermission);
+    const requestPermissionsAndStartScanner = async () => {
+      if (!manualStart) return;
       
-      // Start scanner if permission granted
-      if (hasPermission) {
-        startScanning();
+      try {
+        // Request camera permissions
+        await scanner.startCamera();
+        
+        if (scanner.permission === 'granted') {
+          setHasPermission(true);
+          scanner.startScanning();
+        } else if (scanner.permission === 'denied') {
+          setHasPermission(false);
+        }
+      } catch (error) {
+        console.error('Error starting QR scanner:', error);
+        setHasPermission(false);
       }
     };
     
-    initializeScanner();
+    requestPermissionsAndStartScanner();
     
-    // Cleanup
+    // Clean up scanner when component unmounts
     return () => {
-      stopScanning();
+      scanner.stopScanning();
+      scanner.stopCamera();
     };
-  }, [requestPermission, startScanning, stopScanning]);
+  }, [scanner, manualStart]);
   
-  // Toggle scanner function
+  // Toggle scanner on/off
   const toggleScanner = () => {
-    if (isScanning) {
-      stopScanning();
+    if (scanner.isScanning) {
+      scanner.stopScanning();
     } else {
+      setManualStart(true);
       setScanSuccess(false);
-      startScanning();
     }
   };
   
-  // Function to restart the scanner
-  const restartScanner = () => {
-    setScanSuccess(false);
-    startScanning();
+  // If scanner is not visible, don't render anything
+  if (!visible) return null;
+  
+  // Helper to get appropriate status text
+  const getStatusText = () => {
+    if (scanner.error) {
+      if (scanner.error.type === 'permission_denied') {
+        return 'Camera permission denied. Please allow camera access.';
+      }
+      return `Camera error: ${scanner.error.message}`;
+    }
+    
+    if (scanner.isLoading) return 'Initializing camera...';
+    if (scanSuccess) return 'QR code detected!';
+    if (scanner.isScanning) return 'Scanning for QR code...';
+    return 'Press Start to begin scanning';
   };
-
-  // Check if camera is available
-  const hasCamera = !!videoRef.current;
   
   return (
-    <div className={cn("relative w-full h-80 md:h-96 bg-muted rounded-lg overflow-hidden", className)}>
-      {/* Permission not yet determined */}
-      {hasPermission === null && !error && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Loader2 className="w-10 h-10 text-primary animate-spin" />
-          <span className="sr-only">Checking camera permission...</span>
-        </div>
-      )}
-      
-      {/* Permission denied */}
-      {hasPermission === false && (
-        <PermissionPrompt onRequestPermission={requestPermission} />
-      )}
-      
-      {/* Camera error */}
-      {error && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-          <QrCode className="w-12 h-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold">Camera Error</h3>
-          <p className="text-muted-foreground mb-4">{error.message || "Couldn't access camera"}</p>
-          <Button onClick={() => window.location.reload()}>
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Retry
-          </Button>
-        </div>
-      )}
-      
-      {/* Video preview */}
-      <div className={cn(
-        "relative w-full h-full",
-        (hasPermission !== true || error) && "hidden"
-      )}>
-        <video 
-          ref={videoRef}
-          className="absolute top-0 left-0 w-full h-full object-cover"
+    <div className="relative w-full max-w-md mx-auto h-[400px] overflow-hidden rounded-xl bg-slate-900">
+      {/* Video Preview */}
+      <div className="relative w-full h-full bg-black">
+        <video
+          ref={scanner.videoRef}
+          className="w-full h-full object-cover"
           playsInline
           muted
         />
         
-        {/* Scanner overlay with animations */}
-        <ScannerOverlay isScanning={isScanning} isSuccess={scanSuccess} />
+        {/* Scanner Overlay - shows red when no permission, else scanning animation */}
+        <div className={`absolute inset-0 ${hasPermission === false ? 'bg-red-500/20' : ''}`}>
+          {/* Show scanning animation if scanning and has permission */}
+          {scanner.isScanning && hasPermission && !scanSuccess && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-64 h-64 border-4 border-white/80 rounded-lg animate-pulse"></div>
+              <div className="w-64 h-64 absolute border-t-4 border-blue-500 rounded-lg animate-spin"></div>
+            </div>
+          )}
+          
+          {/* Show success animation if scan was successful */}
+          {scanSuccess && (
+            <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+          )}
+        </div>
         
-        {/* Scanner controls */}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 px-4">
-          <Button 
-            variant="secondary"
-            size="sm"
+        {/* Status Indicator */}
+        <div className="absolute top-0 inset-x-0 p-2 bg-black/70 text-white text-center">
+          {getStatusText()}
+        </div>
+        
+        {/* Controls */}
+        <div className="absolute bottom-0 inset-x-0 p-4 bg-black/70 flex justify-between items-center">
+          <Button
+            variant={scanner.isScanning ? "destructive" : "default"}
             onClick={toggleScanner}
-            className="flex-1"
+            disabled={scanner.isLoading}
           >
-            {isScanning ? 'Pause' : scanSuccess ? 'Scan New' : 'Start'} 
+            {scanner.isScanning ? "Pause" : "Start"}
           </Button>
           
-          {hasCamera && (
+          {scanner.devices.length > 1 && (
             <Button
               variant="outline"
-              size="sm"
-              onClick={toggleFacingMode}
-              className="flex-none bg-background/60 backdrop-blur-md"
+              onClick={scanner.toggleFacingMode}
+              disabled={!scanner.isScanning}
             >
-              <RefreshCw className="h-4 w-4" />
-              <span className="sr-only">Switch Camera</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Switch Camera
             </Button>
           )}
         </div>
         
-        {/* Status text */}
-        <div className="absolute top-4 left-0 right-0 text-center">
-          <div className="inline-block bg-background/60 text-foreground px-3 py-1 rounded-full text-sm backdrop-blur-md">
-            {scanSuccess ? 'QR Code Found!' : isScanning ? 'Scanning...' : 'Scanner Paused'}
+        {/* Error with retry option */}
+        {scanner.error && (
+          <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center p-6">
+            <div className="text-red-500 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h3 className="text-white text-lg font-bold mb-2">Camera Error</h3>
+            <p className="text-white/70 text-center mb-4">{scanner.error.message}</p>
+            <Button onClick={() => {
+              setManualStart(true);
+              scanner.startCamera();
+            }}>
+              Retry
+            </Button>
           </div>
-        </div>
+        )}
       </div>
-      
-      {/* Audio for success feedback */}
-      <audio ref={audioRef} src="/audio/success-beep.mp3" preload="auto" />
     </div>
   );
 }

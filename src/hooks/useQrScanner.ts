@@ -52,6 +52,12 @@ export function useQrScanner(options: ScannerOptions = {}) {
 
     const video = camera.videoRef.current;
     
+    // Check if video has valid dimensions before proceeding
+    if (!video.videoWidth || !video.videoHeight) {
+      // Video dimensions are not available yet
+      return null;
+    }
+    
     // Create a canvas to draw the video frame
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -61,18 +67,29 @@ export function useQrScanner(options: ScannerOptions = {}) {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     
+    // Ensure canvas dimensions are valid
+    if (canvas.width === 0 || canvas.height === 0) {
+      console.warn('Canvas has invalid dimensions:', canvas.width, canvas.height);
+      return null;
+    }
+    
     // Draw the current video frame to the canvas
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    // Get image data for QR code detection
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    
-    // Analyze the image data with jsQR
-    const code = jsQR(imageData.data, imageData.width, imageData.height, {
-      inversionAttempts: 'dontInvert',
-    });
-    
-    return code;
+    try {
+      // Get image data for QR code detection
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      
+      // Analyze the image data with jsQR
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'dontInvert',
+      });
+      
+      return code;
+    } catch (err) {
+      console.error('Error analyzing frame:', err);
+      return null;
+    }
   }, [camera.stream, camera.videoRef, jsQR]);
 
   // Check if a string is a valid invitation token
@@ -168,7 +185,14 @@ export function useQrScanner(options: ScannerOptions = {}) {
     let lastScanTime = 0;
     
     const scanLoop = (timestamp: number) => {
-      if (timestamp - lastScanTime > scanInterval) {
+      // Only scan if video is properly loaded and has dimensions
+      const videoElement = camera.videoRef.current;
+      const isVideoReady = videoElement && 
+                           videoElement.readyState >= 2 && // HAVE_CURRENT_DATA or higher
+                           videoElement.videoWidth > 0 && 
+                           videoElement.videoHeight > 0;
+      
+      if (isVideoReady && timestamp - lastScanTime > scanInterval) {
         lastScanTime = timestamp;
         
         const code = analyzeFrame();
@@ -188,7 +212,7 @@ export function useQrScanner(options: ScannerOptions = {}) {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [isScanning, jsQR, analyzeFrame, processQrCode, scanInterval]);
+  }, [isScanning, jsQR, analyzeFrame, processQrCode, scanInterval, camera.videoRef]);
   
   // Clean up when component unmounts
   useEffect(() => {

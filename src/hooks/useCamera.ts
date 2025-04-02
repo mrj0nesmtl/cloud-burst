@@ -39,7 +39,11 @@ export function useCamera(options: CameraOptions = {}) {
   const [error, setError] = useState<CameraError | null>(null);
   const [permission, setPermission] = useState<PermissionState | null>(null);
   const [isCameraSupported, setIsCameraSupported] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const MAX_RETRIES = 3;
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const initializingRef = useRef(false);
 
   // Check if camera is supported in this browser/device
   useEffect(() => {
@@ -113,9 +117,33 @@ export function useCamera(options: CameraOptions = {}) {
 
   // Start camera stream
   const startCamera = useCallback(async (deviceId?: string) => {
-    if (!isCameraSupported) return;
-
+    if (!isCameraSupported) return null;
+    
+    // Prevent multiple simultaneous initialization attempts
+    if (initializingRef.current) {
+      console.log('Camera initialization already in progress');
+      return null;
+    }
+    
+    // Reset retry count if this is a new call (not a retry)
+    if (!isInitializing) {
+      setRetryCount(0);
+    }
+    
+    // Check if we've exceeded retry limit
+    if (retryCount >= MAX_RETRIES) {
+      setError({
+        type: 'unknown',
+        message: 'Failed to initialize camera after multiple attempts'
+      });
+      setIsInitializing(false);
+      initializingRef.current = false;
+      return null;
+    }
+    
     setIsLoading(true);
+    setIsInitializing(true);
+    initializingRef.current = true;
     setError(null);
 
     try {
@@ -131,6 +159,11 @@ export function useCamera(options: CameraOptions = {}) {
             },
         audio: false,
       };
+
+      // Stop any existing stream first to avoid conflicts
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
 
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
       setStream(mediaStream);
@@ -150,9 +183,73 @@ export function useCamera(options: CameraOptions = {}) {
       // Connect stream to video element if ref exists
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
-        await videoRef.current.play().catch(e => console.error('Error playing video:', e));
+        
+        // Wait for video to be ready with better error handling
+        await new Promise<void>((resolve, reject) => {
+          const videoElement = videoRef.current;
+          if (!videoElement) {
+            resolve();
+            return;
+          }
+          
+          // If video is already loaded, resolve immediately
+          if (videoElement.readyState >= 2) {
+            resolve();
+            return;
+          }
+          
+          // Set up event listeners for both success and failure
+          const handleLoaded = () => {
+            videoElement.removeEventListener('loadeddata', handleLoaded);
+            resolve();
+          };
+          
+          const handleError = (e: Event) => {
+            videoElement.removeEventListener('error', handleError);
+            reject(new Error('Video element encountered an error'));
+          };
+          
+          videoElement.addEventListener('loadeddata', handleLoaded);
+          videoElement.addEventListener('error', handleError);
+          
+          // Try to play the video with a more robust approach
+          let playAttempt;
+          try {
+            playAttempt = videoElement.play();
+            
+            // Modern browsers return a promise from play()
+            if (playAttempt !== undefined) {
+              playAttempt
+                .then(() => {
+                  // Play started successfully
+                })
+                .catch(e => {
+                  // This error is expected in some cases and we'll handle it
+                  console.warn('Initial play attempt was rejected:', e.name);
+                  
+                  // If play was interrupted specifically, we can try again once on user interaction
+                  if (e.name === 'AbortError' || e.name === 'NotAllowedError') {
+                    // We'll still consider this initialization successful,
+                    // but will rely on user interaction to start playing
+                    console.log('Play will require user interaction');
+                  }
+                });
+            }
+          } catch (e) {
+            console.warn('Error in initial play attempt:', e);
+            // Continue despite play error - we'll handle this later
+          }
+          
+          // Set a timeout to resolve anyway after a reasonable time
+          // This prevents hanging if play() is perpetually pending
+          setTimeout(() => {
+            resolve();
+          }, 2000);
+        });
       }
 
+      setIsInitializing(false);
+      initializingRef.current = false;
       return mediaStream;
     } catch (err: any) {
       console.error('Error starting camera:', err);
@@ -174,11 +271,27 @@ export function useCamera(options: CameraOptions = {}) {
         message: err.message || 'Failed to access camera'
       });
       
+      // Increment retry count and potentially retry after a delay
+      const currentRetryCount = retryCount + 1;
+      setRetryCount(currentRetryCount);
+      
+      if (currentRetryCount < MAX_RETRIES) {
+        console.log(`Retrying camera initialization (attempt ${currentRetryCount + 1} of ${MAX_RETRIES})...`);
+        
+        // Wait before retrying
+        setTimeout(() => {
+          startCamera(deviceId);
+        }, 1000); // 1 second delay between retries
+      } else {
+        setIsInitializing(false);
+        initializingRef.current = false;
+      }
+      
       return null;
     } finally {
       setIsLoading(false);
     }
-  }, [defaultOptions, devices.length, getDevices, isCameraSupported]);
+  }, [defaultOptions, devices.length, getDevices, isCameraSupported, isInitializing, retryCount, stream]);
 
   // Stop camera stream
   const stopCamera = useCallback(() => {
