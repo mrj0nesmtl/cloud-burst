@@ -1,56 +1,71 @@
 # Cloud Burst: Invitation & RSVP System Flow
 
+## System Flow Diagram
+
 ```mermaid
-flowchart TD
-    subgraph "1. Invitation Creation"
-        A[Event Organizer] -->|Creates invitation| B[Cloud Burst Platform]
-        B -->|Generates| C[Invitation Record in Database]
-        C -->|Contains| D[Unique invitation token]
-        B -->|Prepares email using| E[SendGrid Template]
-        E -->|Includes event details and RSVP link| F[SendGrid Email Service]
-    end
-
-    subgraph "2. Invitation Delivery"
-        F -->|Sends invitation email| G[Guest's Email Inbox]
-        G -->|Contains| H[Event details & RSVP button]
-        H -->|Links to| I[RSVP URL with token]
-    end
+graph TD
+    A[Organizer Creates Invitation] --> B[Generate Token]
+    B --> C[Prepare Email Template]
+    C --> D[Send Invitation Email]
+    D --> E[Guest Receives Email]
+    E --> F[Guest Clicks RSVP Link]
     
-    subgraph "3. RSVP Verification Flow"
-        J[Guest clicks RSVP link/button] -->|Request sent to| K[Cloud Burst API]
-        K -->|Calls| L[/api/invitations/verify endpoint]
-        L -->|Validates token| M{Is token valid?}
-        M -->|No| N[Error: Invalid invitation]
-        M -->|Yes| O[Updates invitation status to opened]
-        O -->|Calls| P[Supabase Auth signInWithOtp]
-        P -->|Sends| Q[Magic Link Email]
-        Q -->|Using| R[Supabase Magic Link Template]
-    end
-
-    subgraph "4. Authentication Flow"
-        S[Guest receives Magic Link email] -->|Clicks link| T[Supabase Auth Service]
-        T -->|Creates/updates user with| U[User record with metadata]
-        U -->|Contains| U1[invitation_id]
-        U -->|Contains| U2[event_id]
-        U -->|Contains| U3[name]
-        U -->|Contains| U4[role: guest]
-        T -->|Establishes| V[Authenticated session]
-        V -->|Redirects to| W[Event RSVP form page]
-    end
-
-    subgraph "5. RSVP Submission"
-        W -->|Guest fills form| X[RSVP Form with status & details]
-        X -->|Submits| Y[/api/rsvp/submit endpoint]
-        Y -->|Creates/updates| Z[RSVP record in database]
-        Z -->|Links to| C
-        Y -->|Updates| AA[Invitation record with RSVP status]
-        Y -->|Returns| AB[Confirmation to user]
-    end
-
-    %% Connection lines between subgraphs
-    I -.-> J
-    R -.-> S
+    F --> G[Validate Token]
+    G --> H{User Exists?}
+    H -->|No| I[Create User Account]
+    H -->|Yes| J[Show RSVP Form]
+    I --> J
+    
+    F --> K[Generate Magic Link]
+    K --> L[Send Auth Email]
+    L --> M[Guest Clicks Magic Link]
+    M --> N[Create Auth Session]
+    N --> O[Assign Guest Role]
+    O --> J
+    
+    J --> P[Guest Fills Form]
+    P --> Q[Validate Form Data]
+    Q --> R[Create RSVP Record]
+    R --> S[Update Invitation Status]
+    S --> T[Send Confirmation]
+    T --> U[Update Dashboard]
+    
+    style A fill:#d5e8d4,stroke:#82b366
+    style H fill:#ffe6cc,stroke:#d79b00
+    style J fill:#d4f1f9,stroke:#0095b6
+    style P fill:#d4f1f9,stroke:#0095b6
+    style U fill:#d5e8d4,stroke:#82b366
 ```
+
+## Invitation Creation
+
+1. Event Organizer creates invitation
+2. Cloud Burst Platform generates invitation record in database
+3. Invitation record contains unique invitation token
+4. Cloud Burst Platform prepares email using SendGrid Template
+5. SendGrid Email Service sends invitation email to guest's inbox
+
+## Invitation Delivery
+
+1. Guest receives invitation email
+2. Guest clicks RSVP link/button
+3. Cloud Burst Platform validates invitation token
+4. Cloud Burst Platform creates user account if not already present
+5. Cloud Burst Platform redirects guest to RSVP form
+
+## RSVP Verification Flow
+
+1. Guest clicks RSVP link/button
+2. Cloud Burst Platform validates invitation token
+3. Cloud Burst Platform creates user account if not already present
+4. Cloud Burst Platform redirects guest to RSVP form
+
+## RSVP Submission Flow
+
+1. Guest fills out RSVP form
+2. Cloud Burst Platform validates form data
+3. Cloud Burst Platform creates RSVP record in database
+4. Cloud Burst Platform updates invitation status
 
 ## How Our Two Email Systems Work Together
 

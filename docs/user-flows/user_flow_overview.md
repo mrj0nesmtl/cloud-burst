@@ -1,13 +1,15 @@
 # 📖 **User Flow Overview**  
 
 ## Cloud Burst
-📅 *Updated: March 27, 2025*  
-📊 *Version: 0.8.2*
+📅 *Updated: April 2, 2025*  
+📊 *Version: 0.8.5*
 
 ## 📌 Situational Abstract
-Following the successful implementation of the invitation system with SendGrid integration and the recent resolution of critical Next.js 14 App Router architecture issues, Cloud Burst now offers a comprehensive media management platform with enhanced user verification and notification capabilities. The platform has resolved key architectural challenges by implementing proper client/server component separation, fixing authentication flows in gallery pages, and ensuring correct type mapping between database and UI components. Users can capture and share both photos and videos seamlessly through QR code check-ins that connect directly to their mobile device camera, while receiving personalized email communications throughout their journey. The platform now features a complete invitation system with secure API endpoints, enhanced form validation with user feedback, robust error handling, and proper Next.js 14 App Router implementation. The enhanced processing for both media types, optimized streaming capabilities for video content, multiple viewing options for all media, and a complete email template system for user communications are now fully operational, providing a seamless experience across all touchpoints.
+Following the successful implementation of the RSVP dashboard integration and UI refinements in version 0.8.5, Cloud Burst now offers a comprehensive media management platform with enhanced user verification, notification capabilities, and integrated RSVP management. The platform features the integration of the RSVP dashboard within the event management interface, tab-based navigation for seamless RSVP management, improved card styling for better visibility in both light and dark modes, and optimized layouts for both desktop and mobile views.
 
-The media management system is approximately 40% complete, with recent completions including client/server component architecture fixes, authentication flow improvements, type mapping corrections, and proper server-side data fetching. Current development focuses on implementing the gallery system with masonry layout and album management while optimizing the mobile experience.
+The platform continues to feature a complete email template system with SendGrid integration, secure API endpoints, direct camera integration through QR code scanning, and robust authentication flows. We've maintained proper client/server component separation, fixed authentication flows in gallery pages, corrected type mapping between database and UI components, and enhanced the RSVP management experience with improved TypeScript safety. Users can capture and share both photos and videos seamlessly through QR code check-ins that connect directly to their mobile device camera, while receiving personalized email communications throughout their journey.
+
+The RSVP system is now 50% complete, with the organizer-facing dashboard fully implemented and the public-facing components planned for Session 35. The gallery implementation remains at approximately 40% completion, with our current development focus on implementing the public-facing RSVP system and camera integration for QR code scanning.
 
 ## 🔄 **Core User Flows** [Updated]
 
@@ -47,6 +49,7 @@ flowchart TD
     K --> Y[Attendee Management]
     K --> Z[Email Management]
     K --> AA[Invitation Management]
+    K --> BJ[RSVP Management]
     
     L --> AB[Event Dashboard]
     L --> AC[Basic Management]
@@ -59,6 +62,7 @@ flowchart TD
     
     N --> AI[Gallery Access]
     E --> AI
+    N --> BK[Invitation Link]
     
     AI --> AJ[View Gallery]
     AI --> AK[Capture Media]
@@ -96,6 +100,31 @@ flowchart TD
     BF --> BG[Add Attendee]
     BG --> BH[Invite Form]
     BH --> BD
+    
+    BJ --> BL[RSVP Dashboard]
+    BL --> BM[RSVP List]
+    BL --> BN[RSVP Analytics]
+    BM --> BO[RSVP Detail View]
+    BM --> BP[Filter Options]
+    BO --> BQ[Status Management]
+    
+    BK --> BR[Public RSVP Form]
+    BR --> BS{Response}
+    BS -->|Accept| BT[Accept Flow]
+    BS -->|Decline| BU[Decline Flow]
+    BS -->|Maybe| BV[Maybe Flow]
+    BT --> BW[Form Details]
+    BU --> BX[Reason Optional]
+    BV --> BY[Future Option]
+    BW --> BZ[Dietary Preferences]
+    BW --> CA[Plus-One Option]
+    BW --> CB[Notes & Comments]
+    BW --> CC[Submit Response]
+    BX --> CC
+    BY --> CC
+    CC --> CD[Confirmation Page]
+    CD --> CE[Email Confirmation]
+    CE --> BD
 ```
 
 ## 📸 **Media Capture Flow** [Enhanced]
@@ -135,6 +164,61 @@ flowchart TD
     V --> W[Form Validation]
     W --> X[Error Handling]
     X --> Y[User Feedback]
+```
+
+## 📝 **RSVP Flow** [New]
+
+```mermaid
+flowchart TD
+    A[Guest] --> B[Receives Invitation]
+    B --> C[Clicks RSVP Link]
+    C --> D[Token Validation]
+    D --> E{User Exists?}
+    E -->|No| F[Create Account]
+    E -->|Yes| G[RSVP Form]
+    F --> G
+    
+    C --> H[Magic Link Generation]
+    H --> I[Send Auth Email]
+    I --> J[Guest Clicks Link]
+    J --> K[Auth Session]
+    K --> G
+    
+    G --> L{Response Type}
+    L -->|Accept| M[Accept Form]
+    L -->|Decline| N[Decline Form]
+    L -->|Maybe| O[Maybe Form]
+    
+    M --> P[Dietary Preferences]
+    M --> Q[Plus-One Options]
+    M --> R[Special Notes]
+    
+    N --> S[Brief Reason Optional]
+    
+    O --> T[Future Response Option]
+    
+    P --> U[Form Submission]
+    Q --> U
+    R --> U
+    S --> U
+    T --> U
+    
+    U --> V[Form Validation]
+    V --> W[Create RSVP Record]
+    W --> X[Update Invitation Status]
+    X --> Y[Send Confirmation]
+    Y --> Z[Update Dashboard]
+    Z --> AA[Organizer View]
+    
+    AA --> AB[RSVP Dashboard]
+    AB --> AC[RSVP List]
+    AB --> AD[RSVP Analytics]
+    AC --> AE[Filter Options]
+    AC --> AF[RSVP Details]
+    AF --> AG[Status Management]
+    AF --> AH[Guest Information]
+    AF --> AI[Dietary Information]
+    AF --> AJ[Plus-One Details]
 ```
 
 ## 🔐 **Security Flow** [Enhanced]
@@ -233,24 +317,27 @@ graph LR
     A --> G[Template Management]
     A --> H[Email System]
     A --> I[Invitation System]
+    A --> J[RSVP System]
     
-    B --> J[35% Usage]
-    C --> K[25% Usage]
-    D --> L[15% Usage]
-    E --> M[8% Usage]
-    F --> N[4% Usage]
-    G --> O[6% Usage]
-    H --> P[3% Usage]
-    I --> Q[4% Usage]
+    B --> K[30% Usage]
+    C --> L[22% Usage]
+    D --> M[12% Usage]
+    E --> N[7% Usage]
+    F --> O[4% Usage]
+    G --> P[5% Usage]
+    H --> Q[3% Usage]
+    I --> R[7% Usage]
+    J --> S[10% Usage]
 
-    style J fill:#90EE90
-    style K fill:#ADD8E6
-    style L fill:#FFB6C1
-    style M fill:#DDA0DD
-    style N fill:#FFDAB9
-    style O fill:#F0E68C
-    style P fill:#98FB98
-    style Q fill:#87CEFA
+    style K fill:#90EE90
+    style L fill:#ADD8E6
+    style M fill:#FFB6C1
+    style N fill:#DDA0DD
+    style O fill:#FFDAB9
+    style P fill:#F0E68C
+    style Q fill:#98FB98
+    style R fill:#87CEFA
+    style S fill:#FFA07A
 ```
 
 ## 🏷️ **Pre-Event: Ticket Confirmation & QR Code**  
@@ -413,6 +500,48 @@ graph LR
   - Resend invitations
   - Receive guidance information
 
+## 📝 **RSVP System**
+
+### 🎟️ **RSVP Components**
+- `<RsvpDashboard>` for overview
+- `<RsvpList>` for response listing
+- `<RsvpAnalytics>` for metrics
+- `<RsvpDetails>` for individual view
+- `<RsvpForm>` for response collection
+- `<Tabs>` for organizing content
+- `<Card>` for RSVP summary
+- `<Badge>` for status indicators
+- `<Progress>` for response rates
+- ✅ RSVP dashboard integration
+- ✅ Tab-based navigation
+- ✅ RSVP status tracking
+- ✅ Response filtering
+- ✅ Responsive design
+- 🟡 Public invitation landing page (0% complete)
+- 🟡 RSVP form component (0% complete)
+- 🟡 Guest authentication (0% complete)
+
+✔️ Organizers can:
+  - View RSVP dashboard
+  - Track response rates
+  - Filter by status
+  - View individual RSVPs
+  - Access dietary preferences
+  - Manage plus-ones
+  - Export guest lists
+  - Update status manually
+  - View analytics
+
+👥 **Planned for Guests**:
+  - Receive personalized invitation
+  - Click secure link to RSVP
+  - Authenticate via magic link
+  - Submit response (accept/decline/maybe)
+  - Add dietary preferences
+  - Include plus-one details
+  - Leave notes for organizer
+  - Receive confirmation email
+
 ## 📩 **Post-Event Access**  
 
 ### 📊 **Download Components**
@@ -461,6 +590,8 @@ graph LR
 6. Create and manage email templates
 7. Moderate photos
 8. View event analytics
+9. Track and manage RSVPs
+10. Analyze response rates
 
 ### 🎭 **Event Host Journey**
 1. Create personal events
@@ -470,6 +601,7 @@ graph LR
 5. Access event gallery
 6. Upload and moderate photos
 7. Share event with guests
+8. View basic RSVP metrics
 
 ### 👤 **User Journey**
 1. Access personal dashboard
@@ -479,47 +611,58 @@ graph LR
 5. Browse and interact with photos
 6. Download favorites
 7. Manage email preferences
+8. Respond to RSVPs
 
 ### 👥 **Guest Journey**
-1. Access event via QR code or URL
-2. Optional quick registration
-3. View event gallery
-4. Upload photos (if permitted)
-5. Interact with content
-6. Receive post-event access
-7. Get follow-up communications
+1. Receive invitation email
+2. Click RSVP link
+3. Submit RSVP response
+4. Provide dietary preferences
+5. Add plus-one details if applicable
+6. Access event via QR code or URL
+7. Optional quick registration
+8. View event gallery
+9. Upload photos (if permitted)
+10. Interact with content
+11. Receive post-event access
+12. Get follow-up communications
 
 ## 🔄 **Implementation Progress**
 
-As we approach our April 1, 2025 launch date, the invitation system is now 100% complete with SendGrid integration, and we've resolved critical Next.js 14 App Router architecture issues in our gallery implementation.
+As we approach our April 15, 2025 Beta 0.9.0 RC1 date, we've successfully integrated the RSVP dashboard within the event management interface and are now focused on completing the public-facing aspects of the Guest Onboarding & RSVP Flow.
 
 ### Key Achievements:
-- ✅ Complete invitation system with API integration
-- ✅ SendGrid integration for secure email delivery
-- ✅ Enhanced form validation with user feedback
-- ✅ User guidance information throughout flows
-- ✅ API endpoint security
-- ✅ Improved error handling
+- ✅ Integrated RSVP dashboard within event details page
+- ✅ Fixed TypeScript errors in RSVP components
+- ✅ Enhanced tab navigation for seamless RSVP management
+- ✅ Improved card styling for better visibility in both light and dark modes
+- ✅ Added proper color coding for status indicators
+- ✅ Optimized layouts for both desktop and mobile views
+- ✅ Enhanced error handling in RSVP components
+- ✅ Fixed layout issues in event details view
+- ✅ Complete invitation system with SendGrid integration
 - ✅ Next.js 14 client/server component separation
-- ✅ Authentication flow fixes for gallery pages
-- ✅ Proper type mapping between database and UI components
-- ✅ Server-side data fetching implementation
 
-### Current Focus:
+### Current Focus (Session 35):
+- 🟡 Building public invitation landing page (0% complete)
+- 🟡 Creating RSVP form component with validation (0% complete)
+- 🟡 Implementing magic link authentication for guests (0% complete)
+- 🟡 Creating camera access hook for media capture (0% complete)
+- 🟡 Implementing photo capture UI for mobile (0% complete)
+- 🟡 Building token validation for scanned QR codes (30% complete)
 - 🟡 Implementing gallery masonry layout (40% complete)
 - 🟡 Developing album management system (10% complete)
-- 🟡 Enhancing analytics dashboard (0% complete)
-- 🟡 Creating guest upload system (20% complete)
-- 🟡 Implementing onboarding flow (0% complete)
 
 ### Next Steps:
-1. Complete gallery system with masonry layout
-2. Implement album management
-3. Enhance dashboard with analytics panels
-4. Create guest upload system
-5. Develop onboarding flow for new organizers
+1. Complete public-facing RSVP system
+2. Implement magic link authentication for guests
+3. Advance camera integration
+4. Enhance email notifications
+5. Complete gallery system with masonry layout
+6. Implement album management
+7. Create testing suite for RSVP flow
 
 ## 🎯 **Conclusion**  
-Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly** through both photos and videos. By integrating **role-based access control, direct camera integration, custom event URLs, multiple gallery layouts, comprehensive invitation system, and SendGrid email delivery**, Cloud Burst creates an **engaging and seamless user experience** that adapts to different user roles and media preferences. With the recent resolution of Next.js 14 App Router architecture issues, including proper client/server component separation and authentication flow improvements, the platform is now more robust and better positioned to deliver a polished, professional-grade solution for complete event media management as we approach our April 1, 2025 launch date.
+Cloud Burst ensures that event attendees can **easily capture, upload, and relive their event experience effortlessly** through both photos and videos. By integrating **role-based access control, direct camera integration, custom event URLs, multiple gallery layouts, comprehensive invitation system, and RSVP management**, Cloud Burst creates an **engaging and seamless user experience** that adapts to different user roles and media preferences. With the successful integration of the RSVP dashboard and ongoing work on the public RSVP system, the platform is now more robust and better positioned to deliver a polished, professional-grade solution for complete event media management as we approach our April 15, 2025 Beta 0.9.0 RC1 date.
 
 ---

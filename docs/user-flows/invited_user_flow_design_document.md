@@ -1,13 +1,22 @@
 # 🎟️ **Invited Guest - User Flow Design Document**  
 
 ## 📂 *Cloud Burst Platform - User Flows*
-📅 *Last Updated: March 27, 2025*
-📊 *Version: 0.8.2*
+📅 *Last Updated: April 2, 2025*
+📊 *Version: 0.8.5*
 
 ## 📌 Situational Abstract
-Cloud Burst has successfully implemented a comprehensive invitation system with SendGrid integration, secure API endpoints, enhanced form validation, and robust error handling. The platform has also resolved critical Next.js 14 App Router architecture issues in our gallery implementation, ensuring proper client/server component separation and authentication flows. The platform features a complete email template system with high deliverability standards, proper API error recovery, direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching with TanStack Query, and state management with Zustand. The recent architectural improvements in Next.js 14 App Router implementation include proper separation of client and server components, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. This document details the fully implemented invited guest flow, which seamlessly connects event planning and attendance while maintaining our streamlined approach for the April 1, 2025 launch.
+Cloud Burst has successfully implemented a comprehensive invitation system with SendGrid integration, secure API endpoints, enhanced form validation, 
+and robust error handling. The platform has also resolved critical Next.js 14 App Router architecture issues in our gallery implementation, ensuring 
+proper client/server component separation and authentication flows. The platform features a complete email template system with high deliverability 
+standards, proper API error recovery, direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching 
+with TanStack Query, and state management with Zustand. The recent architectural improvements in Next.js 14 App Router implementation include proper 
+separation of client and server components, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. 
+This document details the fully implemented invited guest flow, which seamlessly connects event planning and attendance while maintaining our 
+streamlined approach for the April 1, 2025 launch. Cloud Burst has successfully implemented a comprehensive invitation system with SendGrid integration, secure API endpoints, enhanced form validation, and robust error handling. The platform now also features an integrated RSVP dashboard within the event management interface, allowing organizers to track and manage guest responses directly from the event details page. The internal RSVP management system is 100% complete, with tab-based navigation, proper loading states, error handling, and responsive layouts optimized for both desktop and mobile views.
 
-The invited guest flow is now 100% complete, with robust support for both photo and video content. The gallery implementation is currently at 40% completion, with recent achievements including client/server component architecture fixes, authentication flow improvements, type mapping corrections, and proper server-side data fetching. Our current development now focuses on implementing the gallery system with masonry layout and album management.
+The platform continues to feature a complete email template system with high deliverability standards, proper API error recovery, direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching with TanStack Query, and state management with Zustand. The recent architectural improvements in Next.js 14 App Router implementation include proper separation of client and server components, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. 
+
+This document details the invited guest flow, which is now 50% complete with successful implementation of the organizer-facing RSVP management dashboard. We are now focusing on completing the public-facing components, including the invitation landing page, RSVP form with validation, and magic link authentication for guests. The gallery implementation is currently at 40% completion, with our current development focus on implementing the public-facing RSVP system and camera integration.
 
 ## 🔍 Introduction  
 Cloud Burst is an **event media platform** that enables guests to capture, upload, and share photos and videos at **live events** such as weddings, parties, and corporate gatherings.  
@@ -62,7 +71,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 
 ## 👤 Guest User Journey  
 
-### 📩 **Step 1: Invitation Receipt & Pre-Event Engagement**  
+### 📩 **Step 1: Invitation Receipt & Pre-Event Engagement** [Implementation Status: 100%] 
 ✅ Guests receive an **email invitation** containing:
 - Personalized event details and messaging
 - Unique **QR code** for event access
@@ -78,7 +87,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ SendGrid secure delivery
 - ✅ Email open tracking
 
-### 🔑 **Step 2: Pre-Event Account Setup** [Complete]
+### 🔑 **Step 2: Pre-Event Account Setup** [Implementation Status: 100%]
 ✅ Invited guests can prepare for the event in advance by:
 - Creating an account or signing in with existing credentials
 - Setting preferences for media quality and notifications
@@ -93,7 +102,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Form validation feedback
 - ✅ Error state handling
 
-### 🎉 **Step 3: Event-Day Arrival & QR Code Scan**  
+### 🎉 **Step 3: Event-Day Arrival & QR Code Scan** [Implementation Status: 100%] 
 ✅ Guests arrive at the event and access the platform by:
 - Opening Cloud Burst if pre-registered
 - Scanning their personalized QR code from the invitation
@@ -109,7 +118,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Secure token validation
 - ✅ Error recovery mechanisms
 
-### 🔑 **Step 4: Authentication & Camera Integration**  
+### 🔑 **Step 4: Authentication & Camera Integration** [Implementation Status: 100%] 
 ✅ **Pre-registered User** – Automatic authentication based on existing account
 ✅ **Invited Guest** – Streamlined authentication using invitation credentials
 ✅ **Walk-in Guest** – Quick access via anonymous guest mode
@@ -130,7 +139,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Server-side authentication context
 - ✅ Client/server component separation
 
-### 📷 **Step 5: Media Capture & Upload**  
+### 📷 **Step 5: Media Capture & Upload** [Implementation Status: 40%] 
 ✅ **Camera Integration** provides direct access to device camera
 ✅ **Photo/Video Toggle** allows switching between media types
 🟡 **AI-enhanced processing** automatically improves media quality (Planned for post-launch)
@@ -155,7 +164,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ User guidance tooltips
 - 🟡 Media upload system (40% complete)
 
-### 🖼️ **Step 6: Live Media Gallery**  
+### 🖼️ **Step 6: Live Media Gallery** [Implementation Status: 40%] 
 ✅ A **real-time media wall** updates as guests upload photos and videos
 ✅ **Interactive features** – Like, share, and (optionally) comment
 ✅ **Tag-based filtering** allows guests to organize by categories
@@ -178,7 +187,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Server-side data fetching
 - ✅ Type-safe media mapping
 
-### ⏳ **Step 7: Post-Event Access & Engagement**  
+### ⏳ **Step 7: Post-Event Access & Engagement** [Implementation Status: 40%] 
 ✅ Event media remains available **for a limited time (1-4 weeks)**
 ✅ **Guests receive a follow-up email** with the gallery link
 ✅ **Anonymous guests** are encouraged to create accounts to claim their media
@@ -196,7 +205,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 
 ## 🎨 Page Layouts & Components  
 
-### 🏠 **Event Welcome Page**  
+### 🏠 **Event Welcome Page** [Implementation Status: 100%] 
 ✅ Event branding & high-quality visuals
 ✅ CTA buttons: *Join as Guest* or *Sign In*
 ✅ Event information and schedule
@@ -211,7 +220,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Countdown timer to event
 - ✅ Contextual guidance information
 
-### 🔑 **Authentication Page**  
+### 🔑 **Authentication Page** [Implementation Status: 100%] 
 ✅ Multiple authentication options:
 - Email/password sign-in
 - Social login options
@@ -229,7 +238,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Form validation feedback
 - ✅ Server-side authentication context
 
-### 📷 **Media Capture Page**  
+### 📷 **Media Capture Page** [Implementation Status: 40%] 
 ✅ Integrated **camera interface** for photos and videos
 ✅ **Media type toggle** for switching between capture modes
 🟡 AI-enhanced processing for **best media quality** (Planned for post-launch)
@@ -252,7 +261,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ User guidance tooltips
 - 🟡 Upload system (40% complete)
 
-### 🏆 **Live Gallery (Media Wall)**  
+### 🏆 **Live Gallery (Media Wall)** [Implementation Status: 40%] 
 ✅ **Dynamic grid layout** with uploaded photos and videos
 ✅ **Inline video playback** for seamless browsing
 ✅ **Like, share, and comment** functionality
@@ -275,7 +284,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Server-side data fetching
 - ✅ Type-safe media rendering
 
-### 📨 **Post-Event Page**  
+### 📨 **Post-Event Page** [Implementation Status: 40%] 
 ✅ **Reminder & persistent gallery link**
 🟡 **Download & sharing options** for all media types (40% complete)
 - `<Card>` for download options
@@ -288,11 +297,46 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - 🟡 Media album creation (10% complete)
 - ✅ Follow-up email notifications
 
-### ⚙️ **Settings Page**
+### 🪪 **RSVP Management (Organizer View)** [Implementation Status: 100%]
+✅ **RSVP dashboard** within event details page
+✅ **Tab-based navigation** for seamless RSVP management
+✅ **Response tracking** with proper filtering and search
+- `<Tabs>` for organizing content
+- `<Card>` for RSVP summary
+- `<Table>` for guest list
+- `<Badge>` for status indicators
+- `<Progress>` for response rates
+- `<Alert>` for guidance information
+- ✅ Responsive layout for all devices
+- ✅ Loading states for data fetching
+- ✅ Error handling and recovery
+- ✅ Type-safe data handling
+- ✅ Search and filter capabilities
+- ✅ Proper light/dark mode styling
+
+### 📬 **Invitation Landing Page (Guest View)** [Implementation Status: 0%]
+🟡 **Branded event details** with responsive design
+🟡 **RSVP form** with validation and submission
+🟡 **Response confirmation** based on guest decision
+- `<Card>` for event details
+- `<Form>` for RSVP response
+- `<RadioGroup>` for attendance options
+- `<Switch>` for plus-one toggle
+- `<TextField>` for dietary restrictions
+- `<Button>` for submission
+- `<Alert>` for confirmation
+- 🟡 Mobile-first responsive design
+- 🟡 Form validation and error handling
+- 🟡 Success state with confirmation
+- 🟡 Secure token validation
+- 🟡 Plus-one management
+- 🟡 Dietary preferences handling
+
+### ⚙️ **Settings Page** [Implementation Status: 100%]
 ✅ Profile management & customization
 ✅ Theme & language preferences
 ✅ Media quality preferences
-✅ Notification settings (100% complete)
+✅ Notification settings
 - `<Tabs>` for settings navigation
 - `<Form>` for preferences
 - `<Select>` for options
@@ -326,6 +370,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 ✅ **Secure Email Delivery** – Reliable invitation receipt with tracking
 ✅ **Contextual Guidance** – Helpful information throughout the process
 ✅ **Proper Architecture** – Client/server component separation in Next.js 14
+✅ **RSVP Management** – Comprehensive dashboard for organizers
 
 ---
 
@@ -389,6 +434,7 @@ erDiagram
     USERS ||--o{ MEDIA : owns
     EVENTS ||--o{ MEDIA : contains
     INVITATIONS ||--o{ EMAIL_LOGS : generates
+    INVITATIONS ||--o{ RSVPS : receives
 ```
 
 ### 📱 Development Status
@@ -405,6 +451,8 @@ erDiagram
 - ✅ Invitation management - **100% complete**
 - ✅ Post-event engagement - **100% complete**
 - ✅ Client/server architecture - **100% complete**
+- ✅ RSVP system (organizer-facing) - **100% complete**
+- 🟡 RSVP system (guest-facing) - **0% complete**
 - 🟡 Media upload - **40% complete**
 - 🟡 Gallery display - **40% complete**
 - 🟡 Album management - **10% complete**
@@ -419,6 +467,8 @@ erDiagram
 | **Invitation System** | Email templates, QR codes | April 2025 | ✅ Complete |
 | **Authentication Flow** | Guest access, token handling | April 2025 | ✅ Complete |
 | **Next.js Architecture** | Client/server separation | April 2025 | ✅ Complete |
+| **RSVP Management (Organizer)** | Dashboard, tracking | April 2025 | ✅ Complete |
+| **RSVP System (Guest)** | Landing page, form | April 15, 2025 | 🟡 In Progress (0%) |
 | **Media Capture** | Camera integration, uploads | May 2025 | 🟡 In Progress (40%) |
 | **Post-Event Engagement** | Follow-ups, conversions | May 2025 | ✅ Complete |
 | **Gallery System** | Masonry layout, albums | May 2025 | 🟡 In Progress (40%) |
