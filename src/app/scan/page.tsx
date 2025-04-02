@@ -1,109 +1,55 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense } from 'react';
 import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import SimpleScan from '@/components/invitation/SimpleScan';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
-import { ArrowLeft, Camera, AlertTriangle } from 'lucide-react';
-import { QrScanner } from '@/components/invitation/qr-scanner';
 
 export default function ScanPage() {
-  const [scannerActivated, setScannerActivated] = useState(false);
-  const [secureContext, setSecureContext] = useState(true);
-  
-  // Check if we're in a secure context (needed for camera)
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setSecureContext(window.isSecureContext);
-    }
-  }, []);
-  
-  const activateCamera = () => {
-    console.log('User clicked "Activate Camera" button');
-    setScannerActivated(true);
-  };
-  
   return (
-    <div className="container px-4 py-6 md:py-10 max-w-4xl mx-auto">
-      <header className="flex items-center mb-6">
-        <Link href="/" className="mr-4">
-          <ArrowLeft className="h-5 w-5" />
-          <span className="sr-only">Back</span>
-        </Link>
-        <div>
+    <div className="container max-w-md mx-auto px-4 py-8">
+      {/* Header */}
+      <header className="mb-6">
+        <div className="flex items-center mb-4">
+          <Link href="/" className="text-muted-foreground hover:text-primary mr-2">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
           <h1 className="text-2xl font-bold">Scan Invitation QR Code</h1>
-          <p className="text-muted-foreground">Point your camera at an invitation QR code</p>
         </div>
+        <p className="text-muted-foreground">
+          Point your camera at an invitation QR code
+        </p>
       </header>
-      
-      <main className="space-y-6">
-        {!secureContext && (
-          <Card className="bg-amber-50 border-amber-200">
-            <CardHeader className="text-amber-800">
-              <div className="flex items-start">
-                <AlertTriangle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-medium">Secure Connection Required</h3>
-                  <p className="text-sm mt-1">
-                    Camera access requires a secure connection (HTTPS). 
-                    The scanner may not work on insecure connections except on localhost.
-                  </p>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
-        )}
+
+      {/* Main content */}
+      <main>
+        <Suspense fallback={<div className="h-[400px] bg-muted rounded-xl flex items-center justify-center">Loading camera...</div>}>
+          <SimpleScan />
+        </Suspense>
         
-        {!scannerActivated ? (
-          <Card className="text-center">
-            <CardHeader>
-              <h2 className="text-xl font-semibold">Camera Access Required</h2>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="mx-auto bg-muted rounded-full w-16 h-16 flex items-center justify-center mb-4">
-                <Camera className="h-8 w-8 text-muted-foreground" />
-              </div>
-              <p>This app needs your permission to access the camera for scanning QR codes.</p>
-              <p>When prompted, please select "Allow" to grant camera access.</p>
-              <div className="flex justify-center mt-4">
-                <Button size="lg" onClick={activateCamera}>
-                  Activate Camera
+        {/* Instructions */}
+        <div className="mt-8 bg-muted p-6 rounded-lg">
+          <h2 className="font-semibold text-lg mb-4">How to scan:</h2>
+          <ol className="space-y-3 list-decimal list-inside">
+            <li>Allow camera access when prompted</li>
+            <li>Press the Start button to begin scanning</li>
+            <li>Point your camera at the QR code on the invitation</li>
+            <li>Hold steady until the code is recognized</li>
+            <li>You'll be redirected to the invitation automatically</li>
+          </ol>
+          
+          <div className="mt-6 text-sm text-muted-foreground">
+            Don't have a QR code? You can also enter your invitation code manually.
+            <div className="mt-3">
+              <Link href="/invitation">
+                <Button variant="outline" className="w-full">
+                  Enter Invitation Code
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <Suspense fallback={
-            <div className="h-96 rounded-xl bg-muted flex items-center justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary" />
+              </Link>
             </div>
-          }>
-            <QrScanner />
-          </Suspense>
-        )}
-        
-        <Card>
-          <CardHeader>
-            <h2 className="text-lg font-semibold">How to scan:</h2>
-          </CardHeader>
-          <CardContent>
-            <ol className="list-decimal list-inside space-y-2">
-              <li>Allow camera access when prompted</li>
-              <li>Press the Start button to begin scanning</li>
-              <li>Point your camera at the QR code on the invitation</li>
-              <li>Hold steady until the code is recognized</li>
-              <li>You'll be redirected to the invitation automatically</li>
-            </ol>
-          </CardContent>
-          <CardFooter className="flex justify-between items-center">
-            <p className="text-sm text-muted-foreground">
-              Don't have a QR code? You can also enter your invitation code manually.
-            </p>
-            <Button variant="link" asChild>
-              <Link href="/invitation">Enter Invitation Code</Link>
-            </Button>
-          </CardFooter>
-        </Card>
+          </div>
+        </div>
       </main>
     </div>
   );
