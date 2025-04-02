@@ -165,53 +165,82 @@ export default function SimpleScan({ onScanSuccess, autoRedirect = true }: Simpl
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
+    // Add willReadFrequently attribute to improve performance
+    const context = canvas.getContext('2d', { willReadFrequently: true });
     
     if (!context) return;
     
     let animationFrame: number;
     let lastScanTime = 0;
-    const scanInterval = 200; // ms between scans
+    // Increase scan interval to reduce CPU usage and violations
+    const scanInterval = 500; // ms between scans (increased from 200ms)
+    
+    // Create a smaller processing canvas for better performance
+    const processingCanvas = document.createElement('canvas');
+    const processingContext = processingCanvas.getContext('2d', { willReadFrequently: true });
+    
+    if (!processingContext) return;
+    
+    // Configure processing canvas to be smaller than video for better performance
+    const SCALE_FACTOR = 0.5; // Scale down to 50% for processing
     
     const scanQRCode = (timestamp: number) => {
       if (!isScanning) return;
       
+      // Schedule next frame immediately to avoid blocking the main thread
+      animationFrame = requestAnimationFrame(scanQRCode);
+      
       // Only scan at specified intervals to improve performance
-      if (timestamp - lastScanTime > scanInterval) {
-        lastScanTime = timestamp;
+      if (timestamp - lastScanTime < scanInterval) {
+        return; // Skip this frame, but continue the animation loop
+      }
+      
+      lastScanTime = timestamp;
         
-        // Check if video is playing and has dimensions
-        if (video.readyState === video.HAVE_ENOUGH_DATA && 
-            video.videoWidth > 0 && 
-            video.videoHeight > 0) {
+      // Check if video is playing and has dimensions
+      if (video.readyState === video.HAVE_ENOUGH_DATA && 
+          video.videoWidth > 0 && 
+          video.videoHeight > 0) {
           
-          // Set canvas size to match video
+        // Set main canvas size to match video (only if needed)
+        if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
           
-          // Draw current video frame to canvas
-          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          // Set processing canvas to scaled down version
+          processingCanvas.width = Math.floor(video.videoWidth * SCALE_FACTOR);
+          processingCanvas.height = Math.floor(video.videoHeight * SCALE_FACTOR);
+        }
           
-          try {
-            // Get image data from canvas and scan for QR codes
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imageData.data, imageData.width, imageData.height, {
-              inversionAttempts: 'dontInvert',
-            });
+        // Draw current video frame to main canvas (for reference/debugging)
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Draw scaled-down version to processing canvas
+        processingContext.drawImage(
+          video, 
+          0, 0, video.videoWidth, video.videoHeight,
+          0, 0, processingCanvas.width, processingCanvas.height
+        );
+          
+        try {
+          // Get image data from smaller canvas and scan for QR codes
+          const imageData = processingContext.getImageData(
+            0, 0, processingCanvas.width, processingCanvas.height
+          );
+          
+          const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: 'dontInvert',
+          });
             
-            // If a QR code is found
-            if (code) {
-              handleQrSuccess(code.data);
-              return; // Stop scanning after successful detection
-            }
-          } catch (err) {
-            console.error('Error analyzing QR code:', err);
+          // If a QR code is found
+          if (code) {
+            cancelAnimationFrame(animationFrame); // Stop the loop immediately
+            handleQrSuccess(code.data);
           }
+        } catch (err) {
+          console.error('Error analyzing QR code:', err);
         }
       }
-      
-      // Continue scanning
-      animationFrame = requestAnimationFrame(scanQRCode);
     };
     
     // Start the scanning loop
@@ -238,7 +267,9 @@ export default function SimpleScan({ onScanSuccess, autoRedirect = true }: Simpl
         {/* Hidden canvas for QR code analysis */}
         <canvas 
           ref={canvasRef} 
-          className="hidden" 
+          className="hidden"
+          // This data attribute helps hint to the browser about our usage pattern
+          data-willreadfrequently="true"
         />
         
         {/* Scanning overlay */}
