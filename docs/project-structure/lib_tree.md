@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-04-02T19:36:25.982Z
+Generated: 2025-04-03T02:32:36.734Z
 
 ## Overview
 
@@ -38,6 +38,7 @@ Generated: 2025-04-02T19:36:25.982Z
 │   ├── photos.ts
 │   ├── run-migration.js
 │   ├── search.ts
+│   ├── server-auth.ts
 │   ├── server.ts
 │   ├── templates.ts
 │   ├── test-utils.ts
@@ -64,12 +65,12 @@ Generated: 2025-04-02T19:36:25.982Z
 ├── user-sessions.ts
 └── utils.ts
 
-10 directories, 45 files
+10 directories, 46 files
 
 ```
 
 ## File Type Breakdown
-- ts: 42 file(s)
+- ts: 43 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

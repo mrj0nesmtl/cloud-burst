@@ -61,8 +61,24 @@ export function EventList({
                   />
                 </div>
               ) : (
-                <div className="flex h-12 w-12 items-center justify-center rounded-md border bg-muted/30 flex-shrink-0">
-                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-md border flex-shrink-0"
+                     style={{
+                      backgroundColor: 
+                        event.status === 'published' ? 'var(--green-500)' : 
+                        event.status === 'draft' ? 'var(--orange-500)' : 
+                        event.status === 'completed' ? 'var(--blue-500)' : 
+                        event.status === 'cancelled' ? 'var(--destructive)' : 
+                        'var(--primary)',
+                      color: 'white',
+                      fontWeight: '600',
+                      fontSize: '0.9rem'
+                    }}>
+                  {event.name
+                    .split(' ')
+                    .map(part => part[0])
+                    .join('')
+                    .toUpperCase()
+                    .substring(0, 2)}
                 </div>
               )}
               

@@ -16,7 +16,7 @@ streamlined approach for the April 1, 2025 launch. Cloud Burst has successfully 
 
 The platform continues to feature a complete email template system with high deliverability standards, proper API error recovery, direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching with TanStack Query, and state management with Zustand. The recent architectural improvements in Next.js 14 App Router implementation include proper separation of client and server components, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. 
 
-This document details the invited guest flow, which is now 50% complete with successful implementation of the organizer-facing RSVP management dashboard. We are now focusing on completing the public-facing components, including the invitation landing page, RSVP form with validation, and magic link authentication for guests. The gallery implementation is currently at 40% completion, with our current development focus on implementing the public-facing RSVP system and camera integration.
+This document details the invited guest flow, which is now 50% complete with successful implementation of the organizer-facing RSVP management dashboard and 75% complete QR scanner implementation. We are now focusing on completing the public-facing components, including the invitation landing page, RSVP form with validation, and magic link authentication for guests. The gallery implementation is currently at 40% completion, with our current development focus on implementing the public-facing RSVP system.
 
 ## 🔍 Introduction  
 Cloud Burst is an **event media platform** that enables guests to capture, upload, and share photos and videos at **live events** such as weddings, parties, and corporate gatherings.  
@@ -332,6 +332,25 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - 🟡 Plus-one management
 - 🟡 Dietary preferences handling
 
+### 📱 **QR Scanner Page** [Implementation Status: 75%]
+✅ **Simplified scanner component** with self-contained functionality
+✅ **Camera permission handling** with clear user feedback
+✅ **Scanning animations** for visual engagement during process
+✅ **Error states** with recovery options
+- `<SimpleScan>` for self-contained QR scanning
+- `<CameraView>` for video preview
+- `<ScannerOverlay>` for visual cues
+- `<Button>` for controlling scan state
+- `<Alert>` for error messaging
+- ✅ Direct camera access and control
+- ✅ Performance optimization with downsampling
+- ✅ Error recovery with retry mechanisms
+- ✅ Smooth animations and transitions
+- ✅ Clear user guidance during scanning
+- ✅ Success indication with redirection
+- 🟡 Integration with invitation token system
+- 🟡 QR code generation verification
+
 ### ⚙️ **Settings Page** [Implementation Status: 100%]
 ✅ Profile management & customization
 ✅ Theme & language preferences
@@ -371,6 +390,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 ✅ **Contextual Guidance** – Helpful information throughout the process
 ✅ **Proper Architecture** – Client/server component separation in Next.js 14
 ✅ **RSVP Management** – Comprehensive dashboard for organizers
+✅ **Optimized QR Scanning** – Reliable camera integration with feedback
 
 ---
 
@@ -392,6 +412,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Input sanitization
 - ✅ Server-side authentication context
 - ✅ Client/server component authentication
+- ✅ Camera resource management
 
 ### 🎨 UI/UX Considerations
 - ✅ Mobile-first design
@@ -407,6 +428,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Contextual help information
 - ✅ Error state visualization
 - ✅ Proper client/server component rendering
+- ✅ Scanning feedback animations
 
 ### ⚡ Performance Optimizations
 - ✅ Media lazy loading
@@ -422,6 +444,8 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ API response caching
 - ✅ Error recovery mechanisms
 - ✅ Server-side data fetching
+- ✅ Optimized QR scanning with downsampling
+- ✅ Efficient requestAnimationFrame scheduling
 
 ### 📊 Database Relationships
 ```mermaid
@@ -442,8 +466,8 @@ erDiagram
 - ✅ API endpoints - **100% complete**
 - ✅ Authentication flows - **100% complete**
 - ✅ QR code generation - **100% complete**
-- ✅ QR code scanning - **100% complete**
-- ✅ Camera integration - **100% complete**
+- ✅ QR code scanning - **75% complete**
+- ✅ Camera integration - **75% complete**
 - ✅ Email template system - **100% complete**
 - ✅ SendGrid integration - **100% complete**
 - ✅ Form validation - **100% complete**
@@ -468,6 +492,7 @@ erDiagram
 | **Authentication Flow** | Guest access, token handling | April 2025 | ✅ Complete |
 | **Next.js Architecture** | Client/server separation | April 2025 | ✅ Complete |
 | **RSVP Management (Organizer)** | Dashboard, tracking | April 2025 | ✅ Complete |
+| **QR Scanner & Camera** | Scanning, camera integration | April 2025 | ✅ Complete (75%) |
 | **RSVP System (Guest)** | Landing page, form | April 15, 2025 | 🟡 In Progress (0%) |
 | **Media Capture** | Camera integration, uploads | May 2025 | 🟡 In Progress (40%) |
 | **Post-Event Engagement** | Follow-ups, conversions | May 2025 | ✅ Complete |

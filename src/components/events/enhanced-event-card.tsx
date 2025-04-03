@@ -176,14 +176,14 @@ export function EnhancedEventCard({
       onClick={handleCardClick}
       className="hover:shadow-md hover:border-primary/20"
       >
-        {/* Thumbnail Image */}
-        {event.cover_image_url && (
-          <div style={{
-            position: 'relative',
-            width: '100%',
-            height: '160px',
-            overflow: 'hidden'
-          }}>
+        {/* Thumbnail Image - Always shown with a fallback */}
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          height: '160px',
+          overflow: 'hidden'
+        }}>
+          {event.cover_image_url ? (
             <Image
               src={event.cover_image_url}
               alt={event.name}
@@ -196,17 +196,41 @@ export function EnhancedEventCard({
               }}
               className="hover:scale-105"
             />
-            {/* Status badge overlay */}
+          ) : (
             <div style={{
-              position: 'absolute',
-              top: '12px',
-              right: '12px',
-              zIndex: 10
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: '100%',
+              backgroundColor: 
+                event.status === 'published' ? 'var(--green-500)' : 
+                event.status === 'draft' ? 'var(--orange-500)' : 
+                event.status === 'completed' ? 'var(--blue-500)' : 
+                event.status === 'cancelled' ? 'var(--destructive)' : 
+                'var(--primary)',
+              fontSize: '2.5rem',
+              fontWeight: '600',
+              color: 'white'
             }}>
-              {renderStatusBadge()}
+              {event.name
+                .split(' ')
+                .map(part => part[0])
+                .join('')
+                .toUpperCase()
+                .substring(0, 2)}
             </div>
+          )}
+          {/* Status badge overlay */}
+          <div style={{
+            position: 'absolute',
+            top: '12px',
+            right: '12px',
+            zIndex: 10
+          }}>
+            {renderStatusBadge()}
           </div>
-        )}
+        </div>
 
         <CardHeader style={{ 
           padding: '1.25rem 1.25rem 0.75rem',

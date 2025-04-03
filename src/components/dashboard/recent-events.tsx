@@ -69,8 +69,16 @@ export function RecentEvents({ events }: RecentEventsProps) {
                   sizes="56px"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-primary/10">
-                  <span className="text-sm font-semibold text-primary">
+                <div className="flex h-full w-full items-center justify-center"
+                     style={{
+                      backgroundColor: 
+                        event.status === 'published' ? 'var(--green-500)' : 
+                        event.status === 'draft' ? 'var(--amber-500)' : 
+                        event.status === 'completed' ? 'var(--blue-500)' : 
+                        event.status === 'cancelled' ? 'var(--destructive)' : 
+                        'var(--primary)',
+                     }}>
+                  <span className="text-sm font-semibold text-white">
                     {getInitials(event.name)}
                   </span>
                 </div>

@@ -21,7 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Magic Link authentication for guests
 - Enhanced Analytics dashboard with real-time metrics
 
-## [0.8.5] - 2025-04-08
+## [0.8.5] - 2025-04-02
+### Added in Session 35 (April 2, 2025)
+- **QR Scanner Enhancements**:
+  - Simplified QR scanner implementation with self-contained component
+  - Fixed camera initialization and performance issues
+  - Improved error handling and user feedback during scanning
+  - Added performance optimizations for smooth scanning experience
+  - Reduced requestAnimationFrame violations with better scheduling
+  - Enhanced image processing with downsampling for better performance
+  - Fixed TypeScript errors in camera-related components
+  - Added proper lifecycle management for camera resources
+
 ### Added in Session 34 (April 8, 2025)
 - **RSVP System Dashboard Integration**:
   - Integrated RSVP dashboard within event details page

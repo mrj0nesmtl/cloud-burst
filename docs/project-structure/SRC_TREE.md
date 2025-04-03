@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-02T19:36:18.894Z
+Generated: 2025-04-03T02:32:30.801Z
 
 ## Overview
 
@@ -144,7 +144,9 @@ Generated: 2025-04-02T19:36:18.894Z
 │   │   ├── [token]/
 │   │   │   ├── confirmation/
 │   │   │   │   ├── accepted/
-│   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── add-to-calendar-button.tsx
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── share-event-button.tsx
 │   │   │   │   └── declined/
 │   │   │   │       └── page.tsx
 │   │   │   ├── details/
@@ -454,6 +456,7 @@ Generated: 2025-04-02T19:36:18.894Z
 │   │   ├── upload-dropzone.tsx
 │   │   └── upload-with-tags.tsx
 │   ├── invitation/
+│   │   ├── SimpleScan.tsx
 │   │   ├── qr-scanner.tsx
 │   │   └── scanner-overlay.tsx
 │   ├── invitations/
@@ -569,6 +572,7 @@ Generated: 2025-04-02T19:36:18.894Z
 │   ├── use-auth.ts
 │   ├── use-debounced-auth.ts
 │   ├── use-events.ts
+│   ├── use-media-query.ts
 │   ├── use-permissions.ts
 │   ├── use-profile.ts
 │   ├── use-toast.ts
@@ -607,6 +611,7 @@ Generated: 2025-04-02T19:36:18.894Z
 │   │   ├── photos.ts
 │   │   ├── run-migration.js
 │   │   ├── search.ts
+│   │   ├── server-auth.ts
 │   │   ├── server.ts
 │   │   ├── templates.ts
 │   │   ├── test-utils.ts
@@ -633,7 +638,8 @@ Generated: 2025-04-02T19:36:18.894Z
 │   ├── user-sessions.ts
 │   └── utils.ts
 ├── scripts/
-│   └── mobile-menu.js
+│   ├── mobile-menu.js
+│   └── test-invitation.js
 ├── store/
 │   ├── events-store.ts
 │   ├── index.ts
@@ -647,6 +653,7 @@ Generated: 2025-04-02T19:36:18.894Z
 │   ├── events.ts
 │   ├── gallery.ts
 │   ├── invitations.ts
+│   ├── jsqr.d.ts
 │   ├── media.ts
 │   ├── notifications.ts
 │   ├── rsvp.ts
@@ -656,14 +663,14 @@ Generated: 2025-04-02T19:36:18.894Z
 ├── middleware.test.ts
 └── middleware.ts
 
-192 directories, 455 files
+192 directories, 462 files
 
 ```
 
 ## File Type Breakdown
-- ts: 102 file(s)
-- tsx: 335 file(s)
-- js: 3 file(s)
+- ts: 105 file(s)
+- tsx: 338 file(s)
+- js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)
 
