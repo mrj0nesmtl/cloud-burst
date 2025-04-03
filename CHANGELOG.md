@@ -21,6 +21,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Magic Link authentication for guests
 - Enhanced Analytics dashboard with real-time metrics
 
+## [0.8.6] - 2025-04-2
+### Added in Session 36 (April 2, 2025)
+- **Enhanced Public Gallery Page**:
+  - Implemented modern responsive design with auto-filling grid
+  - Added hover effects and animations for event cards
+  - Improved image display with hover zoom effects and gradient overlays
+  - Optimized for mobile with responsive text sizing and button layouts
+  - Ensured accessibility with proper contrast and text clipping
+  - Implemented consistent styling across all event card components
+  - Added status-colored backgrounds for event thumbnails without images
+  - Enhanced visual hierarchy with improved typography and spacing
+
+### Planned for Session 37 (April 17, 2025)
+- **Public-Facing RSVP System**:
+  - Public invitation landing page
+  - RSVP form component with validation
+  - RSVP confirmation UI components
+  - Form submission and error handling
+  - Security enhancements for invitation tokens
+
+- **Magic Link Authentication**:
+  - Invitation-aware magic links
+  - Guest session state management
+  - Secure authentication redirects
+  - Error handling for authentication issues
+
 ## [0.8.5] - 2025-04-02
 ### Added in Session 35 (April 2, 2025)
 - **QR Scanner Enhancements**:
@@ -54,26 +80,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Implemented proper type safety for form data
   - Improved error handling patterns
   - Enhanced documentation for RSVP system architecture
-
-### Planned for Session 35 (April 15, 2025)
-- **Public-Facing RSVP System**:
-  - Public invitation landing page
-  - RSVP form component with validation
-  - RSVP confirmation UI components
-  - Form submission and error handling
-  - Security enhancements for invitation tokens
-
-- **Camera Integration Enhancements**:
-  - Camera access hook implementation
-  - QR code scanner component
-  - Photo capture functionality for guests
-  - Permission handling and user feedback
-
-- **Magic Link Authentication**:
-  - Invitation-aware magic links
-  - Guest session state management
-  - Secure authentication redirects
-  - Error handling for authentication issues
 
 ## [0.8.4] - 2025-03-31
 ### Added in Session 33 (March 31, 2025)
