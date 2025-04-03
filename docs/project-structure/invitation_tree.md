@@ -1,23 +1,24 @@
 # invitation Directory Structure
-Generated: 2025-04-02T19:36:25.467Z
+Generated: 2025-04-03T02:32:36.253Z
 
 ## Overview
-This directory contains 2 component(s).
+This directory contains 3 component(s).
 
 This directory contains 2 QR/Camera scanning related file(s).
 
 ## Directory Tree
 ```
 ./src/components/invitation/
+├── SimpleScan.tsx
 ├── qr-scanner.tsx
 └── scanner-overlay.tsx
 
-1 directory, 2 files
+1 directory, 3 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 2 file(s)
+- tsx: 3 file(s)
 
 ## Ignored Patterns
 - node_modules

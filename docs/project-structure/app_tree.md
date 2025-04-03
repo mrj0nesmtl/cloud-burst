@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-04-02T19:36:20.741Z
+Generated: 2025-04-03T02:32:32.548Z
 
 ## Overview
 
@@ -127,7 +127,9 @@ This directory contains 96 route(s).
 │   ├── [token]/
 │   │   ├── confirmation/
 │   │   │   ├── accepted/
-│   │   │   │   └── page.tsx
+│   │   │   │   ├── add-to-calendar-button.tsx
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── share-event-button.tsx
 │   │   │   └── declined/
 │   │   │       └── page.tsx
 │   │   ├── details/
@@ -351,13 +353,13 @@ This directory contains 96 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-146 directories, 196 files
+146 directories, 198 files
 
 ```
 
 ## File Type Breakdown
 - ts: 25 file(s)
-- tsx: 160 file(s)
+- tsx: 162 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

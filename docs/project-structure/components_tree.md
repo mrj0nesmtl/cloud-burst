@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-04-02T19:36:23.962Z
+Generated: 2025-04-03T02:32:35.011Z
 
 ## Overview
-This directory contains 165 component(s).
+This directory contains 166 component(s).
 
 
 
@@ -95,6 +95,7 @@ This directory contains 165 component(s).
 │   ├── upload-dropzone.tsx
 │   └── upload-with-tags.tsx
 ├── invitation/
+│   ├── SimpleScan.tsx
 │   ├── qr-scanner.tsx
 │   └── scanner-overlay.tsx
 ├── invitations/
@@ -204,13 +205,13 @@ This directory contains 165 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-22 directories, 173 files
+22 directories, 174 files
 
 ```
 
 ## File Type Breakdown
 - ts: 6 file(s)
-- tsx: 166 file(s)
+- tsx: 167 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

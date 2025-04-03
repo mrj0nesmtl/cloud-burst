@@ -41,6 +41,13 @@ import { Switch } from "@/components/ui/switch"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import slugify from 'slugify'
+import { v4 as uuidv4 } from "uuid"
+import { Checkbox } from "@/components/ui/checkbox"
+import { AlertCircle } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { getAuthenticatedUser } from "@/lib/supabase/auth-utils"
 
 // Form schema with all validations
 const formSchema = z.object({
@@ -60,6 +67,7 @@ const formSchema = z.object({
   cover_image_url: z.string().url().optional().or(z.literal("")),
   thumbnail_image: z.any().optional(),
   custom_url: z.string().optional(),
+  logo_image: z.any().optional(),
 })
 
 // Types for our form data
@@ -67,22 +75,27 @@ type FormData = z.infer<typeof formSchema>
 
 export function EventForm() {
   const router = useRouter()
+  const [isMobile, setIsMobile] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [customUrl, setCustomUrl] = useState("")
-  const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null)
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
+  const [logoPreview, setLogoPreview] = useState<string | null>(null)
+  const [logoFile, setLogoFile] = useState<File | null>(null)
   const [isPreviewMode, setIsPreviewMode] = useState(false)
   
   // Detect viewport size for responsiveness
   useEffect(() => {
+    // Initialize with the current window size
+    setIsMobile(window.innerWidth < 768)
+    setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
+    
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768)
       setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
     }
     
-    handleResize() // Check on initial load
     window.addEventListener('resize', handleResize)
     
     return () => {
@@ -123,43 +136,66 @@ export function EventForm() {
     }
   }, [form.watch("name")])
 
-  // Function to handle thumbnail image upload
-  const handleThumbnailUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+  // Handle thumbnail upload
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (!file) return
-
+    
     // Check if file is an image
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.includes('image/')) {
       toast.error('Please upload an image file')
       return
     }
-
+    
     // Check file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Image must be less than 5MB')
+      toast.error('File size must be less than 5MB')
       return
     }
-
-    // Create a preview URL
+    
+    // Create preview URL
     const previewUrl = URL.createObjectURL(file)
     setThumbnailPreview(previewUrl)
     setThumbnailFile(file)
-    
-    // Update form value
-    form.setValue('thumbnail_image', file)
   }
-
-  // Clear the thumbnail
+  
+  // Clear thumbnail
   const clearThumbnail = () => {
-    if (thumbnailPreview) {
-      URL.revokeObjectURL(thumbnailPreview)
-    }
     setThumbnailPreview(null)
     setThumbnailFile(null)
-    form.setValue('thumbnail_image', undefined)
+  }
+  
+  // Handle logo upload
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    
+    // Check if file is an image
+    if (!file.type.includes('image/')) {
+      toast.error('Please upload an image file')
+      return
+    }
+    
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File size must be less than 5MB')
+      return
+    }
+    
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file)
+    setLogoPreview(previewUrl)
+    setLogoFile(file)
+  }
+  
+  // Clear logo
+  const clearLogo = () => {
+    setLogoPreview(null)
+    setLogoFile(null)
   }
 
-  // Handle form submission
+  // Upload both thumbnail and logo
+  // Modify the onSubmit function to handle both files
   async function onSubmit(data: FormData) {
     if (!isPreviewMode) {
       // Switch to preview mode instead of submitting
@@ -172,121 +208,117 @@ export function EventForm() {
     
     try {
       const supabase = createClient()
+      const { user, error } = await getAuthenticatedUser()
       
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser()
-      
-      // Ensure user exists before proceeding
       if (!user) {
-        throw new Error("User not authenticated")
+        toast.error('You must be logged in to create an event')
+        return
       }
       
       const userId = user.id
+      const eventId = uuidv4()
+      let thumbnailUrl = ''
+      let logoUrl = ''
       
       // Upload thumbnail if exists
-      let thumbnailUrl = ""
       if (thumbnailFile) {
-        const timestamp = new Date().getTime()
-        const fileExtension = thumbnailFile.name.split('.').pop()
-        const filePath = `event-thumbnails/${timestamp}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`
+        // Create organized storage path
+        const fileName = `${Date.now()}-${thumbnailFile.name}`
+        const filePath = `events/${userId}/${eventId}/thumbnail/${fileName}`
         
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('event-assets')
-          .upload(filePath, thumbnailFile, {
-            cacheControl: '3600',
-            upsert: false
-          })
+        const { data: thumbnailData, error: thumbnailError } = await supabase.storage
+          .from('event-media')
+          .upload(filePath, thumbnailFile)
           
-        if (uploadError) {
-          console.error("Error uploading thumbnail:", uploadError)
-          throw new Error("Failed to upload thumbnail image")
+        if (thumbnailError) {
+          console.error('Error uploading thumbnail:', thumbnailError)
+          toast.error('Failed to upload thumbnail')
+          return
         }
         
-        // Get the public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('event-assets')
+        // Get public URL
+        const { data: publicUrlData } = await supabase.storage
+          .from('event-media')
           .getPublicUrl(filePath)
           
-        thumbnailUrl = publicUrl
+        thumbnailUrl = publicUrlData.publicUrl
       }
       
-      // Create event with user ID
-      const { data: response, error } = await supabase
-        .from("events")
+      // Upload logo if exists
+      if (logoFile) {
+        // Create organized storage path
+        const fileName = `${Date.now()}-${logoFile.name}`
+        const filePath = `events/${userId}/${eventId}/logo/${fileName}`
+        
+        const { data: logoData, error: logoError } = await supabase.storage
+          .from('event-media')
+          .upload(filePath, logoFile)
+          
+        if (logoError) {
+          console.error('Error uploading logo:', logoError)
+          toast.error('Failed to upload logo')
+          return
+        }
+        
+        // Get public URL
+        const { data: publicUrlData } = await supabase.storage
+          .from('event-media')
+          .getPublicUrl(filePath)
+          
+        logoUrl = publicUrlData.publicUrl
+      }
+      
+      // Generate QR code URL for the event
+      const baseUrl = window.location.origin
+      const qrCodeUrl = `${baseUrl}/events/${eventId}/rsvp`
+      
+      // Create event
+      const { data: event, error: eventError } = await supabase
+        .from('events')
         .insert({
+          id: eventId,
           name: data.name,
-          description: data.description || "",
           date: data.date.toISOString(),
           location: data.location,
-          status: data.status,
-          max_attendees: data.max_attendees || null,
+          description: data.description || '',
           is_public: data.is_public,
-          cover_image_url: thumbnailUrl || data.cover_image_url || null,
+          max_attendees: data.max_attendees || null,
           custom_url: data.custom_url || null,
-          user_id: userId,
-          created_by: userId,
           organizer_id: userId,
-          qr_code_url: ""
+          status: 'published',
+          cover_image_url: thumbnailUrl,
+          logo_url: logoUrl || null,
+          qr_code_url: qrCodeUrl
         } as any)
-        .select("id")
+        .select()
         .single()
-      
-      if (error) {
-        throw error
+        
+      if (eventError) {
+        console.error('Error creating event:', eventError)
+        toast.error('Failed to create event')
+        return
       }
-      
-      // Get the new event ID
-      const eventId = (response as any).id as string
-      
-      if (!eventId) {
-        throw new Error("Failed to get event ID")
-      }
-      
-      // Update the event with the QR code URL
-      const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fcb-beta.replit.app%2Fevents%2F${eventId}%2Fgallery&size=300x300&margin=10`
-      
-      // Use a complete type assertion to avoid TypeScript errors
-      await supabase
-        .from("events")
-        .update({ 
-          qr_code_url: qrCodeUrl 
-        } as any)
-        .match({ id: eventId } as any)
       
       // Create gallery for the event
       const { error: galleryError } = await supabase
-        .from("galleries")
+        .from('galleries')
         .insert({
           event_id: eventId,
-          name: `${data.name} Gallery`,
-          description: `Gallery for ${data.name}`,
-          settings: {
-            layout: "grid",
-            allowUploads: true,
-            allowedTypes: ["image/jpeg", "image/png", "image/gif", "image/webp"],
-            maxUploadSize: 10 * 1024 * 1024, // 10MB
-            requireApproval: true
-          }
+          is_active: true
         } as any)
-      
+        
       if (galleryError) {
-        console.error("Error creating gallery:", galleryError)
-        // Continue despite gallery error
+        console.error('Error creating gallery:', galleryError)
+        toast.error('Failed to create gallery')
+        // We won't return here as the event is already created
       }
       
-      toast.success("Event created successfully!")
-      
-      // Give database a moment to process all writes before redirecting
-      // Increased timeout to ensure database consistency and force a full page refresh
-      // rather than client-side navigation to ensure all data is refreshed
-      setTimeout(() => {
-        // Hard redirect to force complete data refetch from all sources
-        window.location.href = "/protected/dashboard"
-      }, 2000)
+      toast.success('Event created successfully!')
+      router.push('/dashboard/events')
       
     } catch (error) {
-      console.error("Error creating event:", error)
-      toast.error("Failed to create event. Please try again.")
+      console.error('Error:', error)
+      toast.error('An unexpected error occurred')
     } finally {
       setIsSubmitting(false)
     }
@@ -450,7 +482,7 @@ export function EventForm() {
               type="button" 
               disabled={isSubmitting} 
               className="min-w-[120px]"
-              onClick={() => onSubmit(formData)}
+              onClick={() => onSubmit(form.getValues())}
             >
               {isSubmitting ? (
                 <>
@@ -676,6 +708,77 @@ export function EventForm() {
                         
                         <p className="text-sm text-muted-foreground">
                           Upload a thumbnail image for your event. This will be displayed on the event gallery page and across the platform.
+                        </p>
+                      </div>
+                    </FormItem>
+                    
+                    {/* Event Logo Upload Section */}
+                    <FormItem style={{ gridColumn: isMobile ? 'span 1' : 'span 2' }}>
+                      <FormLabel>Event Logo</FormLabel>
+                      <div className="space-y-4">
+                        {/* Logo preview */}
+                        {logoPreview ? (
+                          <div className="relative w-32 h-32 rounded-full overflow-hidden border border-border">
+                            <Image 
+                              src={logoPreview} 
+                              alt="Logo preview" 
+                              fill 
+                              className="object-cover"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              className="absolute top-2 right-2 h-6 w-6 rounded-full"
+                              onClick={clearLogo}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center w-32 h-32 rounded-full border border-dashed border-border bg-muted/50">
+                            <div className="flex flex-col items-center gap-1">
+                              <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                              <p className="text-xs text-muted-foreground text-center">No logo<br/>uploaded</p>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Upload button */}
+                        <div className="flex gap-3">
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            onClick={() => document.getElementById('logo-upload')?.click()}
+                            disabled={isSubmitting}
+                            className="relative cursor-pointer"
+                          >
+                            <Upload className="mr-2 h-4 w-4" />
+                            {logoPreview ? 'Change Logo' : 'Upload Logo'}
+                            <input
+                              id="logo-upload"
+                              type="file"
+                              accept="image/*"
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                              onChange={handleLogoUpload}
+                            />
+                          </Button>
+                          
+                          {logoPreview && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={clearLogo}
+                              disabled={isSubmitting}
+                            >
+                              <X className="mr-2 h-4 w-4" />
+                              Remove
+                            </Button>
+                          )}
+                        </div>
+                        
+                        <p className="text-sm text-muted-foreground">
+                          Upload a logo for your event. This will appear as a badge on your event page and in listings.
                         </p>
                       </div>
                     </FormItem>

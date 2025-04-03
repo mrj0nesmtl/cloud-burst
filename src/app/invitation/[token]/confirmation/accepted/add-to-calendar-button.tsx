@@ -1,16 +1,16 @@
-'use client'
+"use client"
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { CalendarPlus } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu'
+import { CalendarPlus } from 'lucide-react'
 
-type CalendarEvent = {
+interface CalendarEvent {
   name: string
   details: string
   location: string
@@ -18,75 +18,69 @@ type CalendarEvent = {
   endsAt: string
 }
 
-export function AddToCalendarButton({ event }: { event: CalendarEvent }) {
-  const [isOpen, setIsOpen] = useState(false)
+interface AddToCalendarButtonProps {
+  event: CalendarEvent
+}
+
+export function AddToCalendarButton({ event }: AddToCalendarButtonProps) {
+  const [open, setOpen] = useState(false)
   
-  // Google Calendar URL
+  // Generate Google Calendar URL
   const googleCalendarUrl = () => {
-    const base = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
-    const dates = `&dates=${formatDateForGoogle(event.startsAt)}/${formatDateForGoogle(event.endsAt)}`
-    const details = `&text=${encodeURIComponent(event.name)}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}`
+    const baseUrl = 'https://calendar.google.com/calendar/render'
     
-    return `${base}${dates}${details}`
-  }
-  
-  // iCalendar file download
-  const generateICalContent = () => {
-    const formatICalDate = (dateString: string) => {
-      const date = new Date(dateString)
-      return date.toISOString().replace(/-|:|\.\d+/g, '')
-    }
+    const details = encodeURIComponent(event.details)
+    const location = encodeURIComponent(event.location)
+    const text = encodeURIComponent(event.name)
+    const dates = `${new Date(event.startsAt).toISOString().replace(/-|:|\.\d+/g, '')}/${new Date(event.endsAt).toISOString().replace(/-|:|\.\d+/g, '')}`
     
-    return `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Cloud Burst//Event//EN
-CALSCALE:GREGORIAN
-BEGIN:VEVENT
-SUMMARY:${event.name}
-DTSTART:${formatICalDate(event.startsAt)}
-DTEND:${formatICalDate(event.endsAt)}
-LOCATION:${event.location}
-DESCRIPTION:${event.details}
-STATUS:CONFIRMED
-SEQUENCE:0
-END:VEVENT
-END:VCALENDAR`
+    return `${baseUrl}?action=TEMPLATE&text=${text}&dates=${dates}&details=${details}&location=${location}&sf=true&output=xml`
   }
   
-  const downloadICalFile = () => {
-    const content = generateICalContent()
-    const element = document.createElement('a')
-    const file = new Blob([content], { type: 'text/calendar' })
-    element.href = URL.createObjectURL(file)
-    element.download = `${event.name.replace(/\s+/g, '-')}.ics`
-    document.body.appendChild(element)
-    element.click()
-    document.body.removeChild(element)
-  }
-  
-  // Format date for Google Calendar
-  const formatDateForGoogle = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toISOString().replace(/-|:|\.\d+/g, '')
-  }
-  
-  // Outlook.com calendar URL
-  const outlookCalendarUrl = () => {
-    const base = 'https://outlook.live.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent'
-    const subject = `&subject=${encodeURIComponent(event.name)}`
-    const startDate = `&startdt=${event.startsAt}`
-    const endDate = `&enddt=${event.endsAt}`
-    const body = `&body=${encodeURIComponent(event.details)}`
-    const location = `&location=${encodeURIComponent(event.location)}`
+  // Generate iCal/Outlook URL (download .ics file)
+  const generateIcsFile = () => {
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `SUMMARY:${event.name}`,
+      `DTSTART:${new Date(event.startsAt).toISOString().replace(/-|:|\.\d+/g, '')}`,
+      `DTEND:${new Date(event.endsAt).toISOString().replace(/-|:|\.\d+/g, '')}`,
+      `LOCATION:${event.location}`,
+      `DESCRIPTION:${event.details}`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\n')
     
-    return `${base}${subject}${startDate}${endDate}${body}${location}`
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `${event.name.replace(/\s+/g, '_')}.ics`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+  
+  // Generate Yahoo Calendar URL
+  const yahooCalendarUrl = () => {
+    const baseUrl = 'https://calendar.yahoo.com/'
+    
+    const title = encodeURIComponent(event.name)
+    const desc = encodeURIComponent(event.details)
+    const loc = encodeURIComponent(event.location)
+    const st = new Date(event.startsAt).toISOString().replace(/-|:|\.\d+/g, '')
+    const et = new Date(event.endsAt).toISOString().replace(/-|:|\.\d+/g, '')
+    
+    return `${baseUrl}?v=60&title=${title}&st=${st}&et=${et}&desc=${desc}&in_loc=${loc}`
   }
   
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="w-full flex items-center gap-2">
-          <CalendarPlus className="h-4 w-4" />
+        <Button variant="outline" className="w-full">
+          <CalendarPlus className="mr-2 h-4 w-4" />
           Add to Calendar
         </Button>
       </DropdownMenuTrigger>
@@ -94,11 +88,11 @@ END:VCALENDAR`
         <DropdownMenuItem onClick={() => window.open(googleCalendarUrl(), '_blank')}>
           Google Calendar
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={downloadICalFile}>
-          Apple Calendar
+        <DropdownMenuItem onClick={generateIcsFile}>
+          Outlook / iCal
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => window.open(outlookCalendarUrl(), '_blank')}>
-          Outlook Calendar
+        <DropdownMenuItem onClick={() => window.open(yahooCalendarUrl(), '_blank')}>
+          Yahoo Calendar
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

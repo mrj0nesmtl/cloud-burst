@@ -10,8 +10,8 @@ import { formatDate } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { AddToCalendarButton } from './add-to-calendar-button'
-import { ShareEventButton } from './share-event-button'
+import { AddToCalendarButton } from '@/app/invitation/[token]/confirmation/accepted/add-to-calendar-button'
+import { ShareEventButton } from '@/app/invitation/[token]/confirmation/accepted/share-event-button'
 
 export const metadata: Metadata = {
   title: 'RSVP Confirmed | Cloud Burst',

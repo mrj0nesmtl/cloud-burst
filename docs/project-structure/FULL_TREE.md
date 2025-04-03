@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-02T19:36:17.705Z
+Generated: 2025-04-03T02:32:29.990Z
 
 ## Overview
 
@@ -29,6 +29,8 @@ Generated: 2025-04-02T19:36:17.705Z
 │   ├── workflows/
 │   │   └── versioning.yml
 │   └── dependabot.yml
+├── .vscode/
+│   └── settings.json
 ├── backup-routes.bak/
 │   ├── events-eventId-route/
 │   │   └── gallery/
@@ -59,7 +61,6 @@ Generated: 2025-04-02T19:36:17.705Z
 │   ├── design/
 │   │   ├── UI_components.md
 │   │   ├── consistent-layout.md
-│   │   ├── gallery_implementation.md
 │   │   ├── layout-troubleshooting.md
 │   │   ├── media_schema_migration.md
 │   │   ├── style.md
@@ -148,8 +149,12 @@ Generated: 2025-04-02T19:36:17.705Z
 │   │   ├── session_35_checklist.md
 │   │   ├── session_35_kickoff.md
 │   │   ├── session_35_resources.md
+│   │   ├── session_36_checklist.md
+│   │   ├── session_36_kickoff_prompt.md
+│   │   ├── session_36_resources.md
 │   │   └── version-sync.plan
 │   ├── features/
+│   │   ├── gallery_implementation.md
 │   │   ├── qr-scan-components.md
 │   │   └── qr-scanner-types.md
 │   ├── planning/
@@ -172,6 +177,7 @@ Generated: 2025-04-02T19:36:17.705Z
 │   │   ├── app_tree.md
 │   │   ├── architecture_tree.md
 │   │   ├── auth_tree.md
+│   │   ├── camera_tree.md
 │   │   ├── components_tree.md
 │   │   ├── cursor_tree.md
 │   │   ├── dashboard_tree.md
@@ -179,15 +185,18 @@ Generated: 2025-04-02T19:36:17.705Z
 │   │   ├── events_tree.md
 │   │   ├── gallery_tree.md
 │   │   ├── hooks_tree.md
+│   │   ├── invitation_tree.md
 │   │   ├── lib_tree.md
 │   │   ├── planning_tree.md
 │   │   ├── protected_tree.md
 │   │   ├── public_tree.md
+│   │   ├── scan_tree.md
 │   │   ├── store_tree.md
 │   │   ├── styles_tree.md
 │   │   ├── supabase_tree.md
 │   │   ├── types_tree.md
-│   │   └── ui_tree.md
+│   │   ├── ui_tree.md
+│   │   └── utils_tree.md
 │   ├── rbac/
 │   │   └── role_based_access_control.md
 │   ├── user-flows/
@@ -415,7 +424,9 @@ Generated: 2025-04-02T19:36:17.705Z
 │   │   │   ├── [token]/
 │   │   │   │   ├── confirmation/
 │   │   │   │   │   ├── accepted/
-│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   ├── add-to-calendar-button.tsx
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── share-event-button.tsx
 │   │   │   │   │   └── declined/
 │   │   │   │   │       └── page.tsx
 │   │   │   │   ├── details/
@@ -725,6 +736,7 @@ Generated: 2025-04-02T19:36:17.705Z
 │   │   │   ├── upload-dropzone.tsx
 │   │   │   └── upload-with-tags.tsx
 │   │   ├── invitation/
+│   │   │   ├── SimpleScan.tsx
 │   │   │   ├── qr-scanner.tsx
 │   │   │   └── scanner-overlay.tsx
 │   │   ├── invitations/
@@ -840,6 +852,7 @@ Generated: 2025-04-02T19:36:17.705Z
 │   │   ├── use-auth.ts
 │   │   ├── use-debounced-auth.ts
 │   │   ├── use-events.ts
+│   │   ├── use-media-query.ts
 │   │   ├── use-permissions.ts
 │   │   ├── use-profile.ts
 │   │   ├── use-toast.ts
@@ -878,6 +891,7 @@ Generated: 2025-04-02T19:36:17.705Z
 │   │   │   ├── photos.ts
 │   │   │   ├── run-migration.js
 │   │   │   ├── search.ts
+│   │   │   ├── server-auth.ts
 │   │   │   ├── server.ts
 │   │   │   ├── templates.ts
 │   │   │   ├── test-utils.ts
@@ -904,7 +918,8 @@ Generated: 2025-04-02T19:36:17.705Z
 │   │   ├── user-sessions.ts
 │   │   └── utils.ts
 │   ├── scripts/
-│   │   └── mobile-menu.js
+│   │   ├── mobile-menu.js
+│   │   └── test-invitation.js
 │   ├── store/
 │   │   ├── events-store.ts
 │   │   ├── index.ts
@@ -918,6 +933,7 @@ Generated: 2025-04-02T19:36:17.705Z
 │   │   ├── events.ts
 │   │   ├── gallery.ts
 │   │   ├── invitations.ts
+│   │   ├── jsqr.d.ts
 │   │   ├── media.ts
 │   │   ├── notifications.ts
 │   │   ├── rsvp.ts
@@ -1025,8 +1041,11 @@ Generated: 2025-04-02T19:36:17.705Z
 │   ├── Invitations Table Schema.csv
 │   ├── RSVPs Table Structure.csv
 │   ├── Retrieve Foreign Key Constraints.csv
+│   ├── Supabase Snippet Add Thumbnail URL to Events.csv
 │   ├── Supabase Snippet List RLS Policies for RSVPs Table.csv
+│   ├── events_rows (1).csv
 │   ├── events_rows.csv
+│   ├── galleries_rows (1).csv
 │   └── galleries_rows.csv
 ├── .DS_Store
 ├── .gitignore
@@ -1034,6 +1053,7 @@ Generated: 2025-04-02T19:36:17.705Z
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
+├── check_events_schema.sql
 ├── cloud-burst.code-workspace
 ├── components.json
 ├── eslint.config.mjs
@@ -1046,20 +1066,21 @@ Generated: 2025-04-02T19:36:17.705Z
 ├── postcss.config.mjs
 ├── tailwind.config.js
 ├── tailwind.config.ts
+├── test-invitation.sql
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-237 directories, 803 files
+238 directories, 823 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11746 file(s)
-- tsx: 474 file(s)
-- js: 27761 file(s)
-- json: 2012 file(s)
-- md: 1477 file(s)
-- css: 26 file(s)
+- ts: 11759 file(s)
+- tsx: 477 file(s)
+- js: 27832 file(s)
+- json: 2019 file(s)
+- md: 1486 file(s)
+- css: 27 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns

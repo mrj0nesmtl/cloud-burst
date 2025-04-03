@@ -59,6 +59,9 @@ async function getDashboardData() {
           id,
           name,
           date,
+          status,
+          location,
+          cover_image_url,
           event_attendees(count),
           photos(count)
         `)
@@ -70,6 +73,9 @@ async function getDashboardData() {
       id: event.id,
       name: event.name,
       date: event.date,
+      status: event.status,
+      location: event.location,
+      cover_image_url: event.cover_image_url,
       attendeeCount: event.event_attendees?.[0]?.count ?? 0,
       photoCount: event.photos?.[0]?.count ?? 0,
     })) ?? []

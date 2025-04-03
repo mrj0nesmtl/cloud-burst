@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-02T19:36:19.296Z
+Generated: 2025-04-03T02:32:31.076Z
 
 ## Overview
 
@@ -22,7 +22,6 @@ Generated: 2025-04-02T19:36:19.296Z
 ├── design/
 │   ├── UI_components.md
 │   ├── consistent-layout.md
-│   ├── gallery_implementation.md
 │   ├── layout-troubleshooting.md
 │   ├── media_schema_migration.md
 │   ├── style.md
@@ -111,8 +110,12 @@ Generated: 2025-04-02T19:36:19.296Z
 │   ├── session_35_checklist.md
 │   ├── session_35_kickoff.md
 │   ├── session_35_resources.md
+│   ├── session_36_checklist.md
+│   ├── session_36_kickoff_prompt.md
+│   ├── session_36_resources.md
 │   └── version-sync.plan
 ├── features/
+│   ├── gallery_implementation.md
 │   ├── qr-scan-components.md
 │   └── qr-scanner-types.md
 ├── planning/
@@ -135,6 +138,7 @@ Generated: 2025-04-02T19:36:19.296Z
 │   ├── app_tree.md
 │   ├── architecture_tree.md
 │   ├── auth_tree.md
+│   ├── camera_tree.md
 │   ├── components_tree.md
 │   ├── cursor_tree.md
 │   ├── dashboard_tree.md
@@ -142,15 +146,18 @@ Generated: 2025-04-02T19:36:19.296Z
 │   ├── events_tree.md
 │   ├── gallery_tree.md
 │   ├── hooks_tree.md
+│   ├── invitation_tree.md
 │   ├── lib_tree.md
 │   ├── planning_tree.md
 │   ├── protected_tree.md
 │   ├── public_tree.md
+│   ├── scan_tree.md
 │   ├── store_tree.md
 │   ├── styles_tree.md
 │   ├── supabase_tree.md
 │   ├── types_tree.md
-│   └── ui_tree.md
+│   ├── ui_tree.md
+│   └── utils_tree.md
 ├── rbac/
 │   └── role_based_access_control.md
 ├── user-flows/
@@ -167,12 +174,12 @@ Generated: 2025-04-02T19:36:19.296Z
 ├── .DS_Store
 └── README.md
 
-11 directories, 147 files
+11 directories, 154 files
 
 ```
 
 ## File Type Breakdown
-- md: 142 file(s)
+- md: 149 file(s)
 
 ## Ignored Patterns
 - node_modules

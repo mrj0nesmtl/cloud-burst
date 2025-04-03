@@ -69,18 +69,29 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
+// Extended event interface that includes all fields we're using
+interface ExtendedEvent extends Event {
+  use_logo_as_main_image?: boolean;
+  instagram_url?: string;
+  facebook_url?: string;
+  twitter_url?: string;
+  website_url?: string;
+  accent_color?: string;
+}
+
 interface EventFormProps {
-  initialData?: Event
-  userId: string
-  mode?: 'create' | 'edit'
+  initialData?: ExtendedEvent;
+  userId: string;
+  mode?: 'create' | 'edit';
 }
 
 export function EventForm({ initialData, userId, mode = 'create' }: EventFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLogoUploading, setIsLogoUploading] = useState(false)
+  const [isThumbnailUploading, setIsThumbnailUploading] = useState(false)
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [logoPreview, setLogoPreview] = useState<string | null>(initialData?.logo_url || null)
-  const [isUploading, setIsUploading] = useState(false)
   const [customUrl, setCustomUrl] = useState("")
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
@@ -163,14 +174,14 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
       return logoPreview || undefined // Return existing URL if no new file or undefined
     }
     
-    setIsUploading(true)
+    setIsLogoUploading(true)
     try {
       const supabase = createClient()
       
       // Create a unique filename
       const fileExt = logoFile.name.split('.').pop()
-      const fileName = `event-logo-${eventId}-${Date.now()}.${fileExt}`
-      const filePath = `event-logos/${fileName}`
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 10)}.${fileExt}`
+      const filePath = `logos/${eventId}/${fileName}`
       
       // Upload the file
       const { error: uploadError } = await supabase
@@ -195,7 +206,7 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
       toast.error('Failed to upload logo')
       return undefined
     } finally {
-      setIsUploading(false)
+      setIsLogoUploading(false)
     }
   }
   
@@ -204,6 +215,48 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
     setLogoFile(null)
     setLogoPreview(null)
     form.setValue('logo_url', '')
+  }
+  
+  // Handle thumbnail upload to Supabase Storage
+  const uploadThumbnail = async (eventId: string): Promise<string | undefined> => {
+    if (!thumbnailFile) {
+      return thumbnailPreview || undefined // Return existing URL if no new file or undefined
+    }
+    
+    setIsThumbnailUploading(true)
+    try {
+      const supabase = createClient()
+      
+      // Create a unique filename
+      const fileExt = thumbnailFile.name.split('.').pop()
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 10)}.${fileExt}`
+      const filePath = `event-thumbnails/${fileName}`
+      
+      // Upload the file
+      const { error: uploadError } = await supabase
+        .storage
+        .from('event-assets')
+        .upload(filePath, thumbnailFile, {
+          cacheControl: '3600',
+          upsert: true
+        })
+      
+      if (uploadError) throw uploadError
+      
+      // Get the public URL
+      const { data } = supabase
+        .storage
+        .from('event-assets')
+        .getPublicUrl(filePath)
+      
+      return data.publicUrl
+    } catch (error) {
+      console.error('Error uploading thumbnail:', error)
+      toast.error('Failed to upload thumbnail')
+      return undefined
+    } finally {
+      setIsThumbnailUploading(false)
+    }
   }
   
   // Function to handle thumbnail image upload
@@ -274,14 +327,14 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
               website_url: values.website_url,
               accent_color: values.accent_color,
               use_logo_as_main_image: values.use_logo_as_main_image,
-            },
+            } as any,
           ])
           .select()
         
         if (error) throw error
         
         // Upload logo if there is one
-        if (logoFile) {
+        if (logoFile && data && data[0]) {
           logoUrl = await uploadLogo(data[0].id) || undefined;
           
           // Update event with logo URL
@@ -293,15 +346,36 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
           }
         }
         
-        toast.success('Event created successfully')
-        router.push(`/protected/events/${data[0].id}`)
-      } else {
-        // For edit mode, upload logo first if there is a new one
-        if (logoFile) {
-          logoUrl = await uploadLogo(initialData.id) || undefined;
+        // Upload thumbnail if there is a new one
+        if (thumbnailFile && data && data[0]) {
+          const thumbnailUrl = await uploadThumbnail(data[0].id);
+          
+          // Update event with thumbnail URL if it was successfully uploaded
+          if (thumbnailUrl) {
+            await supabase
+              .from('events')
+              .update({ cover_image_url: thumbnailUrl } as any)
+              .eq('id', data[0].id)
+          }
         }
         
-        // Update existing event
+        toast.success('Event created successfully')
+        router.push(`/protected/events/${data && data[0] ? data[0].id : ''}`)
+      } else {
+        // For edit mode, sequence the uploads one after another to avoid conflicts
+        let coverImageUrl = values.cover_image_url;
+        
+        // Step 1: Upload logo first if there is a new one
+        if (logoFile) {
+          logoUrl = await uploadLogo(initialData!.id) || undefined;
+        }
+        
+        // Step 2: Upload thumbnail if there is a new one - only after logo upload is complete
+        if (thumbnailFile) {
+          coverImageUrl = await uploadThumbnail(initialData!.id);
+        }
+        
+        // Step 3: Update existing event with all data
         const { error } = await supabase
           .from('events')
           .update({
@@ -320,13 +394,14 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
             accent_color: values.accent_color,
             status: values.status,
             use_logo_as_main_image: values.use_logo_as_main_image,
-          })
-          .eq('id', initialData.id)
+            ...(coverImageUrl && { cover_image_url: coverImageUrl }),
+          } as any)
+          .eq('id', initialData!.id)
         
         if (error) throw error
         
         toast.success('Event updated successfully')
-        router.push(`/protected/events/${initialData.id}`)
+        router.push(`/protected/events/${initialData!.id}`)
         router.refresh()
       }
     } catch (error) {
@@ -379,10 +454,10 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
                 type="button"
                 variant="outline"
                 onClick={() => document.getElementById('logo')?.click()}
-                disabled={isUploading}
+                disabled={isLogoUploading}
                 className="mr-2"
               >
-                {isUploading ? (
+                {isLogoUploading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Uploading...
@@ -877,10 +952,10 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
                 type="button"
                 variant="outline"
                 onClick={() => document.getElementById('thumbnail-upload')?.click()}
-                disabled={isSubmitting}
+                disabled={isThumbnailUploading}
                 className="mr-2"
               >
-                {isSubmitting ? (
+                {isThumbnailUploading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Uploading...
@@ -908,7 +983,7 @@ export function EventForm({ initialData, userId, mode = 'create' }: EventFormPro
           </Button>
           <Button 
             type="submit" 
-            disabled={isSubmitting || isUploading}
+            disabled={isSubmitting || isLogoUploading || isThumbnailUploading}
             className="min-w-[120px]"
           >
             {isSubmitting ? (

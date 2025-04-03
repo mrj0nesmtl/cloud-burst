@@ -16,6 +16,8 @@ export interface Event {
   is_public: boolean
   cover_image_url: string | null
   qr_code_url: string | null
+  thumbnail_url?: string | null
+  logo_url?: string | null
   created_at: string
   updated_at: string
   custom_url?: string | null
@@ -98,6 +100,8 @@ export interface CreateEventParams {
   max_attendees?: number
   is_public?: boolean
   cover_image_url?: string
+  thumbnail_url?: string
+  logo_url?: string
 }
 
 export interface UpdateEventParams {
@@ -109,6 +113,8 @@ export interface UpdateEventParams {
   max_attendees?: number
   is_public?: boolean
   cover_image_url?: string
+  thumbnail_url?: string
+  logo_url?: string
   qr_code_url?: string
 }
 

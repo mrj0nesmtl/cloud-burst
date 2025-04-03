@@ -12,7 +12,7 @@ import {
   FileEditIcon, 
   EyeIcon, 
   AlertTriangleIcon, 
-  Activity, 
+  Activity,
   Users,
   MapPin,
   ImageIcon,
