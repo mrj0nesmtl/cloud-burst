@@ -15,6 +15,7 @@ import { RsvpForm } from './rsvp-form'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, MapPin, Clock, User } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
+import { validateInvitationToken, getEventForInvitation } from '@/lib/supabase/invitations'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -57,50 +58,27 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
     return notFound()
   }
   
-  // Validate the invitation token
+  // Validate the invitation token using our new helper function
+  const invitation = await validateInvitationToken(token)
+  
+  if (!invitation) {
+    // Redirect to expired page if token is invalid or expired
+    return redirect(`/invitation/expired?token=${token}`)
+  }
+  
+  // Set token in app.settings for RLS policies
   const cookieStore = cookies()
   const supabase = await createServerClient({ cookies: () => cookieStore })
   
-  // Set token in app.settings for RLS policies
   await (supabase as any).rpc('set_invitation_token', {
     token: token
   })
   
-  // Get invitation details
-  const { data: invitation, error } = await supabase
-    .from('invitations')
-    .select('id, event_id, email, name, status, rsvp_status, expires_at, metadata, created_at, sent_at, updated_at, rsvp_date')
-    .eq('token', token)
-    .single()
+  // Get event details using our new helper function
+  const event = await getEventForInvitation(invitation.event_id)
   
-  if (error || !invitation) {
-    console.error('Invitation not found:', error)
-    return notFound()
-  }
-  
-  // Check if invitation has expired
-  const now = new Date()
-  const expiresAt = invitation.expires_at ? new Date(invitation.expires_at) : null
-  
-  if (invitation.status === 'expired' || (expiresAt && now > expiresAt)) {
-    return redirect(`/invitation/expired?token=${token}`)
-  }
-  
-  // Mark invitation as opened if not already opened
-  await supabase
-    .from('invitations')
-    .update({ status: 'opened' })
-    .eq('id', invitation.id)
-  
-  // Get event details
-  const { data: event, error: eventError } = await supabase
-    .from('events')
-    .select('id, name, date, location, description, cover_image_url, organizer_id')
-    .eq('id', invitation.event_id)
-    .single()
-  
-  if (eventError || !event) {
-    console.error('Event not found:', eventError)
+  if (!event) {
+    console.error('Event not found for invitation')
     return notFound()
   }
   
@@ -187,13 +165,13 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
                 </div>
               )}
               
-              {expiresAt && (
+              {invitation.expires_at && (
                 <div className="flex items-start space-x-3">
                   <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
                   <div>
                     <h4 className="font-medium">RSVP Deadline</h4>
                     <p className="text-sm text-muted-foreground">
-                      {expiresAt ? formatDate(expiresAt.toISOString()) : ''}
+                      {invitation.expires_at ? formatDate(invitation.expires_at) : ''}
                     </p>
                   </div>
                 </div>
@@ -248,12 +226,20 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
           </div>
         </CardContent>
         
-        <CardFooter className="flex flex-col space-y-2 text-center text-xs text-muted-foreground">
-          <p>This invitation was sent to {invitation.email}</p>
-          {expiresAt && (
-            <p>This invitation expires on {formatDate(expiresAt.toISOString())}</p>
+        <CardFooter className="flex flex-col gap-4 sm:flex-row sm:justify-between">
+          <Button variant="outline" asChild>
+            <Link href="/">
+              Back to Home
+            </Link>
+          </Button>
+          
+          {(invitation.metadata as any)?.magic_link && (
+            <Button variant="outline" asChild>
+              <Link href={(invitation.metadata as any)?.magic_link}>
+                Sign in to your account
+              </Link>
+            </Button>
           )}
-          <p>Powered by Cloud Burst</p>
         </CardFooter>
       </Card>
     </div>
