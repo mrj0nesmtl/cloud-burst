@@ -49,7 +49,7 @@ export const sendEventInvitation = async ({
       eventDate: eventDetails.date,
       eventLocation: eventDetails.location,
       eventDescription: eventDetails.description,
-      invitationLink: `${process.env.NEXT_PUBLIC_BASE_URL}/invite/${invitationToken}`,
+      invitationLink: `${process.env.NEXT_PUBLIC_BASE_URL}/invitation/${invitationToken}`,
     }
   });
 }

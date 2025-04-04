@@ -16,13 +16,13 @@ interface EventInvitationQRProps {
   baseUrl?: string
 }
 
-export function EventInvitationQR({ invitation, eventName, baseUrl = 'https://app.cloudburst.io' }: EventInvitationQRProps) {
+export function EventInvitationQR({ invitation, eventName, baseUrl = 'https://cb-beta.replit.app' }: EventInvitationQRProps) {
   const [isCopied, setIsCopied] = useState(false)
   const [activeTab, setActiveTab] = useState('qr')
   const [isClient, setIsClient] = useState(false)
   
   // Create invitation URLs
-  const inviteUrl = `${baseUrl}/invite/${invitation.token}`
+  const inviteUrl = `${baseUrl}/invitation/${invitation.token}`
   const magicLinkUrl = invitation.metadata?.magic_link || inviteUrl
   
   // Set isClient to true when component mounts (to prevent hydration issues with QR code)
