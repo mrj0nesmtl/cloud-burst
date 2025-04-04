@@ -172,17 +172,16 @@ export async function POST(request: NextRequest) {
     const successCount = sendResults.filter(result => result.success).length
     const failureCount = sendResults.filter(result => !result.success).length
     
+    // Return success response with count
     return NextResponse.json({
       success: true,
-      total: invitations.length,
-      sent: successCount,
-      failed: failureCount,
-      results: sendResults,
+      count: invitations.length,
+      message: `${invitations.length} invitation${invitations.length === 1 ? '' : 's'} sent successfully`
     })
   } catch (error) {
     console.error('Error sending invitations:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to send invitations' },
       { status: 500 }
     )
   }
