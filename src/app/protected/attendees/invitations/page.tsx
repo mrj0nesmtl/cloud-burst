@@ -170,8 +170,8 @@ export default function InvitationsPage() {
         }, {} as Record<string, EventCount>) || {};
         
         // Convert to array and sort
-        const eventCountsArray = Object.values(eventCounts)
-          .sort((a: EventCount, b: EventCount) => new Date(b.date || '0').getTime() - new Date(a.date || '0').getTime());
+        const eventCountsArray = Object.values(eventCounts) as EventCount[];
+        eventCountsArray.sort((a, b) => new Date(b.date || '0').getTime() - new Date(a.date || '0').getTime());
         
         // Update state
         setEventCountsArray(eventCountsArray);

@@ -171,8 +171,21 @@ export function EventList({
     try {
       const newEvent = await duplicateEvent(id);
       
+      // Transform the returned event into EventWithCounts format
+      const transformedEvent: EventWithCounts = {
+        ...(newEvent.data || {}),
+        attendees_count: 0,
+        photos_count: 0,
+        // Add other required fields with default values
+        id: newEvent.data?.id || '',
+        name: newEvent.data?.name || '',
+        status: newEvent.data?.status || 'draft',
+        date: newEvent.data?.date || new Date().toISOString(),
+        is_public: newEvent.data?.is_public || false,
+      };
+      
       // Add the new event to the list
-      setFilteredEvents(prev => [newEvent as EventWithCounts, ...prev]);
+      setFilteredEvents(prev => [transformedEvent, ...prev]);
       
       toast({
         title: "Event duplicated",
