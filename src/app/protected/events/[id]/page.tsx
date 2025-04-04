@@ -20,6 +20,7 @@ import { RsvpTabTrigger } from '@/components/events/rsvp-tab-trigger'
 import { Photo } from '@/types/events'
 import { Invitation } from '@/types/invitations'
 import { Button } from '@/components/ui/button'
+import { EventInvitationsPanel } from '@/components/events/event-invitations-panel'
 import {
   Tooltip,
   TooltipContent,
@@ -1165,20 +1166,7 @@ export default async function EventPage({ params }: EventPageProps) {
               </Link>
             </CardHeader>
             <CardContent style={{ padding: '0.5rem' }}>
-              {invitations && invitations.length > 0 ? (
-                <div style={{ width: '100%' }}>
-                  {/* Invitation list would go here */}
-                </div>
-              ) : (
-                <div style={{ 
-                  textAlign: 'center', 
-                  padding: '0.75rem', 
-                  color: 'var(--muted-foreground)',
-                  fontSize: '0.75rem'
-                }}>
-                  No invitations have been sent for this event.
-                </div>
-              )}
+              <EventInvitationsPanel eventId={params.id} />
             </CardContent>
           </Card>
         </TabsContent>
