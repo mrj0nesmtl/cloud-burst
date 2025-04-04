@@ -13,9 +13,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '@/components/ui/separator'
 import { RsvpForm } from './rsvp-form'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, MapPin, Clock, User } from 'lucide-react'
+import { Calendar, MapPin, Clock, User, Lock } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 import { validateInvitationToken, getEventForInvitation } from '@/lib/supabase/invitations'
+import { MagicLinkAuth } from '@/components/invitations/magic-link-auth'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -95,6 +97,10 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
     .select('*')
     .eq('invitation_id', invitation.id)
     .maybeSingle()
+  
+  // Check if user is authenticated
+  const { data: { session } } = await supabase.auth.getSession()
+  const isAuthenticated = !!session?.user
   
   // Format event date
   const eventDate = event.date ? formatDate(event.date) : 'Date to be determined'
@@ -190,40 +196,68 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
           
           <Separator className="my-6" />
           
-          <div>
-            <h3 className="text-xl font-semibold text-center mb-4">RSVP</h3>
-            <RsvpForm 
-              invitation={{
-                id: invitation.id,
-                event_id: invitation.event_id,
-                email: invitation.email || '',
-                name: invitation.name || '',
-                token: token,
-                status: invitation.status as any,
-                rsvp_status: invitation.rsvp_status as any,
-                expires_at: invitation.expires_at,
-                metadata: {
-                  notes: (invitation.metadata as any)?.notes,
-                  dietary_preferences: (invitation.metadata as any)?.dietary_preferences,
-                  plus_one_allowed: (invitation.metadata as any)?.plus_one_allowed || false,
-                  plus_one_used: (invitation.metadata as any)?.plus_one_used || false,
-                  magic_link: (invitation.metadata as any)?.magic_link
-                },
-                created_at: invitation.created_at,
-                sent_at: invitation.sent_at || null,
-                updated_at: invitation.updated_at || invitation.created_at,
-                rsvp_date: invitation.rsvp_date as any
-              }}
-              token={token}
-              rsvp={rsvp ? {
-                id: rsvp.id,
-                status: rsvp.status,
-                guest_count: rsvp.guest_count,
-                dietary_restrictions: rsvp.dietary_restrictions || undefined,
-                notes: rsvp.notes || undefined
-              } : null}
-            />
-          </div>
+          {!isAuthenticated ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-center gap-2 text-center mb-4">
+                <Lock className="h-5 w-5 text-primary" />
+                <h3 className="text-xl font-semibold">Secure Access</h3>
+              </div>
+              
+              <Tabs defaultValue="magic-link" className="w-full">
+                <TabsList className="grid w-full grid-cols-1">
+                  <TabsTrigger value="magic-link">Continue with Magic Link</TabsTrigger>
+                </TabsList>
+                <TabsContent value="magic-link" className="mt-4">
+                  <MagicLinkAuth 
+                    invitationToken={token}
+                    redirectUrl={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/invitation/${token}`}
+                    title="Secure your RSVP"
+                    description="Enter your email to receive a secure access link"
+                  />
+                </TabsContent>
+              </Tabs>
+              
+              <div className="text-center text-sm text-muted-foreground mt-4">
+                <p>Please authenticate to respond to this invitation</p>
+                <p className="mt-1">We use a secure, passwordless login system</p>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h3 className="text-xl font-semibold text-center mb-4">RSVP</h3>
+              <RsvpForm 
+                invitation={{
+                  id: invitation.id,
+                  event_id: invitation.event_id,
+                  email: invitation.email || '',
+                  name: invitation.name || '',
+                  token: token,
+                  status: invitation.status as any,
+                  rsvp_status: invitation.rsvp_status as any,
+                  expires_at: invitation.expires_at,
+                  metadata: {
+                    notes: (invitation.metadata as any)?.notes,
+                    dietary_preferences: (invitation.metadata as any)?.dietary_preferences,
+                    plus_one_allowed: (invitation.metadata as any)?.plus_one_allowed || false,
+                    plus_one_used: (invitation.metadata as any)?.plus_one_used || false,
+                    magic_link: (invitation.metadata as any)?.magic_link
+                  },
+                  created_at: invitation.created_at,
+                  sent_at: invitation.sent_at || null,
+                  updated_at: invitation.updated_at || invitation.created_at,
+                  rsvp_date: invitation.rsvp_date as any
+                }}
+                token={token}
+                rsvp={rsvp ? {
+                  id: rsvp.id,
+                  status: rsvp.status,
+                  guest_count: rsvp.guest_count,
+                  dietary_restrictions: rsvp.dietary_restrictions || undefined,
+                  notes: rsvp.notes || undefined
+                } : null}
+              />
+            </div>
+          )}
         </CardContent>
         
         <CardFooter className="flex flex-col gap-4 sm:flex-row sm:justify-between">

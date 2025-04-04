@@ -73,6 +73,31 @@ export function RsvpForm({ invitation, token, rsvp }: RsvpFormProps) {
         throw new Error(data.error || 'Failed to submit RSVP')
       }
       
+      // Track the RSVP submission analytics
+      try {
+        await fetch('/api/analytics/rsvp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            invitationId: invitation.id,
+            status: values.status,
+            timestamp: new Date().toISOString(),
+            source: 'invitation_page',
+            details: {
+              guestCount: values.guestCount || 1,
+              hasPlusOne: values.plusOne || false,
+              hasDietaryRestrictions: !!values.dietaryRestrictions?.trim(),
+              hasNotes: !!values.notes?.trim()
+            }
+          }),
+        })
+      } catch (analyticsError) {
+        // Don't fail if analytics tracking fails
+        console.error('Analytics tracking error:', analyticsError)
+      }
+      
       // Show success toast
       toast({
         title: 'RSVP Submitted',

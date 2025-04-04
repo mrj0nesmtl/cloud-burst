@@ -205,7 +205,18 @@ export function EventList({
   }
   
   return (
-    <div className="grid gap-4">
+    <div 
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+        gap: '16px',
+        maxHeight: 'calc(100vh - 280px)',
+        overflowY: 'auto',
+        padding: '4px',
+        paddingRight: '12px'
+      }}
+      className="pr-2 event-grid"
+    >
       {filteredEvents.map((event) => (
         <EnhancedEventCard 
           key={event.id} 
@@ -220,8 +231,19 @@ export function EventList({
 
 export function EventListSkeleton() {
   return (
-    <div className="grid gap-4">
-      {[1, 2, 3].map((i) => (
+    <div 
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+        gap: '16px',
+        maxHeight: 'calc(100vh - 280px)',
+        overflowY: 'auto',
+        padding: '4px',
+        paddingRight: '12px'
+      }}
+      className="pr-2 event-grid"
+    >
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
         <Card key={i} className="overflow-hidden">
           <CardContent className="p-6">
             <div className="space-y-3">

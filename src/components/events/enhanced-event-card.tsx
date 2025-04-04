@@ -171,7 +171,11 @@ export function EnhancedEventCard({
         borderRadius: '0.5rem', 
         background: 'var(--card)',
         cursor: 'pointer',
-        transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        maxHeight: '320px',
       }}
       onClick={handleCardClick}
       className="hover:shadow-md hover:border-primary/20"
@@ -180,7 +184,7 @@ export function EnhancedEventCard({
         <div style={{
           position: 'relative',
           width: '100%',
-          height: '160px',
+          height: '140px',
           overflow: 'hidden'
         }}>
           {event.cover_image_url ? (
@@ -224,8 +228,8 @@ export function EnhancedEventCard({
           {/* Status badge overlay */}
           <div style={{
             position: 'absolute',
-            top: '12px',
-            right: '12px',
+            top: '8px',
+            right: '8px',
             zIndex: 10
           }}>
             {renderStatusBadge()}
@@ -233,7 +237,7 @@ export function EnhancedEventCard({
         </div>
 
         <CardHeader style={{ 
-          padding: '1.25rem 1.25rem 0.75rem',
+          padding: '0.75rem 1rem 0.5rem',
         }}>
           <div style={{ 
             display: 'flex', 
@@ -244,9 +248,10 @@ export function EnhancedEventCard({
           }}>
             <div>
               <CardTitle style={{ 
-                fontSize: isMobile ? '1.125rem' : '1.25rem',
+                fontSize: '1rem',
                 fontWeight: '600',
-                lineHeight: '1.3'
+                lineHeight: '1.3',
+                marginBottom: '0.25rem'
               }}>
                 <Link 
                   href={`/protected/events/${event.id}`} 
@@ -260,28 +265,27 @@ export function EnhancedEventCard({
                 </Link>
               </CardTitle>
               <CardDescription style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                marginTop: '0.25rem',
                 fontSize: '0.875rem',
                 color: 'var(--muted-foreground)',
-                gap: '0.5rem'
+                lineHeight: '1.5',
+                marginBottom: '0.75rem',
+                maxHeight: '3em',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
               }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center' }}>
-                  <CalendarDays style={{ 
-                    marginRight: '0.25rem', 
-                    height: '0.875rem', 
-                    width: '0.875rem' 
-                  }} />
-                  {formatDate(event.date)}
-                </span>
                 {event.location && (
-                  <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                  <span style={{ 
+                    display: 'inline-flex', 
+                    alignItems: 'center',
+                    fontSize: '0.75rem' 
+                  }}>
                     <MapPin style={{ 
                       marginRight: '0.25rem', 
-                      height: '0.875rem', 
-                      width: '0.875rem' 
+                      height: '0.75rem', 
+                      width: '0.75rem' 
                     }} />
                     {event.location}
                   </span>
@@ -410,120 +414,139 @@ export function EnhancedEventCard({
             </div>
           </div>
         </CardHeader>
-        <CardContent style={{ padding: '0 1.25rem 0.75rem' }}>
-          {event.description && (
-            <p style={{ 
-              fontSize: '0.875rem', 
-              color: 'var(--muted-foreground)',
-              marginBottom: '1rem',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden'
-            }}>
-              {event.description}
-            </p>
-          )}
+        <CardContent style={{ 
+          padding: '0 1rem 0.75rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.5rem',
+          flex: 1
+        }}>
           <div style={{ 
             display: 'flex', 
-            flexWrap: 'wrap', 
-            gap: '1rem'
+            flexDirection: 'column',
+            gap: '0.5rem'
           }}>
             <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              fontSize: '0.875rem'
-            }}>
-              <Users style={{ 
-                marginRight: '0.375rem', 
-                height: '1rem', 
-                width: '1rem', 
-                color: 'var(--muted-foreground)' 
-              }} />
-              <span style={{ fontWeight: '500' }}>{event.attendees_count}</span>
-              <span style={{ color: 'var(--muted-foreground)', marginLeft: '0.25rem' }}>attendees</span>
-            </div>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              fontSize: '0.875rem'
-            }}>
-              <ImageIcon style={{ 
-                marginRight: '0.375rem', 
-                height: '1rem', 
-                width: '1rem', 
-                color: 'var(--muted-foreground)' 
-              }} />
-              <span style={{ fontWeight: '500' }}>{event.photos_count}</span>
-              <span style={{ color: 'var(--muted-foreground)', marginLeft: '0.25rem' }}>photos</span>
-            </div>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color: 'var(--muted-foreground)',
               fontSize: '0.75rem'
             }}>
-              {event.is_public ? (
-                <span style={{ 
-                  color: 'var(--green-500)', 
-                  backgroundColor: 'rgba(34, 197, 94, 0.1)', 
-                  padding: '0.125rem 0.5rem', 
-                  borderRadius: '9999px'
-                }}>Public</span>
-              ) : (
-                <span style={{ 
-                  color: 'var(--amber-500)', 
-                  backgroundColor: 'rgba(245, 158, 11, 0.1)', 
-                  padding: '0.125rem 0.5rem', 
-                  borderRadius: '9999px'
-                }}>Private</span>
-              )}
+              <CalendarDays size={14} />
+              <span>{formatDate(event.date)}</span>
+            </div>
+
+            <div style={{
+              display: 'flex',
+              gap: '0.75rem',
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center',
+                gap: '0.25rem',
+                color: 'var(--muted-foreground)',
+                fontSize: '0.75rem'
+              }}>
+                <Users size={14} />
+                <span>{event.attendees_count || 0}</span>
+              </div>
+              
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center',
+                gap: '0.25rem',
+                color: 'var(--muted-foreground)',
+                fontSize: '0.75rem'
+              }}>
+                <ImageIcon size={14} />
+                <span>{event.photos_count || 0}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style={{ 
+            padding: '0.5rem 0 0', 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderTop: '1px solid var(--border)',
+            marginTop: 'auto'
+          }}>
+            <Badge variant={event.is_public ? "default" : "outline"} className="text-xs h-5">
+              {event.is_public ? "Public" : "Private"}
+            </Badge>
+            
+            <div style={{ display: 'flex', gap: '0.25rem' }}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                asChild
+                className="h-6 text-xs px-2 py-0"
+              >
+                <Link href={`/protected/events/${event.id}`}>
+                  View
+                </Link>
+              </Button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="h-6 w-6 p-0"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <MoreHorizontal className="h-3 w-3" />
+                    <span className="sr-only">More</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[160px]">
+                  <DropdownMenuItem asChild>
+                    <Link href={`/protected/events/${event.id}/edit`}>
+                      <Edit className="mr-2 h-3.5 w-3.5" />
+                      Edit
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={(e) => {
+                    e.stopPropagation();
+                    if (onDuplicate) handleDuplicate();
+                  }} disabled={isDuplicating}>
+                    <Copy className="mr-2 h-3.5 w-3.5" />
+                    Duplicate
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    className="text-destructive focus:text-destructive"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsDeleteDialogOpen(true);
+                    }}
+                  >
+                    <Trash className="mr-2 h-3.5 w-3.5" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </CardContent>
-        <div style={{ 
-          borderTop: '1px solid var(--border)', 
-          padding: '0.75rem 1.5rem', 
-          display: 'flex', 
-          justifyContent: 'flex-end'
-        }}>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            asChild
-            style={{
-              height: 'auto',
-              padding: '0.375rem 0.75rem',
-              fontSize: '0.875rem'
-            }}
-          >
-            <Link 
-              href={`/protected/events/${event.id}`}
-              style={{
-                textDecoration: 'none'
-              }}
-            >
-              Manage Event
-            </Link>
-          </Button>
-        </div>
       </Card>
       
       {/* Delete confirmation dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to delete this event?</AlertDialogTitle>
+            <AlertDialogTitle>Delete Event</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the event
-              and all associated data.
+              Are you sure you want to delete this event? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            <AlertDialogAction 
+              onClick={handleDelete} 
               disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
