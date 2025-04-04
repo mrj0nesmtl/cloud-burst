@@ -19,12 +19,56 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
   
+  // Handle invitation token in query params - for magic link authentication flow
+  const invitationToken = request.nextUrl.searchParams.get('invitation_token')
+  
+  if (invitationToken && session) {
+    console.log('Found invitation token in URL - updating user metadata')
+    
+    try {
+      // Update user metadata with invitation token
+      await supabase.auth.updateUser({
+        data: {
+          invitation_token: invitationToken,
+          source: 'invitation'
+        }
+      })
+      
+      // Get the invitation to update its status
+      const { data: invitation } = await supabase
+        .from('invitations')
+        .select('id, status')
+        .eq('token', invitationToken)
+        .single()
+      
+      if (invitation) {
+        // Update invitation status if needed
+        if (invitation.status === 'pending' || invitation.status === 'sent') {
+          await supabase
+            .from('invitations')
+            .update({
+              status: 'opened',
+              updated_at: new Date().toISOString()
+            })
+            .eq('token', invitationToken)
+        }
+      }
+      
+      // Remove token from URL to prevent repeated processing
+      const cleanUrl = new URL(request.url)
+      cleanUrl.searchParams.delete('invitation_token')
+      return NextResponse.redirect(cleanUrl)
+    } catch (error) {
+      console.error('Error processing invitation token:', error)
+    }
+  }
+  
   // Handle invitation links via /invite/:token
   if (request.nextUrl.pathname.startsWith('/invite/')) {
     const token = request.nextUrl.pathname.split('/invite/')[1]
     
     // Redirecting to our invitation handling page with the token
-    return NextResponse.redirect(new URL(`/invitation?token=${token}`, request.url))
+    return NextResponse.redirect(new URL(`/invitation/${token}`, request.url))
   }
 
   // Require authentication for auth-protected routes
@@ -52,8 +96,13 @@ export async function middleware(request: NextRequest) {
   
   // For API routes, check for authentication
   if (request.nextUrl.pathname.startsWith('/api/') && !session) {
-    // Special case for invitation validation API
-    if (request.nextUrl.pathname.startsWith('/api/invitations/validate')) {
+    // Special cases for APIs that don't require authentication
+    if (
+      request.nextUrl.pathname.startsWith('/api/invitations/validate') ||
+      request.nextUrl.pathname.startsWith('/api/invitations/[token]') ||
+      request.nextUrl.pathname.startsWith('/api/auth/magic-link') ||
+      request.nextUrl.pathname.startsWith('/api/invitation/')
+    ) {
       return res
     }
     

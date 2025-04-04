@@ -27,6 +27,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { RsvpDashboard } from '@/components/events/rsvp-dashboard'
+import { Mail } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0

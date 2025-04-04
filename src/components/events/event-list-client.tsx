@@ -171,8 +171,21 @@ export function EventList({
     try {
       const newEvent = await duplicateEvent(id);
       
+      // Transform the returned event into EventWithCounts format
+      const transformedEvent: EventWithCounts = {
+        ...(newEvent.data || {}),
+        attendees_count: 0,
+        photos_count: 0,
+        // Add other required fields with default values
+        id: newEvent.data?.id || '',
+        name: newEvent.data?.name || '',
+        status: newEvent.data?.status || 'draft',
+        date: newEvent.data?.date || new Date().toISOString(),
+        is_public: newEvent.data?.is_public || false,
+      };
+      
       // Add the new event to the list
-      setFilteredEvents(prev => [newEvent as EventWithCounts, ...prev]);
+      setFilteredEvents(prev => [transformedEvent, ...prev]);
       
       toast({
         title: "Event duplicated",
@@ -205,7 +218,18 @@ export function EventList({
   }
   
   return (
-    <div className="grid gap-4">
+    <div 
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+        gap: '16px',
+        maxHeight: 'calc(100vh - 280px)',
+        overflowY: 'auto',
+        padding: '4px',
+        paddingRight: '12px'
+      }}
+      className="pr-2 event-grid"
+    >
       {filteredEvents.map((event) => (
         <EnhancedEventCard 
           key={event.id} 
@@ -220,8 +244,19 @@ export function EventList({
 
 export function EventListSkeleton() {
   return (
-    <div className="grid gap-4">
-      {[1, 2, 3].map((i) => (
+    <div 
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+        gap: '16px',
+        maxHeight: 'calc(100vh - 280px)',
+        overflowY: 'auto',
+        padding: '4px',
+        paddingRight: '12px'
+      }}
+      className="pr-2 event-grid"
+    >
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
         <Card key={i} className="overflow-hidden">
           <CardContent className="p-6">
             <div className="space-y-3">

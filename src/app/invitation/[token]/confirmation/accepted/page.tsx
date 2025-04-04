@@ -1,148 +1,206 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
-import { CheckCircle, CalendarDays, Camera, Share2, CalendarPlus } from 'lucide-react'
-import { createServerClient } from '@/lib/supabase/server'
-import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { Calendar, MapPin, Share2, ArrowLeft, Download, User, Clock } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { validateInvitationToken, getEventForInvitation } from '@/lib/supabase/invitations'
 import { formatDate } from '@/lib/utils'
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { AddToCalendarButton } from '@/app/invitation/[token]/confirmation/accepted/add-to-calendar-button'
-import { ShareEventButton } from '@/app/invitation/[token]/confirmation/accepted/share-event-button'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
-export const metadata: Metadata = {
-  title: 'RSVP Confirmed | Cloud Burst',
-  description: 'Your RSVP has been confirmed',
+interface PageProps {
+  params: {
+    token: string
+  }
 }
 
-export default async function AcceptedPage({ params }: { params: { token: string } }) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const cookieStore = cookies()
+  const supabase = createServerComponentClient({ cookies: () => cookieStore })
+  
+  const { data: invitation } = await supabase
+    .from('invitations')
+    .select('*, events(name)')
+    .eq('token', params.token)
+    .single()
+  
+  if (!invitation) {
+    return {
+      title: 'RSVP Confirmation',
+      description: 'Thank you for your response.',
+    }
+  }
+  
+  const eventName = invitation.events?.name || 'Event'
+  
+  return {
+    title: `Thank you - ${eventName} | Cloud Burst`,
+    description: `Your RSVP to ${eventName} has been confirmed.`,
+  }
+}
+
+export default async function AcceptedConfirmationPage({ params }: PageProps) {
   const { token } = params
   
   if (!token) {
     return notFound()
   }
   
-  // Get invitation and event details
   const cookieStore = cookies()
-  const supabase = await createServerClient({ cookies: () => cookieStore })
+  const supabase = createServerComponentClient({ cookies: () => cookieStore })
   
   // Get invitation details
-  const { data: invitation, error } = await supabase
-    .from('invitations')
-    .select('id, event_id, email, name, status, rsvp_status, rsvp_date, metadata')
-    .eq('token', token)
-    .single()
+  const invitation = await validateInvitationToken(token)
   
-  if (error || !invitation || invitation.rsvp_status !== 'accepted') {
+  if (!invitation) {
     return notFound()
   }
   
   // Get event details
-  const { data: event } = await supabase
-    .from('events')
-    .select('id, name, date, location, cover_image_url, description')
-    .eq('id', invitation.event_id)
-    .single()
+  const event = await getEventForInvitation(invitation.event_id)
   
   if (!event) {
     return notFound()
   }
   
-  // Format event date
-  const eventDate = event.date ? formatDate(event.date.toString()) : 'Date to be determined'
+  // Get RSVP details
+  const { data: rsvp } = await supabase
+    .from('rsvps')
+    .select('*')
+    .eq('invitation_id', invitation.id)
+    .maybeSingle()
   
-  // Create calendar event data for add-to-calendar feature
-  const calendarEvent = {
-    name: event.name,
-    details: event.description || '',
-    location: event.location || '',
-    startsAt: event.date || new Date().toISOString(),
-    endsAt: event.date ? new Date(new Date(event.date.toString()).getTime() + 3600000).toISOString() : new Date(new Date().getTime() + 3600000).toISOString(),
-  }
+  // Get event organizer
+  const { data: organizer } = await supabase
+    .from('profiles')
+    .select('id, full_name')
+    .eq('id', event.organizer_id || '')
+    .single()
+  
+  // Format event date
+  const eventDate = event.date ? formatDate(event.date) : 'Date to be determined'
   
   return (
-    <div className="container max-w-2xl mx-auto py-10 px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <Card className="overflow-hidden border-green-200 dark:border-green-900">
+    <div className="container max-w-4xl mx-auto py-8 px-4">
+      <Card className="overflow-hidden">
         {event.cover_image_url && (
-          <div className="relative w-full h-48 md:h-60">
+          <div className="relative w-full h-40 md:h-60">
             <Image
               src={event.cover_image_url}
-              alt={event.name}
+              alt={event.name || ''}
               fill
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-              <h1 className="text-xl font-bold">{event.name}</h1>
-              <p className="text-sm opacity-90">{eventDate}</p>
-            </div>
           </div>
         )}
         
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4 animate-in zoom-in-50 duration-300 delay-200">
-            <div className="bg-green-100 dark:bg-green-900/30 p-4 rounded-full">
-              <CheckCircle className="h-16 w-16 text-green-500" />
+        <CardHeader>
+          <div className="flex flex-col items-center text-center">
+            <div className="inline-flex items-center justify-center rounded-full bg-green-100 p-3 mb-4 dark:bg-green-900/30">
+              <Calendar className="h-6 w-6 text-green-600 dark:text-green-500" />
             </div>
+            <CardTitle className="text-2xl md:text-3xl mb-2">{event.name}</CardTitle>
+            <CardDescription className="text-lg">
+              You've confirmed your attendance!
+            </CardDescription>
           </div>
-          <CardTitle className="text-2xl md:text-3xl animate-in fade-in-50 duration-300 delay-300">You're all set!</CardTitle>
-          <p className="text-muted-foreground mt-2 animate-in fade-in-50 duration-300 delay-400">
-            Your RSVP for {event.name} has been confirmed.
-          </p>
         </CardHeader>
         
         <CardContent className="space-y-6">
-          <div className="bg-muted rounded-lg p-4 animate-in fade-in-50 duration-300 delay-500">
-            <div className="flex items-center space-x-2 mb-3">
-              <CalendarDays className="h-5 w-5 text-primary" />
-              <h3 className="font-medium text-lg">Event Details</h3>
-            </div>
-            <ul className="space-y-2 text-sm">
-              <li><strong>Event:</strong> {event.name}</li>
-              <li><strong>Date:</strong> {eventDate}</li>
-              {event.location && <li><strong>Location:</strong> {event.location}</li>}
-              {invitation.name && <li><strong>Attending:</strong> {invitation.name}</li>}
-              {(invitation.metadata as any)?.plus_one_used && 
-                <li><strong>Plus One:</strong> {(invitation.metadata as any).plus_one_name || 'Guest'}</li>}
-            </ul>
-          </div>
-          
-          <Separator className="animate-in fade-in-50 duration-300 delay-600" />
-          
-          <div className="text-center space-y-4 animate-in fade-in-50 duration-300 delay-700">
-            <h3 className="font-medium">Stay Connected</h3>
-            <p className="text-sm text-muted-foreground">
-              Add this event to your calendar and share it with friends.
+          <div className="flex flex-col items-center bg-muted p-6 rounded-lg">
+            <h3 className="text-xl font-semibold mb-4">Thank you for your RSVP</h3>
+            <p className="text-center text-muted-foreground mb-4">
+              Your response has been recorded and the event organizer has been notified.
             </p>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 justify-center">
-              <AddToCalendarButton event={calendarEvent} />
+            <Button variant="outline" className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Add to Calendar
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <div>
+                  <h4 className="font-medium">Date</h4>
+                  <p className="text-sm text-muted-foreground">{eventDate}</p>
+                </div>
+              </div>
               
-              <ShareEventButton 
-                event={{
-                  name: event.name,
-                  date: eventDate,
-                  location: event.location || '',
-                  url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/invitation/${token}`
-                }} 
-              />
+              {event.location && (
+                <div className="flex items-start space-x-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <h4 className="font-medium">Location</h4>
+                    <p className="text-sm text-muted-foreground">{event.location}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="space-y-4">
+              {invitation.name && (
+                <div className="flex items-start space-x-3">
+                  <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <h4 className="font-medium">Invited Guest</h4>
+                    <p className="text-sm text-muted-foreground">{invitation.name}</p>
+                  </div>
+                </div>
+              )}
+              
+              {rsvp?.guest_count && rsvp.guest_count > 1 && (
+                <div className="flex items-start space-x-3">
+                  <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <h4 className="font-medium">Additional Guests</h4>
+                    <p className="text-sm text-muted-foreground">
+                      {rsvp.guest_count - 1} additional {rsvp.guest_count - 1 === 1 ? 'guest' : 'guests'}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+          
+          {(rsvp?.dietary_restrictions || rsvp?.notes) && (
+            <div className="bg-muted p-4 rounded-lg space-y-4">
+              {rsvp.dietary_restrictions && (
+                <div>
+                  <h4 className="font-medium mb-1">Dietary Restrictions</h4>
+                  <p className="text-sm text-muted-foreground">{rsvp.dietary_restrictions}</p>
+                </div>
+              )}
+              
+              {rsvp.notes && (
+                <div>
+                  <h4 className="font-medium mb-1">Additional Notes</h4>
+                  <p className="text-sm text-muted-foreground">{rsvp.notes}</p>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
         
-        <CardFooter className="flex flex-col gap-4 border-t pt-6 animate-in fade-in-50 duration-300 delay-800">
-          <p className="text-xs text-muted-foreground text-center">
-            A confirmation email has been sent to {invitation.email}
-          </p>
-          
+        <CardFooter className="flex flex-col sm:flex-row gap-4 justify-between">
           <Button variant="outline" asChild>
-            <Link href="/">
-              Return to Home
+            <Link href={`/invitation/${token}`} className="flex items-center gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Invitation
             </Link>
+          </Button>
+          
+          <Button variant="outline" className="flex items-center gap-2">
+            <Share2 className="h-4 w-4" />
+            Share Event
           </Button>
         </CardFooter>
       </Card>

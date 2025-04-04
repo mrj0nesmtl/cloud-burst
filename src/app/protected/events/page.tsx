@@ -65,7 +65,9 @@ export default async function EventsPage() {
       padding: '24px', 
       display: 'flex', 
       flexDirection: 'column', 
-      gap: '24px'
+      gap: '24px',
+      height: 'calc(100vh - 80px)',
+      overflow: 'hidden'
     }}>
       <div style={{ 
         display: 'flex', 
@@ -108,7 +110,7 @@ export default async function EventsPage() {
         </Button>
       </div>
       
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs defaultValue="all" className="w-full h-full flex flex-col">
         <div style={{
           overflowX: 'auto',
           width: '100%',
@@ -137,41 +139,43 @@ export default async function EventsPage() {
         
         <ClientSideFilters />
         
-        <TabsContent value="all" className="mt-6">
-          <Suspense fallback={<EventListSkeleton />}>
-            <EventList 
-              events={events} 
-              emptyMessage="No events found. Create your first event to get started."
-            />
-          </Suspense>
-        </TabsContent>
-        
-        <TabsContent value="published" className="mt-6">
-          <Suspense fallback={<EventListSkeleton />}>
-            <EventList 
-              events={publishedEvents} 
-              emptyMessage="No published events found."
-            />
-          </Suspense>
-        </TabsContent>
-        
-        <TabsContent value="draft" className="mt-6">
-          <Suspense fallback={<EventListSkeleton />}>
-            <EventList 
-              events={draftEvents} 
-              emptyMessage="No draft events found."
-            />
-          </Suspense>
-        </TabsContent>
-        
-        <TabsContent value="completed" className="mt-6">
-          <Suspense fallback={<EventListSkeleton />}>
-            <EventList 
-              events={completedEvents} 
-              emptyMessage="No completed events found."
-            />
-          </Suspense>
-        </TabsContent>
+        <div className="flex-1 overflow-auto mt-4">
+          <TabsContent value="all" className="h-full">
+            <Suspense fallback={<EventListSkeleton />}>
+              <EventList 
+                events={events} 
+                emptyMessage="No events found. Create your first event to get started."
+              />
+            </Suspense>
+          </TabsContent>
+          
+          <TabsContent value="published" className="h-full">
+            <Suspense fallback={<EventListSkeleton />}>
+              <EventList 
+                events={publishedEvents} 
+                emptyMessage="No published events found."
+              />
+            </Suspense>
+          </TabsContent>
+          
+          <TabsContent value="draft" className="h-full">
+            <Suspense fallback={<EventListSkeleton />}>
+              <EventList 
+                events={draftEvents} 
+                emptyMessage="No draft events found."
+              />
+            </Suspense>
+          </TabsContent>
+          
+          <TabsContent value="completed" className="h-full">
+            <Suspense fallback={<EventListSkeleton />}>
+              <EventList 
+                events={completedEvents} 
+                emptyMessage="No completed events found."
+              />
+            </Suspense>
+          </TabsContent>
+        </div>
       </Tabs>
     </div>
   )
