@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-04-03T02:32:32.548Z
+Generated: 2025-04-05T01:51:58.760Z
 
 ## Overview
 
-This directory contains 96 route(s).
+This directory contains 98 route(s).
 
 
 ## Directory Tree
@@ -31,6 +31,12 @@ This directory contains 96 route(s).
 │           └── qr-scan/
 │               └── page.tsx
 ├── api/
+│   ├── analytics/
+│   │   └── rsvp/
+│   │       └── route.ts
+│   ├── auth/
+│   │   └── magic-link/
+│   │       └── route.ts
 │   ├── cron/
 │   │   └── sync-templates/
 │   │       └── route.ts
@@ -40,8 +46,9 @@ This directory contains 96 route(s).
 │   │   └── setup/
 │   │       └── route.ts
 │   ├── events/
-│   │   └── qr-code/
-│   │       └── route.ts
+│   │   ├── qr-code/
+│   │   │   └── route.ts
+│   │   └── route.ts
 │   ├── extract-colors/
 │   │   └── route.ts
 │   ├── galleries/
@@ -58,9 +65,15 @@ This directory contains 96 route(s).
 │   │   │   └── route.ts
 │   │   ├── create/
 │   │   │   └── route.ts
+│   │   ├── send/
+│   │   │   └── route.ts
 │   │   ├── validate/
 │   │   │   └── route.ts
-│   │   └── verify/
+│   │   ├── verify/
+│   │   │   └── route.ts
+│   │   └── route.ts
+│   ├── rpc/
+│   │   └── get-invitation-stats/
 │   │       └── route.ts
 │   ├── rsvp/
 │   │   ├── status/
@@ -71,6 +84,8 @@ This directory contains 96 route(s).
 │   │   ├── [templateId]/
 │   │   │   └── html/
 │   │   │       └── route.ts
+│   │   ├── invitees-template/
+│   │   │   └── route.ts
 │   │   └── sync/
 │   │       └── route.ts
 │   └── test-email/
@@ -250,6 +265,11 @@ This directory contains 96 route(s).
 │   │   │   │   └── page.tsx
 │   │   │   ├── gallery/
 │   │   │   │   └── page.tsx
+│   │   │   ├── invitations/
+│   │   │   │   ├── invitation-form.tsx
+│   │   │   │   ├── invitation-stats.tsx
+│   │   │   │   ├── invitations-list.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── qr/
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
@@ -271,6 +291,10 @@ This directory contains 96 route(s).
 │   │   ├── migrations/
 │   │   │   ├── README.md
 │   │   │   └── add_event_fields.sql
+│   │   ├── new/
+│   │   │   └── invitations/
+│   │   │       ├── layout.tsx
+│   │   │       └── page.tsx
 │   │   ├── layout.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
@@ -353,13 +377,13 @@ This directory contains 96 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-146 directories, 198 files
+157 directories, 211 files
 
 ```
 
 ## File Type Breakdown
-- ts: 25 file(s)
-- tsx: 162 file(s)
+- ts: 32 file(s)
+- tsx: 168 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-03T02:32:29.990Z
+Generated: 2025-04-05T01:51:56.881Z
 
 ## Overview
 
@@ -136,6 +136,12 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │   ├── session_34_checklist.md
 │   │   │   ├── session_34_kickoff.md
 │   │   │   ├── session_34_resources.md
+│   │   │   ├── session_35_checklist.md
+│   │   │   ├── session_35_kickoff.md
+│   │   │   ├── session_35_resources.md
+│   │   │   ├── session_36_checklist.md
+│   │   │   ├── session_36_kickoff_prompt.md
+│   │   │   ├── session_36_resources.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -146,12 +152,16 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_35_checklist.md
-│   │   ├── session_35_kickoff.md
-│   │   ├── session_35_resources.md
-│   │   ├── session_36_checklist.md
-│   │   ├── session_36_kickoff_prompt.md
-│   │   ├── session_36_resources.md
+│   │   ├── roadmap.md
+│   │   ├── session_37_checklist.md
+│   │   ├── session_37_directory_map.md
+│   │   ├── session_37_implementation_guide.md
+│   │   ├── session_37_kickoff_prompt.md
+│   │   ├── session_37_resources.md
+│   │   ├── session_38_checklist.md
+│   │   ├── session_38_directory_map.md
+│   │   ├── session_38_implementation.md
+│   │   ├── session_38_kickoff_prompt.md
 │   │   └── version-sync.plan
 │   ├── features/
 │   │   ├── gallery_implementation.md
@@ -234,6 +244,7 @@ Generated: 2025-04-03T02:32:29.990Z
 │   ├── 20250323205916_update_media_schema.sql
 │   ├── 20250323211204_update_media_schema.sql
 │   ├── 20250331_create_rsvps_table.sql
+│   ├── check_events_schema.sql
 │   └── setup_launch_partner.sql
 ├── public/
 │   ├── audio/
@@ -328,6 +339,12 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │           └── qr-scan/
 │   │   │               └── page.tsx
 │   │   ├── api/
+│   │   │   ├── analytics/
+│   │   │   │   └── rsvp/
+│   │   │   │       └── route.ts
+│   │   │   ├── auth/
+│   │   │   │   └── magic-link/
+│   │   │   │       └── route.ts
 │   │   │   ├── cron/
 │   │   │   │   └── sync-templates/
 │   │   │   │       └── route.ts
@@ -337,8 +354,9 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │   │   └── setup/
 │   │   │   │       └── route.ts
 │   │   │   ├── events/
-│   │   │   │   └── qr-code/
-│   │   │   │       └── route.ts
+│   │   │   │   ├── qr-code/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── route.ts
 │   │   │   ├── extract-colors/
 │   │   │   │   └── route.ts
 │   │   │   ├── galleries/
@@ -355,9 +373,15 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │   │   │   └── route.ts
 │   │   │   │   ├── create/
 │   │   │   │   │   └── route.ts
+│   │   │   │   ├── send/
+│   │   │   │   │   └── route.ts
 │   │   │   │   ├── validate/
 │   │   │   │   │   └── route.ts
-│   │   │   │   └── verify/
+│   │   │   │   ├── verify/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── route.ts
+│   │   │   ├── rpc/
+│   │   │   │   └── get-invitation-stats/
 │   │   │   │       └── route.ts
 │   │   │   ├── rsvp/
 │   │   │   │   ├── status/
@@ -368,6 +392,8 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │   │   ├── [templateId]/
 │   │   │   │   │   └── html/
 │   │   │   │   │       └── route.ts
+│   │   │   │   ├── invitees-template/
+│   │   │   │   │   └── route.ts
 │   │   │   │   └── sync/
 │   │   │   │       └── route.ts
 │   │   │   └── test-email/
@@ -547,6 +573,11 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── gallery/
 │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── invitations/
+│   │   │   │   │   │   ├── invitation-form.tsx
+│   │   │   │   │   │   ├── invitation-stats.tsx
+│   │   │   │   │   │   ├── invitations-list.tsx
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── qr/
 │   │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   │   └── page.tsx
@@ -568,6 +599,10 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │   │   ├── migrations/
 │   │   │   │   │   ├── README.md
 │   │   │   │   │   └── add_event_fields.sql
+│   │   │   │   ├── new/
+│   │   │   │   │   └── invitations/
+│   │   │   │   │       ├── layout.tsx
+│   │   │   │   │       └── page.tsx
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
@@ -691,6 +726,7 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │   ├── event-filters.tsx
 │   │   │   ├── event-form.tsx
 │   │   │   ├── event-invitation-qr.tsx
+│   │   │   ├── event-invitations-panel.tsx
 │   │   │   ├── event-list-client.tsx
 │   │   │   ├── event-list.tsx
 │   │   │   ├── event-navigation.tsx
@@ -740,7 +776,8 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │   ├── qr-scanner.tsx
 │   │   │   └── scanner-overlay.tsx
 │   │   ├── invitations/
-│   │   │   └── create-invitation-form.tsx
+│   │   │   ├── create-invitation-form.tsx
+│   │   │   └── magic-link-auth.tsx
 │   │   ├── layout/
 │   │   │   ├── dashboard-layout.tsx
 │   │   │   └── main-nav.tsx
@@ -852,6 +889,7 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   ├── use-auth.ts
 │   │   ├── use-debounced-auth.ts
 │   │   ├── use-events.ts
+│   │   ├── use-magic-link.ts
 │   │   ├── use-media-query.ts
 │   │   ├── use-permissions.ts
 │   │   ├── use-profile.ts
@@ -866,6 +904,7 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   │   ├── color-extraction.ts
 │   │   │   └── photo-enhancement.ts
 │   │   ├── auth/
+│   │   │   ├── invitation-middleware.ts
 │   │   │   └── utils.ts
 │   │   ├── email/
 │   │   │   ├── index.ts
@@ -945,6 +984,8 @@ Generated: 2025-04-03T02:32:29.990Z
 ├── supabase/
 │   ├── .temp/
 │   │   └── cli-latest
+│   ├── migrations/
+│   │   └── 20250404000000_rsvp_analytics.sql
 │   ├── templates/
 │   │   └── auth_emails/
 │   │       ├── change_email_address.html
@@ -965,6 +1006,9 @@ Generated: 2025-04-03T02:32:29.990Z
 │   │   ├── role_capabilities_rows.csv
 │   │   ├── roles_rows (1).csv
 │   │   └── roles_rows.csv
+│   ├── apr/
+│   │   ├── events_rows (1).csv
+│   │   └── events_rows.csv
 │   ├── mar-29/
 │   │   ├── Snippet Event Details Query.csv
 │   │   ├── Snippet Event and Gallery Overview.csv
@@ -1053,7 +1097,6 @@ Generated: 2025-04-03T02:32:29.990Z
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
-├── check_events_schema.sql
 ├── cloud-burst.code-workspace
 ├── components.json
 ├── eslint.config.mjs
@@ -1070,16 +1113,16 @@ Generated: 2025-04-03T02:32:29.990Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-238 directories, 823 files
+251 directories, 853 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11759 file(s)
-- tsx: 477 file(s)
-- js: 27832 file(s)
-- json: 2019 file(s)
-- md: 1486 file(s)
+- ts: 11780 file(s)
+- tsx: 485 file(s)
+- js: 27879 file(s)
+- json: 2032 file(s)
+- md: 1496 file(s)
 - css: 27 file(s)
 - yml: 164 file(s)
 

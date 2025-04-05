@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-03T02:32:31.076Z
+Generated: 2025-04-05T01:51:57.731Z
 
 ## Overview
 
@@ -97,6 +97,12 @@ Generated: 2025-04-03T02:32:31.076Z
 │   │   ├── session_34_checklist.md
 │   │   ├── session_34_kickoff.md
 │   │   ├── session_34_resources.md
+│   │   ├── session_35_checklist.md
+│   │   ├── session_35_kickoff.md
+│   │   ├── session_35_resources.md
+│   │   ├── session_36_checklist.md
+│   │   ├── session_36_kickoff_prompt.md
+│   │   ├── session_36_resources.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -107,12 +113,16 @@ Generated: 2025-04-03T02:32:31.076Z
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_35_checklist.md
-│   ├── session_35_kickoff.md
-│   ├── session_35_resources.md
-│   ├── session_36_checklist.md
-│   ├── session_36_kickoff_prompt.md
-│   ├── session_36_resources.md
+│   ├── roadmap.md
+│   ├── session_37_checklist.md
+│   ├── session_37_directory_map.md
+│   ├── session_37_implementation_guide.md
+│   ├── session_37_kickoff_prompt.md
+│   ├── session_37_resources.md
+│   ├── session_38_checklist.md
+│   ├── session_38_directory_map.md
+│   ├── session_38_implementation.md
+│   ├── session_38_kickoff_prompt.md
 │   └── version-sync.plan
 ├── features/
 │   ├── gallery_implementation.md
@@ -174,12 +184,12 @@ Generated: 2025-04-03T02:32:31.076Z
 ├── .DS_Store
 └── README.md
 
-11 directories, 154 files
+11 directories, 164 files
 
 ```
 
 ## File Type Breakdown
-- md: 149 file(s)
+- md: 159 file(s)
 
 ## Ignored Patterns
 - node_modules

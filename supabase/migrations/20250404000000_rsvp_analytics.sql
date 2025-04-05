@@ -15,7 +15,9 @@ CREATE INDEX IF NOT EXISTS analytics_events_invitation_id_idx ON analytics_event
 CREATE INDEX IF NOT EXISTS analytics_events_created_at_idx ON analytics_events (created_at);
 
 -- Create a view for RSVP analytics
-CREATE OR REPLACE VIEW rsvp_analytics AS
+CREATE OR REPLACE VIEW rsvp_analytics
+WITH (security_invoker = true)
+AS
 SELECT 
   ae.id,
   ae.created_at,
@@ -48,6 +50,7 @@ WHERE
 ALTER TABLE analytics_events ENABLE ROW LEVEL SECURITY;
 
 -- Policy for organizers to see analytics for their events
+DROP POLICY IF EXISTS "Organizers can view analytics for their events" ON analytics_events;
 CREATE POLICY "Organizers can view analytics for their events" 
 ON analytics_events 
 FOR SELECT 
@@ -60,6 +63,7 @@ USING (
 );
 
 -- Policy for admins to see all analytics
+DROP POLICY IF EXISTS "Admins can view all analytics" ON analytics_events;
 CREATE POLICY "Admins can view all analytics" 
 ON analytics_events 
 FOR SELECT 
@@ -69,6 +73,7 @@ USING (
 );
 
 -- Policy for inserting analytics events (allow all authenticated users)
+DROP POLICY IF EXISTS "Users can insert their own analytics events" ON analytics_events;
 CREATE POLICY "Users can insert their own analytics events" 
 ON analytics_events 
 FOR INSERT 

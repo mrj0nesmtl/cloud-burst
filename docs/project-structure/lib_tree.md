@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-04-03T02:32:36.734Z
+Generated: 2025-04-05T01:52:02.837Z
 
 ## Overview
 
@@ -13,6 +13,7 @@ Generated: 2025-04-03T02:32:36.734Z
 │   ├── color-extraction.ts
 │   └── photo-enhancement.ts
 ├── auth/
+│   ├── invitation-middleware.ts
 │   └── utils.ts
 ├── email/
 │   ├── index.ts
@@ -65,12 +66,12 @@ Generated: 2025-04-03T02:32:36.734Z
 ├── user-sessions.ts
 └── utils.ts
 
-10 directories, 46 files
+10 directories, 47 files
 
 ```
 
 ## File Type Breakdown
-- ts: 43 file(s)
+- ts: 44 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

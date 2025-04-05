@@ -75,7 +75,8 @@ export async function middleware(request: NextRequest) {
   if (
     (request.nextUrl.pathname.startsWith('/dashboard') ||
     request.nextUrl.pathname.startsWith('/account') ||
-    request.nextUrl.pathname.startsWith('/events') ||
+    (request.nextUrl.pathname.startsWith('/events') && 
+     request.nextUrl.pathname !== '/events') ||
     request.nextUrl.pathname.startsWith('/admin')) &&
     !session
   ) {

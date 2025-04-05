@@ -1,9 +1,9 @@
 # protected Directory Structure
-Generated: 2025-04-03T02:32:33.020Z
+Generated: 2025-04-05T01:51:59.215Z
 
 ## Overview
 
-This directory contains 53 route(s).
+This directory contains 55 route(s).
 
 
 ## Directory Tree
@@ -89,6 +89,11 @@ This directory contains 53 route(s).
 │   │   │   └── page.tsx
 │   │   ├── gallery/
 │   │   │   └── page.tsx
+│   │   ├── invitations/
+│   │   │   ├── invitation-form.tsx
+│   │   │   ├── invitation-stats.tsx
+│   │   │   ├── invitations-list.tsx
+│   │   │   └── page.tsx
 │   │   ├── qr/
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
@@ -110,6 +115,10 @@ This directory contains 53 route(s).
 │   ├── migrations/
 │   │   ├── README.md
 │   │   └── add_event_fields.sql
+│   ├── new/
+│   │   └── invitations/
+│   │       ├── layout.tsx
+│   │       └── page.tsx
 │   ├── layout.tsx
 │   ├── loading.tsx
 │   └── page.tsx
@@ -180,13 +189,13 @@ This directory contains 53 route(s).
 │   └── page.tsx
 └── layout.tsx
 
-61 directories, 110 files
+64 directories, 116 files
 
 ```
 
 ## File Type Breakdown
 - ts: 1 file(s)
-- tsx: 100 file(s)
+- tsx: 106 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

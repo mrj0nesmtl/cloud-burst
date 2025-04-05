@@ -26,49 +26,74 @@ export default async function EventGalleryPage({ params }: PageProps) {
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
   
-  // Try to fetch event data from database
+  const { galleryId } = params;
+  let eventId: string | null = null;
+  let galleryData: any = null;
+  
+  // First, try to find the gallery with the given ID
+  const { data: gallery, error: galleryError } = await supabase
+    .from('galleries')
+    .select('id, event_id, settings')
+    .eq('id', galleryId)
+    .single();
+    
+  if (gallery) {
+    // If found as a gallery ID, use its event_id for further queries
+    eventId = gallery.event_id;
+    galleryData = gallery;
+    console.log('Found gallery record:', { galleryId, eventId });
+  } else {
+    // If not found as gallery ID, try to find gallery by event_id
+    const { data: galleryByEvent, error: galleryByEventError } = await supabase
+      .from('galleries')
+      .select('id, event_id, settings')
+      .eq('event_id', galleryId)
+      .single();
+      
+    if (galleryByEvent) {
+      // If found by event_id, use both IDs
+      eventId = galleryId;
+      galleryData = galleryByEvent;
+      console.log('Found gallery by event ID:', { galleryId: galleryByEvent.id, eventId });
+    } else {
+      console.error('Could not find gallery with ID or event ID:', galleryId);
+      console.error('Gallery error:', galleryError);
+      console.error('Gallery by event error:', galleryByEventError);
+    }
+  }
+  
+  // If we couldn't find any gallery or event info, show empty state
+  if (!eventId) {
+    // If no gallery or event exists, try mock data
+    const mockGallery = mockGalleries[galleryId];
+    if (!mockGallery) {
+      return <EmptyGalleryPage galleryId={galleryId} />;
+    }
+    
+    return <MockGalleryPage eventId={galleryId} />;
+  }
+  
+  // Try to fetch event data from database using the resolved eventId
   const { data: event, error: eventError } = await supabase
     .from('events')
     .select('id, name, date, location, description, status')
-    .eq('id', params.galleryId)
+    .eq('id', eventId)
     .single();
   
   if (eventError) {
     console.error('Error fetching event:', eventError);
-  }
-  
-  // If no event data, check if gallery record exists first
-  if (!event) {
-    const { data: gallery, error: galleryError } = await supabase
-      .from('galleries')
-      .select('id, event_id')
-      .eq('event_id', params.galleryId)
-      .single();
-    
-    if (galleryError || !gallery) {
-      // If no gallery or event exists, try mock data
-      const mockGallery = mockGalleries[params.galleryId];
-      if (!mockGallery) {
-        return (
-          <EmptyGalleryPage galleryId={params.galleryId} />
-        );
-      }
-      
-      return (
-        <MockGalleryPage eventId={params.galleryId} />
-      );
-    }
+    return <EmptyGalleryPage galleryId={galleryId} />;
   }
   
   // Fetch photos for this event
   const { data: photos } = await supabase
     .from('photos')
     .select('*')
-    .eq('event_id', params.galleryId)
+    .eq('event_id', eventId)
     .order('created_at', { ascending: false });
   
   // If no photos found, use mock photos instead
-  const mockGallery = mockGalleries[params.galleryId] || mockGalleries['1']; // Fallback to first gallery if no match
+  const mockGallery = mockGalleries[eventId] || mockGalleries['1']; // Fallback to first gallery if no match
   const galleryPhotos = photos?.length ? 
     photos.map(photo => ({
       id: photo.id,

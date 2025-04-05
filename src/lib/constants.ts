@@ -41,10 +41,10 @@ export const GALLERY_LAYOUT_OPTIONS = [
 ]
 
 // Display error duration in ms
-export const ERROR_TOAST_DURATION = 5000
+export const ERROR_TOAST_DURATION = 8000
 
 // Display success duration in ms
-export const SUCCESS_TOAST_DURATION = 3000
+export const SUCCESS_TOAST_DURATION = 5000
 
 // Max file size in bytes (10MB)
 export const MAX_FILE_SIZE = 10 * 1024 * 1024

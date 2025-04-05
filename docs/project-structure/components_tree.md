@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-04-03T02:32:35.011Z
+Generated: 2025-04-05T01:52:01.480Z
 
 ## Overview
-This directory contains 166 component(s).
+This directory contains 168 component(s).
 
 
 
@@ -50,6 +50,7 @@ This directory contains 166 component(s).
 │   ├── event-filters.tsx
 │   ├── event-form.tsx
 │   ├── event-invitation-qr.tsx
+│   ├── event-invitations-panel.tsx
 │   ├── event-list-client.tsx
 │   ├── event-list.tsx
 │   ├── event-navigation.tsx
@@ -99,7 +100,8 @@ This directory contains 166 component(s).
 │   ├── qr-scanner.tsx
 │   └── scanner-overlay.tsx
 ├── invitations/
-│   └── create-invitation-form.tsx
+│   ├── create-invitation-form.tsx
+│   └── magic-link-auth.tsx
 ├── layout/
 │   ├── dashboard-layout.tsx
 │   └── main-nav.tsx
@@ -205,13 +207,13 @@ This directory contains 166 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-22 directories, 174 files
+22 directories, 176 files
 
 ```
 
 ## File Type Breakdown
 - ts: 6 file(s)
-- tsx: 167 file(s)
+- tsx: 169 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns
