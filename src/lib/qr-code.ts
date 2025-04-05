@@ -30,7 +30,8 @@ export function generateQRCodeUrl(params: QRCodeParams): string {
       targetUrl = `${baseUrl}/event/${params.event_id}`;
   }
   
-  return `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(targetUrl)}&size=300x300`;
+  // Using HTTPS and setting explicit size, format and error correction
+  return `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(targetUrl)}&size=300x300&format=png&ecc=H`;
 }
 
 /**
@@ -45,11 +46,22 @@ export async function fetchEventQRCode(eventId: string): Promise<string> {
     }
     
     const data = await response.json();
+    if (!data.qrCodeUrl) {
+      throw new Error('QR code URL is empty');
+    }
+    
+    console.log('Fetched QR code URL:', data.qrCodeUrl);
     return data.qrCodeUrl;
   } catch (error) {
     console.error('Error fetching QR code:', error);
-    // Return a fallback URL
-    return '/placeholder-qr.png';
+    
+    // Generate a fallback URL directly using the QR code service
+    const fallbackUrl = generateQRCodeUrl({
+      event_id: eventId,
+      type: 'event'
+    });
+    console.log('Using fallback QR code URL:', fallbackUrl);
+    return fallbackUrl;
   }
 }
 

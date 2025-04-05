@@ -562,6 +562,7 @@ export default async function EventPage({ params }: EventPageProps) {
                     color: 'var(--primary)',
                     margin: 0,
                     display: 'flex',
+                    
                     alignItems: 'center',
                     gap: '0.5rem'
                   }}>

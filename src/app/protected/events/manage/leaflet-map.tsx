@@ -191,7 +191,7 @@ export function LeafletMap({ height, locations }: LeafletMapProps) {
         center={calculateCenter()}
         zoom={2} // Start with a global view
         style={{ height: '100%', width: '100%' }}
-        whenCreated={(map) => { mapRef.current = map; }}
+        ref={(map: L.Map) => { mapRef.current = map; }}
         minZoom={2} // Prevent zooming out too far
         worldCopyJump={true} // Enables the world to be shown multiple times horizontally
       >

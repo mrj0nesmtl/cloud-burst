@@ -61,10 +61,10 @@ export async function createGalleryForEvent(eventId: string): Promise<{ data: Ga
     return { data: existingGallery as Gallery, error: null }
   }
   
-  // Get event details to set gallery name
+  // Get event details to set gallery name and thumbnail
   const { data: event, error: eventError } = await supabase
     .from('events')
-    .select('name, organizer_id')
+    .select('name, organizer_id, cover_image_url, thumbnail_url')
     .eq('id', eventId)
     .single()
   
@@ -72,6 +72,11 @@ export async function createGalleryForEvent(eventId: string): Promise<{ data: Ga
     console.error('Error fetching event details:', eventError)
     return { data: null, error: eventError }
   }
+  
+  console.log('Event details for gallery creation:', event);
+  
+  // Use event thumbnail or cover image for gallery thumbnail
+  const galleryThumbnail = event.thumbnail_url || event.cover_image_url || null;
   
   // Create a new gallery
   const { data, error } = await supabase
@@ -82,6 +87,7 @@ export async function createGalleryForEvent(eventId: string): Promise<{ data: Ga
       organizer_id: event.organizer_id,
       settings: DEFAULT_GALLERY_SETTINGS,
       status: 'active', // Make sure gallery is always active regardless of event status
+      thumbnail_url: galleryThumbnail,
     })
     .select()
     .single()
