@@ -540,9 +540,10 @@ export default async function EventPage({ params }: EventPageProps) {
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: '1px',
-                backgroundColor: 'var(--border)',
-                width: '100%'
+                gap: '8px',
+                backgroundColor: 'var(--background)',
+                width: '100%',
+                padding: '8px'
               }}>
                 {/* Event Logo/Thumbnail Section */}
                 <div style={{
@@ -552,7 +553,8 @@ export default async function EventPage({ params }: EventPageProps) {
                   flexDirection: 'column',
                   gap: '0.75rem',
                   border: '1px solid var(--border)',
-                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                  borderRadius: '8px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                 }}>
                   <h3 style={{ 
                     fontSize: '0.875rem', 
@@ -602,7 +604,8 @@ export default async function EventPage({ params }: EventPageProps) {
                   flexDirection: 'column',
                   gap: '0.75rem',
                   border: '1px solid var(--border)',
-                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                  borderRadius: '8px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                 }}>
                   <h3 style={{ 
                     fontSize: '0.875rem', 
@@ -661,7 +664,8 @@ export default async function EventPage({ params }: EventPageProps) {
                   flexDirection: 'column',
                   gap: '0.75rem',
                   border: '1px solid var(--border)',
-                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                  borderRadius: '8px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                 }}>
                   <h3 style={{ 
                     fontSize: '0.875rem', 
@@ -742,7 +746,8 @@ export default async function EventPage({ params }: EventPageProps) {
                   flexDirection: 'column',
                   gap: '0.75rem',
                   border: '1px solid var(--border)',
-                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                  borderRadius: '8px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                 }}>
                   <h3 style={{ 
                     fontSize: '0.875rem', 
@@ -838,7 +843,8 @@ export default async function EventPage({ params }: EventPageProps) {
                   flexDirection: 'column',
                   gap: '0.75rem',
                   border: '1px solid var(--border)',
-                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                  borderRadius: '8px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                 }}>
                   <h3 style={{ 
                     fontSize: '0.875rem', 
@@ -908,7 +914,8 @@ export default async function EventPage({ params }: EventPageProps) {
                   flexDirection: 'column',
                   gap: '0.75rem',
                   border: '1px solid var(--border)',
-                  boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                  borderRadius: '8px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                 }}>
                   <h3 style={{ 
                     fontSize: '0.875rem', 
@@ -931,11 +938,11 @@ export default async function EventPage({ params }: EventPageProps) {
                     {/* Attendees */}
                     <div style={{
                       padding: '0.75rem',
-                      backgroundColor: 'var(--secondary-foreground-5, rgba(0,0,0,0.02))',
+                      backgroundColor: 'white',
                       borderRadius: '0.375rem',
                       textAlign: 'center',
                       border: '1px solid var(--border)',
-                      boxShadow: 'var(--stat-card-shadow, 0 1px 3px rgba(0,0,0,0.08))'
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                     }}>
                       <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
                         Attendees
@@ -956,11 +963,11 @@ export default async function EventPage({ params }: EventPageProps) {
                     {/* Invitations */}
                     <div style={{
                       padding: '0.75rem',
-                      backgroundColor: 'var(--secondary-foreground-5, rgba(0,0,0,0.02))',
+                      backgroundColor: 'white',
                       borderRadius: '0.375rem',
                       textAlign: 'center',
                       border: '1px solid var(--border)',
-                      boxShadow: 'var(--stat-card-shadow, 0 1px 3px rgba(0,0,0,0.08))'
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                     }}>
                       <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
                         Invitations
@@ -981,11 +988,11 @@ export default async function EventPage({ params }: EventPageProps) {
                     {/* Photos */}
                     <div style={{
                       padding: '0.75rem',
-                      backgroundColor: 'var(--secondary-foreground-5, rgba(0,0,0,0.02))',
+                      backgroundColor: 'white',
                       borderRadius: '0.375rem',
                       textAlign: 'center',
                       border: '1px solid var(--border)',
-                      boxShadow: 'var(--stat-card-shadow, 0 1px 3px rgba(0,0,0,0.08))'
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                     }}>
                       <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
                         Photos
@@ -1006,11 +1013,11 @@ export default async function EventPage({ params }: EventPageProps) {
                     {/* Created Date */}
                     <div style={{
                       padding: '0.75rem',
-                      backgroundColor: 'var(--secondary-foreground-5, rgba(0,0,0,0.02))',
+                      backgroundColor: 'white',
                       borderRadius: '0.375rem',
                       textAlign: 'center',
                       border: '1px solid var(--border)',
-                      boxShadow: 'var(--stat-card-shadow, 0 1px 3px rgba(0,0,0,0.08))'
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                     }}>
                       <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
                         Created
@@ -1039,7 +1046,8 @@ export default async function EventPage({ params }: EventPageProps) {
                     gap: '0.75rem',
                     gridColumn: '1 / -1',
                     border: '1px solid var(--border)',
-                    boxShadow: 'var(--inner-card-shadow, 0 1px 3px rgba(0,0,0,0.05))'
+                    borderRadius: '8px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                   }}>
                     <h3 style={{ 
                       fontSize: '0.875rem', 
@@ -1320,35 +1328,13 @@ export default async function EventPage({ params }: EventPageProps) {
               alignItems: 'center', 
               justifyContent: 'center'
             }}>
-              <div style={{ 
-                backgroundColor: 'white', 
-                padding: '0.5rem', 
-                borderRadius: '0.375rem', 
-                marginBottom: '0.5rem'
-              }}>
-                {/* QR code would go here */}
-                <div style={{ 
-                  width: '9rem', 
-                  height: '9rem', 
-                  backgroundColor: '#f1f5f9', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  color: '#64748b'
-                }}>
-                  QR Code
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: '0.35rem' }}>
-                <Button variant="outline" size="sm" style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-                  <LucideIcons.Printer style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
-                  Print
-                </Button>
-                <Button variant="outline" size="sm" style={{ height: '1.75rem', fontSize: '0.7rem', padding: '0 0.5rem' }}>
-                  <LucideIcons.Download style={{ marginRight: '0.25rem', height: '0.7rem', width: '0.7rem' }} />
-                  Download
-                </Button>
-              </div>
+              <QRCodeDisplay 
+                eventId={params.id}
+                eventName={event.name}
+                type="event"
+                description="Scan this code to access the event"
+                size={240}
+              />
             </CardContent>
           </Card>
         </TabsContent>

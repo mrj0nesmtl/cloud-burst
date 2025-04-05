@@ -141,22 +141,29 @@ export function EventForm() {
     const file = e.target.files?.[0]
     if (!file) return
     
-    // Check if file is an image
-    if (!file.type.includes('image/')) {
-      toast.error('Please upload an image file')
-      return
+    try {
+      // Check if file is an image
+      if (!file.type.includes('image/')) {
+        toast.error('Please upload an image file')
+        return
+      }
+      
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('File size must be less than 5MB')
+        return
+      }
+      
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file)
+      setThumbnailPreview(previewUrl)
+      setThumbnailFile(file)
+      
+      console.log('Thumbnail file prepared successfully:', file.name, file.type, file.size)
+    } catch (error) {
+      console.error('Error in handleThumbnailUpload:', error)
+      toast.error('Failed to prepare thumbnail. Please try another image.')
     }
-    
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('File size must be less than 5MB')
-      return
-    }
-    
-    // Create preview URL
-    const previewUrl = URL.createObjectURL(file)
-    setThumbnailPreview(previewUrl)
-    setThumbnailFile(file)
   }
   
   // Clear thumbnail
@@ -170,22 +177,29 @@ export function EventForm() {
     const file = e.target.files?.[0]
     if (!file) return
     
-    // Check if file is an image
-    if (!file.type.includes('image/')) {
-      toast.error('Please upload an image file')
-      return
+    try {
+      // Check if file is an image
+      if (!file.type.includes('image/')) {
+        toast.error('Please upload an image file')
+        return
+      }
+      
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('File size must be less than 5MB')
+        return
+      }
+      
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file)
+      setLogoPreview(previewUrl)
+      setLogoFile(file)
+      
+      console.log('Logo file prepared successfully:', file.name, file.type, file.size)
+    } catch (error) {
+      console.error('Error in handleLogoUpload:', error)
+      toast.error('Failed to prepare logo. Please try another image.')
     }
-    
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('File size must be less than 5MB')
-      return
-    }
-    
-    // Create preview URL
-    const previewUrl = URL.createObjectURL(file)
-    setLogoPreview(previewUrl)
-    setLogoFile(file)
   }
   
   // Clear logo
@@ -222,50 +236,88 @@ export function EventForm() {
       
       // Upload thumbnail if exists
       if (thumbnailFile) {
-        // Create organized storage path
-        const fileName = `${Date.now()}-${thumbnailFile.name}`
-        const filePath = `events/${userId}/${eventId}/thumbnail/${fileName}`
-        
-        const { data: thumbnailData, error: thumbnailError } = await supabase.storage
-          .from('event-media')
-          .upload(filePath, thumbnailFile)
+        try {
+          // Create organized storage path
+          const fileName = `${Date.now()}-${thumbnailFile.name}`
+          const filePath = `events/${userId}/${eventId}/thumbnail/${fileName}`
           
-        if (thumbnailError) {
-          console.error('Error uploading thumbnail:', thumbnailError)
-          toast.error('Failed to upload thumbnail')
-          return
+          console.log('Uploading thumbnail file:', {
+            fileName,
+            filePath,
+            fileType: thumbnailFile.type,
+            fileSize: thumbnailFile.size
+          })
+          
+          const { data: thumbnailData, error: thumbnailError } = await supabase.storage
+            .from('event-media')
+            .upload(filePath, thumbnailFile, {
+              cacheControl: '3600',
+              contentType: thumbnailFile.type
+            })
+            
+          if (thumbnailError) {
+            console.error('Error uploading thumbnail:', thumbnailError)
+            toast.error(`Failed to upload thumbnail: ${thumbnailError.message}`)
+            
+            // Continue with event creation without the thumbnail
+            console.log('Proceeding with event creation without thumbnail')
+          } else {
+            // Get public URL
+            const { data: publicUrlData } = await supabase.storage
+              .from('event-media')
+              .getPublicUrl(filePath)
+              
+            thumbnailUrl = publicUrlData.publicUrl
+            console.log('Thumbnail uploaded successfully:', thumbnailUrl)
+          }
+        } catch (thumbnailUploadError) {
+          console.error('Unexpected error uploading thumbnail:', thumbnailUploadError)
+          toast.error('Unexpected error uploading thumbnail. Creating event without thumbnail.')
+          // Continue with event creation without the thumbnail
         }
-        
-        // Get public URL
-        const { data: publicUrlData } = await supabase.storage
-          .from('event-media')
-          .getPublicUrl(filePath)
-          
-        thumbnailUrl = publicUrlData.publicUrl
       }
       
       // Upload logo if exists
       if (logoFile) {
-        // Create organized storage path
-        const fileName = `${Date.now()}-${logoFile.name}`
-        const filePath = `events/${userId}/${eventId}/logo/${fileName}`
-        
-        const { data: logoData, error: logoError } = await supabase.storage
-          .from('event-media')
-          .upload(filePath, logoFile)
+        try {
+          // Create organized storage path
+          const fileName = `${Date.now()}-${logoFile.name}`
+          const filePath = `events/${userId}/${eventId}/logo/${fileName}`
           
-        if (logoError) {
-          console.error('Error uploading logo:', logoError)
-          toast.error('Failed to upload logo')
-          return
+          console.log('Uploading logo file:', {
+            fileName,
+            filePath,
+            fileType: logoFile.type,
+            fileSize: logoFile.size
+          })
+          
+          const { data: logoData, error: logoError } = await supabase.storage
+            .from('event-media')
+            .upload(filePath, logoFile, {
+              cacheControl: '3600',
+              contentType: logoFile.type
+            })
+            
+          if (logoError) {
+            console.error('Error uploading logo:', logoError)
+            toast.error(`Failed to upload logo: ${logoError.message}`)
+            
+            // Continue with event creation without the logo
+            console.log('Proceeding with event creation without logo')
+          } else {
+            // Get public URL
+            const { data: publicUrlData } = await supabase.storage
+              .from('event-media')
+              .getPublicUrl(filePath)
+              
+            logoUrl = publicUrlData.publicUrl
+            console.log('Logo uploaded successfully:', logoUrl)
+          }
+        } catch (logoUploadError) {
+          console.error('Unexpected error uploading logo:', logoUploadError)
+          toast.error('Unexpected error uploading logo. Creating event without logo.')
+          // Continue with event creation without the logo
         }
-        
-        // Get public URL
-        const { data: publicUrlData } = await supabase.storage
-          .from('event-media')
-          .getPublicUrl(filePath)
-          
-        logoUrl = publicUrlData.publicUrl
       }
       
       // Generate QR code URL for the event
@@ -286,7 +338,7 @@ export function EventForm() {
           custom_url: data.custom_url || null,
           organizer_id: userId,
           status: 'published',
-          cover_image_url: thumbnailUrl,
+          cover_image_url: thumbnailUrl || null,
           logo_url: logoUrl || null,
           qr_code_url: qrCodeUrl
         } as any)
@@ -295,9 +347,11 @@ export function EventForm() {
         
       if (eventError) {
         console.error('Error creating event:', eventError)
-        toast.error('Failed to create event')
+        toast.error(`Failed to create event: ${eventError.message}`)
         return
       }
+      
+      console.log('Event created successfully:', event)
       
       // Create gallery for the event
       const { error: galleryError } = await supabase
@@ -309,8 +363,10 @@ export function EventForm() {
         
       if (galleryError) {
         console.error('Error creating gallery:', galleryError)
-        toast.error('Failed to create gallery')
+        toast.error('Failed to create gallery, but event was created')
         // We won't return here as the event is already created
+      } else {
+        console.log('Gallery created successfully for event:', eventId)
       }
       
       toast.success('Event created successfully!')
