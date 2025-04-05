@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-03T02:32:30.801Z
+Generated: 2025-04-05T01:51:57.538Z
 
 ## Overview
 
@@ -48,6 +48,12 @@ Generated: 2025-04-03T02:32:30.801Z
 │   │           └── qr-scan/
 │   │               └── page.tsx
 │   ├── api/
+│   │   ├── analytics/
+│   │   │   └── rsvp/
+│   │   │       └── route.ts
+│   │   ├── auth/
+│   │   │   └── magic-link/
+│   │   │       └── route.ts
 │   │   ├── cron/
 │   │   │   └── sync-templates/
 │   │   │       └── route.ts
@@ -57,8 +63,9 @@ Generated: 2025-04-03T02:32:30.801Z
 │   │   │   └── setup/
 │   │   │       └── route.ts
 │   │   ├── events/
-│   │   │   └── qr-code/
-│   │   │       └── route.ts
+│   │   │   ├── qr-code/
+│   │   │   │   └── route.ts
+│   │   │   └── route.ts
 │   │   ├── extract-colors/
 │   │   │   └── route.ts
 │   │   ├── galleries/
@@ -75,9 +82,15 @@ Generated: 2025-04-03T02:32:30.801Z
 │   │   │   │   └── route.ts
 │   │   │   ├── create/
 │   │   │   │   └── route.ts
+│   │   │   ├── send/
+│   │   │   │   └── route.ts
 │   │   │   ├── validate/
 │   │   │   │   └── route.ts
-│   │   │   └── verify/
+│   │   │   ├── verify/
+│   │   │   │   └── route.ts
+│   │   │   └── route.ts
+│   │   ├── rpc/
+│   │   │   └── get-invitation-stats/
 │   │   │       └── route.ts
 │   │   ├── rsvp/
 │   │   │   ├── status/
@@ -88,6 +101,8 @@ Generated: 2025-04-03T02:32:30.801Z
 │   │   │   ├── [templateId]/
 │   │   │   │   └── html/
 │   │   │   │       └── route.ts
+│   │   │   ├── invitees-template/
+│   │   │   │   └── route.ts
 │   │   │   └── sync/
 │   │   │       └── route.ts
 │   │   └── test-email/
@@ -267,6 +282,11 @@ Generated: 2025-04-03T02:32:30.801Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── gallery/
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── invitations/
+│   │   │   │   │   ├── invitation-form.tsx
+│   │   │   │   │   ├── invitation-stats.tsx
+│   │   │   │   │   ├── invitations-list.tsx
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── qr/
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
@@ -288,6 +308,10 @@ Generated: 2025-04-03T02:32:30.801Z
 │   │   │   ├── migrations/
 │   │   │   │   ├── README.md
 │   │   │   │   └── add_event_fields.sql
+│   │   │   ├── new/
+│   │   │   │   └── invitations/
+│   │   │   │       ├── layout.tsx
+│   │   │   │       └── page.tsx
 │   │   │   ├── layout.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
@@ -411,6 +435,7 @@ Generated: 2025-04-03T02:32:30.801Z
 │   │   ├── event-filters.tsx
 │   │   ├── event-form.tsx
 │   │   ├── event-invitation-qr.tsx
+│   │   ├── event-invitations-panel.tsx
 │   │   ├── event-list-client.tsx
 │   │   ├── event-list.tsx
 │   │   ├── event-navigation.tsx
@@ -460,7 +485,8 @@ Generated: 2025-04-03T02:32:30.801Z
 │   │   ├── qr-scanner.tsx
 │   │   └── scanner-overlay.tsx
 │   ├── invitations/
-│   │   └── create-invitation-form.tsx
+│   │   ├── create-invitation-form.tsx
+│   │   └── magic-link-auth.tsx
 │   ├── layout/
 │   │   ├── dashboard-layout.tsx
 │   │   └── main-nav.tsx
@@ -572,6 +598,7 @@ Generated: 2025-04-03T02:32:30.801Z
 │   ├── use-auth.ts
 │   ├── use-debounced-auth.ts
 │   ├── use-events.ts
+│   ├── use-magic-link.ts
 │   ├── use-media-query.ts
 │   ├── use-permissions.ts
 │   ├── use-profile.ts
@@ -586,6 +613,7 @@ Generated: 2025-04-03T02:32:30.801Z
 │   │   ├── color-extraction.ts
 │   │   └── photo-enhancement.ts
 │   ├── auth/
+│   │   ├── invitation-middleware.ts
 │   │   └── utils.ts
 │   ├── email/
 │   │   ├── index.ts
@@ -663,13 +691,13 @@ Generated: 2025-04-03T02:32:30.801Z
 ├── middleware.test.ts
 └── middleware.ts
 
-192 directories, 462 files
+203 directories, 479 files
 
 ```
 
 ## File Type Breakdown
-- ts: 105 file(s)
-- tsx: 338 file(s)
+- ts: 114 file(s)
+- tsx: 346 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

@@ -1,5 +1,5 @@
 # hooks Directory Structure
-Generated: 2025-04-03T02:32:37.961Z
+Generated: 2025-04-05T01:52:03.865Z
 
 ## Overview
 
@@ -15,6 +15,7 @@ Generated: 2025-04-03T02:32:37.961Z
 ├── use-auth.ts
 ├── use-debounced-auth.ts
 ├── use-events.ts
+├── use-magic-link.ts
 ├── use-media-query.ts
 ├── use-permissions.ts
 ├── use-profile.ts
@@ -25,12 +26,12 @@ Generated: 2025-04-03T02:32:37.961Z
 ├── useQrScanner.ts
 └── useSecureAuth.ts
 
-2 directories, 14 files
+2 directories, 15 files
 
 ```
 
 ## File Type Breakdown
-- ts: 14 file(s)
+- ts: 15 file(s)
 
 ## Ignored Patterns
 - node_modules

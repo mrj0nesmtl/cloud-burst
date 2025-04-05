@@ -1,8 +1,8 @@
 # events Directory Structure
-Generated: 2025-04-03T02:32:35.416Z
+Generated: 2025-04-05T01:52:01.781Z
 
 ## Overview
-This directory contains 20 component(s).
+This directory contains 21 component(s).
 
 
 
@@ -18,6 +18,7 @@ This directory contains 20 component(s).
 ├── event-filters.tsx
 ├── event-form.tsx
 ├── event-invitation-qr.tsx
+├── event-invitations-panel.tsx
 ├── event-list-client.tsx
 ├── event-list.tsx
 ├── event-navigation.tsx
@@ -30,12 +31,12 @@ This directory contains 20 component(s).
 ├── rsvp-tab-trigger.tsx
 └── theme-preview.tsx
 
-1 directory, 20 files
+1 directory, 21 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 20 file(s)
+- tsx: 21 file(s)
 
 ## Ignored Patterns
 - node_modules
