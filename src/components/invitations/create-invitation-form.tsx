@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -44,6 +44,23 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: events, isLoading: eventsLoading } = useEvents();
   
+  // Add a state to track the current step and completion
+  const [currentStep, setCurrentStep] = useState(1);
+  const [completedSteps, setCompletedSteps] = useState<number[]>(eventId ? [1] : []);
+
+  // Function to mark a step as completed
+  const completeStep = (step: number) => {
+    if (!completedSteps.includes(step)) {
+      setCompletedSteps([...completedSteps, step]);
+    }
+  };
+
+  // Function to advance to the next step
+  const goToNextStep = (step: number) => {
+    completeStep(step);
+    setCurrentStep(step + 1);
+  };
+
   // Initialize forms with eventId if provided
   const singleForm = useForm<SingleInviteFormValues>({
     resolver: zodResolver(singleInviteSchema),
@@ -56,7 +73,29 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
       dietaryPreferences: '',
       notes: '',
     },
+    mode: 'onChange',
   });
+
+  // Track form validity for step completion
+  const isStep1Valid = singleForm.getValues().eventId !== '';
+  const isStep2Valid = singleForm.formState.isValid && 
+                      singleForm.getValues().name !== '' && 
+                      singleForm.getValues().email !== '';
+
+  // Watch form fields for step 2 validation
+  const watchName = singleForm.watch('name');
+  const watchEmail = singleForm.watch('email');
+
+  // Update completed steps when form fields change
+  useEffect(() => {
+    if (isStep1Valid) {
+      completeStep(1);
+    }
+    
+    if (isStep2Valid) {
+      completeStep(2);
+    }
+  }, [isStep1Valid, isStep2Valid, watchName, watchEmail]);
 
   const bulkForm = useForm<BulkInviteFormValues>({
     resolver: zodResolver(bulkInviteSchema),
@@ -72,6 +111,7 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
   const onSingleSubmit = async (data: SingleInviteFormValues) => {
     try {
       setIsSubmitting(true);
+      completeStep(3); // Mark the final step as complete when submitting
       
       // Call your API endpoint to create and send invitation
       const response = await fetch('/api/invitations/create', {
@@ -109,7 +149,6 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
           title: '📧 Invitation Sent 👍',
           description: `Successfully sent invitation to ${data.email}`,
           variant: 'success',
-          icon: <CheckCircle className="h-4 w-4 mr-2" />,
         });
       }
 
@@ -154,7 +193,6 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
         title: '📧 Invitations Sent 👍',
         description: 'Successfully sent bulk invitations!',
         variant: 'success',
-        icon: <CheckCircle className="h-4 w-4 mr-2" />,
       });
 
       // Reset form
@@ -181,24 +219,72 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
       <div className="hidden sm:block">
         <div className="bg-muted p-4 rounded-lg">
           <ol className="flex items-center justify-between text-sm font-medium text-center">
-            <li className={`flex items-center ${eventId ? 'text-green-600' : 'text-primary'}`}>
-              <span className="flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-primary/10 text-primary">
-                1
+            <li 
+              className={`flex items-center cursor-pointer ${
+                completedSteps.includes(1) 
+                  ? 'text-green-600' 
+                  : currentStep === 1 
+                    ? 'text-primary' 
+                    : 'text-muted-foreground'
+              }`}
+              onClick={() => setCurrentStep(1)}
+            >
+              <span className={`flex items-center justify-center w-6 h-6 mr-2 rounded-full ${
+                completedSteps.includes(1) 
+                  ? 'bg-green-600 text-white' 
+                  : currentStep === 1 
+                    ? 'bg-primary/10 text-primary' 
+                    : 'bg-muted-foreground/20 text-muted-foreground'
+              }`}>
+                {completedSteps.includes(1) ? '✓' : '1'}
               </span>
               Select Event
-              {eventId && <span className="ml-2 text-green-600">✓</span>}
             </li>
-            <li className="flex-1 border-t-2 border-gray-200 mx-2"></li>
-            <li className="flex items-center text-muted-foreground">
-              <span className="flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-muted-foreground/20">
-                2
+            <li className={`flex-1 border-t-2 ${
+              completedSteps.includes(1) ? 'border-green-600' : 'border-gray-200'
+            } mx-2`}></li>
+            <li 
+              className={`flex items-center cursor-pointer ${
+                completedSteps.includes(2) 
+                  ? 'text-green-600' 
+                  : currentStep === 2 
+                    ? 'text-primary' 
+                    : 'text-muted-foreground'
+              }`}
+              onClick={() => isStep1Valid && setCurrentStep(2)}
+            >
+              <span className={`flex items-center justify-center w-6 h-6 mr-2 rounded-full ${
+                completedSteps.includes(2) 
+                  ? 'bg-green-600 text-white' 
+                  : currentStep === 2 
+                    ? 'bg-primary/10 text-primary' 
+                    : 'bg-muted-foreground/20 text-muted-foreground'
+              }`}>
+                {completedSteps.includes(2) ? '✓' : '2'}
               </span>
               Add Guest Info
             </li>
-            <li className="flex-1 border-t-2 border-gray-200 mx-2"></li>
-            <li className="flex items-center text-muted-foreground">
-              <span className="flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-muted-foreground/20">
-                3
+            <li className={`flex-1 border-t-2 ${
+              completedSteps.includes(2) ? 'border-green-600' : 'border-gray-200'
+            } mx-2`}></li>
+            <li 
+              className={`flex items-center cursor-pointer ${
+                completedSteps.includes(3) 
+                  ? 'text-green-600' 
+                  : currentStep === 3 
+                    ? 'text-primary' 
+                    : 'text-muted-foreground'
+              }`}
+              onClick={() => isStep2Valid && setCurrentStep(3)}
+            >
+              <span className={`flex items-center justify-center w-6 h-6 mr-2 rounded-full ${
+                completedSteps.includes(3) 
+                  ? 'bg-green-600 text-white' 
+                  : currentStep === 3 
+                    ? 'bg-primary/10 text-primary' 
+                    : 'bg-muted-foreground/20 text-muted-foreground'
+              }`}>
+                {completedSteps.includes(3) ? '✓' : '3'}
               </span>
               Send Invitation
             </li>
@@ -230,172 +316,217 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
             <CardContent>
               <Form {...singleForm}>
                 <form onSubmit={singleForm.handleSubmit(onSingleSubmit)} className="space-y-6">
-                  {/* Event Selection */}
-                  <FormField
-                    control={singleForm.control}
-                    name="eventId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Select Event</FormLabel>
-                        <Select 
-                          onValueChange={field.onChange} 
-                          defaultValue={field.value}
-                          disabled={eventsLoading || !!eventId}
-                        >
+                  {/* Event Selection - Step 1 */}
+                  <div className={currentStep === 1 ? 'block' : 'hidden'}>
+                    <FormField
+                      control={singleForm.control}
+                      name="eventId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Select Event</FormLabel>
+                          <Select 
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              if (value) setTimeout(() => goToNextStep(1), 500);
+                            }} 
+                            defaultValue={field.value}
+                            disabled={eventsLoading || !!eventId}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select an event" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {events?.length === 0 ? (
+                                <div className="px-2 py-4 text-center">
+                                  <p className="text-sm text-muted-foreground">No events found</p>
+                                  <Button
+                                    variant="outline" 
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() => router.push('/protected/events/create')}
+                                  >
+                                    Create New Event
+                                  </Button>
+                                </div>
+                              ) : (
+                                events?.map((event) => (
+                                  <SelectItem key={event.id} value={event.id}>
+                                    {event.name}
+                                  </SelectItem>
+                                ))
+                              )}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="mt-6 flex justify-end">
+                      <Button 
+                        type="button" 
+                        onClick={() => isStep1Valid && goToNextStep(1)}
+                        disabled={!isStep1Valid}
+                      >
+                        Next: Add Guest Info
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Guest Info - Step 2 */}
+                  <div className={currentStep === 2 ? 'block' : 'hidden'}>
+                    {/* Name Field */}
+                    <FormField
+                      control={singleForm.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
                           <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select an event" />
-                            </SelectTrigger>
+                            <Input placeholder="Enter attendee name" {...field} />
                           </FormControl>
-                          <SelectContent>
-                            {events?.map((event) => (
-                              <SelectItem key={event.id} value={event.id}>
-                                {event.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* Name Field */}
-                  <FormField
-                    control={singleForm.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter attendee name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* Email Field */}
+                    <FormField
+                      control={singleForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="mt-4">
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter email address" type="email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="mt-6 flex justify-between">
+                      <Button 
+                        type="button" 
+                        variant="outline"
+                        onClick={() => setCurrentStep(1)}
+                      >
+                        Back
+                      </Button>
+                      <Button 
+                        type="button" 
+                        onClick={() => isStep2Valid && goToNextStep(2)}
+                        disabled={!isStep2Valid}
+                      >
+                        Next: Complete Invitation
+                      </Button>
+                    </div>
+                  </div>
 
-                  {/* Email Field */}
-                  <FormField
-                    control={singleForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter email address" type="email" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Custom Message */}
-                  <FormField
-                    control={singleForm.control}
-                    name="message"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Custom Message</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            placeholder="Add a personal message to the invitation..." 
-                            className="min-h-[100px]" 
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          This message will be included in the invitation email
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Plus One Option */}
-                  <FormField
-                    control={singleForm.control}
-                    name="plusOne"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-base">Allow Plus One</FormLabel>
+                  {/* Final Step - Step 3 */}
+                  <div className={currentStep === 3 ? 'block' : 'hidden'}>
+                    {/* Custom Message */}
+                    <FormField
+                      control={singleForm.control}
+                      name="message"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Custom Message</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Add a personal message to the invitation..." 
+                              className="min-h-[100px]" 
+                              {...field} 
+                            />
+                          </FormControl>
                           <FormDescription>
-                            Allow this attendee to bring a guest
+                            This message will be included in the invitation email
                           </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* Dietary Preferences */}
-                  <FormField
-                    control={singleForm.control}
-                    name="dietaryPreferences"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Dietary Preferences</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Enter any dietary requirements" 
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Optional: Add any dietary preferences or restrictions
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* Plus One Option */}
+                    <FormField
+                      control={singleForm.control}
+                      name="plusOne"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 mt-4 p-4 border rounded-md">
+                          <FormControl>
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel>Allow Plus One</FormLabel>
+                            <FormDescription>
+                              Guest can bring an additional person
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* Notes */}
-                  <FormField
-                    control={singleForm.control}
-                    name="notes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Additional Notes</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            placeholder="Add any additional notes..." 
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Optional: Add any additional notes about this attendee
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* Dietary Preferences */}
+                    <FormField
+                      control={singleForm.control}
+                      name="dietaryPreferences"
+                      render={({ field }) => (
+                        <FormItem className="mt-4">
+                          <FormLabel>Dietary Preferences</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Optional dietary preferences or restrictions" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <Button 
-                    type="submit" 
-                    className="w-full"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Sending Invitation...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="mr-2 h-4 w-4" />
-                        Send Guest Invitation
-                      </>
-                    )}
-                  </Button>
-                  <p className="text-xs text-center text-muted-foreground mt-2">
-                    A personalized email with event details will be sent to this guest
-                  </p>
+                    {/* Additional Notes */}
+                    <FormField
+                      control={singleForm.control}
+                      name="notes"
+                      render={({ field }) => (
+                        <FormItem className="mt-4">
+                          <FormLabel>Additional Notes</FormLabel>
+                          <FormControl>
+                            <Textarea placeholder="Optional notes for this guest" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="mt-6 flex justify-between">
+                      <Button 
+                        type="button" 
+                        variant="outline"
+                        onClick={() => setCurrentStep(2)}
+                      >
+                        Back
+                      </Button>
+                      <Button 
+                        type="submit"
+                        disabled={isSubmitting || !isStep2Valid}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="mr-2 h-4 w-4" />
+                            Send Invitation
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
                 </form>
               </Form>
             </CardContent>
@@ -432,11 +563,25 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {events?.map((event) => (
-                              <SelectItem key={event.id} value={event.id}>
-                                {event.name}
-                              </SelectItem>
-                            ))}
+                            {events?.length === 0 ? (
+                              <div className="px-2 py-4 text-center">
+                                <p className="text-sm text-muted-foreground">No events found</p>
+                                <Button
+                                  variant="outline" 
+                                  size="sm"
+                                  className="mt-2"
+                                  onClick={() => router.push('/protected/events/create')}
+                                >
+                                  Create New Event
+                                </Button>
+                              </div>
+                            ) : (
+                              events?.map((event) => (
+                                <SelectItem key={event.id} value={event.id}>
+                                  {event.name}
+                                </SelectItem>
+                              ))
+                            )}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -450,7 +595,16 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
                     name="csvFile"
                     render={({ field: { onChange, value, ...field } }) => (
                       <FormItem>
-                        <FormLabel>Upload Guest List CSV</FormLabel>
+                        <div className="flex items-center justify-between">
+                          <FormLabel>Upload Guest List CSV</FormLabel>
+                          <a 
+                            href="/api/templates/invitees-template" 
+                            target="_blank"
+                            className="text-xs text-primary hover:underline"
+                          >
+                            Download Template
+                          </a>
+                        </div>
                         <FormControl>
                           <Input
                             type="file"

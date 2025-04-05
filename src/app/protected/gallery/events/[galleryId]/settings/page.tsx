@@ -51,7 +51,12 @@ export default async function GallerySettingsPage({ params }: { params: { galler
   
   if (!event || event.organizer_id !== session.user.id) {
     return (
-      <div className="max-w-3xl mx-auto my-8">
+      <div style={{ 
+        width: '100%', 
+        padding: '24px',
+        maxWidth: '1200px',
+        margin: '0 auto'
+      }}>
         <Card>
           <CardHeader>
             <CardTitle>Access Denied</CardTitle>
@@ -68,11 +73,25 @@ export default async function GallerySettingsPage({ params }: { params: { galler
   const eventName = gallery.events?.name || 'Event Gallery'
   
   return (
-    <div className="max-w-3xl mx-auto my-8">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center">
-            <Settings className="h-6 w-6 mr-3 text-primary" />
+    <div style={{ 
+      width: '100%', 
+      padding: '24px',
+      maxWidth: '1200px',
+      margin: '0 auto'
+    }}>
+      <Card style={{
+        border: '1px solid var(--border)',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+        background: 'var(--background)',
+        overflow: 'hidden'
+      }}>
+        <CardHeader style={{ padding: '24px' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            <Settings className="h-6 w-6 text-primary" />
             <div>
               <CardTitle className="text-2xl">{eventName} Settings</CardTitle>
               <CardDescription>Customize how your gallery looks and behaves</CardDescription>
@@ -80,7 +99,7 @@ export default async function GallerySettingsPage({ params }: { params: { galler
           </div>
         </CardHeader>
         <Separator />
-        <CardContent className="pt-6">
+        <CardContent style={{ padding: '24px' }}>
           <GallerySettingsForm gallery={gallery} />
         </CardContent>
       </Card>

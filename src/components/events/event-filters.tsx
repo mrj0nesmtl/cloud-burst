@@ -192,17 +192,18 @@ export function EventFilters({ filters, onFilterChange }: EventFiltersProps) {
             
             <div className="space-y-2">
               <h4 className="font-medium">Status</h4>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 {(['draft', 'published', 'completed', 'cancelled'] as EventStatus[]).map((status) => (
-                  <div key={status} className="flex items-center space-x-2">
+                  <div key={status} className="flex items-center space-x-2 bg-muted/40 px-3 py-2 rounded-md hover:bg-muted">
                     <Checkbox
                       id={`status-${status}`}
                       checked={filters.statuses.includes(status)}
                       onCheckedChange={() => toggleStatus(status)}
+                      className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground h-4 w-4"
                     />
                     <Label
                       htmlFor={`status-${status}`}
-                      className="text-sm capitalize"
+                      className="text-sm font-medium capitalize cursor-pointer w-full"
                     >
                       {status}
                     </Label>
@@ -213,29 +214,31 @@ export function EventFilters({ filters, onFilterChange }: EventFiltersProps) {
             
             <div className="space-y-2">
               <h4 className="font-medium">Visibility</h4>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center space-x-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex items-center space-x-2 bg-muted/40 px-3 py-2 rounded-md hover:bg-muted">
                   <Checkbox
                     id="visibility-public"
                     checked={filters.isPublic === true}
                     onCheckedChange={() => toggleVisibility(true)}
+                    className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground h-4 w-4"
                   />
                   <Label
                     htmlFor="visibility-public"
-                    className="text-sm"
+                    className="text-sm font-medium cursor-pointer w-full"
                   >
                     Public
                   </Label>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 bg-muted/40 px-3 py-2 rounded-md hover:bg-muted">
                   <Checkbox
                     id="visibility-private"
                     checked={filters.isPublic === false}
                     onCheckedChange={() => toggleVisibility(false)}
+                    className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground h-4 w-4"
                   />
                   <Label
                     htmlFor="visibility-private"
-                    className="text-sm"
+                    className="text-sm font-medium cursor-pointer w-full"
                   >
                     Private
                   </Label>

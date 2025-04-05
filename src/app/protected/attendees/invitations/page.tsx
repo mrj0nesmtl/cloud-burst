@@ -32,6 +32,8 @@ import {
 import { formatDistanceToNow } from 'date-fns'
 import type { InvitationWithEvent } from '@/types/invitations'
 import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { Database } from '@/types/supabase'
 
 // Page metadata
 const pageTitle = 'All Guest Invitations';
@@ -90,6 +92,29 @@ function formatDate(dateString: string): string {
   }
 }
 
+// Utility function to fetch event name for event IDs where data is missing
+async function fetchEventName(eventId: string): Promise<string> {
+  try {
+    const supabase = createClient<Database>();
+    const { data, error } = await supabase
+      .from('events')
+      .select('name')
+      .eq('id', eventId as unknown as string)
+      .single();
+    
+    if (error || !data) {
+      console.error('Error fetching event name:', error);
+      return 'Event Not Found';
+    }
+    
+    // Type assertion to ensure TypeScript knows data has a name property
+    return (data as { name: string }).name;
+  } catch (error) {
+    console.error('Error in fetchEventName:', error);
+    return 'Error Loading Name';
+  }
+}
+
 export default function InvitationsPage() {
   // Mobile detection - Client Component
   const [isMobile, setIsMobile] = useState(false);
@@ -142,13 +167,18 @@ export default function InvitationsPage() {
         const declinedCount = data.invitations?.filter((inv: Invitation) => inv.status === 'declined').length || 0;
         
         // Calculate event counts
-        const eventCounts = data.invitations?.reduce((acc: Record<string, EventCount>, inv: Invitation) => {
+        const eventCounts: Record<string, EventCount> = {};
+        
+        // First pass: Initialize with data from API
+        for (const inv of data.invitations || []) {
           const eventId = inv.event_id;
-          if (!acc[eventId]) {
-            acc[eventId] = {
+          if (!eventCounts[eventId]) {
+            const eventData = inv.events?.[0];
+            
+            eventCounts[eventId] = {
               id: eventId,
-              name: inv.events?.[0]?.name || 'Unknown Event',
-              date: inv.events?.[0]?.date,
+              name: eventData?.name || 'Loading Event...',
+              date: eventData?.date,
               count: 0,
               accepted: 0,
               declined: 0,
@@ -156,18 +186,26 @@ export default function InvitationsPage() {
             };
           }
           
-          acc[eventId].count++;
+          eventCounts[eventId].count++;
           
           if (inv.status === 'accepted') {
-            acc[eventId].accepted++;
+            eventCounts[eventId].accepted++;
           } else if (inv.status === 'declined') {
-            acc[eventId].declined++;
+            eventCounts[eventId].declined++;
           } else {
-            acc[eventId].pending++;
+            eventCounts[eventId].pending++;
           }
+        }
+        
+        // Second pass: Fetch missing event names
+        const eventPromises = Object.entries(eventCounts)
+          .filter(([_, event]) => event.name === 'Loading Event...')
+          .map(async ([eventId, event]) => {
+            const name = await fetchEventName(eventId);
+            eventCounts[eventId].name = name;
+          });
           
-          return acc;
-        }, {} as Record<string, EventCount>) || {};
+        await Promise.all(eventPromises);
         
         // Convert to array and sort
         const eventCountsArray = Object.values(eventCounts) as EventCount[];

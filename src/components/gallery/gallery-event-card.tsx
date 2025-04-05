@@ -111,7 +111,7 @@ export function GalleryEventCard({
         
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-3 sm:mt-4">
           <Button className="w-full" variant="default" size="sm" asChild>
-            <Link href={`/protected/gallery/events/${id}`} prefetch={false}>
+            <Link href={`/protected/gallery/events/${eventId}`} prefetch={false}>
               <ExternalLink className="mr-2 h-4 w-4" />
               <span className="whitespace-nowrap">View Gallery</span>
             </Link>

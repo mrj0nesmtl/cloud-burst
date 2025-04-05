@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed TypeScript errors in invitation management components
 - Resolved type safety issues in event duplication functionality
 - Enhanced type definitions for EventCount and related interfaces
+- Fixed middleware to allow public access to the events page without requiring login
+- Added proper type assertions for Supabase queries in fetchEventName function
+- Enhanced invitation API response with improved event data handling
+- Added fallback mechanism to fetch missing event names directly from the database
 
 ## [0.8.6] - 2025-04-2
 ### Added in Session 36 (April 2, 2025)

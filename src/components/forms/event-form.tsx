@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { createClient } from "@/lib/supabase/client"
 import Image from "next/image"
+import { DEFAULT_GALLERY_SETTINGS } from "@/lib/constants"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -220,12 +221,21 @@ export function EventForm() {
     // If in preview mode, proceed with actual submission
     setIsSubmitting(true)
     
+    // Add a timeout to prevent indefinite spinning
+    const submissionTimeout = setTimeout(() => {
+      console.error('Event creation timed out after 30 seconds')
+      toast.error('Event creation is taking longer than expected. Please check network connection and try again.')
+      setIsSubmitting(false)
+    }, 30000)
+    
     try {
       const supabase = createClient()
       const { user, error } = await getAuthenticatedUser()
       
       if (!user) {
         toast.error('You must be logged in to create an event')
+        clearTimeout(submissionTimeout)
+        setIsSubmitting(false)
         return
       }
       
@@ -234,45 +244,62 @@ export function EventForm() {
       let thumbnailUrl = ''
       let logoUrl = ''
       
+      console.log('Starting event creation process:', {
+        eventId, 
+        name: data.name,
+        hasThumbnail: !!thumbnailFile,
+        hasLogo: !!logoFile
+      })
+      
       // Upload thumbnail if exists
       if (thumbnailFile) {
         try {
           // Create organized storage path
-          const fileName = `${Date.now()}-${thumbnailFile.name}`
-          const filePath = `events/${userId}/${eventId}/thumbnail/${fileName}`
+          const fileName = `${Date.now()}-${thumbnailFile.name}`;
+          const filePath = `events/${userId}/${eventId}/thumbnail/${fileName}`;
           
           console.log('Uploading thumbnail file:', {
             fileName,
             filePath,
             fileType: thumbnailFile.type,
-            fileSize: thumbnailFile.size
-          })
+            fileSize: thumbnailFile.size,
+            name: thumbnailFile.name
+          });
+          
+          // Set timeout specifically for this upload
+          const uploadTimeout = setTimeout(() => {
+            console.warn('Thumbnail upload taking too long, continuing with event creation');
+            // Continue without the thumbnail rather than blocking
+          }, 10000);
           
           const { data: thumbnailData, error: thumbnailError } = await supabase.storage
             .from('event-media')
             .upload(filePath, thumbnailFile, {
               cacheControl: '3600',
-              contentType: thumbnailFile.type
-            })
+              contentType: thumbnailFile.type,
+              upsert: true // Add upsert option to prevent conflicts
+            });
             
+          clearTimeout(uploadTimeout);
+          
           if (thumbnailError) {
-            console.error('Error uploading thumbnail:', thumbnailError)
-            toast.error(`Failed to upload thumbnail: ${thumbnailError.message}`)
+            console.error('Error uploading thumbnail:', thumbnailError);
+            toast.error(`Failed to upload thumbnail: ${thumbnailError.message}`);
             
             // Continue with event creation without the thumbnail
-            console.log('Proceeding with event creation without thumbnail')
+            console.log('Proceeding with event creation without thumbnail');
           } else {
             // Get public URL
             const { data: publicUrlData } = await supabase.storage
               .from('event-media')
-              .getPublicUrl(filePath)
+              .getPublicUrl(filePath);
               
-            thumbnailUrl = publicUrlData.publicUrl
-            console.log('Thumbnail uploaded successfully:', thumbnailUrl)
+            thumbnailUrl = publicUrlData.publicUrl;
+            console.log('Thumbnail uploaded successfully:', thumbnailUrl);
           }
         } catch (thumbnailUploadError) {
-          console.error('Unexpected error uploading thumbnail:', thumbnailUploadError)
-          toast.error('Unexpected error uploading thumbnail. Creating event without thumbnail.')
+          console.error('Unexpected error uploading thumbnail:', thumbnailUploadError);
+          toast.error('Unexpected error uploading thumbnail. Creating event without thumbnail.');
           // Continue with event creation without the thumbnail
         }
       }
@@ -281,41 +308,51 @@ export function EventForm() {
       if (logoFile) {
         try {
           // Create organized storage path
-          const fileName = `${Date.now()}-${logoFile.name}`
-          const filePath = `events/${userId}/${eventId}/logo/${fileName}`
+          const logoFileName = `${Date.now()}-${logoFile.name}`;
+          const logoFilePath = `events/${userId}/${eventId}/logo/${logoFileName}`;
           
           console.log('Uploading logo file:', {
-            fileName,
-            filePath,
+            fileName: logoFileName,
+            filePath: logoFilePath,
             fileType: logoFile.type,
-            fileSize: logoFile.size
-          })
+            fileSize: logoFile.size,
+            name: logoFile.name
+          });
+          
+          // Set timeout specifically for this upload
+          const logoUploadTimeout = setTimeout(() => {
+            console.warn('Logo upload taking too long, continuing with event creation');
+            // Continue without the logo rather than blocking
+          }, 10000);
           
           const { data: logoData, error: logoError } = await supabase.storage
             .from('event-media')
-            .upload(filePath, logoFile, {
+            .upload(logoFilePath, logoFile, {
               cacheControl: '3600',
-              contentType: logoFile.type
-            })
+              contentType: logoFile.type,
+              upsert: true // Add upsert option to prevent conflicts
+            });
             
+          clearTimeout(logoUploadTimeout);
+          
           if (logoError) {
-            console.error('Error uploading logo:', logoError)
-            toast.error(`Failed to upload logo: ${logoError.message}`)
+            console.error('Error uploading logo:', logoError);
+            toast.error(`Failed to upload logo: ${logoError.message}`);
             
             // Continue with event creation without the logo
-            console.log('Proceeding with event creation without logo')
+            console.log('Proceeding with event creation without logo');
           } else {
             // Get public URL
             const { data: publicUrlData } = await supabase.storage
               .from('event-media')
-              .getPublicUrl(filePath)
+              .getPublicUrl(logoFilePath);
               
-            logoUrl = publicUrlData.publicUrl
-            console.log('Logo uploaded successfully:', logoUrl)
+            logoUrl = publicUrlData.publicUrl;
+            console.log('Logo uploaded successfully:', logoUrl);
           }
         } catch (logoUploadError) {
-          console.error('Unexpected error uploading logo:', logoUploadError)
-          toast.error('Unexpected error uploading logo. Creating event without logo.')
+          console.error('Unexpected error uploading logo:', logoUploadError);
+          toast.error('Unexpected error uploading logo. Creating event without logo.');
           // Continue with event creation without the logo
         }
       }
@@ -348,34 +385,51 @@ export function EventForm() {
       if (eventError) {
         console.error('Error creating event:', eventError)
         toast.error(`Failed to create event: ${eventError.message}`)
+        clearTimeout(submissionTimeout)
+        setIsSubmitting(false)
         return
       }
       
       console.log('Event created successfully:', event)
       
-      // Create gallery for the event
-      const { error: galleryError } = await supabase
-        .from('galleries')
-        .insert({
-          event_id: eventId,
-          is_active: true
-        } as any)
-        
-      if (galleryError) {
-        console.error('Error creating gallery:', galleryError)
-        toast.error('Failed to create gallery, but event was created')
-        // We won't return here as the event is already created
-      } else {
-        console.log('Gallery created successfully for event:', eventId)
+      // Create gallery for the event - wrap in try/catch to prevent it from blocking event creation
+      try {
+        const { error: galleryError } = await supabase
+          .from('galleries')
+          .insert({
+            event_id: eventId,
+            is_active: true,
+            thumbnail_url: thumbnailUrl || null,
+            settings: DEFAULT_GALLERY_SETTINGS
+          } as any)
+          
+        if (galleryError) {
+          console.error('Error creating gallery:', galleryError)
+          toast.error('Failed to create gallery, but event was created')
+          // We won't return here as the event is already created
+        } else {
+          console.log('Gallery created successfully for event:', eventId)
+        }
+      } catch (galleryCreateError) {
+        console.error('Exception creating gallery:', galleryCreateError)
+        // Don't block event creation for gallery errors
       }
       
+      // Before final redirect and completion
+      console.log('Event created with ID:', eventId)
+      clearTimeout(submissionTimeout)
+      
       toast.success('Event created successfully!')
-      router.push('/dashboard/events')
+      
+      // Use a small delay before redirect to ensure toast is shown
+      setTimeout(() => {
+        router.push('/dashboard/events')
+      }, 500)
       
     } catch (error) {
-      console.error('Error:', error)
-      toast.error('An unexpected error occurred')
-    } finally {
+      console.error('Error creating event:', error)
+      toast.error('An unexpected error occurred: ' + (error instanceof Error ? error.message : 'Unknown error'))
+      clearTimeout(submissionTimeout)
       setIsSubmitting(false)
     }
   }

@@ -17,6 +17,8 @@ export async function GET() {
       );
     }
     
+    console.log('Fetching invitations for user:', session.user.id);
+    
     // Get user's invitations across all events with detailed event information
     const { data: invitations, error } = await supabase
       .from('invitations')
@@ -28,7 +30,7 @@ export async function GET() {
         created_at, 
         updated_at,
         event_id,
-        events:event_id (
+        events:events!inner (
           id,
           name,
           date,
@@ -45,6 +47,19 @@ export async function GET() {
         { error: 'Failed to fetch invitations' },
         { status: 500 }
       );
+    }
+    
+    // Debug: log the first invitation to check structure
+    if (invitations && invitations.length > 0) {
+      console.log('Sample invitation data (first item):', 
+        JSON.stringify({
+          id: invitations[0].id,
+          event_id: invitations[0].event_id,
+          events: invitations[0].events
+        }, null, 2)
+      );
+    } else {
+      console.log('No invitations found for user');
     }
     
     return NextResponse.json({ invitations });
