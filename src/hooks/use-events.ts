@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@/lib/query-helpers';
 import { createClient } from '@/lib/supabase/client';
 
 export interface Event {

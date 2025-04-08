@@ -10,26 +10,26 @@ import { getInvitationsByEventId } from '@/lib/supabase/invitations'
 import { EventInvitationQR } from '@/components/events/event-invitation-qr'
 import Link from 'next/link'
 import { Plus, Download, QrCode, ArrowRight } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
 import { Invitation } from '@/types/invitations'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useLegacyQuery } from '@/lib/query-helpers'
 
 export default function EventQRCodesPage() {
   const params = useParams()
   const eventId = params.eventId as string
   
   // Fetch event details
-  const { data: event, isLoading: isLoadingEvent } = useQuery({
-    queryKey: ['event', eventId],
-    queryFn: () => getEventById(eventId),
-  })
+  const { data: event, isLoading: isLoadingEvent } = useLegacyQuery(
+    ['event', eventId],
+    () => getEventById(eventId)
+  )
   
   // Fetch event invitations
-  const { data: invitations, isLoading: isLoadingInvitations } = useQuery({
-    queryKey: ['invitations', eventId],
-    queryFn: () => getInvitationsByEventId(eventId),
-    enabled: !!eventId,
-  })
+  const { data: invitations, isLoading: isLoadingInvitations } = useLegacyQuery(
+    ['invitations', eventId],
+    () => getInvitationsByEventId(eventId),
+    { enabled: !!eventId }
+  )
   
   // Selected invitation for QR display
   const [selectedInvitation, setSelectedInvitation] = useState<Invitation | null>(null)

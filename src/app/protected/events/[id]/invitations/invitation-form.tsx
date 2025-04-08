@@ -158,12 +158,14 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
                       onChange={e => setEmailInputValue(e.target.value)}
                       onKeyDown={handleKeyDown}
                       className="flex-1"
+                      data-testid="email-input"
                     />
                     <Button
                       type="button"
                       onClick={addEmail}
                       variant="outline"
                       size="icon"
+                      data-testid="add-email-button"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -252,9 +254,9 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>Allow Plus Ones</FormLabel>
+                  <FormLabel>Allow Plus One</FormLabel>
                   <FormDescription>
-                    Guests can bring an additional person
+                    Guests can bring a companion to the event
                   </FormDescription>
                 </div>
               </FormItem>
@@ -275,7 +277,7 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
                 <div className="space-y-1 leading-none">
                   <FormLabel>Send Immediately</FormLabel>
                   <FormDescription>
-                    Send invitations as soon as they're created
+                    Send invitations now or save as draft
                   </FormDescription>
                 </div>
               </FormItem>
@@ -283,17 +285,24 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
           />
         </div>
         
-        <Button type="submit" className="w-full" disabled={isSubmitting || emails.length === 0}>
+        <Button 
+          type="submit" 
+          disabled={isSubmitting || emails.length === 0}
+          className="w-full"
+        >
           {isSubmitting ? (
-            'Sending...'
+            <>
+              <Send className="h-4 w-4 mr-2 animate-pulse" />
+              Sending...
+            </>
           ) : (
             <>
               <Send className="h-4 w-4 mr-2" />
-              {form.watch('sendNow') ? 'Send Invitations' : 'Create Invitation Drafts'}
+              {form.watch('sendNow') ? 'Send Invitations' : 'Save as Draft'}
             </>
           )}
         </Button>
       </form>
     </Form>
-  )
+  );
 } 

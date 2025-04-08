@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient, useLegacyMutation } from '@/lib/query-helpers'
 import { createClient } from '@/lib/supabase/client'
 import { useAuthStore } from '@/lib/supabase/auth-store'
 
@@ -9,7 +9,7 @@ export function useUpdateProfile(userId?: string) {
   
   const effectiveUserId = userId || user?.id
   
-  const updateProfileMutation = useMutation({
+  const updateProfileMutation = useLegacyMutation({
     mutationFn: async (data: any) => {
       if (!effectiveUserId) {
         throw new Error('User ID is required')
@@ -42,7 +42,7 @@ export function useUpdateProfile(userId?: string) {
     }
   })
   
-  const uploadAvatarMutation = useMutation({
+  const uploadAvatarMutation = useLegacyMutation({
     mutationFn: async (file: File) => {
       if (!effectiveUserId) {
         throw new Error('User ID is required')

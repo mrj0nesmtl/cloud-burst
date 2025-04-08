@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@/lib/query-helpers'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import type { Database } from '@/types/supabase'
 
@@ -35,7 +35,7 @@ export function useProfile(userId: string | undefined) {
     },
     enabled: !!userId,
     staleTime: 5 * 60 * 1000,
-    retry: false,
+    retry: false
   })
   
   return {
