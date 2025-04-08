@@ -28,7 +28,7 @@ export default function InvitationsPage({
 
   return (
     <div className="w-full max-w-full py-4 sm:py-6 px-3 sm:px-4 md:px-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-3">
+      <div className="flex flex-wrap justify-between items-start mb-4 sm:mb-6 gap-3">
         <div className="flex items-center gap-2">
           <Link href={`/protected/events/${eventId}`}>
             <Button variant="ghost" size="sm" className="h-8 px-2">
@@ -39,14 +39,14 @@ export default function InvitationsPage({
           <h1 className="text-xl sm:text-2xl font-bold">Event Invitations</h1>
         </div>
         
-        <Button className="w-full md:w-auto">
+        <Button className="w-full sm:w-auto mt-2 sm:mt-0">
           <SendIcon className="h-4 w-4 mr-2" />
           Send Invitations
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-        <div className="lg:col-span-4 space-y-4 sm:space-y-6">
+      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6">
+        <div className="w-full lg:col-span-4 space-y-4 sm:space-y-6 order-2 lg:order-1">
           <Card className="h-full">
             <CardHeader className="bg-primary/5 border-b p-4 sm:p-6">
               <CardTitle className="flex items-center">
@@ -81,7 +81,7 @@ export default function InvitationsPage({
           </Card>
         </div>
         
-        <div className="lg:col-span-8">
+        <div className="w-full lg:col-span-8 order-1 lg:order-2">
           <Card className="h-full">
             <CardHeader className="bg-primary/5 border-b p-4 sm:p-6">
               <CardTitle>Invitation Dashboard</CardTitle>
@@ -95,18 +95,18 @@ export default function InvitationsPage({
               <Separator className="my-4 sm:my-6" />
               
               <Tabs defaultValue="all">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
-                  <TabsList className="w-full md:w-auto h-auto p-1">
+                <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between mb-4">
+                  <TabsList className="w-full sm:w-auto h-auto p-1 self-start">
                     <TabsTrigger value="all" className="text-xs sm:text-sm py-1.5">All</TabsTrigger>
                     <TabsTrigger value="pending" className="text-xs sm:text-sm py-1.5">Pending</TabsTrigger>
                     <TabsTrigger value="accepted" className="text-xs sm:text-sm py-1.5">Accepted</TabsTrigger>
                     <TabsTrigger value="declined" className="text-xs sm:text-sm py-1.5">Declined</TabsTrigger>
                   </TabsList>
                   
-                  <div className="relative w-full md:w-auto">
+                  <div className="relative w-full sm:w-auto">
                     <Input 
                       placeholder="Search by name or email..." 
-                      className="w-full md:w-64 h-9 text-sm"
+                      className="w-full sm:w-60 h-9 text-sm"
                     />
                   </div>
                 </div>

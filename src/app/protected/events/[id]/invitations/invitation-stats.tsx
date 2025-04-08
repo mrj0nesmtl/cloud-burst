@@ -110,7 +110,7 @@ export default function InvitationStats({ eventId }: { eventId: string }) {
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-3">
               <StatCard 
                 label="Total"
                 value={stats.total}

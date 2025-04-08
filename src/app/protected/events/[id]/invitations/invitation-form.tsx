@@ -179,7 +179,7 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
                           className="flex items-center gap-1 bg-primary/10 text-primary rounded-md px-2 py-1 text-sm"
                         >
                           <Mail className="h-3 w-3" />
-                          <span>{email}</span>
+                          <span className="max-w-[150px] truncate">{email}</span>
                           <Button
                             type="button"
                             onClick={() => removeEmail(email)}
@@ -246,7 +246,7 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
             control={form.control}
             name="plusOne"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -267,7 +267,7 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
             control={form.control}
             name="sendNow"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -287,20 +287,11 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
         
         <Button 
           type="submit" 
+          className="w-full" 
           disabled={isSubmitting || emails.length === 0}
-          className="w-full"
         >
-          {isSubmitting ? (
-            <>
-              <Send className="h-4 w-4 mr-2 animate-pulse" />
-              Sending...
-            </>
-          ) : (
-            <>
-              <Send className="h-4 w-4 mr-2" />
-              {form.watch('sendNow') ? 'Send Invitations' : 'Save as Draft'}
-            </>
-          )}
+          <Send className="mr-2 h-4 w-4" />
+          {isSubmitting ? 'Sending...' : 'Send Invitations'}
         </Button>
       </form>
     </Form>
