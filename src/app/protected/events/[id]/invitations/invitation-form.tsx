@@ -142,22 +142,23 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} style={{ width: "100%" }} className="space-y-4 sm:space-y-6">
         <FormField
           control={form.control}
           name="emails"
           render={() => (
-            <FormItem>
-              <FormLabel>Guest Emails</FormLabel>
+            <FormItem style={{ width: "100%" }}>
+              <FormLabel className="text-xs sm:text-sm">Guest Emails</FormLabel>
               <FormControl>
-                <div className="space-y-3">
-                  <div className="flex gap-2">
+                <div style={{ width: "100%" }} className="space-y-2 sm:space-y-3">
+                  <div style={{ width: "100%", display: "flex" }} className="gap-1.5 sm:gap-2">
                     <Input
                       placeholder="guest@example.com"
                       value={emailInputValue}
                       onChange={e => setEmailInputValue(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      className="flex-1"
+                      style={{ flex: 1, minWidth: 0 }}
+                      className="text-xs sm:text-sm h-8 sm:h-9"
                       data-testid="email-input"
                     />
                     <Button
@@ -165,29 +166,31 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
                       onClick={addEmail}
                       variant="outline"
                       size="icon"
+                      className="h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0"
                       data-testid="add-email-button"
                     >
-                      <Plus className="h-4 w-4" />
+                      <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </Button>
                   </div>
                   
                   {emails.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div style={{ width: "100%", overflowX: "hidden", display: "flex", flexWrap: "wrap" }} className="gap-1.5 sm:gap-2 mt-1.5 sm:mt-2">
                       {emails.map(email => (
                         <div
                           key={email}
-                          className="flex items-center gap-1 bg-primary/10 text-primary rounded-md px-2 py-1 text-sm"
+                          style={{ maxWidth: "calc(100% - 6px)" }}
+                          className="flex items-center gap-0.5 xs:gap-1 bg-primary/10 text-primary rounded-md px-1 xs:px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs"
                         >
-                          <Mail className="h-3 w-3" />
-                          <span className="max-w-[150px] truncate">{email}</span>
+                          <Mail className="h-2.5 w-2.5 sm:h-3 sm:w-3 flex-shrink-0" />
+                          <span style={{ maxWidth: "calc(100% - 25px)" }} className="truncate text-[10px] sm:text-xs">{email}</span>
                           <Button
                             type="button"
                             onClick={() => removeEmail(email)}
                             variant="ghost"
                             size="icon"
-                            className="h-4 w-4 p-0 ml-1"
+                            className="h-3.5 w-3.5 sm:h-4 sm:w-4 p-0 ml-0.5 sm:ml-1 flex-shrink-0"
                           >
-                            <X className="h-3 w-3" />
+                            <X className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                           </Button>
                         </div>
                       ))}
@@ -197,10 +200,11 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
                   <Button
                     type="button"
                     variant="outline"
-                    className="w-full mt-2 text-muted-foreground border-dashed"
+                    style={{ width: "100%" }}
+                    className="mt-1.5 sm:mt-2 text-muted-foreground border-dashed text-xs sm:text-sm h-8 sm:h-9"
                     onClick={() => document.getElementById('csv-upload')?.click()}
                   >
-                    <Users className="h-4 w-4 mr-2" />
+                    <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                     Import from CSV
                     <input
                       id="csv-upload"
@@ -215,10 +219,10 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
                   </Button>
                 </div>
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-[10px] sm:text-xs">
                 Add guest emails one by one or import from a CSV file
               </FormDescription>
-              <FormMessage />
+              <FormMessage className="text-[10px] sm:text-xs" />
             </FormItem>
           )}
         />
@@ -228,34 +232,35 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Personal Message (Optional)</FormLabel>
+              <FormLabel className="text-xs sm:text-sm">Personal Message (Optional)</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Add a personalized message to your invitation"
-                  className="min-h-[100px]"
+                  className="min-h-[80px] sm:min-h-[100px] text-xs sm:text-sm"
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-[10px] sm:text-xs" />
             </FormItem>
           )}
         />
         
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3 sm:gap-4">
           <FormField
             control={form.control}
             name="plusOne"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormItem className="flex flex-row items-start space-x-2 sm:space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    className="h-3.5 w-3.5 sm:h-4 sm:w-4 mt-0.5"
                   />
                 </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Allow Plus One</FormLabel>
-                  <FormDescription>
+                <div className="space-y-0.5 sm:space-y-1 leading-none">
+                  <FormLabel className="text-xs sm:text-sm">Allow Plus One</FormLabel>
+                  <FormDescription className="text-[10px] sm:text-xs">
                     Guests can bring a companion to the event
                   </FormDescription>
                 </div>
@@ -267,16 +272,17 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
             control={form.control}
             name="sendNow"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormItem className="flex flex-row items-start space-x-2 sm:space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    className="h-3.5 w-3.5 sm:h-4 sm:w-4 mt-0.5"
                   />
                 </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Send Immediately</FormLabel>
-                  <FormDescription>
+                <div className="space-y-0.5 sm:space-y-1 leading-none">
+                  <FormLabel className="text-xs sm:text-sm">Send Immediately</FormLabel>
+                  <FormDescription className="text-[10px] sm:text-xs">
                     Send invitations now or save as draft
                   </FormDescription>
                 </div>
@@ -287,10 +293,10 @@ export default function InvitationForm({ eventId }: { eventId: string }) {
         
         <Button 
           type="submit" 
-          className="w-full" 
+          className="w-full text-xs sm:text-sm h-8 sm:h-9 mt-2" 
           disabled={isSubmitting || emails.length === 0}
         >
-          <Send className="mr-2 h-4 w-4" />
+          <Send className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
           {isSubmitting ? 'Sending...' : 'Send Invitations'}
         </Button>
       </form>

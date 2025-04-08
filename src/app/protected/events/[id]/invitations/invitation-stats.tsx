@@ -85,64 +85,64 @@ export default function InvitationStats({ eventId }: { eventId: string }) {
     : 0;
 
   return (
-    <Card className="overflow-hidden border">
-      <CardHeader className="p-4 sm:p-6 bg-muted/30 border-b">
-        <CardTitle className="text-base sm:text-lg font-medium">Invitation Stats</CardTitle>
-        <CardDescription>Overview of guest responses</CardDescription>
+    <Card style={{ width: "100%", maxWidth: "100%" }}>
+      <CardHeader className="p-3 sm:p-4 md:p-6 bg-muted/30 border-b">
+        <CardTitle className="text-sm sm:text-base md:text-lg font-medium">Invitation Stats</CardTitle>
+        <CardDescription className="text-xs sm:text-sm">Overview of guest responses</CardDescription>
       </CardHeader>
-      <CardContent className="p-4 sm:p-6">
+      <CardContent className="p-2 sm:p-3 md:p-6">
         {isLoading ? (
-          <div className="flex justify-center items-center min-h-[150px]">
+          <div className="flex justify-center items-center min-h-[120px] sm:min-h-[150px]">
             <LoadingSpinner size="lg" />
           </div>
         ) : error ? (
-          <div className="text-center text-muted-foreground py-8">
-            <p>Unable to load statistics</p>
-            <p className="text-xs mt-2">{error.message}</p>
+          <div className="text-center text-muted-foreground py-4 sm:py-8">
+            <p className="text-sm">Unable to load statistics</p>
+            <p className="text-xs mt-1">{error.message}</p>
             <Button 
               onClick={() => fetchStats()} 
               variant="outline" 
               size="sm" 
-              className="mt-4"
+              className="mt-3 text-xs h-8"
             >
               Retry
             </Button>
           </div>
         ) : (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-3">
+          <div style={{ width: "100%" }} className="space-y-4 sm:space-y-6">
+            <div style={{ width: "100%", display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }} className="gap-1.5 xs:gap-2 sm:gap-3">
               <StatCard 
                 label="Total"
                 value={stats.total}
-                icon={<Users className="h-4 w-4 text-primary" />}
+                icon={<Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />}
                 description="Invitations sent"
                 className="bg-muted/20"
               />
               <StatCard 
                 label="Accepted"
                 value={stats.accepted}
-                icon={<CheckCircle className="h-4 w-4 text-emerald-500" />}
+                icon={<CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500" />}
                 description="Confirmed guests"
                 className="bg-emerald-50 dark:bg-emerald-950/30"
               />
               <StatCard 
                 label="Pending"
                 value={stats.pending} 
-                icon={<Clock className="h-4 w-4 text-amber-500" />}
+                icon={<Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500" />}
                 description="Awaiting response"
                 className="bg-amber-50 dark:bg-amber-950/30"
               />
               <StatCard 
                 label="Declined"
                 value={stats.declined}
-                icon={<XCircle className="h-4 w-4 text-rose-500" />}
+                icon={<XCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-rose-500" />}
                 description="Cannot attend"
                 className="bg-rose-50 dark:bg-rose-950/30"
               />
             </div>
 
             {stats.total > 0 && (
-              <div>
+              <div style={{ width: "100%" }}>
                 <ProgressStat
                   label="Response Rate"
                   value={responseRate}
@@ -193,16 +193,16 @@ interface StatCardProps {
 function StatCard({ label, value, icon, description, className }: StatCardProps) {
   return (
     <div className={cn(
-      "flex flex-col p-3 sm:p-4 rounded-lg border",
+      "flex flex-col p-2 xs:p-2.5 sm:p-3 md:p-4 rounded-lg border max-w-full",
       className
     )}>
       <div className="flex items-center justify-between">
-        <span className="text-xs sm:text-sm font-medium text-muted-foreground">{label}</span>
-        <div className="p-1.5 rounded-full bg-background">{icon}</div>
+        <span className="text-[10px] sm:text-xs font-medium text-muted-foreground truncate mr-1">{label}</span>
+        <div className="p-1 sm:p-1.5 rounded-full bg-background flex-shrink-0">{icon}</div>
       </div>
-      <div className="mt-2 sm:mt-3 flex flex-col">
-        <div className="text-2xl sm:text-3xl font-bold">{value}</div>
-        <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
+      <div className="mt-1 xs:mt-1.5 sm:mt-2 md:mt-3 flex flex-col">
+        <div className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold">{value}</div>
+        <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 truncate">{description}</p>
       </div>
     </div>
   );
@@ -220,18 +220,18 @@ function ProgressStat({
   helpText: string
 }) {
   return (
-    <div className="space-y-2 mt-2">
+    <div className="space-y-1.5 sm:space-y-2 mt-1 sm:mt-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium">{label}</span>
-        <span className="text-sm font-medium">{value}%</span>
+        <span className="text-xs sm:text-sm font-medium">{label}</span>
+        <span className="text-xs sm:text-sm font-medium">{value}%</span>
       </div>
-      <div className="w-full bg-muted/60 rounded-full h-2.5 overflow-hidden dark:bg-muted/30">
+      <div className="w-full bg-muted/60 rounded-full h-2 sm:h-2.5 overflow-hidden dark:bg-muted/30">
         <div 
-          className={`${color} h-2.5 rounded-full transition-all duration-500 ease-in-out`} 
+          className={`${color} h-2 sm:h-2.5 rounded-full transition-all duration-500 ease-in-out`} 
           style={{ width: `${Math.max(value, 2)}%` }}
         />
       </div>
-      <p className="text-xs text-muted-foreground">{helpText}</p>
+      <p className="text-[9px] sm:text-xs text-muted-foreground">{helpText}</p>
     </div>
   );
 } 
