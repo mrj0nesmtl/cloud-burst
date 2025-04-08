@@ -46,17 +46,52 @@ export async function validateInvitationToken(token: string) {
     return null
   }
   
+  console.log('Retrieved invitation:', {
+    id: invitation.id,
+    status: invitation.status,
+    expires_at: invitation.expires_at,
+    event_id: invitation.event_id
+  })
+  
+  // Get event details to check if it's past the event date
+  const { data: event } = await supabase
+    .from('events')
+    .select('date')
+    .eq('id', invitation.event_id)
+    .single()
+  
+  console.log('Event date:', event?.date)
+  
   // Check if invitation has expired
   const now = new Date()
   const expiresAt = invitation.expires_at ? new Date(invitation.expires_at) : null
+  const eventDate = event?.date ? new Date(event.date) : null
   
-  if (invitation.status === 'expired' || (expiresAt && now > expiresAt)) {
+  // An invitation is expired if:
+  // 1. It has status 'expired'
+  // 2. It has an explicit expiration date that has passed
+  // 3. The event date has passed (only if we have an event date)
+  const isExpired = 
+    invitation.status === 'expired' || 
+    (expiresAt && now > expiresAt) ||
+    (eventDate && now > eventDate)
+  
+  console.log('Invitation expiration check:', {
+    isExpired,
+    statusCheck: invitation.status === 'expired',
+    expiresAtCheck: expiresAt ? now > expiresAt : false,
+    eventDateCheck: eventDate ? now > eventDate : false
+  })
+  
+  if (isExpired) {
     // Update status to expired if it's not already
     if (invitation.status !== 'expired') {
       await supabase
         .from('invitations')
         .update({ status: 'expired' })
         .eq('id', invitation.id)
+      
+      console.log('Updated invitation status to expired')
     }
     return null
   }
@@ -67,6 +102,8 @@ export async function validateInvitationToken(token: string) {
       .from('invitations')
       .update({ status: 'opened' })
       .eq('id', invitation.id)
+    
+    console.log('Updated invitation status to opened')
   }
   
   return invitation
