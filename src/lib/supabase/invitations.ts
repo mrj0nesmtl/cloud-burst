@@ -67,20 +67,38 @@ export async function validateInvitationToken(token: string) {
   const expiresAt = invitation.expires_at ? new Date(invitation.expires_at) : null
   const eventDate = event?.date ? new Date(event.date) : null
   
+  console.log('Time check:', {
+    now: now.toISOString(),
+    expiresAt: expiresAt?.toISOString() || 'not set',
+    eventDate: eventDate?.toISOString() || 'not set'
+  })
+
   // An invitation is expired if:
   // 1. It has status 'expired'
   // 2. It has an explicit expiration date that has passed
   // 3. The event date has passed (only if we have an event date)
-  const isExpired = 
-    invitation.status === 'expired' || 
-    (expiresAt && now > expiresAt) ||
-    (eventDate && now > eventDate)
+  let statusCheck = invitation.status === 'expired'
+  let expiresAtCheck = false
+  let eventDateCheck = false
   
-  console.log('Invitation expiration check:', {
+  // Only check dates if they exist
+  if (expiresAt) {
+    expiresAtCheck = now > expiresAt
+  }
+  
+  if (eventDate) {
+    eventDateCheck = now > eventDate
+  }
+  
+  const isExpired = statusCheck || expiresAtCheck || eventDateCheck
+  
+  console.log('Detailed invitation expiration check:', {
     isExpired,
-    statusCheck: invitation.status === 'expired',
-    expiresAtCheck: expiresAt ? now > expiresAt : false,
-    eventDateCheck: eventDate ? now > eventDate : false
+    statusCheck,
+    expiresAtCheck,
+    expiresAtDate: expiresAt?.toISOString() || null,
+    eventDateCheck,
+    eventDate: eventDate?.toISOString() || null
   })
   
   if (isExpired) {

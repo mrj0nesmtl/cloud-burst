@@ -78,6 +78,7 @@ export async function POST(request: Request) {
               status: 'pending',
               rsvp_status: 'pending',
               token,
+              expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
               metadata: {
                 notes: row.notes,
                 dietary_preferences: row.dietary_preferences,
