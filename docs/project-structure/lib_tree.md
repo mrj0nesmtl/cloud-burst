@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-04-05T01:52:02.837Z
+Generated: 2025-04-08T20:39:18.339Z
 
 ## Overview
 
@@ -61,17 +61,18 @@ Generated: 2025-04-05T01:52:02.837Z
 ├── formatters.ts
 ├── index.ts
 ├── qr-code.ts
+├── query-helpers.ts
 ├── security-settings.ts
 ├── sendgrid.ts
 ├── user-sessions.ts
 └── utils.ts
 
-10 directories, 47 files
+10 directories, 48 files
 
 ```
 
 ## File Type Breakdown
-- ts: 44 file(s)
+- ts: 45 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

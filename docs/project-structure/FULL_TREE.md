@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-05T01:51:56.881Z
+Generated: 2025-04-08T20:39:12.573Z
 
 ## Overview
 
@@ -142,6 +142,11 @@ Generated: 2025-04-05T01:51:56.881Z
 │   │   │   ├── session_36_checklist.md
 │   │   │   ├── session_36_kickoff_prompt.md
 │   │   │   ├── session_36_resources.md
+│   │   │   ├── session_37_checklist.md
+│   │   │   ├── session_37_directory_map.md
+│   │   │   ├── session_37_implementation_guide.md
+│   │   │   ├── session_37_kickoff_prompt.md
+│   │   │   ├── session_37_resources.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -152,12 +157,6 @@ Generated: 2025-04-05T01:51:56.881Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── roadmap.md
-│   │   ├── session_37_checklist.md
-│   │   ├── session_37_directory_map.md
-│   │   ├── session_37_implementation_guide.md
-│   │   ├── session_37_kickoff_prompt.md
-│   │   ├── session_37_resources.md
 │   │   ├── session_38_checklist.md
 │   │   ├── session_38_directory_map.md
 │   │   ├── session_38_implementation.md
@@ -374,6 +373,8 @@ Generated: 2025-04-05T01:51:56.881Z
 │   │   │   │   ├── create/
 │   │   │   │   │   └── route.ts
 │   │   │   │   ├── send/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── stats/
 │   │   │   │   │   └── route.ts
 │   │   │   │   ├── validate/
 │   │   │   │   │   └── route.ts
@@ -897,6 +898,8 @@ Generated: 2025-04-05T01:51:56.881Z
 │   │   ├── use-update-profile.ts
 │   │   ├── use-user.ts
 │   │   ├── useCamera.ts
+│   │   ├── useInvitationStats.ts
+│   │   ├── useInvitations.ts
 │   │   ├── useQrScanner.ts
 │   │   └── useSecureAuth.ts
 │   ├── lib/
@@ -952,6 +955,7 @@ Generated: 2025-04-05T01:51:56.881Z
 │   │   ├── formatters.ts
 │   │   ├── index.ts
 │   │   ├── qr-code.ts
+│   │   ├── query-helpers.ts
 │   │   ├── security-settings.ts
 │   │   ├── sendgrid.ts
 │   │   ├── user-sessions.ts
@@ -971,6 +975,7 @@ Generated: 2025-04-05T01:51:56.881Z
 │   │   ├── custom.d.ts
 │   │   ├── events.ts
 │   │   ├── gallery.ts
+│   │   ├── invitation-stats.ts
 │   │   ├── invitations.ts
 │   │   ├── jsqr.d.ts
 │   │   ├── media.ts
@@ -990,7 +995,8 @@ Generated: 2025-04-05T01:51:56.881Z
 │   │   └── auth_emails/
 │   │       ├── change_email_address.html
 │   │       ├── confirm_signup.html
-│   │       ├── invite_user.html
+│   │       ├── invite_user_local.html
+│   │       ├── invite_user_sendgridremote.html
 │   │       ├── magic_link.html
 │   │       ├── reauthentication.html
 │   │       └── reset_password.html
@@ -1092,6 +1098,7 @@ Generated: 2025-04-05T01:51:56.881Z
 │   ├── galleries_rows (1).csv
 │   └── galleries_rows.csv
 ├── .DS_Store
+├── .eslintrc.json
 ├── .gitignore
 ├── .replit
 ├── CHANGELOG.md
@@ -1113,17 +1120,17 @@ Generated: 2025-04-05T01:51:56.881Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-251 directories, 853 files
+252 directories, 859 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11780 file(s)
+- ts: 11771 file(s)
 - tsx: 485 file(s)
-- js: 27879 file(s)
-- json: 2032 file(s)
-- md: 1496 file(s)
-- css: 27 file(s)
+- js: 27873 file(s)
+- json: 2040 file(s)
+- md: 1495 file(s)
+- css: 26 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns

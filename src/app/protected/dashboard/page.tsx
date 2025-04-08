@@ -99,10 +99,10 @@ export default async function DashboardPage() {
   const { stats, recentEvents } = await getDashboardData()
 
   return (
-    <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--background)' }}>
+    <div style={{ width: '100%', maxWidth: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--background)', overflow: 'hidden' }}>
       <DashboardHeader />
       
-      <div style={{ width: '100%', padding: '24px', flex: '1 1 auto' }}>
+      <div style={{ width: '100%', maxWidth: '100%', padding: '16px', flex: '1 1 auto', overflowX: 'hidden' }}>
         {/* Header and Create Event Button */}
         <div style={{ 
           display: 'flex', 
@@ -111,7 +111,8 @@ export default async function DashboardPage() {
           justifyContent: 'space-between',
           gap: '16px', 
           marginBottom: '24px',
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
+          width: '100%'
         }}>
           <div>
             <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '4px' }}>Overview</h1>
@@ -130,9 +131,10 @@ export default async function DashboardPage() {
         {/* Stats Cards */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
           gap: '16px',
-          marginBottom: '24px'
+          marginBottom: '24px',
+          width: '100%'
         }}>
           <Card className="overflow-hidden border border-blue-100 dark:border-blue-900/30 shadow-sm hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800/50 transition-all bg-blue-50/50 dark:bg-blue-900/10">
             <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
@@ -190,13 +192,14 @@ export default async function DashboardPage() {
         {/* Main Content - Charts & Recent Events */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 600px), 1fr))', 
-          gap: '24px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 500px), 1fr))', 
+          gap: '20px',
           marginBottom: '24px',
-          alignItems: 'stretch' 
+          alignItems: 'stretch',
+          width: '100%'
         }}>
           {/* Chart Card */}
-          <Card className="border-none shadow-sm h-full flex flex-col">
+          <Card className="border-none shadow-sm h-full flex flex-col overflow-hidden">
             <CardHeader className="p-6 pb-2">
               <div className="flex items-center justify-between">
                 <div>
@@ -208,8 +211,8 @@ export default async function DashboardPage() {
                 <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
               </div>
             </CardHeader>
-            <CardContent className="p-6 pt-2 flex-1">
-              <div style={{ height: '450px' }}>
+            <CardContent className="p-6 pt-2 flex-1 overflow-hidden">
+              <div style={{ height: '350px', maxWidth: '100%' }}>
                 <Suspense fallback={<div className="h-full w-full flex items-center justify-center">Loading chart...</div>}>
                   <OverviewChart />
                 </Suspense>
@@ -218,7 +221,7 @@ export default async function DashboardPage() {
           </Card>
           
           {/* Recent Events Card */}
-          <Card className="border-none shadow-sm h-full flex flex-col">
+          <Card className="border-none shadow-sm h-full flex flex-col overflow-hidden">
             <CardHeader className="p-6 pb-2">
               <div className="flex items-center justify-between">
                 <div>
@@ -235,14 +238,14 @@ export default async function DashboardPage() {
                 </Link>
               </div>
             </CardHeader>
-            <CardContent className="p-6 pt-4 flex-1">
+            <CardContent className="p-6 pt-4 flex-1 overflow-auto">
               <RecentEvents events={recentEvents} />
             </CardContent>
           </Card>
         </div>
         
         {/* Quick Actions */}
-        <Card className="border-none shadow-sm">
+        <Card className="border-none shadow-sm w-full overflow-hidden">
           <CardHeader className="p-6 pb-2">
             <div className="flex items-center justify-between">
               <div>
@@ -257,7 +260,8 @@ export default async function DashboardPage() {
             <div style={{ 
               display: 'grid', 
               gap: '16px', 
-              gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))'
+              gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+              width: '100%'
             }}>
               <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all hover:scale-[1.02]">
                 <Link href="/protected/qr-codes" className="flex items-start">

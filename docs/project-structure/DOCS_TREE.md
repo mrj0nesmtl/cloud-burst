@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-05T01:51:57.731Z
+Generated: 2025-04-08T20:39:13.554Z
 
 ## Overview
 
@@ -103,6 +103,11 @@ Generated: 2025-04-05T01:51:57.731Z
 │   │   ├── session_36_checklist.md
 │   │   ├── session_36_kickoff_prompt.md
 │   │   ├── session_36_resources.md
+│   │   ├── session_37_checklist.md
+│   │   ├── session_37_directory_map.md
+│   │   ├── session_37_implementation_guide.md
+│   │   ├── session_37_kickoff_prompt.md
+│   │   ├── session_37_resources.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -113,12 +118,6 @@ Generated: 2025-04-05T01:51:57.731Z
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── roadmap.md
-│   ├── session_37_checklist.md
-│   ├── session_37_directory_map.md
-│   ├── session_37_implementation_guide.md
-│   ├── session_37_kickoff_prompt.md
-│   ├── session_37_resources.md
 │   ├── session_38_checklist.md
 │   ├── session_38_directory_map.md
 │   ├── session_38_implementation.md
@@ -184,12 +183,12 @@ Generated: 2025-04-05T01:51:57.731Z
 ├── .DS_Store
 └── README.md
 
-11 directories, 164 files
+11 directories, 163 files
 
 ```
 
 ## File Type Breakdown
-- md: 159 file(s)
+- md: 158 file(s)
 
 ## Ignored Patterns
 - node_modules

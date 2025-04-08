@@ -1,5 +1,5 @@
 # types Directory Structure
-Generated: 2025-04-05T01:52:03.503Z
+Generated: 2025-04-08T20:39:18.960Z
 
 ## Overview
 
@@ -13,6 +13,7 @@ Generated: 2025-04-05T01:52:03.503Z
 ├── custom.d.ts
 ├── events.ts
 ├── gallery.ts
+├── invitation-stats.ts
 ├── invitations.ts
 ├── jsqr.d.ts
 ├── media.ts
@@ -21,12 +22,12 @@ Generated: 2025-04-05T01:52:03.503Z
 ├── search.ts
 └── supabase.ts
 
-1 directory, 11 files
+1 directory, 12 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11 file(s)
+- ts: 12 file(s)
 
 ## Ignored Patterns
 - node_modules
