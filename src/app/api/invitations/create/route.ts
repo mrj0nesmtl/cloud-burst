@@ -94,7 +94,8 @@ export async function POST(request: NextRequest) {
         event_id: eventId,
         created_by: userId,
         message: message || null,
-        status: 'pending'
+        status: 'pending',
+        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
       })
       .select()
       .single();
