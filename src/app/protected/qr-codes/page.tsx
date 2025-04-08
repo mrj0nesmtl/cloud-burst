@@ -124,7 +124,7 @@ export default async function QRCodesPage() {
               const validQrCodeUrl = ensureValidQrCodeUrl(event.qr_code_url, event.id);
               
               return (
-                <Card key={event.id} style={{ 
+                <Card key={event.id} className="dark:border-slate-500 dark:border-opacity-100 dark:border-[2px]" style={{ 
                   border: '2px solid var(--border)', 
                   background: 'var(--card)',
                   height: '100%',
@@ -135,7 +135,7 @@ export default async function QRCodesPage() {
                   boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                   margin: '4px'
                 }}>
-                  <CardHeader style={{ 
+                  <CardHeader className="dark:border-slate-500 dark:border-opacity-100" style={{ 
                     padding: '16px',
                     borderBottom: '2px solid var(--border)'
                   }}>
@@ -174,7 +174,7 @@ export default async function QRCodesPage() {
                       justifyContent: 'center',
                       alignItems: 'center'
                     }}>
-                      <div style={{ 
+                      <div className="dark:border-slate-400 dark:border-2" style={{ 
                         width: 'calc(min(100%, 200px))', 
                         height: 'calc(min(100%, 200px))',
                         position: 'relative',
@@ -197,7 +197,7 @@ export default async function QRCodesPage() {
                     </div>
                   </CardContent>
                   
-                  <CardFooter style={{ 
+                  <CardFooter className="dark:border-slate-500 dark:border-opacity-100" style={{ 
                     padding: '12px 16px',
                     borderTop: '2px solid var(--border)',
                     display: 'flex',
@@ -268,14 +268,14 @@ export default async function QRCodesPage() {
       </div>
       
       {/* Information card */}
-      <Card style={{ 
+      <Card className="dark:border-slate-500 dark:border-opacity-100 dark:border-[2px]" style={{ 
         border: '2px solid var(--border)', 
         background: 'var(--card)',
         borderRadius: '8px',
         overflow: 'hidden',
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
       }}>
-        <CardHeader style={{ padding: '16px', borderBottom: '2px solid var(--border)' }}>
+        <CardHeader className="dark:border-slate-500 dark:border-opacity-100" style={{ padding: '16px', borderBottom: '2px solid var(--border)' }}>
           <CardTitle style={{ fontSize: '18px', fontWeight: '600' }}>How QR Codes Work</CardTitle>
           <CardDescription style={{ fontSize: '14px' }}>Use these QR codes to streamline your event check-in process</CardDescription>
         </CardHeader>
