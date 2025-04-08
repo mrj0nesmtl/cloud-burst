@@ -2,9 +2,9 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Clock, Mail, HelpCircle } from 'lucide-react'
-import { createServerClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { Database } from '@/types/supabase'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -26,26 +26,25 @@ export default async function ExpiredPage({
   // If token is provided, try to get the event details
   if (token) {
     try {
-      const cookieStore = cookies()
-      // Use the direct createRouteHandlerClient for immediate access
-      const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+      // Direct initialization with createServerComponentClient
+      const supabase = createServerComponentClient<Database>({ cookies })
       
       // Get invitation details
-      const { data: invitation } = await supabase
+      const { data: invitation, error: invitationError } = await supabase
         .from('invitations')
         .select('event_id, email')
         .eq('token', token)
         .single()
       
-      if (invitation) {
+      if (!invitationError && invitation) {
         // Get event details
-        const { data: event } = await supabase
+        const { data: event, error: eventError } = await supabase
           .from('events')
           .select('name, organizer_id')
           .eq('id', invitation.event_id)
           .single()
         
-        if (event) {
+        if (!eventError && event && event.name) {
           eventName = event.name
           
           // Add null check for organizer_id
