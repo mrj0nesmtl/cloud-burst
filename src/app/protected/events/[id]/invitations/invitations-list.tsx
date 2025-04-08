@@ -1,8 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { 
   Mail, 
   MoreHorizontal, 
@@ -12,9 +10,14 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
-  Eye
+  Eye,
+  Link,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
 } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, format } from 'date-fns'
+import { cn } from '@/lib/utils'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -50,357 +53,259 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Input,
+} from '@/components/ui/input'
+import {
+  LoadingSpinner,
+} from '@/components/ui/loading-spinner'
+import { Card } from '@/components/ui/card'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-type Invitation = {
-  id: string
-  email: string
-  name: string
-  status: string
-  created_at: string
-  updated_at: string
-  event_id: string
-  plus_one: boolean
-  token: string
+// Define a simple Invitation interface directly in this file
+interface Invitation {
+  id: string;
+  event_id: string;
+  email: string;
+  name: string;
+  token: string;
+  status: string;
+  rsvp_status?: string | null;
+  rsvp_date?: string | null;
+  expires_at: string | null;
+  metadata: any | null;
+  created_at: string;
+  updated_at: string;
+  sent_at: string | null;
+  viewed_at?: string | null;
+  responded_at?: string | null;
 }
 
-export default function InvitationsList({ invitations }: { invitations: Invitation[] }) {
-  const [selectedInvitations, setSelectedInvitations] = useState<string[]>([])
-  const [isResending, setIsResending] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [invitationToDelete, setInvitationToDelete] = useState<string | null>(null)
-  const router = useRouter()
-  const { toast } = useToast()
-  const supabase = createClientComponentClient()
-
-  const toggleSelectAll = () => {
-    if (selectedInvitations.length === invitations.length) {
-      setSelectedInvitations([])
-    } else {
-      setSelectedInvitations(invitations.map(inv => inv.id))
-    }
-  }
-
-  const toggleSelect = (id: string) => {
-    if (selectedInvitations.includes(id)) {
-      setSelectedInvitations(selectedInvitations.filter(i => i !== id))
-    } else {
-      setSelectedInvitations([...selectedInvitations, id])
-    }
-  }
-
-  const resendInvitations = async (ids: string[]) => {
-    setIsResending(true)
-    
-    try {
-      // Call API to resend invitations
-      const response = await fetch('/api/invitations/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          invitationIds: ids,
-        }),
-      })
-      
-      if (!response.ok) {
-        throw new Error('Failed to resend invitations')
+export default function InvitationsList({ 
+  eventId, 
+  filter = 'all'
+}: { 
+  eventId: string
+  filter?: 'all' | 'accepted' | 'declined' | 'pending'
+}) {
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  
+  // Fetch invitations on component mount
+  useEffect(() => {
+    const fetchInvitations = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const supabase = createClientComponentClient();
+        
+        const { data, error } = await supabase
+          .from('invitations')
+          .select('*')
+          .eq('event_id', eventId)
+          .order('created_at', { ascending: false });
+          
+        if (error) throw error;
+        
+        setInvitations(data || []);
+      } catch (err) {
+        console.error('Error fetching invitations:', err);
+        setError(err instanceof Error ? err : new Error('Failed to fetch invitations'));
+      } finally {
+        setIsLoading(false);
       }
-      
-      toast({
-        title: 'Invitations sent',
-        description: `Successfully resent ${ids.length} invitation(s).`,
-      })
-      
-      // Update invitation status
-      await supabase
-        .from('invitations')
-        .update({ status: 'sent', updated_at: new Date().toISOString() })
-        .in('id', ids)
-      
-      router.refresh()
-    } catch (error) {
-      console.error(error)
-      toast({
-        title: 'Error sending invitations',
-        description: 'There was an error resending the invitations.',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsResending(false)
-    }
-  }
-
-  const deleteInvitation = async (id: string) => {
-    setIsDeleting(true)
+    };
     
-    try {
-      const { error } = await supabase
-        .from('invitations')
-        .delete()
-        .eq('id', id)
-      
-      if (error) {
-        throw error
-      }
-      
-      toast({
-        title: 'Invitation deleted',
-        description: 'The invitation has been deleted successfully.',
-      })
-      
-      router.refresh()
-    } catch (error) {
-      console.error(error)
-      toast({
-        title: 'Error deleting invitation',
-        description: 'There was an error deleting the invitation.',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsDeleting(false)
-      setDeleteDialogOpen(false)
-      setInvitationToDelete(null)
-    }
+    fetchInvitations();
+  }, [eventId]);
+  
+  // Filter invitations based on status
+  const filteredInvitations = invitations.filter((invitation: Invitation) => {
+    if (filter === 'all') return true;
+    return invitation.status === filter;
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[300px] flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
   }
 
-  const copyInvitationLink = async (token: string) => {
-    const link = `${window.location.origin}/invitation/${token}`
-    await navigator.clipboard.writeText(link)
-    
-    toast({
-      title: 'Link copied',
-      description: 'Invitation link copied to clipboard.',
-    })
+  if (error) {
+    return (
+      <div className="min-h-[200px] flex flex-col items-center justify-center text-center p-6 border rounded-lg bg-rose-50/10 border-rose-200/30">
+        <h3 className="text-lg font-medium mb-2 text-rose-500">Error loading invitations</h3>
+        <p className="text-muted-foreground text-sm max-w-md">
+          {error.message}
+        </p>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="mt-4"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </Button>
+      </div>
+    );
   }
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'sent':
-        return <Send className="h-4 w-4 text-blue-500" />
-      case 'opened':
-        return <Eye className="h-4 w-4 text-yellow-500" />
-      case 'accepted':
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />
-      case 'declined':
-        return <XCircle className="h-4 w-4 text-red-500" />
-      default:
-        return <Clock className="h-4 w-4 text-gray-500" />
-    }
-  }
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'sent':
-        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Sent</Badge>
-      case 'opened':
-        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Opened</Badge>
-      case 'accepted':
-        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Accepted</Badge>
-      case 'declined':
-        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Declined</Badge>
-      case 'draft':
-        return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Draft</Badge>
-      default:
-        return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Pending</Badge>
-    }
-  }
-
-  const formatDate = (dateString: string) => {
-    try {
-      return formatDistanceToNow(new Date(dateString), { addSuffix: true })
-    } catch (e) {
-      return 'Invalid date'
-    }
+  if (!filteredInvitations.length) {
+    return (
+      <div className="min-h-[200px] flex flex-col items-center justify-center text-center p-6 border rounded-lg bg-muted/10">
+        <h3 className="text-lg font-medium mb-2">No invitations found</h3>
+        <p className="text-muted-foreground text-sm max-w-md">
+          {filter === 'all' 
+            ? "You haven't sent any invitations for this event yet." 
+            : `No invitations with status "${filter}" found.`}
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div>
-      {invitations.length > 0 ? (
-        <>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              {selectedInvitations.length > 0 && (
-                <>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => resendInvitations(selectedInvitations)}
-                    disabled={isResending}
-                  >
-                    <Send className="h-4 w-4 mr-2" />
-                    {isResending ? 'Sending...' : 'Resend'}
-                  </Button>
-                  
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="text-red-600 border-red-200 hover:bg-red-50"
-                    onClick={() => {
-                      setInvitationToDelete('bulk')
-                      setDeleteDialogOpen(true)
-                    }}
-                  >
-                    <Trash className="h-4 w-4 mr-2" />
-                    Delete
-                  </Button>
-                </>
-              )}
-              {selectedInvitations.length > 0 && (
-                <span className="text-sm text-muted-foreground">
-                  {selectedInvitations.length} selected
-                </span>
-              )}
+    <div className="space-y-4">
+      <div className="text-sm text-muted-foreground">
+        {filteredInvitations.length} {filteredInvitations.length === 1 ? 'invitation' : 'invitations'} {filter !== 'all' ? `with status "${filter}"` : ''}
+      </div>
+      
+      <div className="space-y-3">
+        {filteredInvitations.map((invitation: Invitation) => (
+          <InvitationCard key={invitation.id} invitation={invitation} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function InvitationCard({ invitation }: { invitation: Invitation }) {
+  return (
+    <Card className="p-4 overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <h4 className="font-medium truncate">{invitation.name}</h4>
+              <p className="text-sm text-muted-foreground truncate">{invitation.email}</p>
+            </div>
+            <div className="hidden sm:block">
+              <StatusBadge status={invitation.status} />
             </div>
           </div>
           
-          <div className="border rounded-md">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[40px]">
-                    <Checkbox
-                      checked={selectedInvitations.length === invitations.length && invitations.length > 0}
-                      onCheckedChange={toggleSelectAll}
-                    />
-                  </TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead className="hidden md:table-cell">Name</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="hidden md:table-cell">Plus One</TableHead>
-                  <TableHead className="hidden md:table-cell">Updated</TableHead>
-                  <TableHead className="w-[70px]"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {invitations.map((invitation) => (
-                  <TableRow key={invitation.id}>
-                    <TableCell>
-                      <Checkbox
-                        checked={selectedInvitations.includes(invitation.id)}
-                        onCheckedChange={() => toggleSelect(invitation.id)}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
-                        <span className="font-medium">{invitation.email}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {invitation.name || '-'}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              {getStatusIcon(invitation.status)}
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Last status: {invitation.status}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        {getStatusBadge(invitation.status)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {invitation.plus_one ? 'Yes' : 'No'}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell text-muted-foreground">
-                      {formatDate(invitation.updated_at || invitation.created_at)}
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => resendInvitations([invitation.id])}>
-                            <Send className="h-4 w-4 mr-2" />
-                            Resend
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => copyInvitationLink(invitation.token)}>
-                            <Copy className="h-4 w-4 mr-2" />
-                            Copy Link
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="text-red-600"
-                            onClick={() => {
-                              setInvitationToDelete(invitation.id)
-                              setDeleteDialogOpen(true)
-                            }}
-                          >
-                            <Trash className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <div className="mt-2 sm:mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <span>Sent:</span>
+              <span>{format(new Date(invitation.created_at), 'MMM d, yyyy')}</span>
+            </div>
+            
+            {invitation.responded_at && (
+              <div className="flex items-center gap-1">
+                <span>Responded:</span>
+                <span>{format(new Date(invitation.responded_at), 'MMM d, yyyy')}</span>
+              </div>
+            )}
+            
+            {invitation.viewed_at && !invitation.responded_at && (
+              <div className="flex items-center gap-1">
+                <Eye className="h-3 w-3" />
+                <span>Viewed {format(new Date(invitation.viewed_at), 'MMM d, yyyy')}</span>
+              </div>
+            )}
           </div>
-        </>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-10 text-center">
-          <Mail className="h-10 w-10 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium">No invitations found</h3>
-          <p className="text-muted-foreground mt-1 mb-4">
-            Start by adding guest emails to send invitations
-          </p>
+          
+          <div className="sm:hidden mt-2">
+            <StatusBadge status={invitation.status} />
+          </div>
         </div>
-      )}
-      
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {invitationToDelete === 'bulk'
-                ? 'Delete selected invitations'
-                : 'Delete invitation'}
-            </DialogTitle>
-            <DialogDescription>
-              {invitationToDelete === 'bulk'
-                ? `Are you sure you want to delete ${selectedInvitations.length} invitations? This action cannot be undone.`
-                : 'Are you sure you want to delete this invitation? This action cannot be undone.'}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setDeleteDialogOpen(false)
-                setInvitationToDelete(null)
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                if (invitationToDelete === 'bulk') {
-                  // Delete multiple invitations
-                  // This would be implemented similarly to the single delete function
-                  // but handling multiple IDs
-                  console.log('Delete bulk:', selectedInvitations)
-                } else if (invitationToDelete) {
-                  deleteInvitation(invitationToDelete)
-                }
-              }}
-              disabled={isDeleting}
-            >
-              {isDeleting ? 'Deleting...' : 'Delete'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
-  )
+        
+        <div className="flex items-center justify-end gap-2 mt-2 sm:mt-0">
+          <a 
+            href={`/invitation/${invitation.token}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-xs text-primary flex items-center gap-1 underline-offset-2 hover:underline"
+          >
+            <ExternalLink className="h-3 w-3" />
+            <span className="sr-only sm:not-sr-only">View</span>
+          </a>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">Options</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Resend Invitation</DropdownMenuItem>
+              <DropdownMenuItem>Copy Invitation Link</DropdownMenuItem>
+              <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const statusConfig: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
+    // String values
+    'accepted': {
+      label: 'Accepted',
+      icon: <CheckCircle2 className="h-3 w-3" />,
+      className: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
+    },
+    'declined': {
+      label: 'Declined',
+      icon: <XCircle className="h-3 w-3" />,
+      className: 'bg-rose-50 text-rose-700 dark:bg-rose-950/30 dark:text-rose-400'
+    },
+    'pending': {
+      label: 'Pending',
+      icon: <Clock className="h-3 w-3" />,
+      className: 'bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
+    },
+    'sent': {
+      label: 'Sent',
+      icon: <Mail className="h-3 w-3" />,
+      className: 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400'
+    },
+    'opened': {
+      label: 'Opened',
+      icon: <Eye className="h-3 w-3" />,
+      className: 'bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
+    },
+    'expired': {
+      label: 'Expired',
+      icon: <Clock className="h-3 w-3" />,
+      className: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+    }
+  };
+
+  // Find config for this status or use generic fallback
+  const config = statusConfig[status] || {
+    label: status.charAt(0).toUpperCase() + status.slice(1),
+    icon: <Clock className="h-3 w-3" />,
+    className: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+  };
+
+  return (
+    <Badge variant="outline" className={cn("gap-1 py-1 font-normal", config.className)}>
+      {config.icon}
+      {config.label}
+    </Badge>
+  );
 } 

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>{{eventName}} Invitation</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <style>
+        @media screen and (max-width: 600px) {
+            .mobile-padding {
+                padding: 15px !important;
+            }
+            .mobile-container {
+                width: 100% !important;
+                max-width: 480px !important;
+            }
+            .mobile-text-center {
+                text-align: center !important;
+            }
+        }
+        .rsvp-button:hover {
+            background-color: #4f46e5 !important;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .qr-code {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .social-icon:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f5;">
+    <!-- Preheader text -->
+    <div style="display: none; max-height: 0px; overflow: hidden;">
+        You're invited to {{eventName}} on {{eventDate}}! RSVP now.
+    </div>
+    
+    <!-- Event microdata -->
+    <div itemscope itemtype="http://schema.org/Event">
+        <meta itemprop="name" content="{{eventName}}">
+        <meta itemprop="startDate" content="{{eventDate}}">
+        <meta itemprop="location" content="{{eventLocation}}">
+    </div>
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <!-- Main Container with Frame -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="480" class="mobile-container" style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                    <!-- Logo -->
+                    <tr>
+                        <td align="center" style="padding: 30px 0 20px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" 
+                                 width="32" 
+                                 height="32" 
+                                 viewBox="0 0 24 24" 
+                                 fill="none" 
+                                 stroke="#3b82f6" 
+                                 stroke-width="2" 
+                                 stroke-linecap="round" 
+                                 stroke-linejoin="round" 
+                                 style="display: inline-block;">
+                                <path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/>
+                                <path d="m13 12-3 5h4l-3 5"/>
+                            </svg>
+                        </td>
+                    </tr>
+
+                    <!-- Event Name -->
+                    <tr>
+                        <td style="padding: 0 30px 20px; text-align: center;">
+                            <h1 style="margin: 0; font-family: Arial, sans-serif; font-size: 24px; color: #1a1a1a;">
+                                {{eventName}}
+                            </h1>
+                        </td>
+                    </tr>
+
+                    <!-- Host Info -->
+                    <tr>
+                        <td style="padding: 0 30px 20px; text-align: center;">
+                            <p style="margin: 0; font-family: Arial, sans-serif; font-size: 14px; color: #666666;">
+                                Hosted by {{hostName}}
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Event Details -->
+                    <tr>
+                        <td style="padding: 0 30px;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td style="padding: 12px 20px; background-color: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px;">
+                                        <p style="margin: 0; font-family: Arial, sans-serif; font-size: 14px; color: #1a1a1a;">
+                                            <strong style="display: block; margin-bottom: 4px;">Date & Time</strong>
+                                            {{eventDate}}
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr><td height="10"></td></tr>
+                                <tr>
+                                    <td style="padding: 12px 20px; background-color: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 6px;">
+                                        <p style="margin: 0; font-family: Arial, sans-serif; font-size: 14px; color: #1a1a1a;">
+                                            <strong style="display: block; margin-bottom: 4px;">Location</strong>
+                                            {{eventLocation}}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- QR Code -->
+                    <tr>
+                        <td align="center" style="padding: 30px;">
+                            <div style="padding: 10px; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; display: inline-block;">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{invitationLink}}" 
+                                     alt="Event QR Code" 
+                                     width="120" 
+                                     height="120" 
+                                     style="display: block; width: 120px; height: 120px;">
+                            </div>
+                            <p style="margin: 10px 0 0; font-family: Arial, sans-serif; font-size: 12px; color: #666666;">
+                                Scan to RSVP
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- RSVP Button -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{{invitationLink}}" 
+                                           target="_blank"
+                                           style="display: inline-block; padding: 12px 24px; background-color: #6366f1; color: #ffffff; text-decoration: none; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; font-weight: 500;">
+                                            RSVP NOW
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="margin: 0 0 15px; font-family: Arial, sans-serif; font-size: 12px; color: #666666;">
+                                Questions? Contact the host at {{hostEmail}}
+                            </p>
+                            
+                            <!-- Social Media Icons -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
+                                <tr>
+                                    <!-- Instagram -->
+                                    <td style="padding: 0 10px;">
+                                        <a href="#" class="social-icon" style="text-decoration: none; display: inline-block;" aria-label="Visit our Instagram">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                                            </svg>
+                                        </a>
+                                    </td>
+                                    <!-- GitHub -->
+                                    <td style="padding: 0 10px;">
+                                        <a href="#" class="social-icon" style="text-decoration: none; display: inline-block;" aria-label="Visit our GitHub">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                                            </svg>
+                                        </a>
+                                    </td>
+                                    <!-- X/Twitter -->
+                                    <td style="padding: 0 10px;">
+                                        <a href="#" class="social-icon" style="text-decoration: none; display: inline-block;" aria-label="Visit our X/Twitter">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M4 4l11.733 16h4.267l-11.733-16zM4 20l6.768-6.768M20 4l-6.768 6.768"/>
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
