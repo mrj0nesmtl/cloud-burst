@@ -52,11 +52,11 @@ export function GalleryEventCard({
 
   return (
     <Card className={cn(
-      "group overflow-hidden border bg-card shadow-sm hover:shadow-md flex flex-col w-full",
+      "group overflow-hidden border bg-card shadow-sm hover:shadow-md flex flex-col w-full max-w-full",
       className
     )}>
       {/* Image Container with 4:3 Aspect Ratio */}
-      <div className="relative bg-muted w-full" style={{ paddingTop: "75%" }}>
+      <div className="relative bg-muted w-full aspect-[4/3]">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -68,21 +68,21 @@ export function GalleryEventCard({
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-muted">
-            <Calendar className="h-12 w-12 text-muted-foreground/40" />
+            <Calendar className="h-10 w-10 text-muted-foreground/40" />
           </div>
         )}
         
         {/* Date badge */}
         {date && (
-          <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md">
+          <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md">
             {formattedDate}
           </div>
         )}
         
         {/* Bottom gradient and title */}
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent">
-          <div className="absolute bottom-0 left-0 right-0 p-4">
-            <h3 className="font-medium text-base sm:text-lg text-white mb-1 line-clamp-1">
+          <div className="absolute bottom-0 left-0 right-0 p-3">
+            <h3 className="font-medium text-sm sm:text-base text-white mb-1 line-clamp-1">
               {name || 'Unnamed Event'}
             </h3>
             <div className="flex items-center">
@@ -96,29 +96,29 @@ export function GalleryEventCard({
       </div>
       
       {/* Card content */}
-      <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between">
+      <div className="p-2 sm:p-3 md:p-4 flex-1 flex flex-col justify-between">
         <div>
-          <div className="flex flex-wrap items-center justify-between mb-3 sm:mb-4 gap-2">
-            <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
-              <Settings className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+          <div className="flex flex-wrap items-center justify-between mb-2 sm:mb-3 gap-1 sm:gap-2">
+            <div className="flex items-center text-xs text-muted-foreground">
+              <Settings className="mr-1 h-3 w-3" />
               {settings?.layout || 'Grid'} Layout
             </div>
-            <Badge className={`px-2 py-0.5 text-xs ${statusColor}`} variant="outline">
+            <Badge className={`px-1.5 py-0.5 text-xs ${statusColor}`} variant="outline">
               {status || 'Draft'}
             </Badge>
           </div>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-3 sm:mt-4">
-          <Button className="w-full" variant="default" size="sm" asChild>
+        <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-2 mt-2 sm:mt-3">
+          <Button className="w-full text-xs sm:text-sm h-8" variant="default" size="sm" asChild>
             <Link href={`/protected/gallery/events/${eventId}`} prefetch={false}>
-              <ExternalLink className="mr-2 h-4 w-4" />
+              <ExternalLink className="mr-1.5 h-3 w-3 sm:h-4 sm:w-4" />
               <span className="whitespace-nowrap">View Gallery</span>
             </Link>
           </Button>
-          <Button className="w-full" variant="outline" size="sm" asChild>
+          <Button className="w-full text-xs sm:text-sm h-8" variant="outline" size="sm" asChild>
             <Link href={`/protected/gallery/events/${id}/settings`}>
-              <Settings className="mr-2 h-4 w-4" />
+              <Settings className="mr-1.5 h-3 w-3 sm:h-4 sm:w-4" />
               <span className="whitespace-nowrap">Settings</span>
             </Link>
           </Button>

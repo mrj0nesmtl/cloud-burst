@@ -240,7 +240,7 @@ export function MediaCard({
   return (
     <Card 
       className={cn(
-        "overflow-hidden group transition-all duration-200 hover:shadow-md w-full max-w-full",
+        "overflow-hidden group transition-all duration-200 hover:shadow-md w-full max-w-full scale-90 transform origin-top",
         className
       )}
       onClick={handleClick}
@@ -248,246 +248,269 @@ export function MediaCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardContent className="p-0">
-        <div className="relative">
-          {getStatusBadge()}
-          
-          {isVideo ? (
-            // Video thumbnail with play button
-            <div className="relative">
-              <div className={cn(getAspectRatioClass(), "bg-muted/30 overflow-hidden")}>
-                {item.thumbnail_url ? (
-                  <Image
-                    src={item.thumbnail_url}
-                    alt={item.title || "Video thumbnail"}
-                    fill
-                    className="object-cover"
-                    onLoadingComplete={handleImageLoadComplete}
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    priority={priority}
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full w-full bg-muted">
-                    <Film className="h-12 w-12 text-muted-foreground/50" />
-                  </div>
-                )}
-                
+        <div className={cn(
+          "relative overflow-hidden",
+          getAspectRatioClass()
+        )}>
+          {/* Use maxHeight to constrain image size */}
+          <div style={{ 
+            maxHeight: "375px",
+            position: "relative", 
+            width: "100%", 
+            height: "100%"
+          }}>
+            {getStatusBadge()}
+            
+            {isVideo ? (
+              // Video handling with thumbnail
+              <>
+                <Image
+                  src={item.thumbnail_url || item.url}
+                  alt={item.title || "Video thumbnail"}
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority={priority}
+                  className={cn(
+                    "transition-all duration-200",
+                    isImageLoading ? "opacity-0" : "opacity-100"
+                  )}
+                  onLoad={handleImageLoadComplete}
+                />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="rounded-full bg-black/50 p-3">
-                    <Play className="h-8 w-8 text-white" />
+                  <div className="bg-black/60 rounded-full p-1.5">
+                    <Play className="h-6 w-6 text-white" />
                   </div>
                 </div>
-                
-                {/* Duration badge */}
                 {item.duration && (
-                  <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-1.5 py-0.5 rounded">
+                  <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs rounded px-1.5 py-0.5 flex items-center">
+                    <Clock className="h-3 w-3 mr-1" />
                     {Math.floor(item.duration / 60)}:{(item.duration % 60).toString().padStart(2, '0')}
                   </div>
                 )}
-              </div>
-            </div>
-          ) : (
-            // Image display
-            <div className={cn(getAspectRatioClass(), "bg-muted/30 overflow-hidden")}>
+              </>
+            ) : (
+              // Image handling
               <Image
                 src={item.url}
-                alt={item.title || "Media image"}
+                alt={item.title || "Gallery image"}
                 fill
-                className="object-cover"
-                onLoadingComplete={handleImageLoadComplete}
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                style={{ objectFit: "cover" }}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 priority={priority}
-              />
-            </div>
-          )}
-          
-          {isImageLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-              <Skeleton className={cn(getAspectRatioClass(), "w-full h-full")} />
-            </div>
-          )}
-        </div>
-        
-        <div className="p-3">
-          <div className="flex justify-between items-start mb-1 gap-2">
-            <div className="flex-1 min-w-0"> {/* Added min-width to prevent text from expanding container */}
-              <h3 className="font-medium text-sm truncate">
-                {item.title || "Untitled"}
-              </h3>
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                <span>{formattedDate}</span>
-              </p>
-            </div>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[160px]">
-                {!isPublic && (
-                  <>
-                    <DropdownMenuItem className="cursor-pointer">
-                      <Download className="mr-2 h-4 w-4" />
-                      Download
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      <Share className="mr-2 h-4 w-4" />
-                      Share
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem 
-                      className="cursor-pointer text-destructive focus:text-destructive"
-                      onClick={handleDelete}
-                    >
-                      Delete
-                    </DropdownMenuItem>
-                  </>
+                className={cn(
+                  "transition-all duration-200",
+                  isImageLoading ? "opacity-0" : "opacity-100"
                 )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-          
-          {/* Show event name if present and enabled */}
-          {showEvent && item.event && (
-            <div className="mt-1 mb-2">
-              <Badge variant="outline" className="text-xs">
-                {item.event.name}
-              </Badge>
-            </div>
-          )}
-          
-          {/* Conditional approval buttons */}
-          {showApproval && item.status === MediaStatus.PENDING && (
-            <div className="flex gap-2 mt-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex-1 h-8"
-                onClick={handleApprove}
-              >
-                <CheckCircle className="h-4 w-4 mr-1" />
-                Approve
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex-1 h-8 text-destructive border-destructive hover:bg-destructive/10"
-                onClick={handleReject}
-              >
-                <XCircle className="h-4 w-4 mr-1" />
-                Reject
-              </Button>
-            </div>
-          )}
-        </div>
-      </CardContent>
-      
-      {showComments && (
-        <Collapsible 
-          open={isExpanded} 
-          onOpenChange={setIsExpanded}
-          className="border-t"
-        >
-          <CollapsibleTrigger asChild className="w-full">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="w-full flex justify-between p-3 h-auto rounded-none text-muted-foreground"
-            >
-              <span>
-                Comments ({item.comments?.length || 0})
-              </span>
-              <span className="text-xs">
-                {isExpanded ? 'Hide' : 'Show'}
-              </span>
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="border-t px-3 py-2 max-h-[300px] overflow-y-auto space-y-3">
-            {/* Comments list */}
-            {item.comments && item.comments.length > 0 ? (
-              item.comments.map(comment => (
-                <div key={comment.id} className="flex gap-2">
-                  <Avatar className="h-6 w-6">
-                    {comment.author.avatarUrl && (
-                      <AvatarImage src={comment.author.avatarUrl} />
-                    )}
-                    <AvatarFallback className="text-[10px]">
-                      {comment.author.initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 overflow-hidden">
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-medium text-xs truncate">
-                        {comment.author.name}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground">
-                        {formatDistanceToNow(new Date(comment.createdAt), {
-                          addSuffix: true,
-                        })}
-                      </span>
-                    </div>
-                    <p className="text-xs break-words">
-                      {comment.text}
-                    </p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-xs text-muted-foreground text-center py-2">
-                No comments yet.
+                onLoad={handleImageLoadComplete}
+              />
+            )}
+            
+            {/* Loading skeleton */}
+            {isImageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                <Skeleton className="h-[80%] w-[80%] rounded-md" />
               </div>
             )}
             
-            {/* Comment form */}
-            <form onSubmit={handleCommentSubmit} className="flex gap-2 pt-2 items-center">
-              <Input
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Add a comment..."
-                className="h-8 text-xs flex-1 max-w-full"
-                onClick={(e) => e.stopPropagation()}
-              />
-              <Button 
-                type="submit" 
-                size="icon" 
-                className="h-8 w-8"
-                disabled={!newComment.trim()}
+            {/* Overlay with controls */}
+            <div className={cn(
+              "absolute inset-0 bg-black/0 transition-all duration-200 flex items-center justify-center",
+              isHovered ? "bg-black/30" : "bg-black/0 opacity-0"
+            )}>
+              {/* Hover overlay content */}
+            </div>
+          </div>
+        </div>
+        
+        {/* Card footer with details */}
+        <div className="p-2 space-y-1">
+          {item.title && (
+            <div className="flex justify-between items-start gap-1">
+              <h3 className="font-semibold text-xs truncate">
+                {item.title}
+              </h3>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 p-0">
+                    <MoreVertical className="h-3.5 w-3.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {!isPublic && (
+                    <>
+                      <DropdownMenuItem>
+                        <Pencil className="h-4 w-4 mr-2" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem>
+                    <Share className="h-4 w-4 mr-2" />
+                    Share
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Download className="h-4 w-4 mr-2" />
+                    Download
+                  </DropdownMenuItem>
+                  {showApproval && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onSelect={handleApprove}>
+                        <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
+                        Approve
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={handleReject}>
+                        <XCircle className="h-4 w-4 mr-2 text-red-500" />
+                        Reject
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                  {!isPublic && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onSelect={handleDelete}
+                        className="text-red-500 focus:text-red-500"
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
+          
+          {/* Date and metadata */}
+          <div className="flex items-center text-xs text-muted-foreground">
+            <Calendar className="h-3 w-3 mr-1" />
+            <span>{formattedDate}</span>
+          </div>
+          
+          {/* Tags */}
+          {item.metadata?.tags && item.metadata.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1.5">
+              {item.metadata.tags.slice(0, 3).map((tag, index) => (
+                <Badge key={index} variant="secondary" className="text-xs py-0 px-1.5">
+                  {tag}
+                </Badge>
+              ))}
+              {item.metadata.tags.length > 3 && (
+                <Badge variant="outline" className="text-xs py-0 px-1.5">
+                  +{item.metadata.tags.length - 3}
+                </Badge>
+              )}
+            </div>
+          )}
+          
+          {/* Event link if applicable */}
+          {showEvent && item.event && (
+            <div className="text-xs flex items-center mt-1.5">
+              <Calendar className="h-3 w-3 mr-1 text-muted-foreground" />
+              <Link 
+                href={`/protected/events/${item.event.id}`}
+                className="text-primary hover:underline"
                 onClick={(e) => e.stopPropagation()}
               >
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
-          </CollapsibleContent>
-        </Collapsible>
-      )}
-      
-      <CardFooter className="p-3 pt-0 gap-1">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className={cn(
-            "h-8 w-8",
-            isLiked && "text-red-500"
+                {item.event.name}
+              </Link>
+            </div>
           )}
-          onClick={handleLike}
-        >
-          <Heart className={cn("h-4 w-4", isLiked && "fill-current")} />
-        </Button>
-        
-        {/* Quick controls */}
-        {showControls && !isPublic && (
-          <div className="flex justify-end flex-1 gap-1">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Share className="h-4 w-4" />
+          
+          {/* Actions bar */}
+          <div className="flex items-center justify-between pt-1 mt-1 border-t text-muted-foreground">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className={cn("h-6 px-1 text-xs", isLiked && "text-red-500")}
+              onClick={handleLike}
+            >
+              <Heart className={cn("h-3 w-3 mr-1", isLiked && "fill-current")} />
+              Like
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Download className="h-4 w-4" />
-            </Button>
+            
+            {showComments && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-6 px-1 text-xs"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsExpanded(!isExpanded);
+                }}
+              >
+                {(item.comments?.length || 0) > 0 && (
+                  <span className="mr-1 text-xs">{item.comments?.length}</span>
+                )}
+                Comments
+              </Button>
+            )}
           </div>
-        )}
-      </CardFooter>
+          
+          {/* Comments section */}
+          {showComments && (
+            <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="mt-1.5">
+              <CollapsibleContent className="space-y-2">
+                {/* Existing comments */}
+                {item.comments && item.comments.length > 0 ? (
+                  <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                    {item.comments.map((comment) => (
+                      <div key={comment.id} className="flex items-start gap-2">
+                        <Avatar className="h-6 w-6">
+                          {comment.author.avatarUrl ? (
+                            <AvatarImage src={comment.author.avatarUrl} />
+                          ) : null}
+                          <AvatarFallback>{comment.author.initials}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 space-y-0.5">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-medium">{comment.author.name}</span>
+                            <span className="text-[10px] text-muted-foreground">{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}</span>
+                          </div>
+                          <p className="text-xs">{comment.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-xs text-center text-muted-foreground py-1.5">
+                    No comments yet
+                  </div>
+                )}
+                
+                {/* Add comment form */}
+                <form onSubmit={handleCommentSubmit} className="flex items-center gap-2 pt-1.5 border-t">
+                  <Avatar className="h-6 w-6 flex-shrink-0">
+                    <AvatarFallback>
+                      <User className="h-3.5 w-3.5" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <Input
+                    type="text"
+                    placeholder="Add a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="h-7 text-xs"
+                  />
+                  <Button 
+                    type="submit" 
+                    size="sm" 
+                    variant="ghost" 
+                    className="h-7 w-7 p-0"
+                    disabled={!newComment.trim()}
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                  </Button>
+                </form>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+        </div>
+      </CardContent>
     </Card>
   )
 } 

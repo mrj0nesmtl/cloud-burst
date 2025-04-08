@@ -1,5 +1,5 @@
 # cursor Directory Structure
-Generated: 2025-04-08T20:39:13.886Z
+Generated: 2025-04-08T22:04:14.275Z
 
 ## Overview
 

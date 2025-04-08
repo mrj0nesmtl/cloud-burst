@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
+- **Gallery UI Improvements**:
+  - Fixed mobile overflow issues in Gallery and Event Galleries components
+  - Improved responsive design for all gallery components
+  - Enhanced component spacing and layout for better mobile experience
+  - Optimized gallery tabs for better mobile display
+  - Refined card components for consistent appearance across devices
 - Advanced AI Features integration with TensorFlow.js
 - Complete RSVP form with dynamic fields and validation
 - Magic Link authentication for guests

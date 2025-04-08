@@ -50,19 +50,19 @@ export default function EventGalleriesPage() {
   }, []);
   
   // Get grid columns based on screen size
-  const getGridStyle = () => {
-    return {
-      display: 'grid',
-      gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'),
-      gap: isMobile ? '16px' : '24px',
-      width: '100%',
-      maxWidth: '100%'
-    };
+  const getGridClasses = () => {
+    if (isMobile) {
+      return "grid grid-cols-1 gap-3 w-full";
+    } else if (isTablet) {
+      return "grid grid-cols-2 gap-4 w-full";
+    } else {
+      return "grid grid-cols-3 gap-6 w-full";
+    }
   };
   
   if (isLoading) {
     return (
-      <div style={{ width: '100%', padding: '24px' }}>
+      <div className="w-full px-3 sm:px-4 md:px-6">
         <Card>
           <CardHeader>
             <CardTitle>Loading Galleries...</CardTitle>
@@ -74,8 +74,8 @@ export default function EventGalleriesPage() {
   
   if (error) {
     return (
-      <div style={{ width: '100%', padding: '24px' }}>
-        <div className="bg-destructive/10 border border-destructive rounded-lg p-6">
+      <div className="w-full px-3 sm:px-4 md:px-6">
+        <div className="bg-destructive/10 border border-destructive rounded-lg p-4 sm:p-6">
           <h1 className="text-xl font-bold text-destructive mb-3">Error Loading Galleries</h1>
           <p className="text-muted-foreground mb-4">
             There was an error loading your event galleries. Please try again later.
@@ -95,7 +95,7 @@ export default function EventGalleriesPage() {
   
   if (!galleryData || galleryData.length === 0) {
     return (
-      <div style={{ width: '100%', padding: '24px' }}>
+      <div className="w-full px-3 sm:px-4 md:px-6">
         <EmptyState
           icon={<Calendar className="h-12 w-12" />}
           title="No Events Found"
@@ -113,21 +113,21 @@ export default function EventGalleriesPage() {
   }
 
   return (
-    <div style={{ width: '100%', padding: '24px' }}>
-      <Card className="border-border/40 shadow-sm">
-        <CardHeader className="pb-6">
-          <CardTitle className="flex items-center text-2xl">
-            <Calendar className="mr-3 h-6 w-6 text-primary" />
+    <div className="w-full px-3 sm:px-4 md:px-6 pb-4">
+      <Card className="border-border/40 shadow-sm overflow-hidden">
+        <CardHeader className="pb-4 sm:pb-6">
+          <CardTitle className="flex items-center text-xl sm:text-2xl">
+            <Calendar className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 text-primary" />
             Event Galleries
           </CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-sm sm:text-base">
             {galleryData.length > 0
               ? `Manage galleries for ${galleryData.length} ${galleryData.length === 1 ? 'event' : 'events'}`
               : 'No event galleries found'
             }
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-6">
           <div className="flex justify-end mb-4">
             <Button asChild>
               <Link href="/protected/gallery/upload?eventId=recent">
@@ -135,9 +135,9 @@ export default function EventGalleriesPage() {
               </Link>
             </Button>
           </div>
-          <div style={getGridStyle()}>
+          <div className={getGridClasses()}>
             {galleryData.map((item) => (
-              <div key={item.gallery.id} style={{ width: '100%' }}>
+              <div key={item.gallery.id} className="w-full">
                 <GalleryEventCard
                   id={item.gallery.id}
                   eventId={item.event.id}

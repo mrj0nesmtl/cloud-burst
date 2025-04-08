@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-08T20:39:12.573Z
+Generated: 2025-04-08T22:04:05.441Z
 
 ## Overview
 
@@ -1115,20 +1115,19 @@ Generated: 2025-04-08T20:39:12.573Z
 ├── postcss.config.js
 ├── postcss.config.mjs
 ├── tailwind.config.js
-├── tailwind.config.ts
 ├── test-invitation.sql
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-252 directories, 859 files
+252 directories, 858 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11771 file(s)
+- ts: 11768 file(s)
 - tsx: 485 file(s)
-- js: 27873 file(s)
-- json: 2040 file(s)
+- js: 27835 file(s)
+- json: 2025 file(s)
 - md: 1495 file(s)
 - css: 26 file(s)
 - yml: 164 file(s)

@@ -71,10 +71,10 @@ export function GalleryLayout({
               "bg-background transition-all duration-300 ease-in-out z-20",
               isMobile ? (
                 sidebarOpen 
-                  ? "absolute inset-y-0 left-0 w-[250px] shadow-lg border-r" 
+                  ? "absolute inset-y-0 left-0 w-[220px] shadow-lg border-r"
                   : "hidden"
               ) : (
-                "w-[250px] flex-shrink-0 border-r"
+                "w-[220px] flex-shrink-0 border-r"
               )
             )}
           >
@@ -83,9 +83,12 @@ export function GalleryLayout({
         )}
         <main className={cn(
           "flex-1 overflow-auto transition-all duration-300 ease-in-out",
-          isMobile && sidebarOpen && "ml-[250px]"
+          "max-w-full w-full",
+          isMobile && sidebarOpen && "ml-[220px]"
         )}>
-          {children}
+          <div className="max-w-full overflow-x-hidden px-0 md:px-2">
+            {children}
+          </div>
         </main>
       </div>
     </div>
