@@ -11,6 +11,14 @@ const config = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      'xs': '480px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -53,6 +61,13 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        chart: {
+          '1': 'hsl(var(--chart-1))',
+          '2': 'hsl(var(--chart-2))',
+          '3': 'hsl(var(--chart-3))',
+          '4': 'hsl(var(--chart-4))',
+          '5': 'hsl(var(--chart-5))'
+        }
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -113,6 +128,13 @@ const config = {
         },
         ".content-visible": {
           "content-visibility": "visible",
+        },
+        // Ensuring dark mode styling is properly applied for borders
+        ".dark-mode-border": {
+          "@apply dark:border-slate-500 dark:border-opacity-100": {},
+        },
+        ".dark-mode-border-heavy": {
+          "@apply dark:border-slate-400 dark:border-2": {},
         },
       });
     }),
