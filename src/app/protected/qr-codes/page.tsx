@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Plus } from 'lucide-react'
+import { generateQRCodeUrl } from '@/lib/qr-code'
 
 export const metadata = {
   title: 'QR Codes | Cloud Burst',
@@ -26,6 +27,19 @@ const getStatusBadge = (status: string) => {
     default:
       return <Badge variant="outline">{status || 'Unknown'}</Badge>
   }
+}
+
+// Helper function to ensure valid QR code URL
+const ensureValidQrCodeUrl = (url: string | null, eventId: string): string => {
+  // If URL is missing or doesn't point to the QR code service
+  if (!url || !url.includes('api.qrserver.com')) {
+    // Generate a proper QR code URL
+    return generateQRCodeUrl({
+      event_id: eventId,
+      type: 'gallery' // Use gallery type for QR codes
+    });
+  }
+  return url;
 }
 
 export default async function QRCodesPage() {
@@ -105,59 +119,62 @@ export default async function QRCodesPage() {
           width: '100%'
         }}>
           {events && events.length > 0 ? (
-            events.map(event => (
-              <Card key={event.id} style={{ 
-                border: '2px solid var(--border)', 
-                background: 'var(--card)',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden',
-                borderRadius: '8px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                margin: '4px'
-              }}>
-                <CardHeader style={{ 
-                  padding: '16px',
-                  borderBottom: '2px solid var(--border)'
+            events.map(event => {
+              // Ensure the QR code URL is valid
+              const validQrCodeUrl = ensureValidQrCodeUrl(event.qr_code_url, event.id);
+              
+              return (
+                <Card key={event.id} className="dark:border-slate-500 dark:border-opacity-100 dark:border-[2px]" style={{ 
+                  border: '2px solid var(--border)', 
+                  background: 'var(--card)',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  overflow: 'hidden',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                  margin: '4px'
                 }}>
-                  <div style={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'flex-start', 
-                    gap: '8px' 
+                  <CardHeader className="dark:border-slate-500 dark:border-opacity-100" style={{ 
+                    padding: '16px',
+                    borderBottom: '2px solid var(--border)'
                   }}>
-                    <CardTitle style={{ 
-                      fontSize: '18px', 
-                      fontWeight: '600',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'flex-start', 
+                      gap: '8px' 
                     }}>
-                      {event.name}
-                    </CardTitle>
-                    {getStatusBadge(event.status)}
-                  </div>
-                </CardHeader>
-                
-                <CardContent style={{ 
-                  padding: '16px', 
-                  flex: '1', 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  justifyContent: 'center', 
-                  alignItems: 'center',
-                  minHeight: '200px',
-                  backgroundColor: 'var(--background)'
-                }}>
-                  {event.qr_code_url ? (
+                      <CardTitle style={{ 
+                        fontSize: '18px', 
+                        fontWeight: '600',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        {event.name}
+                      </CardTitle>
+                      {getStatusBadge(event.status)}
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent style={{ 
+                    padding: '16px', 
+                    flex: '1', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    justifyContent: 'center', 
+                    alignItems: 'center',
+                    minHeight: '200px',
+                    backgroundColor: 'var(--background)'
+                  }}>
                     <div style={{ 
                       width: '100%', 
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center'
                     }}>
-                      <div style={{ 
+                      <div className="dark:border-slate-400 dark:border-2" style={{ 
                         width: 'calc(min(100%, 200px))', 
                         height: 'calc(min(100%, 200px))',
                         position: 'relative',
@@ -168,7 +185,7 @@ export default async function QRCodesPage() {
                         border: '2px solid #e0e0e0'
                       }}>
                         <img 
-                          src={event.qr_code_url} 
+                          src={validQrCodeUrl} 
                           alt={`QR code for ${event.name}`}
                           style={{
                             width: '100%',
@@ -178,74 +195,62 @@ export default async function QRCodesPage() {
                         />
                       </div>
                     </div>
-                  ) : (
-                    <div style={{ 
-                      padding: '16px', 
-                      border: '2px dashed var(--border)', 
-                      borderRadius: '8px',
-                      backgroundColor: 'var(--muted)',
-                      textAlign: 'center',
-                      color: 'var(--muted-foreground)',
-                      width: '100%'
-                    }}>
-                      QR code not available
-                    </div>
-                  )}
-                </CardContent>
-                
-                <CardFooter style={{ 
-                  padding: '12px 16px',
-                  borderTop: '2px solid var(--border)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  gap: '8px',
-                  flexWrap: 'wrap',
-                  backgroundColor: 'var(--card)'
-                }}>
-                  <div style={{
+                  </CardContent>
+                  
+                  <CardFooter className="dark:border-slate-500 dark:border-opacity-100" style={{ 
+                    padding: '12px 16px',
+                    borderTop: '2px solid var(--border)',
                     display: 'flex',
-                    gap: '8px'
+                    justifyContent: 'space-between',
+                    gap: '8px',
+                    flexWrap: 'wrap',
+                    backgroundColor: 'var(--card)'
                   }}>
-                    <Button size="sm" variant="outline" style={{
+                    <div style={{
+                      display: 'flex',
+                      gap: '8px'
+                    }}>
+                      <Button size="sm" variant="outline" style={{
+                        borderRadius: '6px',
+                        border: '1px solid var(--border)',
+                        height: '36px',
+                        minWidth: '36px',
+                        backgroundColor: 'transparent',
+                        transition: 'all 0.2s ease'
+                      }}>
+                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                          Regenerate
+                        </span>
+                      </Button>
+                      <Button size="sm" variant="outline" style={{
+                        borderRadius: '6px',
+                        border: '1px solid var(--border)',
+                        height: '36px',
+                        minWidth: '36px',
+                        backgroundColor: 'transparent',
+                        transition: 'all 0.2s ease'
+                      }}>
+                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                          Download
+                        </span>
+                      </Button>
+                    </div>
+                    <Button asChild size="sm" variant="default" style={{
                       borderRadius: '6px',
-                      border: '1px solid var(--border)',
                       height: '36px',
                       minWidth: '36px',
-                      backgroundColor: 'transparent',
                       transition: 'all 0.2s ease'
                     }}>
-                      <span style={{ display: 'flex', alignItems: 'center' }}>
-                        Regenerate
-                      </span>
+                      <Link href={`/protected/events/${event.id}`}>
+                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                          Share
+                        </span>
+                      </Link>
                     </Button>
-                    <Button size="sm" variant="outline" style={{
-                      borderRadius: '6px',
-                      border: '1px solid var(--border)',
-                      height: '36px',
-                      minWidth: '36px',
-                      backgroundColor: 'transparent',
-                      transition: 'all 0.2s ease'
-                    }}>
-                      <span style={{ display: 'flex', alignItems: 'center' }}>
-                        Download
-                      </span>
-                    </Button>
-                  </div>
-                  <Button asChild size="sm" variant="default" style={{
-                    borderRadius: '6px',
-                    height: '36px',
-                    minWidth: '36px',
-                    transition: 'all 0.2s ease'
-                  }}>
-                    <Link href={`/protected/events/${event.id}`}>
-                      <span style={{ display: 'flex', alignItems: 'center' }}>
-                        Share
-                      </span>
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))
+                  </CardFooter>
+                </Card>
+              );
+            })
           ) : (
             <Card style={{ 
               border: '1px solid var(--border)', 
@@ -263,14 +268,14 @@ export default async function QRCodesPage() {
       </div>
       
       {/* Information card */}
-      <Card style={{ 
+      <Card className="dark:border-slate-500 dark:border-opacity-100 dark:border-[2px]" style={{ 
         border: '2px solid var(--border)', 
         background: 'var(--card)',
         borderRadius: '8px',
         overflow: 'hidden',
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
       }}>
-        <CardHeader style={{ padding: '16px', borderBottom: '2px solid var(--border)' }}>
+        <CardHeader className="dark:border-slate-500 dark:border-opacity-100" style={{ padding: '16px', borderBottom: '2px solid var(--border)' }}>
           <CardTitle style={{ fontSize: '18px', fontWeight: '600' }}>How QR Codes Work</CardTitle>
           <CardDescription style={{ fontSize: '14px' }}>Use these QR codes to streamline your event check-in process</CardDescription>
         </CardHeader>

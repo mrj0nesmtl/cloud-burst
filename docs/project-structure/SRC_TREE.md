@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-05T01:51:57.538Z
+Generated: 2025-04-08T20:39:13.361Z
 
 ## Overview
 
@@ -83,6 +83,8 @@ Generated: 2025-04-05T01:51:57.538Z
 │   │   │   ├── create/
 │   │   │   │   └── route.ts
 │   │   │   ├── send/
+│   │   │   │   └── route.ts
+│   │   │   ├── stats/
 │   │   │   │   └── route.ts
 │   │   │   ├── validate/
 │   │   │   │   └── route.ts
@@ -606,6 +608,8 @@ Generated: 2025-04-05T01:51:57.538Z
 │   ├── use-update-profile.ts
 │   ├── use-user.ts
 │   ├── useCamera.ts
+│   ├── useInvitationStats.ts
+│   ├── useInvitations.ts
 │   ├── useQrScanner.ts
 │   └── useSecureAuth.ts
 ├── lib/
@@ -661,6 +665,7 @@ Generated: 2025-04-05T01:51:57.538Z
 │   ├── formatters.ts
 │   ├── index.ts
 │   ├── qr-code.ts
+│   ├── query-helpers.ts
 │   ├── security-settings.ts
 │   ├── sendgrid.ts
 │   ├── user-sessions.ts
@@ -680,6 +685,7 @@ Generated: 2025-04-05T01:51:57.538Z
 │   ├── custom.d.ts
 │   ├── events.ts
 │   ├── gallery.ts
+│   ├── invitation-stats.ts
 │   ├── invitations.ts
 │   ├── jsqr.d.ts
 │   ├── media.ts
@@ -691,12 +697,12 @@ Generated: 2025-04-05T01:51:57.538Z
 ├── middleware.test.ts
 └── middleware.ts
 
-203 directories, 479 files
+204 directories, 484 files
 
 ```
 
 ## File Type Breakdown
-- ts: 114 file(s)
+- ts: 119 file(s)
 - tsx: 346 file(s)
 - js: 4 file(s)
 - md: 2 file(s)

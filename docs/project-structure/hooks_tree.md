@@ -1,5 +1,5 @@
 # hooks Directory Structure
-Generated: 2025-04-05T01:52:03.865Z
+Generated: 2025-04-08T20:39:19.265Z
 
 ## Overview
 
@@ -23,15 +23,17 @@ Generated: 2025-04-05T01:52:03.865Z
 ├── use-update-profile.ts
 ├── use-user.ts
 ├── useCamera.ts
+├── useInvitationStats.ts
+├── useInvitations.ts
 ├── useQrScanner.ts
 └── useSecureAuth.ts
 
-2 directories, 15 files
+2 directories, 17 files
 
 ```
 
 ## File Type Breakdown
-- ts: 15 file(s)
+- ts: 17 file(s)
 
 ## Ignored Patterns
 - node_modules

@@ -18,6 +18,7 @@ import { generateRandomCode } from '@/lib/utils'
 import { createServerClient } from './server'
 import { cookies } from 'next/headers'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createAdminClient } from './admin-client'
 
 /**
  * Create a new event
@@ -86,6 +87,16 @@ export async function createEvent(eventData: CreateEventParams) {
  */
 export async function updateEvent(eventId: string, updates: UpdateEventParams) {
   const supabase = createClient()
+  
+  // Validate and fix QR code URL if needed
+  if (updates.qr_code_url !== undefined && 
+      (!updates.qr_code_url || !updates.qr_code_url.includes('api.qrserver.com'))) {
+    // Generate proper QR code URL
+    updates.qr_code_url = generateQRCodeUrl({
+      event_id: eventId,
+      type: 'gallery'
+    })
+  }
   
   const { data, error } = await supabase
     .from('events')
