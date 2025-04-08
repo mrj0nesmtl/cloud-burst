@@ -2,8 +2,9 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Clock, Mail, HelpCircle } from 'lucide-react'
-import { createServerClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { Database } from '@/types/supabase'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -24,38 +25,46 @@ export default async function ExpiredPage({
   
   // If token is provided, try to get the event details
   if (token) {
-    const cookieStore = cookies()
-    const supabase = createServerClient({ cookies: () => cookieStore })
-    
-    // Get invitation details
-    const { data: invitation } = await supabase
-      .from('invitations')
-      .select('event_id, email')
-      .eq('token', token)
-      .single()
-    
-    if (invitation) {
-      // Get event details
-      const { data: event } = await supabase
-        .from('events')
-        .select('name, organizer_id')
-        .eq('id', invitation.event_id)
+    try {
+      // Direct initialization with createServerComponentClient
+      const supabase = createServerComponentClient<Database>({ cookies })
+      
+      // Get invitation details
+      const { data: invitation, error: invitationError } = await supabase
+        .from('invitations')
+        .select('event_id, email')
+        .eq('token', token)
         .single()
       
-      if (event) {
-        eventName = event.name
-        
-        // Get organizer email
-        const { data: organizer } = await supabase
-          .from('profiles')
-          .select('email')
-          .eq('id', event.organizer_id)
+      if (!invitationError && invitation) {
+        // Get event details
+        const { data: event, error: eventError } = await supabase
+          .from('events')
+          .select('name, organizer_id')
+          .eq('id', invitation.event_id)
           .single()
         
-        if (organizer?.email) {
-          contactEmail = organizer.email
+        if (!eventError && event && event.name) {
+          eventName = event.name
+          
+          // Add null check for organizer_id
+          if (event.organizer_id) {
+            // Get organizer email
+            const { data: organizer } = await supabase
+              .from('profiles')
+              .select('email')
+              .eq('id', event.organizer_id)
+              .single()
+            
+            if (organizer?.email) {
+              contactEmail = organizer.email
+            }
+          }
         }
       }
+    } catch (error) {
+      console.error('Error fetching invitation details:', error)
+      // Continue with default values if there's an error
     }
   }
   
