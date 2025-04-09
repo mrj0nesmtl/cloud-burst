@@ -116,7 +116,7 @@ const protectedRoutes = {
     },
     {
       href: "/protected/gallery/events",
-      label: "Events (Galleries)",
+      label: "Events Galleries",
       icon: FolderOpen
     },
     {

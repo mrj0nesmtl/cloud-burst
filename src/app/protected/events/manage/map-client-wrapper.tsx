@@ -74,8 +74,9 @@ const getRandomCoordinate = (): [number, number] => {
 };
 
 export function EventsMapClientWrapper() {
-  // Mobile detection
+  // Mobile detection with more granular breakpoints
   const [isMobile, setIsMobile] = useState(false);
+  const [isSmallMobile, setIsSmallMobile] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [events, setEvents] = useState<Event[]>([]);
@@ -193,7 +194,9 @@ export function EventsMapClientWrapper() {
   
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 768);
+      const width = window.innerWidth;
+      setIsSmallMobile(width < 480); // Extra small devices
+      setIsMobile(width < 768);
     };
     
     checkScreenSize();
@@ -236,84 +239,36 @@ export function EventsMapClientWrapper() {
   }, []);
 
   return (
-    <Card className="w-full overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm">
+    <Card className="w-full overflow-hidden border-0 shadow-none">
       <CardContent className="p-0">
         <div style={{
           width: '100%',
-          height: isMobile ? '300px' : '400px',
+          height: isSmallMobile ? '200px' : isMobile ? '250px' : '400px',
           position: 'relative',
           overflow: 'hidden'
         }}>
           {loading ? (
             <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
               <div className="animate-pulse flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-700 mb-4"></div>
-                <div className="h-4 w-40 bg-gray-300 dark:bg-gray-700 rounded"></div>
-                <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">Loading event locations...</div>
+                <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-700 mb-3"></div>
+                <div className="h-3 w-28 bg-gray-300 dark:bg-gray-700 rounded"></div>
+                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">Loading map...</div>
               </div>
             </div>
-          ) : events.length === 0 ? (
-            <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-              <div className="text-center p-6">
-                <div className="text-4xl mb-4">📍</div>
-                <h3 className="text-lg font-medium mb-2">No Event Locations</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  Events with valid locations will appear on this map.
-                </p>
-              </div>
-            </div>
-          ) : mapLoaded && (
-            <MapComponent 
-              height={isMobile ? 300 : 400} 
-              locations={events.map(event => ({
-                id: event.id,
-                name: event.name,
-                location: event.location || 'Location not specified',
-                status: event.status,
-                coordinates: event.coordinates as [number, number],
-                color: getStatusColor(event.status),
-                isApproximateLocation: event.isApproximate
-              }))} 
-            />
+          ) : (
+            // Only render map if client-side and has events to display
+            mapLoaded && Array.isArray(events) && (
+              <MapComponent 
+                events={events} 
+                getStatusColor={getStatusColor} 
+                theme={theme}
+                isMobile={isMobile}
+              />
+            )
           )}
-          
-          {/* Map legend */}
-          <div style={{
-            position: 'absolute',
-            top: '16px',
-            right: '16px',
-            backgroundColor: theme === 'dark' ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-            color: theme === 'dark' ? '#e0e0e0' : '#333333',
-            borderRadius: '8px',
-            padding: '12px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-            border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)',
-            zIndex: 999
-          }}>
-            <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>Event Status</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {[
-                { status: 'published', label: 'Active' },
-                { status: 'completed', label: 'Completed' },
-                { status: 'draft', label: 'Upcoming' },
-                { status: 'cancelled', label: 'Cancelled' }
-              ].map(item => (
-                <div key={item.status} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ 
-                    width: '10px', 
-                    height: '10px', 
-                    borderRadius: '50%', 
-                    backgroundColor: getStatusColor(item.status),
-                    border: theme === 'dark' ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(255,255,255,0.8)',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-                  }} />
-                  <span style={{ fontSize: '11px', color: theme === 'dark' ? '#e0e0e0' : '#333333' }}>{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </CardContent>
     </Card>
   );
-} 
+}
+

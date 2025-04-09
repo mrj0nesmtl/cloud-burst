@@ -166,7 +166,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Page content */}
-        <div style={{ width: '100%' }}>
+        <div>
           {children}
         </div>
       </div>

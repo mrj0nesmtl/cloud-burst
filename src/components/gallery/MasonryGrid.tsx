@@ -24,24 +24,24 @@ export function MasonryGrid({
   const [columns, setColumns] = useState(3);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Handle resize to determine number of columns - improved breakpoints for better mobile experience
+  // Handle resize to determine number of columns
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       
-      // Adjusted breakpoints for better mobile responsiveness
+      // Adjusted breakpoints for better mobile experience
       if (width < 480) {
         setColumns(1); // Single column for very small devices
       } else if (width < 640) {
-        setColumns(1); // Single column for mobile phones
+        setColumns(1); // Keep single column for small mobile phones
       } else if (width < 768) {
         setColumns(2); // Two columns for larger phones/small tablets
       } else if (width < 1024) {
-        setColumns(2); // Two columns for tablets
+        setColumns(3); // Three columns for tablets
       } else if (width < 1280) {
-        setColumns(3); // Three columns for small desktops
+        setColumns(4); // Four columns for small desktops
       } else {
-        setColumns(4); // Four columns for large desktops
+        setColumns(5); // Five columns for large desktops
       }
     };
     
@@ -57,19 +57,21 @@ export function MasonryGrid({
       return {
         display: 'flex',
         flexDirection: 'column' as 'column', // TypeScript needs this casting
-        gap: '16px',
-        width: '100%', // Ensure full width
-        maxWidth: '100%' // Prevent overflow
+        gap: '12px',
+        width: '100%',
+        maxWidth: '100%',
+        boxSizing: 'border-box' as 'border-box'
       };
     }
     
-    // For multi-column layouts, use grid
+    // For multi-column layouts, use grid with properly constrained width
     return {
       display: 'grid',
       gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      gap: '16px',
-      width: '100%', // Ensure full width
-      maxWidth: '100%' // Prevent overflow
+      gap: '12px',
+      width: '100%',
+      maxWidth: '100%',
+      boxSizing: 'border-box' as 'border-box'
     };
   };
   
@@ -107,11 +109,11 @@ export function MasonryGrid({
   return (
     <div 
       ref={containerRef}
-      className="w-full px-2 sm:px-4" // Reduce padding on mobile
+      className="w-full max-w-full px-2 sm:px-3 md:px-4" 
       style={{ 
         maxWidth: '100%', 
         overflowX: 'hidden',
-        boxSizing: 'border-box' // Ensure padding is included in width calculation
+        boxSizing: 'border-box'
       }}
     >
       <div style={getGridStyle()}>
@@ -126,13 +128,13 @@ export function MasonryGrid({
               isPublic={isPublic}
               onAddComment={onAddComment}
               onLike={onLike}
-              className="w-full max-w-full" // Ensure cards don't overflow
+              className="w-full max-w-full"
             />
           ))
         ) : (
           // Multi-column layout
           columnItems.map((columnItems, columnIndex) => (
-            <div key={columnIndex} className="flex flex-col gap-4 w-full">
+            <div key={columnIndex} className="flex flex-col gap-3 w-full max-w-full">
               {columnItems.map((item) => (
                 <MediaCard
                   key={item.id}
@@ -142,7 +144,7 @@ export function MasonryGrid({
                   isPublic={isPublic}
                   onAddComment={onAddComment}
                   onLike={onLike}
-                  className="w-full"
+                  className="w-full max-w-full"
                 />
               ))}
             </div>
