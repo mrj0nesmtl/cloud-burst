@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-04-08T22:04:17.016Z
+Generated: 2025-04-09T21:52:27.819Z
 
 ## Overview
 
-This directory contains 98 route(s).
+This directory contains 101 route(s).
 
 
 ## Directory Tree
@@ -54,6 +54,12 @@ This directory contains 98 route(s).
 │   ├── galleries/
 │   │   └── events/
 │   │       └── route.ts
+│   ├── gallery/
+│   │   └── check-access/
+│   │       └── route.ts
+│   ├── guests/
+│   │   └── reserve/
+│   │       └── route.ts
 │   ├── invitation/
 │   │   └── lookup/
 │   │       └── route.ts
@@ -61,11 +67,17 @@ This directory contains 98 route(s).
 │   │   ├── [token]/
 │   │   │   └── validate/
 │   │   │       └── route.ts
+│   │   ├── accept/
+│   │   │   └── route.ts
 │   │   ├── bulk-create/
 │   │   │   └── route.ts
 │   │   ├── create/
 │   │   │   └── route.ts
+│   │   ├── resend/
+│   │   │   └── route.ts
 │   │   ├── send/
+│   │   │   └── route.ts
+│   │   ├── staff/
 │   │   │   └── route.ts
 │   │   ├── stats/
 │   │   │   └── route.ts
@@ -127,6 +139,10 @@ This directory contains 98 route(s).
 │   │   │   │   ├── moderation-content.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── event-gallery-content.tsx
+│   │   │   └── page.tsx
+│   │   ├── register/
+│   │   │   └── page.tsx
+│   │   ├── staff/
 │   │   │   └── page.tsx
 │   │   ├── upload/
 │   │   │   └── page.tsx
@@ -277,6 +293,8 @@ This directory contains 98 route(s).
 │   │   │   │   └── page.tsx
 │   │   │   ├── rsvps/
 │   │   │   │   └── page.tsx
+│   │   │   ├── staff/
+│   │   │   │   └── page.tsx
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── create/
@@ -379,13 +397,13 @@ This directory contains 98 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-158 directories, 212 files
+168 directories, 220 files
 
 ```
 
 ## File Type Breakdown
-- ts: 33 file(s)
-- tsx: 168 file(s)
+- ts: 38 file(s)
+- tsx: 171 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

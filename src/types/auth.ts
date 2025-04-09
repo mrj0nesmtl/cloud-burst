@@ -14,8 +14,13 @@ export const UserRole = z.enum([
   'ADMIN',
   'ORGANIZER',
   'EVENT_HOST',
+  'EVENT_STAFF',
   'USER',
-  'GUEST'
+  'GUEST',
+  'CONTRACTOR',
+  'PHOTOGRAPHER',
+  'TECHNICIAN',
+  'MARKETING'
 ]).transform(val => val.toLowerCase() as Lowercase<typeof val>)
 
 export type UserRole = z.infer<typeof UserRole>
@@ -142,5 +147,33 @@ export const roleCapabilities: Record<Lowercase<UserRole>, string[]> = {
   guest: [
     'view:event_photos',
     'upload:event_photos'
+  ],
+  event_staff: [
+    'view:events',
+    'view:event_photos',
+    'manage:own_profile',
+    'upload:event_photos'
+  ],
+  contractor: [
+    'view:events',
+    'view:event_photos',
+    'manage:own_profile'
+  ],
+  photographer: [
+    'view:events',
+    'view:event_photos', 
+    'upload:event_photos',
+    'manage:own_profile'
+  ],
+  technician: [
+    'view:events',
+    'view:event_photos',
+    'manage:own_profile'
+  ],
+  marketing: [
+    'view:events',
+    'view:event_photos',
+    'manage:own_profile',
+    'view:event_analytics'
   ]
 } 

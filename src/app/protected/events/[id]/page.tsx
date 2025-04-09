@@ -29,6 +29,16 @@ import {
 } from "@/components/ui/tooltip"
 import { RsvpDashboard } from '@/components/events/rsvp-dashboard'
 import { Mail } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { UserPlusIcon, UserCheck, Users } from 'lucide-react'
+import { StaffInvitationForm } from '@/components/admin/staff-invitation-form'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -37,6 +47,14 @@ interface EventPageProps {
   params: {
     id: string
   }
+}
+
+type UserRole = 'super_admin' | 'admin' | 'organizer' | 'event_host' | 'event_staff' | 'user' | 'guest';
+
+// Helper function to safely convert string to UserRole
+function validateUserRole(role: string): UserRole {
+  const validRoles: UserRole[] = ['super_admin', 'admin', 'organizer', 'event_host', 'event_staff', 'user', 'guest'];
+  return validRoles.includes(role as UserRole) ? (role as UserRole) : 'user';
 }
 
 function convertDatabasePhotoToPhotoType(photo: any, eventId: string): Photo {
@@ -94,6 +112,42 @@ export default async function EventPage({ params }: EventPageProps) {
   
   if (error || !event) {
     notFound()
+  }
+  
+  // Fetch current user's session and role
+  const { data: { session } } = await supabase.auth.getSession()
+  
+  let userRole: UserRole = 'user'; // Default role
+  
+  if (session?.user) {
+    // Check if user is event owner
+    if (event.organizer_id === session.user.id) {
+      userRole = 'organizer'
+    } else {
+      // Check if user has a staff role for this event
+      const { data: roleData, error: roleError } = await supabase
+        .from('event_staff')
+        .select('role')
+        .eq('event_id', params.id)
+        .eq('user_id', session.user.id)
+        .maybeSingle()
+        
+      if (roleData?.role) {
+        userRole = validateUserRole(roleData.role);
+      }
+      
+      // Also check for admin roles from a user metadata or profiles table if needed
+      // This is just a placeholder - adjust based on your actual DB schema
+      const { data: userData } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .maybeSingle()
+        
+      if (userData?.role === 'admin' || userData?.role === 'super_admin') {
+        userRole = validateUserRole(userData.role);
+      }
+    }
   }
   
   // Fetch event attendees
@@ -834,6 +888,23 @@ export default async function EventPage({ params }: EventPageProps) {
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Add Staff Management access - only visible to organizers and above */}
+                  {(userRole === 'organizer' || userRole === 'admin' || userRole === 'super_admin') && (
+                    <div className="mt-4">
+                      <StaffInvitationForm eventId={params.id} />
+                      <Link href={`/protected/events/${params.id}/staff`} className="mt-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                        <Users className="mr-2 h-4 w-4" />
+                        Manage Staff
+                      </Link>
+                      
+                      {/* Temporary diagnostic button with absolute URL */}
+                      <a href={`http://localhost:3000/protected/events/${params.id}/staff`} className="ml-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/90 h-10 px-4 py-2">
+                        <Users className="mr-2 h-4 w-4" />
+                        Try Staff Link
+                      </a>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Branding & Customization */}

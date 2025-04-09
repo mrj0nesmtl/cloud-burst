@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-08T22:04:09.259Z
+Generated: 2025-04-09T21:52:26.107Z
 
 ## Overview
 
@@ -71,6 +71,12 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   ├── galleries/
 │   │   │   └── events/
 │   │   │       └── route.ts
+│   │   ├── gallery/
+│   │   │   └── check-access/
+│   │   │       └── route.ts
+│   │   ├── guests/
+│   │   │   └── reserve/
+│   │   │       └── route.ts
 │   │   ├── invitation/
 │   │   │   └── lookup/
 │   │   │       └── route.ts
@@ -78,11 +84,17 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   │   ├── [token]/
 │   │   │   │   └── validate/
 │   │   │   │       └── route.ts
+│   │   │   ├── accept/
+│   │   │   │   └── route.ts
 │   │   │   ├── bulk-create/
 │   │   │   │   └── route.ts
 │   │   │   ├── create/
 │   │   │   │   └── route.ts
+│   │   │   ├── resend/
+│   │   │   │   └── route.ts
 │   │   │   ├── send/
+│   │   │   │   └── route.ts
+│   │   │   ├── staff/
 │   │   │   │   └── route.ts
 │   │   │   ├── stats/
 │   │   │   │   └── route.ts
@@ -144,6 +156,10 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   │   │   │   ├── moderation-content.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── event-gallery-content.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── register/
+│   │   │   │   └── page.tsx
+│   │   │   ├── staff/
 │   │   │   │   └── page.tsx
 │   │   │   ├── upload/
 │   │   │   │   └── page.tsx
@@ -294,6 +310,8 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── rsvps/
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── staff/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── create/
@@ -396,6 +414,10 @@ Generated: 2025-04-08T22:04:09.259Z
 │   ├── not-found.tsx
 │   └── page.tsx
 ├── components/
+│   ├── admin/
+│   │   ├── staff-invitation-form.tsx
+│   │   ├── staff-list-item.tsx
+│   │   └── staff-management.tsx
 │   ├── attendees/
 │   │   └── invitation-form.tsx
 │   ├── auth/
@@ -408,6 +430,7 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   ├── role-guard.tsx
 │   │   └── social-auth-buttons.tsx
 │   ├── camera/
+│   │   ├── camera-capture.tsx
 │   │   └── index.tsx
 │   ├── dashboard/
 │   │   ├── MediaStatsCard.tsx
@@ -475,11 +498,15 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   ├── gallery-grid.tsx
 │   │   ├── gallery-settings-form.tsx
 │   │   ├── gallery-tabs.tsx
+│   │   ├── guest-auth-check.tsx
+│   │   ├── guest-reservation-form.tsx
 │   │   ├── guest-upload-dropzone.tsx
 │   │   ├── index.ts
+│   │   ├── media-uploader.tsx
 │   │   ├── mock-data.ts
 │   │   ├── optimized-image.tsx
 │   │   ├── photo-lightbox.tsx
+│   │   ├── upload-button.tsx
 │   │   ├── upload-dropzone.tsx
 │   │   └── upload-with-tags.tsx
 │   ├── invitation/
@@ -530,6 +557,8 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   ├── query-provider.tsx
 │   │   ├── toast-provider.tsx
 │   │   └── tooltip-provider.tsx
+│   ├── rsvp/
+│   │   └── rsvp-form.tsx
 │   ├── settings/
 │   │   └── system-status.tsx
 │   ├── ui/
@@ -555,6 +584,7 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   ├── empty-state.tsx
 │   │   ├── form.tsx
 │   │   ├── icons.tsx
+│   │   ├── image-placeholder.tsx
 │   │   ├── index.ts
 │   │   ├── input.tsx
 │   │   ├── label.tsx
@@ -577,6 +607,7 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   ├── slider.tsx
 │   │   ├── sonner.tsx
 │   │   ├── spinner.tsx
+│   │   ├── staff-role-badge.tsx
 │   │   ├── switch.tsx
 │   │   ├── table.tsx
 │   │   ├── tabs.tsx
@@ -656,6 +687,7 @@ Generated: 2025-04-08T22:04:09.259Z
 │   │   └── rsvp.schema.ts
 │   ├── validations/
 │   │   ├── event.ts
+│   │   ├── rsvp-schema.ts
 │   │   └── rsvp.ts
 │   ├── analytics.ts
 │   ├── auth.ts
@@ -664,6 +696,7 @@ Generated: 2025-04-08T22:04:09.259Z
 │   ├── event-customization.ts
 │   ├── formatters.ts
 │   ├── index.ts
+│   ├── invitations.ts
 │   ├── qr-code.ts
 │   ├── query-helpers.ts
 │   ├── security-settings.ts
@@ -697,13 +730,13 @@ Generated: 2025-04-08T22:04:09.259Z
 ├── middleware.test.ts
 └── middleware.ts
 
-204 directories, 484 files
+216 directories, 505 files
 
 ```
 
 ## File Type Breakdown
-- ts: 119 file(s)
-- tsx: 346 file(s)
+- ts: 126 file(s)
+- tsx: 360 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

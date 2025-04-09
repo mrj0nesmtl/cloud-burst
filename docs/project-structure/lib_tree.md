@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-04-08T22:04:22.716Z
+Generated: 2025-04-09T21:52:32.126Z
 
 ## Overview
 
@@ -52,6 +52,7 @@ Generated: 2025-04-08T22:04:22.716Z
 │   └── rsvp.schema.ts
 ├── validations/
 │   ├── event.ts
+│   ├── rsvp-schema.ts
 │   └── rsvp.ts
 ├── analytics.ts
 ├── auth.ts
@@ -60,6 +61,7 @@ Generated: 2025-04-08T22:04:22.716Z
 ├── event-customization.ts
 ├── formatters.ts
 ├── index.ts
+├── invitations.ts
 ├── qr-code.ts
 ├── query-helpers.ts
 ├── security-settings.ts
@@ -67,12 +69,12 @@ Generated: 2025-04-08T22:04:22.716Z
 ├── user-sessions.ts
 └── utils.ts
 
-10 directories, 48 files
+10 directories, 50 files
 
 ```
 
 ## File Type Breakdown
-- ts: 45 file(s)
+- ts: 47 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

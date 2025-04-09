@@ -1,16 +1,16 @@
 # 🎨 **Application Design Document**  
 
 ## Cloud Burst
-📅 *Updated: April 2, 2025*  
-📊 *Version: 0.8.5*
+📅 *Updated: April 9, 2025*  
+📊 *Version: 0.8.9*
 
 ## 📌 Situational Abstract
 
-Cloud Burst has achieved significant milestones with the implementation of the RSVP dashboard integration and UI refinements in version 0.8.5, building upon the dark mode enhancements and RSVP system foundation established in version 0.8.4. As of April 2, 2025, we have successfully integrated the RSVP dashboard within the event management interface, resolved TypeScript errors in RSVP components, enhanced tab navigation for seamless RSVP management, improved card styling for better visibility in both light and dark modes, and optimized layouts for both desktop and mobile views.
+Cloud Burst has achieved significant milestones with the implementation of the guest reservation onboarding, gallery setup, and camera functionality in version 0.8.9, building upon the responsive design improvements in version 0.8.8 and the RSVP system foundation established in previous versions. As of April 9, 2025, we have successfully implemented a comprehensive guest reservation system with Zod validation, integrated magic link authentication for guests, built a public gallery view with access controls, developed direct camera capture functionality for photos, created a combined upload button with tabs for different methods, and enhanced staff management with contractor roles and visual role badges.
 
-The platform now offers a robust event management experience with proper role-based access control, enhanced navigation patterns, secure authentication flows, fully responsive layouts across all pages, a complete invitation system with SendGrid integration, a comprehensive framework for AI features, an interactive map displaying actual event locations, a refined dark mode experience with consistent UI patterns, and now an integrated RSVP management dashboard within the event details page. Recent achievements include the integration of the RSVP dashboard within the event details page, resolution of TypeScript errors in RSVP components, enhancement of tab navigation for seamless RSVP management, improved card styling for better visibility in both light and dark modes, and optimized layouts for both desktop and mobile views.
+The platform now offers a robust event management experience with proper role-based access control, enhanced navigation patterns, secure authentication flows, fully responsive layouts across all pages, a complete invitation system with SendGrid integration, a comprehensive framework for AI features, direct camera integration for media upload, guest reservation capabilities, and an enhanced staff management system with specialized contractor roles. The implementation of visual role badges and specialized permissions for different contractor types provides event organizers with powerful tools to collaborate with external professionals.
 
-Our focus for version 0.9.0 centers on completing the public-facing aspects of the Guest Onboarding & RSVP Flow implementation while beginning the integration of camera functionality for QR code scanning. These features are critical for our upcoming Beta 0.9.0 Release Candidate 1 scheduled for April 15, 2025. Our immediate priority is delivering these key features while maintaining the platform's stability, performance, and visual consistency across both light and dark themes.
+Our focus for version 0.9.0 centers on finalizing the AI features integration and completing the RSVP analytics dashboard while continuing to enhance email notifications for gallery activities. These features are critical for our upcoming Beta 0.9.0 Release scheduled for April 30, 2025. Our immediate priority is delivering these key features while maintaining the platform's stability, performance, and visual consistency across both light and dark themes.
 
 The platform's architecture continues to demonstrate exceptional resilience and adaptability, keeping us firmly on track for our April 30, 2025 Beta 0.9.0 release target. The team's commitment to excellence is evident in the successful resolution of complex technical challenges while maintaining superior code quality and user experience.
 
@@ -27,8 +27,9 @@ The platform's architecture continues to demonstrate exceptional resilience and 
 | 📜 Legal Framework | ✅ Done | P2 | None | 100% |
 | 💰 Pricing System | ✅ Done | P2 | None | 100% |
 | 🖼️ Photo Upload | ✅ Done | P1 | Storage | 100% |
+| 📷 Camera Integration | ✅ Done | P1 | Browser API | 100% |
 | 🤖 AI Features Framework | ✅ Done | P1 | UI Components | 100% |
-| 🤖 AI Processing | 🟢 Active | P3 | TensorFlow | 15% |
+| 🤖 AI Processing | 🟢 Active | P3 | TensorFlow | 25% |
 | ⚙️ User Settings | ✅ Done | P0 | Auth | 100% |
 | 👤 Profile Management | ✅ Done | P0 | Auth | 100% |
 | 🔔 Notifications | ✅ Done | P1 | Settings | 100% |
@@ -37,9 +38,12 @@ The platform's architecture continues to demonstrate exceptional resilience and 
 | 📊 Dashboard | ✅ Done | P0 | Auth | 100% |
 | 📈 Analytics | 🟢 Active | P1 | Events | 90% |
 | 📊 Chart Components | ✅ Done | P1 | Analytics | 100% |
-| 🖼️ Gallery System | 🟢 Active | P0 | Storage | 95% |
+| 🖼️ Gallery System | ✅ Done | P0 | Storage | 100% |
 | 📨 Invitation System | ✅ Done | P0 | Events | 100% |
-| 📝 RSVP System | 🟢 Active | P0 | Invitations | 50% |
+| 📝 RSVP System | ✅ Done | P0 | Invitations | 100% |
+| 👥 Guest System | ✅ Done | P0 | Gallery | 100% |
+| 👷 Contractor Roles | ✅ Done | P1 | RBAC | 100% |
+| 🔖 Role Badge System | ✅ Done | P1 | UI | 100% |
 | 🗺️ Map Integration | ✅ Done | P1 | Events | 100% |
 | 🌙 Dark Mode | ✅ Done | P1 | UI | 100% |
 
@@ -47,24 +51,27 @@ The platform's architecture continues to demonstrate exceptional resilience and 
 
 | Sprint | Focus | Status | Timeline | Progress |
 |--------|-------|--------|----------|-----------|
-| 1 | 🛠️ Setup & Structure | ✅ Done | Feb 2024 | 100% |
-| 2 | 🎨 UI & Branding | ✅ Done | Feb 2024 | 100% |
-| 3 | 🔐 Auth Reset | ✅ Done | Feb 2024 | 100% |
-| 4 | ⚙️ Super Admin | ✅ Done | Feb 2024 | 100% |
-| 5 | 📧 Notifications | ✅ Done | Mar 2024 | 100% |
-| 6 | 📄 Templates | ✅ Done | Mar 2024 | 100% |
-| 7 | 📅 Events | ✅ Done | Mar 2024 | 100% |
-| 8 | 👥 Attendees | ✅ Done | Mar 2024 | 100% |
-| 9 | 📱 Dashboard | ✅ Done | Mar 2024 | 100% |
-| 10 | 📨 Invitations | ✅ Done | Mar 2024 | 100% |
-| 11 | 📱 Mobile Responsiveness | ✅ Done | Apr 2024 | 100% |
-| 12 | 🤖 AI Features Framework | ✅ Done | Apr 2024 | 100% |
-| 13 | 📊 Chart Components | ✅ Done | Apr 2024 | 100% |
-| 14 | 🗺️ Map Integration | ✅ Done | Apr 2024 | 100% |
-| 15 | 🌙 Dark Mode Enhancement | ✅ Done | Apr 2024 | 100% |
-| 16 | 📝 RSVP System | 🟢 Active | Apr 2024 | 50% |
-| 17 | 🤖 AI Integration | 🟢 Active | Apr 2024 | 15% |
-| 18 | 🚀 Launch Prep | 🟡 Planned | May 2025 | 0% |
+| 1 | 🛠️ Setup & Structure | ✅ Done | Feb 2025 | 100% |
+| 2 | 🎨 UI & Branding | ✅ Done | Feb 2025 | 100% |
+| 3 | 🔐 Auth Reset | ✅ Done | Feb 2025 | 100% |
+| 4 | ⚙️ Super Admin | ✅ Done | Feb 2025 | 100% |
+| 5 | 📧 Notifications | ✅ Done | Mar 2025 | 100% |
+| 6 | 📄 Templates | ✅ Done | Mar 2025 | 100% |
+| 7 | 📅 Events | ✅ Done | Mar 2025 | 100% |
+| 8 | 👥 Attendees | ✅ Done | Mar 2025 | 100% |
+| 9 | 📱 Dashboard | ✅ Done | Mar 2025 | 100% |
+| 10 | 📨 Invitations | ✅ Done | Mar 2025 | 100% |
+| 11 | 📱 Mobile Responsiveness | ✅ Done | Apr 2025 | 100% |
+| 12 | 🤖 AI Features Framework | ✅ Done | Apr 2025 | 100% |
+| 13 | 📊 Chart Components | ✅ Done | Apr 2025 | 100% |
+| 14 | 🗺️ Map Integration | ✅ Done | Apr 2025 | 100% |
+| 15 | 🌙 Dark Mode Enhancement | ✅ Done | Apr 2025 | 100% |
+| 16 | 📝 RSVP System | ✅ Done | Apr 2025 | 100% |
+| 17 | 📷 Camera Integration | ✅ Done | Apr 2025 | 100% |
+| 18 | 👥 Guest System | ✅ Done | Apr 2025 | 100% |
+| 19 | 👷 Contractor Roles | ✅ Done | Apr 2025 | 100% |
+| 20 | 🤖 AI Integration | 🟢 Active | Apr 2025 | 25% |
+| 21 | 🚀 Launch Prep | 🟡 Planned | May 2025 | 0% |
 
 ---
 
@@ -80,6 +87,8 @@ The authentication system is complete and fully integrated with Supabase Auth, p
 - ✅ RLS policies
 - ✅ Protected routes
 - ✅ Role-based UI rendering
+- ✅ Guest authentication with magic links
+- ✅ Contractor role permissions
 
 ### 🚀 Tech Stack  
 - **Frontend**: ⚛️ Next.js 14, TypeScript, Tailwind CSS, Shadcn UI  
@@ -93,6 +102,7 @@ The authentication system is complete and fully integrated with Supabase Auth, p
 - **Form Management**: 📝 React Hook Form with Zod validation
 - **Data Fetching**: 🔄 TanStack Query v5
 - **Data Visualization**: 📊 Recharts with custom components
+- **Camera Integration**: 📸 Native Browser API with custom components
 
 ---
 
@@ -110,6 +120,7 @@ The authentication system is complete and fully integrated with Supabase Auth, p
 - 🔹 Moderate and approve uploaded content
 - 🔹 Analytics view and attendee management
 - 🔹 Access to AI features for media enhancement
+- 🔹 Contractor role management
 
 ### 📷 **Event Host**  
 - 🔹 Create and manage own events (cannot delete)
@@ -131,6 +142,31 @@ The authentication system is complete and fully integrated with Supabase Auth, p
 - 🔹 Basic interaction with platform
 - 🔹 No account required
 - 🔹 View AI-enhanced media
+- 🔹 Gallery access via magic link
+
+### 🏗️ **Contractor**
+- 🔹 External partner with limited event access
+- 🔹 Upload content for specific events
+- 🔹 Specialized permissions based on contractor type
+- 🔹 Visual role identification
+
+### 📸 **Photographer**
+- 🔹 External photographer with photo upload capabilities
+- 🔹 Camera integration access
+- 🔹 Limited event management permissions
+- 🔹 Visual role identification
+
+### 🔧 **Technician**
+- 🔹 Technical support with event setup permissions
+- 🔹 Equipment management access
+- 🔹 Troubleshooting capabilities
+- 🔹 Visual role identification
+
+### 📣 **Marketing**
+- 🔹 External partner with analytics and content access
+- 🔹 Content promotion capabilities
+- 🔹 Limited analytics access
+- 🔹 Visual role identification
 
 ---
 
@@ -148,16 +184,17 @@ The authentication system is complete and fully integrated with Supabase Auth, p
 - ✅ Login
 - ✅ Register
 - ✅ Password Recovery
+- ✅ Guest Reservation
 
 ### 🎛️ **Dashboard**  
-📍 *Status: In Progress*
+📍 *Status: Complete*
 - ✅ Basic Layout
 - ✅ Activity Feed
 - ✅ Quick Actions
 - ✅ Dashboard Stats
 - ✅ Event Management
 - ✅ Attendee Management
-- 🟢 Gallery Management [Active]
+- ✅ Gallery Management
 - ✅ Settings Pages
 - 🟢 Analytics [Active]
 - ✅ AI Features Navigation [Done]
@@ -170,6 +207,7 @@ The authentication system is complete and fully integrated with Supabase Auth, p
 - ✅ Event Configuration
 - ✅ QR Code Management
 - ✅ Status Management
+- ✅ Contractor Management
 
 ### 👥 **Attendee Management**  
 📍 *Status: Complete*
@@ -178,27 +216,32 @@ The authentication system is complete and fully integrated with Supabase Auth, p
 - ✅ Attendee Roles
 - ✅ Invitation System
 - ✅ QR Code Integration
-- 🟢 RSVP System [Active]
+- ✅ RSVP System
+- ✅ Guest Reservation
 
 ### 🖼️ **Gallery**  
-📍 *Status: In Progress*
+📍 *Status: Complete*
 - ✅ Basic Layout & Navigation
 - ✅ Upload Interface
+- ✅ Camera Capture
 - ✅ Grid View
 - ✅ Photo Details
-- 🟢 Masonry Layout [Active]
-- 🟢 Slideshow View [Active]
-- 🟢 Album Management [Active]
-- 🟢 Photo Moderation [Active]
-- 🟢 Photo Tagging [Active]
-- 🟢 Search & Filtering [Active]
+- ✅ Masonry Layout
+- ✅ Slideshow View
+- ✅ Album Management
+- ✅ Photo Moderation
+- ✅ Photo Tagging
+- ✅ Search & Filtering
+- ✅ Gallery Permissions
+- ✅ Guest Access
 
 ### 📊 **Analytics**  
 📍 *Status: Active*
 - ✅ Engagement Metrics Dashboard
 - ✅ Chart Components
-- 🟡 Events Analytics [Coming Soon]
-- 🟡 Photographer Performance [Planned]
+- 🟢 Events Analytics [In Progress]
+- 🟢 Photographer Performance [In Progress]
+- 🟢 RSVP Analytics [In Progress]
 - 🟡 Export & Reporting [Planned]
 
 ### 🤖 **AI Features**  
@@ -212,8 +255,29 @@ The authentication system is complete and fully integrated with Supabase Auth, p
 - ✅ AI Studio Placeholder
 - 🟢 TensorFlow.js Integration [Active]
 - 🟢 Client-side AI Processing [Active]
-- 🟡 Media Enhancement Pipeline [Planned]
-- 🟡 Photo Organization Features [Planned]
+- 🟢 Media Enhancement Pipeline [Active]
+- 🟢 Photo Organization Features [Active]
+
+### 📷 **Camera Integration**  
+📍 *Status: Complete*
+- ✅ Camera Access Component
+- ✅ Photo Capture UI
+- ✅ Video Capture UI
+- ✅ Mobile Responsive Controls
+- ✅ Browser Compatibility
+- ✅ Upload Integration
+- ✅ Progress Tracking
+- ✅ Error Handling
+
+### 👷 **Contractor Management**  
+📍 *Status: Complete*
+- ✅ Contractor Roles System
+- ✅ Role Badge Component
+- ✅ Specialized Permissions
+- ✅ Visual Role Indicators
+- ✅ Staff Management UI
+- ✅ Role Descriptions
+- ✅ Staff Invitation Form
 
 ---
 
@@ -233,6 +297,9 @@ The authentication system is complete and fully integrated with Supabase Auth, p
 │   │   │       └── route.ts
 │   │   ├── extract-colors/
 │   │   │   └── route.ts
+│   │   ├── guests/
+│   │   │   └── reserve/
+│   │   │       └── route.ts
 │   │   └── templates/
 │   │       ├── [templateId]/
 │   │       │   └── html/

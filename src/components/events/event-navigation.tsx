@@ -10,7 +10,8 @@ import {
   Settings, 
   Upload, 
   Mail, 
-  QrCode
+  QrCode,
+  UserCog
 } from "lucide-react"
 
 interface EventNavigationProps {
@@ -50,6 +51,11 @@ export default function EventNavigation({ eventId }: EventNavigationProps) {
       href: `/events/${eventId}/guests`,
       label: "Guests",
       icon: <Users className="h-4 w-4" />,
+    },
+    {
+      href: `/events/${eventId}/staff`,
+      label: "Staff",
+      icon: <UserCog className="h-4 w-4" />,
     },
     {
       href: `/events/${eventId}/settings`,

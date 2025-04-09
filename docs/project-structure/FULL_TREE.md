@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-08T22:04:05.441Z
+Generated: 2025-04-09T21:52:25.178Z
 
 ## Overview
 
@@ -62,7 +62,6 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   ├── UI_components.md
 │   │   ├── consistent-layout.md
 │   │   ├── layout-troubleshooting.md
-│   │   ├── media_schema_migration.md
 │   │   ├── style.md
 │   │   └── website_overview.md
 │   ├── development/
@@ -147,6 +146,12 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   ├── session_37_implementation_guide.md
 │   │   │   ├── session_37_kickoff_prompt.md
 │   │   │   ├── session_37_resources.md
+│   │   │   ├── session_38_checklist.md
+│   │   │   ├── session_38_directory_map.md
+│   │   │   ├── session_38_implementation.md
+│   │   │   ├── session_38_kickoff_prompt.md
+│   │   │   ├── session_38b_checklist.md
+│   │   │   ├── session_38b_kickoff_prompt.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -157,22 +162,21 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_38_checklist.md
-│   │   ├── session_38_directory_map.md
-│   │   ├── session_38_implementation.md
-│   │   ├── session_38_kickoff_prompt.md
+│   │   ├── resource_directories_map.md
+│   │   ├── session_39_checklist.md
+│   │   ├── session_39_completion.md
+│   │   ├── session_39_implementation.md
+│   │   ├── session_39_kickoff.md
 │   │   └── version-sync.plan
 │   ├── features/
 │   │   ├── gallery_implementation.md
 │   │   ├── qr-scan-components.md
 │   │   └── qr-scanner-types.md
 │   ├── planning/
-│   │   ├── auth-cleanup.md
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-2024.pdf
 │   │   ├── deck.md
 │   │   ├── payment_subscription_design.md
-│   │   ├── permissions-analysis.md
 │   │   ├── project_budget_overview.md
 │   │   ├── request_for_product_RFP.md
 │   │   ├── roadmap.md
@@ -221,30 +225,6 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
 │   └── README.md
-├── merged-routes/
-├── migrations/
-│   ├── 01_create_media_table.sql
-│   ├── 01_update_media_schema.sql
-│   ├── 20240317000000_fix_role_capabilities_rls.sql
-│   ├── 20240317001000_standardize_role_capabilities.sql
-│   ├── 20240317002000_document_role_capabilities.sql
-│   ├── 20240317003000_add_profile_capabilities.sql
-│   ├── 20240317004000_align_roles_and_documentation.sql
-│   ├── 20240317004000_update_role_documentation.sql
-│   ├── 20240317004500_create_invitations_table.sql
-│   ├── 20240317005000_add_trial_fields.sql
-│   ├── 20240317005000_invited_user_capabilities.sql
-│   ├── 20240318000000_update_media_rls_policies.sql
-│   ├── 20240318001000_add_event_staff_role.sql
-│   ├── 20240318002000_setup_storage_buckets.sql
-│   ├── 20240318003000_update_media_rls_with_staff.sql
-│   ├── 20240318004000_setup_auth_email_templates.sql
-│   ├── 20240318005000_create_profiles_table.sql
-│   ├── 20250323205916_update_media_schema.sql
-│   ├── 20250323211204_update_media_schema.sql
-│   ├── 20250331_create_rsvps_table.sql
-│   ├── check_events_schema.sql
-│   └── setup_launch_partner.sql
 ├── public/
 │   ├── audio/
 │   │   └── success-beep.mp3
@@ -361,6 +341,12 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   ├── galleries/
 │   │   │   │   └── events/
 │   │   │   │       └── route.ts
+│   │   │   ├── gallery/
+│   │   │   │   └── check-access/
+│   │   │   │       └── route.ts
+│   │   │   ├── guests/
+│   │   │   │   └── reserve/
+│   │   │   │       └── route.ts
 │   │   │   ├── invitation/
 │   │   │   │   └── lookup/
 │   │   │   │       └── route.ts
@@ -368,11 +354,17 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   │   ├── [token]/
 │   │   │   │   │   └── validate/
 │   │   │   │   │       └── route.ts
+│   │   │   │   ├── accept/
+│   │   │   │   │   └── route.ts
 │   │   │   │   ├── bulk-create/
 │   │   │   │   │   └── route.ts
 │   │   │   │   ├── create/
 │   │   │   │   │   └── route.ts
+│   │   │   │   ├── resend/
+│   │   │   │   │   └── route.ts
 │   │   │   │   ├── send/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── staff/
 │   │   │   │   │   └── route.ts
 │   │   │   │   ├── stats/
 │   │   │   │   │   └── route.ts
@@ -434,6 +426,10 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   │   │   │   ├── moderation-content.tsx
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── event-gallery-content.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── register/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── staff/
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── upload/
 │   │   │   │   │   └── page.tsx
@@ -584,6 +580,8 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── rsvps/
 │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── staff/
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── create/
@@ -686,6 +684,10 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   ├── not-found.tsx
 │   │   └── page.tsx
 │   ├── components/
+│   │   ├── admin/
+│   │   │   ├── staff-invitation-form.tsx
+│   │   │   ├── staff-list-item.tsx
+│   │   │   └── staff-management.tsx
 │   │   ├── attendees/
 │   │   │   └── invitation-form.tsx
 │   │   ├── auth/
@@ -698,6 +700,7 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   ├── role-guard.tsx
 │   │   │   └── social-auth-buttons.tsx
 │   │   ├── camera/
+│   │   │   ├── camera-capture.tsx
 │   │   │   └── index.tsx
 │   │   ├── dashboard/
 │   │   │   ├── MediaStatsCard.tsx
@@ -765,11 +768,15 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   ├── gallery-grid.tsx
 │   │   │   ├── gallery-settings-form.tsx
 │   │   │   ├── gallery-tabs.tsx
+│   │   │   ├── guest-auth-check.tsx
+│   │   │   ├── guest-reservation-form.tsx
 │   │   │   ├── guest-upload-dropzone.tsx
 │   │   │   ├── index.ts
+│   │   │   ├── media-uploader.tsx
 │   │   │   ├── mock-data.ts
 │   │   │   ├── optimized-image.tsx
 │   │   │   ├── photo-lightbox.tsx
+│   │   │   ├── upload-button.tsx
 │   │   │   ├── upload-dropzone.tsx
 │   │   │   └── upload-with-tags.tsx
 │   │   ├── invitation/
@@ -820,6 +827,8 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   ├── query-provider.tsx
 │   │   │   ├── toast-provider.tsx
 │   │   │   └── tooltip-provider.tsx
+│   │   ├── rsvp/
+│   │   │   └── rsvp-form.tsx
 │   │   ├── settings/
 │   │   │   └── system-status.tsx
 │   │   ├── ui/
@@ -845,6 +854,7 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   ├── empty-state.tsx
 │   │   │   ├── form.tsx
 │   │   │   ├── icons.tsx
+│   │   │   ├── image-placeholder.tsx
 │   │   │   ├── index.ts
 │   │   │   ├── input.tsx
 │   │   │   ├── label.tsx
@@ -867,6 +877,7 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   ├── slider.tsx
 │   │   │   ├── sonner.tsx
 │   │   │   ├── spinner.tsx
+│   │   │   ├── staff-role-badge.tsx
 │   │   │   ├── switch.tsx
 │   │   │   ├── table.tsx
 │   │   │   ├── tabs.tsx
@@ -946,6 +957,7 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   │   └── rsvp.schema.ts
 │   │   ├── validations/
 │   │   │   ├── event.ts
+│   │   │   ├── rsvp-schema.ts
 │   │   │   └── rsvp.ts
 │   │   ├── analytics.ts
 │   │   ├── auth.ts
@@ -954,6 +966,7 @@ Generated: 2025-04-08T22:04:05.441Z
 │   │   ├── event-customization.ts
 │   │   ├── formatters.ts
 │   │   ├── index.ts
+│   │   ├── invitations.ts
 │   │   ├── qr-code.ts
 │   │   ├── query-helpers.ts
 │   │   ├── security-settings.ts
@@ -989,114 +1002,53 @@ Generated: 2025-04-08T22:04:05.441Z
 ├── supabase/
 │   ├── .temp/
 │   │   └── cli-latest
+│   ├── exports/
+│   │   ├── .DS_Store
+│   │   ├── Album Media Table Structure.csv
+│   │   ├── RSVPs Table Structure.csv
+│   │   ├── events_rows.csv
+│   │   ├── galleries_rows.csv
+│   │   ├── invitations_table_schema.csv
+│   │   ├── profiles_rows.csv
+│   │   ├── public_tables.csv
+│   │   └── roles_rows.csv
 │   ├── migrations/
-│   │   └── 20250404000000_rsvp_analytics.sql
+│   │   ├──  refined_sql.migration.sql
+│   │   ├── 01_create_media_table.sql
+│   │   ├── 01_update_media_schema.sql
+│   │   ├── 20240317000000_fix_role_capabilities_rls.sql
+│   │   ├── 20240317001000_standardize_role_capabilities.sql
+│   │   ├── 20240317002000_document_role_capabilities.sql
+│   │   ├── 20240317003000_add_profile_capabilities.sql
+│   │   ├── 20240317004000_align_roles_and_documentation.sql
+│   │   ├── 20240317004000_update_role_documentation.sql
+│   │   ├── 20240317004500_create_invitations_table.sql
+│   │   ├── 20240317005000_add_trial_fields.sql
+│   │   ├── 20240317005000_invited_user_capabilities.sql
+│   │   ├── 20240318000000_update_media_rls_policies.sql
+│   │   ├── 20240318001000_add_event_staff_role.sql
+│   │   ├── 20240318002000_setup_storage_buckets.sql
+│   │   ├── 20240318003000_update_media_rls_with_staff.sql
+│   │   ├── 20240318004000_setup_auth_email_templates.sql
+│   │   ├── 20240318005000_create_profiles_table.sql
+│   │   ├── 20250323205916_update_media_schema.sql
+│   │   ├── 20250323211204_update_media_schema.sql
+│   │   ├── 20250331_create_rsvps_table.sql
+│   │   ├── 20250404000000_rsvp_analytics.sql
+│   │   ├── 20250409000001_add_guests_gallery_permissions.sql
+│   │   ├── 20250410000001_add_contractor_roles.sql
+│   │   ├── check_events_schema.sql
+│   │   └── setup_launch_partner.sql
 │   ├── templates/
 │   │   └── auth_emails/
 │   │       ├── change_email_address.html
 │   │       ├── confirm_signup.html
-│   │       ├── invite_user_local.html
-│   │       ├── invite_user_sendgridremote.html
+│   │       ├── invite_user.html
 │   │       ├── magic_link.html
 │   │       ├── reauthentication.html
 │   │       └── reset_password.html
 │   ├── .gitignore
 │   └── config.toml
-├── supabase-exports/
-│   ├── Mar 17/
-│   │   ├── +.csv
-│   │   ├── Role Capabilities Migration.csv
-│   │   ├── Supabase Snippet Role Management Migration.csv
-│   │   ├── role_capabilities_rows (1).csv
-│   │   ├── role_capabilities_rows (2).csv
-│   │   ├── role_capabilities_rows.csv
-│   │   ├── roles_rows (1).csv
-│   │   └── roles_rows.csv
-│   ├── apr/
-│   │   ├── events_rows (1).csv
-│   │   └── events_rows.csv
-│   ├── mar-29/
-│   │   ├── Snippet Event Details Query.csv
-│   │   ├── Snippet Event and Gallery Overview.csv
-│   │   ├── events_rows (1).csv
-│   │   ├── events_rows.csv
-│   │   ├── galleries_rows (1).csv
-│   │   └── galleries_rows.csv
-│   ├── mar_18/
-│   │   ├── Supabase Snippet Detailed Table Definitions.csv
-│   │   ├── Supabase Snippet Retrieve Invitations.csv
-│   │   ├── Supabase Snippet Retrieve Table Structures and Constraints.csv
-│   │   ├── Supabase Snippet Retrieve Table Structures.csv
-│   │   ├── Supabase Snippet Table Definitions for Key Entities.csv
-│   │   ├── invitations_rows.csv
-│   │   ├── profiles_rows (1).csv
-│   │   ├── profiles_rows (2).csv
-│   │   ├── profiles_rows.csv
-│   │   ├── role_capabilities_rows.csv
-│   │   └── roles_rows.csv
-│   ├── march_25/
-│   │   ├── Album Media Table Structure.csv
-│   │   ├── Check Foreign Key Relationships for Media Table.csv
-│   │   ├── Check Media Table for Media Type.csv
-│   │   ├── Data Migration Verification.csv
-│   │   ├── Event Attendees Table Structure.csv
-│   │   ├── Examine Invitations Table Structure.csv
-│   │   ├── Media Table Structure.csv
-│   │   ├── Preview of Invitations.csv
-│   │   ├── events_rows (1).csv
-│   │   ├── events_rows.csv
-│   │   ├── events_rows_mar_23.csv
-│   │   ├── galleries_rows.csv
-│   │   ├── invitations_rows (1).csv
-│   │   ├── invitations_rows.csv
-│   │   ├── invitations_rows_mar_23.csv
-│   │   ├── profiles_rows (1).csv
-│   │   ├── profiles_rows.csv
-│   │   └── profiles_rows_mar_23.csv
-│   ├── march_27/
-│   │   ├── events_rows.csv
-│   │   ├── events_rows_mar_29.csv
-│   │   ├── galleries_rows.csv
-│   │   └── profiles_rows.csv
-│   ├── may_22/
-│   │   └── events_rows_lucy_50_added.csv
-│   ├── old/
-│   │   ├── Event Columns Information.csv
-│   │   ├── Event Table Schema.csv
-│   │   ├── List of Public Tables NEW.csv
-│   │   ├── List of Public Tables.csv
-│   │   ├── Marc Reichel - IMDb.mhtml
-│   │   ├── Photo Metadata.csv
-│   │   ├── Retrieve RLS Policies - NEW.csv
-│   │   ├── Retrieve Role Capabilities Policies - new.csv
-│   │   ├── Retrieve Role Capabilities Policies.csv
-│   │   ├── Supabase  Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
-│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (1).csv
-│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (2).csv
-│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (3).csv
-│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx) (4).csv
-│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx).csv
-│   │   ├── Supabase Snippet Retrieve Gallery Information by Event ID.csv
-│   │   ├── View RLS Policies for Galleries.csv
-│   │   ├── events_rows (1).csv
-│   │   ├── events_rows.csv
-│   │   ├── galleries_rows.csv
-│   │   ├── profiles_rows.csv
-│   │   ├── supabase_logs (1).csv
-│   │   ├── supabase_logs (2).csv
-│   │   ├── supabase_logs (3).csv
-│   │   ├── supabase_logs.csv
-│   │   └── supabase_logs_for_one_login.csv
-│   ├── .DS_Store
-│   ├── Invitations Table Schema.csv
-│   ├── RSVPs Table Structure.csv
-│   ├── Retrieve Foreign Key Constraints.csv
-│   ├── Supabase Snippet Add Thumbnail URL to Events.csv
-│   ├── Supabase Snippet List RLS Policies for RSVPs Table.csv
-│   ├── events_rows (1).csv
-│   ├── events_rows.csv
-│   ├── galleries_rows (1).csv
-│   └── galleries_rows.csv
 ├── .DS_Store
 ├── .eslintrc.json
 ├── .gitignore
@@ -1119,17 +1071,17 @@ Generated: 2025-04-08T22:04:05.441Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-252 directories, 858 files
+254 directories, 808 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11768 file(s)
-- tsx: 485 file(s)
-- js: 27835 file(s)
-- json: 2025 file(s)
-- md: 1495 file(s)
-- css: 26 file(s)
+- ts: 11800 file(s)
+- tsx: 499 file(s)
+- js: 28221 file(s)
+- json: 2181 file(s)
+- md: 1499 file(s)
+- css: 27 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns
