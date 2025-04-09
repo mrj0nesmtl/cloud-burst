@@ -1,4 +1,4 @@
-import { QRCodeParams } from '@/types/events'
+import { QRCodeParams as EventQRCodeParams } from '@/types/events'
 
 /**
  * Client-safe QR code utilities
@@ -16,22 +16,27 @@ export function generateQRCodeUrl(params: QRCodeParams): string {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://app.cloudburst.io';
   let targetUrl = '';
   
+  // Sanitize the event_id to prevent URL injection
+  const sanitizedEventId = params.event_id.replace(/[^\w-]/g, '');
+  
   switch (params.type) {
     case 'event':
-      targetUrl = `${baseUrl}/event/${params.event_id}`;
+      targetUrl = `${baseUrl}/event/${sanitizedEventId}`;
       break;
     case 'gallery':
-      targetUrl = `${baseUrl}/gallery/${params.event_id}`;
+      targetUrl = `${baseUrl}/gallery/${sanitizedEventId}`;
       break;
     case 'check-in':
-      targetUrl = `${baseUrl}/check-in/${params.event_id}`;
+      targetUrl = `${baseUrl}/check-in/${sanitizedEventId}`;
       break;
     default:
-      targetUrl = `${baseUrl}/event/${params.event_id}`;
+      targetUrl = `${baseUrl}/event/${sanitizedEventId}`;
   }
   
   // Using HTTPS and setting explicit size, format and error correction
-  return `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(targetUrl)}&size=300x300&format=png&ecc=H`;
+  // Ensure URL is properly encoded to prevent injection
+  const encodedUrl = encodeURIComponent(targetUrl);
+  return `https://api.qrserver.com/v1/create-qr-code/?data=${encodedUrl}&size=300x300&format=png&ecc=H`;
 }
 
 /**
