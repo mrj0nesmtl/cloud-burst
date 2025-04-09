@@ -46,6 +46,8 @@ export async function sendEmail(emailData: EmailData): Promise<boolean> {
     return false;
   }
 
+  console.log(`Preparing to send email to ${emailData.to} with template ${emailData.templateId}`);
+  
   try {
     const msg = {
       to: emailData.to,
@@ -54,12 +56,31 @@ export async function sendEmail(emailData: EmailData): Promise<boolean> {
       dynamicTemplateData: emailData.dynamicTemplateData,
     };
 
-    await sgMail.send(msg);
+    console.log(`Sending email with SendGrid: 
+      To: ${msg.to}
+      From: ${msg.from}
+      TemplateId: ${msg.templateId}
+    `);
+
+    const [response] = await sgMail.send(msg);
+    
     console.log(`Email sent successfully to ${emailData.to}`);
+    console.log(`SendGrid response status code: ${response?.statusCode}`);
+    
     return true;
-  } catch (error) {
-    console.error('Error sending email:', error);
-    throw new Error(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  } catch (err) {
+    console.error('Error sending email via SendGrid:', err);
+    
+    // Type check and handle the error object
+    const error = err as any;
+    if (error.response) {
+      console.error('SendGrid API error response:');
+      console.error(`Status code: ${error.response.status}`);
+      console.error(`Body: ${JSON.stringify(error.response.body, null, 2)}`);
+      console.error(`Headers: ${JSON.stringify(error.response.headers, null, 2)}`);
+    }
+    
+    return false;
   }
 }
 
@@ -84,22 +105,31 @@ export async function sendInvitationEmail(
     return false;
   }
 
+  console.log(`Sending invitation email to ${invitation.email} using template ${templateId}`);
+  console.log('Email data:', JSON.stringify(emailData, null, 2));
+
+  // Match exactly what the template expects
+  const dynamicTemplateData = {
+    eventName: emailData.eventName,
+    eventDate: emailData.eventDate,
+    eventLocation: emailData.eventLocation,
+    invitationLink: emailData.invitationLink,
+    hostName: emailData.hostName,
+    hostEmail: emailData.hostEmail
+  };
+  
+  console.log('Template data being sent:', JSON.stringify(dynamicTemplateData, null, 2));
+
   const data: EmailData = {
     to: invitation.email,
     templateId: templateId,
-    dynamicTemplateData: {
-      eventName: emailData.eventName,
-      eventDate: emailData.eventDate,
-      eventLocation: emailData.eventLocation,
-      invitationLink: emailData.invitationLink,
-      recipientName: emailData.recipientName || invitation.name,
-      token: invitation.token,
-      hostName: emailData.hostName,
-      hostEmail: emailData.hostEmail,
-      galleryLink: emailData.galleryLink,
-      message: emailData.message || '',
-    },
+    dynamicTemplateData
   };
 
-  return sendEmail(data);
+  try {
+    return await sendEmail(data);
+  } catch (error) {
+    console.error('Error in sendInvitationEmail:', error);
+    return false;
+  }
 } 

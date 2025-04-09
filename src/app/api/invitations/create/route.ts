@@ -147,6 +147,12 @@ export async function POST(request: NextRequest) {
         message: message || ''
       };
 
+      console.log(`Attempting to send invitation email to ${email}`);
+      console.log(`Base site URL: ${siteUrl}`);
+      console.log(`Invitation URL: ${inviteUrl}`);
+      console.log(`Event ID: ${eventId}, Event Name: ${event.name}`);
+      console.log(`Host details: ${hostName}, ${hostEmail}`);
+
       // Pass both required arguments to sendInvitationEmail
       const emailSent = await sendInvitationEmail(invitation, emailData);
 
