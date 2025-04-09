@@ -5,7 +5,7 @@
 
 ## Capture Every Moment
 
-[![Version](https://img.shields.io/badge/version-0.8.7-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
+[![Version](https://img.shields.io/badge/version-0.8.9-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -15,7 +15,7 @@
 
 ## Abstract 💡
 
-Cloud Burst represents the evolution of event media capture, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, enhanced gallery functionality, invitation system, RSVP capabilities, and AI-powered features, our platform now offers a comprehensive solution for event media management. Deployed in beta at [https://cb-beta.replit.app](https://cb-beta.replit.app), Cloud Burst maintains exceptional performance while delivering a seamless user experience across devices as we approach our April 7, 2025 beta release date.
+Cloud Burst represents the evolution of event media capture, bridging the gap between traditional charm and modern technology. With the implementation of role-based access control, custom event URLs, enhanced gallery functionality, invitation system, RSVP capabilities, and AI-powered features, our platform now offers a comprehensive solution for event media management. The latest enhancements include a sophisticated contractor management system with visual role indicators and specialized permissions, providing event organizers with powerful tools to collaborate with external professionals. Deployed in beta at [https://cb-beta.replit.app](https://cb-beta.replit.app), Cloud Burst maintains exceptional performance while delivering a seamless user experience across devices as we approach our April 30, 2025 beta release date.
 
 ## Crowd-Powered 🤳
 
@@ -134,6 +134,11 @@ Cloud Burst implements a sophisticated role-based access control system:
 - **Admin**: Administrative access (internal use only)
 - **Organizer**: Event management access (paid tier only)
 - **Event Host**: Create and manage own events (cannot delete)
+- **Event Staff**: Upload content and assist with event management
+- **Contractor**: External partner with limited event access
+- **Photographer**: External photographer with photo upload capabilities
+- **Technician**: Technical support with event setup permissions
+- **Marketing**: External partner with analytics and content access
 - **Invited User**: Invited attendee with QR code access
 - **User**: Standard user with basic platform access
 - **Guest**: Public access to view public events and galleries
@@ -189,7 +194,7 @@ graph LR
 
 ## 🔄 Current Status
 
-Cloud Burst is currently in beta (v0.8.3) with approximately 95% of core features implemented:
+Cloud Burst is currently in beta (v0.8.9) with approximately 97% of core features implemented:
 
 - ✅ Event management system
 - ✅ Role-based access control
@@ -208,24 +213,23 @@ Cloud Burst is currently in beta (v0.8.3) with approximately 95% of core feature
 - ✅ Mobile responsiveness optimization
 - ✅ Chart components for data visualization
 - ✅ AI Features framework
-- 🟡 Guest Onboarding & RSVP Flow (20% complete)
+- ✅ Guest reservation onboarding
+- ✅ Camera functionality implementation
+- ✅ Staff management with contractor roles
+- ✅ Role badge visualization system
 - 🟡 Media moderation (85% complete)
 - 🟡 Gallery masonry layout (95% complete)
 - 🟡 Analytics dashboard (65% complete)
 - 🟡 Album management system (60% complete)
-- 🟡 Camera implementation (30% complete)
-- 🟡 AI integration with media processing (10% complete)
+- 🟡 AI integration with media processing (25% complete)
 
-### Technical Debt (Session 33)
-- Guest Onboarding & RSVP Flow implementation
-- Magic Link authentication for guests
-- RSVP form with preference collection
+### Technical Debt (Session 39)
+- Integration of camera functionality with event galleries
+- Enhanced error handling for upload components
+- Additional test coverage for new components
+- AI features integration with TensorFlow.js
 - Analytics dashboard finalization
-- QR code scanner and camera enhancements
-- Final accessibility improvements
-- Enhanced keyboard navigation
-- TensorFlow.js integration for client-side AI processing
-- Complete documentation for new components
+- Enhanced keyboard navigation for improved accessibility
 
 We're targeting Beta 0.9.0 for internal testing by April 30, 2025, with public launch (v1.0.0) planned for May 15, 2025.
 
@@ -259,22 +263,24 @@ gantt
     RSVP Implementation     :done, e7, 2025-03-21, 5d
     Media Moderation        :done, e8, 2025-03-26, 3d
     Mobile Responsiveness   :done, e9, 2025-03-30, 4d
-    AI Features Framework   :active, e10, 2025-03-31, 5d
-    RSVP Flow Completion    :e11, 2025-03-27, 8d
+    Guest Reservation Flow  :done, e10, 2025-04-01, 5d
+    Camera Integration      :done, e11, 2025-04-05, 4d
+    Contractor Role Management :done, e12, 2025-04-09, 3d
+    AI Features Framework   :active, e13, 2025-04-10, 7d
     
     section Final Preparations
-    Beta v0.9.0 Release     :milestone, b1, 2025-04-07, 7d
-    Performance Tuning      :o1, 2025-04-08, 8d
-    Security Audit          :o2, 2025-04-15, 8d
-    Public Launch (v1.0.0)  :milestone, l3, 2025-04-22, 0d
+    Beta v0.9.0 Release     :milestone, b1, 2025-04-30, 0d
+    Performance Tuning      :o1, 2025-05-01, 8d
+    Security Audit          :o2, 2025-05-09, 5d
+    Public Launch (v1.0.0)  :milestone, l3, 2025-05-15, 0d
 ```
 
 ### Key Development Phases
 
 1. **Foundation Phase** (Feb 1-15, 2025): Project setup, authentication system, database schema design
 2. **Core Functionality Phase** (Feb 16-Mar 1, 2025): Event management, basic media upload, user roles
-3. **Enhanced Features Phase** (Mar 2-Mar 31, 2025): Advanced gallery, navigation, authentication refinements, invitation system, RSVP functionality, AI features
-4. **Final Preparations Phase** (Apr 1-Apr 7, 2025): Performance tuning, security audit, public launch preparations
+3. **Enhanced Features Phase** (Mar 2-Apr 9, 2025): Advanced gallery, navigation, authentication refinements, invitation system, RSVP functionality, guest reservation, camera integration, contractor role management
+4. **Final Preparations Phase** (Apr 10-Apr 30, 2025): AI features, performance tuning, security audit, public launch preparations
 
 ## 🚀 Getting Started
 

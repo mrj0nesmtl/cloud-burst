@@ -1,8 +1,8 @@
 # gallery Directory Structure
-Generated: 2025-04-08T22:04:20.860Z
+Generated: 2025-04-09T21:52:30.697Z
 
 ## Overview
-This directory contains 20 component(s).
+This directory contains 24 component(s).
 
 
 
@@ -25,21 +25,25 @@ This directory contains 20 component(s).
 ├── gallery-grid.tsx
 ├── gallery-settings-form.tsx
 ├── gallery-tabs.tsx
+├── guest-auth-check.tsx
+├── guest-reservation-form.tsx
 ├── guest-upload-dropzone.tsx
 ├── index.ts
+├── media-uploader.tsx
 ├── mock-data.ts
 ├── optimized-image.tsx
 ├── photo-lightbox.tsx
+├── upload-button.tsx
 ├── upload-dropzone.tsx
 └── upload-with-tags.tsx
 
-1 directory, 23 files
+1 directory, 27 files
 
 ```
 
 ## File Type Breakdown
 - ts: 2 file(s)
-- tsx: 20 file(s)
+- tsx: 24 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

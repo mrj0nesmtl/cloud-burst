@@ -1,8 +1,8 @@
 # ui Directory Structure
-Generated: 2025-04-08T22:04:21.385Z
+Generated: 2025-04-09T21:52:31.053Z
 
 ## Overview
-This directory contains 49 component(s).
+This directory contains 51 component(s).
 
 
 
@@ -31,6 +31,7 @@ This directory contains 49 component(s).
 ├── empty-state.tsx
 ├── form.tsx
 ├── icons.tsx
+├── image-placeholder.tsx
 ├── index.ts
 ├── input.tsx
 ├── label.tsx
@@ -53,6 +54,7 @@ This directory contains 49 component(s).
 ├── slider.tsx
 ├── sonner.tsx
 ├── spinner.tsx
+├── staff-role-badge.tsx
 ├── switch.tsx
 ├── table.tsx
 ├── tabs.tsx
@@ -62,13 +64,13 @@ This directory contains 49 component(s).
 ├── tooltip.tsx
 └── use-toast.ts
 
-2 directories, 51 files
+2 directories, 53 files
 
 ```
 
 ## File Type Breakdown
 - ts: 2 file(s)
-- tsx: 49 file(s)
+- tsx: 51 file(s)
 
 ## Ignored Patterns
 - node_modules

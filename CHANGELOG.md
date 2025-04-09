@@ -36,75 +36,103 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Magic Link authentication for guests
 - Enhanced Analytics dashboard with real-time metrics
 
-## [0.8.7] - 2025-04-10
+## [0.8.9] - 2025-04-09
+
+### Added
+- Contractor roles (contractor, photographer, technician, marketing) to the database and TypeScript definitions
+- StaffRoleBadge component for visually indicating different staff and contractor roles
+- StaffListItem component for consistent display of staff members
+- Role-specific descriptions in the staff invitation form
+- Guest reservation form with Zod validation
+- Guest API endpoint for gallery access registration
+- Magic link authentication for guests
+- Camera capture functionality for direct photo uploads
+- Combined upload button with tabs for different upload methods
+- Database schema for guests and gallery permissions
+- Row Level Security (RLS) policies for guest access
+
+### Changed
+- Enhanced staff management UI to differentiate between internal staff and external contractors
+- Updated staff invitation form with role-specific descriptions and icons
+- Improved gallery access controls with permissions system
+- Updated project documentation to reflect recent progress
+- Updated timeline for beta release to April 30, 2025
+
 ### Fixed
-- Fixed TypeScript errors in invitation management components
-- Resolved type safety issues in event duplication functionality
-- Enhanced type definitions for EventCount and related interfaces
-- Fixed middleware to allow public access to the events page without requiring login
-- Added proper type assertions for Supabase queries in fetchEventName function
-- Enhanced invitation API response with improved event data handling
-- Added fallback mechanism to fetch missing event names directly from the database
+- Type validation for user roles in event page component
 
-## [0.8.6] - 2025-04-2
-### Added in Session 36 (April 2, 2025)
-- **Enhanced Public Gallery Page**:
-  - Implemented modern responsive design with auto-filling grid
-  - Added hover effects and animations for event cards
-  - Improved image display with hover zoom effects and gradient overlays
-  - Optimized for mobile with responsive text sizing and button layouts
-  - Ensured accessibility with proper contrast and text clipping
-  - Implemented consistent styling across all event card components
-  - Added status-colored backgrounds for event thumbnails without images
-  - Enhanced visual hierarchy with improved typography and spacing
+## [0.8.8] - 2025-03-30
 
-### Planned for Session 37 (April 17, 2025)
-- **Public-Facing RSVP System**:
-  - Public invitation landing page
-  - RSVP form component with validation
-  - RSVP confirmation UI components
-  - Form submission and error handling
-  - Security enhancements for invitation tokens
+### Added
+- Mobile responsive design enhancements
+- Better viewport awareness to layout-critical components
+- Invitation functionality with database logging
+- RSVP system implementation
 
-- **Magic Link Authentication**:
-  - Invitation-aware magic links
-  - Guest session state management
-  - Secure authentication redirects
-  - Error handling for authentication issues
+### Changed
+- Optimized gallery tabs for better mobile display
+- Enhanced component spacing and layout for better mobile experience
+- Refined card components for consistent appearance across devices
 
-## [0.8.5] - 2025-04-02
-### Added in Session 35 (April 2, 2025)
-- **QR Scanner Enhancements**:
-  - Simplified QR scanner implementation with self-contained component
-  - Fixed camera initialization and performance issues
-  - Improved error handling and user feedback during scanning
-  - Added performance optimizations for smooth scanning experience
-  - Reduced requestAnimationFrame violations with better scheduling
-  - Enhanced image processing with downsampling for better performance
-  - Fixed TypeScript errors in camera-related components
-  - Added proper lifecycle management for camera resources
+### Fixed
+- Mobile overflow issues in Gallery and Event Galleries components
+- Responsive layout in Facial Recognition AI page
+- Added proper inline styling for mobile stacking on key pages
 
-### Added in Session 34 (April 8, 2025)
-- **RSVP System Dashboard Integration**:
-  - Integrated RSVP dashboard within event details page
-  - Enhanced tab navigation for seamless RSVP management
-  - Improved loading states for RSVP data fetching
-  - Added error handling for RSVP components
-  - Created responsive designs for desktop and mobile views
+## [0.8.7] - 2025-03-21
 
-- **UI Enhancements**:
-  - Improved card styling for better visibility in both light and dark modes
-  - Enhanced visual hierarchy in event details display
-  - Added proper color coding for status indicators
-  - Fixed layout issues in event details view
-  - Optimized component styling for consistent user experience
+### Added
+- Comprehensive invitation system with tracking
+- SendGrid integration for email delivery
+- Secure API endpoint usage
+- Enhanced form validation
 
-- **TypeScript and Development Improvements**:
-  - Fixed TypeScript errors in RSVP components
-  - Enhanced type definitions for invitation data
-  - Implemented proper type safety for form data
-  - Improved error handling patterns
-  - Enhanced documentation for RSVP system architecture
+### Changed
+- Optimized memory usage
+- Simplified architecture for better performance
+
+### Fixed
+- State management issues
+- Type safety improvements with TypeScript definition files
+
+## [0.8.6] - 2025-03-15
+
+### Added
+- Interactive map with Leaflet integration
+- Event markers on maps
+- Optimized dashboard layout
+
+### Fixed
+- Database security issues
+- Navigation recovery
+
+## [0.8.5] - 2025-03-10
+
+### Added
+- Advanced gallery layouts
+- Media upload foundation
+- User roles and permissions refinement
+
+### Fixed
+- Authentication repair
+- Navigation improvements
+
+## [0.8.0] - 2025-03-01
+
+### Added
+- Core event management system
+- Basic media upload
+- User roles and permissions
+- Authentication system with Supabase
+- Dashboard foundation
+
+## [0.7.0] - 2025-02-15
+
+### Added
+- Project setup
+- Initial authentication
+- Database schema design
+- Repository structure
 
 ## [0.8.4] - 2025-03-31
 ### Added in Session 33 (March 31, 2025)

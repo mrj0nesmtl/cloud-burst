@@ -1,14 +1,18 @@
 # components Directory Structure
-Generated: 2025-04-08T22:04:20.485Z
+Generated: 2025-04-09T21:52:30.514Z
 
 ## Overview
-This directory contains 168 component(s).
+This directory contains 179 component(s).
 
 
 
 ## Directory Tree
 ```
 ./src/components/
+├── admin/
+│   ├── staff-invitation-form.tsx
+│   ├── staff-list-item.tsx
+│   └── staff-management.tsx
 ├── attendees/
 │   └── invitation-form.tsx
 ├── auth/
@@ -21,6 +25,7 @@ This directory contains 168 component(s).
 │   ├── role-guard.tsx
 │   └── social-auth-buttons.tsx
 ├── camera/
+│   ├── camera-capture.tsx
 │   └── index.tsx
 ├── dashboard/
 │   ├── MediaStatsCard.tsx
@@ -88,11 +93,15 @@ This directory contains 168 component(s).
 │   ├── gallery-grid.tsx
 │   ├── gallery-settings-form.tsx
 │   ├── gallery-tabs.tsx
+│   ├── guest-auth-check.tsx
+│   ├── guest-reservation-form.tsx
 │   ├── guest-upload-dropzone.tsx
 │   ├── index.ts
+│   ├── media-uploader.tsx
 │   ├── mock-data.ts
 │   ├── optimized-image.tsx
 │   ├── photo-lightbox.tsx
+│   ├── upload-button.tsx
 │   ├── upload-dropzone.tsx
 │   └── upload-with-tags.tsx
 ├── invitation/
@@ -143,6 +152,8 @@ This directory contains 168 component(s).
 │   ├── query-provider.tsx
 │   ├── toast-provider.tsx
 │   └── tooltip-provider.tsx
+├── rsvp/
+│   └── rsvp-form.tsx
 ├── settings/
 │   └── system-status.tsx
 ├── ui/
@@ -168,6 +179,7 @@ This directory contains 168 component(s).
 │   ├── empty-state.tsx
 │   ├── form.tsx
 │   ├── icons.tsx
+│   ├── image-placeholder.tsx
 │   ├── index.ts
 │   ├── input.tsx
 │   ├── label.tsx
@@ -190,6 +202,7 @@ This directory contains 168 component(s).
 │   ├── slider.tsx
 │   ├── sonner.tsx
 │   ├── spinner.tsx
+│   ├── staff-role-badge.tsx
 │   ├── switch.tsx
 │   ├── table.tsx
 │   ├── tabs.tsx
@@ -207,13 +220,13 @@ This directory contains 168 component(s).
 ├── shell.tsx
 └── theme-provider.tsx
 
-22 directories, 176 files
+24 directories, 187 files
 
 ```
 
 ## File Type Breakdown
 - ts: 6 file(s)
-- tsx: 169 file(s)
+- tsx: 180 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

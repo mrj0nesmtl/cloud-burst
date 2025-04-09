@@ -1,9 +1,9 @@
 # protected Directory Structure
-Generated: 2025-04-08T22:04:17.816Z
+Generated: 2025-04-09T21:52:28.286Z
 
 ## Overview
 
-This directory contains 55 route(s).
+This directory contains 56 route(s).
 
 
 ## Directory Tree
@@ -99,6 +99,8 @@ This directory contains 55 route(s).
 │   │   │   └── page.tsx
 │   │   ├── rsvps/
 │   │   │   └── page.tsx
+│   │   ├── staff/
+│   │   │   └── page.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
 │   ├── create/
@@ -189,13 +191,13 @@ This directory contains 55 route(s).
 │   └── page.tsx
 └── layout.tsx
 
-64 directories, 116 files
+65 directories, 117 files
 
 ```
 
 ## File Type Breakdown
 - ts: 1 file(s)
-- tsx: 106 file(s)
+- tsx: 107 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-08T22:04:11.571Z
+Generated: 2025-04-09T21:52:26.376Z
 
 ## Overview
 
@@ -23,7 +23,6 @@ Generated: 2025-04-08T22:04:11.571Z
 │   ├── UI_components.md
 │   ├── consistent-layout.md
 │   ├── layout-troubleshooting.md
-│   ├── media_schema_migration.md
 │   ├── style.md
 │   └── website_overview.md
 ├── development/
@@ -108,6 +107,12 @@ Generated: 2025-04-08T22:04:11.571Z
 │   │   ├── session_37_implementation_guide.md
 │   │   ├── session_37_kickoff_prompt.md
 │   │   ├── session_37_resources.md
+│   │   ├── session_38_checklist.md
+│   │   ├── session_38_directory_map.md
+│   │   ├── session_38_implementation.md
+│   │   ├── session_38_kickoff_prompt.md
+│   │   ├── session_38b_checklist.md
+│   │   ├── session_38b_kickoff_prompt.md
 │   │   ├── session_4.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
@@ -118,22 +123,20 @@ Generated: 2025-04-08T22:04:11.571Z
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_38_checklist.md
-│   ├── session_38_directory_map.md
-│   ├── session_38_implementation.md
-│   ├── session_38_kickoff_prompt.md
+│   ├── session_39_checklist.md
+│   ├── session_39_completion.md
+│   ├── session_39_implementation.md
+│   ├── session_39_kickoff.md
 │   └── version-sync.plan
 ├── features/
 │   ├── gallery_implementation.md
 │   ├── qr-scan-components.md
 │   └── qr-scanner-types.md
 ├── planning/
-│   ├── auth-cleanup.md
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-2024.pdf
 │   ├── deck.md
 │   ├── payment_subscription_design.md
-│   ├── permissions-analysis.md
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
 │   ├── roadmap.md
@@ -160,6 +163,7 @@ Generated: 2025-04-08T22:04:11.571Z
 │   ├── planning_tree.md
 │   ├── protected_tree.md
 │   ├── public_tree.md
+│   ├── resource_directories_map.md
 │   ├── scan_tree.md
 │   ├── store_tree.md
 │   ├── styles_tree.md
@@ -183,12 +187,12 @@ Generated: 2025-04-08T22:04:11.571Z
 ├── .DS_Store
 └── README.md
 
-11 directories, 163 files
+11 directories, 167 files
 
 ```
 
 ## File Type Breakdown
-- md: 158 file(s)
+- md: 162 file(s)
 
 ## Ignored Patterns
 - node_modules

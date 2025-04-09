@@ -6,18 +6,19 @@ import { format } from 'date-fns'
 import { createServerClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { Database } from '@/types/supabase'
-import { Invitation, RSVP } from '@/types/rsvp'
+import { InvitationWithEvent } from '@/lib/invitations'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { RsvpForm } from './rsvp-form'
+import { RsvpForm } from '@/components/rsvp/rsvp-form'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, MapPin, Clock, User, Lock } from 'lucide-react'
+import { Calendar, MapPin, Clock, User, Lock, AlertTriangle } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
-import { validateInvitationToken, getEventForInvitation } from '@/lib/supabase/invitations'
+import { validateInvitationToken } from '@/lib/invitations'
 import { MagicLinkAuth } from '@/components/invitations/magic-link-auth'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -53,228 +54,110 @@ export async function generateMetadata({ params }: InvitationPageProps): Promise
   }
 }
 
+// Use the exact types from the RsvpForm component
+type Event = {
+  id: string
+  name: string
+  host_name?: string
+  description?: string
+  start_date?: string
+  end_date?: string
+  location?: string
+}
+
+type Invitation = {
+  id: string
+  email?: string
+  event_id: string
+  status: string
+  expires_at?: string | null
+}
+
 export default async function InvitationPage({ params }: InvitationPageProps) {
   const { token } = params
   
-  if (!token) {
+  // Validate the invitation token using our existing function
+  const result = await validateInvitationToken(token)
+  
+  // Handle validation result with the correct properties
+  if (!result.valid) {
+    if (result.expired) {
+      return redirect(`/invitation/expired?token=${token}`)
+    } else if (result.error && result.error.includes('already been used')) {
+      return redirect(`/invitation/used?token=${token}${result.invitation?.event.id ? `&eventId=${result.invitation.event.id}` : ''}`)
+    } else {
+      return notFound()
+    }
+  }
+  
+  // Extract event and invitation from the validated result
+  const validatedInvitation = result.invitation
+  
+  if (!validatedInvitation || !validatedInvitation.event) {
     return notFound()
   }
-  
-  // Validate the invitation token using our new helper function
-  const invitation = await validateInvitationToken(token)
-  
-  if (!invitation) {
-    // Redirect to expired page if token is invalid or expired
-    return redirect(`/invitation/expired?token=${token}`)
+
+  // Convert to the format needed by RsvpForm component
+  const invitation: Invitation = {
+    id: validatedInvitation.id,
+    event_id: validatedInvitation.event.id,
+    email: validatedInvitation.email || undefined,
+    status: validatedInvitation.status,
+    expires_at: validatedInvitation.expires_at
   }
-  
-  // Set token in app.settings for RLS policies
-  const cookieStore = cookies()
-  const supabase = await createServerClient({ cookies: () => cookieStore })
-  
-  await (supabase as any).rpc('set_invitation_token', {
-    token: token
-  })
-  
-  // Get event details using our new helper function
-  const event = await getEventForInvitation(invitation.event_id)
-  
-  if (!event) {
-    console.error('Event not found for invitation')
-    return notFound()
+
+  const event: Event = {
+    id: validatedInvitation.event.id,
+    name: validatedInvitation.event.name,
+    description: validatedInvitation.event.description || undefined,
+    location: validatedInvitation.event.location || undefined,
+    // Converting date fields to the expected format
+    start_date: validatedInvitation.event.date || undefined
   }
-  
-  // Get event organizer
-  const { data: organizer } = await supabase
-    .from('profiles')
-    .select('id, full_name')
-    .eq('id', event.organizer_id || '')
-    .single()
-  
-  // Get RSVP data if exists
-  const { data: rsvp } = await supabase
-    .from('rsvps')
-    .select('*')
-    .eq('invitation_id', invitation.id)
-    .maybeSingle()
-  
-  // Check if user is authenticated
-  const { data: { session } } = await supabase.auth.getSession()
-  const isAuthenticated = !!session?.user
-  
-  // Format event date
-  const eventDate = event.date ? formatDate(event.date) : 'Date to be determined'
-  
+
+  // If we get here, we have a valid invitation
   return (
-    <div className="container max-w-4xl mx-auto py-8 px-4">
-      <Card className="overflow-hidden">
-        {event.cover_image_url && (
-          <div className="relative w-full h-40 md:h-60">
-            <Image
-              src={event.cover_image_url}
-              alt={event.name || ''}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
-        
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl md:text-3xl">{event.name}</CardTitle>
-              <CardDescription>
-                You've been invited by {organizer?.full_name || 'the event organizer'}
-              </CardDescription>
+    <div className="container max-w-3xl py-10">
+      <Card className="w-full">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">You're invited!</CardTitle>
+          <CardDescription className="text-lg">
+            {event.name}
+          </CardDescription>
+          {event.start_date && (
+            <div className="mt-2 flex items-center justify-center text-sm text-muted-foreground">
+              <Calendar className="mr-1 h-4 w-4" />
+              <span>{formatDate(event.start_date)}</span>
             </div>
-            <Badge variant="outline" className="ml-2">
-              {invitation.rsvp_status === 'accepted' 
-                ? 'Accepted' 
-                : invitation.rsvp_status === 'declined' 
-                ? 'Declined' 
-                : 'Awaiting Response'}
-            </Badge>
-          </div>
+          )}
         </CardHeader>
-        
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div>
-                  <h4 className="font-medium">Date</h4>
-                  <p className="text-sm text-muted-foreground">{eventDate}</p>
-                </div>
-              </div>
-              
-              {event.location && (
-                <div className="flex items-start space-x-3">
-                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <h4 className="font-medium">Location</h4>
-                    <p className="text-sm text-muted-foreground">{event.location}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="space-y-4">
-              {invitation.name && (
-                <div className="flex items-start space-x-3">
-                  <User className="h-5 w-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <h4 className="font-medium">Invited Guest</h4>
-                    <p className="text-sm text-muted-foreground">{invitation.name}</p>
-                  </div>
-                </div>
-              )}
-              
-              {invitation.expires_at && (
-                <div className="flex items-start space-x-3">
-                  <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <h4 className="font-medium">RSVP Deadline</h4>
-                    <p className="text-sm text-muted-foreground">
-                      {invitation.expires_at ? formatDate(invitation.expires_at) : ''}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          
+        <CardContent>
           {event.description && (
-            <div>
-              <h4 className="font-medium mb-2">Event Details</h4>
-              <p className="text-sm text-muted-foreground whitespace-pre-line">
-                {event.description}
-              </p>
+            <div className="mb-6 rounded-lg bg-secondary p-4 text-secondary-foreground">
+              <p>{event.description}</p>
             </div>
           )}
           
-          <Separator className="my-6" />
+          <Alert className="mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Important</AlertTitle>
+            <AlertDescription>
+              By responding to this invitation, you'll create an account that lets you view event photos and upload your own.
+            </AlertDescription>
+          </Alert>
           
-          {!isAuthenticated ? (
-            <div className="space-y-4">
-              <div className="flex items-center justify-center gap-2 text-center mb-4">
-                <Lock className="h-5 w-5 text-primary" />
-                <h3 className="text-xl font-semibold">Secure Access</h3>
-              </div>
-              
-              <Tabs defaultValue="magic-link" className="w-full">
-                <TabsList className="grid w-full grid-cols-1">
-                  <TabsTrigger value="magic-link">Continue with Magic Link</TabsTrigger>
-                </TabsList>
-                <TabsContent value="magic-link" className="mt-4">
-                  <MagicLinkAuth 
-                    invitationToken={token}
-                    redirectUrl={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/invitation/${token}`}
-                    title="Secure your RSVP"
-                    description="Enter your email to receive a secure access link"
-                  />
-                </TabsContent>
-              </Tabs>
-              
-              <div className="text-center text-sm text-muted-foreground mt-4">
-                <p>Please authenticate to respond to this invitation</p>
-                <p className="mt-1">We use a secure, passwordless login system</p>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <h3 className="text-xl font-semibold text-center mb-4">RSVP</h3>
-              <RsvpForm 
-                invitation={{
-                  id: invitation.id,
-                  event_id: invitation.event_id,
-                  email: invitation.email || '',
-                  name: invitation.name || '',
-                  token: token,
-                  status: invitation.status as any,
-                  rsvp_status: invitation.rsvp_status as any,
-                  expires_at: invitation.expires_at,
-                  metadata: {
-                    notes: (invitation.metadata as any)?.notes,
-                    dietary_preferences: (invitation.metadata as any)?.dietary_preferences,
-                    plus_one_allowed: (invitation.metadata as any)?.plus_one_allowed || false,
-                    plus_one_used: (invitation.metadata as any)?.plus_one_used || false,
-                    magic_link: (invitation.metadata as any)?.magic_link
-                  },
-                  created_at: invitation.created_at,
-                  sent_at: invitation.sent_at || null,
-                  updated_at: invitation.updated_at || invitation.created_at,
-                  rsvp_date: invitation.rsvp_date as any
-                }}
-                token={token}
-                rsvp={rsvp ? {
-                  id: rsvp.id,
-                  status: rsvp.status,
-                  guest_count: rsvp.guest_count,
-                  dietary_restrictions: rsvp.dietary_restrictions || undefined,
-                  notes: rsvp.notes || undefined
-                } : null}
-              />
-            </div>
-          )}
+          <RsvpForm 
+            invitation={invitation} 
+            event={event} 
+            token={token} 
+          />
+          
+          <div className="mt-4 text-center text-sm text-muted-foreground">
+            <p>
+              Already responded? <Link href={`/events/${event.id}/gallery`} className="text-primary underline">View the gallery</Link>
+            </p>
+          </div>
         </CardContent>
-        
-        <CardFooter className="flex flex-col gap-4 sm:flex-row sm:justify-between">
-          <Button variant="outline" asChild>
-            <Link href="/">
-              Back to Home
-            </Link>
-          </Button>
-          
-          {(invitation.metadata as any)?.magic_link && (
-            <Button variant="outline" asChild>
-              <Link href={(invitation.metadata as any)?.magic_link}>
-                Sign in to your account
-              </Link>
-            </Button>
-          )}
-        </CardFooter>
       </Card>
     </div>
   )

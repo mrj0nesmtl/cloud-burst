@@ -1,22 +1,23 @@
 # camera Directory Structure
-Generated: 2025-04-08T22:04:22.435Z
+Generated: 2025-04-09T21:52:31.891Z
 
 ## Overview
-This directory contains 0 component(s).
+This directory contains 1 component(s).
 
-This directory contains 1 QR/Camera scanning related file(s).
+This directory contains 2 QR/Camera scanning related file(s).
 
 ## Directory Tree
 ```
 ./src/components/camera/
+├── camera-capture.tsx
 └── index.tsx
 
-1 directory, 1 file
+1 directory, 2 files
 
 ```
 
 ## File Type Breakdown
-- tsx: 1 file(s)
+- tsx: 2 file(s)
 
 ## Ignored Patterns
 - node_modules

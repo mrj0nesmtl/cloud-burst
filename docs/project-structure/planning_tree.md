@@ -1,5 +1,5 @@
 # planning Directory Structure
-Generated: 2025-04-08T22:04:25.316Z
+Generated: 2025-04-09T21:52:33.973Z
 
 ## Overview
 
@@ -9,23 +9,21 @@ Generated: 2025-04-08T22:04:25.316Z
 ## Directory Tree
 ```
 ./docs/planning/
-├── auth-cleanup.md
 ├── business_proposition.md
 ├── ca-en-merchant-fees-2024.pdf
 ├── deck.md
 ├── payment_subscription_design.md
-├── permissions-analysis.md
 ├── project_budget_overview.md
 ├── request_for_product_RFP.md
 ├── roadmap.md
 └── statement_of_work.md
 
-1 directory, 10 files
+1 directory, 8 files
 
 ```
 
 ## File Type Breakdown
-- md: 9 file(s)
+- md: 7 file(s)
 
 ## Ignored Patterns
 - node_modules
