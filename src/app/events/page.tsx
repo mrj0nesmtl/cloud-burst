@@ -7,6 +7,8 @@ import { getPublicEvents } from '@/lib/supabase/events.server'
 import { formatDate } from '@/lib/utils'
 import { CalendarDays, MapPin, Camera, ArrowRight } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 
 export const metadata: Metadata = {
   title: 'Public Events | Cloud Burst',
@@ -14,11 +16,21 @@ export const metadata: Metadata = {
 }
 
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
+export const revalidate = 60
 
 export default async function PublicEventsPage() {
-  // Fetch all public events
-  const events = await getPublicEvents()
+  const supabase = createServerComponentClient({ cookies })
+  
+  // Fetch public events with galleries
+  const { data: events } = await supabase
+    .from('events')
+    .select(`
+      id, name, date, location, cover_image_url,
+      is_gallery_public, description, logo_url
+    `)
+    .eq('is_gallery_public', true)
+    .order('date', { ascending: false })
+    .limit(20)
   
   return (
     <main className="w-full min-h-screen bg-background">
@@ -98,41 +110,7 @@ export default async function PublicEventsPage() {
         margin: '0 auto',
         padding: '3rem 1rem'
       }}>
-        {events.length === 0 ? (
-          <div style={{
-            textAlign: 'center',
-            padding: '3rem 1rem',
-            backgroundColor: 'var(--card)',
-            borderRadius: 'var(--radius)',
-            boxShadow: 'var(--shadow-sm)',
-            border: '1px solid var(--border)'
-          }}>
-            <Camera style={{
-              width: '3rem',
-              height: '3rem',
-              margin: '0 auto 1rem',
-              color: 'var(--muted-foreground)'
-            }} />
-            <h2 style={{
-              fontSize: '1.5rem',
-              fontWeight: 600,
-              marginBottom: '1rem'
-            }}>No public events available</h2>
-            <p style={{
-              color: 'var(--muted-foreground)',
-              marginBottom: '2rem',
-              maxWidth: '28rem',
-              margin: '0 auto 2rem'
-            }}>
-              There are currently no public events to display. Check back later or create your own event!
-            </p>
-            <Button className="bg-blue-500 hover:bg-blue-600" asChild>
-              <Link href="/auth/register">
-                Create Event
-              </Link>
-            </Button>
-          </div>
-        ) : (
+        {events && events.length > 0 ? (
           <>
             <div style={{
               display: 'flex',
@@ -319,6 +297,40 @@ export default async function PublicEventsPage() {
               ))}
             </div>
           </>
+        ) : (
+          <div style={{
+            textAlign: 'center',
+            padding: '3rem 1rem',
+            backgroundColor: 'var(--card)',
+            borderRadius: 'var(--radius)',
+            boxShadow: 'var(--shadow-sm)',
+            border: '1px solid var(--border)'
+          }}>
+            <Camera style={{
+              width: '3rem',
+              height: '3rem',
+              margin: '0 auto 1rem',
+              color: 'var(--muted-foreground)'
+            }} />
+            <h2 style={{
+              fontSize: '1.5rem',
+              fontWeight: 600,
+              marginBottom: '1rem'
+            }}>No public events available</h2>
+            <p style={{
+              color: 'var(--muted-foreground)',
+              marginBottom: '2rem',
+              maxWidth: '28rem',
+              margin: '0 auto 2rem'
+            }}>
+              There are currently no public events to display. Check back later or create your own event!
+            </p>
+            <Button className="bg-blue-500 hover:bg-blue-600" asChild>
+              <Link href="/auth/register">
+                Create Event
+              </Link>
+            </Button>
+          </div>
         )}
       </div>
     </main>

@@ -29,7 +29,7 @@ graph TD
     R --> S[Update Invitation Status]
     S --> T[Send Confirmation]
     T --> U[Update Dashboard]
-
+!
     E --> V[Scan QR Code]
     V --> W[Camera Access]
     W --> X[Process QR Image]
