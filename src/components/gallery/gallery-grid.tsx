@@ -241,7 +241,7 @@ export function GalleryGrid({
   // Render loading skeletons
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {Array.from({ length: 8 }).map((_, index) => (
           <Card key={`skeleton-${index}`} className="overflow-hidden">
             <CardContent className="p-0">
@@ -267,7 +267,7 @@ export function GalleryGrid({
   // Render filtered empty state
   if (filteredPhotos.length === 0 && photos.length > 0) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* Controls */}
         <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
           {/* Search */}
@@ -403,7 +403,7 @@ export function GalleryGrid({
     const currentPhoto = filteredPhotos[slideIndex]
     
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* Controls */}
         <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
           {/* Search */}
@@ -621,7 +621,7 @@ export function GalleryGrid({
   
   // Render grid or masonry layout
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Controls */}
       <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
         {/* Search */}
@@ -783,7 +783,7 @@ export function GalleryGrid({
       <div className="relative">
         {/* Grid Layout */}
         {(currentLayout as GalleryLayout) === 'grid' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {filteredPhotos.map((photo, index) => (
               <Card 
                 key={photo.id} 
@@ -819,7 +819,7 @@ export function GalleryGrid({
         
         {/* Masonry Layout */}
         {(currentLayout as GalleryLayout) === 'masonry' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[200px] gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[200px] gap-4 md:gap-6">
             {filteredPhotos.map((photo, index) => {
               // Determine if the photo should span multiple rows based on aspect ratio
               const rowSpan = photo.width && photo.height 

@@ -16,7 +16,14 @@ import {
   Users,
   MapPin,
   ImageIcon,
-  ChevronRight
+  ChevronRight,
+  ArrowUp,
+  ArrowDown,
+  GlobeIcon,
+  MapIcon,
+  ArrowRight,
+  CalendarPlus,
+  Pencil
 } from 'lucide-react';
 import { EventsMapClientWrapper } from './map-client-wrapper';
 import { StatsMapWrapper } from './stats-map-wrapper';
@@ -35,29 +42,82 @@ interface Event {
   cover_image_url?: string | null;
 }
 
+// Date formatting utility
+const formatDate = (dateString: string): string => {
+  if (!dateString) return 'No date set';
+  
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Invalid date';
+    
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    }).format(date);
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid date';
+  }
+};
+
 export default function ManageEventsPage() {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<Event[]>([]);
   const [attendeeCounts, setAttendeeCounts] = useState<Record<string, number>>({});
   const [user, setUser] = useState<any>(null);
   
-  // Mobile detection
+  // Mobile detection - use breakpoints that align with standard device sizes
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [isLightMode, setIsLightMode] = useState(true);
   
   const router = useRouter();
   const supabase = createClientComponentClient();
   
-  // Handle screen size detection
+  // Handle screen size detection with more specific breakpoints
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 768);
-      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+      const width = window.innerWidth;
+      setIsMobile(width < 640); // Small mobile devices
+      setIsTablet(width >= 640 && width < 1024); // Tablets and small laptops
+      setIsDesktop(width >= 1024); // Desktops and large screens
     };
     
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+  
+  // Detect light/dark mode
+  useEffect(() => {
+    const detectTheme = () => {
+      const isDarkMode = 
+        document.documentElement.classList.contains('dark') || 
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      setIsLightMode(!isDarkMode);
+    };
+    
+    detectTheme();
+    
+    // Set up a mutation observer to detect theme changes
+    const observer = new MutationObserver(detectTheme);
+    observer.observe(document.documentElement, { 
+      attributes: true, 
+      attributeFilter: ['class', 'data-theme'] 
+    });
+    
+    // Also listen for system preference changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', detectTheme);
+    
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', detectTheme);
+    };
   }, []);
   
   // Check user authentication
@@ -152,16 +212,19 @@ export default function ManageEventsPage() {
   const completedEvents = events.filter(event => event.status === 'completed');
   const cancelledEvents = events.filter(event => event.status === 'cancelled');
   
+  // Define past events (either completed or with past date)
+  const pastEvents = events.filter(event => 
+    event.status === 'completed' || 
+    (new Date(event.date) < new Date() && event.status !== 'draft')
+  );
+  
+  // Calculate stats for growth and unique locations
+  const totalAttendees = Object.values(attendeeCounts).reduce((sum, count) => sum + count, 0);
+  const pastEventsGrowth = events.length > 0 ? 5 : 0; // Demo: 5% growth (in a real app would calculate from historical data)
+  const attendeesGrowth = totalAttendees > 0 ? 8 : 0; // Demo: 8% growth (in a real app would calculate from historical data)
+  const uniqueLocations = events.filter(event => event.location).length;
+  
   // Helper functions
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-  };
-
   const getStatusBadge = (status: EventStatus) => {
     // Style configuration for different statuses
     const getStatusStyle = (status: EventStatus) => {
@@ -243,7 +306,10 @@ export default function ManageEventsPage() {
         border: '1px solid var(--border)',
         marginBottom: '12px',
         backgroundColor: 'var(--card)',
-        opacity: 0.7
+        opacity: 0.7,
+        width: '100%',
+        maxWidth: '100%',
+        boxSizing: 'border-box'
       }}>
         <div style={{
           width: isMobile ? '100%' : '50px',
@@ -257,7 +323,9 @@ export default function ManageEventsPage() {
           flex: '1', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '8px'
+          gap: '8px',
+          width: '100%',
+          maxWidth: '100%'
         }}>
           <div style={{
             height: '24px',
@@ -292,216 +360,11 @@ export default function ManageEventsPage() {
               backgroundColor: 'var(--accent)',
               borderRadius: '4px'
             }} />
-            <div style={{
-              height: '36px',
-              width: '80px',
-              backgroundColor: 'var(--accent)',
-              borderRadius: '4px'
-            }} />
           </div>
         )}
       </div>
     ));
   };
-  
-  // Render an event item
-  const renderEventItem = (event: Event, index: number) => (
-    <div key={event.id} style={{
-      position: 'relative',
-      marginBottom: '16px',
-      borderRadius: '12px',
-      border: '1px solid rgba(var(--primary-rgb), 0.2)',
-      overflow: 'hidden',
-      backgroundColor: 'var(--card)',
-      transition: 'all 0.2s ease',
-      cursor: 'pointer',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-    }} onMouseOver={(e) => {
-      e.currentTarget.style.transform = 'translateY(-2px)';
-      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-      e.currentTarget.style.borderColor = 'rgba(var(--primary-rgb), 0.4)';
-      e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--card) 95%, var(--primary) 5%)';
-    }} onMouseOut={(e) => {
-      e.currentTarget.style.transform = 'translateY(0)';
-      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
-      e.currentTarget.style.borderColor = 'rgba(var(--primary-rgb), 0.2)';
-      e.currentTarget.style.backgroundColor = 'var(--card)';
-    }}>
-      <div style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        gap: '16px',
-        padding: '20px',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        position: 'relative',
-        borderLeft: `4px solid ${getEventColor(event.status, 0.8)}`
-      }}>
-        {/* Event thumbnail or avatar */}
-        <div style={{
-          flexShrink: 0,
-          width: isMobile ? '100%' : '56px',
-          height: isMobile ? '140px' : '56px',
-          borderRadius: isMobile ? '8px' : '28px',
-          position: 'relative',
-          overflow: 'hidden',
-          border: '1px solid rgba(var(--primary-rgb), 0.3)',
-          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)'
-        }}>
-          {event.cover_image_url ? (
-            <Image 
-              src={event.cover_image_url}
-              alt={event.name}
-              fill
-              style={{
-                objectFit: 'cover'
-              }}
-            />
-          ) : (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              height: '100%',
-              backgroundColor: getEventColor(event.status, 1),
-              fontSize: isMobile ? '26px' : '20px',
-              fontWeight: 600,
-              color: '#fff'
-            }}>
-              {getInitials(event.name)}
-            </div>
-          )}
-        </div>
-        
-        {/* Event details */}
-        <div style={{
-          flex: 1,
-          minWidth: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px'
-        }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            gap: '12px'
-          }}>
-            <h3 style={{
-              fontSize: '18px',
-              fontWeight: 600,
-              margin: 0,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              color: 'var(--foreground)'
-            }}>
-              {event.name}
-            </h3>
-            {getStatusBadge(event.status)}
-          </div>
-          
-          <div style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            gap: isMobile ? '8px' : '16px',
-            fontSize: '14px',
-            color: 'var(--muted-foreground)'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}>
-              <CalendarIcon style={{ width: '16px', height: '16px', color: 'rgba(var(--primary-rgb), 0.7)' }} />
-              <span>{formatDate(event.date)}</span>
-            </div>
-            
-            {event.location && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <MapPin style={{ width: '16px', height: '16px', color: 'rgba(var(--primary-rgb), 0.7)' }} />
-                <span style={{
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
-                }}>
-                  {event.location}
-                </span>
-              </div>
-            )}
-          </div>
-          
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            fontSize: '14px',
-            color: 'var(--muted-foreground)',
-            marginTop: '4px'
-          }}>
-            <Users style={{ width: '16px', height: '16px', color: 'rgba(var(--primary-rgb), 0.7)' }} />
-            <span>{event.attendeeCount} {event.attendeeCount === 1 ? 'attendee' : 'attendees'}</span>
-          </div>
-        </div>
-        
-        {/* Action buttons on larger screens, arrow icon on mobile */}
-        {isMobile ? (
-          <ChevronRight style={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            width: '18px',
-            height: '18px',
-            color: 'rgba(var(--primary-rgb), 0.7)'
-          }} />
-        ) : (
-          <div style={{
-            display: 'flex',
-            gap: '12px',
-            marginLeft: 'auto'
-          }}>
-            <Button size="sm" variant="outline" asChild style={{
-              borderRadius: '6px',
-              transition: 'all 0.2s ease',
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-              borderColor: 'rgba(var(--primary-rgb), 0.2)'
-            }}>
-              <Link href={`/protected/events/${event.id}`}>
-                <EyeIcon style={{ width: '14px', height: '14px', marginRight: '6px' }} />
-                View
-              </Link>
-            </Button>
-            <Button size="sm" asChild style={{
-              borderRadius: '6px',
-              transition: 'all 0.2s ease',
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
-            }}>
-              <Link href={`/protected/events/${event.id}/edit`}>
-                <FileEditIcon style={{ width: '14px', height: '14px', marginRight: '6px' }} />
-                Manage
-              </Link>
-            </Button>
-          </div>
-        )}
-        
-        {/* Make the entire item clickable */}
-        <Link href={`/protected/events/${event.id}`} style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 5
-        }}>
-          <span style={{ display: 'none' }}>View event</span>
-        </Link>
-      </div>
-    </div>
-  );
   
   // Helper function to get color based on event status with alpha transparency
   const getEventColor = (status: EventStatus, alpha = 1) => {
@@ -518,7 +381,7 @@ export default function ManageEventsPage() {
         return `rgba(100, 116, 139, ${alpha})`;
     }
   };
-  
+
   // Empty state component
   const renderEmptyState = (type: string) => (
     <div style={{
@@ -529,8 +392,11 @@ export default function ManageEventsPage() {
       padding: '48px 24px',
       textAlign: 'center',
       backgroundColor: 'var(--card)',
-      borderRadius: '8px',
-      border: '1px solid var(--border)'
+      borderRadius: '12px',
+      border: '1px solid var(--border)',
+      width: '100%',
+      maxWidth: '100%',
+      boxSizing: 'border-box'
     }}>
       <ImageIcon style={{
         width: '48px',
@@ -540,7 +406,7 @@ export default function ManageEventsPage() {
       }} />
       
       <h3 style={{
-        fontSize: '16px',
+        fontSize: '18px',
         fontWeight: 600,
         margin: 0,
         marginBottom: '8px'
@@ -552,276 +418,391 @@ export default function ManageEventsPage() {
         fontSize: '14px',
         color: 'var(--muted-foreground)',
         margin: 0,
-        marginBottom: '16px',
-        maxWidth: '400px'
+        marginBottom: '24px',
+        maxWidth: '460px'
       }}>
         {type === 'published' && 'When you publish events, they will appear here.'}
         {type === 'draft' && 'Draft events will be saved here while you work on them.'}
-        {type === 'completed' && 'Events marked as completed will appear here.'}
-        {type === 'cancelled' && 'Events that have been cancelled will appear here.'}
-        {type === '' && 'Create your first event to get started.'}
+        {type === 'past' && 'Events marked as completed or past dates will appear here.'}
+        {type === 'all' && 'Create your first event to get started.'}
       </p>
       
-      <Button asChild>
+      <Button asChild style={{
+        width: 'auto',
+        padding: '0 20px',
+        height: '42px'
+      }}>
         <Link href="/protected/events/create">Create Event</Link>
       </Button>
     </div>
   );
+
+  // Event item renderer with improved styling
+  const renderEventItem = (event: Event) => {
+    const formattedDate = formatDate(event.date || '');
+    const status = event.status || 'draft';
+    const statusColors = {
+      published: { bg: 'rgba(16, 185, 129, 0.15)', color: 'rgb(16, 185, 129)', border: 'rgba(16, 185, 129, 0.3)' },
+      draft: { bg: 'rgba(234, 179, 8, 0.15)', color: 'rgb(234, 179, 8)', border: 'rgba(234, 179, 8, 0.3)' },
+      past: { bg: 'rgba(100, 116, 139, 0.15)', color: 'rgb(100, 116, 139)', border: 'rgba(100, 116, 139, 0.3)' },
+    };
+    const statusColor = statusColors[status as keyof typeof statusColors] || statusColors.draft;
+
+    return (
+      <Link href={`/protected/events/${event.id}`} style={{
+        textDecoration: 'none',
+        color: 'inherit'
+      }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'flex-start' : 'center',
+          justifyContent: 'space-between',
+          padding: isMobile ? '16px' : '20px',
+          gap: isMobile ? '12px' : '20px',
+          backgroundColor: 'var(--card)',
+          borderRadius: '12px',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
+          border: '1px solid var(--border)',
+          transition: 'all 0.2s ease',
+          cursor: 'pointer',
+          width: '100%',
+          boxSizing: 'border-box'
+        }} className="hover:shadow-md hover:-translate-y-[1px]">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '16px',
+            alignItems: 'center',
+            width: isMobile ? '100%' : 'auto',
+          }}>
+            <div style={{
+              width: isMobile ? '60px' : '80px',
+              height: isMobile ? '60px' : '80px',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.05)',
+              overflow: 'hidden',
+              flexShrink: 0
+            }}>
+              {event.cover_image_url ? (
+                <Image 
+                  src={event.cover_image_url} 
+                  alt={event.name || 'Event cover'} 
+                  width={isMobile ? 60 : 80} 
+                  height={isMobile ? 60 : 80} 
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }} 
+                />
+              ) : (
+                <div style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(var(--primary-rgb), 0.1)'
+                }}>
+                  <CalendarIcon size={isMobile ? 24 : 32} color="var(--primary)" />
+                </div>
+              )}
+            </div>
+
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <span style={{
+                  backgroundColor: statusColor.bg,
+                  color: statusColor.color,
+                  padding: '2px 8px',
+                  borderRadius: '999px',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  border: `1px solid ${statusColor.border}`,
+                  whiteSpace: 'nowrap'
+                }}>
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </span>
+                <span style={{
+                  fontSize: '12px',
+                  color: 'var(--muted-foreground)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <CalendarIcon size={12} />
+                  {formattedDate}
+                </span>
+              </div>
+              
+              <h3 style={{
+                margin: 0,
+                fontSize: isMobile ? '16px' : '18px',
+                fontWeight: '600',
+                color: 'var(--foreground)',
+                lineHeight: '1.4'
+              }}>
+                {event.name || 'Untitled Event'}
+              </h3>
+              
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+                marginTop: '4px'
+              }}>
+                <span style={{
+                  fontSize: '13px',
+                  color: 'var(--muted-foreground)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <Users size={14} />
+                  {event.attendeeCount} {event.attendeeCount === 1 ? 'attendee' : 'attendees'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {!isMobile && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <Button
+                variant="outline"
+                size="sm"
+                style={{
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/protected/events/${event.id}/edit`);
+                }}
+              >
+                <Pencil size={14} />
+                Edit
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // Show details or menu
+                }}
+              >
+                <ChevronRight size={18} />
+              </Button>
+            </div>
+          )}
+          
+          {isMobile && (
+            <div style={{
+              display: 'flex',
+              width: '100%',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: '8px'
+            }}>
+              <Button
+                variant="outline"
+                size="sm"
+                style={{
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '13px',
+                  padding: '6px 12px'
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/protected/events/${event.id}/edit`);
+                }}
+              >
+                <Pencil size={12} />
+                Edit
+              </Button>
+              
+              <ArrowRight size={16} color="var(--muted-foreground)" />
+            </div>
+          )}
+        </div>
+      </Link>
+    );
+  };
   
   // Main render
   return (
     <div style={{
-      maxWidth: '100%',
+      width: '100%',
       display: 'flex',
       flexDirection: 'column',
-      gap: '24px',
-      padding: isMobile ? '16px' : '24px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      boxSizing: 'border-box',
-      overflowX: 'hidden'
+      padding: '0',
+      margin: '0',
+      boxSizing: 'border-box'
     }}>
-      {/* Header section */}
+      {/* Super minimal header */}
       <div style={{
         display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        gap: isMobile ? '16px' : '0',
-        width: '100%'
+        padding: '16px',
+        borderBottom: '1px solid var(--border)'
       }}>
-        <div style={{ maxWidth: '100%' }}>
-          <h1 style={{
-            fontSize: isMobile ? '24px' : '28px',
-            fontWeight: 700,
-            margin: 0,
-            marginBottom: '8px'
-          }}>
-            Manage Events
-          </h1>
-          <p style={{
-            fontSize: '14px',
-            color: 'var(--muted-foreground)',
-            margin: 0
-          }}>
-          Create, update, and manage your events all in one place.
-        </p>
+        <h1 style={{
+          fontSize: '24px',
+          fontWeight: 700,
+          margin: 0
+        }}>
+          Manage Events
+        </h1>
       </div>
 
-        <Button asChild style={{
-          width: isMobile ? '100%' : 'auto',
-          flexShrink: 0
-        }}>
-          <Link 
-            href="/protected/events/create"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: isMobile ? 'center' : 'flex-start'
-            }}
-          >
-            <CalendarIcon style={{ width: '16px', height: '16px', marginRight: '8px' }} />
-              Create New Event
-            </Link>
-          </Button>
-      </div>
-      
-      {/* Stats and Map section */}
-      <div style={{ width: '100%', overflowX: 'hidden' }}>
+      {/* Stats and Map section - simplified */}
+      <div style={{ 
+        width: '100%', 
+        padding: '16px',
+        boxSizing: 'border-box'
+      }}>
         {user && (
-      <StatsMapWrapper 
+          <StatsMapWrapper 
             processedEvents={events}
-        publishedEvents={publishedEvents}
-        attendeeCounts={attendeeCounts}
-        mapComponent={<EventsMapClientWrapper />}
-      />
+            publishedEvents={publishedEvents}
+            attendeeCounts={attendeeCounts}
+            mapComponent={<EventsMapClientWrapper />}
+          />
         )}
       </div>
       
-      {/* Tabs section */}
-      <Tabs defaultValue="all" style={{
-        width: '100%'
+      {/* Tabs section - simplified structure */}
+      <div style={{
+        width: '100%', 
+        padding: '0 16px 16px',
+        boxSizing: 'border-box'
       }}>
-        <div style={{
-          overflowX: 'auto',
-          paddingBottom: '2px', // Prevent scrollbar cutting off focus rings
-          WebkitOverflowScrolling: 'touch',
-          marginBottom: '16px'
+        <Tabs defaultValue="all" style={{
+          width: '100%',
+          boxSizing: 'border-box'
         }}>
-          <TabsList style={{
+          <div style={{
             display: 'flex',
-            width: isMobile ? 'max-content' : '100%',
-            padding: '4px',
-            backgroundColor: 'rgba(var(--card-rgb), 0.8)',
-            borderRadius: '10px',
-            border: '1px solid rgba(var(--primary-rgb), 0.25)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+            alignItems: 'center',
+            marginBottom: '16px'
           }}>
-            <TabsTrigger value="all" style={{
-              borderRadius: '8px',
-              fontWeight: 500,
-              padding: '8px 16px',
-              transition: 'all 0.2s ease',
-              boxShadow: 'none'
+            <TabsList style={{
+              backgroundColor: 'transparent',
+              padding: '2px'
             }}>
-              All Events
-              <span style={{
-                marginLeft: '8px',
-                fontSize: '12px',
-                fontWeight: '600',
-                backgroundColor: 'rgba(var(--primary-rgb), 0.15)',
-                color: 'var(--primary)',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                border: '1px solid rgba(var(--primary-rgb), 0.3)',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
-              }}>
-                {events.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="published" style={{
-              borderRadius: '8px',
-              fontWeight: 500,
-              padding: '8px 16px',
-              transition: 'all 0.2s ease',
-              boxShadow: 'none'
-            }}>
-              Published
-              <span style={{
-                marginLeft: '8px',
-                fontSize: '12px',
-                fontWeight: '600',
-                backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                color: '#10b981',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
-              }}>
-                {publishedEvents.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="draft" style={{
-              borderRadius: '8px',
-              fontWeight: 500,
-              padding: '8px 16px',
-              transition: 'all 0.2s ease',
-              boxShadow: 'none'
-            }}>
-              Draft
-              <span style={{
-                marginLeft: '8px',
-                fontSize: '12px',
-                fontWeight: '600',
-                backgroundColor: 'rgba(245, 158, 11, 0.15)',
-                color: '#f59e0b',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                border: '1px solid rgba(245, 158, 11, 0.3)',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
-              }}>
-                {draftEvents.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="completed" style={{
-              borderRadius: '8px',
-              fontWeight: 500,
-              padding: '8px 16px',
-              transition: 'all 0.2s ease',
-              boxShadow: 'none'
-            }}>
-              Completed
-              <span style={{
-                marginLeft: '8px',
-                fontSize: '12px',
-                fontWeight: '600',
-                backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                color: '#3b82f6',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
-              }}>
-                {completedEvents.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="cancelled" style={{
-              borderRadius: '8px',
-              fontWeight: 500,
-              padding: '8px 16px',
-              transition: 'all 0.2s ease',
-              boxShadow: 'none'
-            }}>
-              Cancelled
-              <span style={{
-                marginLeft: '8px',
-                fontSize: '12px',
-                fontWeight: '600',
-                backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                color: '#ef4444',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
-              }}>
-                {cancelledEvents.length}
-              </span>
-            </TabsTrigger>
-        </TabsList>
-        </div>
-        
-        <div style={{ marginTop: '16px', width: '100%', overflowX: 'hidden' }}>
-          <TabsContent value="all" style={{ width: '100%' }}>
-            {loading ? (
-              renderSkeletons()
-            ) : events.length > 0 ? (
-              events.map((event, index) => renderEventItem(event, index))
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="published">Published</TabsTrigger>
+              <TabsTrigger value="draft">Draft</TabsTrigger>
+              <TabsTrigger value="past">Past</TabsTrigger>
+            </TabsList>
+            
+            <div style={{ marginLeft: 'auto' }}>
+              <Link 
+                href="/protected/events/create" 
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  backgroundColor: 'var(--primary)',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  fontSize: '14px'
+                }}
+              >
+                <CalendarPlus size={16} />
+                Create New Event
+              </Link>
+            </div>
+          </div>
+          
+          <TabsContent value="all">
+            {events.length === 0 ? (
+              renderEmptyState('all')
             ) : (
-              renderEmptyState("")
-            )}
-        </TabsContent>
-        
-          <TabsContent value="published" style={{ width: '100%' }}>
-            {loading ? (
-              renderSkeletons()
-            ) : publishedEvents.length > 0 ? (
-              publishedEvents.map((event, index) => renderEventItem(event, index))
-            ) : (
-              renderEmptyState("published")
-            )}
-        </TabsContent>
-        
-          <TabsContent value="draft" style={{ width: '100%' }}>
-            {loading ? (
-              renderSkeletons()
-            ) : draftEvents.length > 0 ? (
-              draftEvents.map((event, index) => renderEventItem(event, index))
-            ) : (
-              renderEmptyState("draft")
-            )}
-        </TabsContent>
-        
-          <TabsContent value="completed" style={{ width: '100%' }}>
-            {loading ? (
-              renderSkeletons()
-            ) : completedEvents.length > 0 ? (
-              completedEvents.map((event, index) => renderEventItem(event, index))
-            ) : (
-              renderEmptyState("completed")
-            )}
-        </TabsContent>
-        
-          <TabsContent value="cancelled" style={{ width: '100%' }}>
-            {loading ? (
-              renderSkeletons()
-            ) : cancelledEvents.length > 0 ? (
-              cancelledEvents.map((event, index) => renderEventItem(event, index))
-            ) : (
-              renderEmptyState("cancelled")
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                {events.map(event => (
+                  <div key={event.id}>
+                    {renderEventItem(event)}
+                  </div>
+                ))}
+              </div>
             )}
           </TabsContent>
-          </div>
-      </Tabs>
+          
+          <TabsContent value="published">
+            {publishedEvents.length === 0 ? (
+              renderEmptyState('published')
+            ) : (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                {publishedEvents.map(event => (
+                  <div key={event.id}>
+                    {renderEventItem(event)}
+                  </div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="draft">
+            {draftEvents.length === 0 ? (
+              renderEmptyState('draft')
+            ) : (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                {draftEvents.map(event => (
+                  <div key={event.id}>
+                    {renderEventItem(event)}
+                  </div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="past">
+            {pastEvents.length === 0 ? (
+              renderEmptyState('past')
+            ) : (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                {pastEvents.map(event => (
+                  <div key={event.id}>
+                    {renderEventItem(event)}
+                  </div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }

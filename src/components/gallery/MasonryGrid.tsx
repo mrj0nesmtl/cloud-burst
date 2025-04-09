@@ -29,19 +29,19 @@ export function MasonryGrid({
     const handleResize = () => {
       const width = window.innerWidth;
       
-      // Further adjusted breakpoints for even more columns
+      // Adjusted breakpoints for better mobile experience
       if (width < 480) {
         setColumns(1); // Single column for very small devices
       } else if (width < 640) {
-        setColumns(2); // Two columns for mobile phones
+        setColumns(1); // Keep single column for small mobile phones
       } else if (width < 768) {
-        setColumns(3); // Three columns for larger phones/small tablets
+        setColumns(2); // Two columns for larger phones/small tablets
       } else if (width < 1024) {
-        setColumns(4); // Four columns for tablets (increased from 3)
+        setColumns(3); // Three columns for tablets
       } else if (width < 1280) {
-        setColumns(5); // Five columns for small desktops (increased from 4)
+        setColumns(4); // Four columns for small desktops
       } else {
-        setColumns(6); // Six columns for large desktops (increased from 5)
+        setColumns(5); // Five columns for large desktops
       }
     };
     
@@ -57,19 +57,21 @@ export function MasonryGrid({
       return {
         display: 'flex',
         flexDirection: 'column' as 'column', // TypeScript needs this casting
-        gap: '8px', // Further reduced from 12px
+        gap: '12px',
         width: '100%',
-        maxWidth: '100%'
+        maxWidth: '100%',
+        boxSizing: 'border-box' as 'border-box'
       };
     }
     
-    // For multi-column layouts, use grid with even tighter spacing
+    // For multi-column layouts, use grid with properly constrained width
     return {
       display: 'grid',
       gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      gap: '8px', // Further reduced from 12px
+      gap: '12px',
       width: '100%',
-      maxWidth: '100%'
+      maxWidth: '100%',
+      boxSizing: 'border-box' as 'border-box'
     };
   };
   
@@ -107,7 +109,7 @@ export function MasonryGrid({
   return (
     <div 
       ref={containerRef}
-      className="w-full px-0.5 sm:px-1" // Reduced padding further from px-1 sm:px-2
+      className="w-full max-w-full px-2 sm:px-3 md:px-4" 
       style={{ 
         maxWidth: '100%', 
         overflowX: 'hidden',
@@ -126,13 +128,13 @@ export function MasonryGrid({
               isPublic={isPublic}
               onAddComment={onAddComment}
               onLike={onLike}
-              className="w-full max-w-full scale-90" // Increase scale reduction
+              className="w-full max-w-full"
             />
           ))
         ) : (
           // Multi-column layout
           columnItems.map((columnItems, columnIndex) => (
-            <div key={columnIndex} className="flex flex-col gap-2 w-full"> {/* Further reduced gap from 3 to 2 */}
+            <div key={columnIndex} className="flex flex-col gap-3 w-full max-w-full">
               {columnItems.map((item) => (
                 <MediaCard
                   key={item.id}
@@ -142,7 +144,7 @@ export function MasonryGrid({
                   isPublic={isPublic}
                   onAddComment={onAddComment}
                   onLike={onLike}
-                  className="w-full scale-90" // Increase scale reduction
+                  className="w-full max-w-full"
                 />
               ))}
             </div>

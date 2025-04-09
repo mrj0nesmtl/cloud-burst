@@ -28,10 +28,10 @@ export function GalleryHeader({
   };
 
   return (
-    <div className="w-full flex items-center justify-between">
-      <h1 className="text-xl font-bold">{title}</h1>
+    <div className="w-full max-w-full flex flex-wrap items-center justify-between gap-2 px-2 sm:px-0">
+      <h1 className="text-lg sm:text-xl font-bold truncate">{title}</h1>
       
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         <Tabs 
           defaultValue="all" 
           value={activeFilter} 
@@ -45,14 +45,16 @@ export function GalleryHeader({
           </TabsList>
         </Tabs>
         
-        <Button variant="ghost" size="icon" className="sm:hidden">
+        <Button variant="ghost" size="icon" className="sm:hidden" onClick={() => handleFilterChange(activeFilter === "all" ? "photos" : activeFilter === "photos" ? "videos" : "all")}>
           <FilterIcon className="h-4 w-4" />
+          <span className="sr-only">Filter</span>
         </Button>
         
         {isOrganizer && (
-          <Button onClick={onUpload}>
+          <Button onClick={onUpload} size="sm" className="sm:size-default whitespace-nowrap">
             <UploadIcon className="mr-2 h-4 w-4" />
-            Add Media
+            <span className="hidden sm:inline">Add Media</span>
+            <span className="sm:hidden">Add</span>
           </Button>
         )}
       </div>

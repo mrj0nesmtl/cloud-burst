@@ -41,15 +41,15 @@ export function GalleryLayout({
   };
 
   return (
-    <div className={cn("h-full flex flex-col", className)}>
+    <div className={cn("h-full flex flex-col max-w-full", className)}>
       {header && (
-        <div className="border-b">
-          <div className="flex h-16 items-center px-4">
+        <div className="border-b w-full max-w-full">
+          <div className="flex h-14 sm:h-16 items-center w-full max-w-full overflow-hidden">
             {sidebar && (
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="md:hidden mr-2" 
+                className="md:hidden mr-2 flex-shrink-0" 
                 onClick={toggleSidebar}
               >
                 {sidebarOpen ? (
@@ -57,21 +57,24 @@ export function GalleryLayout({
                 ) : (
                   <Menu className="h-5 w-5" />
                 )}
+                <span className="sr-only">Toggle sidebar</span>
               </Button>
             )}
-            {header}
+            <div className="w-full max-w-full overflow-hidden">
+              {header}
+            </div>
           </div>
         </div>
       )}
 
-      <div className="flex-1 flex overflow-hidden relative">
+      <div className="flex-1 flex overflow-hidden relative w-full max-w-full">
         {sidebar && (
           <aside 
             className={cn(
               "bg-background transition-all duration-300 ease-in-out z-20",
               isMobile ? (
                 sidebarOpen 
-                  ? "absolute inset-y-0 left-0 w-[220px] shadow-lg border-r"
+                  ? "fixed inset-y-0 left-0 w-[220px] shadow-lg border-r"
                   : "hidden"
               ) : (
                 "w-[220px] flex-shrink-0 border-r"
@@ -84,9 +87,9 @@ export function GalleryLayout({
         <main className={cn(
           "flex-1 overflow-auto transition-all duration-300 ease-in-out",
           "max-w-full w-full",
-          isMobile && sidebarOpen && "ml-[220px]"
+          isMobile && sidebarOpen ? "ml-0" : ""
         )}>
-          <div className="max-w-full overflow-x-hidden px-0 md:px-2">
+          <div className="max-w-full overflow-x-hidden w-full">
             {children}
           </div>
         </main>
