@@ -261,6 +261,67 @@ export type DbMedia = Database['public']['Tables']['media']['Row'];
 // export type DbModerationLog = Database['public']['Tables']['moderation_logs']['Row'];
 
 /**
+ * Sanitize user input to prevent XSS attacks
+ */
+function sanitizeString(input: string | null | undefined): string | null | undefined {
+  if (input === null || input === undefined) return input;
+  
+  // Replace potentially dangerous characters
+  return input
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/`/g, '&#96;')
+    .replace(/\$/g, '&#36;');
+}
+
+/**
+ * Helper function to map database media to our application Media type
+ */
+export function mapDbMediaToMedia(dbMedia: any): Media {
+  const metadata = dbMedia.metadata || {};
+  
+  // Determine status based on available fields
+  let status = dbMedia.status as MediaStatus || MediaStatus.PENDING;
+  let isApproved = dbMedia.is_approved;
+  
+  // If status is available, use it
+  if (status) {
+    // Set is_approved for backward compatibility
+    isApproved = status === MediaStatus.APPROVED;
+  } 
+  // If only is_approved is available, derive status from it
+  else if (isApproved !== undefined) {
+    status = isApproved ? MediaStatus.APPROVED : MediaStatus.PENDING;
+  }
+  
+  return {
+    id: dbMedia.id,
+    event_id: dbMedia.event_id || '',
+    uploaded_by: dbMedia.uploaded_by || '',
+    media_type: dbMedia.media_type as MediaType,
+    storage_path: dbMedia.storage_path || '',
+    filename: dbMedia.filename,
+    url: dbMedia.url || '',
+    thumbnail_url: dbMedia.thumbnail_url,
+    title: sanitizeString(dbMedia.title),
+    description: sanitizeString(dbMedia.description),
+    size: dbMedia.size,
+    mime_type: dbMedia.mime_type,
+    width: dbMedia.width,
+    height: dbMedia.height,
+    duration: dbMedia.duration,
+    is_approved: isApproved,
+    status: status,
+    is_public: dbMedia.is_public,
+    metadata: metadata,
+    created_at: dbMedia.created_at || new Date().toISOString(),
+    updated_at: dbMedia.updated_at || new Date().toISOString(),
+  };
+}
+
+/**
  * Helper function to check if media is a photo
  */
 export function isPhoto(media: Media): boolean {
@@ -304,49 +365,4 @@ export interface MediaServiceClient {
   addMediaToAlbum: (albumId: string, mediaId: string) => Promise<boolean>;
   removeMediaFromAlbum: (albumId: string, mediaId: string) => Promise<boolean>;
   reorderAlbumMedia: (albumId: string, mediaIds: string[]) => Promise<boolean>;
-}
-
-/**
- * Helper function to map database media to our application Media type
- */
-export function mapDbMediaToMedia(dbMedia: any): Media {
-  const metadata = dbMedia.metadata || {};
-  
-  // Determine status based on available fields
-  let status = dbMedia.status as MediaStatus || MediaStatus.PENDING;
-  let isApproved = dbMedia.is_approved;
-  
-  // If status is available, use it
-  if (status) {
-    // Set is_approved for backward compatibility
-    isApproved = status === MediaStatus.APPROVED;
-  } 
-  // If only is_approved is available, derive status from it
-  else if (isApproved !== undefined) {
-    status = isApproved ? MediaStatus.APPROVED : MediaStatus.PENDING;
-  }
-  
-  return {
-    id: dbMedia.id,
-    event_id: dbMedia.event_id || '',
-    uploaded_by: dbMedia.uploaded_by || '',
-    media_type: dbMedia.media_type as MediaType,
-    storage_path: dbMedia.storage_path || '',
-    filename: dbMedia.filename,
-    url: dbMedia.url || '',
-    thumbnail_url: dbMedia.thumbnail_url,
-    title: dbMedia.title,
-    description: dbMedia.description,
-    size: dbMedia.size,
-    mime_type: dbMedia.mime_type,
-    width: dbMedia.width,
-    height: dbMedia.height,
-    duration: dbMedia.duration,
-    is_approved: isApproved,
-    status: status,
-    is_public: dbMedia.is_public,
-    metadata: metadata,
-    created_at: dbMedia.created_at || new Date().toISOString(),
-    updated_at: dbMedia.updated_at || new Date().toISOString(),
-  };
 } 

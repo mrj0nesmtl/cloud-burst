@@ -31,15 +31,37 @@ const getStatusBadge = (status: string) => {
 
 // Helper function to ensure valid QR code URL
 const ensureValidQrCodeUrl = (url: string | null, eventId: string): string => {
-  // If URL is missing or doesn't point to the QR code service
-  if (!url || !url.includes('api.qrserver.com')) {
+  // Sanitize the eventId to prevent URL injection
+  const sanitizedEventId = eventId.replace(/[^\w-]/g, '');
+  
+  // Validate URL format and security
+  const isValidUrl = url && 
+    url.startsWith('https://api.qrserver.com/v1/create-qr-code/') && 
+    url.includes('format=png');
+  
+  // If URL is missing or doesn't meet security requirements
+  if (!isValidUrl) {
     // Generate a proper QR code URL
     return generateQRCodeUrl({
-      event_id: eventId,
+      event_id: sanitizedEventId,
       type: 'gallery' // Use gallery type for QR codes
     });
   }
-  return url;
+  
+  // Extra safety: ensure the URL is from a trusted domain
+  try {
+    const urlObj = new URL(url);
+    if (urlObj.hostname !== 'api.qrserver.com') {
+      throw new Error('Invalid QR code URL domain');
+    }
+    return url;
+  } catch (e) {
+    // If URL parsing fails, generate a new secure URL
+    return generateQRCodeUrl({
+      event_id: sanitizedEventId,
+      type: 'gallery'
+    });
+  }
 }
 
 export default async function QRCodesPage() {
