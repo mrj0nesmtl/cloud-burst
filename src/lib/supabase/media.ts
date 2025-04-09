@@ -76,6 +76,22 @@ export const getImageDimensions = (file: File): Promise<{width: number, height: 
 };
 
 /**
+ * Sanitize user input to prevent XSS attacks
+ */
+function sanitizeUserInput(input: string): string {
+  if (!input) return '';
+  
+  // Replace potentially dangerous characters
+  return input
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/`/g, '&#96;')
+    .replace(/\$/g, '&#36;');
+}
+
+/**
  * Upload and create media all in one function
  * This uploads a file to Supabase storage and creates the corresponding media record
  */
@@ -142,6 +158,10 @@ export async function uploadAndCreateMedia(
       }
     }
     
+    // Sanitize user-provided inputs
+    const sanitizedTitle = sanitizeUserInput(title || file.name);
+    const sanitizedDescription = sanitizeUserInput(description || '');
+    
     // Create the media record
     const createParams: CreateMediaParams = {
       eventId,
@@ -150,8 +170,8 @@ export async function uploadAndCreateMedia(
       filePath: storagePath,
       url,
       thumbnailUrl: url, // For now, use the same URL for thumbnail
-      title: title || file.name,
-      description: description || '',
+      title: sanitizedTitle,
+      description: sanitizedDescription,
       size: file.size,
       mimeType: file.type,
       width,
