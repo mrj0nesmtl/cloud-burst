@@ -62,7 +62,7 @@ export default function EventGalleriesPage() {
             if (data.length > 0) {
               console.log('First gallery item structure:', JSON.stringify(data[0]));
             }
-            setGalleryData(data);
+          setGalleryData(data);
             setFilteredData(data);
           } else if (data && data.galleries && Array.isArray(data.galleries)) {
             console.log(`Setting gallery data from nested property: ${data.galleries.length} galleries found`);
@@ -387,7 +387,7 @@ export default function EventGalleriesPage() {
                 onClick={clearSearch}
               >
                 <X className="h-4 w-4" />
-              </Button>
+            </Button>
             )}
           </div>
 
@@ -437,7 +437,7 @@ export default function EventGalleriesPage() {
                 {isLoading && renderSkeletons()}
                 {renderEvents()}
               </div>
-            </div>
+          </div>
           )}
         </CardContent>
       </Card>
