@@ -8,6 +8,9 @@ import { cookies } from 'next/headers'
 import { Database } from '@/types/supabase'
 import { InvitationWithEvent } from '@/lib/invitations'
 
+// Add additional debugging output
+console.log('📣 Loading invitation/[token]/page.tsx - this is the main page component')
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
