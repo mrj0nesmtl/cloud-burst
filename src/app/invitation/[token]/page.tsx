@@ -41,8 +41,8 @@ export async function generateMetadata({ params }: InvitationPageProps): Promise
   
   if (!invitation) {
     return {
-      title: 'Invitation Not Found',
-      description: 'The requested invitation could not be found.',
+      title: 'Cloud Burst | RSVP & Event Gallery',
+      description: 'Respond to your invitation and access event photos.',
     }
   }
   

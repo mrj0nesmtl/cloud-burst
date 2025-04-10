@@ -66,7 +66,9 @@ export async function POST(req: NextRequest) {
     const { error: updateError } = await supabase
       .from('invitations')
       .update({
-        status,
+        status: 'responded',
+        rsvp_status: status,
+        rsvp_date: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
       .eq('id', invitation_id);
@@ -78,6 +80,9 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+    
+    // Log successful invitation update for debugging
+    console.log(`Successfully updated invitation status (ID: ${invitation_id}) to: ${status}`);
     
     // Create or update RSVP details
     const { data: existingRsvp, error: rsvpFetchError } = await supabase
