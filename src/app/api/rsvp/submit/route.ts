@@ -72,6 +72,23 @@ export async function POST(req: NextRequest) {
       marketing_consent 
     } = validatedData;
     
+    // Map the status from the form to the database enum values - moved to higher scope
+    // Database likely has an enum like ACCEPTED, DECLINED, PENDING
+    const mapStatusToDbEnum = (formStatus: string): string => {
+      // Common mapping patterns between form values and database enums
+      const statusMap: Record<string, string> = {
+        'accepted': 'ACCEPTED',
+        'declined': 'DECLINED',
+        'pending': 'PENDING',
+        'maybe': 'PENDING'
+      };
+      
+      return statusMap[formStatus.toLowerCase()] || 'PENDING';
+    };
+    
+    const dbRsvpStatus = mapStatusToDbEnum(status);
+    console.log(`Mapped form status "${status}" to database enum "${dbRsvpStatus}"`);
+    
     // Verify that the token matches the invitation
     let invitation;
     try {
@@ -112,23 +129,6 @@ export async function POST(req: NextRequest) {
     // Update the invitation status - with proper rsvp_status field
     try {
       console.log(`Updating invitation ${invitation_id} with rsvp_status=${status}`);
-      
-      // Map the status from the form to the database enum values
-      // Database likely has an enum like ACCEPTED, DECLINED, PENDING
-      const mapStatusToDbEnum = (formStatus: string): string => {
-        // Common mapping patterns between form values and database enums
-        const statusMap: Record<string, string> = {
-          'accepted': 'ACCEPTED',
-          'declined': 'DECLINED',
-          'pending': 'PENDING',
-          'maybe': 'PENDING'
-        };
-        
-        return statusMap[formStatus.toLowerCase()] || 'PENDING';
-      };
-      
-      const dbRsvpStatus = mapStatusToDbEnum(status);
-      console.log(`Mapped form status "${status}" to database enum "${dbRsvpStatus}"`);
       
       // Update invitation with proper rsvp_status and rsvp_date fields
       const { error: updateError } = await supabase
