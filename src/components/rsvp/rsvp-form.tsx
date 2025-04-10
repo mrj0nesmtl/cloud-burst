@@ -91,13 +91,23 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         throw new Error(data.message || 'Something went wrong')
       }
       
-      // Redirect to confirmation page
-      router.push(`/invitation/${token}/confirmation/${values.status}`)
-      toast.success('Your RSVP has been submitted successfully!')
+      // Show success toast with longer duration
+      toast.success('Your RSVP has been submitted successfully! Redirecting to confirmation page...', {
+        duration: 5000, // 5 seconds duration
+        position: 'top-center',
+      })
+      
+      // Add delay before navigation to ensure toast is visible
+      setTimeout(() => {
+        // Redirect to confirmation page
+        router.push(`/invitation/${token}/confirmation/${values.status}`)
+      }, 2000) // 2 second delay
     } catch (error) {
       console.error('RSVP submission error:', error)
-      toast.error('Failed to submit RSVP. Please try again.')
-    } finally {
+      toast.error('Failed to submit RSVP. Please try again.', {
+        duration: 5000, // 5 seconds duration
+        position: 'top-center',
+      })
       setIsSubmitting(false)
     }
   }
@@ -143,19 +153,19 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
           )}
         />
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base font-medium mb-1.5 block">
+                <FormLabel className="text-base font-semibold mb-2 block">
                   Full Name <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input 
                     placeholder="Enter your full name" 
-                    className="h-12 px-4 text-base w-full rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="h-16 px-5 text-lg w-full rounded-lg border-2 border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 hover:border-primary/50"
                     {...field} 
                   />
                 </FormControl>
@@ -169,14 +179,14 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base font-medium mb-1.5 block">
+                <FormLabel className="text-base font-semibold mb-2 block">
                   Email Address <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="your.email@example.com"
                     type="email"
-                    className="h-12 px-4 text-base w-full rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="h-16 px-5 text-lg w-full rounded-lg border-2 border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 hover:border-primary/50"
                     {...field}
                     disabled={!!invitation.email}
                   />
@@ -312,12 +322,12 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         <div className="pt-6 flex justify-center">
           <Button 
             type="submit"
-            className="min-w-[180px] h-12 px-8 text-base font-medium transition-colors hover:bg-primary/90 hover:shadow-md"
+            className="min-w-[200px] h-14 px-8 text-lg font-semibold rounded-lg transition-all duration-200 bg-primary hover:bg-primary/90 hover:shadow-lg transform hover:-translate-y-0.5"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                 Submitting...
               </>
             ) : (
