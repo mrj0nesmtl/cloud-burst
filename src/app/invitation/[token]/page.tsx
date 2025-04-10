@@ -86,8 +86,13 @@ type Invitation = {
 export default async function InvitationPage({ params }: InvitationPageProps) {
   const { token } = params
   
-  // Add debug log
-  console.log('Handling invitation page request for token:', token)
+  // Enhanced debug logging
+  console.log('🔍 Handling invitation page request:', { 
+    token,
+    tokenLength: token.length,
+    hasHyphens: token.includes('-'),
+    tokenFormat: token.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i) ? 'Valid UUID' : 'Not UUID format'
+  })
   
   try {
     // Validate the invitation token using our existing function
@@ -95,11 +100,11 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
     
     // If no invitation found, return 404
     if (!invitation) {
-      console.error('Invitation not found for token:', token)
+      console.error('❌ Invitation validation failed for token:', token)
       return notFound()
     }
     
-    console.log('Processing invitation:', { 
+    console.log('✅ Successfully validated invitation:', { 
       id: invitation.id, 
       event_id: invitation.event_id,
       status: invitation.status
