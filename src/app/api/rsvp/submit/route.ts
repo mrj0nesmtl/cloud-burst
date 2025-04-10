@@ -113,11 +113,28 @@ export async function POST(req: NextRequest) {
     try {
       console.log(`Updating invitation ${invitation_id} with rsvp_status=${status}`);
       
+      // Map the status from the form to the database enum values
+      // Database likely has an enum like ACCEPTED, DECLINED, PENDING
+      const mapStatusToDbEnum = (formStatus: string): string => {
+        // Common mapping patterns between form values and database enums
+        const statusMap: Record<string, string> = {
+          'accepted': 'ACCEPTED',
+          'declined': 'DECLINED',
+          'pending': 'PENDING',
+          'maybe': 'PENDING'
+        };
+        
+        return statusMap[formStatus.toLowerCase()] || 'PENDING';
+      };
+      
+      const dbRsvpStatus = mapStatusToDbEnum(status);
+      console.log(`Mapped form status "${status}" to database enum "${dbRsvpStatus}"`);
+      
       // Update invitation with proper rsvp_status and rsvp_date fields
       const { error: updateError } = await supabase
         .from('invitations')
         .update({
-          rsvp_status: status, // Use rsvp_status instead of status
+          rsvp_status: dbRsvpStatus, // Use mapped status value
           rsvp_date: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
@@ -131,7 +148,7 @@ export async function POST(req: NextRequest) {
         );
       }
       
-      console.log(`Successfully updated invitation rsvp_status (ID: ${invitation_id}) to: ${status}`);
+      console.log(`Successfully updated invitation rsvp_status (ID: ${invitation_id}) to: ${dbRsvpStatus}`);
     } catch (error) {
       console.error('Exception updating invitation status:', error);
       return NextResponse.json(
@@ -146,7 +163,7 @@ export async function POST(req: NextRequest) {
       const rsvpData = {
         id: nanoid(),
         invitation_id,
-        status,
+        status: dbRsvpStatus, // Use the same mapped status value for consistency
         guest_count: guest_count || 0,
         dietary_restrictions: dietary_restrictions || null,
         notes: notes || null,
@@ -177,7 +194,7 @@ export async function POST(req: NextRequest) {
       await supabase.rpc('track_rsvp_submission', {
         p_event_id: event_id,
         p_invitation_id: invitation_id,
-        p_status: status,
+        p_status: dbRsvpStatus, // Use the mapped status value
         p_guest_count: guest_count || 0
       });
       console.log('Analytics tracking successful');
