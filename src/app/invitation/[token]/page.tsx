@@ -141,23 +141,37 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
           {/* Gallery Preview Section */}
           <div className="mb-6">
             <h3 className="text-sm font-medium text-center mb-3">Event Gallery Preview</h3>
-            <div className="grid grid-cols-3 gap-2">
-              <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
-                  Photos
+            {validatedInvitation.event.cover_image_url ? (
+              <div className="rounded-md overflow-hidden relative aspect-video">
+                <Image 
+                  src={validatedInvitation.event.cover_image_url} 
+                  alt={event.name}
+                  fill
+                  className="object-cover hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end justify-center pb-4">
+                  <p className="text-white text-sm font-medium">RSVP to view full gallery</p>
                 </div>
               </div>
-              <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
-                  Upload
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
+                    Photos
+                  </div>
+                </div>
+                <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
+                    Upload
+                  </div>
+                </div>
+                <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
+                    Share
+                  </div>
                 </div>
               </div>
-              <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
-                  Share
-                </div>
-              </div>
-            </div>
+            )}
             <p className="text-xs text-center text-muted-foreground mt-2">
               RSVP to access the full gallery and upload your own photos
             </p>

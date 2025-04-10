@@ -149,16 +149,13 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base font-medium">
+                <FormLabel className="text-base font-medium mb-1.5 block">
                   Full Name <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input 
                     placeholder="Enter your full name" 
-                    className={`h-11 px-4 text-base w-full ${
-                      form.formState.errors.name ? "border-red-500 focus-visible:ring-red-500" : 
-                      field.value ? "border-green-500 focus-visible:ring-green-500" : ""
-                    }`}
+                    className="h-12 px-4 text-base w-full rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     {...field} 
                   />
                 </FormControl>
@@ -172,17 +169,14 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base font-medium">
+                <FormLabel className="text-base font-medium mb-1.5 block">
                   Email Address <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="your.email@example.com"
                     type="email"
-                    className={`h-11 px-4 text-base w-full ${
-                      form.formState.errors.email ? "border-red-500 focus-visible:ring-red-500" : 
-                      field.value ? "border-green-500 focus-visible:ring-green-500" : ""
-                    }`}
+                    className="h-12 px-4 text-base w-full rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     {...field}
                     disabled={!!invitation.email}
                   />
@@ -198,11 +192,13 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
           name="phone"
           render={({ field }) => (
             <FormItem className="mt-2">
-              <FormLabel className="text-base font-medium">Phone Number (optional)</FormLabel>
+              <FormLabel className="text-base font-medium mb-1.5 block">
+                Phone Number (optional)
+              </FormLabel>
               <FormControl>
                 <Input 
                   placeholder="Your phone number" 
-                  className="h-11 px-4 text-base w-full" 
+                  className="h-12 px-4 text-base w-full rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" 
                   {...field} 
                 />
               </FormControl>
@@ -245,11 +241,13 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
               name="dietary_restrictions"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base font-medium">Dietary Restrictions (optional)</FormLabel>
+                  <FormLabel className="text-base font-medium mb-1.5 block">
+                    Dietary Restrictions (optional)
+                  </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Please list any dietary restrictions or allergies"
-                      className="min-h-24 resize-none px-4 py-3 text-base"
+                      className="min-h-24 resize-none px-4 py-3 text-base rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       {...field}
                     />
                   </FormControl>
@@ -265,11 +263,13 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base font-medium">Additional Notes (optional)</FormLabel>
+              <FormLabel className="text-base font-medium mb-1.5 block">
+                Additional Notes (optional)
+              </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Anything else you'd like to share with the host"
-                  className="min-h-24 resize-none px-4 py-3 text-base"
+                  className="min-h-24 resize-none px-4 py-3 text-base rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   {...field}
                 />
               </FormControl>
