@@ -72,6 +72,11 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
     setIsSubmitting(true)
     
     try {
+      // First show a toast that submission is in progress
+      toast.loading('Submitting your RSVP...', {
+        id: 'rsvp-submission',
+      });
+      
       const response = await fetch('/api/rsvp/submit', {
         method: 'POST',
         headers: {
@@ -91,23 +96,21 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         throw new Error(data.message || 'Something went wrong')
       }
       
-      // Show success toast with longer duration
-      toast.success('Your RSVP has been submitted successfully! Redirecting to confirmation page...', {
-        duration: 5000, // 5 seconds duration
-        position: 'top-center',
-      })
+      // Update the toast to success
+      toast.success('RSVP submitted successfully!', {
+        id: 'rsvp-submission',
+      });
       
-      // Add delay before navigation to ensure toast is visible
-      setTimeout(() => {
-        // Redirect to confirmation page
-        router.push(`/invitation/${token}/confirmation/${values.status}`)
-      }, 2000) // 2 second delay
+      // Immediately redirect to confirmation page without delay
+      router.push(`/invitation/${token}/confirmation/${values.status}`);
     } catch (error) {
       console.error('RSVP submission error:', error)
+      
+      // Update the toast to error
       toast.error('Failed to submit RSVP. Please try again.', {
-        duration: 5000, // 5 seconds duration
-        position: 'top-center',
-      })
+        id: 'rsvp-submission',
+      });
+      
       setIsSubmitting(false)
     }
   }
@@ -164,8 +167,10 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                 </FormLabel>
                 <FormControl>
                   <Input 
+                    id="full-name-input"
                     placeholder="Enter your full name" 
-                    className="h-16 px-5 text-lg w-full rounded-lg border-2 border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 hover:border-primary/50"
+                    className="h-12 px-4 text-base w-full rounded-md border border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
+                    autoComplete="name"
                     {...field} 
                   />
                 </FormControl>
@@ -321,13 +326,13 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
 
         <div className="pt-6 flex justify-center">
           <Button 
-            type="submit"
-            className="min-w-[200px] h-14 px-8 text-lg font-semibold rounded-lg transition-all duration-200 bg-primary hover:bg-primary/90 hover:shadow-lg transform hover:-translate-y-0.5"
+            type="submit" 
+            className="w-full py-6 text-base font-medium" 
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Submitting...
               </>
             ) : (
