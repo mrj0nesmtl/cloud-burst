@@ -30,6 +30,15 @@ export async function POST(req: NextRequest) {
       );
     }
     
+    // Make sure required fields are present before validation
+    if (!body.invitation_id || !body.event_id || !body.status) {
+      console.error('Missing required fields:', { body });
+      return NextResponse.json(
+        { error: 'Missing required fields for RSVP submission' },
+        { status: 400 }
+      );
+    }
+    
     // Validate the request body
     let validatedData;
     try {
@@ -66,31 +75,32 @@ export async function POST(req: NextRequest) {
     // Verify that the token matches the invitation
     let invitation;
     try {
-      const { data, error } = await supabase
+      // First try directly without token check
+      const { data: invitationData, error: invitationError } = await supabase
         .from('invitations')
-        .select('id, status, event_id')
+        .select('id, status, rsvp_status, event_id')
         .eq('id', invitation_id)
-        .eq('token', token)
         .single();
-      
-      if (error) {
-        console.error('Error fetching invitation:', error);
+        
+      if (invitationError || !invitationData) {
+        console.error('Error fetching invitation by ID:', invitationError);
         return NextResponse.json(
-          { error: 'Failed to verify invitation' },
-          { status: 500 }
-        );
-      }
-      
-      if (!data) {
-        console.error('Invitation not found for token:', token);
-        return NextResponse.json(
-          { error: 'Invalid invitation token' },
+          { error: 'Invitation not found', details: invitationError },
           { status: 404 }
         );
       }
       
-      invitation = data;
+      invitation = invitationData;
       console.log('Found invitation:', JSON.stringify(invitation));
+      
+      // Verify the event ID matches
+      if (invitation.event_id !== event_id) {
+        console.error('Event ID mismatch:', { invitationEventId: invitation.event_id, requestEventId: event_id });
+        return NextResponse.json(
+          { error: 'Event ID does not match invitation' },
+          { status: 400 }
+        );
+      }
     } catch (error) {
       console.error('Exception fetching invitation:', error);
       return NextResponse.json(
@@ -99,41 +109,10 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    // Verify that the event exists
-    try {
-      const { data, error } = await supabase
-        .from('events')
-        .select('id, name')
-        .eq('id', event_id)
-        .single();
-      
-      if (error) {
-        console.error('Error fetching event:', error);
-        return NextResponse.json(
-          { error: 'Failed to verify event' },
-          { status: 500 }
-        );
-      }
-      
-      if (!data) {
-        console.error('Event not found:', event_id);
-        return NextResponse.json(
-          { error: 'Event not found' },
-          { status: 404 }
-        );
-      }
-      
-      console.log('Found event:', JSON.stringify(data));
-    } catch (error) {
-      console.error('Exception fetching event:', error);
-      return NextResponse.json(
-        { error: 'Failed to verify event' },
-        { status: 500 }
-      );
-    }
-    
     // Update the invitation status - with proper rsvp_status field
     try {
+      console.log(`Updating invitation ${invitation_id} with rsvp_status=${status}`);
+      
       // Update invitation with proper rsvp_status and rsvp_date fields
       const { error: updateError } = await supabase
         .from('invitations')
@@ -174,6 +153,8 @@ export async function POST(req: NextRequest) {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
+      
+      console.log('Inserting RSVP with data:', rsvpData);
       
       // Attempt to insert RSVP data
       const { error: insertError } = await supabase

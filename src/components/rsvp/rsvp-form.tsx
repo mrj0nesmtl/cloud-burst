@@ -76,6 +76,19 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       toast.loading('Submitting your RSVP...', {
         id: 'rsvp-submission',
       });
+
+      // Ensure status is valid
+      if (!values.status || !['accepted', 'declined'].includes(values.status)) {
+        throw new Error('Please select whether you can attend');
+      }
+      
+      // Log payload for debugging
+      console.log('Submitting RSVP with payload:', {
+        ...values,
+        invitation_id: invitation.id,
+        event_id: event.id,
+        token,
+      });
       
       const response = await fetch('/api/rsvp/submit', {
         method: 'POST',
@@ -90,10 +103,22 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         }),
       })
       
-      const data = await response.json()
+      // Log the raw response for debugging
+      const responseText = await response.text();
+      console.log('Raw API response:', responseText);
+      
+      let data;
+      try {
+        // Try to parse the response as JSON
+        data = JSON.parse(responseText);
+      } catch (e) {
+        console.error('Failed to parse API response as JSON:', e);
+        throw new Error('Invalid server response format');
+      }
       
       if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong')
+        console.error('RSVP submission error details:', data);
+        throw new Error(data.error || data.message || 'Something went wrong');
       }
       
       // Update the toast to success
@@ -107,7 +132,7 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       console.error('RSVP submission error:', error)
       
       // Update the toast to error
-      toast.error('Failed to submit RSVP. Please try again.', {
+      toast.error(`Failed to submit RSVP: ${error instanceof Error ? error.message : 'Please try again'}`, {
         id: 'rsvp-submission',
       });
       
@@ -189,9 +214,11 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                 </FormLabel>
                 <FormControl>
                   <Input
+                    id="email-input"
                     placeholder="your.email@example.com"
                     type="email"
-                    className="h-16 px-5 text-lg w-full rounded-lg border-2 border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 hover:border-primary/50"
+                    className="h-12 px-4 text-base w-full rounded-md border border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
+                    autoComplete="email"
                     {...field}
                     disabled={!!invitation.email}
                   />
