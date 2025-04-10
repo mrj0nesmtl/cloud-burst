@@ -1,4 +1,4 @@
-import { QRCodeParams } from '@/types/events'
+import { QRCodeParams as EventQRCodeParams } from '@/types/events'
 
 /**
  * Client-safe QR code utilities
