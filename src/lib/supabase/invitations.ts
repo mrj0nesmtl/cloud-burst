@@ -36,11 +36,17 @@ export async function validateInvitationToken(token: string) {
     cookies: () => cookieStore
   })
   
-  // Add console log to track function entry
-  console.log('Validating invitation token:', token)
+  // Enhanced logging for debugging
+  console.log('⚠️ Validating invitation token:', { 
+    token, 
+    tokenLength: token.length,
+    hasHyphens: token.includes('-'),
+    format: 'UUID format expected (8-4-4-4-12 characters with hyphens)'
+  })
   
   try {
     // Get invitation details
+    console.log('Querying database for token:', token)
     const { data: invitation, error } = await supabase
       .from('invitations')
       .select('id, event_id, email, name, status, rsvp_status, expires_at, metadata, created_at, sent_at, updated_at, rsvp_date')
@@ -52,7 +58,7 @@ export async function validateInvitationToken(token: string) {
       return null
     }
     
-    console.log('Retrieved invitation:', {
+    console.log('Successfully retrieved invitation:', {
       id: invitation.id,
       status: invitation.status,
       expires_at: invitation.expires_at,

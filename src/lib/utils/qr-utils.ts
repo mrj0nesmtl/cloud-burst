@@ -18,8 +18,8 @@ export interface QRCodeOptions {
  */
 export const invitationTokenSchema = z
   .string()
-  .regex(/^[a-zA-Z0-9]{8,24}$/, {
-    message: 'Invitation token must be 8-24 alphanumeric characters',
+  .regex(/^[a-zA-Z0-9\-]{8,36}$/, {
+    message: 'Invitation token must be 8-36 characters (alphanumeric and hyphens)',
   });
 
 /**
@@ -84,7 +84,7 @@ export function extractInvitationTokenFromUrl(url: string): string | null {
     const urlObj = new URL(url);
     
     // Check path pattern: /invitation/TOKEN
-    const pathMatch = urlObj.pathname.match(/\/invitation\/([a-zA-Z0-9]{8,24})$/);
+    const pathMatch = urlObj.pathname.match(/\/invitation\/([a-zA-Z0-9\-]{8,36})$/);
     if (pathMatch && pathMatch[1]) {
       return pathMatch[1];
     }
