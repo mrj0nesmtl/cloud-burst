@@ -16,21 +16,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
-- **Mobile Responsiveness Improvements**:
-  - Fixed mobile overflow issues in Gallery and Event Galleries components
-  - Improved responsive design for all gallery components
-  - Enhanced component spacing and layout for better mobile experience
-  - Optimized gallery tabs for better mobile display
-  - Refined card components for consistent appearance across devices
-  - Fixed responsive layout in Facial Recognition AI page
-  - Implemented proper inline styling for mobile stacking on key pages
-  - Added viewport awareness to layout-critical components
-- **Invitation System Verification**:
-  - Successfully tested event invitation sending with database logging
-  - Confirmed stable deployment with invitation functionality
-  - Fixed email delivery by properly configuring SendGrid API keys in deployment
-  - Verified end-to-end email sending functionality with successful delivery
-  - Prepared groundwork for RSVP system implementation
+- **Guest Reservation System Improvements**:
+  - Enhanced styling and visual feedback for RSVP form
+  - Added accessibility improvements for the form with screen reader support
+  - Implemented better keyboard navigation for form elements
+  - Added hover effects and visual feedback for interactive elements
+  - Improved form validation feedback with clearer error messages
+- **Gallery Preview Enhancements**:
+  - Added gallery preview functionality to invitation page
+  - Implemented event thumbnails for gallery previews
+  - Enhanced public gallery access controls for authorized guests
+  - Improved gallery loading states and visual feedback
+  - Added responsive design for gallery views across all devices
+- **Responsive Design Enhancements**:
+  - Refined responsive design for invitation and RSVP workflows
+  - Optimized mobile view for gallery previews
+  - Improved touch targets for mobile interactions
 - Advanced AI Features integration with TensorFlow.js
 - Complete RSVP form with dynamic fields and validation
 - Magic Link authentication for guests
