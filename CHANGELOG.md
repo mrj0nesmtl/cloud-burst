@@ -16,13 +16,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
-- **Guest Reservation System Improvements**:
+- Advanced AI Features integration with TensorFlow.js
+- Enhanced Analytics dashboard with real-time metrics
+
+## [0.8.10] - 2025-04-15
+### Added
+- **Guest Reservation System**:
   - Enhanced styling and visual feedback for RSVP form
   - Added accessibility improvements for the form with screen reader support
   - Implemented better keyboard navigation for form elements
   - Added hover effects and visual feedback for interactive elements
   - Improved form validation feedback with clearer error messages
-- **Gallery Preview Enhancements**:
+  - Fixed database schema alignment for RSVP submissions
+- **Gallery Access Control**:
   - Added gallery preview functionality to invitation page
   - Implemented event thumbnails for gallery previews
   - Enhanced public gallery access controls for authorized guests
@@ -32,10 +38,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Refined responsive design for invitation and RSVP workflows
   - Optimized mobile view for gallery previews
   - Improved touch targets for mobile interactions
-- Advanced AI Features integration with TensorFlow.js
 - Complete RSVP form with dynamic fields and validation
 - Magic Link authentication for guests
-- Enhanced Analytics dashboard with real-time metrics
+
+### Fixed
+- Database schema alignment issues for RSVP submissions
+- Invitation status updating with proper field names
+- Analytics tracking for RSVP submissions
 
 ## [0.8.9] - 2025-04-09
 

@@ -132,43 +132,27 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    // Update the invitation status - try multiple field names for compatibility
+    // Update the invitation status - with proper rsvp_status field
     try {
-      // First approach - with our standard field names
+      // Update invitation with proper rsvp_status and rsvp_date fields
       const { error: updateError } = await supabase
         .from('invitations')
         .update({
-          status: 'responded',
-          rsvp_status: status,
+          rsvp_status: status, // Use rsvp_status instead of status
           rsvp_date: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
         .eq('id', invitation_id);
       
       if (updateError) {
-        console.error('Error updating invitation status (first attempt):', updateError);
-        
-        // Second approach - try with alternative field names
-        const { error: alternativeUpdateError } = await supabase
-          .from('invitations')
-          .update({
-            status: status, // Direct status update if no rsvp_status field
-            response_status: status, // Try another possible field name
-            responded_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', invitation_id);
-        
-        if (alternativeUpdateError) {
-          console.error('Error updating invitation status (second attempt):', alternativeUpdateError);
-          return NextResponse.json(
-            { error: 'Failed to update invitation status' },
-            { status: 500 }
-          );
-        }
+        console.error('Error updating invitation status:', updateError);
+        return NextResponse.json(
+          { error: 'Failed to update invitation status', details: updateError },
+          { status: 500 }
+        );
       }
       
-      console.log(`Successfully updated invitation status (ID: ${invitation_id}) to: ${status}`);
+      console.log(`Successfully updated invitation rsvp_status (ID: ${invitation_id}) to: ${status}`);
     } catch (error) {
       console.error('Exception updating invitation status:', error);
       return NextResponse.json(
@@ -177,79 +161,33 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    // Create or update RSVP details
+    // Create or update RSVP details - focused on 'rsvps' table
     try {
-      // Check for existing RSVP
-      const { data: existingRsvp, error: rsvpFetchError } = await supabase
-        .from('rsvp_details')
-        .select('id')
-        .eq('invitation_id', invitation_id)
-        .single();
-      
-      if (rsvpFetchError && rsvpFetchError.code !== 'PGRST116') { // Not "no rows returned" error
-        console.error('Error checking existing RSVP:', rsvpFetchError);
-        // Continue anyway - we'll try to insert a new one
-      }
-      
+      // Prepare RSVP data matching actual schema
       const rsvpData = {
-        name,
-        email,
-        phone: phone || null,
-        guest_count,
+        id: nanoid(),
+        invitation_id,
+        status,
+        guest_count: guest_count || 0,
         dietary_restrictions: dietary_restrictions || null,
         notes: notes || null,
-        marketing_consent
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       };
       
-      if (existingRsvp) {
-        // Update existing RSVP details
-        const { error } = await supabase
-          .from('rsvp_details')
-          .update(rsvpData)
-          .eq('id', existingRsvp.id);
-        
-        if (error) {
-          console.error('Error updating RSVP details:', error);
-          // Continue anyway - the invitation status update is more important
-        } else {
-          console.log('Successfully updated RSVP details');
-        }
+      // Attempt to insert RSVP data
+      const { error: insertError } = await supabase
+        .from('rsvps')
+        .insert(rsvpData);
+      
+      if (insertError) {
+        console.error('Failed to insert RSVP details:', insertError);
+        // Continue anyway - the invitation status update is more important
       } else {
-        // Try alternative table name first - rsvps
-        const { error: rsvpsInsertError } = await supabase
-          .from('rsvps')
-          .insert({
-            id: nanoid(),
-            invitation_id,
-            event_id,
-            ...rsvpData
-          });
-        
-        if (rsvpsInsertError) {
-          console.log('Could not insert into rsvps table, trying rsvp_details');
-          
-          // Try inserting into rsvp_details
-          const { error: rsvpDetailsInsertError } = await supabase
-            .from('rsvp_details')
-            .insert({
-              id: nanoid(),
-              invitation_id,
-              event_id,
-              ...rsvpData
-            });
-          
-          if (rsvpDetailsInsertError) {
-            console.error('Error inserting RSVP details:', rsvpDetailsInsertError);
-            // Continue anyway - the invitation status update is more important
-          } else {
-            console.log('Successfully inserted RSVP details');
-          }
-        } else {
-          console.log('Successfully inserted into rsvps table');
-        }
+        console.log('Successfully inserted RSVP details');
       }
     } catch (error) {
-      console.error('Exception saving RSVP details:', error);
+      console.error('Exception handling RSVP details:', error);
       // Continue anyway - the invitation status update is more important
     }
     
@@ -259,10 +197,12 @@ export async function POST(req: NextRequest) {
         p_event_id: event_id,
         p_invitation_id: invitation_id,
         p_status: status,
-        p_guest_count: guest_count
+        p_guest_count: guest_count || 0
       });
+      console.log('Analytics tracking successful');
     } catch (err) {
       console.error('Analytics error:', err);
+      // Continue despite analytics error
     }
     
     // Return success response
