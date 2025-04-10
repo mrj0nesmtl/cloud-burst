@@ -143,15 +143,24 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
           )}
         />
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel className="text-base font-medium">
+                  Full Name <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your full name" {...field} />
+                  <Input 
+                    placeholder="Enter your full name" 
+                    className={`h-11 px-4 text-base w-full ${
+                      form.formState.errors.name ? "border-red-500 focus-visible:ring-red-500" : 
+                      field.value ? "border-green-500 focus-visible:ring-green-500" : ""
+                    }`}
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -163,11 +172,17 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email Address</FormLabel>
+                <FormLabel className="text-base font-medium">
+                  Email Address <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="your.email@example.com"
                     type="email"
+                    className={`h-11 px-4 text-base w-full ${
+                      form.formState.errors.email ? "border-red-500 focus-visible:ring-red-500" : 
+                      field.value ? "border-green-500 focus-visible:ring-green-500" : ""
+                    }`}
                     {...field}
                     disabled={!!invitation.email}
                   />
@@ -182,12 +197,16 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
           control={form.control}
           name="phone"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone Number (optional)</FormLabel>
+            <FormItem className="mt-2">
+              <FormLabel className="text-base font-medium">Phone Number (optional)</FormLabel>
               <FormControl>
-                <Input placeholder="Your phone number" {...field} />
+                <Input 
+                  placeholder="Your phone number" 
+                  className="h-11 px-4 text-base w-full" 
+                  {...field} 
+                />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-sm mt-1">
                 We'll only use this to contact you about this event
               </FormDescription>
               <FormMessage />
@@ -226,11 +245,11 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
               name="dietary_restrictions"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Dietary Restrictions (optional)</FormLabel>
+                  <FormLabel className="text-base font-medium">Dietary Restrictions (optional)</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Please list any dietary restrictions or allergies"
-                      className="min-h-24 resize-none"
+                      className="min-h-24 resize-none px-4 py-3 text-base"
                       {...field}
                     />
                   </FormControl>
@@ -246,11 +265,11 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Additional Notes (optional)</FormLabel>
+              <FormLabel className="text-base font-medium">Additional Notes (optional)</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Anything else you'd like to share with the host"
-                  className="min-h-24 resize-none"
+                  className="min-h-24 resize-none px-4 py-3 text-base"
                   {...field}
                 />
               </FormControl>
@@ -263,7 +282,7 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
           control={form.control}
           name="marketing_consent"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 mt-6">
               <FormControl>
                 <Checkbox
                   checked={field.value}
@@ -290,10 +309,20 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
           </Alert>
         )}
 
-        <div className="flex justify-end">
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Submit RSVP
+        <div className="pt-6 flex justify-center">
+          <Button 
+            type="submit"
+            className="min-w-[180px] h-12 px-8 text-base font-medium transition-colors hover:bg-primary/90 hover:shadow-md"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              'Submit RSVP'
+            )}
           </Button>
         </div>
       </form>

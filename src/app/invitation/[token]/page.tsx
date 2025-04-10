@@ -138,6 +138,31 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
             </div>
           )}
           
+          {/* Gallery Preview Section */}
+          <div className="mb-6">
+            <h3 className="text-sm font-medium text-center mb-3">Event Gallery Preview</h3>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
+                  Photos
+                </div>
+              </div>
+              <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
+                  Upload
+                </div>
+              </div>
+              <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
+                  Share
+                </div>
+              </div>
+            </div>
+            <p className="text-xs text-center text-muted-foreground mt-2">
+              RSVP to access the full gallery and upload your own photos
+            </p>
+          </div>
+          
           <Alert className="mb-6">
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Important</AlertTitle>
