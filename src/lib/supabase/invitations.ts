@@ -32,99 +32,114 @@ export async function getInvitationsByEventId(eventId: string): Promise<Invitati
  */
 export async function validateInvitationToken(token: string) {
   const cookieStore = cookies()
-  const supabase = await createServerClient({ cookies: () => cookieStore })
-  
-  // Get invitation details
-  const { data: invitation, error } = await supabase
-    .from('invitations')
-    .select('id, event_id, email, name, status, rsvp_status, expires_at, metadata, created_at, sent_at, updated_at, rsvp_date')
-    .eq('token', token)
-    .single()
-  
-  if (error || !invitation) {
-    console.error('Invitation not found:', error)
-    return null
-  }
-  
-  console.log('Retrieved invitation:', {
-    id: invitation.id,
-    status: invitation.status,
-    expires_at: invitation.expires_at,
-    event_id: invitation.event_id
+  const supabase = await createServerClient({ 
+    cookies: () => cookieStore
   })
   
-  // Get event details to check if it's past the event date
-  const { data: event } = await supabase
-    .from('events')
-    .select('date')
-    .eq('id', invitation.event_id)
-    .single()
+  // Add console log to track function entry
+  console.log('Validating invitation token:', token)
   
-  console.log('Event date:', event?.date)
-  
-  // Check if invitation has expired
-  const now = new Date()
-  const expiresAt = invitation.expires_at ? new Date(invitation.expires_at) : null
-  const eventDate = event?.date ? new Date(event.date) : null
-  
-  console.log('Time check:', {
-    now: now.toISOString(),
-    expiresAt: expiresAt?.toISOString() || 'not set',
-    eventDate: eventDate?.toISOString() || 'not set'
-  })
+  try {
+    // Get invitation details
+    const { data: invitation, error } = await supabase
+      .from('invitations')
+      .select('id, event_id, email, name, status, rsvp_status, expires_at, metadata, created_at, sent_at, updated_at, rsvp_date')
+      .eq('token', token)
+      .single()
+    
+    if (error || !invitation) {
+      console.error('Invitation not found:', error)
+      return null
+    }
+    
+    console.log('Retrieved invitation:', {
+      id: invitation.id,
+      status: invitation.status,
+      expires_at: invitation.expires_at,
+      event_id: invitation.event_id
+    })
+    
+    // Get event details to check if it's past the event date
+    const { data: event, error: eventError } = await supabase
+      .from('events')
+      .select('id, name, date, location, description, cover_image_url, organizer_id')
+      .eq('id', invitation.event_id)
+      .single()
+    
+    if (eventError) {
+      console.error('Error fetching event:', eventError)
+      // Continue anyway, as we can still return invitation data
+    }
+    
+    console.log('Event date:', event?.date)
+    
+    // Check if invitation has expired
+    const now = new Date()
+    const expiresAt = invitation.expires_at ? new Date(invitation.expires_at) : null
+    const eventDate = event?.date ? new Date(event.date) : null
+    
+    console.log('Time check:', {
+      now: now.toISOString(),
+      expiresAt: expiresAt?.toISOString() || 'not set',
+      eventDate: eventDate?.toISOString() || 'not set'
+    })
 
-  // An invitation is expired if:
-  // 1. It has status 'expired'
-  // 2. It has an explicit expiration date that has passed
-  // 3. The event date has passed (only if we have an event date)
-  let statusCheck = invitation.status === 'expired'
-  let expiresAtCheck = false
-  let eventDateCheck = false
-  
-  // Only check dates if they exist
-  if (expiresAt) {
-    expiresAtCheck = now > expiresAt
-  }
-  
-  if (eventDate) {
-    eventDateCheck = now > eventDate
-  }
-  
-  const isExpired = statusCheck || expiresAtCheck || eventDateCheck
-  
-  console.log('Detailed invitation expiration check:', {
-    isExpired,
-    statusCheck,
-    expiresAtCheck,
-    expiresAtDate: expiresAt?.toISOString() || null,
-    eventDateCheck,
-    eventDate: eventDate?.toISOString() || null
-  })
-  
-  if (isExpired) {
-    // Update status to expired if it's not already
-    if (invitation.status !== 'expired') {
+    // An invitation is expired if:
+    // 1. It has status 'expired'
+    // 2. It has an explicit expiration date that has passed
+    // 3. The event date has passed (only if we have an event date)
+    let statusCheck = invitation.status === 'expired'
+    let expiresAtCheck = false
+    let eventDateCheck = false
+    
+    // Only check dates if they exist
+    if (expiresAt) {
+      expiresAtCheck = now > expiresAt
+    }
+    
+    if (eventDate) {
+      eventDateCheck = now > eventDate
+    }
+    
+    const isExpired = statusCheck || expiresAtCheck || eventDateCheck
+    
+    console.log('Detailed invitation expiration check:', {
+      isExpired,
+      statusCheck,
+      expiresAtCheck,
+      expiresAtDate: expiresAt?.toISOString() || null,
+      eventDateCheck,
+      eventDate: eventDate?.toISOString() || null
+    })
+    
+    if (isExpired) {
+      // Update status to expired if it's not already
+      if (invitation.status !== 'expired') {
+        await supabase
+          .from('invitations')
+          .update({ status: 'expired' })
+          .eq('id', invitation.id)
+        
+        console.log('Updated invitation status to expired')
+      }
+      return null
+    }
+    
+    // Mark invitation as opened if not already opened or responded to
+    if (invitation.status === 'sent') {
       await supabase
         .from('invitations')
-        .update({ status: 'expired' })
+        .update({ status: 'opened' })
         .eq('id', invitation.id)
       
-      console.log('Updated invitation status to expired')
+      console.log('Updated invitation status to opened')
     }
+    
+    return invitation
+  } catch (error) {
+    console.error('Error validating invitation token:', error)
     return null
   }
-  
-  // Mark invitation as opened if not already opened or responded to
-  if (invitation.status === 'sent') {
-    await supabase
-      .from('invitations')
-      .update({ status: 'opened' })
-      .eq('id', invitation.id)
-    
-    console.log('Updated invitation status to opened')
-  }
-  
-  return invitation
 }
 
 /**
@@ -133,19 +148,37 @@ export async function validateInvitationToken(token: string) {
  * @returns The event details
  */
 export async function getEventForInvitation(eventId: string) {
-  const cookieStore = cookies()
-  const supabase = await createServerClient({ cookies: () => cookieStore })
-  
-  const { data: event, error } = await supabase
-    .from('events')
-    .select('id, name, date, location, description, cover_image_url, organizer_id')
-    .eq('id', eventId)
-    .single()
-  
-  if (error || !event) {
-    console.error('Event not found:', error)
+  if (!eventId) {
+    console.error('No event ID provided to getEventForInvitation')
     return null
   }
-  
-  return event
+
+  try {
+    const cookieStore = cookies()
+    const supabase = await createServerClient({ cookies: () => cookieStore })
+    
+    console.log('Fetching event for invitation:', eventId)
+    
+    const { data: event, error } = await supabase
+      .from('events')
+      .select('id, name, date, location, description, cover_image_url, organizer_id')
+      .eq('id', eventId)
+      .single()
+    
+    if (error || !event) {
+      console.error('Event not found:', error)
+      return null
+    }
+    
+    console.log('Retrieved event:', { 
+      id: event.id,
+      name: event.name,
+      date: event.date
+    })
+    
+    return event
+  } catch (error) {
+    console.error('Error fetching event for invitation:', error)
+    return null
+  }
 } 

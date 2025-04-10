@@ -13,9 +13,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '@/components/ui/separator'
 import { RsvpForm } from '@/components/rsvp/rsvp-form'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, MapPin, Clock, User, Lock, AlertTriangle } from 'lucide-react'
+import { Calendar, MapPin, Clock, User, Lock, AlertTriangle, CameraOff } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
-import { validateInvitationToken } from '@/lib/invitations'
+import { validateInvitationToken } from '@/lib/supabase/invitations'
+import { getEventForInvitation } from '@/lib/supabase/invitations'
 import { MagicLinkAuth } from '@/components/invitations/magic-link-auth'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -29,28 +30,37 @@ interface InvitationPageProps {
   }
 }
 
-export async function generateMetadata({ params }: InvitationPageProps): Promise<Metadata> {
-  const cookieStore = cookies()
-  const supabase = await createServerClient({ cookies: () => cookieStore })
-  
-  const { data: invitation } = await supabase
-    .from('invitations')
-    .select('*, events(name)')
-    .eq('token', params.token)
-    .single()
-  
-  if (!invitation) {
-    return {
-      title: 'Cloud Burst | RSVP & Event Gallery',
-      description: 'Respond to your invitation and access event photos.',
+export async function generateMetadata({
+  params,
+}: {
+  params: { token: string }
+}): Promise<Metadata> {
+  console.log('Generating metadata for invitation token:', params.token)
+  try {
+    const invitation = await validateInvitationToken(params.token)
+    if (!invitation) {
+      return {
+        title: 'Invitation | Cloud Burst',
+      }
     }
-  }
-  
-  const eventName = invitation.events?.name || 'Event'
-  
-  return {
-    title: `You're invited to ${eventName} | Cloud Burst`,
-    description: `Respond to your invitation for ${eventName}`,
+    
+    // Fetch event details separately
+    const event = await getEventForInvitation(invitation.event_id)
+    if (!event) {
+      return {
+        title: 'Invitation | Cloud Burst',
+      }
+    }
+    
+    return {
+      title: `${event.name} | Cloud Burst`,
+      description: `You're invited to ${event.name}. Please RSVP.`,
+    }
+  } catch (error) {
+    console.error('Error generating metadata:', error)
+    return {
+      title: 'Invitation | Cloud Burst',
+    }
   }
 }
 
@@ -76,128 +86,123 @@ type Invitation = {
 export default async function InvitationPage({ params }: InvitationPageProps) {
   const { token } = params
   
-  // Validate the invitation token using our existing function
-  const result = await validateInvitationToken(token)
+  // Add debug log
+  console.log('Handling invitation page request for token:', token)
   
-  // Handle validation result with the correct properties
-  if (!result.valid) {
-    if (result.expired) {
-      return redirect(`/invitation/expired?token=${token}`)
-    } else if (result.error && result.error.includes('already been used')) {
-      return redirect(`/invitation/used?token=${token}${result.invitation?.event.id ? `&eventId=${result.invitation.event.id}` : ''}`)
-    } else {
+  try {
+    // Validate the invitation token using our existing function
+    const invitation = await validateInvitationToken(token)
+    
+    // If no invitation found, return 404
+    if (!invitation) {
+      console.error('Invitation not found for token:', token)
       return notFound()
     }
-  }
-  
-  // Extract event and invitation from the validated result
-  const validatedInvitation = result.invitation
-  
-  if (!validatedInvitation || !validatedInvitation.event) {
-    return notFound()
-  }
+    
+    console.log('Processing invitation:', { 
+      id: invitation.id, 
+      event_id: invitation.event_id,
+      status: invitation.status
+    })
+    
+    // Get event details
+    const event = await getEventForInvitation(invitation.event_id)
+    
+    if (!event) {
+      console.error('Event not found for invitation:', invitation.id)
+      return notFound()
+    }
+    
+    console.log('Retrieved event for invitation:', { 
+      id: event.id, 
+      name: event.name 
+    })
+    
+    // Convert to the format needed by RsvpForm component
+    const rsvpInvitation = {
+      id: invitation.id,
+      event_id: invitation.event_id,
+      email: invitation.email || undefined,
+      status: invitation.status,
+      expires_at: invitation.expires_at
+    }
 
-  // Convert to the format needed by RsvpForm component
-  const invitation: Invitation = {
-    id: validatedInvitation.id,
-    event_id: validatedInvitation.event.id,
-    email: validatedInvitation.email || undefined,
-    status: validatedInvitation.status,
-    expires_at: validatedInvitation.expires_at
-  }
-
-  const event: Event = {
-    id: validatedInvitation.event.id,
-    name: validatedInvitation.event.name,
-    description: validatedInvitation.event.description || undefined,
-    location: validatedInvitation.event.location || undefined,
-    // Converting date fields to the expected format
-    start_date: validatedInvitation.event.date || undefined
-  }
-
-  // If we get here, we have a valid invitation
-  return (
-    <div className="container max-w-3xl py-10">
-      <Card className="w-full">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">You're invited!</CardTitle>
-          <CardDescription className="text-lg">
-            {event.name}
-          </CardDescription>
-          {event.start_date && (
-            <div className="mt-2 flex items-center justify-center text-sm text-muted-foreground">
-              <Calendar className="mr-1 h-4 w-4" />
-              <span>{formatDate(event.start_date)}</span>
-            </div>
-          )}
-        </CardHeader>
-        <CardContent>
-          {event.description && (
-            <div className="mb-6 rounded-lg bg-secondary p-4 text-secondary-foreground">
-              <p>{event.description}</p>
-            </div>
-          )}
-          
-          {/* Gallery Preview Section */}
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-center mb-3">Event Gallery Preview</h3>
-            {validatedInvitation.event.cover_image_url ? (
-              <div className="rounded-md overflow-hidden relative aspect-video">
-                <Image 
-                  src={validatedInvitation.event.cover_image_url} 
-                  alt={event.name}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end justify-center pb-4">
-                  <p className="text-white text-sm font-medium">RSVP to view full gallery</p>
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-3 gap-2">
-                <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
-                    Photos
-                  </div>
-                </div>
-                <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
-                    Upload
-                  </div>
-                </div>
-                <div className="aspect-square rounded-md bg-muted overflow-hidden relative">
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent text-white text-xs font-medium">
-                    Share
-                  </div>
-                </div>
+    const rsvpEvent = {
+      id: event.id,
+      name: event.name,
+      description: event.description || undefined,
+      location: event.location || undefined,
+      // Converting date fields to the expected format
+      start_date: event.date || undefined
+    }
+    
+    // If we get here, we have a valid invitation and event
+    return (
+      <div className="container max-w-3xl py-10">
+        <Card className="w-full">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold">You're invited!</CardTitle>
+            <CardDescription className="text-lg">
+              {rsvpEvent.name}
+            </CardDescription>
+            {rsvpEvent.start_date && (
+              <div className="mt-2 flex items-center justify-center text-sm text-muted-foreground">
+                <Calendar className="mr-1 h-4 w-4" />
+                <span>{formatDate(rsvpEvent.start_date)}</span>
               </div>
             )}
-            <p className="text-xs text-center text-muted-foreground mt-2">
-              RSVP to access the full gallery and upload your own photos
-            </p>
-          </div>
-          
-          <Alert className="mb-6">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>Important</AlertTitle>
-            <AlertDescription>
-              By responding to this invitation, you'll create an account that lets you view event photos and upload your own.
-            </AlertDescription>
-          </Alert>
-          
-          <RsvpForm 
-            invitation={invitation} 
-            event={event} 
-            token={token} 
-          />
-          
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            <p>
-              Already responded? <Link href={`/events/${event.id}/gallery`} className="text-primary underline">View the gallery</Link>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
+          </CardHeader>
+          <CardContent>
+            {rsvpEvent.description && (
+              <div className="mb-6 rounded-lg bg-secondary p-4 text-secondary-foreground">
+                <p>{rsvpEvent.description}</p>
+              </div>
+            )}
+            
+            {/* Gallery Preview Section */}
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-center mb-3">Event Gallery Preview</h3>
+              {event.cover_image_url ? (
+                <div className="rounded-md overflow-hidden relative aspect-video">
+                  <Image 
+                    src={event.cover_image_url} 
+                    alt={rsvpEvent.name}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              ) : (
+                <div className="rounded-md overflow-hidden relative aspect-video bg-muted flex items-center justify-center">
+                  <CameraOff className="h-12 w-12 text-muted-foreground" />
+                </div>
+              )}
+            </div>
+            
+            <Alert className="mb-6">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Important</AlertTitle>
+              <AlertDescription>
+                By responding to this invitation, you'll create an account that lets you view event photos and upload your own.
+              </AlertDescription>
+            </Alert>
+            
+            <RsvpForm 
+              invitation={rsvpInvitation} 
+              event={rsvpEvent} 
+              token={token} 
+            />
+            
+            <div className="mt-4 text-center text-sm text-muted-foreground">
+              <p>
+                Already responded? <Link href={`/events/${rsvpEvent.id}/gallery`} className="text-primary underline">View the gallery</Link>
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  } catch (error) {
+    console.error('Error handling invitation page:', error)
+    return notFound()
+  }
 } 
