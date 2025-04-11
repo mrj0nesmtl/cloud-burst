@@ -59,7 +59,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate a secure token for the invitation
+    // Using standard UUID format without version prefix to avoid URL encoding issues
     const token = uuidv4();
+    
+    // For debugging - log the token format
+    console.log('Generated invitation token:', {
+      token,
+      length: token.length,
+      format: 'standard UUID v4'
+    });
 
     // Environment variables check for debugging
     console.log('Environment variables check:');
@@ -107,6 +115,31 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Verify that the invitation was actually stored in the database
+    const { data: verifyData, error: verifyError } = await supabase
+      .from('invitations')
+      .select('id, token, status')
+      .eq('token', token)
+      .single();
+    
+    if (verifyError || !verifyData) {
+      console.error('CRITICAL: Invitation verification failed after insert:', verifyError);
+      console.error('Original token:', token);
+      console.error('Original invitation data:', invitation);
+      
+      return NextResponse.json(
+        { error: 'Failed to verify invitation in database' },
+        { status: 500 }
+      );
+    }
+    
+    console.log('✅ Verified invitation in database:', {
+      verifiedId: verifyData.id,
+      verifiedToken: verifyData.token,
+      originalToken: token,
+      match: verifyData.token === token
+    });
 
     // Attempt to send email, but allow the process to continue even if email fails
     let warning = null;

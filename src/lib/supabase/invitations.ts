@@ -34,16 +34,24 @@ export async function getInvitationsByEventId(eventId: string): Promise<Invitati
  */
 export async function validateInvitationToken(token: string) {
   // Enhanced logging for debugging
-  console.log('⚠️ Validating invitation token:', { 
+  console.log('🔍 Validating invitation token:', { 
     token, 
     tokenLength: token.length,
     hasHyphens: token.includes('-'),
-    format: 'UUID format expected (8-4-4-4-12 characters with hyphens)'
+    format: 'UUID format expected (8-4-4-4-12 characters with hyphens)',
+    isValidUUID: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)
   })
   
   try {
     // Use createServerComponentClient directly with cookies
     const supabase = createServerComponentClient<Database>({ cookies })
+    
+    // Additional logging for the query
+    console.log('📊 DB Query:', {
+      table: 'invitations',
+      condition: `token = ${token}`,
+      tokenEncoded: encodeURIComponent(token)
+    })
     
     // Get invitation details
     console.log('Querying database for token:', token)
