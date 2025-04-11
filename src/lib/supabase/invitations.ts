@@ -2,6 +2,8 @@ import { createServerClient } from './server'
 import { cookies } from 'next/headers'
 import { Invitation } from '@/types/invitations'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { Database } from '@/types/supabase'
 
 /**
  * Get all invitations for an event
@@ -31,11 +33,6 @@ export async function getInvitationsByEventId(eventId: string): Promise<Invitati
  * @returns The invitation data if valid, null if invalid or expired
  */
 export async function validateInvitationToken(token: string) {
-  const cookieStore = cookies()
-  const supabase = await createServerClient({ 
-    cookies: () => cookieStore
-  })
-  
   // Enhanced logging for debugging
   console.log('⚠️ Validating invitation token:', { 
     token, 
@@ -45,6 +42,9 @@ export async function validateInvitationToken(token: string) {
   })
   
   try {
+    // Use createServerComponentClient directly with cookies
+    const supabase = createServerComponentClient<Database>({ cookies })
+    
     // Get invitation details
     console.log('Querying database for token:', token)
     const { data: invitation, error } = await supabase
@@ -160,8 +160,8 @@ export async function getEventForInvitation(eventId: string) {
   }
 
   try {
-    const cookieStore = cookies()
-    const supabase = await createServerClient({ cookies: () => cookieStore })
+    // Use createServerComponentClient directly with cookies
+    const supabase = createServerComponentClient<Database>({ cookies })
     
     console.log('Fetching event for invitation:', eventId)
     

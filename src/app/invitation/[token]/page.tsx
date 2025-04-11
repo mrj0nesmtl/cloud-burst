@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/types/supabase'
 import { InvitationWithEvent } from '@/lib/invitations'
@@ -104,7 +104,39 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
     // If no invitation found, return 404
     if (!invitation) {
       console.error('❌ Invitation validation failed for token:', token)
-      return notFound()
+      // Add a fallback component with a link to guest-access instead of notFound()
+      return (
+        <div className="container max-w-3xl py-10">
+          <Card className="w-full">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold">Invitation Not Found</CardTitle>
+              <CardDescription className="text-lg">
+                We couldn't validate your invitation token
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Alert variant="destructive" className="mb-6">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Token Error</AlertTitle>
+                <AlertDescription>
+                  The invitation token could not be validated. This may be due to a server issue.
+                </AlertDescription>
+              </Alert>
+              
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-center text-muted-foreground">
+                  Please try the alternative access method or contact the event organizer.
+                </p>
+                <Link href="/guest-access" passHref>
+                  <Button>
+                    Use Alternative Access
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )
     }
     
     console.log('✅ Successfully validated invitation:', { 
