@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-09T21:52:26.107Z
+Generated: 2025-04-11T03:54:00.719Z
 
 ## Overview
 
@@ -173,6 +173,8 @@ Generated: 2025-04-09T21:52:26.107Z
 │   ├── gallery/
 │   │   └── [eventId]/
 │   │       └── page.tsx
+│   ├── guest-access/
+│   │   └── page.tsx
 │   ├── invitation/
 │   │   ├── [token]/
 │   │   │   ├── confirmation/
@@ -184,6 +186,8 @@ Generated: 2025-04-09T21:52:26.107Z
 │   │   │   │       └── page.tsx
 │   │   │   ├── details/
 │   │   │   │   └── page.tsx
+│   │   │   ├── default.tsx
+│   │   │   ├── layout.tsx
 │   │   │   ├── page.tsx
 │   │   │   ├── rsvp-details.tsx
 │   │   │   └── rsvp-form.tsx
@@ -730,13 +734,13 @@ Generated: 2025-04-09T21:52:26.107Z
 ├── middleware.test.ts
 └── middleware.ts
 
-216 directories, 505 files
+217 directories, 508 files
 
 ```
 
 ## File Type Breakdown
 - ts: 126 file(s)
-- tsx: 360 file(s)
+- tsx: 363 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

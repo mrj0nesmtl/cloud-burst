@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-09T21:52:25.178Z
+Generated: 2025-04-11T03:53:59.793Z
 
 ## Overview
 
@@ -152,6 +152,10 @@ Generated: 2025-04-09T21:52:25.178Z
 │   │   │   ├── session_38_kickoff_prompt.md
 │   │   │   ├── session_38b_checklist.md
 │   │   │   ├── session_38b_kickoff_prompt.md
+│   │   │   ├── session_39_checklist.md
+│   │   │   ├── session_39_completion.md
+│   │   │   ├── session_39_implementation.md
+│   │   │   ├── session_39_kickoff.md
 │   │   │   ├── session_4.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
@@ -162,11 +166,9 @@ Generated: 2025-04-09T21:52:25.178Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── resource_directories_map.md
-│   │   ├── session_39_checklist.md
-│   │   ├── session_39_completion.md
-│   │   ├── session_39_implementation.md
-│   │   ├── session_39_kickoff.md
+│   │   ├── session_39b_checklist.md
+│   │   ├── session_39b_kickoff_prompt.md
+│   │   ├── session_39b_resources.md
 │   │   └── version-sync.plan
 │   ├── features/
 │   │   ├── gallery_implementation.md
@@ -203,6 +205,7 @@ Generated: 2025-04-09T21:52:25.178Z
 │   │   ├── planning_tree.md
 │   │   ├── protected_tree.md
 │   │   ├── public_tree.md
+│   │   ├── resource_directories_map.md
 │   │   ├── scan_tree.md
 │   │   ├── store_tree.md
 │   │   ├── styles_tree.md
@@ -443,6 +446,8 @@ Generated: 2025-04-09T21:52:25.178Z
 │   │   ├── gallery/
 │   │   │   └── [eventId]/
 │   │   │       └── page.tsx
+│   │   ├── guest-access/
+│   │   │   └── page.tsx
 │   │   ├── invitation/
 │   │   │   ├── [token]/
 │   │   │   │   ├── confirmation/
@@ -454,6 +459,8 @@ Generated: 2025-04-09T21:52:25.178Z
 │   │   │   │   │       └── page.tsx
 │   │   │   │   ├── details/
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── default.tsx
+│   │   │   │   ├── layout.tsx
 │   │   │   │   ├── page.tsx
 │   │   │   │   ├── rsvp-details.tsx
 │   │   │   │   └── rsvp-form.tsx
@@ -1006,12 +1013,18 @@ Generated: 2025-04-09T21:52:25.178Z
 │   │   ├── .DS_Store
 │   │   ├── Album Media Table Structure.csv
 │   │   ├── RSVPs Table Structure.csv
+│   │   ├── Supabase Snippet Check Invitations with Tokens.csv
+│   │   ├── Supabase Snippet Count Total Invitations.csv
+│   │   ├── Supabase Snippet Fetch Failed Invitation Token Details.csv
+│   │   ├── Supabase Snippet Token Format Validation.csv
 │   │   ├── events_rows.csv
 │   │   ├── galleries_rows.csv
+│   │   ├── invitations_rows.csv
 │   │   ├── invitations_table_schema.csv
 │   │   ├── profiles_rows.csv
 │   │   ├── public_tables.csv
-│   │   └── roles_rows.csv
+│   │   ├── roles_rows.csv
+│   │   └── rsvps_rows.csv
 │   ├── migrations/
 │   │   ├──  refined_sql.migration.sql
 │   │   ├── 01_create_media_table.sql
@@ -1048,7 +1061,9 @@ Generated: 2025-04-09T21:52:25.178Z
 │   │       ├── reauthentication.html
 │   │       └── reset_password.html
 │   ├── .gitignore
-│   └── config.toml
+│   ├── check-invitation.sql
+│   ├── config.toml
+│   └── patch-rsvp.sql
 ├── .DS_Store
 ├── .eslintrc.json
 ├── .gitignore
@@ -1067,20 +1082,19 @@ Generated: 2025-04-09T21:52:25.178Z
 ├── postcss.config.js
 ├── postcss.config.mjs
 ├── tailwind.config.js
-├── test-invitation.sql
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-254 directories, 808 files
+255 directories, 821 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11800 file(s)
-- tsx: 499 file(s)
-- js: 28221 file(s)
-- json: 2181 file(s)
-- md: 1499 file(s)
+- ts: 11783 file(s)
+- tsx: 502 file(s)
+- js: 27876 file(s)
+- json: 2038 file(s)
+- md: 1502 file(s)
 - css: 27 file(s)
 - yml: 164 file(s)
 
