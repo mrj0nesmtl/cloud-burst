@@ -1,13 +1,13 @@
 # Cloud Burst - Development Status Notes
 
-## Current Version: 0.8.13
+## Current Version: 0.9.0
 ## Last Updated: April 10, 2025, 11:45 PM
-## Session: 39C - RSVP System Fixes & Redeployment
+## Session: 39C - v0.9.0 - RSVP System Fixes & Redeployment
 
 ### Overview
 Cloud Burst continues to make steady progress with recent focus on fixing critical issues in the RSVP system and invitation flow. We've resolved database constraint issues by properly mapping RSVP status values between the frontend and backend, implemented enhanced token validation for invitations, and added comprehensive logging for debugging. These fixes stabilize the guest reservation and RSVP flow, which are crucial components for the upcoming beta release. The application has been redeployed with these fixes, providing a more reliable experience for event hosts and guests.
 
-### Recent Progress (Session 39C - v0.8.13)
+### Recent Progress (Session 39C - v0.8.13- v0.9.0)
 - ✅ Fixed RSVP status mapping to match database enum constraints ('accepted' → 'yes')
 - ✅ Improved logging for RSVP submissions to show both original and mapped values
 - ✅ Enhanced database updates for invitation status with proper field names
