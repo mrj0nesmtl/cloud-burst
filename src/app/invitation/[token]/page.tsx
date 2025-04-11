@@ -97,16 +97,20 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
     tokenFormat: token.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i) ? 'Valid UUID' : 'Not UUID format'
   })
   
+  // Ensure token is properly formatted
+  // Next.js might be altering the token format in the URL parameters
+  const cleanToken = token.replace(/\s/g, '');
+  
   try {
     // Log token before validation for debugging
-    console.log('🔑 About to validate token in database:', token);
+    console.log('🔑 About to validate token in database:', cleanToken);
     
     // Validate the invitation token using our existing function
-    const invitation = await validateInvitationToken(token)
+    const invitation = await validateInvitationToken(cleanToken)
     
     // If no invitation found, return 404
     if (!invitation) {
-      console.error('❌ Invitation validation failed for token:', token)
+      console.error('❌ Invitation validation failed for token:', cleanToken)
       // Add a fallback component with a link to guest-access instead of notFound()
       return (
         <div className="container max-w-3xl py-10">
@@ -232,7 +236,7 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
             <RsvpForm 
               invitation={rsvpInvitation} 
               event={rsvpEvent} 
-              token={token} 
+              token={cleanToken} 
             />
             
             <div className="mt-4 text-center text-sm text-muted-foreground">
