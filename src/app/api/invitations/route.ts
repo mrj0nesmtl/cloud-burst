@@ -27,6 +27,8 @@ export async function GET() {
         email, 
         name, 
         status, 
+        rsvp_status,
+        rsvp_date,
         created_at, 
         updated_at,
         event_id,
@@ -55,6 +57,8 @@ export async function GET() {
         JSON.stringify({
           id: invitations[0].id,
           event_id: invitations[0].event_id,
+          status: invitations[0].status,
+          rsvp_status: invitations[0].rsvp_status,
           events: invitations[0].events
         }, null, 2)
       );

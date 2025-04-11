@@ -91,7 +91,7 @@ export async function getUserEventsWithCounts(): Promise<EventWithCounts[]> {
     throw new Error('User not authenticated');
   }
   
-  // Add cache control headers to ensure fresh data
+  // Fetch events with basic counts
   const { data, error } = await supabase
     .from('events')
     .select(`
@@ -100,16 +100,41 @@ export async function getUserEventsWithCounts(): Promise<EventWithCounts[]> {
       photos_count: photos(count)
     `)
     .eq('organizer_id', session.user.id)
-    .order('date', { ascending: false })
+    .order('date', { ascending: false });
     
   if (error) {
     console.error('Error fetching user events with counts:', error);
     throw new Error(`Failed to fetch user events with counts: ${error.message}`);
   }
   
+  // Get event IDs for further queries
+  const eventIds = data.map((event: any) => event.id);
+  
+  // Get all accepted RSVPs for these events in a single query
+  const { data: acceptedRsvps, error: rsvpError } = await supabase
+    .from('invitations')
+    .select('event_id')
+    .in('event_id', eventIds)
+    .eq('rsvp_status', 'accepted');
+  
+  if (rsvpError) {
+    console.error('Error fetching accepted RSVPs:', rsvpError);
+    // Continue anyway with just the attendee counts
+  }
+  
+  // Count RSVPs per event ID
+  const acceptedRsvpsCountMap: Record<string, number> = {};
+  if (acceptedRsvps) {
+    acceptedRsvps.forEach((rsvp: any) => {
+      if (rsvp.event_id) {
+        acceptedRsvpsCountMap[rsvp.event_id] = (acceptedRsvpsCountMap[rsvp.event_id] || 0) + 1;
+      }
+    });
+  }
+  
   return data.map((event: any) => ({
     ...event,
-    attendees_count: event.attendees_count[0]?.count || 0,
+    attendees_count: (event.attendees_count[0]?.count || 0) + (acceptedRsvpsCountMap[event.id] || 0),
     photos_count: event.photos_count[0]?.count || 0
   })) as EventWithCounts[];
 }

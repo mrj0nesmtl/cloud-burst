@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     // Simple query to count invitations by status
     const { data: invitations, error: countError } = await supabase
       .from('invitations')
-      .select('status')
+      .select('status, rsvp_status')
       .eq('event_id', eventId)
     
     if (countError) {
@@ -66,8 +66,8 @@ export async function GET(request: NextRequest) {
       total: invitations.length,
       pending: invitations.filter(inv => inv.status === 'pending').length,
       opened: invitations.filter(inv => inv.status === 'opened').length,
-      accepted: invitations.filter(inv => inv.status === 'accepted').length,
-      declined: invitations.filter(inv => inv.status === 'declined').length,
+      accepted: invitations.filter(inv => inv.rsvp_status === 'accepted').length,
+      declined: invitations.filter(inv => inv.rsvp_status === 'declined').length,
       sent: invitations.filter(inv => inv.status === 'sent').length,
       draft: invitations.filter(inv => inv.status === 'draft').length,
     }

@@ -42,12 +42,14 @@ async function getDashboardData() {
     const [
       eventsCount,
       attendeesCount,
+      acceptedRsvpsCount,
       photosCount,
       activeEventsCount,
       { data: recentEvents },
     ] = await Promise.all([
       supabase.from('events').select('*', { count: 'exact', head: true }),
       supabase.from('event_attendees').select('*', { count: 'exact', head: true }),
+      supabase.from('invitations').select('*', { count: 'exact', head: true }).eq('rsvp_status', 'accepted'),
       supabase.from('photos').select('*', { count: 'exact', head: true }),
       supabase
         .from('events')
@@ -69,6 +71,24 @@ async function getDashboardData() {
         .limit(5),
     ])
 
+    // Special handling for event attendee counts to include RSVPs
+    const eventIds = recentEvents?.map(event => event.id) || [];
+    
+    // Get counts of accepted RSVPs for each event
+    const { data: acceptedRsvps } = await supabase
+      .from('invitations')
+      .select('event_id')
+      .in('event_id', eventIds)
+      .eq('rsvp_status', 'accepted');
+      
+    // Count RSVPs per event
+    const rsvpCountsByEvent: Record<string, number> = {};
+    acceptedRsvps?.forEach(rsvp => {
+      if (rsvp.event_id) {
+        rsvpCountsByEvent[rsvp.event_id] = (rsvpCountsByEvent[rsvp.event_id] || 0) + 1;
+      }
+    });
+
     const transformedEvents = recentEvents?.map((event) => ({
       id: event.id,
       name: event.name,
@@ -76,14 +96,14 @@ async function getDashboardData() {
       status: event.status,
       location: event.location,
       cover_image_url: event.cover_image_url,
-      attendeeCount: event.event_attendees?.[0]?.count ?? 0,
+      attendeeCount: (event.event_attendees?.[0]?.count ?? 0) + (rsvpCountsByEvent[event.id] || 0),
       photoCount: event.photos?.[0]?.count ?? 0,
     })) ?? []
 
     return {
       stats: {
         totalEvents: eventsCount.count ?? 0,
-        totalAttendees: attendeesCount.count ?? 0,
+        totalAttendees: (attendeesCount.count ?? 0) + (acceptedRsvpsCount.count ?? 0),
         totalPhotos: photosCount.count ?? 0,
         activeEvents: activeEventsCount.count ?? 0,
       },
@@ -158,7 +178,7 @@ export default async function DashboardPage() {
             </CardHeader>
             <CardContent className="p-4 pt-2">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.totalAttendees}</div>
-              <p className="text-sm text-muted-foreground">Event participants</p>
+              <p className="text-sm text-muted-foreground">Event participants (includes RSVPs)</p>
             </CardContent>
           </Card>
           
