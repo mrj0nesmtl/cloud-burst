@@ -19,6 +19,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Advanced AI Features integration with TensorFlow.js
 - Enhanced Analytics dashboard with real-time metrics
 
+## [0.8.13] - 2025-04-10
+### Fixed
+- Enhanced debugging for invitation token validation
+- Added comprehensive token verification logging in invitation flow
+- Fixed invitation email generation to consistently use database token
+- Improved RSVP status mapping to match database constraints
+- Enhanced logging for RSVP submissions to show mapped values
+- Verified magic link authentication flow for guest users
+- Validated complete invitation to gallery access workflow
+
+### Added
+- Detailed token validation logging in invitation page component
+- Token extraction and verification in email sending process
+- Debug logs for token formatting and validation
+
+## [0.8.12] - 2025-04-10
+### Fixed
+- Invitation email generation to use correct database token in links
+- Enhanced token verification with detailed logging for debugging
+- Added validation logging to invitation page component
+- Improved invitation link generation to ensure token consistency
+- Resolved magic link authentication issues for guests with valid tokens
+
+## [0.8.11] - 2025-04-10
+### Fixed
+- RSVP status mapping to match database constraints
+- Improved logging for RSVP submissions to show mapped values
+- Enhanced invitation status updating with proper database enum values
+- Fixed constraint validation issues in RSVP form submissions
+
 ## [0.8.10] - 2025-04-15
 ### Added
 - **Guest Reservation System**:
