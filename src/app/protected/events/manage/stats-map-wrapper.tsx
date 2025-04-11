@@ -200,7 +200,7 @@ export function StatsMapWrapper({
         <div style={cardContentStyle}>
           <div style={getValueStyle('rgb(5, 150, 105)')}>{totalAttendees}</div>
           <p style={subtitleStyle}>
-            Across {Object.keys(attendeeCounts).length} events
+            Across {Object.keys(attendeeCounts).length} events (includes RSVPs)
           </p>
         </div>
       </div>
