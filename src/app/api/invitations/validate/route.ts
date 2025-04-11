@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { createGuestAccount, generateGuestLoginLink } from '@/lib/supabase/auth-utils'
+import { Database } from '@/types/supabase'
 
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get('token')
@@ -14,9 +15,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Initialize Supabase server client
-    const cookieStore = cookies()
-    const supabase = await createServerClient(cookieStore)
+    // Initialize Supabase server client using createServerComponentClient directly
+    const supabase = createServerComponentClient<Database>({ cookies })
     
     // Lookup the invitation
     const { data: invitationData, error: invitationError } = await supabase

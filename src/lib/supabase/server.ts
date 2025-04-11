@@ -12,6 +12,8 @@ export function createClient() {
 
 /**
  * Create a Supabase client for use in server components
+ * This function provides a unified way to create a server client
+ * that works with the latest version of Supabase Auth Helpers
  */
 export async function createServerClient(cookieStore?: any) {
   if (typeof window !== 'undefined') {
@@ -20,19 +22,21 @@ export async function createServerClient(cookieStore?: any) {
   }
 
   // We're on the server
-  if (cookieStore) {
-    // Use provided cookies
-    return createServerComponentClient<Database>({ cookies: () => cookieStore })
-  } else {
-    // Try to dynamically import cookies (only works in App Router)
-    try {
-      const { cookies } = await import('next/headers')
-      return createServerComponentClient<Database>({ cookies: () => cookies() })
-    } catch (e) {
-      // Fallback for Pages Router or other contexts
-      console.warn('Could not import cookies from next/headers. Using client component client instead.')
-      return createClientComponentClient<Database>()
+  try {
+    // Use Next.js cookies API
+    const { cookies } = await import('next/headers')
+    
+    if (cookieStore) {
+      // If cookieStore is provided directly, use it
+      return createServerComponentClient<Database>({ cookies })
+    } else {
+      // Otherwise, get cookies from next/headers
+      return createServerComponentClient<Database>({ cookies })
     }
+  } catch (e) {
+    // Fallback for contexts where cookies() isn't available
+    console.warn('Could not import cookies from next/headers. Using client component client instead.')
+    return createClientComponentClient<Database>()
   }
 }
 
