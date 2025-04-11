@@ -316,7 +316,7 @@ export default function InvitationsPage() {
           <CardContent>
             <div style={{ fontSize: '1.875rem', fontWeight: 'bold' }}>{totalCount}</div>
             <p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)', marginTop: '4px' }}>
-              Across all events
+              Across all events (includes accepted RSVPs)
             </p>
           </CardContent>
         </Card>

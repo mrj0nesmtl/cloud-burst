@@ -449,7 +449,15 @@ export function EnhancedEventCard({
                 fontSize: '0.75rem'
               }}>
                 <Users size={14} />
-                <span>{event.attendees_count || 0}</span>
+                <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                  <span>{event.attendees_count || 0}</span>
+                  <span style={{ 
+                    fontSize: '0.65rem',
+                    marginLeft: '2px',
+                    color: 'var(--muted-foreground)',
+                    opacity: 0.7
+                  }}>(incl. RSVPs)</span>
+                </div>
               </div>
               
               <div style={{ 

@@ -131,6 +131,8 @@ export default function InvitationsList({
   // Filter invitations based on status
   const filteredInvitations = invitations.filter((invitation: Invitation) => {
     if (filter === 'all') return true;
+    if (filter === 'accepted') return invitation.rsvp_status === 'accepted';
+    if (filter === 'declined') return invitation.rsvp_status === 'declined';
     return invitation.status === filter;
   });
 
@@ -200,7 +202,7 @@ function InvitationCard({ invitation }: { invitation: Invitation }) {
               <p className="text-sm text-muted-foreground truncate">{invitation.email}</p>
             </div>
             <div className="hidden sm:block">
-              <StatusBadge status={invitation.status} />
+              <StatusBadge status={invitation.rsvp_status || invitation.status} />
             </div>
           </div>
           
@@ -226,7 +228,7 @@ function InvitationCard({ invitation }: { invitation: Invitation }) {
           </div>
           
           <div className="sm:hidden mt-2">
-            <StatusBadge status={invitation.status} />
+            <StatusBadge status={invitation.rsvp_status || invitation.status} />
           </div>
         </div>
         
