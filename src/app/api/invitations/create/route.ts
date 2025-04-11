@@ -121,8 +121,12 @@ export async function POST(request: NextRequest) {
           })
         : 'TBD';
 
+      // Critical fix: Use the invitation token from the database record
+      // instead of generating a new one for the URL
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-      const inviteUrl = `${siteUrl}/invitation/${token}`;
+      const inviteUrl = `${siteUrl}/invitation/${invitation.token}`;
+
+      console.log('⚠️ Using database token for invitation link:', invitation.token);
 
       // Get host information
       const { data: hostProfile } = await supabase

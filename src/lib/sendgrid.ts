@@ -108,6 +108,16 @@ export async function sendInvitationEmail(
   console.log(`Sending invitation email to ${invitation.email} using template ${templateId}`);
   console.log('Email data:', JSON.stringify(emailData, null, 2));
 
+  // Add token verification logging
+  const invitationLinkUrl = new URL(emailData.invitationLink);
+  const pathSegments = invitationLinkUrl.pathname.split('/');
+  const tokenInUrl = pathSegments[pathSegments.length - 1];
+  
+  console.log('⚠️ INVITATION TOKEN CHECK:');
+  console.log(`- Token in database: ${invitation.token}`);
+  console.log(`- Token in URL: ${tokenInUrl}`);
+  console.log(`- Do they match? ${invitation.token === tokenInUrl ? 'YES ✅' : 'NO ❌'}`);
+
   // Match exactly what the template expects
   const dynamicTemplateData = {
     eventName: emailData.eventName,

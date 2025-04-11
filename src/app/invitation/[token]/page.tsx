@@ -98,6 +98,9 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
   })
   
   try {
+    // Log token before validation for debugging
+    console.log('🔑 About to validate token in database:', token);
+    
     // Validate the invitation token using our existing function
     const invitation = await validateInvitationToken(token)
     
