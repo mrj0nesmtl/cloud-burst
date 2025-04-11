@@ -45,6 +45,7 @@ interface Invitation {
   email: string;
   name?: string;
   status: string;
+  rsvp_status?: string;
   created_at: string;
   updated_at?: string;
   event_id: string;
@@ -95,11 +96,11 @@ function formatDate(dateString: string): string {
 // Utility function to fetch event name for event IDs where data is missing
 async function fetchEventName(eventId: string): Promise<string> {
   try {
-    const supabase = createClient<Database>();
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('events')
       .select('name')
-      .eq('id', eventId as unknown as string)
+      .eq('id', eventId as any)
       .single();
     
     if (error || !data) {
@@ -163,8 +164,10 @@ export default function InvitationsPage() {
         const totalCount = data.invitations?.length || 0;
         const pendingCount = data.invitations?.filter((inv: Invitation) => inv.status === 'pending' || inv.status === 'sent').length || 0;
         const openedCount = data.invitations?.filter((inv: Invitation) => inv.status === 'opened').length || 0;
-        const acceptedCount = data.invitations?.filter((inv: Invitation) => inv.status === 'accepted').length || 0;
-        const declinedCount = data.invitations?.filter((inv: Invitation) => inv.status === 'declined').length || 0;
+        
+        // Use rsvp_status instead of status for RSVP-related counts
+        const acceptedCount = data.invitations?.filter((inv: Invitation) => inv.rsvp_status === 'accepted').length || 0;
+        const declinedCount = data.invitations?.filter((inv: Invitation) => inv.rsvp_status === 'declined').length || 0;
         
         // Calculate event counts
         const eventCounts: Record<string, EventCount> = {};
@@ -188,9 +191,9 @@ export default function InvitationsPage() {
           
           eventCounts[eventId].count++;
           
-          if (inv.status === 'accepted') {
+          if (inv.rsvp_status === 'accepted') {
             eventCounts[eventId].accepted++;
-          } else if (inv.status === 'declined') {
+          } else if (inv.rsvp_status === 'declined') {
             eventCounts[eventId].declined++;
           } else {
             eventCounts[eventId].pending++;
@@ -583,14 +586,14 @@ export default function InvitationsPage() {
                   </TabsContent>
                   <TabsContent value="accepted" className="m-0 p-0">
                     <InvitationsList 
-                      invitations={filteredInvitations.filter(inv => inv.status === 'accepted')} 
+                      invitations={filteredInvitations.filter(inv => inv.rsvp_status === 'accepted')} 
                       emptyMessage="No accepted invitations"
                       isMobile={isMobile}
                     />
                   </TabsContent>
                   <TabsContent value="declined" className="m-0 p-0">
                     <InvitationsList 
-                      invitations={filteredInvitations.filter(inv => inv.status === 'declined')} 
+                      invitations={filteredInvitations.filter(inv => inv.rsvp_status === 'declined')} 
                       emptyMessage="No declined invitations"
                       isMobile={isMobile}
                     />
@@ -923,10 +926,10 @@ function InvitationsList({
                 alignItems: 'center', 
                 gap: '4px'
               }}>
-                {getStatusIcon(invitation.status)}
+                {getStatusIcon(invitation.status, invitation.rsvp_status)}
               </div>
               <div>
-                {getStatusBadge(invitation.status)}
+                {getStatusBadge(invitation.status, invitation.rsvp_status)}
               </div>
             </div>
           </div>
@@ -963,31 +966,39 @@ function InvitationsList({
   );
 }
 
-function getStatusIcon(status: string) {
+function getStatusIcon(status: string, rsvpStatus: string | undefined) {
+  // Check RSVP status first
+  if (rsvpStatus === 'accepted') {
+    return <CheckCircle2 className="h-4 w-4 text-green-500" />
+  } else if (rsvpStatus === 'declined') {
+    return <XCircle className="h-4 w-4 text-red-500" />
+  }
+
+  // Fall back to regular status
   switch (status) {
     case 'sent':
       return <Mail className="h-4 w-4 text-blue-500" />
     case 'opened':
       return <Eye className="h-4 w-4 text-yellow-500" />
-    case 'accepted':
-      return <CheckCircle2 className="h-4 w-4 text-green-500" />
-    case 'declined':
-      return <XCircle className="h-4 w-4 text-red-500" />
     default:
       return <Clock className="h-4 w-4 text-gray-500" />
   }
 }
 
-function getStatusBadge(status: string) {
+function getStatusBadge(status: string, rsvpStatus: string | undefined) {
+  // Check RSVP status first
+  if (rsvpStatus === 'accepted') {
+    return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Accepted</Badge>
+  } else if (rsvpStatus === 'declined') {
+    return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Declined</Badge>
+  }
+
+  // Fall back to regular status
   switch (status) {
     case 'sent':
       return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Sent</Badge>
     case 'opened':
       return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Opened</Badge>
-    case 'accepted':
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Accepted</Badge>
-    case 'declined':
-      return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Declined</Badge>
     case 'draft':
       return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Draft</Badge>
     default:

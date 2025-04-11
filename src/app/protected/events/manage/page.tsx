@@ -169,16 +169,28 @@ export default function ManageEventsPage() {
         const attendeeCountsObj: Record<string, number> = {};
         
         for (const event of events) {
-          const { count, error: countError } = await supabase
+          // Get traditional attendees count
+          const { count: attendeesCount, error: countError } = await supabase
             .from('event_attendees')
             .select('*', { count: 'exact', head: true })
             .eq('event_id', event.id);
             
+          // Get accepted RSVPs count - first get invitations with accepted rsvp_status
+          const { count: acceptedRsvpsCount, error: rsvpError } = await supabase
+            .from('invitations')
+            .select('*', { count: 'exact', head: true })
+            .eq('event_id', event.id)
+            .eq('rsvp_status', 'accepted');
+            
           if (countError) {
             console.error(`Error fetching attendees for event ${event.id}:`, countError);
-            attendeeCountsObj[event.id] = 0;
+            attendeeCountsObj[event.id] = acceptedRsvpsCount || 0;
+          } else if (rsvpError) {
+            console.error(`Error fetching RSVPs for event ${event.id}:`, rsvpError);
+            attendeeCountsObj[event.id] = attendeesCount || 0;
           } else {
-            attendeeCountsObj[event.id] = count || 0;
+            // Combine both counts - traditional attendees and accepted RSVPs
+            attendeeCountsObj[event.id] = (attendeesCount || 0) + (acceptedRsvpsCount || 0);
           }
         }
         

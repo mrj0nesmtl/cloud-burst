@@ -1,7 +1,22 @@
 # Session 39B Testing Checklist
 # April 10, 2025
-# V 0.8.9
+# V 0.9.0
 # Session 39B - Testing Phase
+
+## Timeline
+- Testing Start: April 9, 8:00 PM, 2025
+- Testing Completion: April 10, 11:00 PM, 2025
+- Documentation: Immediately following testing
+- Status: Mostly Complete (95%) 
+
+## New Findings
+- RSVP data flow successfully implemented and tested
+- RSVP status correctly displayed in all dashboard views
+- Event attendee count now accurately includes accepted RSVPs
+- Database constraints for RSVP status properly handled
+- Invitation status successfully updated upon RSVP response
+- Stats updated to show RSVPs in total attendee counts
+- Visual indicators added to show RSVPs are included in counts 
 
 ## Guest Reservation Onboarding Testing
 - [x] Verify guest reservation form renders correctly on all device sizes
@@ -37,6 +52,10 @@
 - [x] Confirm successful RSVP updates invitation status
 - [x] Test magic link authentication flow for RSVP
 - [x] Verify RSVP confirmation displays correctly
+- [x] Confirm RSVP status correctly shows in dashboard
+- [x] Verify accepted RSVPs count properly in event metrics
+- [x] Test attendee count calculation with accepted RSVPs
+- [x] Confirm event management page shows accurate RSVP counts
 
 ## Camera Integration Testing
 - [x] Test camera activation on desktop browsers
@@ -82,8 +101,3 @@
 - [x] Update technical documentation with implementation details
 - [x] Document performance metrics
 
-## Timeline
-- Testing Start: April 9, 8:00 PM, 2025
-- Testing Completion: April 10, 11:00 PM, 2025
-- Documentation: Immediately following testing
-- Status: Mostly Complete (90%) 

@@ -19,6 +19,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Advanced AI Features integration with TensorFlow.js
 - Enhanced Analytics dashboard with real-time metrics
 
+## [0.9.0] - 2025-04-11
+### Fixed
+- RSVP status correctly mapped to database constraints ('accepted', 'declined', 'pending')
+- Invitation rsvp_status field properly updated when RSVP is submitted
+- Status badges and icons updated to use rsvp_status field for RSVP state
+- Event attendee counts now include accepted RSVPs in all dashboard views
+- Stats dashboard updated to indicate RSVPs are included in attendee counts
+- Invitation listing now properly filters by rsvp_status instead of status
+- Type definitions updated to include rsvp_status field
+- Improved event list appearance with consistent attendee count display
+- Complete end-to-end testing of RSVP submission flow
+
+### Added
+- Visual indicator in stats dashboard that totals include RSVPs
+- Enhanced attendee count calculation combining traditional attendees and RSVPs
+- Prioritization of rsvp_status over status for invitation display
+
 ## [0.8.13] - 2025-04-10
 ### Fixed
 - Enhanced debugging for invitation token validation
