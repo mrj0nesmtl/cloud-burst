@@ -12,6 +12,8 @@ With these core user-facing features now stable, Session 40 represents our pivot
 
 The foundation for AI features has already been established with the initial TensorFlow.js integration and basic facial detection components. Similarly, we've implemented the chart components and basic metrics visualization for the analytics dashboard. Today's session will focus on completing these features to create a compelling value proposition for the Beta release scheduled for April 30, 2025.
 
+Additionally, we need to address several critical operational elements that will enhance the user experience and system security. These include creating a seamless pre-event profile creation flow for invited guests, refining the admin panel navigation for different user roles, reconfiguring the dietary preferences component, and conducting comprehensive security and storage audits.
+
 ## Primary Objectives
 
 1. **Finalize AI Features Integration**
@@ -42,6 +44,27 @@ The foundation for AI features has already been established with the initial Ten
    - Improve gallery integration with real-time updates
    - Add batch operations for uploaded media
 
+5. **Implement Pre-Event Guest Profile Creation**
+   - Create a post-RSVP profile creation flow
+   - Develop a mobile-optimized camera permission pre-request system
+   - Link invitation tokens to newly created accounts
+   - Implement guided camera configuration as part of onboarding
+   - Provide clear value proposition for pre-event account creation
+
+6. **Refine Admin Panel Navigation**
+   - Enhance sidebar menu based on user roles
+   - Create specialized views for different invitation types
+   - Implement quick-access controls for content moderation
+   - Add visual differentiation for permission-based UI elements
+   - Optimize mobile admin experience
+
+7. **Conduct System Audits**
+   - Perform Supabase security audit (RLS policies, authentication flows)
+   - Complete storage audit (quota management, lifecycle policies)
+   - Review invitation system with dietary component reconfiguration
+   - Test access control across all user roles
+   - Validate data integrity across all tables
+
 ## Technical Approach
 
 ### AI Features
@@ -52,6 +75,15 @@ The analytics system will use our existing chart components, enhanced with inter
 
 ### Camera Enhancement
 The camera improvements will focus on the mobile experience, where most users will capture photos. We'll optimize the UI for touch interaction, improve visual feedback, and enhance the performance on various device capabilities. The integration with the gallery will be streamlined to create a seamless experience from capture to viewing.
+
+### Guest Profile Creation
+The pre-event profile creation will leverage our existing invitation token system, creating a seamless transition from RSVP acceptance to account creation. We'll implement a streamlined mobile-first flow that emphasizes the benefits of pre-event setup and guides users through camera permission configuration to reduce friction during the event.
+
+### Admin Experience Refinement
+The admin panel improvements will focus on role-based UI customization, with conditional rendering of navigation elements and controls based on permissions. We'll implement specialized views for invitation management and content moderation, with clear visual indicators of permission levels.
+
+### Security and Storage Audits
+We'll conduct comprehensive audits of our Supabase implementation, focusing on Row Level Security policies, authentication flows, and data access patterns. The storage audit will examine quota management, lifecycle policies, and optimization opportunities.
 
 ## Key Components for Implementation
 
@@ -76,6 +108,27 @@ The camera improvements will focus on the mobile experience, where most users wi
 - Background upload management
 - Gallery integration components
 
+### Guest Profile System
+- Post-RSVP account creation flow
+- Camera permission pre-request UI
+- Mobile onboarding experience
+- Invitation token linking
+- Guided setup process
+
+### Admin Interface
+- Role-based navigation components
+- Permission-based UI rendering
+- Content moderation interface
+- Invitation management specialized views
+- Visual permission indicators
+
+### Audit Framework
+- RLS policy verification scripts
+- Storage usage analytics
+- Token validation test suite
+- Dietary preference component
+- Permission matrix validation
+
 ## Integration Points
 The success of this session depends on effective integration between these systems:
 
@@ -83,6 +136,8 @@ The success of this session depends on effective integration between these syste
 2. **AI + Gallery**: Batch processing of existing media
 3. **Analytics + RSVP**: Connecting RSVP data to dashboard visualizations
 4. **Camera + Gallery**: Creating a seamless capture-to-view experience
+5. **RSVP + Guest Profile**: Linking invitation acceptance to account creation
+6. **Admin Panel + Role System**: Dynamically rendering based on permissions
 
 ## Expected Challenges
 
@@ -101,6 +156,12 @@ The success of this session depends on effective integration between these syste
    - Managing touch interactions effectively
    - Handling device capability variations
 
+4. **Security Considerations**
+   - Ensuring robust RLS policies across all tables
+   - Managing token validation securely
+   - Implementing proper access controls
+   - Validating storage security
+
 ## Success Criteria
 By the end of Session 40, we should have:
 
@@ -108,16 +169,22 @@ By the end of Session 40, we should have:
 2. Complete analytics dashboard with accurate RSVP and photographer metrics
 3. Enhanced camera experience optimized for mobile devices
 4. Improved media upload workflow with better user feedback
-5. Comprehensive documentation for all new features
-6. Successful testing across different devices and browsers
+5. Streamlined pre-event guest profile creation flow
+6. Refined admin panel with role-based navigation
+7. Completed security and storage audits
+8. Reconfigured dietary preferences component
+9. Comprehensive documentation for all new features
+10. Successful testing across different devices and browsers
 
 ## Timeline
-- 8:00 AM - 10:00 AM: AI features implementation
-- 10:00 AM - 12:00 PM: Analytics dashboard development
-- 12:00 PM - 1:00 PM: Documentation and review
-- 1:00 PM - 3:00 PM: Camera enhancements and upload improvements
-- 3:00 PM - 4:00 PM: Integration testing
-- 4:00 PM - 5:00 PM: Final review and documentation updates
+- 8:00 AM - 9:30 AM: AI features implementation
+- 9:30 AM - 11:00 AM: Analytics dashboard development
+- 11:00 AM - 12:00 PM: Camera enhancements and upload improvements
+- 12:00 PM - 1:00 PM: Pre-event guest profile creation flow
+- 1:00 PM - 2:00 PM: Admin panel navigation refinement
+- 2:00 PM - 3:00 PM: Security and storage audits
+- 3:00 PM - 4:00 PM: Dietary component reconfiguration and invitation testing
+- 4:00 PM - 5:00 PM: Integration testing, documentation, and review
 
 ## Preparation
 To make this session productive, please review:
@@ -125,5 +192,8 @@ To make this session productive, please review:
 - Previous camera implementation code
 - Current analytics dashboard components
 - User feedback on capture and upload experience
+- Existing invitation flow and RSVP system
+- Current admin panel navigation structure
+- Supabase RLS policies and storage configuration
 
-Let's focus on delivering these final key features to prepare for our Beta release. With AI features and analytics complete, our platform will offer a compelling value proposition that distinguishes it from competitors and provides meaningful benefits to event organizers and guests. 
+Let's focus on delivering these final key features to prepare for our Beta release. With AI features, analytics dashboard, and enhanced user experiences complete, our platform will offer a compelling value proposition that distinguishes it from competitors and provides meaningful benefits to event organizers and guests. 
