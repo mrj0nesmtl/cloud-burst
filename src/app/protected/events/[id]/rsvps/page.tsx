@@ -4,7 +4,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { z } from 'zod'
 
-import { RsvpDashboard } from '@/components/events/rsvp-dashboard'
+import { RsvpDashboard } from '@/components/dashboard/RsvpDashboard'
 import { Shell } from '@/components/shell'
 import { Database } from '@/types/supabase'
 
