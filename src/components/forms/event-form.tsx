@@ -423,7 +423,7 @@ export function EventForm() {
       
       // Use a small delay before redirect to ensure toast is shown
       setTimeout(() => {
-        router.push('/dashboard/events')
+        router.push('/protected/dashboard')
       }, 500)
       
     } catch (error) {

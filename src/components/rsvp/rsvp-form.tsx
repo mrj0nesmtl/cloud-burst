@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -21,9 +21,11 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { Loader2 } from 'lucide-react'
+import { Loader2, PlusCircle, MinusCircle, User, Users } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { rsvpFormSchema } from '@/lib/validations/rsvp'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 
 type Event = {
   id: string
@@ -53,9 +55,17 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showGuestFields, setShowGuestFields] = useState(false)
+  const [hasPlusOne, setHasPlusOne] = useState(false)
 
-  const form = useForm<z.infer<typeof rsvpFormSchema>>({
-    resolver: zodResolver(rsvpFormSchema),
+  // Updated schema to include plus_one_name
+  const extendedSchema = rsvpFormSchema.extend({
+    plus_one_name: z.string().optional(),
+    plus_one_email: z.string().email('Please enter a valid email').optional(),
+    has_plus_one: z.boolean().optional(),
+  });
+
+  const form = useForm<z.infer<typeof extendedSchema>>({
+    resolver: zodResolver(extendedSchema),
     defaultValues: {
       status: 'accepted',
       name: '',
@@ -64,11 +74,27 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       guest_count: 0,
       dietary_restrictions: '',
       notes: '',
-      marketing_consent: false
+      marketing_consent: false,
+      has_plus_one: false,
+      plus_one_name: '',
+      plus_one_email: '',
     },
   })
 
-  async function onSubmit(values: z.infer<typeof rsvpFormSchema>) {
+  // Watch for status changes to show/hide guest fields
+  const status = form.watch('status');
+  const guestCount = form.watch('guest_count');
+  const hasPlusOneWatch = form.watch('has_plus_one');
+
+  useEffect(() => {
+    setShowGuestFields(status === 'accepted');
+  }, [status]);
+
+  useEffect(() => {
+    setHasPlusOne(hasPlusOneWatch || false);
+  }, [hasPlusOneWatch]);
+
+  async function onSubmit(values: z.infer<typeof extendedSchema>) {
     setIsSubmitting(true)
     
     try {
@@ -82,25 +108,28 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         throw new Error('Please select whether you can attend');
       }
       
-      // Log payload for debugging
-      console.log('Submitting RSVP with payload:', {
+      // Prepare the payload - format with plus one data if present
+      const payload = {
         ...values,
         invitation_id: invitation.id,
         event_id: event.id,
         token,
-      });
+        // Include plus one details in a format the API expects
+        plus_one: values.has_plus_one ? {
+          name: values.plus_one_name,
+          email: values.plus_one_email
+        } : null
+      };
+      
+      // Log payload for debugging
+      console.log('Submitting RSVP with payload:', payload);
       
       const response = await fetch('/api/rsvp/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...values,
-          invitation_id: invitation.id,
-          event_id: event.id,
-          token,
-        }),
+        body: JSON.stringify(payload),
       })
       
       // Log the raw response for debugging
@@ -141,154 +170,279 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Will you attend?</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={(value) => {
-                    field.onChange(value);
-                    setShowGuestFields(value === 'accepted');
-                  }}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="accepted" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      Yes, I'll be there
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="declined" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      No, I can't make it
-                    </FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-1 gap-6">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-semibold mb-2 block">
-                  Full Name <span className="text-red-500">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input 
-                    id="full-name-input"
-                    placeholder="Enter your full name" 
-                    className="h-12 px-4 text-base w-full rounded-md border border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
-                    autoComplete="name"
-                    {...field} 
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-semibold mb-2 block">
-                  Email Address <span className="text-red-500">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    id="email-input"
-                    placeholder="your.email@example.com"
-                    type="email"
-                    className="h-12 px-4 text-base w-full rounded-md border border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
-                    autoComplete="email"
-                    {...field}
-                    disabled={!!invitation.email}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem className="mt-2">
-              <FormLabel className="text-base font-medium mb-1.5 block">
-                Phone Number (optional)
-              </FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="Your phone number" 
-                  className="h-12 px-4 text-base w-full rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" 
-                  {...field} 
-                />
-              </FormControl>
-              <FormDescription className="text-sm mt-1">
-                We'll only use this to contact you about this event
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {showGuestFields && (
-          <>
+    <Card className="w-full max-w-3xl mx-auto shadow-lg">
+      <CardHeader className="bg-primary/5 pb-4">
+        <CardTitle className="text-2xl font-bold text-center text-primary">
+          {event.name} - RSVP
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="guest_count"
+              name="status"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Additional Guests</FormLabel>
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-lg font-semibold">Will you attend?</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      min="0"
-                      max="3"
-                      placeholder="0"
-                      {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                    <RadioGroup
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowGuestFields(value === 'accepted');
+                      }}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-2"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0 rounded-md border p-3 hover:bg-accent/20 transition-colors cursor-pointer">
+                        <FormControl>
+                          <RadioGroupItem value="accepted" />
+                        </FormControl>
+                        <FormLabel className="font-normal text-base cursor-pointer flex items-center">
+                          <Users className="mr-2 h-5 w-5 text-primary" />
+                          Yes, I'll be there
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0 rounded-md border p-3 hover:bg-accent/20 transition-colors cursor-pointer">
+                        <FormControl>
+                          <RadioGroupItem value="declined" />
+                        </FormControl>
+                        <FormLabel className="font-normal text-base cursor-pointer flex items-center">
+                          <User className="mr-2 h-5 w-5 text-muted-foreground" />
+                          No, I can't make it
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Separator className="my-4" />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold mb-2 block">
+                      Full Name <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        id="full-name-input"
+                        placeholder="Enter your full name" 
+                        className="h-12 px-4 text-base w-full rounded-md border border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
+                        autoComplete="name"
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold mb-2 block">
+                      Email Address <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="email-input"
+                        placeholder="your.email@example.com"
+                        type="email"
+                        className="h-12 px-4 text-base w-full rounded-md border border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
+                        autoComplete="email"
+                        {...field}
+                        disabled={!!invitation.email}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem className="mt-2">
+                  <FormLabel className="text-base font-medium mb-1.5 block">
+                    Phone Number (optional)
+                  </FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Your phone number" 
+                      className="h-12 px-4 text-base w-full rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" 
+                      {...field} 
                     />
                   </FormControl>
-                  <FormDescription>
-                    Number of additional guests attending with you
+                  <FormDescription className="text-sm mt-1">
+                    We'll only use this to contact you about this event
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+            {showGuestFields && (
+              <>
+                <div className="bg-primary/5 p-4 rounded-lg space-y-4">
+                  <h3 className="text-lg font-semibold text-primary">Guest Information</h3>
+                  
+                  <FormField
+                    control={form.control}
+                    name="has_plus_one"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border bg-card p-4">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="text-base">
+                            I'm bringing a plus one
+                          </FormLabel>
+                          <FormDescription>
+                            Add your plus one's details below
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  {hasPlusOne && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6 pr-2 py-3 border-l-2 border-primary/30 ml-2">
+                      <FormField
+                        control={form.control}
+                        name="plus_one_name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base">
+                              Plus One Name <span className="text-red-500">*</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Full name"
+                                className="h-12"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="plus_one_email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base">
+                              Plus One Email
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="email@example.com"
+                                type="email"
+                                className="h-12"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
+
+                  <FormField
+                    control={form.control}
+                    name="guest_count"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base">Additional Guests</FormLabel>
+                        <div className="flex items-center">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-10 w-10"
+                            onClick={() => field.onChange(Math.max(0, field.value - 1))}
+                          >
+                            <MinusCircle className="h-4 w-4" />
+                          </Button>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="3"
+                              className="h-12 text-center mx-2"
+                              {...field}
+                              onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                            />
+                          </FormControl>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-10 w-10"
+                            onClick={() => field.onChange(Math.min(3, field.value + 1))}
+                          >
+                            <PlusCircle className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <FormDescription>
+                          Number of additional guests attending with you (max 3)
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="dietary_restrictions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-medium mb-1.5 block">
+                          Dietary Restrictions (optional)
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Please list any dietary restrictions or allergies"
+                            className="min-h-24 resize-none px-4 py-3 text-base rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </>
+            )}
+
             <FormField
               control={form.control}
-              name="dietary_restrictions"
+              name="notes"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base font-medium mb-1.5 block">
-                    Dietary Restrictions (optional)
+                    Additional Notes (optional)
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Please list any dietary restrictions or allergies"
+                      placeholder="Anything else you'd like to share with the host"
                       className="min-h-24 resize-none px-4 py-3 text-base rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       {...field}
                     />
@@ -297,77 +451,58 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                 </FormItem>
               )}
             />
-          </>
-        )}
 
-        <FormField
-          control={form.control}
-          name="notes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-base font-medium mb-1.5 block">
-                Additional Notes (optional)
-              </FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Anything else you'd like to share with the host"
-                  className="min-h-24 resize-none px-4 py-3 text-base rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="marketing_consent"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 mt-6">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      I agree to receive updates about this event and future events
+                    </FormLabel>
+                    <FormDescription>
+                      You can unsubscribe at any time
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="marketing_consent"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 mt-6">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  I agree to receive updates about this event and future events
-                </FormLabel>
-                <FormDescription>
-                  You can unsubscribe at any time
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
-
-        {invitation.expires_at && new Date(invitation.expires_at) < new Date() && (
-          <Alert variant="destructive">
-            <AlertDescription>
-              Please note that the RSVP deadline has passed, but you can still submit your response.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        <div className="pt-6 flex justify-center">
-          <Button 
-            type="submit" 
-            className="w-full py-6 text-base font-medium" 
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              'Submit RSVP'
+            {invitation.expires_at && new Date(invitation.expires_at) < new Date() && (
+              <Alert variant="destructive">
+                <AlertDescription>
+                  Please note that the RSVP deadline has passed, but you can still submit your response.
+                </AlertDescription>
+              </Alert>
             )}
-          </Button>
-        </div>
-      </form>
-    </Form>
+
+            <div className="pt-6">
+              <Button 
+                type="submit" 
+                className="w-full py-6 text-base font-medium rounded-md" 
+                disabled={isSubmitting}
+                size="lg"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  'Submit RSVP'
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   )
 } 
