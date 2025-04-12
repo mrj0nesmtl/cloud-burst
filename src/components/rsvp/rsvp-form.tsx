@@ -19,17 +19,17 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { Loader2, PlusCircle, MinusCircle, User, Users } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { rsvpFormSchema, validatePlusOneFields } from '@/lib/validations/rsvp'
+import { rsvpFormSchema } from '@/lib/validations/rsvp'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
 type Event = {
   id: string
   name: string
+  slug?: string
   host_name?: string
   description?: string
   start_date?: string
@@ -54,18 +54,19 @@ interface RsvpFormProps {
 export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showGuestFields, setShowGuestFields] = useState(false)
+  const [showGuestFields, setShowGuestFields] = useState(true)
   const [hasPlusOne, setHasPlusOne] = useState(false)
 
-  // Updated schema to include plus_one_name
-  const extendedSchema = rsvpFormSchema.extend({
+  // Define form schema
+  const formSchema = rsvpFormSchema.extend({
     plus_one_name: z.string().optional(),
     plus_one_email: z.string().email('Please enter a valid email').optional(),
     has_plus_one: z.boolean().optional(),
   });
 
-  const form = useForm<z.infer<typeof extendedSchema>>({
-    resolver: zodResolver(extendedSchema),
+  // Initialize form
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       status: 'accepted',
       name: '',
@@ -81,38 +82,48 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
     },
   })
 
-  // Watch for status changes to show/hide guest fields
+  // Watch form values
   const status = form.watch('status');
-  const guestCount = form.watch('guest_count');
   const hasPlusOneWatch = form.watch('has_plus_one');
 
+  // Handle status changes
   useEffect(() => {
     setShowGuestFields(status === 'accepted');
     
-    // Clear guest-related errors when declining
+    // Clear guest-related fields when declining
     if (status === 'declined') {
       form.clearErrors(['guest_count', 'has_plus_one', 'plus_one_name', 'plus_one_email', 'dietary_restrictions']);
+      form.setValue('guest_count', 0);
+      form.setValue('has_plus_one', false);
+      form.setValue('plus_one_name', '');
+      form.setValue('plus_one_email', '');
+      form.setValue('dietary_restrictions', '');
     }
   }, [status, form]);
 
+  // Handle plus one changes
   useEffect(() => {
-    setHasPlusOne(hasPlusOneWatch || false);
+    setHasPlusOne(hasPlusOneWatch);
     
-    // Apply conditional validation for plus one fields
+    // Validate plus one name when checkbox is checked
     if (hasPlusOneWatch) {
-      form.setError('plus_one_name', {
-        type: 'manual',
-        message: form.getValues('plus_one_name') ? '' : 'Plus one name is required'
-      });
+      const plusOneName = form.getValues('plus_one_name');
+      if (!plusOneName || plusOneName.length < 2) {
+        form.setError('plus_one_name', {
+          type: 'manual',
+          message: 'Plus one name is required'
+        });
+      }
     } else {
       form.clearErrors('plus_one_name');
     }
   }, [hasPlusOneWatch, form]);
 
-  const onSubmit = async (data: z.infer<typeof extendedSchema>) => {
+  // Form submission handler
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("Form submission started:", data);
     
-    // Check plus one validation before proceeding
+    // Validate plus one fields
     if (data.has_plus_one && (!data.plus_one_name || data.plus_one_name.length < 2)) {
       form.setError('plus_one_name', {
         type: 'manual',
@@ -124,39 +135,52 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
     setIsSubmitting(true);
     
     try {
-      // Validate invitation ID exists
-      if (!invitation.id) {
-        throw new Error("Invalid invitation ID");
+      // Validate required IDs
+      if (!invitation.id || !event.id) {
+        throw new Error("Invalid invitation or event data");
       }
       
-      const response = await fetch("/api/rsvp", {
+      // Add a small delay to prevent race conditions
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Submit data to API
+      const response = await fetch("/api/rsvp/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...data,
-          invitationId: invitation.id,
-          eventId: event.id,
+          invitation_id: invitation.id,
+          event_id: event.id,
+          status: data.status,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          has_plus_one: data.has_plus_one,
+          plus_one_name: data.plus_one_name,
+          plus_one_email: data.plus_one_email,
+          guest_count: data.guest_count || 0,
+          dietary_restrictions: data.dietary_restrictions,
+          notes: data.notes,
+          marketing_consent: data.marketing_consent
         }),
       });
       
-      console.log("API response status:", response.status);
-      
+      // Handle response
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error("RSVP submission failed:", errorData);
         throw new Error(errorData.message || "Failed to submit RSVP");
       }
       
-      // Handle successful submission
+      // Success message
       toast.success("Your RSVP has been submitted successfully!");
       
-      // Redirect to confirmation page or show confirmation UI
+      // Redirect based on response
+      const eventPath = event.slug || event.id;
       if (data.status === 'accepted') {
-        router.push(`/event/${event.slug}/confirmed`);
+        router.push(`/event/${eventPath}/confirmed`);
       } else {
-        router.push(`/event/${event.slug}/declined`);
+        router.push(`/event/${eventPath}/declined`);
       }
     } catch (error) {
       console.error("RSVP submission error:", error);
@@ -167,287 +191,294 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto shadow-lg">
-      <CardHeader className="bg-primary/5 pb-4">
+    <Card className="w-full max-w-3xl mx-auto shadow-lg border-0">
+      <CardHeader className="bg-primary/5 pb-6">
         <CardTitle className="text-2xl font-bold text-center text-primary">
           {event.name} - RSVP
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6">
+      
+      <CardContent className="p-6 md:p-8">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel className="text-lg font-semibold">Will you attend?</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowGuestFields(value === 'accepted');
-                        
-                        // Reset guest-related fields when declining
-                        if (value === 'declined') {
-                          form.setValue('guest_count', 0);
-                          form.setValue('has_plus_one', false);
-                          form.setValue('plus_one_name', '');
-                          form.setValue('plus_one_email', '');
-                          form.setValue('dietary_restrictions', '');
-                        }
-                      }}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-2"
-                    >
-                      <FormItem className={`flex items-center space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/20 transition-colors cursor-pointer ${status === 'accepted' ? 'border-primary bg-primary/5' : ''}`}>
-                        <FormControl>
-                          <RadioGroupItem value="accepted" />
-                        </FormControl>
-                        <FormLabel className="font-normal text-base cursor-pointer flex items-center">
-                          <Users className="mr-2 h-5 w-5 text-primary" />
-                          Yes, I'll be there
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className={`flex items-center space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/20 transition-colors cursor-pointer ${status === 'declined' ? 'border-primary bg-primary/5' : ''}`}>
-                        <FormControl>
-                          <RadioGroupItem value="declined" />
-                        </FormControl>
-                        <FormLabel className="font-normal text-base cursor-pointer flex items-center">
-                          <User className="mr-2 h-5 w-5 text-muted-foreground" />
-                          No, I can't make it
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* Attendance Selection */}
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="space-y-4">
+                    <FormLabel className="text-xl font-semibold">Will you attend?</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setShowGuestFields(value === 'accepted');
+                        }}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-3"
+                      >
+                        <FormItem className={`flex items-center space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/20 transition-colors cursor-pointer ${status === 'accepted' ? 'border-primary bg-primary/5' : ''}`}>
+                          <FormControl>
+                            <RadioGroupItem value="accepted" />
+                          </FormControl>
+                          <FormLabel className="font-normal text-base cursor-pointer flex items-center">
+                            <Users className="mr-2 h-5 w-5 text-primary" />
+                            Yes, I'll be there
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className={`flex items-center space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/20 transition-colors cursor-pointer ${status === 'declined' ? 'border-primary bg-primary/5' : ''}`}>
+                          <FormControl>
+                            <RadioGroupItem value="declined" />
+                          </FormControl>
+                          <FormLabel className="font-normal text-base cursor-pointer flex items-center">
+                            <User className="mr-2 h-5 w-5 text-muted-foreground" />
+                            No, I can't make it
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-            <Separator className="my-4" />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Separator className="my-6" />
+            
+            {/* Personal Information */}
+            <div className="space-y-6">
+              {/* Full Name */}
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center">
+                    <FormLabel className="text-base font-medium mb-1.5 block">
                       Full Name <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="Your name" 
-                        {...field} 
-                        disabled={isSubmitting}
-                        className={`bg-white ${form.formState.errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
-                        onChange={(e) => {
-                          console.log('Name updated:', e.target.value);
-                          field.onChange(e.target.value);
-                        }}
-                      />
+                      <div className="w-full">
+                        <Input 
+                          placeholder="Your full name" 
+                          {...field} 
+                          disabled={isSubmitting}
+                          className="h-12 w-full text-base px-4"
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
 
+              {/* Email Address */}
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center">
+                    <FormLabel className="text-base font-medium mb-1.5 block">
                       Email Address <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="your.email@example.com"
-                        {...field}
-                        disabled={Boolean(invitation.email) || isSubmitting}
-                        className={`bg-white ${form.formState.errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
-                        onChange={(e) => {
-                          if (!invitation.email) {
-                            console.log('Email updated:', e.target.value);
-                            field.onChange(e.target.value);
-                          }
-                        }}
-                      />
+                      <div className="w-full">
+                        <Input
+                          type="email"
+                          placeholder="your.email@example.com"
+                          {...field}
+                          disabled={Boolean(invitation.email) || isSubmitting}
+                          className="h-12 w-full text-base px-4"
+                        />
+                      </div>
                     </FormControl>
-                    <FormDescription>
+                    <FormDescription className="text-sm mt-1">
                       {invitation.email ? "Email address cannot be changed" : "We'll send your confirmation to this email"}
                     </FormDescription>
                     <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
+
+              {/* Phone Number */}
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-medium mb-1.5 block">
+                      Phone Number (optional)
+                    </FormLabel>
+                    <FormControl>
+                      <div className="w-full">
+                        <Input 
+                          placeholder="Your phone number" 
+                          className="h-12 w-full text-base px-4" 
+                          {...field} 
+                        />
+                      </div>
+                    </FormControl>
+                    <FormDescription className="text-sm mt-1">
+                      We'll only use this to contact you about this event
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem className="mt-2">
-                  <FormLabel className="text-base font-medium mb-1.5 block">
-                    Phone Number (optional)
-                  </FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Your phone number" 
-                      className="h-12 px-4 text-base w-full rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormDescription className="text-sm mt-1">
-                    We'll only use this to contact you about this event
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            {/* Guest Information (Conditional) */}
             {showGuestFields && (
-              <>
-                <div className="bg-primary/5 p-4 rounded-lg space-y-4">
-                  <h3 className="text-lg font-semibold text-primary">Guest Information</h3>
-                  
-                  <FormField
-                    control={form.control}
-                    name="has_plus_one"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border bg-card p-4">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel className="text-base">
-                            I'm bringing a plus one
-                          </FormLabel>
-                          <FormDescription>
-                            Add your plus one's details below
-                          </FormDescription>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+              <div className="bg-primary/5 p-6 rounded-lg space-y-6 mt-6">
+                <h3 className="text-lg font-semibold text-primary">Guest Information</h3>
+                
+                {/* Plus One */}
+                <FormField
+                  control={form.control}
+                  name="has_plus_one"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border bg-card p-4">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel className="text-base">
+                          I'm bringing a plus one
+                        </FormLabel>
+                        <FormDescription>
+                          Add your plus one's details below
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-                  {hasPlusOne && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6 pr-2 py-3 border-l-2 border-primary/30 ml-2">
-                      <FormField
-                        control={form.control}
-                        name="plus_one_name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center">
-                              Plus One Name <span className="text-red-500 ml-1">*</span>
-                            </FormLabel>
-                            <FormControl>
+                {/* Plus One Details (Conditional) */}
+                {hasPlusOne && (
+                  <div className="grid grid-cols-1 gap-4 pl-6 pr-2 py-3 border-l-2 border-primary/30 ml-2">
+                    <FormField
+                      control={form.control}
+                      name="plus_one_name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base font-medium mb-1.5 block">
+                            Plus One Name <span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <div className="w-full">
                               <Input
-                                placeholder="Full name"
-                                className={`h-12 ${form.formState.errors.plus_one_name ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+                                placeholder="Full name of your guest"
+                                className="h-12 w-full text-base px-4"
                                 {...field}
                               />
-                            </FormControl>
-                            <FormMessage className="text-red-500" />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="plus_one_email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-base">
-                              Plus One Email
-                            </FormLabel>
-                            <FormControl>
+                            </div>
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="plus_one_email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base font-medium mb-1.5 block">
+                            Plus One Email
+                          </FormLabel>
+                          <FormControl>
+                            <div className="w-full">
                               <Input
                                 placeholder="email@example.com"
                                 type="email"
-                                className="h-12"
+                                className="h-12 w-full text-base px-4"
                                 {...field}
                               />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  )}
-
-                  <FormField
-                    control={form.control}
-                    name="guest_count"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base">Additional Guests</FormLabel>
-                        <div className="flex items-center">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-10 w-10"
-                            onClick={() => field.onChange(Math.max(0, field.value - 1))}
-                          >
-                            <MinusCircle className="h-4 w-4" />
-                          </Button>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              min="0"
-                              max="3"
-                              className="h-12 text-center mx-2"
-                              {...field}
-                              onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                            />
+                            </div>
                           </FormControl>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-10 w-10"
-                            onClick={() => field.onChange(Math.min(3, field.value + 1))}
-                          >
-                            <PlusCircle className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <FormDescription>
-                          Number of additional guests attending with you (max 3)
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
 
-                  <FormField
-                    control={form.control}
-                    name="dietary_restrictions"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base font-medium mb-1.5 block">
-                          Dietary Restrictions (optional)
-                        </FormLabel>
+                {/* Additional Guests */}
+                <FormField
+                  control={form.control}
+                  name="guest_count"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium mb-1.5 block">
+                        Additional Guests
+                      </FormLabel>
+                      <div className="flex items-center">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-12 w-12 rounded-r-none"
+                          onClick={() => field.onChange(Math.max(0, field.value - 1))}
+                        >
+                          <MinusCircle className="h-5 w-5" />
+                        </Button>
                         <FormControl>
-                          <Textarea
-                            placeholder="Please list any dietary restrictions or allergies"
-                            className="min-h-24 resize-none px-4 py-3 text-base rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                          <Input
+                            type="number"
+                            min="0"
+                            max="3"
+                            className="h-12 text-center rounded-none border-x-0 w-20"
                             {...field}
+                            onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                           />
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-12 w-12 rounded-l-none"
+                          onClick={() => field.onChange(Math.min(3, field.value + 1))}
+                        >
+                          <PlusCircle className="h-5 w-5" />
+                        </Button>
+                      </div>
+                      <FormDescription className="text-sm mt-1">
+                        Number of additional guests attending with you (max 3)
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Dietary Restrictions */}
+                <FormField
+                  control={form.control}
+                  name="dietary_restrictions"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium mb-1.5 block">
+                        Dietary Restrictions (optional)
+                      </FormLabel>
+                      <FormControl>
+                        <div className="w-full">
+                          <Textarea
+                            placeholder="Please list any dietary restrictions or allergies"
+                            className="min-h-24 resize-none px-4 py-3 text-base w-full"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             )}
 
+            {/* Additional Notes */}
             <FormField
               control={form.control}
               name="notes"
@@ -457,17 +488,20 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                     Additional Notes (optional)
                   </FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Anything else you'd like to share with the host"
-                      className="min-h-24 resize-none px-4 py-3 text-base rounded-md border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      {...field}
-                    />
+                    <div className="w-full">
+                      <Textarea
+                        placeholder="Anything else you'd like to share with the host"
+                        className="min-h-24 resize-none px-4 py-3 text-base w-full"
+                        {...field}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+            {/* Marketing Consent */}
             <FormField
               control={form.control}
               name="marketing_consent"
@@ -480,7 +514,7 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>
+                    <FormLabel className="text-base">
                       I agree to receive updates about this event and future events
                     </FormLabel>
                     <FormDescription>
@@ -491,14 +525,16 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
               )}
             />
 
+            {/* Expiration Warning */}
             {invitation.expires_at && new Date(invitation.expires_at) < new Date() && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" className="mt-6">
                 <AlertDescription>
                   Please note that the RSVP deadline has passed, but you can still submit your response.
                 </AlertDescription>
               </Alert>
             )}
 
+            {/* Submit Button */}
             <div className="pt-6">
               <Button 
                 type="submit" 
