@@ -126,108 +126,149 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    // Update the invitation status - with proper rsvp_status field
+    // Process the RSVP - Create all necessary records in one transaction
     try {
-      console.log(`Updating invitation ${invitation_id} with rsvp_status=${dbRsvpStatus} (mapped from '${status}')`);
+      // 1. Update the invitation status
+      console.log(`Updating invitation ${invitation_id} with rsvp_status=${dbRsvpStatus}`);
       
-      // Update invitation with proper rsvp_status and rsvp_date fields
       const { error: updateError } = await supabase
         .from('invitations')
         .update({
-          rsvp_status: dbRsvpStatus, // Use mapped status value
+          rsvp_status: dbRsvpStatus,
           rsvp_date: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
         .eq('id', invitation_id);
       
       if (updateError) {
-        console.error('Error updating invitation status:', updateError);
+        console.error('Error updating invitation:', updateError);
         return NextResponse.json(
-          { error: 'Failed to update invitation status', details: updateError },
+          { error: 'Failed to update invitation', details: updateError },
           { status: 500 }
         );
       }
       
-      console.log(`Successfully updated invitation rsvp_status (ID: ${invitation_id}) to: ${dbRsvpStatus}`);
+      // 2. Create or update profile
+      let profileId;
+      
+      // Check if profile exists
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle();
+      
+      if (existingProfile) {
+        profileId = existingProfile.id;
+        console.log(`Using existing profile: ${profileId}`);
+      } else {
+        // Create new profile
+        const { data: newProfile, error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            email: email,
+            full_name: name,
+            role: 'guest',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+          .select('id')
+          .single();
+        
+        if (profileError) {
+          console.error('Error creating profile:', profileError);
+        } else if (newProfile) {
+          profileId = newProfile.id;
+          console.log(`Created new profile: ${profileId}`);
+        }
+      }
+      
+      // 3. Create RSVP record
+      const rsvpId = nanoid();
+      console.log(`Creating RSVP record with ID: ${rsvpId}`);
+      
+      const { error: rsvpError } = await supabase
+        .from('rsvps')
+        .insert({
+          id: rsvpId,
+          invitation_id: invitation_id,
+          event_id: event_id,
+          status: dbRsvpStatus,
+          guest_count: guest_count || 0,
+          dietary_restrictions: dietary_restrictions || null,
+          notes: notes || null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+      
+      if (rsvpError) {
+        console.error('Error creating RSVP record:', rsvpError);
+      } else {
+        console.log('Successfully created RSVP record');
+      }
+      
+      // 4. Create event attendee record if accepted
+      if (profileId && (dbRsvpStatus === 'yes' || dbRsvpStatus === 'accepted')) {
+        console.log(`Creating event attendee record for profile: ${profileId}`);
+        
+        // Check if attendee record already exists
+        const { data: existingAttendee } = await supabase
+          .from('event_attendees')
+          .select('id')
+          .eq('event_id', event_id)
+          .eq('profile_id', profileId)
+          .maybeSingle();
+        
+        if (existingAttendee) {
+          console.log(`Attendee record already exists: ${existingAttendee.id}`);
+        } else {
+          // Create new attendee record
+          const { error: attendeeError } = await supabase
+            .from('event_attendees')
+            .insert({
+              event_id: event_id,
+              profile_id: profileId,
+              created_at: new Date().toISOString()
+            });
+          
+          if (attendeeError) {
+            console.error('Error creating attendee record:', attendeeError);
+          } else {
+            console.log('Successfully created attendee record');
+          }
+        }
+      }
+      
+      // 5. Log analytics
+      try {
+        await supabase.rpc('track_rsvp_submission', {
+          p_event_id: event_id,
+          p_invitation_id: invitation_id,
+          p_status: dbRsvpStatus,
+          p_guest_count: guest_count || 0
+        });
+        console.log('Analytics tracking successful');
+      } catch (err) {
+        console.error('Analytics error:', err);
+        // Continue despite analytics error
+      }
+      
+      // Return success response
+      console.log('RSVP submission completed successfully');
+      return NextResponse.json({
+        success: true,
+        message: status === 'accepted' 
+          ? 'Thank you for accepting the invitation!'
+          : 'Thank you for responding to the invitation.'
+      });
+      
     } catch (error) {
-      console.error('Exception updating invitation status:', error);
+      console.error('Error processing RSVP:', error);
       return NextResponse.json(
-        { error: 'Failed to update invitation status' },
+        { error: 'Failed to process RSVP' },
         { status: 500 }
       );
     }
-    
-    // Fix for the RSVP database issue
-    try {
-      // First check if an RSVP record already exists
-      const { data: existingRsvp } = await supabase
-        .from('rsvps')
-        .select('id')
-        .eq('invitation_id', invitation_id)
-        .maybeSingle();
-        
-      const rsvpData = {
-        invitation_id,
-        event_id,
-        status: dbRsvpStatus,
-        guest_count: guest_count || 0,
-        dietary_restrictions: dietary_restrictions || null,
-        notes: notes || null,
-        updated_at: new Date().toISOString()
-      };
-      
-      // If exists, update it; otherwise insert new record
-      if (existingRsvp?.id) {
-        await supabase
-          .from('rsvps')
-          .update(rsvpData)
-          .eq('id', existingRsvp.id);
-        console.log('Updated existing RSVP record');
-      } else {
-        // Add created_at for new records
-        await supabase
-          .from('rsvps')
-          .insert({
-            ...rsvpData,
-            id: nanoid(), // Ensure unique ID
-            created_at: new Date().toISOString()
-          });
-        console.log('Created new RSVP record');
-      }
-      
-      // Create initial profile if not exists
-      await supabase.rpc('create_guest_profile_if_not_exists', {
-        p_email: email,
-        p_name: name,
-        p_event_id: event_id
-      });
-      
-    } catch (error) {
-      console.error('Error saving RSVP details:', error);
-    }
-    
-    // Log analytics for the RSVP
-    try {
-      await supabase.rpc('track_rsvp_submission', {
-        p_event_id: event_id,
-        p_invitation_id: invitation_id,
-        p_status: dbRsvpStatus, // Use the mapped status value
-        p_guest_count: guest_count || 0
-      });
-      console.log('Analytics tracking successful');
-    } catch (err) {
-      console.error('Analytics error:', err);
-      // Continue despite analytics error
-    }
-    
-    // Return success response
-    console.log('RSVP submission completed successfully');
-    return NextResponse.json({
-      success: true,
-      message: status === 'accepted' 
-        ? 'Thank you for accepting the invitation!'
-        : 'Thank you for responding to the invitation.'
-    });
   } catch (error) {
     console.error('Unhandled RSVP submission error:', error);
     
