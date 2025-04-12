@@ -19,6 +19,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Advanced AI Features integration with TensorFlow.js
 - Enhanced Analytics dashboard with real-time metrics
 
+## [0.9.2] - 2025-04-15
+### Added
+- **Enhanced Guest Profiles**:
+  - Avatar upload functionality with image preview
+  - Profile image management with change/remove options
+  - Integration with Supabase Storage for avatar persistence
+  - Automatic thumbnail generation for guest profiles
+  - Enhanced form validation for profile information
+  
+- **TikTok-style Camera Interface**:
+  - Vertical 9:16 aspect ratio for modern camera experience
+  - Full-screen camera preview with overlay controls
+  - Flashlight toggle functionality with visual feedback
+  - TikTok-inspired camera control buttons with modern styling
+  - Redesigned camera interface with floating action buttons
+  - Visual indicators for camera state (active/inactive)
+  
+- **Mobile Experience Improvements**:
+  - Responsive design optimizations for camera interface
+  - Touch-friendly controls for mobile users
+  - Enhanced visual feedback for interactive elements
+  - Hardware capability detection for flashlight
+  - Proper camera initialization and cleanup
+  
+### Changed
+- Profile setup workflow now includes avatar selection
+- Camera interface completely redesigned with modern aesthetic
+- Improved user feedback with toast notifications
+- Enhanced tab navigation for guest profile setup
+- Optimized form submission with visual loading indicators
+- Better error handling for unsupported device features
+
 ## [0.9.1] - 2025-04-12
 ### Added
 - Enhanced post-RSVP guest experience with profile setup workflow

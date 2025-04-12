@@ -1,8 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Check, Calendar, Share } from 'lucide-react'
+import { Check, Calendar, Share, Camera, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 
 export const metadata: Metadata = {
   title: 'RSVP Confirmed',
@@ -35,6 +36,33 @@ export default function ConfirmedPage({ params }: { params: { slug: string } }) 
               If you need to make changes to your RSVP, please contact the event host.
             </p>
           </div>
+          
+          <Separator className="my-2" />
+          
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <h3 className="font-semibold text-lg mb-2">Complete Your Setup</h3>
+            <p className="text-sm mb-4">
+              To make the most of your event experience, please complete these quick steps:
+            </p>
+            
+            <div className="space-y-3">
+              <Button variant="default" className="w-full justify-start" asChild>
+                <Link href={`/guest/profile?event=${params.slug}`}>
+                  <User className="mr-2 h-4 w-4" />
+                  Complete Your Profile
+                </Link>
+              </Button>
+              
+              <Button variant="default" className="w-full justify-start" asChild>
+                <Link href={`/guest/camera-setup?event=${params.slug}`}>
+                  <Camera className="mr-2 h-4 w-4" />
+                  Set Up Camera Access
+                </Link>
+              </Button>
+            </div>
+          </div>
+          
+          <Separator className="my-2" />
           
           <div className="space-y-4">
             <Button variant="outline" className="w-full justify-start" asChild>
