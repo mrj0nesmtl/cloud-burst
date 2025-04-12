@@ -23,7 +23,7 @@ import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { Loader2, PlusCircle, MinusCircle, User, Users } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { rsvpFormSchema } from '@/lib/validations/rsvp'
+import { rsvpFormSchema, validatePlusOneFields } from '@/lib/validations/rsvp'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
@@ -88,86 +88,83 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
 
   useEffect(() => {
     setShowGuestFields(status === 'accepted');
-  }, [status]);
+    
+    // Clear guest-related errors when declining
+    if (status === 'declined') {
+      form.clearErrors(['guest_count', 'has_plus_one', 'plus_one_name', 'plus_one_email', 'dietary_restrictions']);
+    }
+  }, [status, form]);
 
   useEffect(() => {
     setHasPlusOne(hasPlusOneWatch || false);
-  }, [hasPlusOneWatch]);
+    
+    // Apply conditional validation for plus one fields
+    if (hasPlusOneWatch) {
+      form.setError('plus_one_name', {
+        type: 'manual',
+        message: form.getValues('plus_one_name') ? '' : 'Plus one name is required'
+      });
+    } else {
+      form.clearErrors('plus_one_name');
+    }
+  }, [hasPlusOneWatch, form]);
 
-  async function onSubmit(values: z.infer<typeof extendedSchema>) {
-    setIsSubmitting(true)
+  const onSubmit = async (data: z.infer<typeof extendedSchema>) => {
+    console.log("Form submission started:", data);
+    
+    // Check plus one validation before proceeding
+    if (data.has_plus_one && (!data.plus_one_name || data.plus_one_name.length < 2)) {
+      form.setError('plus_one_name', {
+        type: 'manual',
+        message: 'Plus one name is required'
+      });
+      return;
+    }
+    
+    setIsSubmitting(true);
     
     try {
-      // First show a toast that submission is in progress
-      toast.loading('Submitting your RSVP...', {
-        id: 'rsvp-submission',
-      });
-
-      // Ensure status is valid
-      if (!values.status || !['accepted', 'declined'].includes(values.status)) {
-        throw new Error('Please select whether you can attend');
+      // Validate invitation ID exists
+      if (!invitation.id) {
+        throw new Error("Invalid invitation ID");
       }
       
-      // Prepare the payload - format with plus one data if present
-      const payload = {
-        ...values,
-        invitation_id: invitation.id,
-        event_id: event.id,
-        token,
-        // Include plus one details in a format the API expects
-        plus_one: values.has_plus_one ? {
-          name: values.plus_one_name,
-          email: values.plus_one_email
-        } : null
-      };
-      
-      // Log payload for debugging
-      console.log('Submitting RSVP with payload:', payload);
-      
-      const response = await fetch('/api/rsvp/submit', {
-        method: 'POST',
+      const response = await fetch("/api/rsvp", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
-      })
+        body: JSON.stringify({
+          ...data,
+          invitationId: invitation.id,
+          eventId: event.id,
+        }),
+      });
       
-      // Log the raw response for debugging
-      const responseText = await response.text();
-      console.log('Raw API response:', responseText);
-      
-      let data;
-      try {
-        // Try to parse the response as JSON
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.error('Failed to parse API response as JSON:', e);
-        throw new Error('Invalid server response format');
-      }
+      console.log("API response status:", response.status);
       
       if (!response.ok) {
-        console.error('RSVP submission error details:', data);
-        throw new Error(data.error || data.message || 'Something went wrong');
+        const errorData = await response.json().catch(() => ({}));
+        console.error("RSVP submission failed:", errorData);
+        throw new Error(errorData.message || "Failed to submit RSVP");
       }
       
-      // Update the toast to success
-      toast.success('RSVP submitted successfully!', {
-        id: 'rsvp-submission',
-      });
+      // Handle successful submission
+      toast.success("Your RSVP has been submitted successfully!");
       
-      // Immediately redirect to confirmation page without delay
-      router.push(`/invitation/${token}/confirmation/${values.status}`);
+      // Redirect to confirmation page or show confirmation UI
+      if (data.status === 'accepted') {
+        router.push(`/event/${event.slug}/confirmed`);
+      } else {
+        router.push(`/event/${event.slug}/declined`);
+      }
     } catch (error) {
-      console.error('RSVP submission error:', error)
-      
-      // Update the toast to error
-      toast.error(`Failed to submit RSVP: ${error instanceof Error ? error.message : 'Please try again'}`, {
-        id: 'rsvp-submission',
-      });
-      
-      setIsSubmitting(false)
+      console.error("RSVP submission error:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to submit RSVP. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-3xl mx-auto shadow-lg">
@@ -190,11 +187,20 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowGuestFields(value === 'accepted');
+                        
+                        // Reset guest-related fields when declining
+                        if (value === 'declined') {
+                          form.setValue('guest_count', 0);
+                          form.setValue('has_plus_one', false);
+                          form.setValue('plus_one_name', '');
+                          form.setValue('plus_one_email', '');
+                          form.setValue('dietary_restrictions', '');
+                        }
                       }}
                       defaultValue={field.value}
                       className="flex flex-col space-y-2"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0 rounded-md border p-3 hover:bg-accent/20 transition-colors cursor-pointer">
+                      <FormItem className={`flex items-center space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/20 transition-colors cursor-pointer ${status === 'accepted' ? 'border-primary bg-primary/5' : ''}`}>
                         <FormControl>
                           <RadioGroupItem value="accepted" />
                         </FormControl>
@@ -203,7 +209,7 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                           Yes, I'll be there
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0 rounded-md border p-3 hover:bg-accent/20 transition-colors cursor-pointer">
+                      <FormItem className={`flex items-center space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/20 transition-colors cursor-pointer ${status === 'declined' ? 'border-primary bg-primary/5' : ''}`}>
                         <FormControl>
                           <RadioGroupItem value="declined" />
                         </FormControl>
@@ -227,19 +233,22 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold mb-2 block">
-                      Full Name <span className="text-red-500">*</span>
+                    <FormLabel className="flex items-center">
+                      Full Name <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input 
-                        id="full-name-input"
-                        placeholder="Enter your full name" 
-                        className="h-12 px-4 text-base w-full rounded-md border border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
-                        autoComplete="name"
+                        placeholder="Your name" 
                         {...field} 
+                        disabled={isSubmitting}
+                        className={`bg-white ${form.formState.errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+                        onChange={(e) => {
+                          console.log('Name updated:', e.target.value);
+                          field.onChange(e.target.value);
+                        }}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
@@ -249,21 +258,28 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold mb-2 block">
-                      Email Address <span className="text-red-500">*</span>
+                    <FormLabel className="flex items-center">
+                      Email Address <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
-                        id="email-input"
-                        placeholder="your.email@example.com"
                         type="email"
-                        className="h-12 px-4 text-base w-full rounded-md border border-input bg-background shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
-                        autoComplete="email"
+                        placeholder="your.email@example.com"
                         {...field}
-                        disabled={!!invitation.email}
+                        disabled={Boolean(invitation.email) || isSubmitting}
+                        className={`bg-white ${form.formState.errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+                        onChange={(e) => {
+                          if (!invitation.email) {
+                            console.log('Email updated:', e.target.value);
+                            field.onChange(e.target.value);
+                          }
+                        }}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormDescription>
+                      {invitation.email ? "Email address cannot be changed" : "We'll send your confirmation to this email"}
+                    </FormDescription>
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
@@ -327,17 +343,17 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                         name="plus_one_name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-base">
-                              Plus One Name <span className="text-red-500">*</span>
+                            <FormLabel className="flex items-center">
+                              Plus One Name <span className="text-red-500 ml-1">*</span>
                             </FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="Full name"
-                                className="h-12"
+                                className={`h-12 ${form.formState.errors.plus_one_name ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                                 {...field}
                               />
                             </FormControl>
-                            <FormMessage />
+                            <FormMessage className="text-red-500" />
                           </FormItem>
                         )}
                       />
@@ -486,19 +502,24 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
             <div className="pt-6">
               <Button 
                 type="submit" 
-                className="w-full py-6 text-base font-medium rounded-md" 
+                className="w-full py-6 text-base font-medium rounded-md bg-primary hover:bg-primary/90 text-white" 
                 disabled={isSubmitting}
                 size="lg"
               >
                 {isSubmitting ? (
-                  <>
+                  <div className="flex items-center justify-center">
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Submitting...
-                  </>
+                    <span>Submitting RSVP...</span>
+                  </div>
                 ) : (
-                  'Submit RSVP'
+                  status === 'accepted' ? 'Confirm Attendance' : 'Submit Response'
                 )}
               </Button>
+              {!isSubmitting && (
+                <p className="text-center text-muted-foreground mt-2 text-sm">
+                  By submitting, you confirm your RSVP details are correct
+                </p>
+              )}
             </div>
           </form>
         </Form>
