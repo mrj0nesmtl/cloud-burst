@@ -4,11 +4,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
-import { Calendar, MapPin, Share2, ArrowLeft, Download, User, Clock } from 'lucide-react'
+import { Calendar, MapPin, Share2, ArrowLeft, Download, User, Clock, UserPlus, Camera, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { validateInvitationToken, getEventForInvitation } from '@/lib/supabase/invitations'
 import { formatDate } from '@/lib/utils'
+import { ImageIcon } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -188,6 +189,45 @@ export default async function AcceptedConfirmationPage({ params }: PageProps) {
               )}
             </div>
           )}
+          
+          <div className="mt-6 border rounded-lg overflow-hidden">
+            <div className="bg-muted p-4 flex justify-between items-center">
+              <h3 className="font-medium">Event Gallery Preview</h3>
+              <Button variant="link" size="sm">View All</Button>
+            </div>
+            <div className="p-4 grid grid-cols-3 gap-2">
+              <div className="aspect-square bg-muted/50 rounded flex items-center justify-center">
+                <ImageIcon className="text-muted-foreground h-6 w-6" />
+              </div>
+              <div className="col-span-2 aspect-video bg-muted/50 rounded flex items-center justify-center">
+                <MapPin className="text-muted-foreground h-6 w-6" />
+                <span className="ml-2 text-sm text-muted-foreground">Venue Preview</span>
+              </div>
+            </div>
+          </div>
+          
+          <Card className="mt-6">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Your Guest Dashboard</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-3">
+                <Button variant="outline" className="h-auto py-4 flex flex-col items-center justify-center">
+                  <Camera className="h-5 w-5 mb-2" />
+                  <span className="text-sm">Test Camera</span>
+                </Button>
+                <Button variant="outline" className="h-auto py-4 flex flex-col items-center justify-center">
+                  <Upload className="h-5 w-5 mb-2" />
+                  <span className="text-sm">Upload Photos</span>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Button variant="outline" className="flex items-center gap-2 mt-4 w-full md:w-auto">
+            <UserPlus className="h-4 w-4" />
+            Complete Your Profile
+          </Button>
         </CardContent>
         
         <CardFooter className="flex flex-col sm:flex-row gap-4 justify-between">

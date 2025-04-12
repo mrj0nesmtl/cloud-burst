@@ -92,6 +92,13 @@ export function InvitationForm({
   async function onSingleSubmit(values: SingleInviteFormValues) {
     setIsSubmitting(true)
     
+    // Create a persistent toast that stays visible during the process
+    const loadingToast = toast({
+      title: "Processing invitation...",
+      description: "Please wait while we process and send your invitation. This may take a moment.",
+      duration: Infinity, // Set to infinite duration so it doesn't auto-dismiss
+    })
+    
     try {
       // Call the API endpoint instead of directly using addEventAttendee
       const response = await fetch('/api/invitations/create', {
@@ -113,6 +120,9 @@ export function InvitationForm({
         throw new Error(errorData.error || 'Failed to send invitation');
       }
       
+      // Dismiss the loading toast
+      toast.dismiss(loadingToast)
+      
       // Success response
       toast({
         title: "Invitation sent successfully!",
@@ -130,6 +140,10 @@ export function InvitationForm({
       onInvitationsSent()
     } catch (error) {
       console.error('Error sending invitation:', error)
+      
+      // Dismiss the loading toast
+      toast.dismiss(loadingToast)
+      
       toast({
         variant: "destructive",
         title: "Failed to send invitation",
@@ -144,6 +158,13 @@ export function InvitationForm({
   async function onBulkSubmit(values: BulkInviteFormValues) {
     setIsSubmitting(true)
     setCsvErrors([])
+    
+    // Create a persistent toast that stays visible during the entire process
+    const loadingToast = toast({
+      title: "Processing invitations...",
+      description: "Please wait while we process and send your invitations. This may take a few moments.",
+      duration: Infinity, // Set to infinite duration so it doesn't auto-dismiss
+    })
     
     try {
       // Parse emails (one per line)
@@ -180,6 +201,14 @@ export function InvitationForm({
         }
       })
       
+      // Update toast with count
+      toast({
+        id: loadingToast,
+        title: "Sending invitations...",
+        description: `Processing ${attendees.length} invitations. Please wait while emails are being sent.`,
+        duration: Infinity,
+      })
+      
       // Call the API endpoint for bulk invitations
       const response = await fetch('/api/invitations/bulk-create', {
         method: 'POST',
@@ -199,6 +228,9 @@ export function InvitationForm({
         throw new Error(errorData.error || 'Failed to send invitations');
       }
       
+      // Dismiss the loading toast
+      toast.dismiss(loadingToast)
+      
       // Success response
       toast({
         title: "Invitations sent successfully!",
@@ -215,6 +247,9 @@ export function InvitationForm({
       onInvitationsSent()
     } catch (error) {
       console.error('Error sending bulk invitations:', error)
+      
+      // Dismiss the loading toast
+      toast.dismiss(loadingToast)
       
       if (error instanceof Error) {
         setCsvErrors([error.message])

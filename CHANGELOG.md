@@ -19,6 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Advanced AI Features integration with TensorFlow.js
 - Enhanced Analytics dashboard with real-time metrics
 
+## [0.9.1] - 2025-04-12
+### Added
+- Enhanced post-RSVP guest experience with profile setup workflow
+- Camera testing functionality for guests to verify device compatibility
+- Improved confirmation pages with gallery preview and dashboard access
+- Database integration to properly create guest profiles from RSVPs
+- Fixed RSVP record creation in database to ensure proper tracking
+
 ## [0.9.0] - 2025-04-11
 ### Fixed
 - RSVP status correctly mapped to database constraints ('accepted', 'declined', 'pending')

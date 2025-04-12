@@ -157,36 +157,53 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    // Create or update RSVP details - focused on 'rsvps' table
+    // Fix for the RSVP database issue
     try {
-      // Prepare RSVP data matching actual schema
+      // First check if an RSVP record already exists
+      const { data: existingRsvp } = await supabase
+        .from('rsvps')
+        .select('id')
+        .eq('invitation_id', invitation_id)
+        .maybeSingle();
+        
       const rsvpData = {
-        id: nanoid(),
         invitation_id,
-        status: dbRsvpStatus, // Use the same mapped status value for consistency
+        event_id,
+        status: dbRsvpStatus,
         guest_count: guest_count || 0,
         dietary_restrictions: dietary_restrictions || null,
         notes: notes || null,
-        created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
       
-      console.log('Inserting RSVP with data:', rsvpData);
-      
-      // Attempt to insert RSVP data
-      const { error: insertError } = await supabase
-        .from('rsvps')
-        .insert(rsvpData);
-      
-      if (insertError) {
-        console.error('Failed to insert RSVP details:', insertError);
-        // Continue anyway - the invitation status update is more important
+      // If exists, update it; otherwise insert new record
+      if (existingRsvp?.id) {
+        await supabase
+          .from('rsvps')
+          .update(rsvpData)
+          .eq('id', existingRsvp.id);
+        console.log('Updated existing RSVP record');
       } else {
-        console.log('Successfully inserted RSVP details');
+        // Add created_at for new records
+        await supabase
+          .from('rsvps')
+          .insert({
+            ...rsvpData,
+            id: nanoid(), // Ensure unique ID
+            created_at: new Date().toISOString()
+          });
+        console.log('Created new RSVP record');
       }
+      
+      // Create initial profile if not exists
+      await supabase.rpc('create_guest_profile_if_not_exists', {
+        p_email: email,
+        p_name: name,
+        p_event_id: event_id
+      });
+      
     } catch (error) {
-      console.error('Exception handling RSVP details:', error);
-      // Continue anyway - the invitation status update is more important
+      console.error('Error saving RSVP details:', error);
     }
     
     // Log analytics for the RSVP
