@@ -143,33 +143,49 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       // Add a small delay to prevent race conditions
       await new Promise(resolve => setTimeout(resolve, 100));
       
+      // Prepare the request payload
+      const payload = {
+        invitation_id: invitation.id,
+        event_id: event.id,
+        status: data.status,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        has_plus_one: data.has_plus_one,
+        plus_one_name: data.plus_one_name,
+        plus_one_email: data.plus_one_email,
+        guest_count: data.guest_count || 0,
+        dietary_restrictions: data.dietary_restrictions,
+        notes: data.notes,
+        marketing_consent: data.marketing_consent
+      };
+      
+      console.log("Sending RSVP data to API:", JSON.stringify(payload, null, 2));
+      
       // Submit data to API
       const response = await fetch("/api/rsvp/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          invitation_id: invitation.id,
-          event_id: event.id,
-          status: data.status,
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          has_plus_one: data.has_plus_one,
-          plus_one_name: data.plus_one_name,
-          plus_one_email: data.plus_one_email,
-          guest_count: data.guest_count || 0,
-          dietary_restrictions: data.dietary_restrictions,
-          notes: data.notes,
-          marketing_consent: data.marketing_consent
-        }),
+        body: JSON.stringify(payload),
       });
       
       // Handle response
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to submit RSVP");
+        console.error("RSVP submission failed:", errorData);
+        
+        // Show different error messages based on status code
+        if (response.status === 400) {
+          throw new Error(errorData.error || "Invalid form data. Please check all fields and try again.");
+        } else if (response.status === 404) {
+          throw new Error("Invitation not found. Please check your invitation link.");
+        } else if (response.status === 500) {
+          throw new Error("Server error. Please try again later.");
+        } else {
+          throw new Error(errorData.error || "Failed to submit RSVP");
+        }
       }
       
       // Success message
@@ -337,18 +353,19 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                   control={form.control}
                   name="has_plus_one"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border bg-card p-4">
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border bg-card/50 p-4 shadow-sm">
                       <FormControl>
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          className="mt-1"
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel className="text-base">
+                        <FormLabel className="text-base font-medium">
                           I'm bringing a plus one
                         </FormLabel>
-                        <FormDescription>
+                        <FormDescription className="text-sm text-muted-foreground">
                           Add your plus one's details below
                         </FormDescription>
                       </div>
@@ -358,7 +375,7 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
 
                 {/* Plus One Details (Conditional) */}
                 {hasPlusOne && (
-                  <div className="grid grid-cols-1 gap-4 pl-6 pr-2 py-3 border-l-2 border-primary/30 ml-2">
+                  <div className="space-y-4 pl-6 pr-2 py-4 border-l-2 border-primary/30 ml-2">
                     <FormField
                       control={form.control}
                       name="plus_one_name"
@@ -368,15 +385,13 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                             Plus One Name <span className="text-red-500 ml-1">*</span>
                           </FormLabel>
                           <FormControl>
-                            <div className="w-full">
-                              <Input
-                                placeholder="Full name of your guest"
-                                className="h-12 w-full text-base px-4"
-                                {...field}
-                              />
-                            </div>
+                            <Input
+                              placeholder="Full name of your guest"
+                              className="h-12 text-base px-4 w-full"
+                              {...field}
+                            />
                           </FormControl>
-                          <FormMessage className="text-red-500" />
+                          <FormMessage className="text-red-500 mt-1" />
                         </FormItem>
                       )}
                     />
@@ -390,16 +405,14 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                             Plus One Email
                           </FormLabel>
                           <FormControl>
-                            <div className="w-full">
-                              <Input
-                                placeholder="email@example.com"
-                                type="email"
-                                className="h-12 w-full text-base px-4"
-                                {...field}
-                              />
-                            </div>
+                            <Input
+                              placeholder="email@example.com"
+                              type="email"
+                              className="h-12 text-base px-4 w-full"
+                              {...field}
+                            />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage className="text-red-500 mt-1" />
                         </FormItem>
                       )}
                     />
@@ -411,8 +424,8 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                   control={form.control}
                   name="guest_count"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base font-medium mb-1.5 block">
+                    <FormItem className="bg-card/50 p-4 rounded-md border shadow-sm">
+                      <FormLabel className="text-base font-medium mb-2 block">
                         Additional Guests
                       </FormLabel>
                       <div className="flex items-center">
@@ -445,7 +458,7 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                           <PlusCircle className="h-5 w-5" />
                         </Button>
                       </div>
-                      <FormDescription className="text-sm mt-1">
+                      <FormDescription className="text-sm mt-2">
                         Number of additional guests attending with you (max 3)
                       </FormDescription>
                       <FormMessage />
@@ -458,19 +471,288 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                   control={form.control}
                   name="dietary_restrictions"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base font-medium mb-1.5 block">
+                    <FormItem className="bg-card/50 p-4 rounded-md border shadow-sm">
+                      <FormLabel className="text-base font-medium mb-2 block">
                         Dietary Restrictions (optional)
                       </FormLabel>
-                      <FormControl>
-                        <div className="w-full">
-                          <Textarea
-                            placeholder="Please list any dietary restrictions or allergies"
-                            className="min-h-24 resize-none px-4 py-3 text-base w-full"
-                            {...field}
+                      <FormDescription className="text-sm mb-3">
+                        Please select any dietary restrictions or allergies
+                      </FormDescription>
+                      <div className="flex flex-col space-y-3">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="vegetarian"
+                            checked={field.value?.includes('Vegetarian')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Vegetarian')) {
+                                  field.onChange([...values, 'Vegetarian'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Vegetarian').join(', '));
+                              }
+                            }}
                           />
+                          <label 
+                            htmlFor="vegetarian"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Vegetarian
+                          </label>
                         </div>
-                      </FormControl>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="vegan"
+                            checked={field.value?.includes('Vegan')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Vegan')) {
+                                  field.onChange([...values, 'Vegan'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Vegan').join(', '));
+                              }
+                            }}
+                          />
+                          <label 
+                            htmlFor="vegan"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Vegan
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="gluten-free"
+                            checked={field.value?.includes('Gluten-free')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Gluten-free')) {
+                                  field.onChange([...values, 'Gluten-free'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Gluten-free').join(', '));
+                              }
+                            }}
+                          />
+                          <label 
+                            htmlFor="gluten-free"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Gluten-free
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="nut-free"
+                            checked={field.value?.includes('Nut-free')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Nut-free')) {
+                                  field.onChange([...values, 'Nut-free'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Nut-free').join(', '));
+                              }
+                            }}
+                          />
+                          <label 
+                            htmlFor="nut-free"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Nut-free
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="dairy-free"
+                            checked={field.value?.includes('Dairy-free')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Dairy-free')) {
+                                  field.onChange([...values, 'Dairy-free'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Dairy-free').join(', '));
+                              }
+                            }}
+                          />
+                          <label 
+                            htmlFor="dairy-free"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Dairy-free/Lactose intolerant
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="kosher"
+                            checked={field.value?.includes('Kosher')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Kosher')) {
+                                  field.onChange([...values, 'Kosher'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Kosher').join(', '));
+                              }
+                            }}
+                          />
+                          <label 
+                            htmlFor="kosher"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Kosher
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="halal"
+                            checked={field.value?.includes('Halal')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Halal')) {
+                                  field.onChange([...values, 'Halal'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Halal').join(', '));
+                              }
+                            }}
+                          />
+                          <label 
+                            htmlFor="halal"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Halal
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="seafood-allergy"
+                            checked={field.value?.includes('Seafood allergy')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Seafood allergy')) {
+                                  field.onChange([...values, 'Seafood allergy'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Seafood allergy').join(', '));
+                              }
+                            }}
+                          />
+                          <label 
+                            htmlFor="seafood-allergy"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Seafood allergy
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="diabetic"
+                            checked={field.value?.includes('Diabetic')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Diabetic')) {
+                                  field.onChange([...values, 'Diabetic'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Diabetic').join(', '));
+                              }
+                            }}
+                          />
+                          <label 
+                            htmlFor="diabetic"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Diabetic
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="low-sodium"
+                            checked={field.value?.includes('Low sodium')}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || '';
+                              const values = currentValue.split(', ').filter(v => v !== '');
+                              
+                              if (checked) {
+                                if (!values.includes('Low sodium')) {
+                                  field.onChange([...values, 'Low sodium'].join(', '));
+                                }
+                              } else {
+                                field.onChange(values.filter(v => v !== 'Low sodium').join(', '));
+                              }
+                            }}
+                          />
+                          <label 
+                            htmlFor="low-sodium"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Low sodium
+                          </label>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4">
+                        <FormLabel className="text-sm font-medium mb-2 block">
+                          Other dietary restrictions
+                        </FormLabel>
+                        <Input
+                          placeholder="Please specify any other dietary restrictions"
+                          className="h-10 text-sm w-full"
+                          onChange={(e) => {
+                            const currentValue = field.value || '';
+                            const values = currentValue.split(', ').filter(v => !v.startsWith('Other:') && v !== '');
+                            
+                            if (e.target.value) {
+                              field.onChange([...values, `Other: ${e.target.value}`].join(', '));
+                            } else {
+                              field.onChange(values.join(', '));
+                            }
+                          }}
+                          defaultValue={field.value?.includes('Other:') 
+                            ? field.value.substring(field.value.indexOf('Other:') + 7) 
+                            : ''}
+                        />
+                      </div>
+                      
                       <FormMessage />
                     </FormItem>
                   )}
@@ -483,18 +765,16 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
               control={form.control}
               name="notes"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-medium mb-1.5 block">
+                <FormItem className="bg-card/50 p-4 rounded-md border shadow-sm">
+                  <FormLabel className="text-base font-medium mb-2 block">
                     Additional Notes (optional)
                   </FormLabel>
                   <FormControl>
-                    <div className="w-full">
-                      <Textarea
-                        placeholder="Anything else you'd like to share with the host"
-                        className="min-h-24 resize-none px-4 py-3 text-base w-full"
-                        {...field}
-                      />
-                    </div>
+                    <Textarea
+                      placeholder="Anything else you'd like to share with the host"
+                      className="min-h-24 resize-none px-4 py-3 text-base w-full"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -506,18 +786,19 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
               control={form.control}
               name="marketing_consent"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 mt-6">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 mt-6 shadow-sm">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="mt-1"
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-base">
+                    <FormLabel className="text-base font-medium">
                       I agree to receive updates about this event and future events
                     </FormLabel>
-                    <FormDescription>
+                    <FormDescription className="text-sm text-muted-foreground">
                       You can unsubscribe at any time
                     </FormDescription>
                   </div>

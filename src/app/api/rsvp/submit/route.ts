@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { rsvpSubmitSchema } from '@/lib/validations/rsvp';
 import { z } from 'zod';
 import { nanoid } from 'nanoid';
 
 import { Database } from '@/types/supabase';
-import { rsvpFormSchema, transformRsvpFormToDb } from '@/lib/validations/rsvp-schema';
 
 /**
  * API route handler for submitting RSVP responses
@@ -30,11 +28,28 @@ export async function POST(req: NextRequest) {
       );
     }
     
+    // Define schema for RSVP submission
+    const rsvpSubmitSchema = z.object({
+      invitation_id: z.string().uuid(),
+      event_id: z.string().uuid(),
+      status: z.enum(['accepted', 'declined']),
+      name: z.string().min(2, { message: "Full name is required" }),
+      email: z.string().email({ message: "Valid email is required" }),
+      phone: z.string().optional().nullable(),
+      has_plus_one: z.boolean().optional().nullable(),
+      plus_one_name: z.string().optional().nullable(),
+      plus_one_email: z.string().email().optional().nullable(),
+      guest_count: z.number().min(0).max(10).optional().nullable(),
+      dietary_restrictions: z.string().optional().nullable(),
+      notes: z.string().optional().nullable(),
+      marketing_consent: z.boolean().optional().nullable()
+    });
+    
     // Make sure required fields are present before validation
     if (!body.invitation_id || !body.event_id || !body.status) {
       console.error('Missing required fields:', { body });
       return NextResponse.json(
-        { error: 'Missing required fields for RSVP submission' },
+        { error: 'Missing required fields for RSVP submission. Must include invitation_id, event_id, and status.' },
         { status: 400 }
       );
     }
@@ -60,12 +75,14 @@ export async function POST(req: NextRequest) {
     
     const { 
       invitation_id, 
-      event_id, 
-      token, 
+      event_id,
       status, 
       name, 
       email, 
       phone, 
+      has_plus_one,
+      plus_one_name,
+      plus_one_email,
       guest_count, 
       dietary_restrictions, 
       notes, 
@@ -89,7 +106,7 @@ export async function POST(req: NextRequest) {
     const dbRsvpStatus = mapStatusToDbEnum(status);
     console.log(`Mapped form status "${status}" to database enum "${dbRsvpStatus}"`);
     
-    // Verify that the token matches the invitation
+    // Verify that the invitation matches
     let invitation;
     try {
       // First try directly without token check
@@ -136,7 +153,8 @@ export async function POST(req: NextRequest) {
         .update({
           rsvp_status: dbRsvpStatus,
           rsvp_date: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          plus_one_used: !!has_plus_one
         })
         .eq('id', invitation_id);
       
@@ -187,14 +205,16 @@ export async function POST(req: NextRequest) {
       const rsvpId = nanoid();
       console.log(`Creating RSVP record with ID: ${rsvpId}`);
       
+      // Calculate total guest count
+      const total_guest_count = (guest_count || 0) + (has_plus_one ? 1 : 0);
+      
       const { error: rsvpError } = await supabase
         .from('rsvps')
         .insert({
           id: rsvpId,
           invitation_id: invitation_id,
-          event_id: event_id,
           status: dbRsvpStatus,
-          guest_count: guest_count || 0,
+          guest_count: total_guest_count,
           dietary_restrictions: dietary_restrictions || null,
           notes: notes || null,
           created_at: new Date().toISOString(),
@@ -245,7 +265,7 @@ export async function POST(req: NextRequest) {
           p_event_id: event_id,
           p_invitation_id: invitation_id,
           p_status: dbRsvpStatus,
-          p_guest_count: guest_count || 0
+          p_guest_count: total_guest_count
         });
         console.log('Analytics tracking successful');
       } catch (err) {
