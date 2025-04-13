@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-11T03:53:59.793Z
+Generated: 2025-04-13T18:26:07.875Z
 
 ## Overview
 
@@ -156,7 +156,13 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   │   ├── session_39_completion.md
 │   │   │   ├── session_39_implementation.md
 │   │   │   ├── session_39_kickoff.md
+│   │   │   ├── session_39b_checklist.md
+│   │   │   ├── session_39b_kickoff_prompt.md
+│   │   │   ├── session_39b_resources.md
 │   │   │   ├── session_4.md
+│   │   │   ├── session_40_checklist.md
+│   │   │   ├── session_40_kickoff_prompt.md
+│   │   │   ├── session_40_resources.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
 │   │   │   ├── session_7.md
@@ -166,9 +172,7 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_39b_checklist.md
-│   │   ├── session_39b_kickoff_prompt.md
-│   │   ├── session_39b_resources.md
+│   │   ├── session_41_checklist.md
 │   │   └── version-sync.plan
 │   ├── features/
 │   │   ├── gallery_implementation.md
@@ -215,6 +219,8 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   └── utils_tree.md
 │   ├── rbac/
 │   │   └── role_based_access_control.md
+│   ├── session_notes/
+│   │   └── session_40_checklist.md
 │   ├── user-flows/
 │   │   ├── RSVP_IMPLEMENTATION_GUIDE.md
 │   │   ├── create_test_users_ui.md
@@ -227,7 +233,8 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   └── README.md
+│   ├── README.md
+│   └── roadmap.md
 ├── public/
 │   ├── audio/
 │   │   └── success-beep.mp3
@@ -422,6 +429,12 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   │   └── [customUrl]/
 │   │   │       ├── layout.tsx
 │   │   │       └── page.tsx
+│   │   ├── event/
+│   │   │   └── [slug]/
+│   │   │       ├── confirmed/
+│   │   │       │   └── page.tsx
+│   │   │       └── declined/
+│   │   │           └── page.tsx
 │   │   ├── events/
 │   │   │   ├── [eventId]/
 │   │   │   │   ├── gallery/
@@ -446,10 +459,22 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   ├── gallery/
 │   │   │   └── [eventId]/
 │   │   │       └── page.tsx
+│   │   ├── guest/
+│   │   │   ├── camera-setup/
+│   │   │   │   └── page.tsx
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx
+│   │   │   ├── photos/
+│   │   │   │   └── page.tsx
+│   │   │   ├── profile/
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx
 │   │   ├── guest-access/
 │   │   │   └── page.tsx
 │   │   ├── invitation/
 │   │   │   ├── [token]/
+│   │   │   │   ├── camera-test/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── confirmation/
 │   │   │   │   │   ├── accepted/
 │   │   │   │   │   │   ├── add-to-calendar-button.tsx
@@ -458,6 +483,8 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   │   │   │   └── declined/
 │   │   │   │   │       └── page.tsx
 │   │   │   │   ├── details/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── profile-setup/
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── default.tsx
 │   │   │   │   ├── layout.tsx
@@ -711,6 +738,7 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   │   └── index.tsx
 │   │   ├── dashboard/
 │   │   │   ├── MediaStatsCard.tsx
+│   │   │   ├── RsvpDashboard.tsx
 │   │   │   ├── activity-feed.tsx
 │   │   │   ├── analytics-overview.tsx
 │   │   │   ├── contact-stats.tsx
@@ -786,6 +814,12 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   │   ├── upload-button.tsx
 │   │   │   ├── upload-dropzone.tsx
 │   │   │   └── upload-with-tags.tsx
+│   │   ├── guest/
+│   │   │   ├── GuestDashboard.tsx
+│   │   │   ├── GuestProfileForm.tsx
+│   │   │   ├── PhotoUploader.tsx
+│   │   │   ├── camera-test.tsx
+│   │   │   └── profile-setup-form.tsx
 │   │   ├── invitation/
 │   │   │   ├── SimpleScan.tsx
 │   │   │   ├── qr-scanner.tsx
@@ -795,6 +829,7 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   │   └── magic-link-auth.tsx
 │   │   ├── layout/
 │   │   │   ├── dashboard-layout.tsx
+│   │   │   ├── guest-header.tsx
 │   │   │   └── main-nav.tsx
 │   │   ├── maps/
 │   │   │   ├── EventMap.tsx
@@ -810,6 +845,7 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   │   ├── MediaModerationGrid.tsx
 │   │   │   ├── MediaUploader.tsx
 │   │   │   ├── MediaViewer.tsx
+│   │   │   ├── camera-test.tsx
 │   │   │   └── upload-media-button.tsx
 │   │   ├── nav/
 │   │   │   ├── logo.tsx
@@ -900,7 +936,8 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   ├── error-boundary.tsx
 │   │   ├── query-provider.tsx
 │   │   ├── shell.tsx
-│   │   └── theme-provider.tsx
+│   │   ├── theme-provider.tsx
+│   │   └── theme-toggle.tsx
 │   ├── hooks/
 │   │   ├── __tests__/
 │   │   │   └── use-permissions.test.ts
@@ -1014,6 +1051,7 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   ├── Album Media Table Structure.csv
 │   │   ├── RSVPs Table Structure.csv
 │   │   ├── Supabase Snippet Check Invitations with Tokens.csv
+│   │   ├── Supabase Snippet Check Table Existence and Structure.csv
 │   │   ├── Supabase Snippet Count Total Invitations.csv
 │   │   ├── Supabase Snippet Fetch Failed Invitation Token Details.csv
 │   │   ├── Supabase Snippet Token Format Validation.csv
@@ -1024,6 +1062,7 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   ├── profiles_rows.csv
 │   │   ├── public_tables.csv
 │   │   ├── roles_rows.csv
+│   │   ├── rsvps_rows (1).csv
 │   │   └── rsvps_rows.csv
 │   ├── migrations/
 │   │   ├──  refined_sql.migration.sql
@@ -1049,6 +1088,7 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │   ├── 20250331_create_rsvps_table.sql
 │   │   ├── 20250404000000_rsvp_analytics.sql
 │   │   ├── 20250409000001_add_guests_gallery_permissions.sql
+│   │   ├── 20250410000000_create_track_rsvp_submission.sql
 │   │   ├── 20250410000001_add_contractor_roles.sql
 │   │   ├── check_events_schema.sql
 │   │   └── setup_launch_partner.sql
@@ -1060,6 +1100,7 @@ Generated: 2025-04-11T03:53:59.793Z
 │   │       ├── magic_link.html
 │   │       ├── reauthentication.html
 │   │       └── reset_password.html
+│   ├── .DS_Store
 │   ├── .gitignore
 │   ├── check-invitation.sql
 │   ├── config.toml
@@ -1085,17 +1126,17 @@ Generated: 2025-04-11T03:53:59.793Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-255 directories, 821 files
+268 directories, 849 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11783 file(s)
-- tsx: 502 file(s)
-- js: 27876 file(s)
-- json: 2038 file(s)
-- md: 1502 file(s)
-- css: 27 file(s)
+- ts: 11777 file(s)
+- tsx: 520 file(s)
+- js: 27744 file(s)
+- json: 2019 file(s)
+- md: 1514 file(s)
+- css: 25 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns

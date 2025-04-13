@@ -25,7 +25,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
@@ -43,6 +42,15 @@ const guestProfileSchema = z.object({
 })
 
 type GuestProfileFormValues = z.infer<typeof guestProfileSchema>
+
+// Add these interface extensions at the top of the file after imports
+interface ExtendedMediaTrackCapabilities extends MediaTrackCapabilities {
+  torch?: boolean;
+}
+
+interface TorchConstraintSet extends MediaTrackConstraintSet {
+  torch?: boolean;
+}
 
 export default function GuestProfilePage() {
   const router = useRouter()
@@ -63,6 +71,8 @@ export default function GuestProfilePage() {
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
   const [isCameraActive, setIsCameraActive] = useState(false)
   const [flashlightActive, setFlashlightActive] = useState(false)
+  const [testPhotos, setTestPhotos] = useState<string[]>([])
+  const [isTakingPhoto, setIsTakingPhoto] = useState(false)
   
   const supabase = createClientComponentClient()
 
@@ -340,23 +350,28 @@ export default function GuestProfilePage() {
       const fileExt = file.name.split('.').pop()
       const filePath = `avatars/${invitationId}/${Date.now()}.${fileExt}`
       
-      // Upload to Supabase Storage
+      // Upload to Supabase Storage - using the correct bucket name
       const { error: uploadError } = await supabase.storage
-        .from('guest-profiles')
+        .from('profile-photos')
         .upload(filePath, file)
         
       if (uploadError) {
         throw uploadError
       }
       
-      // Get the public URL
+      // Get the public URL from the correct bucket
       const { data } = supabase.storage
-        .from('guest-profiles')
+        .from('profile-photos')
         .getPublicUrl(filePath)
         
       return data.publicUrl
     } catch (error) {
       console.error('Error uploading avatar:', error)
+      toast({
+        title: "Upload failed",
+        description: "There was a problem uploading your avatar",
+        variant: "destructive",
+      })
       return null
     } finally {
       setUploadingAvatar(false)
@@ -417,8 +432,8 @@ export default function GuestProfilePage() {
       // Get video track
       const videoTrack = cameraStream.getVideoTracks()[0];
       
-      // Check if track supports torch mode
-      const capabilities = videoTrack.getCapabilities();
+      // Check if track supports torch mode - use type assertion for torch property
+      const capabilities = videoTrack.getCapabilities() as ExtendedMediaTrackCapabilities;
       if (!capabilities.torch) {
         toast({
           title: "Flashlight not available",
@@ -428,10 +443,10 @@ export default function GuestProfilePage() {
         return;
       }
       
-      // Toggle torch mode
+      // Toggle torch mode - use type assertion for torch property
       const newTorchState = !flashlightActive;
       await videoTrack.applyConstraints({
-        advanced: [{ torch: newTorchState }]
+        advanced: [{ torch: newTorchState } as TorchConstraintSet]
       });
       
       setFlashlightActive(newTorchState);
@@ -451,18 +466,88 @@ export default function GuestProfilePage() {
     }
   };
 
+  const takeTestPhoto = async () => {
+    if (!cameraStream) {
+      toast({
+        title: "Camera not active",
+        description: "Please allow camera access to take a photo",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      setIsTakingPhoto(true);
+      
+      // Get video element
+      const videoElement = document.getElementById('camera-preview') as HTMLVideoElement;
+      if (!videoElement) return;
+      
+      // Create a canvas element
+      const canvas = document.createElement('canvas');
+      canvas.width = videoElement.videoWidth;
+      canvas.height = videoElement.videoHeight;
+      
+      // Draw the current video frame to the canvas
+      const context = canvas.getContext('2d');
+      if (!context) return;
+      
+      // Add a flash effect
+      const flashOverlay = document.getElementById('flash-overlay');
+      if (flashOverlay) {
+        flashOverlay.classList.add('active');
+        setTimeout(() => {
+          flashOverlay.classList.remove('active');
+        }, 300);
+      }
+      
+      // Draw the video frame with a slight delay to show the flash effect
+      setTimeout(() => {
+        context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+        
+        // Convert canvas to data URL
+        const photoUrl = canvas.toDataURL('image/jpeg');
+        
+        // Add to test photos
+        setTestPhotos(prev => [photoUrl, ...prev]);
+        
+        // Schedule deletion after 5 minutes
+        setTimeout(() => {
+          setTestPhotos(prev => prev.filter(url => url !== photoUrl));
+        }, 5 * 60 * 1000); // 5 minutes
+        
+        toast({
+          title: "Photo captured",
+          description: "Test photo will be deleted after 5 minutes",
+        });
+        
+        setIsTakingPhoto(false);
+      }, 100);
+      
+    } catch (error) {
+      console.error('Error taking photo:', error);
+      toast({
+        title: "Error taking photo",
+        description: "There was a problem capturing your photo",
+        variant: "destructive",
+      });
+      setIsTakingPhoto(false);
+    }
+  };
+
   const onSubmit = async (values: GuestProfileFormValues) => {
     setIsSubmitting(true)
     setError(null)
     
     try {
       let invitationId: string | null = null
+      let eventId: string | null = null
       
-      // Get the invitation ID based on token or event ID
+      // Get the invitation and event ID based on token or event parameter
       if (invitationToken) {
         const { data, error } = await supabase
           .from('invitations')
-          .select('id')
+          .select('id, event_id')
           .eq('token', invitationToken)
           .single()
           
@@ -471,8 +556,12 @@ export default function GuestProfilePage() {
         }
         
         invitationId = data.id
-      } else if (eventId) {
-        // Get invitation for this event directly
+        eventId = data.event_id
+      } else if (searchParams.get('event')) {
+        // Use the event ID from the URL
+        eventId = searchParams.get('event')
+        
+        // Get invitation for this event directly (just for reference)
         const { data: invitation, error: invitationError } = await supabase
           .from('invitations')
           .select('id, email, event_id')
@@ -481,69 +570,101 @@ export default function GuestProfilePage() {
           .limit(1)
           .maybeSingle()
           
-        if (invitationError || !invitation) {
-          throw new Error('Unable to find an invitation for this event')
+        if (invitation) {
+          invitationId = invitation.id
         }
-        
-        invitationId = invitation.id
       }
       
-      if (!invitationId) {
-        throw new Error('No valid invitation found')
+      if (!eventId) {
+        throw new Error('No valid event found')
       }
       
-      // Upload avatar if there's a new file
+      // Upload avatar if there's a new file (using invitationId for naming)
       let avatarUrl = values.avatar_url
-      if (avatarFile) {
+      if (avatarFile && invitationId) {
         const uploadedUrl = await uploadAvatar(avatarFile, invitationId)
         if (uploadedUrl) {
           avatarUrl = uploadedUrl
         }
       }
       
-      // Check if guest profile already exists
-      const { data: existingGuest } = await supabase
-        .from('guests')
-        .select('id')
-        .eq('invitation_id', invitationId)
-        .maybeSingle()
-      
-      // Create or update guest profile
-      const guestData = {
-        invitation_id: invitationId,
-        name: values.name,
-        email: values.email,
-        phone: values.phone || null,
-        notes: values.notes || null,
-        avatar_url: avatarUrl || null,
-        updated_at: new Date().toISOString(),
+      // Generate an access token for the guest if needed
+      const generateAccessToken = () => {
+        return crypto.randomUUID()
       }
       
-      let guestOperation
-      
-      if (existingGuest?.id) {
-        // Update existing guest
-        guestOperation = supabase
+      // Try direct table operations
+      try {
+        // Check if guest profile already exists
+        const { data: existingGuest } = await supabase
           .from('guests')
-          .update(guestData)
-          .eq('id', existingGuest.id)
-      } else {
-        // Create new guest
-        guestOperation = supabase
-          .from('guests')
-          .insert({
-            ...guestData,
-            created_at: new Date().toISOString(),
-          })
+          .select('id, access_token')
+          .eq('email', values.email)
+          .eq('event_id', eventId)
+          .maybeSingle()
+        
+        // Create or update guest profile according to the actual schema
+        const guestData = {
+          name: values.name,
+          email: values.email,
+          phone: values.phone || null,
+          event_id: eventId,
+          updated_at: new Date().toISOString(),
+        }
+        
+        // Only set access_token for new guests
+        if (!existingGuest?.id) {
+          // @ts-ignore
+          guestData.access_token = generateAccessToken()
+          // @ts-ignore
+          guestData.created_at = new Date().toISOString()
+          // @ts-ignore
+          guestData.status = 'registered'
+        }
+        
+        let guestOperation
+        
+        if (existingGuest?.id) {
+          // Update existing guest
+          guestOperation = supabase
+            .from('guests')
+            .update(guestData)
+            .eq('id', existingGuest.id)
+        } else {
+          // Create new guest
+          guestOperation = supabase
+            .from('guests')
+            .insert(guestData)
+        }
+        
+        const { error: guestError } = await guestOperation
+        
+        if (guestError) {
+          console.error('Error with guest operation:', guestError)
+          throw new Error(guestError.message)
+        }
+        
+        // Also save the notes if provided to a separate table or through RPC if needed
+        if (values.notes) {
+          // Try to update RSVP notes if it exists
+          const { error: notesError } = await supabase
+            .from('rsvps')
+            .update({ guest_notes: values.notes })
+            .eq('invitation_id', invitationId)
+            .eq('guest_email', values.email)
+          
+          if (notesError) {
+            console.warn('Could not save notes to RSVP:', notesError)
+            // Non-critical, continue without failing
+          }
+        }
+        
+      } catch (tableError) {
+        console.error('Error with table operations:', tableError)
+        throw new Error('Unable to save profile data. Please try again.')
       }
       
-      const { error: guestError } = await guestOperation
-      
-      if (guestError) {
-        throw new Error(guestError.message)
-      }
-      
-      // Use the toast from useToast() with the proper structure
+      // Show success message
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully!",
@@ -551,21 +672,23 @@ export default function GuestProfilePage() {
       })
       
       // If the invitation has a different email than provided, update it
-      const { data: invitation } = await supabase
-        .from('invitations')
-        .select('email')
-        .eq('id', invitationId)
-        .single()
-        
-      if (invitation && invitation.email !== values.email) {
-        const { error: updateError } = await supabase
+      if (invitationId) {
+        const { data: invitation } = await supabase
           .from('invitations')
-          .update({ email: values.email })
+          .select('email')
           .eq('id', invitationId)
+          .single()
           
-        if (updateError) {
-          console.error('Error updating invitation email:', updateError)
-          // Not critical, so we don't throw
+        if (invitation && invitation.email !== values.email) {
+          const { error: updateError } = await supabase
+            .from('invitations')
+            .update({ email: values.email })
+            .eq('id', invitationId)
+            
+          if (updateError) {
+            console.error('Error updating invitation email:', updateError)
+            // Not critical, so we don't throw
+          }
         }
       }
       
@@ -577,7 +700,6 @@ export default function GuestProfilePage() {
     } catch (error) {
       console.error('Error submitting profile:', error)
       setError(error instanceof Error ? error.message : 'Failed to update profile')
-      // Use the toast from useToast() with the proper structure
       toast({
         title: "Update failed",
         description: "There was a problem updating your profile. Please try again.",
@@ -643,245 +765,307 @@ export default function GuestProfilePage() {
         </p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-2 mb-6">
-          <TabsTrigger value="profile" className="flex items-center gap-2">
-            <User2Icon className="h-4 w-4" />
-            Profile Information
-          </TabsTrigger>
-          <TabsTrigger value="camera" className="flex items-center gap-2">
-            <Camera className="h-4 w-4" />
-            Camera Setup
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="profile">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User2Icon className="h-5 w-5" />
-                Your Information
-              </CardTitle>
-              <CardDescription>
-                Please provide or update your contact information
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="flex flex-col items-center gap-4 mb-6">
-                    <Avatar className="h-24 w-24">
-                      <AvatarImage src={avatarUrl || ''} alt={form.getValues().name} />
-                      <AvatarFallback>{form.getValues().name?.slice(0, 2).toUpperCase() || 'GU'}</AvatarFallback>
+      {activeTab === 'profile' ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <User2Icon className="h-5 w-5" />
+              Your Information
+            </CardTitle>
+            <CardDescription>
+              Please provide or update your contact information
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div className="flex flex-col items-center gap-4 mb-6">
+                  <div className="relative group">
+                    <Avatar className="h-32 w-32 border-4 border-primary/10 shadow-lg transition-all duration-200">
+                      <AvatarImage src={avatarUrl || ''} alt={form.getValues().name} className="object-cover" />
+                      <AvatarFallback className="text-2xl bg-primary/10">
+                        {form.getValues().name?.slice(0, 2).toUpperCase() || 'GU'}
+                      </AvatarFallback>
                     </Avatar>
                     
-                    <div className="flex gap-2">
-                      <div className="grid w-full max-w-sm items-center gap-1.5">
-                        <Label htmlFor="avatar" className="cursor-pointer">
-                          <div className="flex items-center gap-2 rounded-md border border-input px-3 py-2 text-sm hover:bg-accent">
-                            <Upload className="h-4 w-4" />
-                            {avatarUrl ? 'Change' : 'Upload'} Avatar
-                          </div>
-                          <input 
-                            id="avatar" 
-                            type="file" 
-                            accept="image/*" 
-                            onChange={handleAvatarChange} 
-                            className="hidden" 
-                          />
-                        </Label>
-                      </div>
-                      
-                      {avatarUrl && (
-                        <Button 
-                          type="button" 
-                          variant="outline" 
-                          size="sm"
-                          onClick={removeAvatar}
-                          className="h-9"
-                        >
-                          <Trash2 className="h-4 w-4 mr-1" />
-                          Remove
-                        </Button>
-                      )}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <Label htmlFor="avatar" className="cursor-pointer w-full h-full">
+                        <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center">
+                          <Upload className="h-8 w-8 text-white" />
+                        </div>
+                        <input 
+                          id="avatar" 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={handleAvatarChange} 
+                          className="hidden" 
+                        />
+                      </Label>
                     </div>
                   </div>
                   
-                  <FormField
-                    control={form.control}
-                    name="avatar_url"
-                    render={({ field }) => (
-                      <FormItem className="hidden">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Full Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Your name" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          Your full name as you'd like it to appear
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email Address</FormLabel>
-                        <FormControl>
-                          <Input placeholder="your.email@example.com" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          We'll use this to contact you about the event
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone Number (Optional)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="+1 (555) 123-4567" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          For urgent communications only
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="notes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Additional Notes (Optional)</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            placeholder="Any additional information you'd like the host to know"
-                            className="min-h-[100px]"
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="pt-4 flex justify-between">
-                    <Button type="submit" disabled={isSubmitting || uploadingAvatar} className="w-full">
-                      {(isSubmitting || uploadingAvatar) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      {uploadingAvatar ? 'Uploading Avatar...' : 'Save Profile & Continue to Camera Setup'}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="camera">
-          <Card className="relative">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Camera className="h-5 w-5" />
-                Camera Setup
-              </CardTitle>
-              <CardDescription>
-                Let's set up and test your camera for the event
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="px-0 py-0">
-              <div className="relative bg-black">
-                <div className="aspect-[9/16] max-w-md mx-auto relative overflow-hidden">
-                  <video 
-                    id="camera-preview" 
-                    className="absolute inset-0 h-full w-full object-cover" 
-                    autoPlay 
-                    playsInline
-                    muted
-                  />
-                  {!isCameraActive && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <p className="text-white text-sm">Camera preview will appear here</p>
-                    </div>
-                  )}
-                  
-                  {/* TikTok-style UI elements */}
-                  <div className="absolute bottom-4 right-4 flex flex-col gap-4">
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="rounded-full h-12 w-12 bg-white/20 backdrop-blur-sm text-white border border-white/30"
-                      onClick={toggleFlashlight}
+                  <div className="flex gap-2">
+                    <Label 
+                      htmlFor="avatar-btn" 
+                      className="cursor-pointer flex items-center gap-2 py-2 px-4 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
                     >
-                      <Lightbulb className={`h-6 w-6 ${flashlightActive ? 'text-yellow-300' : 'text-white'}`} />
-                    </Button>
+                      <Upload className="h-4 w-4" />
+                      {avatarUrl ? 'Change Avatar' : 'Upload Avatar'}
+                      <input 
+                        id="avatar-btn" 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleAvatarChange} 
+                        className="hidden" 
+                      />
+                    </Label>
                     
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="rounded-full h-12 w-12 bg-white/20 backdrop-blur-sm text-white border border-white/30"
-                    >
-                      <Camera className="h-6 w-6" />
-                    </Button>
+                    {avatarUrl && (
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={removeAvatar}
+                        className="h-10"
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Remove
+                      </Button>
+                    )}
                   </div>
                   
-                  <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-                    <Button
-                      variant="secondary"
-                      className="rounded-full px-8 bg-white text-black font-medium"
-                    >
-                      Take Test Photo
-                    </Button>
+                  {avatarUrl && (
+                    <p className="text-xs text-muted-foreground">
+                      Your profile picture will be visible to event hosts and other attendees
+                    </p>
+                  )}
+                </div>
+                
+                <FormField
+                  control={form.control}
+                  name="avatar_url"
+                  render={({ field }) => (
+                    <FormItem className="hidden">
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your name" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Your full name as you'd like it to appear
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input placeholder="your.email@example.com" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        We'll use this to contact you about the event
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="+1 (555) 123-4567" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        For urgent communications only
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Additional Notes (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Any additional information you'd like the host to know"
+                          className="min-h-[100px]"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="pt-4 flex justify-between">
+                  <Button 
+                    type="button" 
+                    onClick={() => setActiveTab('camera')} 
+                    className="w-full"
+                  >
+                    Continue to Setup Camera
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="relative">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Camera className="h-5 w-5" />
+              Camera Setup
+            </CardTitle>
+            <CardDescription>
+              Let's set up and test your camera for the event
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-0 py-0">
+            <div className="relative bg-black">
+              <div className="aspect-[9/16] max-w-md mx-auto relative overflow-hidden">
+                <video 
+                  id="camera-preview" 
+                  className="absolute inset-0 h-full w-full object-cover" 
+                  autoPlay 
+                  playsInline
+                  muted
+                />
+                {!isCameraActive && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <p className="text-white text-sm">Camera preview will appear here</p>
                   </div>
+                )}
+                
+                {/* Flash overlay for photo effect */}
+                <div 
+                  id="flash-overlay" 
+                  className="absolute inset-0 bg-white opacity-0 transition-opacity duration-200 pointer-events-none"
+                ></div>
+                
+                {/* TikTok-style UI elements */}
+                <div className="absolute bottom-4 right-4 flex flex-col gap-4">
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="rounded-full h-12 w-12 bg-white/20 backdrop-blur-sm text-white border border-white/30"
+                    onClick={toggleFlashlight}
+                  >
+                    <Lightbulb className={`h-6 w-6 ${flashlightActive ? 'text-yellow-300' : 'text-white'}`} />
+                  </Button>
+                  
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="rounded-full h-12 w-12 bg-white/20 backdrop-blur-sm text-white border border-white/30"
+                  >
+                    <Camera className="h-6 w-6" />
+                  </Button>
+                </div>
+                
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+                  <Button
+                    variant="secondary"
+                    className="rounded-full px-8 bg-white text-black font-medium"
+                    onClick={takeTestPhoto}
+                    disabled={isTakingPhoto || !isCameraActive}
+                  >
+                    {isTakingPhoto ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : null}
+                    Take Test Photo
+                  </Button>
                 </div>
               </div>
+            </div>
+            
+            <div className="p-6">
+              <h3 className="text-lg font-semibold mb-2">Test Photo Gallery</h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                Test photos will be automatically deleted after 5 minutes.
+              </p>
               
-              <div className="p-6">
-                <h3 className="text-lg font-semibold mb-2">Test Photo Gallery</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  Test photos will be automatically deleted after 5 minutes.
-                </p>
-                
-                <div className="grid grid-cols-3 gap-2 mb-4">
+              <div className="grid grid-cols-3 gap-2 mb-4">
+                {testPhotos.length === 0 ? (
                   <div className="aspect-square bg-slate-200 dark:bg-slate-800 rounded-md flex items-center justify-center">
                     <p className="text-muted-foreground text-xs">No photos yet</p>
                   </div>
-                </div>
+                ) : (
+                  testPhotos.map((photo, index) => (
+                    <div key={index} className="aspect-square bg-slate-200 dark:bg-slate-800 rounded-md overflow-hidden">
+                      <img 
+                        src={photo} 
+                        alt={`Test photo ${index + 1}`} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))
+                )}
               </div>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => setActiveTab('profile')}>
-                Back to Profile
-              </Button>
-              <Button>
-                Complete Setup
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="outline" onClick={() => setActiveTab('profile')}>
+              Back to Profile
+            </Button>
+            <Button 
+              onClick={() => {
+                // Submit the form programmatically
+                form.handleSubmit(onSubmit)();
+              }}
+              disabled={isSubmitting || uploadingAvatar}
+            >
+              {(isSubmitting || uploadingAvatar) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Complete Setup
+            </Button>
+          </CardFooter>
+        </Card>
+      )}
     </div>
   )
+}
+
+// Add this CSS at the end of the file
+const flashStyle = `
+  #flash-overlay.active {
+    opacity: 0.9;
+    animation: flash 300ms ease-out;
+  }
+  
+  @keyframes flash {
+    0% { opacity: 0.9; }
+    100% { opacity: 0; }
+  }
+`;
+
+// Inject the flash animation styles
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  styleElement.textContent = flashStyle;
+  document.head.appendChild(styleElement);
 } 

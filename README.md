@@ -88,9 +88,43 @@ Remember the magic of disposable cameras 📸 on wedding tables? We've reimagine
 
 ## 🏗️ System Architecture
 
-<div align="center">
-  <img src="docs/assets/architecture-diagram.png" alt="Cloud Burst System Architecture" width="100%" />
-</div>
+```mermaid
+graph TD
+    Client["📱 Client Device"] -->|"HTTPS Request"| WebApp["🌐 Web App (Next.js)"]
+    WebApp -->|"API Calls"| Supabase["🗄️ Supabase"]
+    WebApp -->|"Dashboard"| Dashboard["📊 Dashboard System"]
+    WebApp -->|"Template Management"| Templates["📋 Template System"]
+    WebApp -->|"Event Management"| Events["📅 Event System"]
+    WebApp -->|"Gallery Management"| Gallery["🖼️ Gallery System"]
+    WebApp -->|"Attendee Management"| Attendees["👥 Attendee System"]
+    WebApp -->|"User Settings"| Settings["⚙️ Settings System"]
+    WebApp -->|"Analytics"| Analytics["📈 Analytics System"]
+    WebApp -->|"Access Control"| RBAC["🔒 RBAC System"]
+    WebApp -->|"AI Features"| AI["🧠 AI System"]
+    
+    Dashboard -->|"Load"| Supabase
+    Templates -->|"Sync"| Supabase
+    Events -->|"CRUD"| Supabase
+    Gallery -->|"CRUD"| Supabase
+    Attendees -->|"CRUD"| Supabase
+    Settings -->|"CRUD"| Supabase
+    Analytics -->|"Query"| Supabase
+    RBAC -->|"Verify"| Supabase
+    AI -->|"Process"| Supabase
+    
+    Supabase --> Auth["🔑 Auth"]
+    Supabase --> Database["💾 Database"]
+    Supabase --> Storage["📦 Storage"]
+    
+    style WebApp fill:#2A2A2A,stroke:#333,color:#fff
+    style Supabase fill:#3ECF8E,stroke:#333,color:#000
+    style Auth fill:#1E3A8A,stroke:#333,color:#fff
+    style Database fill:#065F46,stroke:#333,color:#fff
+    style Storage fill:#7E22CE,stroke:#333,color:#fff
+    style Analytics fill:#DC2626,stroke:#333,color:#fff
+    style Gallery fill:#2563EB,stroke:#333,color:#fff
+    style AI fill:#6D28D9,stroke:#333,color:#fff
+```
 
 ## 👥 User Roles
 
@@ -109,93 +143,73 @@ Cloud Burst implements a sophisticated role-based access control system:
 - **User**: Standard user with basic platform access
 - **Guest**: Public access to view public events and galleries
 
-<div align="center">
-  <img src="docs/assets/user-flow-diagram.png" alt="Cloud Burst User Flow" width="100%" />
-</div>
-
-## 📱 User Experience
-
-### For Event Organizers
-- Create and manage events
-- Send invitations to attendees
-- Monitor event analytics
-- Review and approve media uploads
-- Generate event QR codes
-- Access AI features for media enhancement
-
-### For Photographers
-- Upload and organize media
-- Create albums and galleries
-- Edit and enhance content with AI tools
-- Share with event participants
-- Track engagement metrics
-- Apply automated tagging and organization
-
-### For Invited Guests
-- Receive personalized invitations
-- Scan QR codes for instant access
-- Capture media directly from the event
-- View and download shared content
-- Connect with other attendees
-- Respond to invitations with RSVP
-- Enjoy AI-enhanced photos and videos
-
-## 🔄 Current Status
-
-Cloud Burst is currently in beta (v0.9.2) with approximately 90% of core features implemented:
-
-- ✅ Event management system
-- ✅ Role-based access control
-- ✅ QR code generation and scanning
-- ✅ Direct camera integration
-- ✅ Media upload and gallery foundation
-- ✅ Event card navigation and interactivity
-- ✅ Mobile navigation and responsive design
-- ✅ Enhanced modal dialogs and UI components
-- ✅ RSVP system foundation
-- ✅ Public gallery access
-- ✅ Invitation management enhancements
-- ✅ Beta partner integration
-- ✅ Email system improvements
-- ✅ Profile management
-- ✅ Mobile responsiveness optimization
-- ✅ Chart components for data visualization
-- ✅ AI Features framework
-- ✅ Guest reservation onboarding
-- ✅ Camera functionality implementation
-- ✅ Staff management with contractor roles
-- ✅ Role badge visualization system
-- ✅ Profile avatar upload functionality
-- ✅ Camera testing with flashlight control
-- 🟡 Guest dashboard navigation (60% complete)
-- 🟡 Gallery layouts for guests (45% complete)
-- 🟡 AI integration with media processing (30% complete)
-- 🟡 Analytics dashboard (70% complete)
-
-### Technical Debt (Session 40)
-- Fix navigation issues to guest dashboard after setup completion
-- Improve token handling and persistence for guest authentication
-- Enhance gallery layouts and browsing experience for guests
-- Integration of AI features with TensorFlow.js
-- Analytics dashboard enhancements
-- Enhanced error handling for profile and camera components
-
-We're targeting Beta 1.0 RC1 for internal testing by April 30, 2025, with public launch (v1.0.0) planned for May 25, 2025.
+```mermaid
+graph LR
+    A["👤 Event Guest"] --> B{"🔍 Has QR?"}
+    B -->|"Yes"| C["📱 Scan QR"]
+    B -->|"No"| D["✉️ Request Access"]
+    C --> E["🖼️ Gallery Access"]
+    D --> F["📲 Receive QR"]
+    F --> C
+    E --> G["📤 Upload Media"]
+    E --> H["👁️ View Gallery"]
+    G --> I["🤖 AI Processing"]
+    I --> H
+    E --> J["📊 Engagement Analytics"]
+    
+    style A fill:#2A2A2A,stroke:#333,color:#fff
+    style E fill:#1E3A8A,stroke:#333,color:#fff
+    style G fill:#065F46,stroke:#333,color:#fff
+    style H fill:#7E22CE,stroke:#333,color:#fff
+    style I fill:#DC2626,stroke:#333,color:#fff
+    style J fill:#2563EB,stroke:#333,color:#fff
+```
 
 ## 📅 Project Timeline
 
 Cloud Burst has evolved from concept to robust beta platform since its inception. Here's our development roadmap:
 
-<div align="center">
-  <img src="docs/assets/project-timeline.png" alt="Cloud Burst Project Timeline" width="100%" />
-</div>
-
-### Key Development Phases
-
-1. **Foundation Phase** (Feb 1-15, 2025): Project setup, authentication system, database schema design
-2. **Core Functionality Phase** (Feb 16-Mar 1, 2025): Event management, basic media upload, user roles
-3. **Enhanced Features Phase** (Mar 2-Apr 15, 2025): Advanced gallery, navigation, authentication refinements, invitation system, RSVP functionality, guest reservation, camera integration, contractor role management, profile creation
-4. **Final Preparations Phase** (Apr 16-Apr 30, 2025): Guest dashboard navigation, gallery enhancements, AI features, performance tuning, security audit, public launch preparations
+```mermaid
+gantt
+    title Cloud Burst Development Timeline
+    dateFormat  YYYY-MM-DD
+    axisFormat %b %d
+    
+    section Foundation
+    Project Setup           :done, f1, 2025-02-01, 7d
+    Authentication          :done, f2, 2025-02-08, 7d
+    Database Schema         :done, f3, 2025-02-15, 5d
+    
+    section Core Functionality
+    Event Management        :done, c1, 2025-02-20, 7d
+    Basic Media Upload      :done, c2, 2025-02-25, 5d
+    User Roles & Permissions:done, c3, 2025-03-01, 5d
+    
+    section Enhanced Features
+    Advanced Gallery Layouts:done, e1, 2025-03-05, 5d
+    Navigation Recovery     :done, e2, 2025-03-07, 3d
+    Authentication Repair   :done, e3, 2025-03-10, 3d
+    Dashboard Implementation:done, e4, 2025-03-11, 4d
+    Database Security Fixes :done, e5, 2025-03-15, 1d
+    Invitation System       :done, e6, 2025-03-16, 7d
+    RSVP Implementation     :done, e7, 2025-03-21, 5d
+    Media Moderation        :done, e8, 2025-03-26, 3d
+    Mobile Responsiveness   :done, e9, 2025-03-30, 4d
+    Guest Reservation Flow  :done, e10, 2025-04-01, 5d
+    Camera Integration      :done, e11, 2025-04-05, 4d
+    Contractor Role Management :done, e12, 2025-04-09, 3d
+    Profile Creation        :done, e13, 2025-04-10, 5d
+    Camera Testing          :done, e14, 2025-04-15, 3d
+    
+    section Final Preparations
+    Guest Dashboard Navigation :active, g1, 2025-04-16, 6d
+    Gallery Enhancements    :active, g2, 2025-04-16, 6d
+    AI Features Framework   :active, g3, 2025-04-16, 14d
+    Beta v1.0 RC1 Release   :milestone, b1, 2025-04-30, 0d
+    Performance Tuning      :o1, 2025-05-01, 8d
+    Security Audit          :o2, 2025-05-09, 5d
+    Public Launch (v1.0.0)  :milestone, l3, 2025-05-25, 0d
+```
 
 ## 🚀 Getting Started
 

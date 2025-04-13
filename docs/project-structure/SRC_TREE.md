@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-11T03:54:00.719Z
+Generated: 2025-04-13T18:26:08.713Z
 
 ## Overview
 
@@ -149,6 +149,12 @@ Generated: 2025-04-11T03:54:00.719Z
 │   │   └── [customUrl]/
 │   │       ├── layout.tsx
 │   │       └── page.tsx
+│   ├── event/
+│   │   └── [slug]/
+│   │       ├── confirmed/
+│   │       │   └── page.tsx
+│   │       └── declined/
+│   │           └── page.tsx
 │   ├── events/
 │   │   ├── [eventId]/
 │   │   │   ├── gallery/
@@ -173,10 +179,22 @@ Generated: 2025-04-11T03:54:00.719Z
 │   ├── gallery/
 │   │   └── [eventId]/
 │   │       └── page.tsx
+│   ├── guest/
+│   │   ├── camera-setup/
+│   │   │   └── page.tsx
+│   │   ├── dashboard/
+│   │   │   └── page.tsx
+│   │   ├── photos/
+│   │   │   └── page.tsx
+│   │   ├── profile/
+│   │   │   └── page.tsx
+│   │   └── layout.tsx
 │   ├── guest-access/
 │   │   └── page.tsx
 │   ├── invitation/
 │   │   ├── [token]/
+│   │   │   ├── camera-test/
+│   │   │   │   └── page.tsx
 │   │   │   ├── confirmation/
 │   │   │   │   ├── accepted/
 │   │   │   │   │   ├── add-to-calendar-button.tsx
@@ -185,6 +203,8 @@ Generated: 2025-04-11T03:54:00.719Z
 │   │   │   │   └── declined/
 │   │   │   │       └── page.tsx
 │   │   │   ├── details/
+│   │   │   │   └── page.tsx
+│   │   │   ├── profile-setup/
 │   │   │   │   └── page.tsx
 │   │   │   ├── default.tsx
 │   │   │   ├── layout.tsx
@@ -438,6 +458,7 @@ Generated: 2025-04-11T03:54:00.719Z
 │   │   └── index.tsx
 │   ├── dashboard/
 │   │   ├── MediaStatsCard.tsx
+│   │   ├── RsvpDashboard.tsx
 │   │   ├── activity-feed.tsx
 │   │   ├── analytics-overview.tsx
 │   │   ├── contact-stats.tsx
@@ -513,6 +534,12 @@ Generated: 2025-04-11T03:54:00.719Z
 │   │   ├── upload-button.tsx
 │   │   ├── upload-dropzone.tsx
 │   │   └── upload-with-tags.tsx
+│   ├── guest/
+│   │   ├── GuestDashboard.tsx
+│   │   ├── GuestProfileForm.tsx
+│   │   ├── PhotoUploader.tsx
+│   │   ├── camera-test.tsx
+│   │   └── profile-setup-form.tsx
 │   ├── invitation/
 │   │   ├── SimpleScan.tsx
 │   │   ├── qr-scanner.tsx
@@ -522,6 +549,7 @@ Generated: 2025-04-11T03:54:00.719Z
 │   │   └── magic-link-auth.tsx
 │   ├── layout/
 │   │   ├── dashboard-layout.tsx
+│   │   ├── guest-header.tsx
 │   │   └── main-nav.tsx
 │   ├── maps/
 │   │   ├── EventMap.tsx
@@ -537,6 +565,7 @@ Generated: 2025-04-11T03:54:00.719Z
 │   │   ├── MediaModerationGrid.tsx
 │   │   ├── MediaUploader.tsx
 │   │   ├── MediaViewer.tsx
+│   │   ├── camera-test.tsx
 │   │   └── upload-media-button.tsx
 │   ├── nav/
 │   │   ├── logo.tsx
@@ -627,7 +656,8 @@ Generated: 2025-04-11T03:54:00.719Z
 │   ├── error-boundary.tsx
 │   ├── query-provider.tsx
 │   ├── shell.tsx
-│   └── theme-provider.tsx
+│   ├── theme-provider.tsx
+│   └── theme-toggle.tsx
 ├── hooks/
 │   ├── __tests__/
 │   │   └── use-permissions.test.ts
@@ -734,13 +764,13 @@ Generated: 2025-04-11T03:54:00.719Z
 ├── middleware.test.ts
 └── middleware.ts
 
-217 directories, 508 files
+229 directories, 526 files
 
 ```
 
 ## File Type Breakdown
 - ts: 126 file(s)
-- tsx: 363 file(s)
+- tsx: 381 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

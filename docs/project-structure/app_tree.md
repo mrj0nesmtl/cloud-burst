@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-04-11T03:54:02.592Z
+Generated: 2025-04-13T18:26:10.592Z
 
 ## Overview
 
-This directory contains 102 route(s).
+This directory contains 110 route(s).
 
 
 ## Directory Tree
@@ -132,6 +132,12 @@ This directory contains 102 route(s).
 │   └── [customUrl]/
 │       ├── layout.tsx
 │       └── page.tsx
+├── event/
+│   └── [slug]/
+│       ├── confirmed/
+│       │   └── page.tsx
+│       └── declined/
+│           └── page.tsx
 ├── events/
 │   ├── [eventId]/
 │   │   ├── gallery/
@@ -156,10 +162,22 @@ This directory contains 102 route(s).
 ├── gallery/
 │   └── [eventId]/
 │       └── page.tsx
+├── guest/
+│   ├── camera-setup/
+│   │   └── page.tsx
+│   ├── dashboard/
+│   │   └── page.tsx
+│   ├── photos/
+│   │   └── page.tsx
+│   ├── profile/
+│   │   └── page.tsx
+│   └── layout.tsx
 ├── guest-access/
 │   └── page.tsx
 ├── invitation/
 │   ├── [token]/
+│   │   ├── camera-test/
+│   │   │   └── page.tsx
 │   │   ├── confirmation/
 │   │   │   ├── accepted/
 │   │   │   │   ├── add-to-calendar-button.tsx
@@ -168,6 +186,8 @@ This directory contains 102 route(s).
 │   │   │   └── declined/
 │   │   │       └── page.tsx
 │   │   ├── details/
+│   │   │   └── page.tsx
+│   │   ├── profile-setup/
 │   │   │   └── page.tsx
 │   │   ├── default.tsx
 │   │   ├── layout.tsx
@@ -401,13 +421,13 @@ This directory contains 102 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-169 directories, 223 files
+180 directories, 232 files
 
 ```
 
 ## File Type Breakdown
 - ts: 38 file(s)
-- tsx: 174 file(s)
+- tsx: 183 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 
