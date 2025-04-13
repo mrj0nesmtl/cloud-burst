@@ -1,5 +1,5 @@
 # invitation Directory Structure
-Generated: 2025-04-11T03:54:07.689Z
+Generated: 2025-04-13T18:26:15.084Z
 
 ## Overview
 This directory contains 3 component(s).

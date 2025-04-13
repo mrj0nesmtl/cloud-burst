@@ -43,6 +43,44 @@ Cloud Burst has evolved significantly since its inception, with all core feature
 - [Security Architecture](architecture/security.md)
 - [AI Implementation](architecture/ai_implementation.md)
 
+```mermaid
+graph TD
+    Client["📱 Client Device"] -->|"HTTPS Request"| WebApp["🌐 Web App (Next.js)"]
+    WebApp -->|"API Calls"| Supabase["🗄️ Supabase"]
+    WebApp -->|"Dashboard"| Dashboard["📊 Dashboard System"]
+    WebApp -->|"Template Management"| Templates["📋 Template System"]
+    WebApp -->|"Event Management"| Events["📅 Event System"]
+    WebApp -->|"Gallery Management"| Gallery["🖼️ Gallery System"]
+    WebApp -->|"Attendee Management"| Attendees["👥 Attendee System"]
+    WebApp -->|"User Settings"| Settings["⚙️ Settings System"]
+    WebApp -->|"Analytics"| Analytics["📈 Analytics System"]
+    WebApp -->|"Access Control"| RBAC["🔒 RBAC System"]
+    WebApp -->|"AI Features"| AI["🧠 AI System"]
+    
+    Dashboard -->|"Load"| Supabase
+    Templates -->|"Sync"| Supabase
+    Events -->|"CRUD"| Supabase
+    Gallery -->|"CRUD"| Supabase
+    Attendees -->|"CRUD"| Supabase
+    Settings -->|"CRUD"| Supabase
+    Analytics -->|"Query"| Supabase
+    RBAC -->|"Verify"| Supabase
+    AI -->|"Process"| Supabase
+    
+    Supabase --> Auth["🔑 Auth"]
+    Supabase --> Database["💾 Database"]
+    Supabase --> Storage["📦 Storage"]
+    
+    style WebApp fill:#2A2A2A,stroke:#333,color:#fff
+    style Supabase fill:#3ECF8E,stroke:#333,color:#000
+    style Auth fill:#1E3A8A,stroke:#333,color:#fff
+    style Database fill:#065F46,stroke:#333,color:#fff
+    style Storage fill:#7E22CE,stroke:#333,color:#fff
+    style Analytics fill:#DC2626,stroke:#333,color:#fff
+    style Gallery fill:#2563EB,stroke:#333,color:#fff
+    style AI fill:#6D28D9,stroke:#333,color:#fff
+```
+
 ### 🚀 Deployment
 
 - [Deployment Guides](deployment/deployment_guides.md)
@@ -144,6 +182,28 @@ Cloud Burst has evolved significantly since its inception, with all core feature
 - [RSVP Implementation Guide](user-flows/RSVP_IMPLEMENTATION_GUIDE.md)
 - [Invitation and RSVP System Flow](user-flows/invitation%20and%20RSVP%20system%20flow.md)
 
+```mermaid
+graph LR
+    A["👤 Event Guest"] --> B{"🔍 Has QR?"}
+    B -->|"Yes"| C["📱 Scan QR"]
+    B -->|"No"| D["✉️ Request Access"]
+    C --> E["🖼️ Gallery Access"]
+    D --> F["📲 Receive QR"]
+    F --> C
+    E --> G["📤 Upload Media"]
+    E --> H["👁️ View Gallery"]
+    G --> I["🤖 AI Processing"]
+    I --> H
+    E --> J["📊 Engagement Analytics"]
+    
+    style A fill:#2A2A2A,stroke:#333,color:#fff
+    style E fill:#1E3A8A,stroke:#333,color:#fff
+    style G fill:#065F46,stroke:#333,color:#fff
+    style H fill:#7E22CE,stroke:#333,color:#fff
+    style I fill:#DC2626,stroke:#333,color:#fff
+    style J fill:#2563EB,stroke:#333,color:#fff
+```
+
 ## 🤝 Contributing
 
 Please see our [Contributing Guidelines](development/contributing.md) for details on how to get involved.
@@ -215,47 +275,47 @@ Cloud Burst uses AI pair programming to accelerate development. We've establishe
 
 As we approach our April 30, 2025 Beta 1.0 RC1 release date, the platform is approximately 90% complete. Recent implementations include:
 
-### Key Achievements in Session 40
-
-- ✅ Implemented guest profile creation with avatar upload functionality
-- ✅ Created TikTok-style camera interface with modern aesthetic
-- ✅ Added camera testing feature with flashlight toggle capability
-- ✅ Fixed framer-motion dependency to resolve dashboard build errors
-- ✅ Enhanced avatar component with improved styling and hover effects
-- ✅ Updated confirmation page UI with consistent black buttons
-- ✅ Removed redundant brand elements from headers for cleaner UI
-- ✅ Generated comprehensive project structure documentation
-
-### Key Achievements in Session 39
-
-- ✅ Fixed RSVP status mapping to match database enum constraints
-- ✅ Improved logging for RSVP submissions with mapped values
-- ✅ Enhanced database updates for invitation status with proper field names
-- ✅ Fixed constraint validation issues in RSVP form submissions
-- ✅ Fixed invitation email generation to use correct database token in links
-- ✅ Enhanced token verification with improved logging
-- ✅ Added Row Level Security policies for guest submissions
-- ✅ Conducted end-to-end testing of invitation-to-RSVP flow
-
-### Key Achievements in Session 38
-
-- ✅ Implemented guest reservation form with Zod validation
-- ✅ Created guest API endpoint for registration
-- ✅ Integrated magic link authentication for guests
-- ✅ Built public gallery view with access controls
-- ✅ Implemented guest authentication check component
-- ✅ Developed camera capture functionality for direct photos
-- ✅ Added contractor roles and visual role badges
-- ✅ Enhanced staff invitation form with role-specific descriptions
-
-### Next Milestones
-
-1. Fix navigation to guest dashboard after setup completion (target: v0.9.3 by April 22, 2025)
-2. Implement beautiful gallery layouts for guests (target: v0.9.3 by April 22, 2025)
-3. Continue AI feature integration (target: v0.9.5 by April 30, 2025)
-4. Enhance analytics dashboard (target: v0.9.5 by April 30, 2025)
-5. Beta 1.0 RC1 Release (target: April 30, 2025)
-6. Public launch (target: v1.0.0 by May 25, 2025)
+```mermaid
+gantt
+    title Cloud Burst Development Timeline
+    dateFormat  YYYY-MM-DD
+    axisFormat %b %d
+    
+    section Foundation
+    Project Setup           :done, f1, 2025-02-01, 7d
+    Authentication          :done, f2, 2025-02-08, 7d
+    Database Schema         :done, f3, 2025-02-15, 5d
+    
+    section Core Functionality
+    Event Management        :done, c1, 2025-02-20, 7d
+    Basic Media Upload      :done, c2, 2025-02-25, 5d
+    User Roles & Permissions:done, c3, 2025-03-01, 5d
+    
+    section Enhanced Features
+    Advanced Gallery Layouts:done, e1, 2025-03-05, 5d
+    Navigation Recovery     :done, e2, 2025-03-07, 3d
+    Authentication Repair   :done, e3, 2025-03-10, 3d
+    Dashboard Implementation:done, e4, 2025-03-11, 4d
+    Database Security Fixes :done, e5, 2025-03-15, 1d
+    Invitation System       :done, e6, 2025-03-16, 7d
+    RSVP Implementation     :done, e7, 2025-03-21, 5d
+    Media Moderation        :done, e8, 2025-03-26, 3d
+    Mobile Responsiveness   :done, e9, 2025-03-30, 4d
+    Guest Reservation Flow  :done, e10, 2025-04-01, 5d
+    Camera Integration      :done, e11, 2025-04-05, 4d
+    Contractor Role Management :done, e12, 2025-04-09, 3d
+    Profile Creation        :done, e13, 2025-04-10, 5d
+    Camera Testing          :done, e14, 2025-04-15, 3d
+    
+    section Final Preparations
+    Guest Dashboard Navigation :active, g1, 2025-04-16, 6d
+    Gallery Enhancements    :active, g2, 2025-04-16, 6d
+    AI Features Framework   :active, g3, 2025-04-16, 14d
+    Beta v1.0 RC1 Release   :milestone, b1, 2025-04-30, 0d
+    Performance Tuning      :o1, 2025-05-01, 8d
+    Security Audit          :o2, 2025-05-09, 5d
+    Public Launch (v1.0.0)  :milestone, l3, 2025-05-25, 0d
+```
 
 <div align="center">
   <img src="../public/android-chrome-192x192.png" alt="Cloud Burst Logo" width="120" height="120" />

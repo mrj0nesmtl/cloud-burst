@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-04-11T03:54:06.140Z
+Generated: 2025-04-13T18:26:13.669Z
 
 ## Overview
-This directory contains 179 component(s).
+This directory contains 188 component(s).
 
 
 
@@ -29,6 +29,7 @@ This directory contains 179 component(s).
 │   └── index.tsx
 ├── dashboard/
 │   ├── MediaStatsCard.tsx
+│   ├── RsvpDashboard.tsx
 │   ├── activity-feed.tsx
 │   ├── analytics-overview.tsx
 │   ├── contact-stats.tsx
@@ -104,6 +105,12 @@ This directory contains 179 component(s).
 │   ├── upload-button.tsx
 │   ├── upload-dropzone.tsx
 │   └── upload-with-tags.tsx
+├── guest/
+│   ├── GuestDashboard.tsx
+│   ├── GuestProfileForm.tsx
+│   ├── PhotoUploader.tsx
+│   ├── camera-test.tsx
+│   └── profile-setup-form.tsx
 ├── invitation/
 │   ├── SimpleScan.tsx
 │   ├── qr-scanner.tsx
@@ -113,6 +120,7 @@ This directory contains 179 component(s).
 │   └── magic-link-auth.tsx
 ├── layout/
 │   ├── dashboard-layout.tsx
+│   ├── guest-header.tsx
 │   └── main-nav.tsx
 ├── maps/
 │   ├── EventMap.tsx
@@ -128,6 +136,7 @@ This directory contains 179 component(s).
 │   ├── MediaModerationGrid.tsx
 │   ├── MediaUploader.tsx
 │   ├── MediaViewer.tsx
+│   ├── camera-test.tsx
 │   └── upload-media-button.tsx
 ├── nav/
 │   ├── logo.tsx
@@ -218,15 +227,16 @@ This directory contains 179 component(s).
 ├── error-boundary.tsx
 ├── query-provider.tsx
 ├── shell.tsx
-└── theme-provider.tsx
+├── theme-provider.tsx
+└── theme-toggle.tsx
 
-24 directories, 187 files
+25 directories, 196 files
 
 ```
 
 ## File Type Breakdown
 - ts: 6 file(s)
-- tsx: 180 file(s)
+- tsx: 189 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

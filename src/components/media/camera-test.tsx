@@ -100,6 +100,12 @@ export default function CameraTest() {
             !cameraActive && "hidden"
           )} 
         />
+        
+        {cameraActive && (
+          <div className="absolute bottom-2 right-2 bg-black/30 text-white text-xs px-2 py-1 rounded-md">
+            Camera Active
+          </div>
+        )}
       </div>
       
       <div className="flex justify-center gap-3">
@@ -107,16 +113,16 @@ export default function CameraTest() {
           <Button 
             onClick={startCamera} 
             disabled={loading}
-            className="flex items-center gap-2"
+            className="bg-blue-500 hover:bg-blue-600"
           >
             {loading ? (
               <>
-                <RefreshCw className="h-4 w-4 animate-spin" />
+                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                 Requesting Camera
               </>
             ) : (
               <>
-                <Camera className="h-4 w-4" />
+                <Camera className="mr-2 h-4 w-4" />
                 Start Camera
               </>
             )}
