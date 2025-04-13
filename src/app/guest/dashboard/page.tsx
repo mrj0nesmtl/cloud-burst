@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
-import { supabase } from '@/lib/supabase/client'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Loader2, CameraIcon, ImageIcon, UserCircle2Icon, CalendarIcon, MapPinIcon } from 'lucide-react'
 import {
   Card,
@@ -18,10 +18,14 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { formatDate } from '@/lib/utils'
+import { invitationTokenService } from '@/lib/tokens/invitation-token'
 
 export default function GuestDashboardPage() {
   const searchParams = useSearchParams()
-  const invitationToken = searchParams.get('token')
+  
+  // Use token service to get token from multiple sources
+  const invitationToken = invitationTokenService.getToken(searchParams)
+  const eventId = searchParams.get('event')
   
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -30,39 +34,139 @@ export default function GuestDashboardPage() {
 
   useEffect(() => {
     async function loadEventData() {
-      if (!invitationToken) {
-        setError('No invitation token provided')
-        setLoading(false)
-        return
-      }
+      setLoading(true)
+      setError(null)
 
+      const supabase = createClientComponentClient()
+      
       try {
-        // Fetch guest info using the invitation token
-        const { data: guestData, error: guestError } = await supabase
-          .from('guests')
-          .select('*, events(*)')
-          .eq('invitation_token', invitationToken)
-          .single()
-
-        if (guestError) {
-          throw new Error('Invalid invitation token')
+        // First check if we have a token
+        if (!invitationToken && !eventId) {
+          throw new Error('No invitation token or event ID provided')
         }
 
-        if (!guestData) {
-          throw new Error('Guest not found')
+        let invitation
+        let eventData
+        
+        // If we have a token, get the invitation first
+        if (invitationToken) {
+          // Fetch invitation
+          const { data: invData, error: invError } = await supabase
+            .from('invitations')
+            .select('id, email, name, event_id, status')
+            .eq('token', invitationToken)
+            .single()
+            
+          if (invError || !invData) {
+            console.error('Error fetching invitation:', invError)
+            throw new Error('Invalid invitation token')
+          }
+          
+          invitation = invData
+          
+          // Get event using invitation's event_id
+          const { data: evtData, error: evtError } = await supabase
+            .from('events')
+            .select('*')
+            .eq('id', invitation.event_id)
+            .single()
+            
+          if (evtError || !evtData) {
+            console.error('Error fetching event:', evtError)
+            throw new Error('Event not found')
+          }
+          
+          eventData = evtData
         }
-
-        setGuest(guestData)
-        setEvent(guestData.events)
+        // If no token but we have an event ID
+        else if (eventId) {
+          // Get event directly
+          const { data: evtData, error: evtError } = await supabase
+            .from('events')
+            .select('*')
+            .eq('id', eventId)
+            .single()
+            
+          if (evtError || !evtData) {
+            console.error('Error fetching event by ID:', evtError)
+            throw new Error('Event not found')
+          }
+          
+          eventData = evtData
+          
+          // Try to find invitation for this event
+          const { data: invData, error: invError } = await supabase
+            .from('invitations')
+            .select('id, email, name, token')
+            .eq('event_id', eventId)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle()
+            
+          if (!invError && invData) {
+            invitation = invData
+            
+            // Store the token for future use
+            if (invitation.token) {
+              invitationTokenService.storeToken(invitation.token)
+            }
+          }
+        }
+        
+        if (!eventData) {
+          throw new Error('Could not find event information')
+        }
+        
+        setEvent(eventData)
+        
+        // Now get guest information if we have an invitation
+        if (invitation) {
+          // Check for guest profile using invitation ID
+          const { data: guestData, error: guestError } = await supabase
+            .from('guests')
+            .select('*')
+            .eq('invitation_id', invitation.id)
+            .maybeSingle()
+            
+          if (!guestError && guestData) {
+            setGuest(guestData)
+          } else {
+            // If no guest profile, check for RSVP
+            const { data: rsvpData, error: rsvpError } = await supabase
+              .from('rsvps')
+              .select('*')
+              .eq('invitation_id', invitation.id)
+              .maybeSingle()
+              
+            if (!rsvpError && rsvpData) {
+              setGuest({
+                name: rsvpData.guest_name || invitation.name,
+                email: rsvpData.guest_email || invitation.email,
+                rsvp_status: rsvpData.status === 'accepted' ? 'attending' : rsvpData.status,
+                phone: rsvpData.guest_phone,
+                invitation_id: invitation.id
+              })
+            } else {
+              // No guest profile or RSVP, use invitation data
+              setGuest({
+                name: invitation.name,
+                email: invitation.email,
+                invitation_id: invitation.id
+              })
+            }
+          }
+        }
+        
         setLoading(false)
       } catch (err: any) {
+        console.error('Error loading dashboard data:', err)
         setError(err.message || 'Failed to load event data')
         setLoading(false)
       }
     }
 
     loadEventData()
-  }, [invitationToken])
+  }, [invitationToken, eventId])
 
   if (loading) {
     return (
@@ -83,6 +187,11 @@ export default function GuestDashboardPage() {
         <p className="text-muted-foreground text-center mt-4">
           Please check your invitation link or contact the event organizer.
         </p>
+        <div className="flex justify-center mt-8">
+          <Button asChild variant="default">
+            <Link href="/">Return to Home</Link>
+          </Button>
+        </div>
       </div>
     )
   }
@@ -92,6 +201,19 @@ export default function GuestDashboardPage() {
   const canUploadPhotos = event?.allow_photo_sharing && (
     !event.photo_upload_deadline || new Date() <= new Date(event.photo_upload_deadline)
   )
+  
+  // Prepare params for links
+  const getLinkParams = () => {
+    const params = new URLSearchParams()
+    if (invitationToken) {
+      params.set('token', invitationToken)
+    } else if (eventId) {
+      params.set('event', eventId)
+    }
+    return params.toString()
+  }
+  
+  const linkParams = getLinkParams()
   
   return (
     <div className="container max-w-7xl py-10">
@@ -162,7 +284,7 @@ export default function GuestDashboardPage() {
                     transition={{ duration: 0.3 }}
                   >
                     <Button asChild className="w-full justify-start" variant="outline">
-                      <Link href={`/guest/photos?token=${invitationToken}`} className="flex items-center gap-2">
+                      <Link href={`/guest/photos?${linkParams}`} className="flex items-center gap-2">
                         <ImageIcon className="h-4 w-4" />
                         <span>Upload Photos</span>
                       </Link>
@@ -177,7 +299,7 @@ export default function GuestDashboardPage() {
                     transition={{ duration: 0.3, delay: 0.1 }}
                   >
                     <Button asChild className="w-full justify-start" variant="outline">
-                      <Link href={`/guest/photos?token=${invitationToken}&tab=camera`} className="flex items-center gap-2">
+                      <Link href={`/guest/camera-setup?${linkParams}`} className="flex items-center gap-2">
                         <CameraIcon className="h-4 w-4" />
                         <span>Test Camera</span>
                       </Link>
@@ -192,7 +314,7 @@ export default function GuestDashboardPage() {
                     transition={{ duration: 0.3, delay: 0.2 }}
                   >
                     <Button asChild className="w-full justify-start" variant="outline">
-                      <Link href={`/guest/profile?token=${invitationToken}`} className="flex items-center gap-2">
+                      <Link href={`/guest/profile?${linkParams}`} className="flex items-center gap-2">
                         <UserCircle2Icon className="h-4 w-4" />
                         <span>Complete Your Profile</span>
                       </Link>
@@ -239,7 +361,7 @@ export default function GuestDashboardPage() {
               </CardContent>
               <CardFooter>
                 <Button asChild variant="ghost" size="sm" className="w-full">
-                  <Link href={`/guest/profile?token=${invitationToken}`}>
+                  <Link href={`/guest/profile?${linkParams}`}>
                     {hasProfileCompleted ? 'Update Profile' : 'Complete Profile'}
                   </Link>
                 </Button>

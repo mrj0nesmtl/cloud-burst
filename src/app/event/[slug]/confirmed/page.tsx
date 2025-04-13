@@ -12,6 +12,138 @@ export const metadata: Metadata = {
   description: 'Thank you for confirming your attendance',
 }
 
+// Function to create or update RSVP record
+async function createOrUpdateRsvp(eventId: string, token: string) {
+  try {
+    const supabase = createServerComponentClient({ cookies })
+    
+    // First get the invitation
+    const { data: invitation, error: invitationError } = await supabase
+      .from('invitations')
+      .select('id, email, name, status')
+      .eq('token', token)
+      .single()
+      
+    if (invitationError || !invitation) {
+      console.error('Invalid invitation token or invitation not found:', invitationError)
+      return { 
+        success: false, 
+        error: 'Invalid invitation token or invitation not found' 
+      }
+    }
+    
+    console.log('Found invitation:', invitation)
+    
+    // Check if there's already an RSVP for this invitation
+    const { data: existingRsvp, error: rsvpCheckError } = await supabase
+      .from('rsvps')
+      .select('id, status')
+      .eq('invitation_id', invitation.id)
+      .maybeSingle()
+      
+    if (rsvpCheckError && rsvpCheckError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+      console.error('Error checking existing RSVP:', rsvpCheckError)
+      return { 
+        success: false, 
+        error: 'Failed to check existing RSVP' 
+      }
+    }
+    
+    let rsvp
+    
+    // If RSVP exists, update it, otherwise create a new one
+    if (existingRsvp) {
+      console.log('Updating existing RSVP:', existingRsvp.id)
+      
+      const { data: updatedRsvp, error: updateError } = await supabase
+        .from('rsvps')
+        .update({
+          status: 'accepted',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', existingRsvp.id)
+        .select()
+        .single()
+        
+      if (updateError) {
+        console.error('Failed to update RSVP record:', updateError)
+        return { 
+          success: false, 
+          error: 'Failed to update RSVP record' 
+        }
+      }
+      
+      rsvp = updatedRsvp
+    } else {
+      console.log('Creating new RSVP for invitation:', invitation.id)
+      
+      // Create new RSVP
+      const { data: newRsvp, error: createError } = await supabase
+        .from('rsvps')
+        .insert({
+          invitation_id: invitation.id,
+          status: 'accepted',
+          guest_count: 1,
+          guest_name: invitation.name || null,
+          guest_email: invitation.email || null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+        
+      if (createError) {
+        console.error('Failed to create RSVP record:', createError)
+        return { 
+          success: false, 
+          error: 'Failed to create RSVP record' 
+        }
+      }
+      
+      rsvp = newRsvp
+    }
+    
+    // Update invitation status
+    const { error: invitationUpdateError } = await supabase
+      .from('invitations')
+      .update({ 
+        status: 'used',
+        rsvp_status: 'accepted',
+        rsvp_date: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', invitation.id)
+      
+    if (invitationUpdateError) {
+      console.error('Failed to update invitation status:', invitationUpdateError)
+      // Not returning error here as the RSVP was created successfully
+    }
+    
+    // Track analytics event
+    await supabase
+      .from('analytics_events')
+      .insert({
+        type: 'rsvp_response',
+        invitation_id: invitation.id,
+        event_id: eventId,
+        properties: {
+          status: 'accepted',
+          timestamp: new Date().toISOString(),
+          source: 'web',
+          guestCount: 1
+        }
+      })
+    
+    return { success: true, rsvp }
+  } catch (error) {
+    console.error('Error in createOrUpdateRsvp:', error)
+    return { 
+      success: false, 
+      error: 'Failed to process RSVP' 
+    }
+  }
+}
+
 // Function to get the most recent invitation token for an event
 async function getInvitationToken(eventId: string) {
   try {
@@ -31,19 +163,6 @@ async function getInvitationToken(eventId: string) {
       return null
     }
 
-    // Check if there's an RSVP for this invitation
-    const { data: rsvpData, error: rsvpError } = await supabase
-      .from('rsvps')
-      .select('id')
-      .eq('invitation_id', invitationData.id)
-      .eq('status', 'yes')
-      .maybeSingle()
-      
-    if (rsvpError) {
-      console.error('Error fetching RSVP data:', rsvpError)
-      // Not blocking, we'll use the invitation token regardless
-    }
-    
     return invitationData.token
   } catch (error) {
     console.error('Error in getInvitationToken:', error)
@@ -52,8 +171,24 @@ async function getInvitationToken(eventId: string) {
 }
 
 export default async function ConfirmedPage({ params }: { params: { slug: string } }) {
-  // Get the invitation token for this event
-  const invitationToken = await getInvitationToken(params.slug)
+  // Get the current token from the URL
+  const urlParams = new URL(cookies().get('next-url')?.value || '', 'https://example.com').searchParams
+  const token = urlParams.get('token')
+  
+  // If we have a token, create/update the RSVP
+  let rsvpResult: { success: boolean; error?: string | null; rsvp?: any }
+  
+  if (token) {
+    rsvpResult = await createOrUpdateRsvp(params.slug, token)
+    console.log('RSVP result:', rsvpResult)
+  } else {
+    console.log('No token found in URL, skipping RSVP creation')
+    rsvpResult = { success: false, error: 'No token found in URL' }
+  }
+  
+  // Get the invitation token for the next steps (profile, camera)
+  // If we have a token from URL, use that, otherwise try to get one for the event
+  const invitationToken = token || await getInvitationToken(params.slug)
   
   // Prepare query params for the profile and camera setup pages
   const profileQueryParams = new URLSearchParams()

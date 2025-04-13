@@ -32,6 +32,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { toast as sonnerToast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
+import { invitationTokenService } from '@/lib/tokens/invitation-token'
 
 const guestProfileSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -56,7 +57,9 @@ export default function GuestProfilePage() {
   const router = useRouter()
   const { toast } = useToast()
   const searchParams = useSearchParams()
-  const invitationToken = searchParams.get('token')
+  
+  // Use token service to get token from multiple sources
+  const invitationToken = invitationTokenService.getToken(searchParams)
   const eventId = searchParams.get('event')
   
   const [isLoading, setIsLoading] = useState(true)
@@ -179,7 +182,7 @@ export default function GuestProfilePage() {
       // Get invitation for this event directly
       const { data: invitation, error: invitationError } = await supabase
         .from('invitations')
-        .select('id, email, event_id, name')
+        .select('id, email, event_id, name, token')
         .eq('event_id', eventId)
         .order('created_at', { ascending: false })
         .limit(1)
@@ -189,6 +192,11 @@ export default function GuestProfilePage() {
         setError('Unable to find an invitation for this event. Please check the event ID or get a new invitation.')
         setIsLoading(false)
         return null
+      }
+      
+      // Store the token for future use
+      if (invitation.token) {
+        invitationTokenService.storeToken(invitation.token)
       }
       
       // Get event details
@@ -209,7 +217,7 @@ export default function GuestProfilePage() {
         .from('rsvps')
         .select('id, status, guest_name, guest_email, guest_phone, guest_notes')
         .eq('invitation_id', invitation.id)
-        .eq('status', 'yes')
+        .eq('status', 'accepted')
         .maybeSingle()
         
       if (rsvpError) {
@@ -253,76 +261,54 @@ export default function GuestProfilePage() {
       
       return { invitation, guest, event: eventData }
     } catch (error) {
-      console.error('Error fetching guest data by event ID:', error)
+      console.error('Error in getGuestDataByEventId:', error)
       setError('Failed to load your profile data')
       return null
     }
   }
 
+  // Effect to load guest data on component mount
   useEffect(() => {
     const loadGuestData = async () => {
       setIsLoading(true)
       setError(null)
       
-      try {
-        if (!invitationToken && !eventId) {
-          setError('No invitation token or event ID was provided')
+      // First try to get data using token
+      if (invitationToken) {
+        console.log('Loading guest data using token:', invitationToken)
+        const result = await getGuestDataByToken(invitationToken)
+        
+        if (result) {
+          setIsLoading(false)
           return
         }
-
-        // If we have an eventId but no invitationToken, fetch the most recent invitation for this event
-        if (!invitationToken && eventId) {
-          const { data: invitation, error: invitationError } = await supabase
-            .from('invitations')
-            .select('token, email, event_id')
-            .eq('event_id', eventId)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .maybeSingle()
-            
-          if (invitationError || !invitation) {
-            setError('Unable to find an invitation for this event')
-            return
-          }
-          
-          // Use the found invitation token for the rest of the process
-          router.replace(`/guest/profile?token=${invitation.token}`)
-          return // Router will reload the page with the token
-        }
-
-        // Fetch invitation data
-        const { data: invitation, error: invitationError } = await supabase
-          .from('invitations')
-          .select('id, event_id, email')
-          .eq('token', invitationToken as string)
-          .single()
-
-        if (invitationError || !invitation) {
-          throw new Error('Invalid invitation token')
-        }
         
-        let profileData = null
-        
-        if (invitationToken) {
-          profileData = await getGuestDataByToken(invitationToken)
-        } else if (eventId) {
-          profileData = await getGuestDataByEventId(eventId)
-        }
-        
-        if (!profileData) {
-          // Error already set within the get functions
-          return
-        }
-      } catch (error) {
-        console.error('Error loading guest data:', error)
-        setError('Failed to load your profile data')
-      } finally {
-        setIsLoading(false)
+        // If token failed, don't give up yet - try event ID
       }
+      
+      // Fall back to event ID if token failed or isn't available
+      if (eventId) {
+        console.log('Falling back to event ID:', eventId)
+        const result = await getGuestDataByEventId(eventId)
+        
+        if (result) {
+          setIsLoading(false)
+          return
+        }
+      }
+      
+      // If we got here, both methods failed
+      if (!invitationToken && !eventId) {
+        setError('No invitation token or event ID provided. Please check your invitation link.')
+      } else {
+        setError('Could not load profile data. Please check your invitation link or try again later.')
+      }
+      
+      setIsLoading(false)
     }
-
+    
     loadGuestData()
-  }, [invitationToken, eventId])
+  }, [])
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -536,178 +522,126 @@ export default function GuestProfilePage() {
   };
 
   const onSubmit = async (values: GuestProfileFormValues) => {
-    setIsSubmitting(true)
-    setError(null)
-    
     try {
-      let invitationId: string | null = null
-      let eventId: string | null = null
+      setIsSubmitting(true)
       
-      // Get the invitation and event ID based on token or event parameter
-      if (invitationToken) {
-        const { data, error } = await supabase
-          .from('invitations')
-          .select('id, event_id')
-          .eq('token', invitationToken)
+      // No guest record yet, create one
+      if (!guest?.id) {
+        // We need an invitation_id to create a guest
+        if (!guest?.invitation_id) {
+          toast({
+            title: 'Error',
+            description: 'No invitation found for this profile. Please go back and try again.',
+            variant: 'destructive',
+          })
+          setIsSubmitting(false)
+          return
+        }
+        
+        // Create new guest record
+        const { data: newGuest, error: createError } = await supabase
+          .from('guests')
+          .insert({
+            invitation_id: guest.invitation_id,
+            name: values.name,
+            email: values.email,
+            phone: values.phone || null,
+            notes: values.notes || null,
+            avatar_url: avatarUrl,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .select()
           .single()
           
-        if (error || !data) {
-          throw new Error('Invalid invitation token')
+        if (createError) {
+          console.error('Error creating guest:', createError)
+          toast({
+            title: 'Error',
+            description: 'Failed to create your profile. Please try again.',
+            variant: 'destructive',
+          })
+          setIsSubmitting(false)
+          return
         }
         
-        invitationId = data.id
-        eventId = data.event_id
-      } else if (searchParams.get('event')) {
-        // Use the event ID from the URL
-        eventId = searchParams.get('event')
+        setGuest(newGuest)
         
-        // Get invitation for this event directly (just for reference)
-        const { data: invitation, error: invitationError } = await supabase
-          .from('invitations')
-          .select('id, email, event_id')
-          .eq('event_id', eventId)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle()
-          
-        if (invitation) {
-          invitationId = invitation.id
-        }
-      }
-      
-      if (!eventId) {
-        throw new Error('No valid event found')
-      }
-      
-      // Upload avatar if there's a new file (using invitationId for naming)
-      let avatarUrl = values.avatar_url
-      if (avatarFile && invitationId) {
-        const uploadedUrl = await uploadAvatar(avatarFile, invitationId)
-        if (uploadedUrl) {
-          avatarUrl = uploadedUrl
-        }
-      }
-      
-      // Generate an access token for the guest if needed
-      const generateAccessToken = () => {
-        return crypto.randomUUID()
-      }
-      
-      // Try direct table operations
-      try {
-        // Check if guest profile already exists
-        const { data: existingGuest } = await supabase
+        console.log('Created new guest:', newGuest)
+      } else {
+        // Update existing guest record
+        const { data: updatedGuest, error: updateError } = await supabase
           .from('guests')
-          .select('id, access_token')
-          .eq('email', values.email)
-          .eq('event_id', eventId)
-          .maybeSingle()
-        
-        // Create or update guest profile according to the actual schema
-        const guestData = {
-          name: values.name,
-          email: values.email,
-          phone: values.phone || null,
-          event_id: eventId,
-          updated_at: new Date().toISOString(),
-        }
-        
-        // Only set access_token for new guests
-        if (!existingGuest?.id) {
-          // @ts-ignore
-          guestData.access_token = generateAccessToken()
-          // @ts-ignore
-          guestData.created_at = new Date().toISOString()
-          // @ts-ignore
-          guestData.status = 'registered'
-        }
-        
-        let guestOperation
-        
-        if (existingGuest?.id) {
-          // Update existing guest
-          guestOperation = supabase
-            .from('guests')
-            .update(guestData)
-            .eq('id', existingGuest.id)
-        } else {
-          // Create new guest
-          guestOperation = supabase
-            .from('guests')
-            .insert(guestData)
-        }
-        
-        const { error: guestError } = await guestOperation
-        
-        if (guestError) {
-          console.error('Error with guest operation:', guestError)
-          throw new Error(guestError.message)
-        }
-        
-        // Also save the notes if provided to a separate table or through RPC if needed
-        if (values.notes) {
-          // Try to update RSVP notes if it exists
-          const { error: notesError } = await supabase
-            .from('rsvps')
-            .update({ guest_notes: values.notes })
-            .eq('invitation_id', invitationId)
-            .eq('guest_email', values.email)
+          .update({
+            name: values.name,
+            email: values.email,
+            phone: values.phone || null,
+            notes: values.notes || null,
+            avatar_url: avatarUrl,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', guest.id)
+          .select()
+          .single()
           
-          if (notesError) {
-            console.warn('Could not save notes to RSVP:', notesError)
-            // Non-critical, continue without failing
-          }
+        if (updateError) {
+          console.error('Error updating guest:', updateError)
+          toast({
+            title: 'Error',
+            description: 'Failed to update your profile. Please try again.',
+            variant: 'destructive',
+          })
+          setIsSubmitting(false)
+          return
         }
         
-      } catch (tableError) {
-        console.error('Error with table operations:', tableError)
-        throw new Error('Unable to save profile data. Please try again.')
+        setGuest(updatedGuest)
+        
+        console.log('Updated guest:', updatedGuest)
       }
       
-      // Show success message
+      // Generate access token for the guest dashboard
+      const accessToken = generateAccessToken()
+      
+      // Save the access token to localStorage
+      localStorage.setItem('guest_access_token', accessToken)
+      
+      // Ensure the invitation token is preserved
+      if (invitationToken) {
+        invitationTokenService.storeToken(invitationToken)
+      }
+      
       toast({
-        title: "Profile updated",
-        description: "Your profile has been updated successfully!",
-        variant: "success",
+        title: 'Success',
+        description: 'Your profile has been saved successfully!',
       })
       
-      // If the invitation has a different email than provided, update it
-      if (invitationId) {
-        const { data: invitation } = await supabase
-          .from('invitations')
-          .select('email')
-          .eq('id', invitationId)
-          .single()
-          
-        if (invitation && invitation.email !== values.email) {
-          const { error: updateError } = await supabase
-            .from('invitations')
-            .update({ email: values.email })
-            .eq('id', invitationId)
-            
-          if (updateError) {
-            console.error('Error updating invitation email:', updateError)
-            // Not critical, so we don't throw
-          }
-        }
+      // Navigate to the guest dashboard with the token
+      const dashboardParams = new URLSearchParams()
+      if (invitationToken) {
+        dashboardParams.set('token', invitationToken)
+      }
+      if (event?.id) {
+        dashboardParams.set('event', event.id)
       }
       
-      // After saving profile, switch to camera tab if we're on the profile tab
-      if (activeTab === 'profile') {
-        setActiveTab('camera')
-      }
-      
+      // Redirect to the dashboard
+      router.push(`/guest/dashboard?${dashboardParams.toString()}`)
     } catch (error) {
-      console.error('Error submitting profile:', error)
-      setError(error instanceof Error ? error.message : 'Failed to update profile')
+      console.error('Error saving profile:', error)
       toast({
-        title: "Update failed",
-        description: "There was a problem updating your profile. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to save your profile. Please try again.',
+        variant: 'destructive',
       })
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  // Helper to generate a random access token
+  const generateAccessToken = () => {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
   }
 
   if (isLoading) {
@@ -1068,4 +1002,4 @@ if (typeof document !== 'undefined') {
   const styleElement = document.createElement('style');
   styleElement.textContent = flashStyle;
   document.head.appendChild(styleElement);
-} 
+}
