@@ -1,0 +1,10 @@
+This is a placeholder for the user flow diagram image.
+The image needs to be manually generated from the mermaid markdown in user-flow-diagram.md
+and saved as user-flow-diagram.png in this directory.
+
+You can generate this image using:
+1. Paste the mermaid diagram code from user-flow-diagram.md into https://mermaid.live/
+2. Export as PNG
+3. Save the PNG as user-flow-diagram.png in the docs/assets/ directory
+
+This is needed to ensure diagrams render properly on GitHub mobile. 

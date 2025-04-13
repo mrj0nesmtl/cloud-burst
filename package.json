@@ -1,13 +1,14 @@
 {
   "name": "cloud-burst",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "debug": "NODE_OPTIONS='--inspect' next dev"
+    "debug": "NODE_OPTIONS='--inspect' next dev",
+    "generate:structure": "node scripts/generate-structure.mjs"
   },
   "dependencies": {
     "@eslint/config-array": "^0.19.2",
