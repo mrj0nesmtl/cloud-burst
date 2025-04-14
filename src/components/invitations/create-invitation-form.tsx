@@ -114,7 +114,7 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
       completeStep(3); // Mark the final step as complete when submitting
       
       // Create a persistent toast that stays visible during processing
-      const loadingToast = toast({
+      toast({
         title: "Processing invitation...",
         description: "Please wait while we process and send your invitation. This may take a moment.",
         duration: Infinity, // Set to infinite duration so it doesn't auto-dismiss
@@ -129,8 +129,12 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
 
       const responseData = await response.json();
 
-      // Dismiss the loading toast
-      toast.dismiss(loadingToast);
+      // Show success toast
+      toast({
+        title: "Invitation Sent",
+        description: "Your invitation has been processed successfully.",
+        duration: 3000, // Auto-dismiss after 3 seconds
+      });
 
       if (!response.ok) {
         console.error('Error response:', response.status, responseData);
@@ -187,7 +191,7 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
       setIsSubmitting(true);
       
       // Create a persistent toast that stays visible during processing
-      const loadingToast = toast({
+      toast({
         title: "Processing invitations...",
         description: "Please wait while we process and send your invitations. This may take a few moments.",
         duration: Infinity, // Set to infinite duration so it doesn't auto-dismiss
@@ -201,7 +205,6 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
 
       // Update toast with more specific information
       toast({
-        id: loadingToast,
         title: "Sending invitations...",
         description: "Uploading and processing invitation list. Please wait while emails are being sent.",
         duration: Infinity,
@@ -212,8 +215,12 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
         body: formData,
       });
 
-      // Dismiss the loading toast
-      toast.dismiss(loadingToast);
+      // Show success toast
+      toast({
+        title: "Invitation Sent",
+        description: "Your invitation has been processed successfully.",
+        duration: 3000, // Auto-dismiss after 3 seconds
+      });
 
       if (!response.ok) throw new Error('Failed to send invitations');
 
@@ -231,9 +238,7 @@ export function CreateInvitationForm({ eventId }: { eventId?: string }) {
         router.push(`/protected/events/${data.eventId}`);
       }
     } catch (error) {
-      // Dismiss any loading toast if there's an error
-      toast.dismiss();
-      
+      // Show error toast
       toast({
         title: 'Error',
         description: 'Failed to send invitations. Please try again.',
