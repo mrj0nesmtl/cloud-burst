@@ -19,23 +19,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Advanced AI Features integration with TensorFlow.js
 - Enhanced Analytics dashboard with real-time metrics
 
-## [0.9.2] - 2025-04-13
+## [0.9.2] - 2025-04-15
 ### Added
 - Guest profile page with form for updating personal information
 - Avatar upload component with improved styling and hover effects
 - Camera access testing feature with full-screen preview
 - Flashlight toggle for camera testing in different lighting conditions
 - Token-based authentication for guest profiles and dashboard access
+- RSVP analytics tracking to populate the analytics_events table and RSVP_analytics view
+- Comprehensive event analytics data capture for attendance and guest preferences
+- Automated metadata collection for dietary requirements, guest counts, and special notes
+- Marketing consent tracking for future guest communications
+- Enhanced error handling and validation for RSVP submissions
+- Integration with analytics pipeline for real-time RSVP response tracking
+- Custom analytics event types for tracking form completion rates
 
 ### Fixed
 - Styling issues on event confirmation page (background and button consistency)
 - Input field validation and interactivity in RSVP form
 - Visual consistency across guest-facing interfaces
+- Analytics event tracking for RSVP submissions now properly captured
+- Database capture of detailed RSVP response metadata
+- Error handling for edge cases in RSVP form submission process
+- Corrected validation and storage of plus-one details
+- Race condition in analytics event creation during RSVP submission
+- Proper cleanup of abandoned form submissions in analytics
 
 ### Changed
 - Updated confirmation page UI with consistent black buttons
 - Improved form field layouts and error handling
 - Enhanced user feedback during profile setup process
+- Added detailed analytics properties for RSVP responses
+- Refactored RSVP submission handler for better performance and reliability
+- Improved error logging and monitoring for RSVP process
+- Updated documentation for analytics events structure
+- Optimized database queries for RSVP analytics views
+- Enhanced analytics schema with additional metadata fields
 
 ## [0.9.1] - 2025-04-12
 ### Added

@@ -1,205 +1,249 @@
-import { Metadata } from 'next'
+import { Metadata, ResolvingMetadata } from 'next/types'
 import Link from 'next/link'
 import { Check, Calendar, Share, Camera, User } from 'lucide-react'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
+import { cookies, headers } from 'next/headers'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { v4 as uuidv4 } from 'uuid'
+import { Database } from '@/types/supabase'
+import { redirect } from 'next/navigation'
 
-export const metadata: Metadata = {
-  title: 'RSVP Confirmed',
-  description: 'Thank you for confirming your attendance',
+// Define metadata for the page
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
+  return {
+    title: 'RSVP Confirmed',
+    description: 'Your RSVP has been confirmed successfully',
+  }
 }
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+// Environment variables for Supabase admin client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
 // Function to create or update RSVP record
-async function createOrUpdateRsvp(eventId: string, token: string) {
+async function createOrUpdateRsvp(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  invitation: any,
+  eventId: string
+) {
   try {
-    const supabase = createServerComponentClient({ cookies })
+    console.log(`[RSVP-DEBUG] Creating or updating RSVP for invitation: ${invitation.id}`)
     
-    // First get the invitation
-    const { data: invitation, error: invitationError } = await supabase
-      .from('invitations')
-      .select('id, email, name, status')
-      .eq('token', token)
-      .single()
-      
-    if (invitationError || !invitation) {
-      console.error('Invalid invitation token or invitation not found:', invitationError)
-      return { 
-        success: false, 
-        error: 'Invalid invitation token or invitation not found' 
-      }
-    }
-    
-    console.log('Found invitation:', invitation)
-    
-    // Check if there's already an RSVP for this invitation
-    const { data: existingRsvp, error: rsvpCheckError } = await supabase
+    // Check if RSVP already exists
+    const { data: existingRsvpData, error: existingError } = await supabaseAdmin
       .from('rsvps')
-      .select('id, status')
+      .select('*')
       .eq('invitation_id', invitation.id)
       .maybeSingle()
       
-    if (rsvpCheckError && rsvpCheckError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
-      console.error('Error checking existing RSVP:', rsvpCheckError)
+    if (existingError && existingError.code !== 'PGRST116') {
+      console.error(`[RSVP-ERROR] Error checking existing RSVP: ${JSON.stringify(existingError)}`)
       return { 
         success: false, 
-        error: 'Failed to check existing RSVP' 
+        error: `Failed to check existing RSVP: ${existingError.message}` 
       }
     }
     
-    let rsvp
+    let rsvp = null
     
-    // If RSVP exists, update it, otherwise create a new one
-    if (existingRsvp) {
-      console.log('Updating existing RSVP:', existingRsvp.id)
+    // Update existing RSVP if found
+    if (existingRsvpData) {
+      console.log(`[RSVP-DEBUG] Found existing RSVP: ${existingRsvpData.id}`)
       
-      const { data: updatedRsvp, error: updateError } = await supabase
+      const updateData = {
+        status: 'accepted',
+        updated_at: new Date().toISOString()
+      }
+      
+      console.log(`[RSVP-DEBUG] Updating RSVP with data: ${JSON.stringify(updateData)}`)
+      
+      const { data: updatedRsvp, error: updateError } = await supabaseAdmin
         .from('rsvps')
-        .update({
-          status: 'accepted',
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', existingRsvp.id)
+        .update(updateData)
+        .eq('id', existingRsvpData.id)
         .select()
         .single()
         
       if (updateError) {
-        console.error('Failed to update RSVP record:', updateError)
+        console.error(`[RSVP-ERROR] Failed to update RSVP: ${JSON.stringify(updateError)}`)
         return { 
           success: false, 
-          error: 'Failed to update RSVP record' 
+          error: `Failed to update RSVP: ${updateError.message}` 
         }
       }
       
+      console.log(`[RSVP-DEBUG] Successfully updated RSVP`)
       rsvp = updatedRsvp
     } else {
-      console.log('Creating new RSVP for invitation:', invitation.id)
-      
       // Create new RSVP
-      const { data: newRsvp, error: createError } = await supabase
+      console.log(`[RSVP-DEBUG] No existing RSVP found, creating new one`)
+      
+      // Generate a proper UUID for the RSVP
+      const rsvpId = uuidv4()
+      
+      const rsvpData = {
+        id: rsvpId,
+        invitation_id: invitation.id,
+        event_id: eventId,
+        name: invitation.name || '',
+        email: invitation.email || '',
+        status: 'accepted',
+        guest_count: invitation.guest_count || 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+      
+      console.log(`[RSVP-DEBUG] Creating RSVP with data: ${JSON.stringify(rsvpData)}`)
+      
+      const { data: newRsvp, error: insertError } = await supabaseAdmin
         .from('rsvps')
-        .insert({
-          invitation_id: invitation.id,
-          status: 'accepted',
-          guest_count: 1,
-          guest_name: invitation.name || null,
-          guest_email: invitation.email || null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
+        .insert(rsvpData)
         .select()
         .single()
         
-      if (createError) {
-        console.error('Failed to create RSVP record:', createError)
+      if (insertError) {
+        console.error(`[RSVP-ERROR] Error creating RSVP: ${JSON.stringify(insertError)}`)
         return { 
           success: false, 
-          error: 'Failed to create RSVP record' 
+          error: `Failed to create RSVP: ${insertError.message}` 
         }
       }
       
+      console.log(`[RSVP-DEBUG] Successfully created RSVP: ${newRsvp.id}`)
       rsvp = newRsvp
     }
     
-    // Update invitation status
-    const { error: invitationUpdateError } = await supabase
+    // Update invitation status to confirmed
+    console.log(`[RSVP-DEBUG] Updating invitation status to confirmed`)
+    const { error: invitationUpdateError } = await supabaseAdmin
       .from('invitations')
       .update({ 
-        status: 'used',
-        rsvp_status: 'accepted',
-        rsvp_date: new Date().toISOString(),
+        status: 'confirmed',
         updated_at: new Date().toISOString()
       })
       .eq('id', invitation.id)
       
     if (invitationUpdateError) {
-      console.error('Failed to update invitation status:', invitationUpdateError)
-      // Not returning error here as the RSVP was created successfully
+      console.error(`[RSVP-ERROR] Error updating invitation status: ${JSON.stringify(invitationUpdateError)}`)
+      // We'll continue even if this fails, as the RSVP is already created/updated
+    } else {
+      console.log(`[RSVP-DEBUG] Successfully updated invitation status`)
     }
     
-    // Track analytics event
-    await supabase
-      .from('analytics_events')
-      .insert({
-        type: 'rsvp_response',
-        invitation_id: invitation.id,
+    // Create an analytics event for the RSVP
+    try {
+      console.log(`[RSVP-DEBUG] Creating analytics event for RSVP`)
+      
+      const analyticsData = {
+        event_type: 'rsvp_confirmed',
         event_id: eventId,
-        properties: {
-          status: 'accepted',
-          timestamp: new Date().toISOString(),
-          source: 'web',
-          guestCount: 1
-        }
-      })
+        user_id: null,
+        invitation_id: invitation.id,
+        rsvp_id: rsvp.id,
+        metadata: {
+          rsvp_status: 'accepted',
+          guest_count: rsvp.guest_count
+        },
+        created_at: new Date().toISOString()
+      }
+      
+      const { error: analyticsError } = await supabaseAdmin
+        .from('analytics_events')
+        .insert(analyticsData)
+        
+      if (analyticsError) {
+        console.error(`[RSVP-ERROR] Error creating analytics event: ${JSON.stringify(analyticsError)}`)
+      } else {
+        console.log(`[RSVP-DEBUG] Successfully created analytics event`)
+      }
+    } catch (analyticsError) {
+      console.error(`[RSVP-ERROR] Unhandled error creating analytics event: ${analyticsError}`)
+      // Continue even if analytics fails
+    }
     
+    console.log(`[RSVP-DEBUG] RSVP confirmation process completed successfully`)
     return { success: true, rsvp }
   } catch (error) {
-    console.error('Error in createOrUpdateRsvp:', error)
+    console.error(`[RSVP-ERROR] Unhandled error in createOrUpdateRsvp: ${error}`)
     return { 
       success: false, 
-      error: 'Failed to process RSVP' 
+      error: `An unexpected error occurred: ${error instanceof Error ? error.message : String(error)}` 
     }
   }
 }
 
-// Function to get the most recent invitation token for an event
-async function getInvitationToken(eventId: string) {
+// Helper function to extract invitation token from referer or cookies
+async function getInvitationToken(eventId: string): Promise<string | null> {
   try {
-    const supabase = createServerComponentClient({ cookies })
+    let token: string | null = null;
     
-    // Get the invitation directly using the event ID
-    const { data: invitationData, error: invitationError } = await supabase
-      .from('invitations')
-      .select('id, token, event_id')
-      .eq('event_id', eventId)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
-      
-    if (invitationError || !invitationData) {
-      console.error('Error fetching invitation data:', invitationError)
-      return null
+    // First try to get token from referer URL
+    const requestHeaders = headers();
+    const referer = requestHeaders.get('referer') || '';
+    console.log(`[RSVP-DEBUG] Referer: ${referer}`);
+    
+    if (referer) {
+      try {
+        const refererUrl = new URL(referer);
+        token = refererUrl.searchParams.get('token');
+        console.log(`[RSVP-DEBUG] Token from referer URL: ${token || 'not found'}`);
+      } catch (error) {
+        console.error(`[RSVP-ERROR] Error parsing referer URL: ${error}`);
+      }
     }
-
-    return invitationData.token
+    
+    // If no token in referer, try cookies
+    if (!token) {
+      const nextUrl = cookies().get('next-url')?.value;
+      
+      if (nextUrl) {
+        try {
+          const url = new URL(nextUrl, 'https://example.com');
+          token = url.searchParams.get('token');
+          console.log(`[RSVP-DEBUG] Token from cookies: ${token || 'not found'}`);
+        } catch (error) {
+          console.error(`[RSVP-ERROR] Error parsing URL from cookies: ${error}`);
+        }
+      }
+    }
+    
+    // If still no token, try to get from cookies directly
+    if (!token) {
+      token = cookies().get('invitation_token')?.value || null;
+      console.log(`[RSVP-DEBUG] Token from direct cookie: ${token || 'not found'}`);
+    }
+    
+    return token;
   } catch (error) {
-    console.error('Error in getInvitationToken:', error)
-    return null
+    console.error(`[RSVP-ERROR] Error getting invitation token: ${error}`);
+    return null;
   }
 }
 
-export default async function ConfirmedPage({ params }: { params: { slug: string } }) {
-  // Get the current token from the URL
-  const urlParams = new URL(cookies().get('next-url')?.value || '', 'https://example.com').searchParams
-  const token = urlParams.get('token')
+// Create a ConfirmedLayout component here since it doesn't exist yet
+function ConfirmedLayout({ 
+  event, 
+  invitation,
+  rsvp 
+}: { 
+  event: any;
+  invitation: any;
+  rsvp: any;
+}) {
+  // Prepare query params for profile and camera setup
+  const queryParams = new URLSearchParams();
+  queryParams.set('token', invitation.token);
   
-  // If we have a token, create/update the RSVP
-  let rsvpResult: { success: boolean; error?: string | null; rsvp?: any }
-  
-  if (token) {
-    rsvpResult = await createOrUpdateRsvp(params.slug, token)
-    console.log('RSVP result:', rsvpResult)
-  } else {
-    console.log('No token found in URL, skipping RSVP creation')
-    rsvpResult = { success: false, error: 'No token found in URL' }
-  }
-  
-  // Get the invitation token for the next steps (profile, camera)
-  // If we have a token from URL, use that, otherwise try to get one for the event
-  const invitationToken = token || await getInvitationToken(params.slug)
-  
-  // Prepare query params for the profile and camera setup pages
-  const profileQueryParams = new URLSearchParams()
-  if (invitationToken) {
-    profileQueryParams.set('token', invitationToken)
-  } else {
-    profileQueryParams.set('event', params.slug)
-  }
-  
-  const profileUrl = `/guest/profile?${profileQueryParams}`
-  const cameraUrl = `/guest/camera-setup?${profileQueryParams}`
+  const profileUrl = `/guest/profile?${queryParams}`;
+  const cameraUrl = `/guest/camera-setup?${queryParams}`;
   
   return (
     <div className="container max-w-lg py-10">
@@ -258,7 +302,7 @@ export default async function ConfirmedPage({ params }: { params: { slug: string
         
         <div className="space-y-4">
           <Link 
-            href={`/event/${params.slug}`}
+            href={`/event/${event.slug}`}
             className="flex items-center bg-black hover:bg-gray-900 text-white px-4 py-3 rounded-md w-full"
           >
             <Calendar className="mr-2 h-5 w-5" />
@@ -266,7 +310,7 @@ export default async function ConfirmedPage({ params }: { params: { slug: string
           </Link>
           
           <Link 
-            href={`/event/${params.slug}/share`}
+            href={`/event/${event.slug}/share`}
             className="flex items-center bg-black hover:bg-gray-900 text-white px-4 py-3 rounded-md w-full"
           >
             <Share className="mr-2 h-5 w-5" />
@@ -275,5 +319,81 @@ export default async function ConfirmedPage({ params }: { params: { slug: string
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}
+
+export default async function ConfirmedPage({
+  params
+}: {
+  params: { slug: string }
+}) {
+  const { slug } = params
+  const supabase = createClient()
+  const supabaseAdmin = createClient()
+  
+  console.log(`[RSVP-DEBUG] Loading confirmation page for event: ${slug}`)
+  
+  try {
+    // Get the event by slug
+    const { data: event, error: eventError } = await supabase
+      .from('events')
+      .select('*')
+      .eq('slug', slug)
+      .single()
+      
+    if (eventError || !event) {
+      console.error(`[RSVP-ERROR] Error fetching event: ${JSON.stringify(eventError)}`)
+      redirect(`/event/${slug}/not-found`)
+    }
+    
+    console.log(`[RSVP-DEBUG] Found event: ${event.id}`)
+    
+    // Get invitation token from referer or cookie
+    const token = await getInvitationToken(event.id)
+    
+    if (!token) {
+      console.error(`[RSVP-ERROR] No invitation token found`)
+      redirect(`/event/${slug}/not-found`)
+    }
+    
+    console.log(`[RSVP-DEBUG] Using invitation token: ${token}`)
+    
+    // Get the invitation by token
+    const { data: invitation, error: invitationError } = await supabase
+      .from('invitations')
+      .select('*')
+      .eq('token', token)
+      .single()
+      
+    if (invitationError || !invitation) {
+      console.error(`[RSVP-ERROR] Error fetching invitation: ${JSON.stringify(invitationError)}`)
+      redirect(`/event/${slug}/not-found`)
+    }
+    
+    console.log(`[RSVP-DEBUG] Found invitation: ${invitation.id}`)
+    
+    // Create or update RSVP record
+    const { success, rsvp, error: rsvpError } = await createOrUpdateRsvp(
+      supabaseAdmin,
+      invitation,
+      event.id
+    )
+    
+    if (!success || !rsvp) {
+      console.error(`[RSVP-ERROR] Failed to create/update RSVP: ${rsvpError || 'Unknown error'}`)
+      redirect(`/event/${slug}/error?message=Failed to confirm RSVP`)
+    }
+    
+    // Return the confirmation page
+    return (
+      <ConfirmedLayout 
+        event={event} 
+        invitation={invitation} 
+        rsvp={rsvp} 
+      />
+    )
+  } catch (error) {
+    console.error(`[RSVP-ERROR] Unhandled error in confirmation page: ${error}`)
+    redirect(`/event/${slug}/error?message=An unexpected error occurred`)
+  }
+}
