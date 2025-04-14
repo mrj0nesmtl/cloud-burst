@@ -68,7 +68,7 @@ export default function Home() {
       </section>
 
       {/* Why Choose Cloud Burst Section */}
-      <section className="section bg-background py-16">
+      <section className="section bg-background py-10">
         <div className="container mx-auto px-4">
           <h2 className="section-title text-center mb-6">How memories will be captured.</h2>
           <p className="text-center max-w-3xl mx-auto mb-12 text-muted-foreground">
@@ -123,8 +123,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Call to Action Section */}
-      <section className="container mx-auto px-4 mb-24">
+      {/* Call to Action Section - No bottom border */}
+      <section className="container mx-auto px-4 flex-grow">
         <div className="cta-section bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 space-y-6 border border-primary/20 shadow-lg">
           <h2 className="text-3xl font-bold text-primary text-center">Register for Cloud Burst Beta</h2>
           <p className="text-lg text-center text-foreground">
@@ -146,13 +146,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-background border-t border-border mt-auto">
-        <div className="container mx-auto py-16 px-4">
-          {/* Footer content */}
-        </div>
-      </footer>
     </div>
   )
 }
