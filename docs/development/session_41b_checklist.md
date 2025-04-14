@@ -9,7 +9,7 @@
 - Documentation: Concurrent with development
 - Status: Planned (0%)
 
-## Critical Priorities (MUST FIX)
+## Critical Priorities (MUST REVIEW AND FIX)
 - [ ] **Token Management Service**
   - [ ] Create token management utility at `src/lib/tokens/invitation-token.ts`
   - [ ] Implement token storage in localStorage/cookies
