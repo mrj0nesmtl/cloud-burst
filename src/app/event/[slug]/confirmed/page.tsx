@@ -144,13 +144,13 @@ async function createOrUpdateRsvp(
       
       const analyticsData = {
         type: 'rsvp_confirmed',
-        event_reference: eventId,
-        user_reference: null,
         invitation_id: invitation.id,
         properties: {
+          event_id: eventId,
           rsvp_id: rsvp.id,
           rsvp_status: 'accepted',
-          guest_count: rsvp.guest_count
+          guest_count: rsvp.guest_count,
+          timestamp: new Date().toISOString()
         },
         created_at: new Date().toISOString()
       }
@@ -180,12 +180,19 @@ async function createOrUpdateRsvp(
   }
 }
 
-// Helper function to extract invitation token from referer or cookies
-async function getInvitationToken(eventId: string): Promise<string | null> {
+// Helper function to extract invitation token from referer, cookies, or URL params
+async function getInvitationToken(eventId: string, searchParams?: { [key: string]: string | string[] | undefined }): Promise<string | null> {
   try {
     let token: string | null = null;
     
-    // First try to get token from referer URL
+    // First try to get token from searchParams (passed from the component)
+    if (searchParams && searchParams.token) {
+      token = searchParams.token as string;
+      console.log(`[RSVP-DEBUG] Token from searchParams: ${token}`);
+      return token;
+    }
+    
+    // Then try to get token from referer URL
     const requestHeaders = headers();
     const referer = requestHeaders.get('referer') || '';
     console.log(`[RSVP-DEBUG] Referer: ${referer}`);
@@ -201,21 +208,6 @@ async function getInvitationToken(eventId: string): Promise<string | null> {
     }
     
     // If no token in referer, try cookies
-    if (!token) {
-      const nextUrl = cookies().get('next-url')?.value;
-      
-      if (nextUrl) {
-        try {
-          const url = new URL(nextUrl, 'https://example.com');
-          token = url.searchParams.get('token');
-          console.log(`[RSVP-DEBUG] Token from cookies: ${token || 'not found'}`);
-        } catch (error) {
-          console.error(`[RSVP-ERROR] Error parsing URL from cookies: ${error}`);
-        }
-      }
-    }
-    
-    // If still no token, try to get from cookies directly
     if (!token) {
       token = cookies().get('invitation_token')?.value || null;
       console.log(`[RSVP-DEBUG] Token from direct cookie: ${token || 'not found'}`);
@@ -323,11 +315,14 @@ function ConfirmedLayout({
 }
 
 export default async function ConfirmedPage({
-  params
+  params,
+  searchParams
 }: {
-  params: { slug: string }
+  params: { slug: string },
+  searchParams: { [key: string]: string | string[] | undefined }
 }) {
   console.log(`[RSVP-DEBUG] Loading confirmation page for event: ${params.slug}`);
+  console.log(`[RSVP-DEBUG] Search params:`, searchParams);
   
   // Create Supabase admin client
   const supabaseAdmin = createClient();
@@ -351,7 +346,7 @@ export default async function ConfirmedPage({
     console.log(`[RSVP-DEBUG] Successfully retrieved event: ${event.name}`);
     
     // Get the invitation token
-    const token = await getInvitationToken(eventId);
+    const token = await getInvitationToken(eventId, searchParams);
     
     if (!token) {
       console.error(`[RSVP-ERROR] No invitation token found`);

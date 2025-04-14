@@ -189,7 +189,6 @@ export async function POST(req: NextRequest) {
           .from('profiles')
           .insert({
             id: uuidv4(), // Generate proper UUID for profile ID
-            user_id: uuidv4(), // Generate a placeholder user_id (required field)
             email: email,
             full_name: name,
             role: 'guest',
@@ -241,10 +240,10 @@ export async function POST(req: NextRequest) {
         const { error: analyticsError } = await supabaseAdmin
           .from('analytics_events')
           .insert({
-            type: 'rsvp_response',
+            type: 'rsvp_submission',
             invitation_id: invitation_id,
-            event_reference: event_id,
             properties: {
+              event_id: event_id,
               status: dbRsvpStatus,
               timestamp: new Date().toISOString(),
               source: 'web_form',
@@ -271,7 +270,7 @@ export async function POST(req: NextRequest) {
       }
       
       // 4. Create event attendee record if accepted with admin client
-      if (dbRsvpStatus === 'yes' || dbRsvpStatus === 'accepted') {
+      if (dbRsvpStatus === 'accepted') {
         console.log(`Creating event attendee record`);
         
         // Create new attendee record
@@ -283,9 +282,9 @@ export async function POST(req: NextRequest) {
             event_id: event_id,
             email: email,
             name: name,
-            status: 'confirmed',
+            status: 'registered', // Use a valid status from the constraint
             access_code: nanoid(8),
-            user_id: profileId || null,
+            invitation_id: invitation_id,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           });
@@ -312,9 +311,9 @@ export async function POST(req: NextRequest) {
         // Continue despite analytics error
       }
       
-      // Return success response
-      console.log('RSVP submission completed successfully');
-      return NextResponse.json({
+      // After successful processing, before returning the response
+      // Set token as cookie for the confirmation page fallback
+      const response = NextResponse.json({
         success: true,
         message: status === 'accepted' 
           ? 'Thank you for accepting the invitation!'
@@ -323,6 +322,18 @@ export async function POST(req: NextRequest) {
         event_id: event_id,
         token: token
       });
+      
+      // Set token cookie for fallback
+      response.cookies.set({
+        name: 'invitation_token',
+        value: token,
+        maxAge: 3600, // 1 hour
+        path: '/',
+        sameSite: 'lax'
+      });
+      
+      console.log('RSVP submission completed successfully, token cookie set');
+      return response;
       
     } catch (error) {
       console.error('Error processing RSVP:', error);
