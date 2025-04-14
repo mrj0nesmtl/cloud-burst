@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-13T18:26:09.040Z
+Generated: 2025-04-14T15:27:39.886Z
 
 ## Overview
 
@@ -14,6 +14,14 @@ Generated: 2025-04-13T18:26:09.040Z
 │   ├── application_design_document.md
 │   ├── security.md
 │   └── system_architecture_flowchart.md
+├── assets/
+│   ├── README.md
+│   ├── architecture-diagram.md
+│   ├── architecture-diagram.png.placeholder
+│   ├── project-timeline.md
+│   ├── project-timeline.png.placeholder
+│   ├── user-flow-diagram.md
+│   └── user-flow-diagram.png.placeholder
 ├── deployment/
 │   ├── deployment_fixes.md
 │   ├── deployment_guides.md
@@ -134,6 +142,11 @@ Generated: 2025-04-13T18:26:09.040Z
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
 │   ├── session_41_checklist.md
+│   ├── session_41_kickoff.md
+│   ├── session_41_plan.md
+│   ├── session_41b_chat_summary.md
+│   ├── session_41b_checklist.md
+│   ├── session_41b_kickoff.md
 │   └── version-sync.plan
 ├── features/
 │   ├── gallery_implementation.md
@@ -181,7 +194,6 @@ Generated: 2025-04-13T18:26:09.040Z
 ├── rbac/
 │   └── role_based_access_control.md
 ├── session_notes/
-│   └── session_40_checklist.md
 ├── user-flows/
 │   ├── RSVP_IMPLEMENTATION_GUIDE.md
 │   ├── create_test_users_ui.md
@@ -197,12 +209,12 @@ Generated: 2025-04-13T18:26:09.040Z
 ├── README.md
 └── roadmap.md
 
-12 directories, 176 files
+13 directories, 187 files
 
 ```
 
 ## File Type Breakdown
-- md: 171 file(s)
+- md: 179 file(s)
 
 ## Ignored Patterns
 - node_modules

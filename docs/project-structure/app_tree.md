@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-04-13T18:26:10.592Z
+Generated: 2025-04-14T15:27:41.470Z
 
 ## Overview
 
-This directory contains 110 route(s).
+This directory contains 111 route(s).
 
 
 ## Directory Tree
@@ -121,6 +121,8 @@ This directory contains 110 route(s).
 │   ├── test-layout/
 │   │   └── page.tsx
 │   └── layout.tsx
+├── confirm/
+│   └── page.tsx
 ├── dashboard/
 │   ├── analytics/
 │   │   └── page.tsx
@@ -421,13 +423,13 @@ This directory contains 110 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-180 directories, 232 files
+181 directories, 233 files
 
 ```
 
 ## File Type Breakdown
 - ts: 38 file(s)
-- tsx: 183 file(s)
+- tsx: 184 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-13T18:26:08.713Z
+Generated: 2025-04-14T15:27:39.634Z
 
 ## Overview
 
@@ -138,6 +138,8 @@ Generated: 2025-04-13T18:26:08.713Z
 │   │   ├── test-layout/
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
+│   ├── confirm/
+│   │   └── page.tsx
 │   ├── dashboard/
 │   │   ├── analytics/
 │   │   │   └── page.tsx
@@ -714,6 +716,8 @@ Generated: 2025-04-13T18:26:08.713Z
 │   │   ├── test-utils.ts
 │   │   ├── verify-schema.html
 │   │   └── verify-schema.js
+│   ├── tokens/
+│   │   └── invitation-token.ts
 │   ├── utils/
 │   │   ├── codeGenerator.ts
 │   │   └── qr-utils.ts
@@ -764,13 +768,13 @@ Generated: 2025-04-13T18:26:08.713Z
 ├── middleware.test.ts
 └── middleware.ts
 
-229 directories, 526 files
+231 directories, 528 files
 
 ```
 
 ## File Type Breakdown
-- ts: 126 file(s)
-- tsx: 381 file(s)
+- ts: 127 file(s)
+- tsx: 382 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)
