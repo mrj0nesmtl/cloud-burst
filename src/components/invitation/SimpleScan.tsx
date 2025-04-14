@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import jsQR from 'jsqr';
+import { invitationTokenService } from '@/lib/tokens/invitation-token';
 
 interface SimpleScanProps {
   onScanSuccess?: (result: string) => void;
@@ -41,6 +42,28 @@ export default function SimpleScan({ onScanSuccess, autoRedirect = true }: Simpl
     const audio = new Audio('/audio/success-beep.mp3');
     audio.play().catch(err => console.warn('Could not play success sound:', err));
     
+    // Extract token from QR code
+    // QR might contain a full URL or just the token
+    let token = text;
+    
+    // If QR contains a URL, extract the token parameter
+    if (text.includes('?') && text.includes('token=')) {
+      try {
+        const url = new URL(text);
+        const params = new URLSearchParams(url.search);
+        const extractedToken = params.get('token');
+        if (extractedToken) {
+          token = extractedToken;
+        }
+      } catch (e) {
+        // Not a valid URL, just use the raw value
+        console.log('QR code is not a valid URL, using raw value as token');
+      }
+    }
+    
+    // Store token immediately for future use
+    invitationTokenService.storeToken(token);
+    
     // Show success toast
     toast({
       title: "QR Code Scanned",
@@ -50,13 +73,14 @@ export default function SimpleScan({ onScanSuccess, autoRedirect = true }: Simpl
     
     // Call callback if provided
     if (onScanSuccess) {
-      onScanSuccess(text);
+      onScanSuccess(token);
     }
     
     // Auto-redirect if enabled
     if (autoRedirect) {
       setTimeout(() => {
-        router.push(`/invitation/${text}`);
+        // Use token parameter for proper context in next page
+        router.push(`/guest/profile?token=${encodeURIComponent(token)}`);
       }, 1000);
     }
   };

@@ -3,6 +3,35 @@ import { cookies } from 'next/headers';
 import { validateInvitationToken } from '../invitations';
 
 /**
+ * Token data interface containing validated invitation information
+ */
+export interface TokenData {
+  invitationId: string;
+  eventId: string;
+  guestEmail: string;
+  status: string;
+}
+
+/**
+ * Error information for token-related issues
+ */
+export interface TokenError {
+  type: 'missing_token' | 'invalid_token' | 'expired_token' | 'revoked_token' | 'validation_error';
+  message: string;
+  userMessage: string;
+}
+
+/**
+ * Result of token retrieval and validation
+ */
+export interface TokenResult {
+  success: boolean;
+  token?: string;
+  data?: TokenData;
+  error?: TokenError;
+}
+
+/**
  * Service for managing invitation tokens throughout the user journey
  */
 export const invitationTokenService = {
@@ -125,6 +154,82 @@ export const invitationTokenService = {
       console.error('Error in getEventIdFromToken:', error);
       return null;
     }
+  },
+
+  /**
+   * Get token with comprehensive error handling
+   * @param searchParams - Optional search params from useSearchParams
+   * @returns A promise resolving to a TokenResult object
+   */
+  getTokenWithErrorHandling: async (searchParams?: URLSearchParams): Promise<TokenResult> => {
+    // Try to get token from available sources
+    const token = invitationTokenService.getToken(searchParams);
+    
+    if (!token) {
+      return { 
+        success: false, 
+        error: {
+          type: 'missing_token',
+          message: 'No invitation token found',
+          userMessage: 'Your invitation link appears to be incomplete. Please use the complete link from your invitation email.'
+        }
+      };
+    }
+    
+    // Validate token
+    const validation = await invitationTokenService.validateToken(token);
+    
+    if (!validation.valid) {
+      let errorType: TokenError['type'] = 'invalid_token';
+      let userMessage = 'Your invitation link is not valid. Please check your email for the correct link or contact the event organizer.';
+      
+      // Refine error type based on validation result
+      if (validation.expired) {
+        errorType = 'expired_token';
+        userMessage = 'Your invitation has expired. Please contact the event organizer for assistance.';
+      } else if (validation.invitation?.status === 'revoked') {
+        errorType = 'revoked_token';
+        userMessage = 'This invitation has been revoked. Please contact the event organizer for assistance.';
+      }
+      
+      return { 
+        success: false, 
+        error: {
+          type: errorType,
+          message: validation.error || 'Invalid token',
+          userMessage
+        }
+      };
+    }
+    
+    // Valid token with data
+    if (validation.invitation) {
+      const data: TokenData = {
+        invitationId: validation.invitation.id,
+        eventId: validation.invitation.event.id,
+        guestEmail: validation.invitation.email,
+        status: validation.invitation.status
+      };
+      
+      // Store valid token for future use
+      invitationTokenService.storeToken(token);
+      
+      return {
+        success: true,
+        token,
+        data
+      };
+    }
+    
+    // This should not happen if validation.valid is true, but just in case
+    return {
+      success: false,
+      error: {
+        type: 'validation_error',
+        message: 'Token validation succeeded but invitation data is missing',
+        userMessage: 'We encountered a problem with your invitation. Please try again or contact the event organizer.'
+      }
+    };
   }
 };
 
