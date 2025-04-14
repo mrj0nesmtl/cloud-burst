@@ -98,8 +98,8 @@ export async function POST(req: NextRequest) {
     const mapStatusToDbEnum = (formStatus: string): string => {
       // Map form values to database enum values
       const statusMap: Record<string, string> = {
-        'accepted': 'yes',
-        'declined': 'no',
+        'accepted': 'accepted',
+        'declined': 'declined',
         'pending': 'pending',
         'maybe': 'maybe'
       };
@@ -191,7 +191,7 @@ export async function POST(req: NextRequest) {
             id: uuidv4(), // Generate proper UUID for profile ID
             user_id: uuidv4(), // Generate a placeholder user_id (required field)
             email: email,
-            name: name,
+            full_name: name,
             role: 'guest',
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
@@ -243,7 +243,7 @@ export async function POST(req: NextRequest) {
           .insert({
             type: 'rsvp_response',
             invitation_id: invitation_id,
-            event_id: event_id,
+            event_reference: event_id,
             properties: {
               status: dbRsvpStatus,
               timestamp: new Date().toISOString(),
