@@ -240,8 +240,8 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       // Success message
       toast.success("Your RSVP has been submitted successfully!");
       
-      // Redirect based on response
-      const eventPath = event.slug || event.id;
+      // Redirect based on response - always use event.id, not slug
+      const eventPath = event.id; // Use event ID, not slug
       const redirectUrl = data.status === 'accepted' 
         ? `/event/${eventPath}/confirmed?token=${responseData.token || token}`
         : `/event/${eventPath}/declined`;
@@ -333,7 +333,7 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         toast.success("Your RSVP has been submitted successfully!");
         
         // Direct navigation using window.location
-        const eventPath = event.slug || event.id;
+        const eventPath = event.id;
         const redirectUrl = `/event/${eventPath}/confirmed?token=${token}`;
         
         console.log("Redirecting to:", redirectUrl);

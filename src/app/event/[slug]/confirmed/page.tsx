@@ -92,11 +92,10 @@ async function createOrUpdateRsvp(
       const rsvpData = {
         id: rsvpId,
         invitation_id: invitation.id,
-        event_id: eventId,
-        name: invitation.name || '',
-        email: invitation.email || '',
         status: 'accepted',
         guest_count: invitation.guest_count || 1,
+        guest_name: invitation.name || '',
+        guest_email: invitation.email || '',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }
@@ -127,6 +126,7 @@ async function createOrUpdateRsvp(
       .from('invitations')
       .update({ 
         status: 'confirmed',
+        rsvp_status: 'accepted',
         updated_at: new Date().toISOString()
       })
       .eq('id', invitation.id)
@@ -143,12 +143,12 @@ async function createOrUpdateRsvp(
       console.log(`[RSVP-DEBUG] Creating analytics event for RSVP`)
       
       const analyticsData = {
-        event_type: 'rsvp_confirmed',
-        event_id: eventId,
-        user_id: null,
+        type: 'rsvp_confirmed',
+        event_reference: eventId,
+        user_reference: null,
         invitation_id: invitation.id,
-        rsvp_id: rsvp.id,
-        metadata: {
+        properties: {
+          rsvp_id: rsvp.id,
           rsvp_status: 'accepted',
           guest_count: rsvp.guest_count
         },
@@ -327,73 +327,70 @@ export default async function ConfirmedPage({
 }: {
   params: { slug: string }
 }) {
-  const { slug } = params
-  const supabase = createClient()
-  const supabaseAdmin = createClient()
+  console.log(`[RSVP-DEBUG] Loading confirmation page for event: ${params.slug}`);
   
-  console.log(`[RSVP-DEBUG] Loading confirmation page for event: ${slug}`)
+  // Create Supabase admin client
+  const supabaseAdmin = createClient();
   
   try {
-    // Get the event by slug
-    const { data: event, error: eventError } = await supabase
+    // Get the event by ID (not by slug)
+    const eventId = params.slug; // The slug is actually the event UUID
+    console.log(`[RSVP-DEBUG] Fetching event: ${eventId}`);
+    
+    const { data: event, error: eventError } = await supabaseAdmin
       .from('events')
       .select('*')
-      .eq('slug', slug)
-      .single()
+      .eq('id', eventId)
+      .single();
       
     if (eventError || !event) {
-      console.error(`[RSVP-ERROR] Error fetching event: ${JSON.stringify(eventError)}`)
-      redirect(`/event/${slug}/not-found`)
+      console.error(`[RSVP-ERROR] Error fetching event: ${JSON.stringify(eventError)}`);
+      redirect('/error?message=Event+not+found');
     }
     
-    console.log(`[RSVP-DEBUG] Found event: ${event.id}`)
+    console.log(`[RSVP-DEBUG] Successfully retrieved event: ${event.name}`);
     
-    // Get invitation token from referer or cookie
-    const token = await getInvitationToken(event.id)
+    // Get the invitation token
+    const token = await getInvitationToken(eventId);
     
     if (!token) {
-      console.error(`[RSVP-ERROR] No invitation token found`)
-      redirect(`/event/${slug}/not-found`)
+      console.error(`[RSVP-ERROR] No invitation token found`);
+      redirect(`/error?message=No+invitation+token+found`);
     }
     
-    console.log(`[RSVP-DEBUG] Using invitation token: ${token}`)
-    
-    // Get the invitation by token
-    const { data: invitation, error: invitationError } = await supabase
+    // Get the invitation
+    console.log(`[RSVP-DEBUG] Fetching invitation with token: ${token}`);
+    const { data: invitation, error: invitationError } = await supabaseAdmin
       .from('invitations')
       .select('*')
       .eq('token', token)
-      .single()
+      .single();
       
     if (invitationError || !invitation) {
-      console.error(`[RSVP-ERROR] Error fetching invitation: ${JSON.stringify(invitationError)}`)
-      redirect(`/event/${slug}/not-found`)
+      console.error(`[RSVP-ERROR] Error fetching invitation: ${JSON.stringify(invitationError)}`);
+      redirect(`/error?message=Invalid+invitation+token`);
     }
-    
-    console.log(`[RSVP-DEBUG] Found invitation: ${invitation.id}`)
     
     // Create or update RSVP record
-    const { success, rsvp, error: rsvpError } = await createOrUpdateRsvp(
-      supabaseAdmin,
-      invitation,
-      event.id
-    )
+    const rsvpResult = await createOrUpdateRsvp(supabaseAdmin, invitation, eventId);
     
-    if (!success || !rsvp) {
-      console.error(`[RSVP-ERROR] Failed to create/update RSVP: ${rsvpError || 'Unknown error'}`)
-      redirect(`/event/${slug}/error?message=Failed to confirm RSVP`)
+    if (!rsvpResult.success) {
+      console.error(`[RSVP-ERROR] Error creating/updating RSVP: ${rsvpResult.error}`);
+      // Continue anyway to show the confirmation page
     }
     
-    // Return the confirmation page
+    console.log(`[RSVP-DEBUG] Rendering confirmation page`);
+    
+    // Render the confirmation page
     return (
       <ConfirmedLayout 
         event={event} 
         invitation={invitation} 
-        rsvp={rsvp} 
+        rsvp={rsvpResult.rsvp || null} 
       />
-    )
+    );
   } catch (error) {
-    console.error(`[RSVP-ERROR] Unhandled error in confirmation page: ${error}`)
-    redirect(`/event/${slug}/error?message=An unexpected error occurred`)
+    console.error(`[RSVP-ERROR] Unhandled error in confirmation page: ${error}`);
+    redirect(`/error?message=An+unexpected+error+occurred`);
   }
 }
