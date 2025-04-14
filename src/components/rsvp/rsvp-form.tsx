@@ -241,23 +241,15 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       toast.success("Your RSVP has been submitted successfully!");
       
       // Redirect based on response - always use event.id, not slug
-      const eventPath = event.id; // Use event ID, not slug
-      const redirectUrl = data.status === 'accepted' 
-        ? `/event/${eventPath}/confirmed?token=${responseData.token || token}`
-        : `/event/${eventPath}/declined`;
-        
-      console.log("RSVP redirect path:", redirectUrl);
-        
-      // Try window.location as a fallback if router.push doesn't work
+      const confirmationUrl = `/event/${event.id}/confirmed?token=${token}`;
+      console.log(`Redirecting to confirmation URL: ${confirmationUrl}`);
+      
       try {
-        if (data.status === 'accepted') {
-          router.push(`/event/${eventPath}/confirmed?token=${responseData.token || token}`);
-        } else {
-          router.push(`/event/${eventPath}/declined`);
-        }
+        router.push(confirmationUrl);
       } catch (routerError) {
-        console.error("Router push failed, trying window.location:", routerError);
-        window.location.href = redirectUrl;
+        console.error("Error with router push:", routerError);
+        // Fallback to window.location
+        window.location.href = confirmationUrl;
       }
     } catch (error) {
       console.error("RSVP submission error:", error);
@@ -332,12 +324,17 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         // Show success message
         toast.success("Your RSVP has been submitted successfully!");
         
-        // Direct navigation using window.location
-        const eventPath = event.id;
-        const redirectUrl = `/event/${eventPath}/confirmed?token=${token}`;
+        // Redirect based on response - always use event.id, not slug
+        const confirmationUrl = `/event/${event.id}/confirmed?token=${token}`;
+        console.log(`Redirecting to confirmation URL: ${confirmationUrl}`);
         
-        console.log("Redirecting to:", redirectUrl);
-        window.location.href = redirectUrl;
+        try {
+          router.push(confirmationUrl);
+        } catch (routerError) {
+          console.error("Error with router push:", routerError);
+          // Fallback to window.location
+          window.location.href = confirmationUrl;
+        }
       } catch (error) {
         console.error("Button submission error:", error);
         toast.error(error instanceof Error ? error.message : "Failed to submit RSVP");

@@ -180,12 +180,21 @@ async function createOrUpdateRsvp(
   }
 }
 
-// Helper function to extract invitation token from referer or cookies
+// Helper function to extract invitation token from referer, cookies, or URL params
 async function getInvitationToken(eventId: string): Promise<string | null> {
   try {
     let token: string | null = null;
     
-    // First try to get token from referer URL
+    // First try to get token from URL parameters (searchParams)
+    const urlParams = new URLSearchParams(headers().get('x-url-params') || '');
+    token = urlParams.get('token');
+    
+    if (token) {
+      console.log(`[RSVP-DEBUG] Token from URL params: ${token}`);
+      return token;
+    }
+    
+    // Then try to get token from referer URL
     const requestHeaders = headers();
     const referer = requestHeaders.get('referer') || '';
     console.log(`[RSVP-DEBUG] Referer: ${referer}`);
@@ -201,21 +210,6 @@ async function getInvitationToken(eventId: string): Promise<string | null> {
     }
     
     // If no token in referer, try cookies
-    if (!token) {
-      const nextUrl = cookies().get('next-url')?.value;
-      
-      if (nextUrl) {
-        try {
-          const url = new URL(nextUrl, 'https://example.com');
-          token = url.searchParams.get('token');
-          console.log(`[RSVP-DEBUG] Token from cookies: ${token || 'not found'}`);
-        } catch (error) {
-          console.error(`[RSVP-ERROR] Error parsing URL from cookies: ${error}`);
-        }
-      }
-    }
-    
-    // If still no token, try to get from cookies directly
     if (!token) {
       token = cookies().get('invitation_token')?.value || null;
       console.log(`[RSVP-DEBUG] Token from direct cookie: ${token || 'not found'}`);
