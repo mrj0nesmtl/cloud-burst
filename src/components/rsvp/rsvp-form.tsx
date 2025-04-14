@@ -240,6 +240,10 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       // Success message
       toast.success("Your RSVP has been submitted successfully!");
       
+      // Add this after the API call but before redirect
+      // Set token as a cookie for fallback
+      document.cookie = `invitation_token=${token}; path=/; max-age=3600; SameSite=Lax`;
+
       // Redirect based on response - always use event.id, not slug
       const confirmationUrl = `/event/${event.id}/confirmed?token=${token}`;
       console.log(`Redirecting to confirmation URL: ${confirmationUrl}`);
@@ -324,6 +328,10 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         // Show success message
         toast.success("Your RSVP has been submitted successfully!");
         
+        // Add this after the API call but before redirect
+        // Set token as a cookie for fallback
+        document.cookie = `invitation_token=${token}; path=/; max-age=3600; SameSite=Lax`;
+
         // Redirect based on response - always use event.id, not slug
         const confirmationUrl = `/event/${event.id}/confirmed?token=${token}`;
         console.log(`Redirecting to confirmation URL: ${confirmationUrl}`);
@@ -1041,9 +1049,21 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                           console.log("Alternative submission succeeded:", data);
                           toast.success("RSVP submitted successfully!");
                           
-                          // Navigate with minimal query parameters
-                          const url = `/event/${event.id}/confirmed?token=${token}`;
-                          window.location.href = url;
+                          // Add this after the API call but before redirect
+                          // Set token as a cookie for fallback
+                          document.cookie = `invitation_token=${token}; path=/; max-age=3600; SameSite=Lax`;
+
+                          // Redirect based on response - always use event.id, not slug
+                          const confirmationUrl = `/event/${event.id}/confirmed?token=${token}`;
+                          console.log(`Redirecting to confirmation URL: ${confirmationUrl}`);
+                          
+                          try {
+                            router.push(confirmationUrl);
+                          } catch (routerError) {
+                            console.error("Error with router push:", routerError);
+                            // Fallback to window.location
+                            window.location.href = confirmationUrl;
+                          }
                         })
                         .catch(error => {
                           console.error("Alternative submission error:", error);

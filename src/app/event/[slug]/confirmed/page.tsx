@@ -144,13 +144,13 @@ async function createOrUpdateRsvp(
       
       const analyticsData = {
         type: 'rsvp_confirmed',
-        event_reference: eventId,
-        user_reference: null,
         invitation_id: invitation.id,
         properties: {
+          event_id: eventId,
           rsvp_id: rsvp.id,
           rsvp_status: 'accepted',
-          guest_count: rsvp.guest_count
+          guest_count: rsvp.guest_count,
+          timestamp: new Date().toISOString()
         },
         created_at: new Date().toISOString()
       }
@@ -181,16 +181,14 @@ async function createOrUpdateRsvp(
 }
 
 // Helper function to extract invitation token from referer, cookies, or URL params
-async function getInvitationToken(eventId: string): Promise<string | null> {
+async function getInvitationToken(eventId: string, searchParams?: { [key: string]: string | string[] | undefined }): Promise<string | null> {
   try {
     let token: string | null = null;
     
-    // First try to get token from URL parameters (searchParams)
-    const urlParams = new URLSearchParams(headers().get('x-url-params') || '');
-    token = urlParams.get('token');
-    
-    if (token) {
-      console.log(`[RSVP-DEBUG] Token from URL params: ${token}`);
+    // First try to get token from searchParams (passed from the component)
+    if (searchParams && searchParams.token) {
+      token = searchParams.token as string;
+      console.log(`[RSVP-DEBUG] Token from searchParams: ${token}`);
       return token;
     }
     
@@ -317,11 +315,14 @@ function ConfirmedLayout({
 }
 
 export default async function ConfirmedPage({
-  params
+  params,
+  searchParams
 }: {
-  params: { slug: string }
+  params: { slug: string },
+  searchParams: { [key: string]: string | string[] | undefined }
 }) {
   console.log(`[RSVP-DEBUG] Loading confirmation page for event: ${params.slug}`);
+  console.log(`[RSVP-DEBUG] Search params:`, searchParams);
   
   // Create Supabase admin client
   const supabaseAdmin = createClient();
@@ -345,7 +346,7 @@ export default async function ConfirmedPage({
     console.log(`[RSVP-DEBUG] Successfully retrieved event: ${event.name}`);
     
     // Get the invitation token
-    const token = await getInvitationToken(eventId);
+    const token = await getInvitationToken(eventId, searchParams);
     
     if (!token) {
       console.error(`[RSVP-ERROR] No invitation token found`);

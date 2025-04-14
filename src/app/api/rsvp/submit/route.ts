@@ -311,9 +311,9 @@ export async function POST(req: NextRequest) {
         // Continue despite analytics error
       }
       
-      // Return success response
-      console.log('RSVP submission completed successfully');
-      return NextResponse.json({
+      // After successful processing, before returning the response
+      // Set token as cookie for the confirmation page fallback
+      const response = NextResponse.json({
         success: true,
         message: status === 'accepted' 
           ? 'Thank you for accepting the invitation!'
@@ -322,6 +322,18 @@ export async function POST(req: NextRequest) {
         event_id: event_id,
         token: token
       });
+      
+      // Set token cookie for fallback
+      response.cookies.set({
+        name: 'invitation_token',
+        value: token,
+        maxAge: 3600, // 1 hour
+        path: '/',
+        sameSite: 'lax'
+      });
+      
+      console.log('RSVP submission completed successfully, token cookie set');
+      return response;
       
     } catch (error) {
       console.error('Error processing RSVP:', error);
