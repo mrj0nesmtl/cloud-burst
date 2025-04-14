@@ -29,6 +29,9 @@ graph TD
     R --> S[Update Invitation Status]
     S --> T[Send Confirmation]
     T --> U[Update Dashboard]
+    U --> AA[Profile Setup]
+    AA --> AB[Store Token]
+    AB --> AC[Guest Dashboard]
 !
     E --> V[Scan QR Code]
     V --> W[Camera Access]
@@ -43,6 +46,9 @@ graph TD
     style V fill:#d5e8d4,stroke:#82b366
     style W fill:#d5e8d4,stroke:#82b366
     style X fill:#d5e8d4,stroke:#82b366
+    style AA fill:#d5e8d4,stroke:#82b366
+    style AB fill:#d4f1f9,stroke:#0095b6
+    style AC fill:#d5e8d4,stroke:#82b366
 ```
 
 ## Invitation Creation
@@ -68,6 +74,30 @@ graph TD
 3. Cloud Burst Platform creates user account if not already present
 4. Cloud Burst Platform redirects guest to RSVP form
 
+## Token Management System
+
+Our newly implemented Token Management Service provides a robust system for handling invitation tokens throughout the guest journey:
+
+1. **Multi-source Token Retrieval**
+   - URL parameters (primary source for initial access)
+   - localStorage (for persistent client-side storage)
+   - Cookies (for server component access and redundancy)
+
+2. **Token Storage Strategy**
+   - Redundant storage in both localStorage and cookies
+   - Proper SameSite and path attributes for security
+   - Reasonable expiration time (7 days) for persistent access
+
+3. **Token Validation Process**
+   - Server-side validation against Supabase database
+   - Type-safe error handling with descriptive messages
+   - Fall-back mechanisms for missing or invalid tokens
+
+4. **Cross-page Token Persistence**
+   - Consistent token context across page navigation
+   - Proper state transfer between profile setup and dashboard
+   - Query parameter preservation for critical flows
+
 ## QR Code Scanning Flow
 
 1. Guest navigates to scan page
@@ -85,6 +115,17 @@ graph TD
 2. Cloud Burst Platform validates form data
 3. Cloud Burst Platform creates RSVP record in database
 4. Cloud Burst Platform updates invitation status
+5. System stores invitation token using the Token Management Service
+6. Guest proceeds to profile setup with preserved token context
+
+## Profile Setup & Dashboard Navigation
+
+1. Guest completes profile form with personal details
+2. Token Management Service maintains authentication context
+3. Form submission includes token for proper data association
+4. System navigates to dashboard with token context preserved
+5. Dashboard authenticates using the token service
+6. Personalized content is displayed based on token and profile data
 
 ## QR Scanner Implementation Details
 
@@ -113,6 +154,12 @@ Our QR scanner implementation has been optimized for reliable performance:
    - Efficient video element lifecycle handling
    - Prevention of memory leaks
    - Proper animation frame cancellation
+
+5. **Token Integration**
+   - Direct extraction of tokens from QR codes
+   - Immediate token storage upon successful scan
+   - Seamless handoff to token management service
+   - Proper error handling for invalid QR codes
 
 ## How Our Two Email Systems Work Together
 
@@ -144,3 +191,23 @@ Our QR scanner implementation has been optimized for reliable performance:
    - Email link for direct access
    - QR code scanning for mobile-friendly access
    - Manual invitation code entry as fallback option
+
+6. **Token Management Integration**:
+   - Tokens persist throughout the entire guest journey
+   - Seamless authentication from RSVP to profile to dashboard
+   - Error handling provides clear guidance when tokens are missing
+   - Cross-browser compatibility with multiple storage mechanisms
+
+## Implementation Status
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Invitation Creation | ✅ 100% | Complete with SendGrid integration |
+| Email Templates | ✅ 100% | Fully customizable with dynamic content |
+| QR Code Generation | ✅ 100% | Working with error correction |
+| QR Code Scanner | ✅ 75% | Base implementation working, token integration in progress |
+| RSVP Form | ✅ 100% | Complete with validation and submission |
+| Guest Profile Setup | 🟡 75% | Layout complete, token integration in progress |
+| Token Management | 🟡 15% | Implementation started, core functions defined |
+| Dashboard Navigation | 🟡 40% | Layout complete, authentication integration in progress |
+| End-to-end Testing | 🟡 10% | Test cases defined, implementation beginning |

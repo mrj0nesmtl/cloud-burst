@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Improved layout consistency by leveraging the existing footer in the root layout
   - Fixed spacing between CTA section and footer for better visual hierarchy
   - Ensured proper component import structure for Next.js App Router
+- Fixed TypeScript errors in invitation form toast implementation
+  - Removed incompatible ID property from toast calls
+  - Updated toast usage to align with the API design
+  - Simplified toast notification management
+  - Improved error handling in invitation submission process
 
 ## [0.9.2] - 2025-04-15
 ### Added

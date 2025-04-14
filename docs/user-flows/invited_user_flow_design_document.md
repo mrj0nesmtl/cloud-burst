@@ -1,22 +1,21 @@
 # 🎟️ **Invited Guest - User Flow Design Document**  
 
 ## 📂 *Cloud Burst Platform - User Flows*
-📅 *Last Updated: April 2, 2025*
-📊 *Version: 0.8.5*
+📅 *Last Updated: April 15, 2025*
+📊 *Version: 0.9.3*
 
 ## 📌 Situational Abstract
 Cloud Burst has successfully implemented a comprehensive invitation system with SendGrid integration, secure API endpoints, enhanced form validation, 
 and robust error handling. The platform has also resolved critical Next.js 14 App Router architecture issues in our gallery implementation, ensuring 
 proper client/server component separation and authentication flows. The platform features a complete email template system with high deliverability 
 standards, proper API error recovery, direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching 
-with TanStack Query, and state management with Zustand. The recent architectural improvements in Next.js 14 App Router implementation include proper 
-separation of client and server components, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. 
-This document details the fully implemented invited guest flow, which seamlessly connects event planning and attendance while maintaining our 
-streamlined approach for the April 1, 2025 launch. Cloud Burst has successfully implemented a comprehensive invitation system with SendGrid integration, secure API endpoints, enhanced form validation, and robust error handling. The platform now also features an integrated RSVP dashboard within the event management interface, allowing organizers to track and manage guest responses directly from the event details page. The internal RSVP management system is 100% complete, with tab-based navigation, proper loading states, error handling, and responsive layouts optimized for both desktop and mobile views.
+with TanStack Query, and state management with Zustand. 
 
-The platform continues to feature a complete email template system with high deliverability standards, proper API error recovery, direct camera integration through QR code scanning, support for both photos and videos, optimized data fetching with TanStack Query, and state management with Zustand. The recent architectural improvements in Next.js 14 App Router implementation include proper separation of client and server components, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. 
+The platform now also features an integrated RSVP dashboard within the event management interface, allowing organizers to track and manage guest responses directly from the event details page. The internal RSVP management system is 100% complete, with tab-based navigation, proper loading states, error handling, and responsive layouts optimized for both desktop and mobile views.
 
-This document details the invited guest flow, which is now 50% complete with successful implementation of the organizer-facing RSVP management dashboard and 75% complete QR scanner implementation. We are now focusing on completing the public-facing components, including the invitation landing page, RSVP form with validation, and magic link authentication for guests. The gallery implementation is currently at 40% completion, with our current development focus on implementing the public-facing RSVP system.
+Recent architectural improvements in Next.js 14 App Router implementation include proper separation of client and server components, fixed authentication flows in gallery pages, and corrected type mapping between database and UI components. We have also made important progress with TypeScript fixes in the invitation form toast implementation, resolving build errors and improving notification reliability.
+
+This document details the invited guest flow, which is now 50% complete with successful implementation of the organizer-facing RSVP management dashboard and 75% complete QR scanner implementation. The current development focus is on implementing a robust token management system to create a seamless end-to-end experience from RSVP to profile setup to dashboard, ensuring persistent authentication throughout the guest journey.
 
 ## 🔍 Introduction  
 Cloud Burst is an **event media platform** that enables guests to capture, upload, and share photos and videos at **live events** such as weddings, parties, and corporate gatherings.  
@@ -41,6 +40,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ API endpoint security
 - ✅ Form data validation
 - ✅ Server-side authentication context
+- 🟡 Token management service (15% complete)
 
 ### 🔐 **Guest Authentication** [Implementation Status: 100%]
 - ✅ Secure session handling
@@ -56,6 +56,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ SendGrid email delivery
 - ✅ Form validation feedback
 - ✅ Client/server authentication flow
+- 🟡 Multi-source token retrieval (URL, localStorage, cookies)
 
 ### ⚙️ **User Settings**
 - ✅ Profile customization
@@ -117,6 +118,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Multiple access paths (personalized or event-wide QR)
 - ✅ Secure token validation
 - ✅ Error recovery mechanisms
+- 🟡 Token storage after successful scan (75% complete)
 
 ### 🔑 **Step 4: Authentication & Camera Integration** [Implementation Status: 100%] 
 ✅ **Pre-registered User** – Automatic authentication based on existing account
@@ -138,6 +140,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ API error handling
 - ✅ Server-side authentication context
 - ✅ Client/server component separation
+- 🟡 Token persistence between authentication steps (75% complete)
 
 ### 📷 **Step 5: Media Capture & Upload** [Implementation Status: 40%] 
 ✅ **Camera Integration** provides direct access to device camera
@@ -163,6 +166,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Offline capture with sync
 - ✅ User guidance tooltips
 - 🟡 Media upload system (40% complete)
+- 🟡 Token-based media attribution (40% complete)
 
 ### 🖼️ **Step 6: Live Media Gallery** [Implementation Status: 40%] 
 ✅ A **real-time media wall** updates as guests upload photos and videos
@@ -186,8 +190,42 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Proper 'use client' directives
 - ✅ Server-side data fetching
 - ✅ Type-safe media mapping
+- 🟡 Token-based gallery access (40% complete)
 
-### ⏳ **Step 7: Post-Event Access & Engagement** [Implementation Status: 40%] 
+### 🧩 **Step 7: Profile Setup & Navigation** [Implementation Status: 75%]
+✅ Guests complete their profile after RSVP submission:
+- Filling out personal details
+- Setting preferences
+- Uploading avatar photo
+- `<ProfileForm>` with validation
+- `<AvatarUpload>` for profile photos
+- `<PreferencesForm>` for settings
+- `<Button>` for submission
+- ✅ Layout and form design (100% complete)
+- ✅ Form validation (100% complete)
+- ✅ Avatar upload functionality (100% complete)
+- 🟡 Token preservation during profile setup (75% complete)
+- 🟡 Navigation to dashboard with token context (40% complete)
+- 🟡 Error handling for token-related issues (40% complete)
+
+### 🎛️ **Step 8: Guest Dashboard Access** [Implementation Status: 40%]
+✅ Guests access personalized dashboard with event information:
+- Event details and schedule
+- Gallery access
+- Camera access
+- Settings and preferences
+- `<DashboardLayout>` for overall structure
+- `<EventCard>` for event details
+- `<ActionButtons>` for navigation
+- `<WelcomeMessage>` for personalization
+- ✅ Layout design (100% complete)
+- ✅ Component structure (100% complete)
+- 🟡 Token-based authentication (15% complete)
+- 🟡 Personalized content loading (40% complete)
+- 🟡 Error handling for authentication issues (40% complete)
+- 🟡 Navigation between dashboard sections (75% complete)
+
+### ⏳ **Step 9: Post-Event Access & Engagement** [Implementation Status: 40%] 
 ✅ Event media remains available **for a limited time (1-4 weeks)**
 ✅ **Guests receive a follow-up email** with the gallery link
 ✅ **Anonymous guests** are encouraged to create accounts to claim their media
@@ -200,6 +238,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Media attribution linking
 - ✅ Personalized follow-up emails
 - 🟡 Bulk download options (40% complete)
+- 🟡 Token preservation for post-event access (40% complete)
 
 ---
 
@@ -237,6 +276,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Secure token management
 - ✅ Form validation feedback
 - ✅ Server-side authentication context
+- 🟡 Token persistence across auth steps (75% complete)
 
 ### 📷 **Media Capture Page** [Implementation Status: 40%] 
 ✅ Integrated **camera interface** for photos and videos
@@ -260,6 +300,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Offline capabilities
 - ✅ User guidance tooltips
 - 🟡 Upload system (40% complete)
+- 🟡 Token-based media attribution (40% complete)
 
 ### 🏆 **Live Gallery (Media Wall)** [Implementation Status: 40%] 
 ✅ **Dynamic grid layout** with uploaded photos and videos
@@ -283,6 +324,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Proper 'use client' directives
 - ✅ Server-side data fetching
 - ✅ Type-safe media rendering
+- 🟡 Token-based gallery access (40% complete)
 
 ### 📨 **Post-Event Page** [Implementation Status: 40%] 
 ✅ **Reminder & persistent gallery link**
@@ -296,6 +338,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - 🟡 Bulk download functionality (40% complete)
 - 🟡 Media album creation (10% complete)
 - ✅ Follow-up email notifications
+- 🟡 Token persistence for post-event access (40% complete)
 
 ### 🪪 **RSVP Management (Organizer View)** [Implementation Status: 100%]
 ✅ **RSVP dashboard** within event details page
@@ -313,11 +356,12 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Type-safe data handling
 - ✅ Search and filter capabilities
 - ✅ Proper light/dark mode styling
+- ✅ RSVP analytics tracking
 
-### 📬 **Invitation Landing Page (Guest View)** [Implementation Status: 0%]
-🟡 **Branded event details** with responsive design
-🟡 **RSVP form** with validation and submission
-🟡 **Response confirmation** based on guest decision
+### 📬 **Invitation Landing Page (Guest View)** [Implementation Status: 100%]
+✅ **Branded event details** with responsive design
+✅ **RSVP form** with validation and submission
+✅ **Response confirmation** based on guest decision
 - `<Card>` for event details
 - `<Form>` for RSVP response
 - `<RadioGroup>` for attendance options
@@ -325,12 +369,28 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - `<TextField>` for dietary restrictions
 - `<Button>` for submission
 - `<Alert>` for confirmation
-- 🟡 Mobile-first responsive design
-- 🟡 Form validation and error handling
-- 🟡 Success state with confirmation
-- 🟡 Secure token validation
-- 🟡 Plus-one management
-- 🟡 Dietary preferences handling
+- ✅ Mobile-first responsive design
+- ✅ Form validation and error handling
+- ✅ Success state with confirmation
+- ✅ Secure token validation
+- ✅ Plus-one management
+- ✅ Dietary preferences handling
+- ✅ Token storage upon submission
+- 🟡 Navigation to profile setup (75% complete)
+
+### 👤 **Profile Setup Page** [Implementation Status: 75%]
+✅ **Guest profile creation** after RSVP submission
+✅ **Form with validation** for personal details
+- `<ProfileForm>` with validation
+- `<AvatarUpload>` for profile photos
+- `<PreferencesForm>` for settings
+- `<Button>` for submission
+- ✅ Layout and form design (100% complete)
+- ✅ Form validation (100% complete)
+- ✅ Avatar upload functionality (100% complete)
+- 🟡 Token retrieval with Token Management Service (15% complete)
+- 🟡 Token context preservation during submission (15% complete)
+- 🟡 Error handling for token-related issues (40% complete)
 
 ### 📱 **QR Scanner Page** [Implementation Status: 75%]
 ✅ **Simplified scanner component** with self-contained functionality
@@ -348,8 +408,23 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Smooth animations and transitions
 - ✅ Clear user guidance during scanning
 - ✅ Success indication with redirection
-- 🟡 Integration with invitation token system
-- 🟡 QR code generation verification
+- 🟡 Integration with invitation token system (75% complete)
+- 🟡 QR code generation verification (75% complete)
+- 🟡 Token storage after successful scan (75% complete)
+
+### 🎛️ **Guest Dashboard Page** [Implementation Status: 40%]
+✅ **Personalized dashboard** for guests after profile setup
+✅ **Event information** and access to features
+- `<DashboardLayout>` for overall structure
+- `<EventCard>` for event details
+- `<ActionButtons>` for navigation
+- `<WelcomeMessage>` for personalization
+- ✅ Layout design (100% complete)
+- ✅ Component structure (100% complete)
+- 🟡 Token-based authentication (15% complete)
+- 🟡 Personalized content loading (40% complete)
+- 🟡 Error handling for authentication issues (40% complete)
+- 🟡 Navigation between dashboard sections (75% complete)
 
 ### ⚙️ **Settings Page** [Implementation Status: 100%]
 ✅ Profile management & customization
@@ -391,10 +466,22 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 ✅ **Proper Architecture** – Client/server component separation in Next.js 14
 ✅ **RSVP Management** – Comprehensive dashboard for organizers
 ✅ **Optimized QR Scanning** – Reliable camera integration with feedback
+🟡 **Seamless Authentication** – Persistent token management throughout user journey (15% complete)
 
 ---
 
 ## 🚀 Technical Implementation
+
+### 🔒 Token Management System [Implementation Status: 15%]
+- 🟡 Multi-source token retrieval (URL, localStorage, cookies)
+- 🟡 Redundant storage mechanisms for reliability
+- 🟡 Type-safe validation against Supabase database
+- 🟡 Comprehensive error handling and fallback options
+- 🟡 Cross-page token persistence throughout user journey
+- 🟡 Integration with QR scanner functionality
+- 🟡 Secure token storage with proper expiration
+- 🟡 Token validation in server components
+- 🟡 Clear user feedback for token-related issues
 
 ### 🔒 Security Measures
 - ✅ JWT-based authentication
@@ -413,6 +500,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Server-side authentication context
 - ✅ Client/server component authentication
 - ✅ Camera resource management
+- 🟡 Token persistence across page navigation (15% complete)
 
 ### 🎨 UI/UX Considerations
 - ✅ Mobile-first design
@@ -429,6 +517,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Error state visualization
 - ✅ Proper client/server component rendering
 - ✅ Scanning feedback animations
+- 🟡 Token-related error messages (40% complete)
 
 ### ⚡ Performance Optimizations
 - ✅ Media lazy loading
@@ -446,6 +535,7 @@ Cloud Burst is an **event media platform** that enables guests to capture, uploa
 - ✅ Server-side data fetching
 - ✅ Optimized QR scanning with downsampling
 - ✅ Efficient requestAnimationFrame scheduling
+- 🟡 Token verification caching (0% complete)
 
 ### 📊 Database Relationships
 ```mermaid
@@ -459,6 +549,7 @@ erDiagram
     EVENTS ||--o{ MEDIA : contains
     INVITATIONS ||--o{ EMAIL_LOGS : generates
     INVITATIONS ||--o{ RSVPS : receives
+    RSVPS ||--|| ANALYTICS_EVENTS : triggers
 ```
 
 ### 📱 Development Status
@@ -476,7 +567,10 @@ erDiagram
 - ✅ Post-event engagement - **100% complete**
 - ✅ Client/server architecture - **100% complete**
 - ✅ RSVP system (organizer-facing) - **100% complete**
-- 🟡 RSVP system (guest-facing) - **0% complete**
+- ✅ RSVP system (guest-facing) - **100% complete**
+- ✅ RSVP analytics tracking - **100% complete**
+- 🟡 Token management service - **15% complete**
+- 🟡 Profile to dashboard navigation - **40% complete**
 - 🟡 Media upload - **40% complete**
 - 🟡 Gallery display - **40% complete**
 - 🟡 Album management - **10% complete**
@@ -492,10 +586,12 @@ erDiagram
 | **Authentication Flow** | Guest access, token handling | April 2025 | ✅ Complete |
 | **Next.js Architecture** | Client/server separation | April 2025 | ✅ Complete |
 | **RSVP Management (Organizer)** | Dashboard, tracking | April 2025 | ✅ Complete |
+| **RSVP System (Guest)** | Landing page, form | April 2025 | ✅ Complete |
+| **RSVP Analytics** | Tracking, reporting | April 2025 | ✅ Complete |
 | **QR Scanner & Camera** | Scanning, camera integration | April 2025 | ✅ Complete (75%) |
-| **RSVP System (Guest)** | Landing page, form | April 15, 2025 | 🟡 In Progress (0%) |
+| **Token Management** | Service implementation | April 16, 2025 | 🟡 In Progress (15%) |
+| **Navigation Flow** | Profile to dashboard | April 17, 2025 | 🟡 In Progress (40%) |
 | **Media Capture** | Camera integration, uploads | May 2025 | 🟡 In Progress (40%) |
-| **Post-Event Engagement** | Follow-ups, conversions | May 2025 | ✅ Complete |
 | **Gallery System** | Masonry layout, albums | May 2025 | 🟡 In Progress (40%) |
 
 ---

@@ -19,12 +19,15 @@ import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { formatDate } from '@/lib/utils'
 import { invitationTokenService } from '@/lib/tokens/invitation-token'
+import { useToken } from '@/contexts/token-context'
+import { TokenErrorAlert } from '@/components/guest/token-error'
 
 export default function GuestDashboardPage() {
   const searchParams = useSearchParams()
   
-  // Use token service to get token from multiple sources
-  const invitationToken = invitationTokenService.getToken(searchParams)
+  // Get token from context instead of service directly
+  const { token: invitationToken, tokenData, isLoading: tokenLoading, error: tokenError } = useToken()
+  
   const eventId = searchParams.get('event')
   
   const [loading, setLoading] = useState(true)
@@ -34,21 +37,27 @@ export default function GuestDashboardPage() {
 
   useEffect(() => {
     async function loadEventData() {
+      // Wait for token context to initialize
+      if (tokenLoading) {
+        return;
+      }
+      
       setLoading(true)
       setError(null)
 
       const supabase = createClientComponentClient()
       
       try {
-        // First check if we have a token
-        if (!invitationToken && !eventId) {
-          throw new Error('No invitation token or event ID provided')
+        // Check if we have a token or event ID
+        if (tokenError && !eventId) {
+          // Use the user-friendly message from the token context
+          throw new Error(tokenError.userMessage)
         }
 
         let invitation
         let eventData
         
-        // If we have a token, get the invitation first
+        // If we have a token from context, get the invitation
         if (invitationToken) {
           // Fetch invitation
           const { data: invData, error: invError } = await supabase
@@ -166,13 +175,24 @@ export default function GuestDashboardPage() {
     }
 
     loadEventData()
-  }, [invitationToken, eventId])
+  }, [invitationToken, eventId, tokenLoading, tokenError])
 
   if (loading) {
     return (
       <div className="container max-w-7xl py-10 flex flex-col items-center justify-center min-h-[60vh]">
         <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
         <p className="text-muted-foreground">Loading event information...</p>
+      </div>
+    )
+  }
+
+  if (tokenError && !eventId) {
+    return (
+      <div className="container max-w-4xl py-10">
+        <TokenErrorAlert 
+          error={tokenError} 
+          onRetry={() => window.location.reload()} 
+        />
       </div>
     )
   }

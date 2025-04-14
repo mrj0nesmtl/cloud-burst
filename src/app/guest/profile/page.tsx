@@ -33,6 +33,9 @@ import { toast as sonnerToast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
 import { invitationTokenService } from '@/lib/tokens/invitation-token'
+import { useToken } from '@/contexts/token-context'
+import { TokenErrorAlert } from '@/components/guest/token-error'
+import Link from 'next/link'
 
 const guestProfileSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -53,13 +56,25 @@ interface TorchConstraintSet extends MediaTrackConstraintSet {
   torch?: boolean;
 }
 
+interface ProfileData {
+  name: string;
+  email: string;
+  phone?: string;
+  notes?: string;
+  avatar_url: string | null;
+  invitation_id: string;
+  updated_at: string;
+  created_at?: string;
+}
+
 export default function GuestProfilePage() {
   const router = useRouter()
   const { toast } = useToast()
   const searchParams = useSearchParams()
   
-  // Use token service to get token from multiple sources
-  const invitationToken = invitationTokenService.getToken(searchParams)
+  // Get token from context
+  const { token: invitationToken, tokenData, isLoading: tokenLoading, error: tokenError } = useToken()
+  
   const eventId = searchParams.get('event')
   
   const [isLoading, setIsLoading] = useState(true)
@@ -270,45 +285,49 @@ export default function GuestProfilePage() {
   // Effect to load guest data on component mount
   useEffect(() => {
     const loadGuestData = async () => {
-      setIsLoading(true)
-      setError(null)
+      setIsLoading(true);
+      setError(null);
       
-      // First try to get data using token
+      // Wait for token loading to complete
+      if (tokenLoading) {
+        return;
+      }
+      
+      // Handle token error
+      if (tokenError) {
+        setError(tokenError.userMessage);
+        setIsLoading(false);
+        return;
+      }
+      
+      // If we have a token, use it
       if (invitationToken) {
-        console.log('Loading guest data using token:', invitationToken)
-        const result = await getGuestDataByToken(invitationToken)
-        
+        const result = await getGuestDataByToken(invitationToken);
         if (result) {
-          setIsLoading(false)
-          return
+          // Success
+        } else {
+          // Error already set in getGuestDataByToken
         }
-        
-        // If token failed, don't give up yet - try event ID
-      }
-      
-      // Fall back to event ID if token failed or isn't available
-      if (eventId) {
-        console.log('Falling back to event ID:', eventId)
-        const result = await getGuestDataByEventId(eventId)
-        
+      } 
+      // If we have an event ID but no token, try to get data by event
+      else if (eventId) {
+        const result = await getGuestDataByEventId(eventId);
         if (result) {
-          setIsLoading(false)
-          return
+          // Success
+        } else {
+          // Error already set in getGuestDataByEventId
         }
       }
-      
-      // If we got here, both methods failed
-      if (!invitationToken && !eventId) {
-        setError('No invitation token or event ID provided. Please check your invitation link.')
-      } else {
-        setError('Could not load profile data. Please check your invitation link or try again later.')
+      // No token or event ID
+      else {
+        setError('No invitation information found. Please use the link from your invitation email.');
       }
       
-      setIsLoading(false)
-    }
+      setIsLoading(false);
+    };
     
-    loadGuestData()
-  }, [])
+    loadGuestData();
+  }, [invitationToken, eventId, tokenLoading, tokenError]);
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -524,114 +543,91 @@ export default function GuestProfilePage() {
   const onSubmit = async (values: GuestProfileFormValues) => {
     try {
       setIsSubmitting(true)
+
+      if (!guest?.invitation_id && !invitationToken) {
+        toast({
+          title: 'Error',
+          description: 'Missing invitation information. Please go back to your invitation email.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // Upload avatar if we have a file
+      let avatarUrl = null
+      if (avatarFile) {
+        avatarUrl = await uploadAvatar(avatarFile, guest?.invitation_id)
+        if (!avatarUrl) {
+          toast({
+            title: 'Warning',
+            description: 'Failed to upload avatar, but we\'ll save your other information.',
+            variant: 'default',
+          })
+        }
+      } else if (form.getValues('avatar_url')) {
+        avatarUrl = form.getValues('avatar_url')
+      }
+
+      // Check if profile already exists
+      const isNewProfile = !guest?.id
       
-      // No guest record yet, create one
-      if (!guest?.id) {
-        // We need an invitation_id to create a guest
-        if (!guest?.invitation_id) {
-          toast({
-            title: 'Error',
-            description: 'No invitation found for this profile. Please go back and try again.',
-            variant: 'destructive',
-          })
-          setIsSubmitting(false)
-          return
-        }
-        
-        // Create new guest record
-        const { data: newGuest, error: createError } = await supabase
+      // Prepare profile data
+      const profileData: ProfileData = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        notes: values.notes,
+        avatar_url: avatarUrl || null,
+        invitation_id: guest?.invitation_id || '',
+        updated_at: new Date().toISOString(),
+      }
+      
+      if (isNewProfile) {
+        profileData.created_at = new Date().toISOString()
+      }
+      
+      // Save to Supabase
+      const supabase = createClientComponentClient()
+      
+      let result
+      if (isNewProfile) {
+        result = await supabase
           .from('guests')
-          .insert({
-            invitation_id: guest.invitation_id,
-            name: values.name,
-            email: values.email,
-            phone: values.phone || null,
-            notes: values.notes || null,
-            avatar_url: avatarUrl,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
+          .insert(profileData)
           .select()
-          .single()
-          
-        if (createError) {
-          console.error('Error creating guest:', createError)
-          toast({
-            title: 'Error',
-            description: 'Failed to create your profile. Please try again.',
-            variant: 'destructive',
-          })
-          setIsSubmitting(false)
-          return
-        }
-        
-        setGuest(newGuest)
-        
-        console.log('Created new guest:', newGuest)
       } else {
-        // Update existing guest record
-        const { data: updatedGuest, error: updateError } = await supabase
+        result = await supabase
           .from('guests')
-          .update({
-            name: values.name,
-            email: values.email,
-            phone: values.phone || null,
-            notes: values.notes || null,
-            avatar_url: avatarUrl,
-            updated_at: new Date().toISOString(),
-          })
+          .update(profileData)
           .eq('id', guest.id)
           .select()
-          .single()
-          
-        if (updateError) {
-          console.error('Error updating guest:', updateError)
-          toast({
-            title: 'Error',
-            description: 'Failed to update your profile. Please try again.',
-            variant: 'destructive',
-          })
-          setIsSubmitting(false)
-          return
-        }
-        
-        setGuest(updatedGuest)
-        
-        console.log('Updated guest:', updatedGuest)
       }
       
-      // Generate access token for the guest dashboard
-      const accessToken = generateAccessToken()
-      
-      // Save the access token to localStorage
-      localStorage.setItem('guest_access_token', accessToken)
-      
-      // Ensure the invitation token is preserved
-      if (invitationToken) {
-        invitationTokenService.storeToken(invitationToken)
+      if (result.error) {
+        throw new Error(`Failed to save profile: ${result.error.message}`)
       }
       
       toast({
-        title: 'Success',
-        description: 'Your profile has been saved successfully!',
+        title: 'Profile saved',
+        description: 'Your profile has been successfully saved.',
+        variant: 'default',
       })
       
-      // Navigate to the guest dashboard with the token
-      const dashboardParams = new URLSearchParams()
+      // Navigate to dashboard with token
+      const params = new URLSearchParams()
       if (invitationToken) {
-        dashboardParams.set('token', invitationToken)
-      }
-      if (event?.id) {
-        dashboardParams.set('event', event.id)
+        params.set('token', invitationToken)
+      } else if (eventId) {
+        params.set('event', eventId)
       }
       
-      // Redirect to the dashboard
-      router.push(`/guest/dashboard?${dashboardParams.toString()}`)
-    } catch (error) {
-      console.error('Error saving profile:', error)
+      // Navigate to dashboard
+      router.push(`/guest/dashboard?${params.toString()}`)
+    } catch (err: any) {
+      console.error('Error saving profile:', err)
       toast({
         title: 'Error',
-        description: 'Failed to save your profile. Please try again.',
+        description: err.message || 'Failed to save profile',
         variant: 'destructive',
       })
     } finally {
@@ -639,16 +635,22 @@ export default function GuestProfilePage() {
     }
   }
 
-  // Helper to generate a random access token
-  const generateAccessToken = () => {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-  }
-
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+      <div className="container flex flex-col items-center justify-center min-h-[50vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary mb-4" />
         <p className="text-muted-foreground">Loading your profile...</p>
+      </div>
+    )
+  }
+
+  if (tokenError) {
+    return (
+      <div className="container max-w-4xl py-10">
+        <TokenErrorAlert 
+          error={tokenError} 
+          onRetry={() => window.location.reload()} 
+        />
       </div>
     )
   }
@@ -656,14 +658,23 @@ export default function GuestProfilePage() {
   if (error) {
     return (
       <div className="container max-w-4xl py-10">
-        <Alert variant="destructive" className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
+        <Alert variant="destructive" className="mb-8">
+          <AlertCircle className="h-5 w-5 mr-2" />
+          <AlertTitle>Error loading profile</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
-        <p className="text-muted-foreground text-center mt-4">
-          Please check your invitation link or contact the event organizer.
-        </p>
+
+        <div className="flex justify-center mt-8">
+          <Button
+            onClick={() => window.location.reload()}
+            className="mr-4"
+          >
+            Try Again
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/">Return to Home</Link>
+          </Button>
+        </div>
       </div>
     )
   }
