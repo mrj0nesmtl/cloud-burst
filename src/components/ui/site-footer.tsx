@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function SiteFooter() {
   const [email, setEmail] = useState("");
@@ -35,7 +36,7 @@ export function SiteFooter() {
   };
 
   return (
-    <footer className="w-full bg-background border-t border-border/40">
+    <footer className="w-full bg-background border-t border-border/40 mt-16">
       <div className="mx-auto max-w-[1400px] w-full p-8">
         {/* Using the custom footer-layout class from layout.css to avoid grid conflicts */}
         <div className="footer-layout">
@@ -163,26 +164,34 @@ export function SiteFooter() {
         <div className="border-t border-border/30 pt-6 flex flex-col md:flex-row justify-between items-center">
           {/* Social links */}
           <div className="flex space-x-4 mb-4 md:mb-0">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <span className="text-muted-foreground hover:text-primary cursor-pointer">
+                    <Instagram className="h-5 w-5" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Coming soon</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <span className="text-muted-foreground hover:text-primary cursor-pointer">
+                    <Facebook className="h-5 w-5" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Coming soon</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
             <a 
-              href="https://instagram.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="text-muted-foreground hover:text-primary"
-            >
-              <Instagram className="h-5 w-5" />
-            </a>
-            <a 
-              href="https://facebook.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="text-muted-foreground hover:text-primary"
-            >
-              <Facebook className="h-5 w-5" />
-            </a>
-            <a 
-              href="https://github.com" 
+              href="https://github.com/mrj0nesmtl/cloud-burst/blob/main/README.md" 
               target="_blank" 
               rel="noopener noreferrer"
               aria-label="GitHub"
@@ -191,7 +200,7 @@ export function SiteFooter() {
               <Github className="h-5 w-5" />
             </a>
             <a 
-              href="https://linkedin.com" 
+              href="https://ca.linkedin.com/company/arcana-concept" 
               target="_blank" 
               rel="noopener noreferrer"
               aria-label="LinkedIn"
