@@ -1,6 +1,7 @@
+'use client'
+
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { validateInvitationToken } from '../invitations';
+import { validateInvitationTokenClient } from '../invitations-client';
 
 /**
  * Token data interface containing validated invitation information
@@ -33,6 +34,7 @@ export interface TokenResult {
 
 /**
  * Service for managing invitation tokens throughout the user journey
+ * Client-side only implementation
  */
 export const invitationTokenService = {
   /**
@@ -113,24 +115,7 @@ export const invitationTokenService = {
   },
   
   /**
-   * Validate token against the database
-   * @param token - The invitation token to validate
-   * @returns A promise resolving to an object with validation results
-   */
-  validateToken: async (token: string) => {
-    try {
-      return await validateInvitationToken(token);
-    } catch (error) {
-      console.error('Error validating invitation token:', error);
-      return { 
-        valid: false, 
-        error: 'Failed to validate invitation token' 
-      };
-    }
-  },
-  
-  /**
-   * Get the event ID associated with a token
+   * Get the event ID associated with a token - client-side implementation
    * @param token - The invitation token
    * @returns A promise resolving to the event ID if found, null otherwise
    */
@@ -157,7 +142,24 @@ export const invitationTokenService = {
   },
 
   /**
-   * Get token with comprehensive error handling
+   * Validate token against the database - client-side implementation
+   * @param token - The invitation token to validate
+   * @returns A promise resolving to an object with validation results
+   */
+  validateToken: async (token: string) => {
+    try {
+      return await validateInvitationTokenClient(token);
+    } catch (error) {
+      console.error('Error validating invitation token:', error);
+      return { 
+        valid: false, 
+        error: 'Failed to validate invitation token' 
+      };
+    }
+  },
+
+  /**
+   * Get token with comprehensive error handling - client side implementation
    * @param searchParams - Optional search params from useSearchParams
    * @returns A promise resolving to a TokenResult object
    */
@@ -231,29 +233,4 @@ export const invitationTokenService = {
       }
     };
   }
-};
-
-/**
- * Server-side function to get token from cookies
- * For use in Server Components
- */
-export async function getTokenFromCookies() {
-  const cookieStore = cookies();
-  return cookieStore.get('invitation_token')?.value || null;
-}
-
-/**
- * Server-side function to validate token and get invitation
- * For use in Server Components
- * @param token - The invitation token to validate
- */
-export async function validateTokenServerSide(token: string) {
-  if (!token) return { valid: false, error: 'No token provided' };
-  
-  try {
-    return await validateInvitationToken(token);
-  } catch (error) {
-    console.error('Server-side token validation error:', error);
-    return { valid: false, error: 'Failed to validate token' };
-  }
-} 
+}; 
