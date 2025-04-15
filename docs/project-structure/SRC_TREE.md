@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-14T15:27:39.634Z
+Generated: 2025-04-15T02:46:27.386Z
 
 ## Overview
 
@@ -62,6 +62,9 @@ Generated: 2025-04-14T15:27:39.634Z
 │   │   │   │   └── route.ts
 │   │   │   └── setup/
 │   │   │       └── route.ts
+│   │   ├── diagnose/
+│   │   │   └── schema/
+│   │   │       └── route.ts
 │   │   ├── events/
 │   │   │   ├── qr-code/
 │   │   │   │   └── route.ts
@@ -75,6 +78,8 @@ Generated: 2025-04-14T15:27:39.634Z
 │   │   │   └── check-access/
 │   │   │       └── route.ts
 │   │   ├── guests/
+│   │   │   ├── avatar/
+│   │   │   │   └── route.ts
 │   │   │   └── reserve/
 │   │   │       └── route.ts
 │   │   ├── invitation/
@@ -541,7 +546,8 @@ Generated: 2025-04-14T15:27:39.634Z
 │   │   ├── GuestProfileForm.tsx
 │   │   ├── PhotoUploader.tsx
 │   │   ├── camera-test.tsx
-│   │   └── profile-setup-form.tsx
+│   │   ├── profile-setup-form.tsx
+│   │   └── token-error.tsx
 │   ├── invitation/
 │   │   ├── SimpleScan.tsx
 │   │   ├── qr-scanner.tsx
@@ -660,6 +666,8 @@ Generated: 2025-04-14T15:27:39.634Z
 │   ├── shell.tsx
 │   ├── theme-provider.tsx
 │   └── theme-toggle.tsx
+├── contexts/
+│   └── token-context.tsx
 ├── hooks/
 │   ├── __tests__/
 │   │   └── use-permissions.test.ts
@@ -717,6 +725,7 @@ Generated: 2025-04-14T15:27:39.634Z
 │   │   ├── verify-schema.html
 │   │   └── verify-schema.js
 │   ├── tokens/
+│   │   ├── invitation-token-server.ts
 │   │   └── invitation-token.ts
 │   ├── utils/
 │   │   ├── codeGenerator.ts
@@ -734,6 +743,7 @@ Generated: 2025-04-14T15:27:39.634Z
 │   ├── event-customization.ts
 │   ├── formatters.ts
 │   ├── index.ts
+│   ├── invitations-client.ts
 │   ├── invitations.ts
 │   ├── qr-code.ts
 │   ├── query-helpers.ts
@@ -742,6 +752,7 @@ Generated: 2025-04-14T15:27:39.634Z
 │   ├── user-sessions.ts
 │   └── utils.ts
 ├── scripts/
+│   ├── connect-db.sh*
 │   ├── mobile-menu.js
 │   └── test-invitation.js
 ├── store/
@@ -768,13 +779,13 @@ Generated: 2025-04-14T15:27:39.634Z
 ├── middleware.test.ts
 └── middleware.ts
 
-231 directories, 528 files
+235 directories, 535 files
 
 ```
 
 ## File Type Breakdown
-- ts: 127 file(s)
-- tsx: 382 file(s)
+- ts: 131 file(s)
+- tsx: 384 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

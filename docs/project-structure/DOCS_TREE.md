@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-14T15:27:39.886Z
+Generated: 2025-04-15T02:46:27.942Z
 
 ## Overview
 
@@ -132,6 +132,9 @@ Generated: 2025-04-14T15:27:39.886Z
 │   │   ├── session_40_checklist.md
 │   │   ├── session_40_kickoff_prompt.md
 │   │   ├── session_40_resources.md
+│   │   ├── session_41_checklist.md
+│   │   ├── session_41_kickoff.md
+│   │   ├── session_41_plan.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
 │   │   ├── session_7.md
@@ -141,9 +144,6 @@ Generated: 2025-04-14T15:27:39.886Z
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_41_checklist.md
-│   ├── session_41_kickoff.md
-│   ├── session_41_plan.md
 │   ├── session_41b_chat_summary.md
 │   ├── session_41b_checklist.md
 │   ├── session_41b_kickoff.md
@@ -156,11 +156,13 @@ Generated: 2025-04-14T15:27:39.886Z
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-2024.pdf
 │   ├── deck.md
+│   ├── name_change.md
 │   ├── payment_subscription_design.md
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
 │   ├── roadmap.md
-│   └── statement_of_work.md
+│   ├── statement_of_work.md
+│   └── token_management_system.md
 ├── project-structure/
 │   ├── DOCS_TREE.md
 │   ├── FULL_TREE.md
@@ -202,19 +204,19 @@ Generated: 2025-04-14T15:27:39.886Z
 │   ├── invitation_system_development_plan.md
 │   ├── invitation_system_testing_plan.md
 │   ├── invited_user_flow_design_document.md
+│   ├── media-upload-sequence.md
 │   ├── media_upload_sequence_diagram.md
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
 ├── .DS_Store
-├── README.md
-└── roadmap.md
+└── README.md
 
-13 directories, 187 files
+13 directories, 189 files
 
 ```
 
 ## File Type Breakdown
-- md: 179 file(s)
+- md: 181 file(s)
 
 ## Ignored Patterns
 - node_modules

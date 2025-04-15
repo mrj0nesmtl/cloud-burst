@@ -1,5 +1,5 @@
 # development Directory Structure
-Generated: 2025-04-14T15:27:48.330Z
+Generated: 2025-04-15T02:46:38.276Z
 
 ## Overview
 
@@ -107,6 +107,9 @@ Generated: 2025-04-14T15:27:48.330Z
 │   ├── session_40_checklist.md
 │   ├── session_40_kickoff_prompt.md
 │   ├── session_40_resources.md
+│   ├── session_41_checklist.md
+│   ├── session_41_kickoff.md
+│   ├── session_41_plan.md
 │   ├── session_5.md
 │   ├── session_6.md
 │   ├── session_7.md
@@ -116,9 +119,6 @@ Generated: 2025-04-14T15:27:48.330Z
 ├── STATUS_NOTES.md
 ├── VERSION_CONTROL.md
 ├── contributing.md
-├── session_41_checklist.md
-├── session_41_kickoff.md
-├── session_41_plan.md
 ├── session_41b_chat_summary.md
 ├── session_41b_checklist.md
 ├── session_41b_kickoff.md

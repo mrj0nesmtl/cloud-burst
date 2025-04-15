@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-14T15:27:38.783Z
+Generated: 2025-04-15T02:46:25.531Z
 
 ## Overview
 
@@ -171,6 +171,9 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   │   ├── session_40_checklist.md
 │   │   │   ├── session_40_kickoff_prompt.md
 │   │   │   ├── session_40_resources.md
+│   │   │   ├── session_41_checklist.md
+│   │   │   ├── session_41_kickoff.md
+│   │   │   ├── session_41_plan.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
 │   │   │   ├── session_7.md
@@ -180,9 +183,6 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_41_checklist.md
-│   │   ├── session_41_kickoff.md
-│   │   ├── session_41_plan.md
 │   │   ├── session_41b_chat_summary.md
 │   │   ├── session_41b_checklist.md
 │   │   ├── session_41b_kickoff.md
@@ -195,11 +195,13 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   ├── business_proposition.md
 │   │   ├── ca-en-merchant-fees-2024.pdf
 │   │   ├── deck.md
+│   │   ├── name_change.md
 │   │   ├── payment_subscription_design.md
 │   │   ├── project_budget_overview.md
 │   │   ├── request_for_product_RFP.md
 │   │   ├── roadmap.md
-│   │   └── statement_of_work.md
+│   │   ├── statement_of_work.md
+│   │   └── token_management_system.md
 │   ├── project-structure/
 │   │   ├── DOCS_TREE.md
 │   │   ├── FULL_TREE.md
@@ -241,12 +243,12 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   ├── invitation_system_development_plan.md
 │   │   ├── invitation_system_testing_plan.md
 │   │   ├── invited_user_flow_design_document.md
+│   │   ├── media-upload-sequence.md
 │   │   ├── media_upload_sequence_diagram.md
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
 │   ├── .DS_Store
-│   ├── README.md
-│   └── roadmap.md
+│   └── README.md
 ├── public/
 │   ├── audio/
 │   │   └── success-beep.mp3
@@ -294,6 +296,8 @@ Generated: 2025-04-14T15:27:38.783Z
 │   ├── types/
 │   │   └── tree-cli.d.ts
 │   ├── .DS_Store
+│   ├── add-avatar-column.sh*
+│   ├── add-avatar-column.sql
 │   ├── check-policies.js
 │   ├── deploy-dev.sh*
 │   ├── generate-favicons.sh*
@@ -354,6 +358,9 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   │   │   │   └── route.ts
 │   │   │   │   └── setup/
 │   │   │   │       └── route.ts
+│   │   │   ├── diagnose/
+│   │   │   │   └── schema/
+│   │   │   │       └── route.ts
 │   │   │   ├── events/
 │   │   │   │   ├── qr-code/
 │   │   │   │   │   └── route.ts
@@ -367,6 +374,8 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   │   │   └── check-access/
 │   │   │   │       └── route.ts
 │   │   │   ├── guests/
+│   │   │   │   ├── avatar/
+│   │   │   │   │   └── route.ts
 │   │   │   │   └── reserve/
 │   │   │   │       └── route.ts
 │   │   │   ├── invitation/
@@ -833,7 +842,8 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   │   ├── GuestProfileForm.tsx
 │   │   │   ├── PhotoUploader.tsx
 │   │   │   ├── camera-test.tsx
-│   │   │   └── profile-setup-form.tsx
+│   │   │   ├── profile-setup-form.tsx
+│   │   │   └── token-error.tsx
 │   │   ├── invitation/
 │   │   │   ├── SimpleScan.tsx
 │   │   │   ├── qr-scanner.tsx
@@ -952,6 +962,8 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   ├── shell.tsx
 │   │   ├── theme-provider.tsx
 │   │   └── theme-toggle.tsx
+│   ├── contexts/
+│   │   └── token-context.tsx
 │   ├── hooks/
 │   │   ├── __tests__/
 │   │   │   └── use-permissions.test.ts
@@ -1009,6 +1021,7 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   │   ├── verify-schema.html
 │   │   │   └── verify-schema.js
 │   │   ├── tokens/
+│   │   │   ├── invitation-token-server.ts
 │   │   │   └── invitation-token.ts
 │   │   ├── utils/
 │   │   │   ├── codeGenerator.ts
@@ -1026,6 +1039,7 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   ├── event-customization.ts
 │   │   ├── formatters.ts
 │   │   ├── index.ts
+│   │   ├── invitations-client.ts
 │   │   ├── invitations.ts
 │   │   ├── qr-code.ts
 │   │   ├── query-helpers.ts
@@ -1034,6 +1048,7 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   ├── user-sessions.ts
 │   │   └── utils.ts
 │   ├── scripts/
+│   │   ├── connect-db.sh*
 │   │   ├── mobile-menu.js
 │   │   └── test-invitation.js
 │   ├── store/
@@ -1066,6 +1081,7 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   ├── .DS_Store
 │   │   ├── Album Media Table Structure.csv
 │   │   ├── Display Current RSVP Policies.csv
+│   │   ├── Profile Access Policies.csv
 │   │   ├── RSVPs Table Structure.csv
 │   │   ├── Supabase Snippet Check Invitations with Tokens.csv
 │   │   ├── Supabase Snippet Check Table Existence and Structure.csv
@@ -1077,10 +1093,12 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   ├── View RSVP Table Permissions.csv
 │   │   ├── events_rows.csv
 │   │   ├── galleries_rows.csv
+│   │   ├── guests_rows.csv
 │   │   ├── invitations_rows.csv
 │   │   ├── invitations_table_schema.csv
 │   │   ├── profiles_rows.csv
 │   │   ├── public_tables.csv
+│   │   ├── role_capabilities_rows.csv
 │   │   ├── roles_rows.csv
 │   │   ├── rsvps_rows (1).csv
 │   │   ├── rsvps_rows _NEW.csv
@@ -1111,6 +1129,16 @@ Generated: 2025-04-14T15:27:38.783Z
 │   │   ├── 20250409000001_add_guests_gallery_permissions.sql
 │   │   ├── 20250410000000_create_track_rsvp_submission.sql
 │   │   ├── 20250410000001_add_contractor_roles.sql
+│   │   ├── 20250415_add_avatar_url_and_functions.sql
+│   │   ├── 20250415_add_avatar_url_to_guests.sql
+│   │   ├── 20250416_add_guest_helper_function.sql
+│   │   ├── 20250416_add_invitation_id_to_guests.sql
+│   │   ├── 20250416_add_security_functions.sql
+│   │   ├── 20250416_create_constraints_for_guests.sql
+│   │   ├── 20250416_create_secure_views.sql
+│   │   ├── 20250416_enable_rls_on_gallery_permissions.sql
+│   │   ├── 20250416_enable_rls_on_guests.sql
+│   │   ├── 20250416_enable_rls_on_tables.sql
 │   │   ├── check_events_schema.sql
 │   │   └── setup_launch_partner.sql
 │   ├── templates/
@@ -1133,6 +1161,7 @@ Generated: 2025-04-14T15:27:38.783Z
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
+├── STATUS_NOTES.md
 ├── cloud-burst.code-workspace
 ├── components.json
 ├── eslint.config.mjs
@@ -1143,20 +1172,21 @@ Generated: 2025-04-14T15:27:38.783Z
 ├── package.json
 ├── postcss.config.js
 ├── postcss.config.mjs
+├── supabase.types.ts
 ├── tailwind.config.js
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-271 directories, 867 files
+275 directories, 893 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11784 file(s)
-- tsx: 521 file(s)
-- js: 27976 file(s)
-- json: 2092 file(s)
-- md: 1522 file(s)
+- ts: 11787 file(s)
+- tsx: 523 file(s)
+- js: 27794 file(s)
+- json: 2022 file(s)
+- md: 1525 file(s)
 - css: 26 file(s)
 - yml: 164 file(s)
 
