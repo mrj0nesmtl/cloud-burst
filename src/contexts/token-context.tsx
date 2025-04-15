@@ -1,3 +1,5 @@
+'use client'
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { invitationTokenService, TokenData, TokenError } from '@/lib/tokens/invitation-token';

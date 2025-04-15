@@ -28,6 +28,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated toast usage to align with the API design
   - Simplified toast notification management
   - Improved error handling in invitation submission process
+- Fixed RSVP submission and confirmation flow
+  - Corrected database schema usage in profile creation and analytics events
+  - Updated status mapping to use valid enum values ('accepted' instead of 'yes')
+  - Fixed event attendee record creation with proper status values
+  - Enhanced token handling in confirmation page with multiple fallback mechanisms
+  - Added token persistence via cookies for better reliability
+  - Improved error handling and logging throughout RSVP process
+  - Fixed redirection to confirmation page using event ID and token
+- Fixed client/server component architecture in invitation system
+  - Added 'use client' directive to token context component
+  - Created dedicated client-side invitation validation utilities
+  - Fixed component imports to respect Next.js 14 App Router architecture
+  - Properly separated server-side and client-side code
+  - Resolved build errors related to server component imports
+  - Created a client-side implementation of the invitation token validation logic
+  - Added proper error handling for token validation client-side
 
 ## [0.9.2] - 2025-04-15
 ### Added
