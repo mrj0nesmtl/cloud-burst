@@ -59,9 +59,9 @@ interface TorchConstraintSet extends MediaTrackConstraintSet {
 interface ProfileData {
   name: string;
   email: string;
-  phone?: string;
-  notes?: string;
-  avatar_url: string | null;
+  phone?: string | null;
+  notes?: string | null;
+  avatar_url?: string | null;
   invitation_id: string;
   updated_at: string;
   created_at?: string;
@@ -108,7 +108,6 @@ export default function GuestProfilePage() {
   // Function to get guest data by invitation token
   const getGuestDataByToken = async (token: string) => {
     try {
-      console.log('Getting guest data by token:', token)
       // Get invitation by token
       const { data: invitation, error: invitationError } = await supabase
         .from('invitations')
@@ -122,8 +121,6 @@ export default function GuestProfilePage() {
         setIsLoading(false)
         return null
       }
-      
-      console.log('Found invitation:', invitation)
       
       // Get event details
       const { data: eventData, error: eventError } = await supabase
@@ -166,8 +163,6 @@ export default function GuestProfilePage() {
       const guestPhone = guestData?.phone || rsvpData?.guest_phone || ''
       const guestNotes = guestData?.notes || rsvpData?.guest_notes || ''
       const guestAvatar = guestData?.avatar_url || null
-      
-      console.log('Setting form data:', { name: guestName, email: guestEmail, phone: guestPhone, notes: guestNotes, avatar_url: guestAvatar })
       
       if (guestAvatar) {
         setAvatarUrl(guestAvatar)
@@ -257,8 +252,6 @@ export default function GuestProfilePage() {
       const guestPhone = guest?.phone || rsvp?.guest_phone || ''
       const guestNotes = guest?.notes || rsvp?.guest_notes || ''
       const guestAvatar = guest?.avatar_url || null
-      
-      console.log('Setting form data:', { name: guestName, email: guestEmail, phone: guestPhone, notes: guestNotes, avatar_url: guestAvatar })
       
       if (guestAvatar) {
         setAvatarUrl(guestAvatar)
@@ -355,7 +348,7 @@ export default function GuestProfilePage() {
       const fileExt = file.name.split('.').pop()
       const filePath = `avatars/${invitationId}/${Date.now()}.${fileExt}`
       
-      // Upload to Supabase Storage - using the correct bucket name
+      // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from('profile-photos')
         .upload(filePath, file)
@@ -364,7 +357,7 @@ export default function GuestProfilePage() {
         throw uploadError
       }
       
-      // Get the public URL from the correct bucket
+      // Get the public URL
       const { data } = supabase.storage
         .from('profile-photos')
         .getPublicUrl(filePath)
@@ -541,99 +534,57 @@ export default function GuestProfilePage() {
   };
 
   const onSubmit = async (values: GuestProfileFormValues) => {
+    setIsSubmitting(true);
     try {
-      setIsSubmitting(true)
-
       if (!guest?.invitation_id && !invitationToken) {
-        toast({
-          title: 'Error',
-          description: 'Missing invitation information. Please go back to your invitation email.',
-          variant: 'destructive',
-        })
-        return
+        throw new Error('No invitation ID available');
       }
-
-      // Upload avatar if we have a file
-      let avatarUrl = null
+      
+      const invitationId = guest?.invitation_id || tokenData?.invitationId;
+      
+      // Upload avatar if there's a new file
+      let finalAvatarUrl = avatarUrl;
       if (avatarFile) {
-        avatarUrl = await uploadAvatar(avatarFile, guest?.invitation_id)
-        if (!avatarUrl) {
-          toast({
-            title: 'Warning',
-            description: 'Failed to upload avatar, but we\'ll save your other information.',
-            variant: 'default',
-          })
+        const uploadedUrl = await uploadAvatar(avatarFile, invitationId);
+        if (uploadedUrl) {
+          finalAvatarUrl = uploadedUrl;
         }
-      } else if (form.getValues('avatar_url')) {
-        avatarUrl = form.getValues('avatar_url')
-      }
-
-      // Check if profile already exists
-      const isNewProfile = !guest?.id
-      
-      // Prepare profile data
-      const profileData: ProfileData = {
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
-        notes: values.notes,
-        avatar_url: avatarUrl || null,
-        invitation_id: guest?.invitation_id || '',
-        updated_at: new Date().toISOString(),
       }
       
-      if (isNewProfile) {
-        profileData.created_at = new Date().toISOString()
+      // Use the security definer function instead of direct table access
+      const { data, error } = await supabase
+        .rpc('handle_guest_profile', {
+          p_invitation_id: invitationId,
+          p_name: values.name,
+          p_email: values.email,
+          p_phone: values.phone || null,
+          p_notes: values.notes || null,
+          p_avatar_url: finalAvatarUrl || null
+        })
+      
+      if (error) {
+        throw new Error(`Failed to save profile: ${error.message}`);
       }
       
-      // Save to Supabase
-      const supabase = createClientComponentClient()
-      
-      let result
-      if (isNewProfile) {
-        result = await supabase
-          .from('guests')
-          .insert(profileData)
-          .select()
-      } else {
-        result = await supabase
-          .from('guests')
-          .update(profileData)
-          .eq('id', guest.id)
-          .select()
-      }
-      
-      if (result.error) {
-        throw new Error(`Failed to save profile: ${result.error.message}`)
-      }
-      
+      // Show success message
       toast({
-        title: 'Profile saved',
-        description: 'Your profile has been successfully saved.',
-        variant: 'default',
-      })
+        title: 'Profile Updated',
+        description: 'Your profile has been updated successfully.',
+      });
       
-      // Navigate to dashboard with token
-      const params = new URLSearchParams()
-      if (invitationToken) {
-        params.set('token', invitationToken)
-      } else if (eventId) {
-        params.set('event', eventId)
-      }
-      
-      // Navigate to dashboard
-      router.push(`/guest/dashboard?${params.toString()}`)
-    } catch (err: any) {
-      console.error('Error saving profile:', err)
+      // Navigate to the next step
+      router.push(`/guest/camera-setup?token=${invitationToken}`);
+    } catch (error) {
+      console.error('Error saving profile:', error);
       toast({
-        title: 'Error',
-        description: err.message || 'Failed to save profile',
         variant: 'destructive',
-      })
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to save profile',
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (

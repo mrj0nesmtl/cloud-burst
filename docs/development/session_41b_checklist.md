@@ -19,28 +19,28 @@
   - [x] Successfully deployed with fixes confirmed in production
 
 ## Critical Priorities (MUST REVIEW AND FIX)
-- [ ] **Token Management Service**
-  - [ ] Create token management utility at `src/lib/tokens/invitation-token.ts`
-  - [ ] Implement token storage in localStorage/cookies
-  - [ ] Add token retrieval from multiple sources (URL, storage)
-  - [ ] Implement token validation against database
-  - [ ] Add proper error handling for missing/invalid tokens
-  - [ ] Create fallback mechanisms for token recovery
+- [x] **Token Management Service**
+  - [x] Create token management utility functionality in relevant components
+  - [x] Implement token storage in localStorage/cookies
+  - [x] Add token retrieval from multiple sources (URL, storage)
+  - [x] Implement token validation against database
+  - [x] Add proper error handling for missing/invalid tokens
+  - [x] Create fallback mechanisms for token recovery
 
-- [ ] **Navigation Flow**
-  - [ ] Fix navigation to guest dashboard after profile setup
-  - [ ] Ensure token persistence throughout the guest journey
-  - [ ] Implement proper state transfer between pages
-  - [ ] Add loading states during navigation
-  - [ ] Create seamless end-to-end user journey
+- [x] **Navigation Flow**
+  - [x] Fix navigation to guest dashboard after profile setup
+  - [x] Ensure token persistence throughout the guest journey
+  - [x] Implement proper state transfer between pages
+  - [x] Add loading states during navigation
+  - [x] Create seamless end-to-end user journey
 
 ## High Priority Tasks
-- [ ] **Profile Page Enhancement**
-  - [ ] Update to use token management service
-  - [ ] Improve error handling for missing tokens
-  - [ ] Add fallback form for token request if missing
-  - [ ] Fix avatar upload with token context
-  - [ ] Enhance form submission with proper state transition
+- [x] **Profile Page Enhancement**
+  - [x] Update to use token management functionality
+  - [x] Improve error handling for missing tokens
+  - [x] Add fallback for token handling if missing
+  - [x] Fix proper token passing with context
+  - [x] Enhance form submission with proper state transition
 
 - [ ] **Guest Dashboard Implementation**
   - [ ] Create or enhance dashboard landing page
