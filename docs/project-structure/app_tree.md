@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-04-14T15:27:41.470Z
+Generated: 2025-04-15T02:46:30.503Z
 
 ## Overview
 
@@ -45,6 +45,9 @@ This directory contains 111 route(s).
 │   │   │   └── route.ts
 │   │   └── setup/
 │   │       └── route.ts
+│   ├── diagnose/
+│   │   └── schema/
+│   │       └── route.ts
 │   ├── events/
 │   │   ├── qr-code/
 │   │   │   └── route.ts
@@ -58,6 +61,8 @@ This directory contains 111 route(s).
 │   │   └── check-access/
 │   │       └── route.ts
 │   ├── guests/
+│   │   ├── avatar/
+│   │   │   └── route.ts
 │   │   └── reserve/
 │   │       └── route.ts
 │   ├── invitation/
@@ -423,12 +428,12 @@ This directory contains 111 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-181 directories, 233 files
+184 directories, 235 files
 
 ```
 
 ## File Type Breakdown
-- ts: 38 file(s)
+- ts: 40 file(s)
 - tsx: 184 file(s)
 - md: 1 file(s)
 - css: 2 file(s)

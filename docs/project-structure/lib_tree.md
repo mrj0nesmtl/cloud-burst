@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-04-14T15:27:46.608Z
+Generated: 2025-04-15T02:46:36.256Z
 
 ## Overview
 
@@ -46,6 +46,7 @@ Generated: 2025-04-14T15:27:46.608Z
 │   ├── verify-schema.html
 │   └── verify-schema.js
 ├── tokens/
+│   ├── invitation-token-server.ts
 │   └── invitation-token.ts
 ├── utils/
 │   ├── codeGenerator.ts
@@ -63,6 +64,7 @@ Generated: 2025-04-14T15:27:46.608Z
 ├── event-customization.ts
 ├── formatters.ts
 ├── index.ts
+├── invitations-client.ts
 ├── invitations.ts
 ├── qr-code.ts
 ├── query-helpers.ts
@@ -71,12 +73,12 @@ Generated: 2025-04-14T15:27:46.608Z
 ├── user-sessions.ts
 └── utils.ts
 
-11 directories, 51 files
+11 directories, 53 files
 
 ```
 
 ## File Type Breakdown
-- ts: 48 file(s)
+- ts: 50 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns
