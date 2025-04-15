@@ -551,23 +551,16 @@ export default function GuestProfilePage() {
         }
       }
       
-      // Prepare the profile data
-      const profileData: ProfileData = {
-        invitation_id: invitationId,
-        name: values.name,
-        email: values.email,
-        phone: values.phone || null,
-        notes: values.notes || null,
-        avatar_url: finalAvatarUrl || null,
-        updated_at: new Date().toISOString()
-      };
-      
-      // Save the profile to the database
+      // Use the security definer function instead of direct table access
       const { data, error } = await supabase
-        .from('guests')
-        .upsert(profileData)
-        .select()
-        .single();
+        .rpc('handle_guest_profile', {
+          p_invitation_id: invitationId,
+          p_name: values.name,
+          p_email: values.email,
+          p_phone: values.phone || null,
+          p_notes: values.notes || null,
+          p_avatar_url: finalAvatarUrl || null
+        })
       
       if (error) {
         throw new Error(`Failed to save profile: ${error.message}`);
