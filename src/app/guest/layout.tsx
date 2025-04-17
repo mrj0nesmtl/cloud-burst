@@ -1,9 +1,4 @@
 import { Metadata } from 'next'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { CameraIcon, ImageIcon, HomeIcon } from 'lucide-react'
-import Image from 'next/image'
-import { GuestHeader } from '@/components/layout/guest-header'
 import { TokenProvider } from '@/contexts/token-context'
 
 export const metadata: Metadata = {
@@ -17,9 +12,23 @@ export default function GuestLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <GuestHeader />
-      <main className="flex-1 bg-background">
+    <div 
+      className="flex flex-col min-h-screen"
+      style={{
+        maxWidth: '100vw',
+        overflowX: 'hidden',
+        background: 'linear-gradient(to bottom, #0a0d14, #121620)'
+      }}
+    >
+      <main 
+        className="flex-1 relative"
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
         <TokenProvider>
           {children}
         </TokenProvider>

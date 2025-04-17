@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-15T02:46:27.386Z
+Generated: 2025-04-17T03:59:42.158Z
 
 ## Overview
 
@@ -76,6 +76,9 @@ Generated: 2025-04-15T02:46:27.386Z
 │   │   │       └── route.ts
 │   │   ├── gallery/
 │   │   │   └── check-access/
+│   │   │       └── route.ts
+│   │   ├── guest/
+│   │   │   └── upload/
 │   │   │       └── route.ts
 │   │   ├── guests/
 │   │   │   ├── avatar/
@@ -187,13 +190,19 @@ Generated: 2025-04-15T02:46:27.386Z
 │   │   └── [eventId]/
 │   │       └── page.tsx
 │   ├── guest/
+│   │   ├── camera/
+│   │   │   └── page.tsx
 │   │   ├── camera-setup/
 │   │   │   └── page.tsx
 │   │   ├── dashboard/
 │   │   │   └── page.tsx
+│   │   ├── gallery/
+│   │   │   └── page.tsx
 │   │   ├── photos/
 │   │   │   └── page.tsx
 │   │   ├── profile/
+│   │   │   └── page.tsx
+│   │   ├── upload/
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
 │   ├── guest-access/
@@ -545,6 +554,7 @@ Generated: 2025-04-15T02:46:27.386Z
 │   │   ├── GuestDashboard.tsx
 │   │   ├── GuestProfileForm.tsx
 │   │   ├── PhotoUploader.tsx
+│   │   ├── bottom-nav.tsx
 │   │   ├── camera-test.tsx
 │   │   ├── profile-setup-form.tsx
 │   │   └── token-error.tsx
@@ -752,6 +762,7 @@ Generated: 2025-04-15T02:46:27.386Z
 │   ├── user-sessions.ts
 │   └── utils.ts
 ├── scripts/
+│   ├── apply-rls-policies.sh
 │   ├── connect-db.sh*
 │   ├── mobile-menu.js
 │   └── test-invitation.js
@@ -779,13 +790,13 @@ Generated: 2025-04-15T02:46:27.386Z
 ├── middleware.test.ts
 └── middleware.ts
 
-235 directories, 535 files
+240 directories, 541 files
 
 ```
 
 ## File Type Breakdown
-- ts: 131 file(s)
-- tsx: 384 file(s)
+- ts: 132 file(s)
+- tsx: 388 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

@@ -36,6 +36,7 @@ import { invitationTokenService } from '@/lib/tokens/invitation-token'
 import { useToken } from '@/contexts/token-context'
 import { TokenErrorAlert } from '@/components/guest/token-error'
 import Link from 'next/link'
+import crypto from 'crypto'
 
 const guestProfileSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -542,6 +543,18 @@ export default function GuestProfilePage() {
       
       const invitationId = guest?.invitation_id || tokenData?.invitationId;
       
+      // First get the event_id from the invitation
+      const { data: invitation, error: invitationError } = await supabase
+        .from('invitations')
+        .select('event_id')
+        .eq('id', invitationId)
+        .single();
+        
+      if (invitationError || !invitation?.event_id) {
+        console.error('Error getting invitation:', invitationError);
+        throw new Error('Could not find associated event for this invitation');
+      }
+      
       // Upload avatar if there's a new file
       let finalAvatarUrl = avatarUrl;
       if (avatarFile) {
@@ -551,18 +564,30 @@ export default function GuestProfilePage() {
         }
       }
       
-      // Use the security definer function instead of direct table access
+      // Generate an access token (UUID)
+      const accessToken = crypto.randomUUID ? crypto.randomUUID() : 
+        `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+      
+      // Direct guest table update - now includes event_id and access_token
       const { data, error } = await supabase
-        .rpc('handle_guest_profile', {
-          p_invitation_id: invitationId,
-          p_name: values.name,
-          p_email: values.email,
-          p_phone: values.phone || null,
-          p_notes: values.notes || null,
-          p_avatar_url: finalAvatarUrl || null
+        .from('guests')
+        .upsert({
+          invitation_id: invitationId,
+          event_id: invitation.event_id,
+          name: values.name,
+          email: values.email,
+          phone: values.phone || null,
+          notes: values.notes || null,
+          avatar_url: finalAvatarUrl || null,
+          access_token: accessToken,
+          status: 'registered',
+          updated_at: new Date().toISOString()
         })
+        .select()
+        .single();
       
       if (error) {
+        console.error('Guest profile error details:', error);
         throw new Error(`Failed to save profile: ${error.message}`);
       }
       
@@ -572,8 +597,8 @@ export default function GuestProfilePage() {
         description: 'Your profile has been updated successfully.',
       });
       
-      // Navigate to the next step
-      router.push(`/guest/camera-setup?token=${invitationToken}`);
+      // Navigate to the next step with a from=profile parameter to trigger a welcome toast
+      router.push(`/guest/dashboard?token=${invitationToken}&from=profile`);
     } catch (error) {
       console.error('Error saving profile:', error);
       toast({
