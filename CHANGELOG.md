@@ -45,6 +45,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added proper loading and error states in dashboard page
 
 ### Fixed - April 17, 2025
+- **Guest Experience Updates**:
+  - Fixed gallery page to correctly query the `photos` table instead of non-existent `event_photos`
+  - Simplified photo URL processing in gallery page for better performance
+  - Improved guest layout with cleaner, more focused design
+  - Removed unnecessary GuestHeader component from layout
+  - Enhanced BottomNav styling and positioning for better usability
+  - Adjusted content padding and spacing for improved mobile experience
+  - Streamlined navigation between dashboard, camera, and gallery sections
+
+### Fixed - April 17, 2025
 - **Critical Database and UI Fixes**:
   - Added missing `handle_guest_profile` security definer function
   - Fixed invitation and guest profile management with proper constraints
@@ -1462,3 +1472,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS integration
 - Shadcn UI setup
 - Supabase initialization
+
