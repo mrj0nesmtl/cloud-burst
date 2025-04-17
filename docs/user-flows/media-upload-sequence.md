@@ -1,290 +1,262 @@
 # 📊 **Media Upload Sequence Diagram**
 
 ## 📂 *Cloud Burst Platform - User Flows*
-📅 *Last Updated: April 15, 2025*
-📊 *Version: 0.9.3*
+📅 *Last Updated: April 17, 2025*
+📊 *Version: 0.9.5*
 
 ## 📌 Situational Abstract
-Cloud Burst has successfully implemented a comprehensive media upload system with a sequence diagram that illustrates the complete flow from user authentication to file processing. The platform now features mobile-first upload components, proper file validation, type checking, and server-side security measures. Direct camera integration allows guests to capture and upload media seamlessly, with support for both photos and videos. The system includes proper error handling, loading states, and success notifications.
+Cloud Burst has completed a major milestone in version 0.9.5 with the implementation of a full end-to-end guest journey that includes photo upload functionality directly integrated with event galleries. Guests can now seamlessly move from RSVP to profile creation to actively contributing photos to event galleries. The platform supports both direct camera capture and file uploads, storing images securely in Supabase Storage with proper attribution to guests and events.
 
-Recent improvements include proper client/server component separation in the Next.js 14 App Router architecture, fixing authentication flows in gallery pages, and correcting type mapping between database and UI components. We have also made significant progress with TypeScript fixes and are now focusing on implementing a robust token management system to create a seamless end-to-end experience from RSVP to profile setup to dashboard, ensuring persistent authentication throughout the guest journey including during media uploads.
+Recent improvements include fixing critical issues with profile creation constraints, implementing middleware checks for guest dashboard access, creating an intuitive bottom navigation for the guest area, and resolving table name inconsistencies in gallery queries. While the core upload functionality is working, we're currently troubleshooting some inconsistencies with uploads not always appearing in galleries and potential attribution issues. Session 42-B will focus on QA testing and resolving these remaining issues to ensure a seamless photo upload experience before the beta release.
 
 ## 🔄 **Sequence Diagram**
 
 ```mermaid
 sequenceDiagram
-    participant Guest as Guest/User
+    participant Guest as Guest
     participant UI as Cloud Burst UI
-    participant TMS as Token Management Service
-    participant API as Cloud Burst API
+    participant GuestAPI as Guest API
+    participant Auth as Authentication
     participant Storage as Supabase Storage
-    participant DB as Supabase Database
-    participant Processing as Media Processing
+    participant DB as Database
+    participant Gallery as Gallery View
 
-    Guest->>UI: 1. Access Camera/Upload Interface
+    Guest->>UI: Access Camera/Upload Page
+    UI->>Auth: Validate guest token
+    Auth-->>UI: Token validation result
     
-    Note over UI,TMS: Token Validation Flow
-    UI->>TMS: 1.1 Retrieve stored tokens
-    TMS-->>UI: 1.2 Return valid token or error
-    UI->>API: 1.3 Validate token
-    API-->>UI: 1.4 Authentication result
-
-    Guest->>UI: 2. Capture photo/video or select file
-    UI->>UI: 3. Validate file (type, size, count)
+    Note over Guest,UI: Camera Capture Flow
+    Guest->>UI: Select camera view
+    UI->>Guest: Request camera permissions
+    Guest->>UI: Grant camera access
+    UI->>Guest: Display live camera preview
+    Guest->>UI: Capture photo
+    UI->>Guest: Show photo preview
+    Guest->>UI: Confirm upload
     
-    Note over UI,API: Upload Process
-    UI->>API: 4. Initialize upload (POST /api/media/init)
-    API->>DB: 5. Create media record
-    DB-->>API: 6. Return record ID
-    API-->>UI: 7. Return signed upload URL + record ID
+    Note over UI,Storage: Upload Process
+    UI->>GuestAPI: Initialize upload (POST /api/guest/upload/init)
+    GuestAPI->>Auth: Verify token & permissions
+    Auth-->>GuestAPI: Authorization confirmed
+    GuestAPI->>DB: Get event details from guest token
+    DB-->>GuestAPI: Event details
+    GuestAPI-->>UI: Return signed upload URL
     
-    UI->>Storage: 8. Upload file with token context (PUT)
-    Storage-->>UI: 9. Upload confirmation
+    UI->>Storage: Upload photo to storage
+    Storage-->>UI: Upload confirmation
     
-    UI->>API: 10. Confirm upload (POST /api/media/confirm)
-    API->>DB: 11. Update media record status
-    API->>Processing: 12. Trigger optimization
+    UI->>GuestAPI: Confirm upload (POST /api/guest/upload/confirm)
+    GuestAPI->>DB: Create photo record with event & guest association
+    DB-->>GuestAPI: Confirmation
+    GuestAPI-->>UI: Return success & photo ID
+    UI->>Guest: Display success notification
     
-    Processing->>Storage: 13. Process media (resize, compress)
-    Processing->>DB: 14. Update with processed URLs
-    
-    API-->>UI: 15. Return success status
-    UI-->>Guest: 16. Display success notification
-    
-    Note over UI,DB: Real-time Update
-    DB->>UI: 17. Push media to gallery (realtime subscription)
+    Note over Guest,Gallery: Gallery View
+    Guest->>UI: Navigate to Gallery page
+    UI->>GuestAPI: Fetch photos (GET /api/guest/gallery)
+    GuestAPI->>DB: Query photos table for event
+    DB-->>GuestAPI: Return photo records
+    GuestAPI-->>UI: Return photo data
+    UI->>Gallery: Render photo grid
+    Gallery-->>Guest: Display gallery with photos
 ```
 
-## 🔐 **Authentication & Token Flow**
+## 🔐 **Authentication & Guest Attribution**
 
-The authentication and token flow has been enhanced to ensure persistent user sessions throughout the media upload process:
+Guest authentication and attribution has been significantly improved in v0.9.5:
 
-1. **Token Retrieval System**: 
-   - **Multi-source Retrieval**: The Token Management Service (TMS) attempts to retrieve valid tokens from various sources (URL parameters, localStorage, cookies)
-   - **Priority Chain**: Tokens are evaluated in a priority order with most trusted sources first
-   - **Type Validation**: All tokens are validated against TypeScript interfaces before use
+1. **Token Validation System**:
+   - **Middleware Integration**: Server-side validation of invitation tokens
+   - **Profile Check**: Verification of complete guest profiles before dashboard access
+   - **Secure Token Pass-Through**: Token is securely passed to upload endpoints
+   - **Event Association**: Photos are automatically associated with the correct event
 
-2. **Token Storage Strategy**:
-   - **Redundant Storage**: Tokens are stored in multiple locations for resilience
-   - **Hierarchical Access**: Primary access through memory/context, with fallbacks to localStorage and cookies
-   - **Encryption**: Sensitive token data is encrypted in storage
+2. **Guest Attribution Flow**:
+   - **Profile Requirement**: Guests must complete profiles before uploading
+   - **Automatic Attribution**: Photos are linked to guest ID from profile
+   - **Event Context**: Event association is derived from invitation token
+   - **Permission Verification**: RLS policies ensure proper access controls
+   - **Gallery Filtering**: Photos are filtered by event ID for gallery display
 
-3. **Token Validation Process**:
-   - **Server-side Verification**: All tokens are verified against Supabase database
-   - **Role-based Permission Check**: Access levels are determined based on token claims
-   - **Automatic Refreshing**: Valid tokens are automatically refreshed near expiration
-
-4. **Token Context in Upload**:
-   - **Upload Context**: Token is attached to upload requests for attribution
-   - **Authorization Headers**: Tokens are included in API calls
-   - **Media Attribution**: Uploaded media is attributed to the correct guest/event based on token claims
+3. **Security Model**:
+   - **Row Level Security**: Comprehensive RLS policies for photo access
+   - **Storage Security**: Secure bucket configuration with proper CORS setup
+   - **Permission Granularity**: Separate policies for viewing vs. uploading
+   - **Audit Trail**: Complete tracking of uploads by guest
 
 ## 📤 **Media Upload Components**
 
-### 🎬 File Capture & Selection Components [Implementation Status: 40%]
-- ✅ `<CameraView>` - Integrated camera interface
+### 🎬 Camera Capture Components [Implementation Status: 90%]
+- ✅ `<CameraPage>` - Dedicated camera page with bottom navigation
+- ✅ `<CameraCapture>` - Camera interface with preview
 - ✅ `<CaptureButton>` - Photo capture functionality
-- ✅ `<RecordButton>` - Video recording with duration display
-- ✅ `<FileSelectButton>` - Local file selection
-- ✅ `<DropZone>` - Drag-and-drop file uploads
-- ✅ `<MediaTypeToggle>` - Switch between photo/video modes
-- ✅ Form validation with error messages
-- ✅ File type restriction enforcement
-- ✅ Size validation with user feedback
-- 🟡 Token attachment to media requests (40% complete)
+- ✅ `<PreviewScreen>` - Photo preview before upload
+- ✅ `<UploadConfirmation>` - Confirmation before upload
+- ✅ Error handling for camera permissions
+- ✅ Integration with guest token context
+- 🟡 Progress indicators during upload (80% complete)
+- 🟡 Enhanced error handling for failed uploads (60% complete)
+- 🟡 Camera controls for flash/switching cameras (40% complete)
 
-### 🔄 Upload Process Components [Implementation Status: 40%]
-- ✅ `<UploadProgress>` - Visual upload progress indicator
-- ✅ `<ErrorDisplay>` - User-friendly error messages
-- ✅ `<SuccessView>` - Confirmation with preview
-- ✅ `<RetryOption>` - Error recovery mechanism
-- ✅ `<BatchUpload>` - Multiple file handling
-- ✅ Optimized chunked uploads
-- ✅ Background upload capability
-- ✅ Pause/resume functionality
-- 🟡 Token-based upload attribution (40% complete)
-- 🟡 Error handling for token issues (40% complete)
+### 📁 File Upload Components [Implementation Status: 90%]
+- ✅ `<UploadPage>` - Dedicated upload page with navigation
+- ✅ `<FileUploader>` - File selection and upload component
+- ✅ `<DropZone>` - Drag-and-drop file upload area
+- ✅ `<FilePreview>` - Preview selected files before upload
+- ✅ `<UploadButton>` - Trigger upload process
+- ✅ File validation (size, type, count)
+- ✅ Integration with guest token context
+- 🟡 Progress indicators during upload (80% complete)
+- 🟡 Enhanced error handling for failed uploads (60% complete)
+- 🟡 Multi-file upload capabilities (40% complete)
 
-### 🖼️ Preview Components [Implementation Status: 75%]
-- ✅ `<ImagePreview>` - Photo preview with zoom
-- ✅ `<VideoPreview>` - Video preview with controls
-- ✅ `<GalleryPreview>` - Thumbnail view of uploads
-- ✅ `<EditOptions>` - Basic editing controls
-- ✅ `<ShareButton>` - Quick sharing functionality
-- ✅ Responsive layout adaptation
-- ✅ Light/dark mode support
-- ✅ Skeleton placeholders during loading
-- ✅ Error fallback screens
+### 🖼️ Gallery Components [Implementation Status: 85%]
+- ✅ `<GalleryPage>` - Dedicated gallery page with navigation
+- ✅ `<PhotoGrid>` - Gallery grid layout for photos
+- ✅ `<PhotoCard>` - Individual photo display component
+- ✅ `<LoadingGallery>` - Loading state for gallery
+- ✅ `<EmptyGallery>` - Display when no photos exist
+- ✅ Integration with guest token context
+- ✅ Proper table name references in queries
+- 🟡 Real-time updates for new uploads (70% complete)
+- 🟡 Infinite scroll/pagination (50% complete)
+- 🟡 Photo interaction features (40% complete)
 
-## 🔒 **Security Implementation**
+## 🔄 **API Endpoints**
 
-### File Validation [Implementation Status: 100%]
-- ✅ MIME type verification
-- ✅ File extension validation
-- ✅ Size limitations (client & server)
-- ✅ Malware scanning
-- ✅ Content validation
-- ✅ Metadata stripping
-- ✅ Filename sanitization
-- ✅ Error handling with user feedback
-
-### Authentication & Authorization [Implementation Status: 75%]
-- ✅ JWT validation
-- ✅ Role-based permissions
-- ✅ Event-specific access control
-- ✅ Upload quotas by user type
-- ✅ API rate limiting
-- ✅ CORS configuration
-- ✅ QR code access verification
-- ✅ Invitation token validation
-- 🟡 Token persistence throughout upload flow (40% complete)
-- 🟡 Token-based media attribution (40% complete)
-
-### Storage Security [Implementation Status: 100%]
-- ✅ Signed URLs for uploads
-- ✅ Time-limited access tokens
-- ✅ Content-Disposition headers
-- ✅ Proper CORS configuration
-- ✅ Bucket isolation by event
-- ✅ Row Level Security policies
-- ✅ Access auditing
-- ✅ CDN protection
-
-## 🚀 **API Endpoints**
-
-### Media Initialization
+### Upload Initialization
 ```typescript
-// POST /api/media/init
-interface InitializeUploadRequest {
-  eventId: string;
-  mediaType: 'image' | 'video';
+// POST /api/guest/upload/init
+interface UploadInitRequest {
   fileName: string;
+  fileType: string;
   fileSize: number;
-  mimeType: string;
-  // Token context is now included in the request
-  tokenContext?: {
-    invitationToken?: string;
-    guestToken?: string;
-    userToken?: string;
-  };
 }
 
-interface InitializeUploadResponse {
-  mediaId: string;
+interface UploadInitResponse {
   uploadUrl: string;
+  photoId: string;
   fields: Record<string, string>;
-  expiresAt: string;
 }
 ```
 
-### Media Confirmation
+### Upload Confirmation
 ```typescript
-// POST /api/media/confirm
-interface ConfirmUploadRequest {
-  mediaId: string;
-  status: 'completed' | 'failed';
-  errorDetails?: string;
-  // Token context is now included in the request
-  tokenContext?: {
-    invitationToken?: string;
-    guestToken?: string;
-    userToken?: string;
-  };
+// POST /api/guest/upload/confirm
+interface UploadConfirmRequest {
+  photoId: string;
 }
 
-interface ConfirmUploadResponse {
+interface UploadConfirmResponse {
   success: boolean;
-  mediaUrl?: string;
-  thumbnailUrl?: string;
+  photoUrl: string;
 }
 ```
 
-### Media Processing Status
+### Gallery Fetch
 ```typescript
-// GET /api/media/status/:mediaId
-interface MediaStatusResponse {
-  mediaId: string;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
-  progress?: number;
-  mediaUrl?: string;
-  thumbnailUrl?: string;
-  errorDetails?: string;
+// GET /api/guest/gallery
+// Query params: ?limit=20&cursor=<cursor>
+
+interface GalleryResponse {
+  photos: {
+    id: string;
+    url: string;
+    createdAt: string;
+    guest: {
+      name: string;
+      avatar?: string;
+    } | null;
+  }[];
+  nextCursor: string | null;
 }
 ```
 
 ## 📱 **Mobile Implementation**
 
-### Responsive Design [Implementation Status: 100%]
-- ✅ Mobile-first approach
-- ✅ Touch-optimized controls
-- ✅ Device orientation handling
-- ✅ Adaptive layout components
-- ✅ Native-like animations
-- ✅ Gesture controls
-- ✅ Bottom sheet interactions
-- ✅ Safe area considerations
+The guest photo upload experience has been designed with mobile-first principles:
 
-### Device Integration [Implementation Status: 75%]
-- ✅ Camera access with permissions
-- ✅ Media library integration
-- ✅ Vibration feedback
-- ✅ Network status awareness
-- ✅ Offline capability
-- ✅ Background upload support
-- ✅ Battery efficiency considerations
-- 🟡 Deep linking with token passing (75% complete)
+- ✅ **Responsive Camera Interface**: Adapts to device orientation and screen size
+- ✅ **Touch-Optimized Controls**: Large, accessible capture buttons and controls
+- ✅ **Bottom Navigation**: Intuitive navigation between dashboard, camera, gallery, and upload
+- ✅ **Adaptive Layout**: Proper spacing and component sizing across devices
+- ✅ **Permission Handling**: Clear guidance for camera and storage permissions
+- ✅ **Network Awareness**: Basic handling of connectivity issues
+- 🟡 **Progressive Enhancement**: Partial implementation of advanced features based on device capabilities
+- 🟡 **Offline Support**: Basic implementation of queued uploads
 
-## 🔄 **Error Handling & Recovery**
+## 🔁 **Current Implementation Status**
 
-### Client-Side Errors [Implementation Status: 100%]
-- ✅ File validation errors
-- ✅ Network connectivity issues
-- ✅ Permission denials
-- ✅ Device capability restrictions
-- ✅ Storage limitations
-- ✅ User feedback mechanisms
-- ✅ Automatic retry logic
-- ✅ Fallback mechanisms
-- ✅ Error boundaries
-- ✅ Toast notifications
+### Core Upload Flow [90% Complete]
+- ✅ Camera access and photo capture
+- ✅ File selection and validation
+- ✅ Upload to Supabase Storage
+- ✅ Database record creation
+- ✅ Association with guest and event
+- 🟡 Progress tracking during upload (80% complete)
+- 🟡 Enhanced error handling (60% complete)
 
-### Server-Side Errors [Implementation Status: 75%]
-- ✅ Rate limiting exceeded
-- ✅ Storage quota issues
-- ✅ Processing failures
-- ✅ Database constraints
-- ✅ Authentication failures
-- ✅ Detailed error logging
-- ✅ Fallback processing options
-- ✅ Graceful degradation
-- 🟡 Token-related error handling (40% complete)
+### Gallery Integration [85% Complete]
+- ✅ Gallery page layout and design
+- ✅ Photo grid component
+- ✅ Database queries for photos
+- ✅ Loading states and empty states
+- 🟡 Real-time updates (70% complete)
+- 🟡 Infinite scroll/pagination (50% complete)
+- 🟡 Photo interactions (40% complete)
 
-## 📊 **Implementation Status**
+### User Experience [80% Complete]
+- ✅ Bottom navigation implementation
+- ✅ Basic success indicators
+- ✅ Basic error handling
+- 🟡 Enhanced progress indicators (80% complete)
+- 🟡 Comprehensive error messaging (60% complete)
+- 🟡 Loading optimizations (50% complete)
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| File Selection UI | ✅ 100% | Complete with mobile optimization |
-| Camera Integration | ✅ 75% | Core functionality working, enhancing UX |
-| Upload Process | ✅ 40% | Basic functionality works, implementing token integration |
-| Progress Indicators | ✅ 100% | Complete with animations |
-| Error Handling | ✅ 75% | Core error handling complete, enhancing token-related errors |
-| Success States | ✅ 100% | Complete with confirmation |
-| Gallery Integration | ✅ 40% | Real-time updates working, enhancing UX |
-| Mobile Responsiveness | ✅ 100% | Fully responsive design |
-| Token Management | 🟡 15% | Currently implementing persistent token system |
-| Media Attribution | 🟡 40% | Implementing token-based attribution |
+### Performance & Reliability [75% Complete]
+- ✅ Basic image optimization
+- ✅ Query optimization for gallery loads
+- 🟡 Lazy loading implementation (70% complete)
+- 🟡 Connection resilience (60% complete)
+- 🟡 Background uploads (40% complete)
+- 🟡 Retry mechanisms (30% complete)
 
-## 🗓️ **Upcoming Work**
+## 🚀 **Next Steps for Session 42-B**
 
-- Implementing the Token Management Service with multi-source retrieval
-- Enhancing media upload with token-based attribution
-- Completing the camera integration with improved UX
-- Implementing media processing enhancements
-- Completing the gallery integration with real-time updates
-- Adding support for token-based access to media files
-- Implementing media download functionality
-- Adding album creation and management
+1. **Resolve Gallery Integration Issues**
+   - Fix inconsistent photo appearance in gallery
+   - Ensure proper event and guest attribution
+   - Implement real-time updates for new uploads
+   - Add proper loading and error states
+
+2. **Enhance Upload Experience**
+   - Add detailed progress indicators
+   - Implement comprehensive error handling
+   - Add upload success confirmations
+   - Ensure token persistence during upload
+
+3. **Optimize Performance**
+   - Implement lazy loading for gallery images
+   - Add proper caching mechanisms
+   - Optimize image loading in gallery view
+   - Implement virtualized scrolling for large galleries
+
+4. **Improve Reliability**
+   - Add retry mechanisms for failed uploads
+   - Implement offline queue capability
+   - Enhance error recovery
+   - Add detailed logging for troubleshooting
+
+## 🧪 **Upcoming Testing Focus**
+
+- Cross-device testing (iOS/Android)
+- Performance testing with large galleries
+- Network resilience testing
+- Error recovery testing
+- Edge case handling (very large files, unsupported formats)
+- Token persistence across page navigation
+- Permission boundary testing
 
 ---
 
-This document will be regularly updated as implementation progresses, with a target completion date of May 15, 2025, ahead of our June 1, 2025 public launch. 
+This document will continue to be updated as we resolve the remaining issues and enhance the guest photo upload experience. Our target is to have a fully functional, reliable photo upload and gallery system ready for the Beta 1.0 Release Candidate by April 30, 2025. 
