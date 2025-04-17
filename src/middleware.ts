@@ -20,6 +20,51 @@ export async function middleware(req: NextRequest) {
   const isAuthenticated = !!session
   const pathname = req.nextUrl.pathname
   
+  // Guest dashboard route - check if user has a guest profile
+  if (pathname.startsWith('/guest/dashboard')) {
+    const token = req.nextUrl.searchParams.get('token')
+    
+    if (!token) {
+      console.log('No token provided for guest dashboard access');
+      return NextResponse.redirect(new URL('/', req.url))
+    }
+    
+    try {
+      // First, check if the invitation is valid
+      const { data: invitation, error: invitationError } = await supabase
+        .from('invitations')
+        .select('id, email, name')
+        .eq('token', token)
+        .single();
+
+      if (invitationError || !invitation) {
+        console.log('Invalid invitation token for guest dashboard', invitationError);
+        return NextResponse.redirect(new URL('/invitation/invalid', req.url))
+      }
+      
+      // Now check if guest profile exists for this invitation
+      const { data: guest, error: guestError } = await supabase
+        .from('guests')
+        .select('id, name, email')
+        .eq('invitation_id', invitation.id)
+        .maybeSingle();
+      
+      if (guestError || !guest) {
+        console.log('No guest profile found, redirecting to profile setup');
+        // Redirect to profile setup, passing the token
+        const profileUrl = new URL(`/guest/profile`, req.url)
+        profileUrl.searchParams.set('token', token)
+        return NextResponse.redirect(profileUrl)
+      }
+      
+      // Guest exists, allow access to dashboard
+      return res
+    } catch (error) {
+      console.error('Error checking guest profile:', error);
+      return NextResponse.redirect(new URL('/', req.url))
+    }
+  }
+  
   // Protected routes that require authentication
   if (
     pathname.startsWith('/dashboard') || 
@@ -111,5 +156,6 @@ export const config = {
     '/admin/:path*',
     '/events/:path*', 
     '/protected/:path*',
+    '/guest/dashboard/:path*',
   ],
 } 

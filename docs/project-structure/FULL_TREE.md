@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-15T02:46:25.531Z
+Generated: 2025-04-17T03:59:41.263Z
 
 ## Overview
 
@@ -174,6 +174,9 @@ Generated: 2025-04-15T02:46:25.531Z
 │   │   │   ├── session_41_checklist.md
 │   │   │   ├── session_41_kickoff.md
 │   │   │   ├── session_41_plan.md
+│   │   │   ├── session_41b_chat_summary.md
+│   │   │   ├── session_41b_checklist.md
+│   │   │   ├── session_41b_kickoff.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
 │   │   │   ├── session_7.md
@@ -183,9 +186,10 @@ Generated: 2025-04-15T02:46:25.531Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_41b_chat_summary.md
-│   │   ├── session_41b_checklist.md
-│   │   ├── session_41b_kickoff.md
+│   │   ├── session_42_checklist.md
+│   │   ├── session_42_implementation_notes.md
+│   │   ├── session_42_kickoff_narrative.md
+│   │   ├── session_42_resource_directories_map.md
 │   │   └── version-sync.plan
 │   ├── features/
 │   │   ├── gallery_implementation.md
@@ -224,7 +228,6 @@ Generated: 2025-04-15T02:46:25.531Z
 │   │   ├── planning_tree.md
 │   │   ├── protected_tree.md
 │   │   ├── public_tree.md
-│   │   ├── resource_directories_map.md
 │   │   ├── scan_tree.md
 │   │   ├── store_tree.md
 │   │   ├── styles_tree.md
@@ -373,6 +376,9 @@ Generated: 2025-04-15T02:46:25.531Z
 │   │   │   ├── gallery/
 │   │   │   │   └── check-access/
 │   │   │   │       └── route.ts
+│   │   │   ├── guest/
+│   │   │   │   └── upload/
+│   │   │   │       └── route.ts
 │   │   │   ├── guests/
 │   │   │   │   ├── avatar/
 │   │   │   │   │   └── route.ts
@@ -483,13 +489,19 @@ Generated: 2025-04-15T02:46:25.531Z
 │   │   │   └── [eventId]/
 │   │   │       └── page.tsx
 │   │   ├── guest/
+│   │   │   ├── camera/
+│   │   │   │   └── page.tsx
 │   │   │   ├── camera-setup/
 │   │   │   │   └── page.tsx
 │   │   │   ├── dashboard/
 │   │   │   │   └── page.tsx
+│   │   │   ├── gallery/
+│   │   │   │   └── page.tsx
 │   │   │   ├── photos/
 │   │   │   │   └── page.tsx
 │   │   │   ├── profile/
+│   │   │   │   └── page.tsx
+│   │   │   ├── upload/
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx
 │   │   ├── guest-access/
@@ -841,6 +853,7 @@ Generated: 2025-04-15T02:46:25.531Z
 │   │   │   ├── GuestDashboard.tsx
 │   │   │   ├── GuestProfileForm.tsx
 │   │   │   ├── PhotoUploader.tsx
+│   │   │   ├── bottom-nav.tsx
 │   │   │   ├── camera-test.tsx
 │   │   │   ├── profile-setup-form.tsx
 │   │   │   └── token-error.tsx
@@ -1048,6 +1061,7 @@ Generated: 2025-04-15T02:46:25.531Z
 │   │   ├── user-sessions.ts
 │   │   └── utils.ts
 │   ├── scripts/
+│   │   ├── apply-rls-policies.sh
 │   │   ├── connect-db.sh*
 │   │   ├── mobile-menu.js
 │   │   └── test-invitation.js
@@ -1139,6 +1153,12 @@ Generated: 2025-04-15T02:46:25.531Z
 │   │   ├── 20250416_enable_rls_on_gallery_permissions.sql
 │   │   ├── 20250416_enable_rls_on_guests.sql
 │   │   ├── 20250416_enable_rls_on_tables.sql
+│   │   ├── 20250417_add_guest_media_upload_policy.sql
+│   │   ├── 20250417_add_guest_upload_direct_policy.sql
+│   │   ├── 20250417_create_guest_profile_function.sql
+│   │   ├── 20250417_create_handle_guest_profile_function.sql
+│   │   ├── 20250417_update_guest_rls_policies.sql
+│   │   ├── 20250417_update_profiles_subscription_constraints.sql
 │   │   ├── check_events_schema.sql
 │   │   └── setup_launch_partner.sql
 │   ├── templates/
@@ -1161,7 +1181,6 @@ Generated: 2025-04-15T02:46:25.531Z
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
-├── STATUS_NOTES.md
 ├── cloud-burst.code-workspace
 ├── components.json
 ├── eslint.config.mjs
@@ -1177,16 +1196,16 @@ Generated: 2025-04-15T02:46:25.531Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-275 directories, 893 files
+280 directories, 907 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11787 file(s)
-- tsx: 523 file(s)
-- js: 27794 file(s)
-- json: 2022 file(s)
-- md: 1525 file(s)
+- ts: 11790 file(s)
+- tsx: 527 file(s)
+- js: 27814 file(s)
+- json: 2030 file(s)
+- md: 1527 file(s)
 - css: 26 file(s)
 - yml: 164 file(s)
 

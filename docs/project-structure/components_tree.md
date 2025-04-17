@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-04-15T02:46:33.927Z
+Generated: 2025-04-17T03:59:46.602Z
 
 ## Overview
-This directory contains 189 component(s).
+This directory contains 190 component(s).
 
 
 
@@ -109,6 +109,7 @@ This directory contains 189 component(s).
 │   ├── GuestDashboard.tsx
 │   ├── GuestProfileForm.tsx
 │   ├── PhotoUploader.tsx
+│   ├── bottom-nav.tsx
 │   ├── camera-test.tsx
 │   ├── profile-setup-form.tsx
 │   └── token-error.tsx
@@ -231,13 +232,13 @@ This directory contains 189 component(s).
 ├── theme-provider.tsx
 └── theme-toggle.tsx
 
-25 directories, 197 files
+25 directories, 198 files
 
 ```
 
 ## File Type Breakdown
 - ts: 6 file(s)
-- tsx: 190 file(s)
+- tsx: 191 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

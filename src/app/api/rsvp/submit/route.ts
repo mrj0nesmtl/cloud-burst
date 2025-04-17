@@ -170,42 +170,8 @@ export async function POST(req: NextRequest) {
         );
       }
       
-      // 2. Create or update profile with admin client
-      let profileId = null;
-      
-      // Check if profile exists
-      const { data: existingProfile } = await supabaseAdmin
-        .from('profiles')
-        .select('id')
-        .eq('email', email)
-        .maybeSingle();
-      
-      if (existingProfile) {
-        profileId = existingProfile.id;
-        console.log(`Using existing profile: ${profileId}`);
-      } else {
-        // Create new profile
-        const { data: newProfile, error: profileError } = await supabaseAdmin
-          .from('profiles')
-          .insert({
-            id: uuidv4(), // Generate proper UUID for profile ID
-            email: email,
-            full_name: name,
-            role: 'guest',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          })
-          .select('id')
-          .single();
-        
-        if (profileError) {
-          console.error('Error creating profile:', profileError);
-          // Continue with the RSVP process even if profile creation fails
-        } else if (newProfile) {
-          profileId = newProfile.id;
-          console.log(`Created new profile: ${profileId}`);
-        }
-      }
+      // 2. Skip profile creation to avoid foreign key issues
+      console.log('Skipping profile creation due to foreign key constraints');
       
       // 3. Create RSVP record with admin client
       const rsvpId = uuidv4(); // Use UUID instead of nanoid
@@ -232,6 +198,35 @@ export async function POST(req: NextRequest) {
         // Continue with the process instead of failing completely
       } else {
         console.log('Successfully created RSVP record');
+      }
+      
+      // Create guest record directly
+      try {
+        console.log('Creating guest record directly, skipping profile creation');
+        const { data: guestData, error: guestError } = await supabaseAdmin
+          .from('guests')
+          .upsert({
+            invitation_id: invitation_id,
+            event_id: event_id,
+            name: name,
+            email: email,
+            phone: phone || null,
+            notes: notes || null,
+            status: 'registered',
+            updated_at: new Date().toISOString()
+          })
+          .select()
+          .single();
+        
+        if (guestError) {
+          console.error('Error creating guest record:', guestError);
+          // Continue with the process instead of failing completely
+        } else {
+          console.log('Successfully created guest record:', guestData);
+        }
+      } catch (guestError) {
+        console.error('Exception creating guest record:', guestError);
+        // Continue with the process instead of failing completely
       }
       
       // Insert analytics event for RSVP response
@@ -267,34 +262,6 @@ export async function POST(req: NextRequest) {
       } catch (analyticsError) {
         console.error('Error creating analytics event:', analyticsError);
         // Continue despite analytics error
-      }
-      
-      // 4. Create event attendee record if accepted with admin client
-      if (dbRsvpStatus === 'accepted') {
-        console.log(`Creating event attendee record`);
-        
-        // Create new attendee record
-        const attendeeId = uuidv4(); // Generate proper UUID for attendee ID
-        const { error: attendeeError } = await supabaseAdmin
-          .from('event_attendees')
-          .insert({
-            id: attendeeId,
-            event_id: event_id,
-            email: email,
-            name: name,
-            status: 'registered', // Use a valid status from the constraint
-            access_code: nanoid(8),
-            invitation_id: invitation_id,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          });
-        
-        if (attendeeError) {
-          console.error('Error creating attendee record:', attendeeError);
-          // Continue despite attendee record error
-        } else {
-          console.log('Successfully created attendee record');
-        }
       }
       
       // 5. Log analytics with regular client (this doesn't require admin access)
