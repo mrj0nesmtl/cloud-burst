@@ -15,8 +15,7 @@ import {
   CreateAlbumParams,
   UpdateAlbumParams,
   MediaUploadResult,
-  MediaServiceClient,
-  mapDbMediaToMedia
+  MediaServiceClient
 } from '@/types/media';
 import { createClient } from '@/lib/supabase/client';
 
@@ -76,98 +75,160 @@ export const getImageDimensions = (file: File): Promise<{width: number, height: 
 };
 
 /**
- * Upload and create media all in one function
- * This uploads a file to Supabase storage and creates the corresponding media record
+ * Get all media for an event - CLIENT VERSION
+ */
+export async function getEventMedia(eventId: string): Promise<Media[]> {
+  const supabase = createClientComponentClient<Database>();
+  
+  const { data, error } = await supabase
+    .from('media')
+    .select('*')
+    .eq('event_id', eventId)
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching event media:', error);
+    return [];
+  }
+  
+  return data.map(mapDbMediaToMedia);
+}
+
+/**
+ * Get a media item by ID - CLIENT VERSION
+ */
+export async function getMediaById(mediaId: string): Promise<Media | null> {
+  const supabase = createClientComponentClient<Database>();
+  
+  const { data, error } = await supabase
+    .from('media')
+    .select('*')
+    .eq('id', mediaId)
+    .single();
+  
+  if (error) {
+    console.error('Error fetching media:', error);
+    return null;
+  }
+  
+  return mapDbMediaToMedia(data);
+}
+
+/**
+ * Upload and create a media record
  */
 export async function uploadAndCreateMedia(
   file: File,
   eventId: string,
-  userId: string,
-  title?: string,
-  description?: string,
-  isPublic?: boolean,
-  mediaType?: MediaType,
-  metadata?: MediaMetadata
+  userId: string | null,
+  title: string = '',
+  description: string = '',
+  isPublic: boolean = false,
+  mediaType: MediaType = MediaType.PHOTO,
+  metadata: Record<string, any> = {}
 ): Promise<Media | null> {
-  try {
-    const supabase = createClient();
-    
-    // Determine media type based on file type if not provided
-    const fileMediaType = mediaType || (file.type.startsWith('image/') 
-      ? MediaType.PHOTO 
-      : file.type.startsWith('video/') 
-        ? MediaType.VIDEO 
-        : MediaType.PHOTO);
-        
-    // Generate a unique filename
-    const timestamp = new Date().getTime();
-    const fileExtension = file.name.split('.').pop();
-    const uniqueFilename = `${timestamp}-${file.name}`;
-    
-    // Create storage path
-    const storagePath = `media/${eventId}/${uniqueFilename}`;
-    
-    // Upload the file
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('events')
-      .upload(storagePath, file, {
-        contentType: file.type,
-        cacheControl: '3600'
-      });
-      
-    if (uploadError) {
-      console.error('Error uploading file:', uploadError);
-      return null;
-    }
-    
-    // Get the public URL for the file
-    const { data: urlData } = await supabase.storage
-      .from('events')
-      .getPublicUrl(storagePath);
-      
-    const url = urlData.publicUrl;
-    
-    // Get dimensions for image files
-    let width = 0;
-    let height = 0;
-    let duration = 0;
-    
-    if (fileMediaType === MediaType.PHOTO) {
-      try {
-        const dimensions = await getImageDimensions(file);
-        width = dimensions.width;
-        height = dimensions.height;
-      } catch (e) {
-        console.error('Error getting image dimensions:', e);
-      }
-    }
-    
-    // Create the media record
-    const createParams: CreateMediaParams = {
-      eventId,
-      userId,
-      mediaType: fileMediaType,
-      filePath: storagePath,
-      url,
-      thumbnailUrl: url, // For now, use the same URL for thumbnail
-      title: title || file.name,
-      description: description || '',
-      size: file.size,
-      mimeType: file.type,
-      width,
-      height,
-      duration,
-      isPublic: isPublic || false,
-      metadata: metadata || {},
-      filename: file.name
-    };
-    
-    // Call the service to create the media record
-    return await mediaService.createMedia(createParams);
-  } catch (error) {
-    console.error('Error in uploadAndCreateMedia:', error);
-    return null;
+  const supabase = createClientComponentClient<Database>();
+  
+  // Generate a unique filename
+  const timestamp = new Date().getTime();
+  const fileExt = file.name.split('.').pop();
+  const safeFileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
+  const storagePath = `events/${eventId}/${safeFileName}`;
+  
+  // Upload the file to Supabase Storage
+  const { data: uploadData, error: uploadError } = await supabase
+    .storage
+    .from('event-photos')
+    .upload(storagePath, file);
+  
+  if (uploadError) {
+    console.error('Error uploading media:', uploadError);
+    throw new Error(`Failed to upload file: ${uploadError.message}`);
   }
+  
+  // Get the public URL for the uploaded file
+  const { data: { publicUrl } } = supabase
+    .storage
+    .from('event-photos')
+    .getPublicUrl(storagePath);
+  
+  // Create a record in the media table
+  const mediaRecord = {
+    event_id: eventId,
+    uploaded_by: userId,
+    media_type: mediaType === MediaType.VIDEO ? 'video' : 'photo',
+    storage_path: storagePath,
+    filename: safeFileName,
+    original_filename: file.name,
+    url: publicUrl,
+    size_bytes: file.size,
+    content_type: file.type,
+    title: title,
+    description: description,
+    is_public: isPublic,
+    status: 'pending',
+    metadata: metadata
+  };
+  
+  const { data: mediaData, error: mediaError } = await supabase
+    .from('media')
+    .insert(mediaRecord)
+    .select()
+    .single();
+  
+  if (mediaError) {
+    console.error('Error creating media record:', mediaError);
+    
+    // Log the insertion payload for debugging
+    console.error('Media insert payload:', mediaRecord);
+    
+    throw new Error(`Failed to create media record: ${mediaError.message}`);
+  }
+  
+  return mapDbMediaToMedia(mediaData);
+}
+
+/**
+ * Maps a database media record to the Media type
+ */
+function mapDbMediaToMedia(mediaRecord: any): Media {
+  return {
+    id: mediaRecord.id,
+    eventId: mediaRecord.event_id,
+    mediaType: mediaRecord.media_type as MediaType,
+    storagePath: mediaRecord.storage_path,
+    filename: mediaRecord.filename || '',
+    originalFilename: mediaRecord.original_filename || '',
+    url: mediaRecord.url || '',
+    thumbnailUrl: mediaRecord.thumbnail_url || '',
+    size: mediaRecord.size_bytes || 0,
+    width: mediaRecord.width || null,
+    height: mediaRecord.height || null,
+    title: mediaRecord.title || '',
+    description: mediaRecord.description || '',
+    isPublic: mediaRecord.is_public || false,
+    status: mediaRecord.status || 'pending',
+    metadata: mediaRecord.metadata || {},
+    createdAt: mediaRecord.created_at,
+    updatedAt: mediaRecord.updated_at
+  };
+}
+
+/**
+ * Get public URL for a media item
+ */
+export function getMediaPublicUrl(media: Media): string {
+  if (media.url) {
+    return media.url;
+  }
+  
+  const supabase = createClientComponentClient<Database>();
+  return supabase
+    .storage
+    .from('event-photos')
+    .getPublicUrl(media.storagePath)
+    .data
+    .publicUrl;
 }
 
 // Create a typed Supabase client to use with media service
@@ -274,8 +335,9 @@ const mediaService: MediaServiceClient = {
     return (data || []).map(media => mapDbMediaToMedia(media));
   },
   
-  getMediaById: async (mediaId: string) => {
+  getMediaById: async (mediaId: string): Promise<Media | null> => {
     const supabase = createClient();
+    
     const { data, error } = await supabase
       .from('media')
       .select('*')
@@ -294,21 +356,20 @@ const mediaService: MediaServiceClient = {
     const supabase = createClient();
     const mediaRecord = {
       event_id: params.eventId,
-      uploaded_by: params.userId,
       media_type: params.mediaType,
-      storage_path: params.filePath,
+      storage_path: params.storagePath,
       filename: params.filename,
+      original_filename: params.originalFilename,
       url: params.url,
       thumbnail_url: params.thumbnailUrl,
       title: params.title,
       description: params.description,
       size: params.size,
-      mime_type: params.mimeType,
+      mime_type: params.contentType,
       width: params.width,
       height: params.height,
-      duration: params.duration,
       is_public: params.isPublic || false,
-      status: MediaStatus.PENDING,
+      status: params.status || MediaStatus.PENDING,
       metadata: params.metadata || {},
     };
     
@@ -399,7 +460,7 @@ const mediaService: MediaServiceClient = {
     return true;
   },
   
-  uploadMedia: async (file: File, eventId: string, onProgress?: (progress: number) => void) => {
+  uploadMedia: async (file: File, eventId: string, onProgress?: (progress: number) => void): Promise<MediaUploadResult | null> => {
     const supabase = createClient();
     
     // Generate a unique filename
