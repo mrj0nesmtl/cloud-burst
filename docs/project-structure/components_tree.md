@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-04-17T03:59:46.602Z
+Generated: 2025-04-18T18:53:19.334Z
 
 ## Overview
-This directory contains 190 component(s).
+This directory contains 192 component(s).
 
 
 
@@ -138,6 +138,8 @@ This directory contains 190 component(s).
 │   ├── MediaModerationGrid.tsx
 │   ├── MediaUploader.tsx
 │   ├── MediaViewer.tsx
+│   ├── ModerationCard.tsx
+│   ├── camera-capture.tsx
 │   ├── camera-test.tsx
 │   └── upload-media-button.tsx
 ├── nav/
@@ -232,13 +234,13 @@ This directory contains 190 component(s).
 ├── theme-provider.tsx
 └── theme-toggle.tsx
 
-25 directories, 198 files
+25 directories, 200 files
 
 ```
 
 ## File Type Breakdown
 - ts: 6 file(s)
-- tsx: 191 file(s)
+- tsx: 193 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

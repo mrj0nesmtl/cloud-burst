@@ -1,5 +1,5 @@
 # supabase Directory Structure
-Generated: 2025-04-17T03:59:48.579Z
+Generated: 2025-04-18T18:53:20.947Z
 
 ## Overview
 
@@ -15,6 +15,7 @@ Generated: 2025-04-17T03:59:48.579Z
 ├── auth-store.ts
 ├── auth-utils.ts
 ├── client.ts
+├── dashboard.ts
 ├── debug-queries.ts
 ├── events.server.ts
 ├── events.ts
@@ -34,12 +35,12 @@ Generated: 2025-04-17T03:59:48.579Z
 ├── verify-schema.html
 └── verify-schema.js
 
-2 directories, 23 files
+2 directories, 24 files
 
 ```
 
 ## File Type Breakdown
-- ts: 20 file(s)
+- ts: 21 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

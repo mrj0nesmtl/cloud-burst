@@ -1,21 +1,63 @@
 {
-  "name": "Cloud Burst",
-  "short_name": "Cloud Burst",
-  "description": "AI-Powered Event Photography Platform",
+  "name": "Cloudburst",
+  "short_name": "Cloudburst",
+  "description": "Event Media + Invitation Platform",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
+      "src": "/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/android-chrome-512x512.png",
+      "src": "/logo-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/maskable-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "My Events",
+      "short_name": "Events",
+      "description": "View your events",
+      "url": "/protected/dashboard",
+      "icons": [{ "src": "/shortcuts/events.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Upload Photos",
+      "short_name": "Upload",
+      "description": "Upload new photos",
+      "url": "/protected/uploads",
+      "icons": [{ "src": "/shortcuts/upload.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/homescreen.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ]
 } 
