@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { GalleryLayout } from '@/components/gallery/GalleryLayout';
-import { EventGallery } from '@/components/gallery/EventGallery';
+import { EventGallery, PhotoItem } from '@/components/gallery/EventGallery';
 import { Skeleton } from '@/components/ui/skeleton';
 import { mockGalleries } from '@/components/gallery/mock-data';
 import { Card, CardContent } from '@/components/ui/card';
@@ -45,30 +45,50 @@ export default async function EventGalleryPage({ params }: PageProps) {
     );
   }
   
-  // Fetch photos for this event
-  const { data: photos } = await supabase
-    .from('photos')
-    .select('*')
-    .eq('event_id', params.id)
-    .order('created_at', { ascending: false });
+  // Fetch the event photos
+  let galleryPhotos: PhotoItem[] = []
+  try {
+    // Fetch approved media for this event
+    const { data: mediaItems } = await supabase
+      .from('media')
+      .select('*')
+      .eq('event_id', params.id)
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false })
+    
+    console.log(`Found ${mediaItems?.length || 0} approved media items for event ${params.id}`)
+
+    if (mediaItems && mediaItems.length > 0) {
+      // Map the media items to the PhotoItem format expected by EventGallery
+      galleryPhotos = mediaItems.map(item => ({
+        id: item.id,
+        url: item.url,
+        thumbnail: item.thumbnail_url || item.url,
+        title: item.title || 'Untitled',
+        description: item.description || '',
+        tags: item.tags || [],
+        dateUploaded: item.created_at,
+        views: item.views || 0,
+        likes: item.likes_count || 0,
+        downloads: item.downloads_count || 0,
+        featured: item.featured || false
+      }))
+    }
+  } catch (error) {
+    console.error('Error fetching media for gallery:', error)
+    // Fall back to mock data if there's an error or no photos
+    galleryPhotos = mockGalleries[params.id]?.photos || []
+  }
+
+  if (galleryPhotos.length === 0) {
+    console.log('No approved media found, using mock photos')
+    galleryPhotos = mockGalleries[params.id]?.photos || []
+  }
   
-  // If no photos found, use mock photos instead
-  const mockGallery = mockGalleries[params.id] || mockGalleries['1']; // Fallback to first gallery if no match
-  const galleryPhotos = photos?.length ? 
-    photos.map(photo => ({
-      id: photo.id,
-      url: photo.url || mockGallery.photos[0].url, // Fallback to mock URL if none exists
-      thumbnail: photo.thumbnail_url || photo.url || mockGallery.photos[0].thumbnail,
-      title: photo.title || `Photo ${photo.id}`,
-      description: photo.description || '',
-      tags: photo.tags ? photo.tags.split(',') : [],
-      dateUploaded: photo.created_at,
-      views: photo.view_count || 0,
-      likes: photo.like_count || 0,
-      downloads: photo.download_count || 0,
-      featured: photo.is_featured || false
-    })) : 
-    mockGallery.photos;
+  // Debug the first media item to see its structure
+  if (galleryPhotos && galleryPhotos.length > 0) {
+    console.log('First gallery photo after mapping:', galleryPhotos[0]);
+  }
   
   const header = (
     <div className="flex items-center justify-between w-full">

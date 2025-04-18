@@ -18,6 +18,7 @@ import { BottomNav } from '@/components/guest/bottom-nav'
 type MediaItem = {
   id: string
   url: string
+  storage_path?: string
   uploaded_by: string
   created_at: string
   type: 'image' | 'video'
@@ -82,6 +83,8 @@ export default function GuestGalleryPage() {
         return
       }
       
+      console.log('Found invitation for event:', invitation.event_id);
+      
       // Get event details
       const { data: eventData, error: eventError } = await supabase
         .from('events')
@@ -97,6 +100,7 @@ export default function GuestGalleryPage() {
       }
       
       setEvent(eventData)
+      console.log('Event details:', eventData);
       
       // Fetch media items directly for this event
       const { data: mediaData, error: mediaError } = await supabase
@@ -112,18 +116,32 @@ export default function GuestGalleryPage() {
         return
       }
       
+      console.log('Raw media data from database:', mediaData);
+      console.log('Media items count for event:', mediaData?.length || 0);
+      
       if (mediaData && mediaData.length > 0) {
         const processedMedia = mediaData.map(item => {
-          // Determine media type based on url or type field
-          const type = item.type || (item.url?.includes('.mp4') ? 'video' : 'image')
+          // Determine media type based on media_type field or content_type
+          const type = item.media_type || 
+                      (item.content_type?.startsWith('video/') ? 'video' : 'image')
+          
+          // Use our image proxy for URLs to avoid CORS issues
+          let imageUrl = item.url || '';
+          
+          // If the media has a storage_path, use our proxy instead
+          if (item.storage_path) {
+            imageUrl = `/api/image-proxy?path=${encodeURIComponent(item.storage_path)}`;
+            console.log('Using proxy URL for media item:', imageUrl);
+          }
           
           return {
             id: item.id,
-            url: item.url,
-            uploaded_by: item.uploaded_by_token === token ? 'You' : 'Other Guest',
+            url: imageUrl,
+            storage_path: item.storage_path,
+            uploaded_by: item.metadata?.invitation_token === token ? 'You' : 'Other Guest',
             created_at: item.created_at,
-            type: type as 'image' | 'video',
-            is_camera_capture: item.is_camera_capture || false
+            type: (type === 'video' ? 'video' : 'image') as 'image' | 'video',
+            is_camera_capture: item.metadata?.is_camera_capture || false
           }
         })
         
@@ -146,6 +164,7 @@ export default function GuestGalleryPage() {
   // Handle filtering and searching
   useEffect(() => {
     let result = [...mediaItems]
+    console.log('Starting filtering with', mediaItems.length, 'media items');
     
     // Apply filter
     if (filter === 'mine' && invitationToken) {
@@ -166,6 +185,7 @@ export default function GuestGalleryPage() {
       )
     }
     
+    console.log('After filtering, we have', result.length, 'media items to show');
     setFilteredMedia(result)
   }, [filter, searchQuery, mediaItems, invitationToken])
   
@@ -350,7 +370,9 @@ export default function GuestGalleryPage() {
                       {item.type === 'video' ? (
                         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                           <Image
-                            src={item.url.replace('.mp4', '.jpg') || '/images/video-placeholder.jpg'}
+                            src={item.storage_path ? 
+                              `/api/image-proxy?path=${encodeURIComponent(item.storage_path.replace(/\.\w+$/, '.jpg'))}` : 
+                              (item.url.replace('.mp4', '.jpg') || '/images/video-placeholder.jpg')}
                             alt="Video thumbnail"
                             fill
                             style={{ objectFit: 'cover' }}

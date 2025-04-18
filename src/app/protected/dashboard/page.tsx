@@ -43,14 +43,14 @@ async function getDashboardData() {
       eventsCount,
       attendeesCount,
       acceptedRsvpsCount,
-      photosCount,
+      mediaCount,
       activeEventsCount,
       { data: recentEvents },
     ] = await Promise.all([
       supabase.from('events').select('*', { count: 'exact', head: true }),
       supabase.from('event_attendees').select('*', { count: 'exact', head: true }),
       supabase.from('invitations').select('*', { count: 'exact', head: true }).eq('rsvp_status', 'accepted'),
-      supabase.from('photos').select('*', { count: 'exact', head: true }),
+      supabase.from('media').select('*', { count: 'exact', head: true }),
       supabase
         .from('events')
         .select('*', { count: 'exact', head: true })
@@ -65,7 +65,7 @@ async function getDashboardData() {
           location,
           cover_image_url,
           event_attendees(count),
-          photos(count)
+          media(count)
         `)
         .order('created_at', { ascending: false })
         .limit(5),
@@ -97,14 +97,14 @@ async function getDashboardData() {
       location: event.location,
       cover_image_url: event.cover_image_url,
       attendeeCount: (event.event_attendees?.[0]?.count ?? 0) + (rsvpCountsByEvent[event.id] || 0),
-      photoCount: event.photos?.[0]?.count ?? 0,
+      mediaCount: event.media?.[0]?.count ?? 0,
     })) ?? []
 
     return {
       stats: {
         totalEvents: eventsCount.count ?? 0,
         totalAttendees: (attendeesCount.count ?? 0) + (acceptedRsvpsCount.count ?? 0),
-        totalPhotos: photosCount.count ?? 0,
+        totalMedia: mediaCount.count ?? 0,
         activeEvents: activeEventsCount.count ?? 0,
       },
       recentEvents: transformedEvents,
@@ -197,14 +197,14 @@ export default async function DashboardPage() {
           
           <Card className="overflow-hidden border border-purple-100 dark:border-purple-900/30 shadow-sm hover:shadow-md hover:border-purple-200 dark:hover:border-purple-800/50 transition-all bg-purple-50/50 dark:bg-purple-900/10">
             <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-              <CardTitle className="text-base font-medium">Total Photos</CardTitle>
+              <CardTitle className="text-base font-medium">Total Media</CardTitle>
               <div className="h-8 w-8 rounded-md bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
                 <Image className="h-4 w-4 text-purple-600 dark:text-purple-400" />
               </div>
             </CardHeader>
             <CardContent className="p-4 pt-2">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.totalPhotos}</div>
-              <p className="text-sm text-muted-foreground">Photos uploaded</p>
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.totalMedia}</div>
+              <p className="text-sm text-muted-foreground">Uploaded images and videos</p>
             </CardContent>
           </Card>
         </div>
@@ -258,8 +258,10 @@ export default async function DashboardPage() {
                 </Link>
               </div>
             </CardHeader>
-            <CardContent className="p-6 pt-4 flex-1 overflow-auto">
-              <RecentEvents events={recentEvents} />
+            <CardContent className="p-6 pt-4 flex-1 overflow-hidden">
+              <div className="h-[350px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary/40 dark:scrollbar-thumb-primary/30 scrollbar-track-transparent hover:scrollbar-thumb-primary/50 dark:hover:scrollbar-thumb-primary/40">
+                <RecentEvents events={recentEvents} />
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -283,6 +285,18 @@ export default async function DashboardPage() {
               gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
               width: '100%'
             }}>
+              <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all hover:scale-[1.02]">
+                <Link href="/protected/events/create" className="flex items-start">
+                  <div className="mr-3 h-10 w-10 rounded-md bg-red-100 dark:bg-red-800/30 flex items-center justify-center">
+                    <Plus className="h-5 w-5 text-red-600 dark:text-red-400" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-sm font-medium">Create New Event</span>
+                    <span className="text-xs text-muted-foreground mt-1">Start planning your next event</span>
+                  </div>
+                </Link>
+              </Button>
+              
               <Button variant="outline" asChild className="h-auto justify-start px-4 py-3 border-none bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all hover:scale-[1.02]">
                 <Link href="/protected/qr-codes" className="flex items-start">
                   <div className="mr-3 h-10 w-10 rounded-md bg-blue-100 dark:bg-blue-800/30 flex items-center justify-center">
