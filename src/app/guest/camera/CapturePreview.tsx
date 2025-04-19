@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 
 interface CapturePreviewProps {
   photoUrl: string;
-  onUpload: (photoBlob: Blob) => void;
+  onUpload: (dataUrl: string) => void;
   onRetake: () => void;
   onCancel: () => void;
 }
@@ -39,15 +39,9 @@ export function CapturePreview({
   const [saturation, setSaturation] = useState(100);
   const [filter, setFilter] = useState('none');
   
-  // Fetch the image as a blob for processing
-  const getPhotoBlob = async (): Promise<Blob> => {
-    const response = await fetch(photoUrl);
-    return await response.blob();
-  };
-  
-  const handleUpload = async () => {
-    const blob = await getPhotoBlob();
-    onUpload(blob);
+  const handleUpload = () => {
+    // Just pass the photoUrl string back to the parent component
+    onUpload(photoUrl);
   };
   
   const handleEdit = () => {

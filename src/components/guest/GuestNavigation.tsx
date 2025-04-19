@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Home, Camera, Gallery, Upload, User } from 'lucide-react';
+import { Home, Camera, Image, Upload, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface GuestNavigationProps {
@@ -27,7 +27,7 @@ export function GuestNavigation({ token, activeItem }: GuestNavigationProps) {
     },
     {
       name: 'Gallery',
-      icon: Gallery,
+      icon: Image,
       href: `/guest/gallery?token=${token}`,
       active: activeItem === 'gallery',
     },

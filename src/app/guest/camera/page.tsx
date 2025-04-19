@@ -31,7 +31,7 @@ export default function GuestCameraPage() {
   const [eventId, setEventId] = useState<string | null>(null)
   const [invitationId, setInvitationId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [cameraActive, setCameraActive] = useState(false)
   const [permissionError, setPermissionError] = useState<string | null>(null)
   const [capturedPhotos, setCapturedPhotos] = useState<{id: string, preview: string, uploading: boolean, progress: number, uploaded: boolean, error: string | null}[]>([])
@@ -44,6 +44,20 @@ export default function GuestCameraPage() {
   const [isFlashOn, setIsFlashOn] = useState(false)
   const [stream, setStream] = useState<MediaStream | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  
+  // Initialize camera when component mounts
+  useEffect(() => {
+    if (!loading && !error) {
+      initializeCamera(isFrontCamera);
+    }
+    
+    return () => {
+      // Cleanup camera on unmount
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [loading, error]);
   
   // Initialize with token from URL or localStorage
   useEffect(() => {
@@ -89,6 +103,190 @@ export default function GuestCameraPage() {
       setError(err.message || 'Failed to load event details')
       setLoading(false)
     }
+  }
+  
+  // Initialize camera functions
+  const initializeCamera = async (useFrontCamera: boolean) => {
+    setIsInitializing(true)
+    setPermissionError(null)
+    
+    try {
+      const constraints = {
+        video: {
+          facingMode: useFrontCamera ? 'user' : 'environment',
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        },
+        audio: false
+      }
+      
+      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints)
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream
+        setStream(mediaStream)
+        setHasCameraPermission(true)
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error)
+      setHasCameraPermission(false)
+      
+      if (error instanceof DOMException) {
+        if (error.name === 'NotAllowedError') {
+          setPermissionError('Camera access was denied. Please allow camera access in your browser settings.')
+        } else if (error.name === 'NotFoundError') {
+          setPermissionError('No camera detected. Please connect a camera and try again.')
+        } else {
+          setPermissionError(`Camera error: ${error.message}`)
+        }
+      } else {
+        setPermissionError('An unknown error occurred while accessing the camera.')
+      }
+    } finally {
+      setIsInitializing(false)
+    }
+  }
+  
+  const toggleFlash = () => {
+    // Flash functionality is only supported on certain browsers/devices
+    setIsFlashOn(prev => !prev)
+    
+    if (stream) {
+      const tracks = stream.getVideoTracks()
+      if (tracks.length > 0) {
+        const track = tracks[0]
+        const capabilities = track.getCapabilities()
+        
+        // Check if torch is supported
+        if (capabilities.torch) {
+          try {
+            track.applyConstraints({
+              advanced: [{ torch: !isFlashOn }]
+            })
+          } catch (error) {
+            console.error('Error toggling flash:', error)
+            toast({
+              variant: "destructive",
+              title: "Flash Error",
+              description: "Flash functionality is not supported on your device."
+            })
+          }
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Flash Not Supported",
+            description: "Flash functionality is not supported on your device."
+          })
+        }
+      }
+    }
+  }
+  
+  const capturePhoto = () => {
+    if (!videoRef.current) return
+    
+    // Take photo using the existing canvas
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current
+      const canvas = canvasRef.current
+      
+      // Match canvas dimensions to video
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+      
+      // Draw video frame to canvas
+      const context = canvas.getContext('2d')
+      if (context) {
+        // If front camera is active, flip the image horizontally
+        if (isFrontCamera) {
+          context.translate(canvas.width, 0)
+          context.scale(-1, 1)
+        }
+        
+        context.drawImage(video, 0, 0, canvas.width, canvas.height)
+        
+        // Reset transformation if we applied one
+        if (isFrontCamera) {
+          context.setTransform(1, 0, 0, 1, 0, 0)
+        }
+        
+        // Convert to data URL for preview
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95)
+        setCapturedPhotoUrl(dataUrl)
+        setIsCapturing(true)
+      }
+    }
+  }
+  
+  const switchCamera = () => {
+    // Stop current stream
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop())
+    }
+    
+    // Toggle front/back camera
+    setIsFrontCamera(prev => !prev)
+    setIsFlashOn(false)
+    
+    // Reinitialize with new camera
+    initializeCamera(!isFrontCamera)
+  }
+  
+  const handleUpload = async (dataUrl: string) => {
+    try {
+      // Convert data URL to blob
+      const response = await fetch(dataUrl)
+      const blob = await response.blob()
+      
+      // Generate a unique ID for this photo
+      const photoId = uuidv4()
+      
+      // Add to captured photos for upload
+      setCapturedPhotos(prev => [
+        ...prev, 
+        { 
+          id: photoId, 
+          preview: dataUrl, 
+          uploading: false, 
+          progress: 0, 
+          uploaded: false,
+          error: null
+        }
+      ])
+      
+      // Reset capturing state
+      setIsCapturing(false)
+      setCapturedPhotoUrl(null)
+      
+      // Provide feedback
+      toast({
+        title: "Photo Saved!",
+        description: "Your photo has been saved. You can upload it to the event.",
+      })
+    } catch (err) {
+      console.error('Error saving photo:', err)
+      toast({
+        variant: "destructive",
+        title: "Save Failed",
+        description: "There was a problem saving your photo. Please try again.",
+      })
+      
+      // Reset capturing state on error
+      setIsCapturing(false)
+      setCapturedPhotoUrl(null)
+    }
+  }
+  
+  const handleRetake = () => {
+    // Clear current capture and return to camera view
+    setIsCapturing(false)
+    setCapturedPhotoUrl(null)
+  }
+  
+  const handleCancel = () => {
+    // Clear current capture and return to camera view
+    setIsCapturing(false)
+    setCapturedPhotoUrl(null)
   }
   
   // Camera functions
