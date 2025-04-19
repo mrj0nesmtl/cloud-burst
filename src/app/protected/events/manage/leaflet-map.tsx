@@ -129,12 +129,13 @@ export function LeafletMap({ events, getStatusColor, theme, isMobile }: LeafletM
   };
   
   useEffect(() => {
-    // Inject styles for map depending on theme
+    // Create a stylesheet element instead of using innerHTML
     const styleEl = document.createElement('style');
     document.head.appendChild(styleEl);
     
     const updateStyles = () => {
-      styleEl.innerHTML = `
+      // Use textContent instead of innerHTML for security
+      const cssText = `
         .leaflet-container {
           background-color: ${theme === 'dark' ? '#1a1a1a' : '#f0f0f0'};
           color: ${theme === 'dark' ? '#e0e0e0' : '#333'};
@@ -168,6 +169,9 @@ export function LeafletMap({ events, getStatusColor, theme, isMobile }: LeafletM
           width: auto !important;
         }
       `;
+      
+      // Use textContent which properly escapes content
+      styleEl.textContent = cssText;
     };
     
     updateStyles();

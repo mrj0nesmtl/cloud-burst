@@ -256,7 +256,7 @@ export type DbMedia = Database['public']['Tables']['media']['Row'];
 // export type DbModerationLog = Database['public']['Tables']['moderation_logs']['Row'];
 
 /**
- * Helper function to check if media is a photo
+ * Sanitize user input to prevent XSS attacks
  */
 export function isPhoto(media: Media): boolean {
   return media.mediaType === MediaType.PHOTO;
@@ -267,6 +267,94 @@ export function isPhoto(media: Media): boolean {
  */
 export function isVideo(media: Media): boolean {
   return media.mediaType === MediaType.VIDEO;
+}
+
+export type MediaUploadResult = {
+  path: string;
+  url: string;
+};
+
+export interface MediaServiceClient {
+  supabase: SupabaseClient<Database>;
+  getEventMedia: (eventId: string) => Promise<Media[]>;
+  getApprovedEventMedia: (eventId: string) => Promise<Media[]>;
+  getPendingEventMedia: (eventId: string) => Promise<Media[]>;
+  getRejectedEventMedia: (eventId: string) => Promise<Media[]>;
+  getUserMedia: (userId?: string) => Promise<Media[]>;
+  getMediaById: (mediaId: string) => Promise<Media | null>;
+  createMedia: (params: CreateMediaParams) => Promise<Media | null>;
+  updateMedia: (params: UpdateMediaParams) => Promise<Media | null>;
+  deleteMedia: (mediaId: string) => Promise<boolean>;
+  uploadMedia: (file: File, eventId: string, onProgress?: (progress: number) => void) => Promise<MediaUploadResult | null>;
+  approveMedia: (mediaId: string, reason?: string) => Promise<Media | null>;
+  rejectMedia: (mediaId: string, reason?: string) => Promise<Media | null>;
+
+  
+  // Replace potentially dangerous characters
+  return input
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/`/g, '&#96;')
+    .replace(/\$/g, '&#36;');
+}
+
+/**
+ * Helper function to map database media to our application Media type
+ */
+export function mapDbMediaToMedia(dbMedia: any): Media {
+  const metadata = dbMedia.metadata || {};
+  
+  // Determine status based on available fields
+  let status = dbMedia.status as MediaStatus || MediaStatus.PENDING;
+  let isApproved = dbMedia.is_approved;
+  
+  // If status is available, use it
+  if (status) {
+    // Set is_approved for backward compatibility
+    isApproved = status === MediaStatus.APPROVED;
+  } 
+  // If only is_approved is available, derive status from it
+  else if (isApproved !== undefined) {
+    status = isApproved ? MediaStatus.APPROVED : MediaStatus.PENDING;
+  }
+  
+  return {
+    id: dbMedia.id,
+    eventId: dbMedia.event_id || '',
+    mediaType: dbMedia.media_type as MediaType,
+    storagePath: dbMedia.storage_path || '',
+    filename: dbMedia.filename,
+    originalFilename: dbMedia.filename,
+    url: dbMedia.url || '',
+    thumbnailUrl: dbMedia.thumbnail_url,
+
+    size: dbMedia.size,
+    width: dbMedia.width,
+    height: dbMedia.height,
+    title: dbMedia.title,
+    description: dbMedia.description,
+    isPublic: dbMedia.is_public,
+    status: dbMedia.status,
+    metadata: metadata,
+    createdAt: dbMedia.created_at || new Date().toISOString(),
+    updatedAt: dbMedia.updated_at,
+  };
+}
+
+/**
+ * Helper function to check if media is a photo
+ */
+export function isPhoto(media: Media): boolean {
+  return media.media_type === MediaType.PHOTO;
+}
+
+/**
+ * Helper function to check if media is a video
+ */
+export function isVideo(media: Media): boolean {
+  return media.media_type === MediaType.VIDEO;
 }
 
 export type MediaUploadResult = {
@@ -299,46 +387,4 @@ export interface MediaServiceClient {
   addMediaToAlbum: (albumId: string, mediaId: string) => Promise<boolean>;
   removeMediaFromAlbum: (albumId: string, mediaId: string) => Promise<boolean>;
   reorderAlbumMedia: (albumId: string, mediaIds: string[]) => Promise<boolean>;
-}
-
-/**
- * Helper function to map database media to our application Media type
- */
-export function mapDbMediaToMedia(dbMedia: any): Media {
-  const metadata = dbMedia.metadata || {};
-  
-  // Determine status based on available fields
-  let status = dbMedia.status as MediaStatus || MediaStatus.PENDING;
-  let isApproved = dbMedia.is_approved;
-  
-  // If status is available, use it
-  if (status) {
-    // Set is_approved for backward compatibility
-    isApproved = status === MediaStatus.APPROVED;
-  } 
-  // If only is_approved is available, derive status from it
-  else if (isApproved !== undefined) {
-    status = isApproved ? MediaStatus.APPROVED : MediaStatus.PENDING;
-  }
-  
-  return {
-    id: dbMedia.id,
-    eventId: dbMedia.event_id || '',
-    mediaType: dbMedia.media_type as MediaType,
-    storagePath: dbMedia.storage_path || '',
-    filename: dbMedia.filename,
-    originalFilename: dbMedia.filename,
-    url: dbMedia.url || '',
-    thumbnailUrl: dbMedia.thumbnail_url,
-    size: dbMedia.size,
-    width: dbMedia.width,
-    height: dbMedia.height,
-    title: dbMedia.title,
-    description: dbMedia.description,
-    isPublic: dbMedia.is_public,
-    status: dbMedia.status,
-    metadata: metadata,
-    createdAt: dbMedia.created_at || new Date().toISOString(),
-    updatedAt: dbMedia.updated_at,
-  };
 } 

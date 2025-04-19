@@ -74,9 +74,6 @@ export const getImageDimensions = (file: File): Promise<{width: number, height: 
   });
 };
 
-/**
- * Get all media for an event - CLIENT VERSION
- */
 export async function getEventMedia(eventId: string): Promise<Media[]> {
   const supabase = createClientComponentClient<Database>();
   
@@ -114,9 +111,6 @@ export async function getMediaById(mediaId: string): Promise<Media | null> {
   return mapDbMediaToMedia(data);
 }
 
-/**
- * Upload and create a media record
- */
 export async function uploadAndCreateMedia(
   file: File,
   eventId: string,
