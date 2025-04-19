@@ -597,7 +597,7 @@ export default function GuestCameraPage() {
         
         {/* Camera controls */}
         {hasCameraPermission === true && !isInitializing && (
-          <div className="absolute inset-x-0 bottom-20 flex justify-center space-x-6 p-4">
+          <div className="absolute inset-x-0 bottom-28 flex justify-center space-x-6 p-4">
             {/* Flash toggle */}
             <Button
               variant="outline"
