@@ -10,7 +10,7 @@ import {
   DialogDescription
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Media } from '@/types/media';
+import { Media, MediaType } from '@/types/media';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -18,9 +18,11 @@ import {
   Maximize, 
   Minimize, 
   Info, 
-  X
+  X,
+  Download
 } from 'lucide-react';
 import { formatDate, formatFileSize } from '@/lib/utils';
+import { getProxiedMediaUrl } from '@/lib/utils/media-proxy';
 
 interface MediaDetailsDialogProps {
   media: Media | null;
@@ -125,12 +127,9 @@ export function MediaDetailsDialog({
 
   if (!media) return null;
 
-  const mediaType = typeof media.type === 'string' 
-    ? media.type.toLowerCase() 
-    : '';
-  
-  const isPhoto = mediaType === 'photo';
-  const isVideo = mediaType === 'video';
+  const mediaType = media.mediaType?.toLowerCase() || '';
+  const isPhoto = mediaType === 'photo' || mediaType === MediaType.PHOTO || !mediaType;
+  const isVideo = mediaType === 'video' || mediaType === MediaType.VIDEO;
 
   const handleImageLoad = () => {
     setIsLoading(false);
@@ -150,9 +149,10 @@ export function MediaDetailsDialog({
       <DialogContent 
         ref={contentRef}
         className={`
-          sm:max-w-[90vw] md:max-w-[85vw] lg:max-w-[80vw] 
+          sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-[85vw] 
           ${isFullscreen ? 'h-[95vh] max-h-[95vh] p-2' : 'max-h-[85vh]'}
           overflow-hidden flex flex-col
+          animate-in fade-in-0 zoom-in-95 duration-300
         `}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -176,6 +176,8 @@ export function MediaDetailsDialog({
               onClick={toggleInfo}
               size="icon"
               variant="ghost"
+              title="Toggle information panel (I)"
+              aria-label="Toggle information"
             >
               <Info className="h-4 w-4" />
             </Button>
@@ -183,6 +185,8 @@ export function MediaDetailsDialog({
               onClick={toggleFullscreen}
               size="icon"
               variant="ghost"
+              title="Toggle fullscreen (F)"
+              aria-label="Toggle fullscreen"
             >
               {isFullscreen ? (
                 <Minimize className="h-4 w-4" />
@@ -194,49 +198,58 @@ export function MediaDetailsDialog({
               onClick={() => onOpenChange(false)}
               size="icon"
               variant="ghost"
+              title="Close (Escape)"
+              aria-label="Close"
             >
               <X className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
-        <div className={`flex ${isFullscreen ? 'h-full' : ''}`}>
+        <div className={`flex flex-col md:flex-row ${isFullscreen ? 'h-full' : ''}`}>
           {/* Media display area */}
           <div 
             className={`
               relative flex items-center justify-center 
-              ${showInfo ? 'w-[70%]' : 'w-full'} 
-              ${isFullscreen ? 'h-full' : 'max-h-[70vh]'}
+              w-full md:${showInfo ? 'w-[70%]' : 'w-full'} 
+              ${isFullscreen ? 'h-full' : 'max-h-[60vh] md:max-h-[70vh]'}
               overflow-hidden
             `}
           >
             {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/5">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-sm z-20">
+                <div className="flex flex-col items-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                  <span className="mt-2 text-sm text-muted-foreground">Loading media...</span>
+                </div>
               </div>
             )}
             
             {/* Navigation buttons */}
-            <div className="absolute inset-y-0 left-0 flex items-center">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-2 z-10">
               {hasPrevious && onPrevious && (
                 <Button
                   onClick={onPrevious}
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 rounded-full bg-black/20 hover:bg-black/40 text-white"
+                  className="h-10 w-10 rounded-full bg-black/40 hover:bg-black/60 text-white transition-all"
+                  title="Previous image (Left arrow)"
+                  aria-label="Previous image"
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               )}
             </div>
             
-            <div className="absolute inset-y-0 right-0 flex items-center">
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2 z-10">
               {hasNext && onNext && (
                 <Button
                   onClick={onNext}
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 rounded-full bg-black/20 hover:bg-black/40 text-white"
+                  className="h-10 w-10 rounded-full bg-black/40 hover:bg-black/60 text-white transition-all"
+                  title="Next image (Right arrow)"
+                  aria-label="Next image"
                 >
                   <ArrowRight className="h-5 w-5" />
                 </Button>
@@ -246,15 +259,18 @@ export function MediaDetailsDialog({
             {isPhoto && media.url && (
               <img
                 ref={imgRef}
-                src={media.url}
+                src={getProxiedMediaUrl(media.url)}
                 alt={media.title || "Media item"}
                 className={`
                   max-w-full max-h-full object-contain
                   ${isFullscreen ? 'h-full w-auto' : ''}
                   ${imageError ? 'hidden' : ''}
+                  hover:cursor-zoom-in transition-all duration-200
                 `}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
+                onClick={toggleFullscreen}
+                title="Click to toggle fullscreen"
               />
             )}
             
@@ -263,25 +279,33 @@ export function MediaDetailsDialog({
                 controls
                 autoPlay={false}
                 className="max-w-full max-h-full object-contain"
-                src={media.url}
+                src={getProxiedMediaUrl(media.url)}
                 onLoadedData={handleImageLoad}
                 onError={handleImageError}
+                poster={media.thumbnailUrl ? getProxiedMediaUrl(media.thumbnailUrl) : undefined}
               >
                 Your browser does not support the video tag.
               </video>
             )}
             
             {imageError && (
-              <div className="flex flex-col items-center justify-center text-center p-4">
-                <span className="text-red-500 font-semibold">Unable to load media</span>
-                <p className="text-sm text-muted-foreground">URL: {media.url}</p>
+              <div className="flex flex-col items-center justify-center text-center p-8 border border-dashed border-red-300 rounded-md bg-red-50/10 max-w-md mx-auto">
+                <span className="text-red-500 font-semibold text-lg mb-2">Unable to load media</span>
+                <p className="text-sm text-muted-foreground mb-3">We couldn't load the image from the server.</p>
+                <details className="text-xs text-muted-foreground/70 w-full overflow-hidden">
+                  <summary className="cursor-pointer">View technical details</summary>
+                  <p className="mt-1 break-all whitespace-pre-wrap">{media.url}</p>
+                </details>
               </div>
             )}
           </div>
           
           {/* Info panel */}
           {showInfo && (
-            <div className={`w-[30%] p-4 overflow-y-auto ${isFullscreen ? 'h-full' : 'max-h-[70vh]'}`}>
+            <div className={`
+              w-full md:w-[30%] p-4 overflow-y-auto 
+              ${isFullscreen ? 'h-full' : 'max-h-[25vh] md:max-h-[70vh]'}
+            `}>
               <h3 className="text-lg font-semibold mb-2">{media.title || 'Untitled'}</h3>
               
               {media.description && (
@@ -291,7 +315,7 @@ export function MediaDetailsDialog({
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="font-medium">Type:</span>
-                  <span>{media.type || 'Unknown'}</span>
+                  <span>{media.mediaType || 'Unknown'}</span>
                 </div>
                 
                 {media.width && media.height && (
@@ -301,17 +325,17 @@ export function MediaDetailsDialog({
                   </div>
                 )}
                 
-                {media.fileSize && (
+                {media.size && (
                   <div className="flex justify-between">
                     <span className="font-medium">Size:</span>
-                    <span>{formatFileSize(media.fileSize)}</span>
+                    <span>{formatFileSize(media.size)}</span>
                   </div>
                 )}
                 
-                {media.duration && (
+                {media.metadata?.duration && (
                   <div className="flex justify-between">
                     <span className="font-medium">Duration:</span>
-                    <span>{Math.round(media.duration)}s</span>
+                    <span>{Math.round(media.metadata.duration)}s</span>
                   </div>
                 )}
                 
@@ -336,32 +360,63 @@ export function MediaDetailsDialog({
                 )}
               </div>
               
-              <div className="mt-4">
-                <h4 className="text-sm font-medium mb-2">Navigation</h4>
+              <div className="mt-4 border-t pt-4">
+                <h4 className="text-sm font-medium mb-2">Keyboard Navigation</h4>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="flex items-center">
-                    <ArrowLeft className="h-3 w-3 mr-1" /> 
+                    <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono mr-2">←</kbd>
                     <span>Previous image</span>
                   </div>
                   <div className="flex items-center">
-                    <ArrowRight className="h-3 w-3 mr-1" /> 
+                    <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono mr-2">→</kbd>
                     <span>Next image</span>
                   </div>
                   <div className="flex items-center">
-                    <span className="font-mono mr-1">F</span> 
+                    <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono mr-2">F</kbd>
                     <span>Toggle fullscreen</span>
                   </div>
                   <div className="flex items-center">
-                    <span className="font-mono mr-1">I</span> 
-                    <span>Toggle info</span>
+                    <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono mr-2">I</kbd>
+                    <span>Toggle info panel</span>
                   </div>
                   <div className="flex items-center">
-                    <span className="font-mono mr-1">Esc</span> 
-                    <span>Exit fullscreen</span>
+                    <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono mr-2">Esc</kbd>
+                    <span>Exit fullscreen/Close</span>
                   </div>
                   <div className="flex items-center">
-                    <span>Swipe left/right</span>
+                    <span className="text-xs">Swipe left/right on touch devices</span>
                   </div>
+                </div>
+              </div>
+
+              <div className="mt-4 border-t pt-4">
+                <h4 className="text-sm font-medium mb-2">Actions</h4>
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="w-full flex items-center justify-center gap-1"
+                    onClick={() => {
+                      // Open the original image in a new tab for download
+                      window.open(media.url, '_blank');
+                    }}
+                    title="Download original image"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    <span>Download</span>
+                  </Button>
+                  {showEditButton && onEdit && (
+                    <Button
+                      size="sm" 
+                      variant="outline"
+                      className="w-full flex items-center justify-center gap-1"
+                      onClick={() => onEdit(media)}
+                      title="Edit media details"
+                    >
+                      <Edit className="h-3.5 w-3.5" />
+                      <span>Edit</span>
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
