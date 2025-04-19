@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { Calendar, ImageIcon, UploadIcon, Search, Filter, Check, X } from 'lucide-react'
 import { GalleryEventCard } from '@/components/gallery/gallery-event-card'
 import { EmptyState } from '@/components/ui/empty-state'
+import { ConsistentGrid } from '@/components/gallery/consistent-grid'
 
 export default function EventGalleriesPage() {
   const [galleryData, setGalleryData] = useState<any[]>([]);
@@ -190,7 +191,7 @@ export default function EventGalleriesPage() {
   // Render events
   const renderEvents = () => {
     if (!filteredData || filteredData.length === 0) {
-      return <div className="col-span-full text-center py-8 text-muted-foreground">No events to display</div>;
+      return null; // Return null, the empty state is handled by ConsistentGrid
     }
 
     return filteredData.map((item, index) => {
@@ -251,6 +252,20 @@ export default function EventGalleriesPage() {
     });
   };
   
+  // Create empty state for zero events
+  const emptyState = (
+    <EmptyState
+      icon={<Calendar className="h-12 w-12 text-muted-foreground" />}
+      title="No events found"
+      description="There are no events matching your filters."
+      actions={
+        <Button onClick={resetFilters} variant="outline">
+          Reset Filters
+        </Button>
+      }
+    />
+  );
+
   // Render loading state
   if (isLoading) {
     return (
@@ -318,129 +333,99 @@ export default function EventGalleriesPage() {
       </div>
     );
   }
-  
-  // Render empty state
-  if (!galleryData || galleryData.length === 0) {
-    return (
-      <div style={{
-        maxWidth: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '24px',
-        padding: isMobile ? '16px' : '24px',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        boxSizing: 'border-box',
-        overflowX: 'hidden'
-      }}>
-        <EmptyState
-          icon={<Calendar className="h-12 w-12" />}
-          title="No Events Found"
-          description="You don't have any events yet. Create an event to get started with your gallery."
-          action={
-            <Button size="lg" className="w-full sm:w-auto" asChild>
-              <Link href="/protected/events/create">
-                Create New Event
-              </Link>
-            </Button>
-          }
-        />
-      </div>
-    );
-  }
 
   return (
-    <div style={{
-      width: '100%',
-      maxWidth: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '24px',
-      padding: isMobile ? '12px' : '24px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      boxSizing: 'border-box',
-      overflowX: 'hidden'
-    }}>
-      <Card className="border-border/40 shadow-sm">
-        <CardHeader className="pb-2 space-y-1">
-          <CardTitle className="text-xl">Event Galleries</CardTitle>
-          <CardDescription>Browse and manage your event photo galleries</CardDescription>
-        </CardHeader>
-        
-        <div className="px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2 pb-4">
-          <div className="relative w-full sm:w-auto sm:min-w-[300px]">
+    <Card className="border-border/40">
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center">
+            <ImageIcon className="mr-2 h-5 w-5 text-primary" />
+            Event Galleries
+          </div>
+          <Button size="sm" asChild>
+            <Link href="/protected/events/create">
+              <UploadIcon className="mr-2 h-4 w-4" />
+              Create Event
+            </Link>
+          </Button>
+        </CardTitle>
+        <CardDescription>Manage galleries for your events</CardDescription>
+      </CardHeader>
+      
+      <CardContent>
+        {/* Search and Filters */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search events..."
-              className="pl-8 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8 w-full"
             />
             {searchQuery && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-1 top-1.5 h-7 w-7"
+              <X 
+                className="absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground" 
                 onClick={clearSearch}
-              >
-                <X className="h-4 w-4" />
-            </Button>
+              />
             )}
           </div>
-
-          {/* Status Filter */}
-          <div className="w-full sm:w-auto">
-            <Select
-              value={statusFilter}
-              onValueChange={setStatusFilter}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="All Statuses" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-full sm:w-40 flex items-center">
+              <Filter className="mr-2 h-4 w-4" />
+              <SelectValue placeholder="All Statuses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="published">Published</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         
-        {/* Content */}
-        <CardContent className="p-0 sm:p-0">
-          {filteredData.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-6 sm:p-8 text-center">
-              <Filter className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
-              <h3 className="text-lg font-medium mb-2">No matching events found</h3>
-              <p className="text-muted-foreground mb-4">
-                Try adjusting your search or filter to find what you're looking for.
-              </p>
-              <Button variant="outline" onClick={resetFilters}>
-                Clear Filters
-              </Button>
-            </div>
-          ) : (
-            <div className="pt-2 pb-8 px-4 sm:px-6">
-              <div 
-                className="grid gap-4 sm:gap-6"
-                style={{
-                  width: '100%',
-                  maxWidth: '100%',
-                  gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))',
-                  overflowX: 'hidden'
-                }}
-              >
-                {isLoading && renderSkeletons()}
-                {renderEvents()}
+        {/* Active Filters */}
+        {(searchQuery || statusFilter !== 'all') && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {searchQuery && (
+              <div className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-sm font-medium text-foreground">
+                Search: {searchQuery}
+                <button className="ml-1" onClick={clearSearch}>
+                  <X className="h-3 w-3" />
+                </button>
               </div>
+            )}
+            
+            {statusFilter !== 'all' && (
+              <div className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-sm font-medium text-foreground">
+                Status: {statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)}
+                <button className="ml-1" onClick={() => setStatusFilter('all')}>
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            )}
+            
+            <button
+              className="inline-flex items-center rounded-full bg-primary/10 text-primary hover:bg-primary/20 px-2.5 py-0.5 text-sm font-medium transition-colors"
+              onClick={resetFilters}
+            >
+              Reset All
+            </button>
           </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+        )}
+        
+        {/* Grid of Event Cards */}
+        <div className="mt-6">
+          <ConsistentGrid 
+            isLoading={isLoading}
+            emptyState={(filteredData.length === 0) ? emptyState : undefined}
+          >
+            {renderEvents()}
+          </ConsistentGrid>
+        </div>
+      </CardContent>
+    </Card>
   );
 } 

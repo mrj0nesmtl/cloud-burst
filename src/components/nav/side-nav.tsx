@@ -38,7 +38,7 @@ export function SideNav({ collapsed = false }: SideNavProps) {
 
   return (
     <nav className={cn(
-      "flex flex-col gap-6 px-2 py-4",
+      "flex flex-col gap-4 px-2 pt-1 pb-4",
       collapsed && "items-center"
     )}>
       {/* Dashboard Section */}

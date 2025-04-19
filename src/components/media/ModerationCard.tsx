@@ -123,14 +123,14 @@ export function ModerationCard({ media, onSuccess }: ModerationCardProps) {
   return (
     <>
       <Card className="overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow w-full">
-        <div className="relative w-full aspect-video">
+        <div className="relative w-full aspect-square">
           {(thumbnailUrl || mediaUrl) ? (
             <Image 
               src={thumbnailUrl || mediaUrl}
               alt={media.title || 'Media item'} 
               fill
               className="object-cover transition-transform hover:scale-105" 
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 50vw, 33vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
               priority
             />
           ) : (
@@ -139,12 +139,12 @@ export function ModerationCard({ media, onSuccess }: ModerationCardProps) {
             </div>
           )}
         </div>
-        <CardContent className="p-5 flex-grow">
+        <CardContent className="p-4 flex-grow">
           <h3 className="font-medium text-lg mb-2 truncate">{media.title || 'Untitled'}</h3>
-          <p className="text-sm text-muted-foreground mb-3">
+          <p className="text-sm text-muted-foreground mb-2">
             From: {media.event_name || 'Unknown Event'}
           </p>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-sm text-muted-foreground mb-3">
             Uploaded: {new Date(media.created_at).toLocaleDateString()}
           </p>
           

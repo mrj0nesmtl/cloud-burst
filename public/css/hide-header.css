@@ -1,0 +1,9 @@
+/* Hide the global SiteHeader in protected routes */
+main > div > header {
+  display: none !important;
+}
+
+/* Make sure the mobile menu toggle is still visible */
+.mobile-menu-toggle {
+  display: block !important;
+} 

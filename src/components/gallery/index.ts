@@ -5,6 +5,7 @@ export { MediaCard } from './MediaCard';
 export type { MediaItem, Comment } from './MediaCard';
 export { MasonryGrid } from './MasonryGrid';
 export { MediaViewer } from './MediaViewer';
+export { ConsistentGrid } from './consistent-grid';
 
 // For backward compatibility (if MediaGrid is needed)
 import { MasonryGrid as MediaGrid } from './MasonryGrid';

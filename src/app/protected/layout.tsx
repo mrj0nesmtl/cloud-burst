@@ -7,6 +7,9 @@ import { AuthGuard } from '@/components/auth/auth-guard'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
+// Use a simpler approach - directly create the CSS in a public directory file
+const cssPath = '/css/hide-header.css'
+
 // Force dynamic rendering for this layout
 export const dynamic = 'force-dynamic'
 
@@ -55,11 +58,15 @@ export default async function ProtectedLayout({
     return (
       <ErrorBoundary>
         <AuthGuard>
-          <DashboardLayout>
-            <Suspense fallback={<LoadingSpinner size="lg" className="mx-auto my-12" />}>
-              {children}
-            </Suspense>
-          </DashboardLayout>
+          <>
+            {/* Add a stylesheet link to hide the header */}
+            <link rel="stylesheet" href={cssPath} />
+            <DashboardLayout>
+              <Suspense fallback={<LoadingSpinner size="lg" className="mx-auto my-12" />}>
+                {children}
+              </Suspense>
+            </DashboardLayout>
+          </>
         </AuthGuard>
       </ErrorBoundary>
     )

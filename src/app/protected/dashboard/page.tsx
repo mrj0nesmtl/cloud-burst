@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import { createServerClient } from '@/lib/supabase/server'
-import { DashboardHeader } from '@/components/dashboard/header'
 import { OverviewChart } from '@/components/dashboard/overview-chart'
 import { RecentEvents } from '@/components/dashboard/recent-events'
 import { Button } from '@/components/ui/button'
@@ -120,8 +119,6 @@ export default async function DashboardPage() {
 
   return (
     <div style={{ width: '100%', maxWidth: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--background)', overflow: 'hidden' }}>
-      <DashboardHeader />
-      
       <div style={{ width: '100%', maxWidth: '100%', padding: '16px', flex: '1 1 auto', overflowX: 'hidden' }}>
         {/* Header and Create Event Button */}
         <div style={{ 

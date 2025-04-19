@@ -18,7 +18,7 @@ export function DashboardHeader() {
         padding: '0 24px'
       }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '20px', fontWeight: 'bold' }}>Cloud Burst</span>
+          <span style={{ fontSize: '20px', fontWeight: 'bold' }}></span>
         </Link>
       </div>
     </header>

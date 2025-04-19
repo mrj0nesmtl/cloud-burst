@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { v4 as uuidv4 } from 'uuid'
-import { Camera, X, Image as ImageIcon, Upload, CheckCircle, AlertCircle } from 'lucide-react'
+import { Camera, X, Image as ImageIcon, Upload, CheckCircle, AlertCircle, Cog, FlipHorizontal, Zap, ZapOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -14,6 +14,8 @@ import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/components/ui/use-toast'
 import { invitationTokenService } from '@/lib/tokens/invitation-token'
 import { BottomNav } from '@/components/guest/bottom-nav'
+import { CapturePreview } from './CapturePreview'
+import { GuestNavigation } from '@/components/guest/GuestNavigation'
 
 export default function GuestCameraPage() {
   const searchParams = useSearchParams()
@@ -29,11 +31,19 @@ export default function GuestCameraPage() {
   const [eventId, setEventId] = useState<string | null>(null)
   const [invitationId, setInvitationId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const const [error, setError] = useState<string | null>(null)
   const [cameraActive, setCameraActive] = useState(false)
   const [permissionError, setPermissionError] = useState<string | null>(null)
   const [capturedPhotos, setCapturedPhotos] = useState<{id: string, preview: string, uploading: boolean, progress: number, uploaded: boolean, error: string | null}[]>([])
   const [allUploaded, setAllUploaded] = useState(false)
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null)
+  const [isInitializing, setIsInitializing] = useState(true)
+  const [isCapturing, setIsCapturing] = useState(false)
+  const [capturedPhotoUrl, setCapturedPhotoUrl] = useState<string | null>(null)
+  const [isFrontCamera, setIsFrontCamera] = useState(true)
+  const [isFlashOn, setIsFlashOn] = useState(false)
+  const [stream, setStream] = useState<MediaStream | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
   
   // Initialize with token from URL or localStorage
   useEffect(() => {
@@ -339,158 +349,95 @@ export default function GuestCameraPage() {
     )
   }
   
+  if (isCapturing && capturedPhotoUrl) {
+    return (
+      <CapturePreview
+        photoUrl={capturedPhotoUrl}
+        onUpload={handleUpload}
+        onRetake={handleRetake}
+        onCancel={handleCancel}
+      />
+    )
+  }
+  
   return (
-    <div className="container py-6">
-      <h1 className="text-2xl font-bold mb-6">Event Camera</h1>
-      
-      {/* Camera Viewer */}
-      <div className="relative bg-black rounded-lg overflow-hidden mb-4 aspect-[4/3]">
-        {!cameraActive && !permissionError && (
-          <div className="absolute inset-0 flex items-center justify-center text-center p-4 bg-muted">
-            <div>
-              <Camera className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-              <p className="text-muted-foreground mb-4">
-                Start the camera to begin taking photos
-              </p>
-              <Button onClick={startCamera}>
-                <Camera className="mr-2 h-4 w-4" />
-                Start Camera
-              </Button>
+    <div className="flex flex-col min-h-screen bg-background">
+      <div className="flex-1 relative">
+        {/* Camera permission denied */}
+        {hasCameraPermission === false && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+            <Camera className="h-12 w-12 text-muted-foreground mb-4" />
+            <h2 className="text-xl font-bold mb-2">Camera Access Denied</h2>
+            <p className="text-muted-foreground mb-4">
+              Please allow camera access in your browser settings to capture photos.
+            </p>
+            <Button onClick={() => initializeCamera(isFrontCamera)}>
+              Try Again
+            </Button>
+          </div>
+        )}
+        
+        {/* Loading state */}
+        {isInitializing && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black">
+            <div className="animate-pulse flex flex-col items-center">
+              <Camera className="h-12 w-12 text-white mb-4" />
+              <p className="text-white text-sm">Starting camera...</p>
             </div>
           </div>
         )}
         
-        {permissionError && (
-          <div className="absolute inset-0 flex items-center justify-center text-center p-4 bg-muted">
-            <div>
-              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-2" />
-              <p className="text-red-500 mb-4">{permissionError}</p>
-              <Button variant="outline" onClick={startCamera}>
-                Try Again
-              </Button>
-            </div>
-          </div>
-        )}
-        
-        <video 
+        {/* Camera preview */}
+        <video
           ref={videoRef}
           autoPlay
           playsInline
           muted
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover ${isFrontCamera ? 'scale-x-[-1]' : ''}`}
+          style={{ display: hasCameraPermission === true && !isInitializing ? 'block' : 'none' }}
         />
         
-        {/* Hidden canvas for photo capture */}
-        <canvas ref={canvasRef} className="hidden" />
-      </div>
-      
-      {/* Camera Controls */}
-      <div className="flex justify-between items-center mb-8">
-        {cameraActive ? (
-          <>
-            <Button variant="outline" onClick={stopCamera}>
-              <X className="mr-2 h-4 w-4" /> 
-              Stop Camera
-            </Button>
-            
-            <Button 
-              size="lg" 
-              className="rounded-full w-16 h-16 p-0 bg-primary"
-              onClick={takePhoto}
+        {/* Camera controls */}
+        {hasCameraPermission === true && !isInitializing && (
+          <div className="absolute inset-x-0 bottom-20 flex justify-center space-x-6 p-4">
+            {/* Flash toggle */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-12 w-12 rounded-full bg-black/30 backdrop-blur-sm text-white border-white/20"
+              onClick={toggleFlash}
             >
-              <Camera className="h-8 w-8" />
+              {isFlashOn ? <ZapOff className="h-6 w-6" /> : <Zap className="h-6 w-6" />}
             </Button>
             
-            <Button variant="outline" onClick={() => router.push(`/guest/gallery?token=${invitationToken}`)}>
-              <ImageIcon className="mr-2 h-4 w-4" />
-              Gallery
+            {/* Capture button */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-16 w-16 rounded-full bg-white text-black border-4 border-black/10"
+              onClick={capturePhoto}
+            >
+              <div className="h-12 w-12 rounded-full border-2 border-black" />
             </Button>
-          </>
-        ) : (
-          <div className="w-full flex justify-center">
-            {!permissionError && (
-              <Button onClick={startCamera}>
-                <Camera className="mr-2 h-4 w-4" />
-                Start Camera
-              </Button>
-            )}
+            
+            {/* Camera flip */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-12 w-12 rounded-full bg-black/30 backdrop-blur-sm text-white border-white/20"
+              onClick={switchCamera}
+            >
+              <FlipHorizontal className="h-6 w-6" />
+            </Button>
           </div>
         )}
       </div>
       
-      {/* Captured Photos */}
-      {capturedPhotos.length > 0 && (
-        <div className="mb-10">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-medium">
-              Captured Photos ({capturedPhotos.length})
-            </h2>
-            
-            <Button 
-              onClick={uploadPhotos} 
-              disabled={capturedPhotos.every(p => p.uploaded || p.uploading)}
-            >
-              <Upload className="mr-2 h-4 w-4" />
-              {capturedPhotos.some(p => p.uploading) 
-                ? 'Uploading...' 
-                : allUploaded 
-                  ? 'All Uploaded' 
-                  : 'Upload All'}
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {capturedPhotos.map(photo => (
-              <Card key={photo.id} className="overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="relative aspect-square">
-                    <img 
-                      src={photo.preview} 
-                      alt="Captured photo" 
-                      className="w-full h-full object-cover"
-                    />
-                    
-                    {/* Status overlays */}
-                    {photo.uploaded && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <CheckCircle className="h-10 w-10 text-green-500" />
-                      </div>
-                    )}
-                    
-                    {photo.error && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <AlertCircle className="h-10 w-10 text-red-500" />
-                      </div>
-                    )}
-                    
-                    {/* Remove button */}
-                    {!photo.uploading && (
-                      <Button 
-                        variant="destructive" 
-                        size="icon" 
-                        className="absolute top-2 right-2 h-8 w-8 rounded-full"
-                        onClick={() => removePhoto(photo.id)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                  
-                  {/* Progress bar */}
-                  {photo.uploading && (
-                    <div className="p-2">
-                      <Progress value={photo.progress} className="h-2" />
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Bottom navigation */}
+      <GuestNavigation token={invitationToken || ''} activeItem="camera" />
       
-      {/* Use the shared BottomNav component instead of inline navigation */}
-      <BottomNav activeTab="camera" invitationToken={invitationToken} />
+      {/* Hidden canvas for capturing photos */}
+      <canvas ref={canvasRef} className="hidden" />
     </div>
   )
 } 

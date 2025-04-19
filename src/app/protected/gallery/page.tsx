@@ -2,12 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { GalleryLayout, GallerySidebar, GalleryHeader, MasonryGrid, MediaViewer, MediaItem } from '@/components/gallery';
+import { GalleryLayout, GallerySidebar, GalleryHeader, MediaViewer, MediaItem } from '@/components/gallery';
 import { useToast } from '@/components/ui/use-toast';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types/supabase';
 import { getEventMedia } from '@/lib/supabase/media';
 import { MediaType } from '@/types/media';
+import { ConsistentGrid } from '@/components/gallery/consistent-grid';
+import { Card, CardContent } from '@/components/ui/card';
+import { MediaCard } from '@/components/gallery/MediaCard';
+import { Button } from '@/components/ui/button';
+import { Plus, Image as ImageIcon } from 'lucide-react';
+import Link from 'next/link';
 
 // Mock albums for the sidebar
 const MOCK_ALBUMS = [
@@ -242,68 +248,84 @@ export default function GalleryPage() {
     router.push(path);
   };
 
+  // Create an empty state component
+  const emptyState = (
+    <div className="flex flex-col items-center justify-center p-10 text-center">
+      <ImageIcon className="h-12 w-12 text-muted-foreground mb-4" />
+      <h3 className="text-lg font-medium mb-2">No media found</h3>
+      <p className="text-muted-foreground mb-6">
+        {activeFilter !== 'all' 
+          ? `No ${activeFilter} media found. Try a different filter or upload some ${activeFilter} files.`
+          : "You don't have any media yet. Upload photos and videos to get started."}
+      </p>
+      <Button asChild>
+        <Link href="/protected/gallery/upload">
+          <Plus className="h-4 w-4 mr-2" />
+          Upload Media
+        </Link>
+      </Button>
+    </div>
+  );
+
   return (
-    <GalleryLayout
-      header={
-        <GalleryHeader
-          title="My Gallery"
-          isOrganizer={true}
-          onUpload={handleUpload}
-          onFilterChange={handleFilterChange}
-        />
-      }
-      sidebar={
-        <GallerySidebar
-          isOrganizer={true}
-          albums={albums.length > 0 ? albums : MOCK_ALBUMS}
-          events={events.length > 0 ? events : MOCK_EVENTS}
-          onNavigate={handleNavigation}
-        />
-      }
-      isPublic={false}
-    >
-      {loading ? (
-        <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    <div className="space-y-6">
+      {/* Gallery Header with Actions */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">My Gallery</h2>
+          <p className="text-muted-foreground">
+            Manage your photos and videos across all events
+          </p>
         </div>
-      ) : (
-        <>
-          {filteredItems.length === 0 ? (
-            <div className="text-center py-12">
-              <h3 className="text-xl font-semibold mb-2">No media found</h3>
-              <p className="text-muted-foreground">Upload some photos or videos to see them here</p>
-              <button 
-                onClick={handleUpload}
-                className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
-              >
-                Upload Media
-              </button>
-            </div>
-          ) : (
-            <MasonryGrid
-              items={filteredItems}
-              onItemClick={handleMediaClick}
-              showComments={true}
-              onAddComment={handleAddComment}
-              onLike={handleLike}
-              isPublic={isMobile}
-            />
-          )}
-        </>
-      )}
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setActiveFilter('all')}>
+            All
+          </Button>
+          <Button variant="outline" onClick={() => setActiveFilter('photo')}>
+            Photos
+          </Button>
+          <Button variant="outline" onClick={() => setActiveFilter('video')}>
+            Videos
+          </Button>
+          <Button asChild>
+            <Link href="/protected/gallery/upload">
+              <Plus className="h-4 w-4 mr-2" />
+              Upload
+            </Link>
+          </Button>
+        </div>
+      </div>
+
+      {/* Gallery Grid */}
+      <Card>
+        <CardContent className="p-6">
+          <ConsistentGrid
+            isLoading={loading}
+            emptyState={filteredItems.length === 0 ? emptyState : undefined}
+          >
+            {filteredItems.map((item) => (
+              <MediaCard
+                key={item.id}
+                media={item}
+                onClick={() => handleMediaClick(item)}
+                onLike={() => handleLike(item.id)}
+              />
+            ))}
+          </ConsistentGrid>
+        </CardContent>
+      </Card>
       
+      {/* Media Viewer */}
       {isViewerOpen && selectedMediaIndex >= 0 && (
         <MediaViewer
-          items={filteredItems}
-          currentIndex={selectedMediaIndex}
-          isOpen={isViewerOpen}
+          media={filteredItems}
+          initialIndex={selectedMediaIndex}
           onClose={() => setIsViewerOpen(false)}
           onNavigate={handleViewerNavigate}
-          showComments={true}
-          onAddComment={handleAddComment}
           onLike={handleLike}
+          onComment={handleAddComment}
         />
       )}
-    </GalleryLayout>
+    </div>
   );
 } 

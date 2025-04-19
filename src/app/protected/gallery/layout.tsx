@@ -31,9 +31,9 @@ export default async function GalleryLayout({ children }: GalleryLayoutProps) {
     if (!session) redirect('/auth/signin?returnTo=/protected/gallery/all')
 
     return (
-      <div className="w-full px-2 sm:px-4 md:px-6 py-4">
-        <div className="mb-6">
-          <div className="flex flex-col space-y-2 mb-4">
+      <div className="w-full px-6 sm:px-8 md:px-10 py-6">
+        <div className="mb-8">
+          <div className="flex flex-col space-y-2 mb-6">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Gallery</h1>
             <p className="text-sm sm:text-base text-muted-foreground">
               Manage your event media, galleries and albums
