@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-17T03:59:42.158Z
+Generated: 2025-04-18T18:53:15.394Z
 
 ## Overview
 
@@ -62,6 +62,8 @@ Generated: 2025-04-17T03:59:42.158Z
 │   │   │   │   └── route.ts
 │   │   │   └── setup/
 │   │   │       └── route.ts
+│   │   ├── debug/
+│   │   │   └── route.ts
 │   │   ├── diagnose/
 │   │   │   └── schema/
 │   │   │       └── route.ts
@@ -85,6 +87,8 @@ Generated: 2025-04-17T03:59:42.158Z
 │   │   │   │   └── route.ts
 │   │   │   └── reserve/
 │   │   │       └── route.ts
+│   │   ├── image-proxy/
+│   │   │   └── route.ts
 │   │   ├── invitation/
 │   │   │   └── lookup/
 │   │   │       └── route.ts
@@ -110,6 +114,8 @@ Generated: 2025-04-17T03:59:42.158Z
 │   │   │   │   └── route.ts
 │   │   │   ├── verify/
 │   │   │   │   └── route.ts
+│   │   │   └── route.ts
+│   │   ├── media-proxy/
 │   │   │   └── route.ts
 │   │   ├── rpc/
 │   │   │   └── get-invitation-stats/
@@ -388,6 +394,8 @@ Generated: 2025-04-17T03:59:42.158Z
 │   │   │   │   ├── page-metadata.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── moderate/
+│   │   │   │   ├── actions.ts
+│   │   │   │   ├── moderator-client.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── upload/
 │   │   │   │   ├── page.tsx
@@ -583,6 +591,8 @@ Generated: 2025-04-17T03:59:42.158Z
 │   │   ├── MediaModerationGrid.tsx
 │   │   ├── MediaUploader.tsx
 │   │   ├── MediaViewer.tsx
+│   │   ├── ModerationCard.tsx
+│   │   ├── camera-capture.tsx
 │   │   ├── camera-test.tsx
 │   │   └── upload-media-button.tsx
 │   ├── nav/
@@ -716,6 +726,7 @@ Generated: 2025-04-17T03:59:42.158Z
 │   │   ├── auth-store.ts
 │   │   ├── auth-utils.ts
 │   │   ├── client.ts
+│   │   ├── dashboard.ts
 │   │   ├── debug-queries.ts
 │   │   ├── events.server.ts
 │   │   ├── events.ts
@@ -739,6 +750,7 @@ Generated: 2025-04-17T03:59:42.158Z
 │   │   └── invitation-token.ts
 │   ├── utils/
 │   │   ├── codeGenerator.ts
+│   │   ├── media-proxy.ts
 │   │   └── qr-utils.ts
 │   ├── validation/
 │   │   └── rsvp.schema.ts
@@ -790,13 +802,13 @@ Generated: 2025-04-17T03:59:42.158Z
 ├── middleware.test.ts
 └── middleware.ts
 
-240 directories, 541 files
+243 directories, 550 files
 
 ```
 
 ## File Type Breakdown
-- ts: 132 file(s)
-- tsx: 388 file(s)
+- ts: 138 file(s)
+- tsx: 391 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

@@ -1,5 +1,5 @@
 # app Directory Structure
-Generated: 2025-04-17T03:59:43.908Z
+Generated: 2025-04-18T18:53:16.805Z
 
 ## Overview
 
@@ -45,6 +45,8 @@ This directory contains 114 route(s).
 │   │   │   └── route.ts
 │   │   └── setup/
 │   │       └── route.ts
+│   ├── debug/
+│   │   └── route.ts
 │   ├── diagnose/
 │   │   └── schema/
 │   │       └── route.ts
@@ -68,6 +70,8 @@ This directory contains 114 route(s).
 │   │   │   └── route.ts
 │   │   └── reserve/
 │   │       └── route.ts
+│   ├── image-proxy/
+│   │   └── route.ts
 │   ├── invitation/
 │   │   └── lookup/
 │   │       └── route.ts
@@ -93,6 +97,8 @@ This directory contains 114 route(s).
 │   │   │   └── route.ts
 │   │   ├── verify/
 │   │   │   └── route.ts
+│   │   └── route.ts
+│   ├── media-proxy/
 │   │   └── route.ts
 │   ├── rpc/
 │   │   └── get-invitation-stats/
@@ -371,6 +377,8 @@ This directory contains 114 route(s).
 │   │   │   ├── page-metadata.tsx
 │   │   │   └── page.tsx
 │   │   ├── moderate/
+│   │   │   ├── actions.ts
+│   │   │   ├── moderator-client.tsx
 │   │   │   └── page.tsx
 │   │   ├── upload/
 │   │   │   ├── page.tsx
@@ -437,13 +445,13 @@ This directory contains 114 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-189 directories, 239 files
+192 directories, 244 files
 
 ```
 
 ## File Type Breakdown
-- ts: 41 file(s)
-- tsx: 187 file(s)
+- ts: 45 file(s)
+- tsx: 188 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

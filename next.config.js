@@ -2,7 +2,9 @@
 const nextConfig = {
   // Configure error handling and development indicators
   // Server Actions are stable in Next.js 14, no need for experimental flag
-  experimental: {},
+  experimental: {
+    // Server Actions are now available by default
+  },
   // Disable error overlay completely
   devIndicators: {
     position: 'bottom-right',
@@ -46,7 +48,13 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**.supabase.co',
+        hostname: '*.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
       },
@@ -64,7 +72,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '**.replit.app',
+        hostname: '*.replit.app',
         port: '',
         pathname: '/**',
       },
@@ -73,14 +81,9 @@ const nextConfig = {
         hostname: 'api.qrserver.com',
         port: '',
         pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        port: '',
-        pathname: '/**',
       }
     ],
+    // We don't need to configure domains for our proxy since it's on the same domain
   },
   // Remove experimental features
   // webpack: (config, { isServer }) => {

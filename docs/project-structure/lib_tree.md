@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-04-17T03:59:48.370Z
+Generated: 2025-04-18T18:53:20.782Z
 
 ## Overview
 
@@ -27,6 +27,7 @@ Generated: 2025-04-17T03:59:48.370Z
 │   ├── auth-store.ts
 │   ├── auth-utils.ts
 │   ├── client.ts
+│   ├── dashboard.ts
 │   ├── debug-queries.ts
 │   ├── events.server.ts
 │   ├── events.ts
@@ -50,6 +51,7 @@ Generated: 2025-04-17T03:59:48.370Z
 │   └── invitation-token.ts
 ├── utils/
 │   ├── codeGenerator.ts
+│   ├── media-proxy.ts
 │   └── qr-utils.ts
 ├── validation/
 │   └── rsvp.schema.ts
@@ -73,12 +75,12 @@ Generated: 2025-04-17T03:59:48.370Z
 ├── user-sessions.ts
 └── utils.ts
 
-11 directories, 53 files
+11 directories, 55 files
 
 ```
 
 ## File Type Breakdown
-- ts: 50 file(s)
+- ts: 52 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

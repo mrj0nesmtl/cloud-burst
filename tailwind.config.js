@@ -118,6 +118,7 @@ const config = {
   },
   plugins: [
     require("tailwindcss-animate"),
+    require("tailwind-scrollbar"),
     plugin(({ addUtilities }) => {
       addUtilities({
         ".content-auto": {

@@ -1,5 +1,5 @@
 # protected Directory Structure
-Generated: 2025-04-17T03:59:44.323Z
+Generated: 2025-04-18T18:53:17.144Z
 
 ## Overview
 
@@ -137,6 +137,8 @@ This directory contains 56 route(s).
 │   │   ├── page-metadata.tsx
 │   │   └── page.tsx
 │   ├── moderate/
+│   │   ├── actions.ts
+│   │   ├── moderator-client.tsx
 │   │   └── page.tsx
 │   ├── upload/
 │   │   ├── page.tsx
@@ -191,13 +193,13 @@ This directory contains 56 route(s).
 │   └── page.tsx
 └── layout.tsx
 
-65 directories, 117 files
+65 directories, 119 files
 
 ```
 
 ## File Type Breakdown
-- ts: 1 file(s)
-- tsx: 107 file(s)
+- ts: 2 file(s)
+- tsx: 108 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

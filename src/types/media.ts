@@ -9,7 +9,7 @@ import { Json } from './supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 /**
- * Media type enum
+ * Media types enum
  */
 export enum MediaType {
   PHOTO = 'photo',
@@ -44,45 +44,41 @@ export enum GallerySortOption {
 }
 
 /**
- * Media interface for both photos and videos
- * Matches the database schema
+ * Media interface representing a media item
  */
 export interface Media {
   id: string;
-  event_id: string;
-  uploaded_by: string;  // This is user_id in our code but uploaded_by in DB
-  media_type: MediaType;
-  storage_path: string; // This is file_path in our code but storage_path in DB
+  eventId: string;
+  mediaType: MediaType;
+  storagePath: string;
   filename: string;
+  originalFilename: string;
   url: string;
-  thumbnail_url?: string | null;
-  title?: string | null;
-  description?: string | null;
-  size?: number | null;
-  mime_type?: string | null;
-  width?: number | null;
-  height?: number | null;
-  duration?: number | null;
-  is_approved?: boolean | null;
-  status?: MediaStatus;
-  is_public?: boolean | null;
-  metadata?: Record<string, any> | null;
-  created_at: string;
-  updated_at: string;
+  thumbnailUrl?: string;
+  size: number;
+  width: number | null;
+  height: number | null;
+  title?: string;
+  description?: string;
+  isPublic: boolean;
+  status: string;
+  metadata: Record<string, any>;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 /**
  * Photo specific interface (for backward compatibility)
  */
-export interface Photo extends Omit<Media, 'media_type'> {
-  media_type: MediaType.PHOTO;
+export interface Photo extends Omit<Media, 'mediaType'> {
+  mediaType: MediaType.PHOTO;
 }
 
 /**
  * Video specific interface
  */
-export interface Video extends Omit<Media, 'media_type' | 'duration'> {
-  media_type: MediaType.VIDEO;
+export interface Video extends Omit<Media, 'mediaType' | 'duration'> {
+  mediaType: MediaType.VIDEO;
   duration: number; // in seconds
 }
 
@@ -101,26 +97,25 @@ export interface MediaWithUploader extends Media {
 }
 
 /**
- * Parameters for creating a new media item
- * Uses our application naming conventions
+ * Media creation parameters
  */
 export interface CreateMediaParams {
   eventId: string;
-  userId: string; // will map to uploaded_by
   mediaType: MediaType;
-  filePath: string; // will map to storage_path
+  storagePath: string;
   filename: string;
+  originalFilename: string;
   url: string;
+  thumbnailUrl?: string;
+  size: number;
+  contentType: string;
+  width?: number | null;
+  height?: number | null;
   title?: string;
   description?: string;
-  thumbnailUrl?: string;
-  size?: number;
-  width?: number;
-  height?: number;
-  duration?: number;
-  metadata?: Record<string, any>;
-  mimeType?: string;
   isPublic?: boolean;
+  status?: string;
+  metadata?: Record<string, any>;
 }
 
 /**
@@ -263,8 +258,37 @@ export type DbMedia = Database['public']['Tables']['media']['Row'];
 /**
  * Sanitize user input to prevent XSS attacks
  */
-function sanitizeString(input: string | null | undefined): string | null | undefined {
-  if (input === null || input === undefined) return input;
+export function isPhoto(media: Media): boolean {
+  return media.mediaType === MediaType.PHOTO;
+}
+
+/**
+ * Helper function to check if media is a video
+ */
+export function isVideo(media: Media): boolean {
+  return media.mediaType === MediaType.VIDEO;
+}
+
+export type MediaUploadResult = {
+  path: string;
+  url: string;
+};
+
+export interface MediaServiceClient {
+  supabase: SupabaseClient<Database>;
+  getEventMedia: (eventId: string) => Promise<Media[]>;
+  getApprovedEventMedia: (eventId: string) => Promise<Media[]>;
+  getPendingEventMedia: (eventId: string) => Promise<Media[]>;
+  getRejectedEventMedia: (eventId: string) => Promise<Media[]>;
+  getUserMedia: (userId?: string) => Promise<Media[]>;
+  getMediaById: (mediaId: string) => Promise<Media | null>;
+  createMedia: (params: CreateMediaParams) => Promise<Media | null>;
+  updateMedia: (params: UpdateMediaParams) => Promise<Media | null>;
+  deleteMedia: (mediaId: string) => Promise<boolean>;
+  uploadMedia: (file: File, eventId: string, onProgress?: (progress: number) => void) => Promise<MediaUploadResult | null>;
+  approveMedia: (mediaId: string, reason?: string) => Promise<Media | null>;
+  rejectMedia: (mediaId: string, reason?: string) => Promise<Media | null>;
+
   
   // Replace potentially dangerous characters
   return input
@@ -298,26 +322,24 @@ export function mapDbMediaToMedia(dbMedia: any): Media {
   
   return {
     id: dbMedia.id,
-    event_id: dbMedia.event_id || '',
-    uploaded_by: dbMedia.uploaded_by || '',
-    media_type: dbMedia.media_type as MediaType,
-    storage_path: dbMedia.storage_path || '',
+    eventId: dbMedia.event_id || '',
+    mediaType: dbMedia.media_type as MediaType,
+    storagePath: dbMedia.storage_path || '',
     filename: dbMedia.filename,
+    originalFilename: dbMedia.filename,
     url: dbMedia.url || '',
-    thumbnail_url: dbMedia.thumbnail_url,
-    title: sanitizeString(dbMedia.title),
-    description: sanitizeString(dbMedia.description),
+    thumbnailUrl: dbMedia.thumbnail_url,
+
     size: dbMedia.size,
-    mime_type: dbMedia.mime_type,
     width: dbMedia.width,
     height: dbMedia.height,
-    duration: dbMedia.duration,
-    is_approved: isApproved,
-    status: status,
-    is_public: dbMedia.is_public,
+    title: dbMedia.title,
+    description: dbMedia.description,
+    isPublic: dbMedia.is_public,
+    status: dbMedia.status,
     metadata: metadata,
-    created_at: dbMedia.created_at || new Date().toISOString(),
-    updated_at: dbMedia.updated_at || new Date().toISOString(),
+    createdAt: dbMedia.created_at || new Date().toISOString(),
+    updatedAt: dbMedia.updated_at,
   };
 }
 

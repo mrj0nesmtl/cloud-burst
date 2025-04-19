@@ -11,13 +11,13 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { EventActions } from '@/components/events/event-actions'
 import { AttendeeManagement } from '@/components/events/attendee-management'
-import { GalleryGrid } from '@/components/gallery/gallery-grid'
+import { MediaGrid } from '@/components/media/MediaGrid'
 import { UploadDropzone } from '@/components/gallery/upload-dropzone'
 import { QRCodeDisplay } from '@/components/events/qr-code-display'
 import { getServerSupabase } from '@/lib/supabase/server'
 import { EventStatusSelector } from '@/components/events/event-status-selector'
 import { RsvpTabTrigger } from '@/components/events/rsvp-tab-trigger'
-import { Photo } from '@/types/events'
+import { Media } from '@/types/media'
 import { Invitation } from '@/types/invitations'
 import { Button } from '@/components/ui/button'
 import { EventInvitationsPanel } from '@/components/events/event-invitations-panel'
@@ -37,8 +37,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { UserPlusIcon, UserCheck, Users } from 'lucide-react'
+import { UserPlusIcon, UserCheck, Users, Image as ImageIcon } from 'lucide-react'
 import { StaffInvitationForm } from '@/components/admin/staff-invitation-form'
+import { getApprovedEventMedia } from '@/lib/supabase/media.server'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -55,27 +56,6 @@ type UserRole = 'super_admin' | 'admin' | 'organizer' | 'event_host' | 'event_st
 function validateUserRole(role: string): UserRole {
   const validRoles: UserRole[] = ['super_admin', 'admin', 'organizer', 'event_host', 'event_staff', 'user', 'guest'];
   return validRoles.includes(role as UserRole) ? (role as UserRole) : 'user';
-}
-
-function convertDatabasePhotoToPhotoType(photo: any, eventId: string): Photo {
-  return {
-    id: photo.id,
-    event_id: photo.event_id || eventId,
-    filename: photo.filename || '',
-    storage_path: photo.storage_path || '',
-    is_approved: Boolean(photo.is_approved),
-    metadata: {},  // Initialize with empty object as fallback
-    created_at: photo.created_at || new Date().toISOString(),
-    updated_at: photo.updated_at || new Date().toISOString(),
-    uploaded_by: photo.uploaded_by || null,
-    width: photo.width || null,
-    height: photo.height || null,
-    size: photo.size || 0,
-    mime_type: photo.mime_type || '',
-    // Optional fields omitted if not present
-    ...(photo.url && { url: photo.url }),
-    ...(photo.thumbnail_url && { thumbnail_url: photo.thumbnail_url })
-  };
 }
 
 export async function generateMetadata({ params }: EventPageProps): Promise<Metadata> {
@@ -156,15 +136,8 @@ export default async function EventPage({ params }: EventPageProps) {
     .select('*')
     .eq('event_id', params.id)
   
-  // Fetch event photos
-  const { data: dbPhotos } = await supabase
-    .from('photos')
-    .select('*')
-    .eq('event_id', params.id)
-    .order('created_at', { ascending: false })
-  
-  // Convert database photos to Photo type with proper url property
-  const photos = dbPhotos?.map(photo => convertDatabasePhotoToPhotoType(photo, params.id)) || []
+  // Fetch approved event media using the server function
+  const mediaItems: Media[] = await getApprovedEventMedia(params.id)
   
   // Fetch event invitations
   const { data: invitations } = await supabase
@@ -497,7 +470,7 @@ export default async function EventPage({ params }: EventPageProps) {
                     }} 
                     className="text-foreground group-hover:text-primary"
                   />
-                  {photos && photos.length > 0 && (
+                  {mediaItems && mediaItems.length > 0 && (
                     <span style={{
                       position: 'absolute',
                       top: '0',
@@ -513,7 +486,7 @@ export default async function EventPage({ params }: EventPageProps) {
                       justifyContent: 'center',
                       zIndex: 2
                     }}>
-                      {photos.length}
+                      {mediaItems.length}
                     </span>
                   )}
                   <span 
@@ -522,7 +495,7 @@ export default async function EventPage({ params }: EventPageProps) {
                   ></span>
                 </TabsTrigger>
               </TooltipTrigger>
-              <TooltipContent>Gallery ({photos?.length || 0})</TooltipContent>
+              <TooltipContent>Gallery ({mediaItems?.length || 0})</TooltipContent>
             </Tooltip>
             
             <RsvpTabTrigger eventId={params.id} />
@@ -1057,7 +1030,7 @@ export default async function EventPage({ params }: EventPageProps) {
                       </div>
                     </div>
                     
-                    {/* Photos */}
+                    {/* Media Count */}
                     <div style={{
                       padding: '0.75rem',
                       backgroundColor: 'white',
@@ -1067,7 +1040,7 @@ export default async function EventPage({ params }: EventPageProps) {
                       boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                     }}>
                       <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
-                        Photos
+                        Media
                       </div>
                       <div style={{ 
                         fontSize: '1.25rem', 
@@ -1077,8 +1050,8 @@ export default async function EventPage({ params }: EventPageProps) {
                         justifyContent: 'center',
                         gap: '0.25rem'
                       }}>
-                        <LucideIcons.Image size={14} className="text-muted-foreground" />
-                        {photos?.length || 0}
+                        <ImageIcon className="text-muted-foreground" />
+                        {mediaItems?.length || 0}
                       </div>
                     </div>
                     
@@ -1291,72 +1264,39 @@ export default async function EventPage({ params }: EventPageProps) {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Gallery</CardTitle>
-                <CardDescription>
-                  Upload and manage event photos
-                </CardDescription>
+                <CardTitle>Event Gallery</CardTitle>
+                <CardDescription>Approved media for this event.</CardDescription>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">
-                  <LucideIcons.Upload className="mr-2 h-4 w-4" />
-                  Upload Photos
-                </Button>
-                <Button size="sm" asChild>
-                  <Link href={`/protected/events/${params.id}/gallery`}>
-                    <LucideIcons.Eye className="mr-2 h-4 w-4" />
-                    View Gallery
-                  </Link>
-                </Button>
+                <Button variant="outline" size="sm">View Full Gallery</Button>
               </div>
             </CardHeader>
             <CardContent>
-              {photos && photos.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {photos.slice(0, 8).map((photo, index) => (
-                    <div key={index} className="aspect-square relative overflow-hidden rounded-md border">
-                      <div className="relative w-full h-full">
-                        <img
-                          src={photo.url || photo.storage_path || ''}
-                          alt={`Event photo ${index + 1}`}
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                  {photos.length > 8 && (
-                    <Link
-                      href={`/protected/events/${params.id}/gallery`}
-                      className="aspect-square flex items-center justify-center rounded-md border bg-muted/50 hover:bg-muted"
-                    >
-                      <div className="text-center">
-                        <LucideIcons.Plus className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
-                        <span className="text-sm font-medium">
-                          View {photos.length - 8} more
-                        </span>
-                      </div>
-                    </Link>
-                  )}
-                </div>
+              {mediaItems.length > 0 ? (
+                <MediaGrid media={mediaItems} />
               ) : (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <LucideIcons.Camera className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium mb-2">No photos uploaded yet</h3>
-                  <p className="text-muted-foreground mb-4 max-w-md">
-                    Upload photos of your event to create a gallery that attendees can view and interact with.
-                  </p>
-                  <div className="flex gap-3">
-                    <Button variant="outline" asChild>
-                      <Link href={`/protected/events/${params.id}/gallery`}>
-                        Browse Gallery
-                      </Link>
-                    </Button>
-                    <Button>
-                      <LucideIcons.Upload className="mr-2 h-4 w-4" />
-                      Upload Photos
-                    </Button>
-                  </div>
-                </div>
+                <p className="text-muted-foreground text-center py-8">No media has been approved for this event yet.</p>
               )}
+            </CardContent>
+          </Card>
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Upload Media</CardTitle>
+              <CardDescription>Guests can upload using the event link or QR code.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <UploadDropzone eventId={params.id} />
+            </CardContent>
+          </Card>
+          <Card className="mt-6">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Moderate Media</CardTitle>
+              <Link href={`/protected/events/${event.id}/gallery/moderation`}>
+                <Button variant="secondary" size="sm">Go to Moderation</Button>
+              </Link>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Review and approve/reject media uploaded by guests.</p>
             </CardContent>
           </Card>
         </TabsContent>

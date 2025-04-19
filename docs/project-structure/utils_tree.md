@@ -1,5 +1,5 @@
 # utils Directory Structure
-Generated: 2025-04-17T03:59:48.779Z
+Generated: 2025-04-18T18:53:21.136Z
 
 ## Overview
 
@@ -10,14 +10,15 @@ This directory contains 1 QR/Camera scanning related file(s).
 ```
 ./src/lib/utils/
 ├── codeGenerator.ts
+├── media-proxy.ts
 └── qr-utils.ts
 
-1 directory, 2 files
+1 directory, 3 files
 
 ```
 
 ## File Type Breakdown
-- ts: 2 file(s)
+- ts: 3 file(s)
 
 ## Ignored Patterns
 - node_modules

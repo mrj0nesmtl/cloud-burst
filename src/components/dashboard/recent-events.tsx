@@ -137,13 +137,6 @@ export function RecentEvents({ events }: RecentEventsProps) {
           </div>
         </Link>
       ))}
-      
-      {/* Create event button at the bottom */}
-      <Button asChild variant="outline" className="w-full mt-4">
-        <Link href="/protected/events/create" className="flex items-center justify-center">
-          <span>Create New Event</span>
-        </Link>
-      </Button>
     </div>
   )
 }

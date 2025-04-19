@@ -5,10 +5,14 @@ import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { UserRoundCheck, ShieldAlert, CheckCircle2, XCircle, ImageIcon } from 'lucide-react'
+import { ModerationCard } from '@/components/media/ModerationCard'
+import { ModeratorClient } from './moderator-client'
+import Image from 'next/image'
+import { getProxiedMediaUrl } from '@/lib/utils/media-proxy'
 
 export const metadata: Metadata = {
   title: 'Moderation | Gallery | Cloud Burst',
-  description: 'Moderate photos for your events',
+  description: 'Moderate media for your events',
 }
 
 // Prevent caching and ensure fresh data
@@ -44,7 +48,7 @@ export default async function ModerationPage() {
               Moderation
             </CardTitle>
             <CardDescription>
-              Manage and approve photos submitted to your events
+              Manage and approve media submitted to your events
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
@@ -52,7 +56,7 @@ export default async function ModerationPage() {
               <ShieldAlert className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium">No Events Found</h3>
               <p className="mt-1 text-sm text-muted-foreground max-w-md">
-                You don't have any events yet. Create an event to start moderating photos.
+                You don't have any events yet. Create an event to start moderating media.
               </p>
             </div>
           </CardContent>
@@ -60,27 +64,66 @@ export default async function ModerationPage() {
       )
     }
     
-    // Get all pending photos from user's events
+    // Get all pending media from user's events
     const eventIds = events.map(event => event.id)
-    const { data: pendingPhotos, error: pendingError } = await supabase
-      .from('photos')
+    const { data: pendingMedia, error: pendingError } = await supabase
+      .from('media')
       .select('*, event:event_id(name)')
       .in('event_id', eventIds)
-      .eq('is_approved', false)
+      .eq('status', 'pending')
       .order('created_at', { ascending: false })
     
     if (pendingError) throw pendingError
     
-    // Get all approved photos from user's events
-    const { data: approvedPhotos, error: approvedError } = await supabase
-      .from('photos')
+    // Get all approved media from user's events
+    const { data: approvedMedia, error: approvedError } = await supabase
+      .from('media')
       .select('*, event:event_id(name)')
       .in('event_id', eventIds)
-      .eq('is_approved', true)
+      .eq('status', 'approved')
       .order('created_at', { ascending: false })
       .limit(50) // Limit to recent ones
     
     if (approvedError) throw approvedError
+    
+    // Format media for client component
+    const formattedPendingMedia = pendingMedia.map(media => ({
+      id: media.id,
+      event_id: media.event_id,
+      title: media.title || 'Untitled',
+      description: media.description || '',
+      media_type: media.media_type,
+      status: media.status,
+      url: media.url,
+      thumbnail_url: media.thumbnail_url,
+      storage_path: media.storage_path,
+      created_at: media.created_at,
+      updated_at: media.updated_at,
+      width: media.width,
+      height: media.height,
+      size: media.size,
+      uploaded_by: media.uploaded_by,
+      event_name: media.event?.name || 'Unknown Event'
+    }))
+    
+    const formattedApprovedMedia = approvedMedia.map(media => ({
+      id: media.id,
+      event_id: media.event_id,
+      title: media.title || 'Untitled',
+      description: media.description || '',
+      media_type: media.media_type,
+      status: media.status,
+      url: media.url,
+      thumbnail_url: media.thumbnail_url,
+      storage_path: media.storage_path,
+      created_at: media.created_at,
+      updated_at: media.updated_at,
+      width: media.width,
+      height: media.height,
+      size: media.size,
+      uploaded_by: media.uploaded_by,
+      event_name: media.event?.name || 'Unknown Event'
+    }))
     
     return (
       <Card className="border-border/40 shadow-sm">
@@ -90,7 +133,7 @@ export default async function ModerationPage() {
             Moderation
           </CardTitle>
           <CardDescription>
-            Manage and approve photos submitted to your events
+            Manage and approve media submitted to your events
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
@@ -98,9 +141,9 @@ export default async function ModerationPage() {
             <TabsList className="mb-6">
               <TabsTrigger value="pending" className="relative">
                 Pending
-                {pendingPhotos.length > 0 && (
+                {pendingMedia.length > 0 && (
                   <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                    {pendingPhotos.length}
+                    {pendingMedia.length}
                   </span>
                 )}
               </TabsTrigger>
@@ -108,77 +151,63 @@ export default async function ModerationPage() {
             </TabsList>
             
             <TabsContent value="pending">
-              {pendingPhotos.length === 0 ? (
+              {pendingMedia.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
                   <CheckCircle2 className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium">No Pending Photos</h3>
+                  <h3 className="text-lg font-medium">No Pending Media</h3>
                   <p className="mt-1 text-sm text-muted-foreground max-w-md">
-                    There are no photos waiting for your approval.
+                    There are no media items waiting for your approval.
                   </p>
                 </div>
               ) : (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {/* Here you'd render a component to display and moderate each pending photo */}
-                  {/* This would include approve/reject actions, which would need client components */}
-                  {pendingPhotos.map((photo) => (
-                    <div key={photo.id} className="relative group overflow-hidden rounded-lg border bg-card shadow-sm">
-                      <div className="relative aspect-square bg-muted">
-                        {/* You would add the moderation component here */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                          <p className="text-sm text-muted-foreground">Photo ID: {photo.id}</p>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <p className="text-sm font-medium">From: {photo.event?.name || 'Unknown Event'}</p>
-                        <p className="text-xs text-muted-foreground">
-                          Uploaded: {new Date(photo.created_at).toLocaleDateString()}
-                        </p>
-                        <div className="mt-3 flex space-x-2">
-                          <button className="flex-1 flex items-center justify-center rounded-md bg-green-500/10 text-green-500 py-1 text-xs font-medium">
-                            <CheckCircle2 className="mr-1 h-3 w-3" />
-                            Approve
-                          </button>
-                          <button className="flex-1 flex items-center justify-center rounded-md bg-destructive/10 text-destructive py-1 text-xs font-medium">
-                            <XCircle className="mr-1 h-3 w-3" />
-                            Reject
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <ModeratorClient pendingMedia={formattedPendingMedia} />
               )}
             </TabsContent>
             
             <TabsContent value="approved">
-              {approvedPhotos.length === 0 ? (
+              {approvedMedia.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
                   <ImageIcon className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium">No Approved Photos</h3>
+                  <h3 className="text-lg font-medium">No Approved Media</h3>
                   <p className="mt-1 text-sm text-muted-foreground max-w-md">
-                    You haven't approved any photos yet.
+                    You haven't approved any media items yet.
                   </p>
                 </div>
               ) : (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {/* Here you'd render recently approved photos */}
-                  {approvedPhotos.map((photo) => (
-                    <div key={photo.id} className="relative group overflow-hidden rounded-lg border bg-card shadow-sm">
-                      <div className="relative aspect-square bg-muted">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                          <p className="text-sm text-muted-foreground">Photo ID: {photo.id}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 px-1">
+                  {approvedMedia.map((media) => {
+                    const thumbnailUrl = media.thumbnail_url ? getProxiedMediaUrl(media.thumbnail_url) : '';
+                    const mediaUrl = media.url ? getProxiedMediaUrl(media.url) : '';
+                    
+                    return (
+                      <Card key={media.id} className="overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow w-full">
+                        <div className="relative w-full aspect-video">
+                          {(thumbnailUrl || mediaUrl) ? (
+                            <Image 
+                              src={thumbnailUrl || mediaUrl}
+                              alt={media.title || 'Media item'} 
+                              fill
+                              className="object-cover transition-transform hover:scale-105" 
+                              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 50vw, 33vw"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                              <ImageIcon className="h-20 w-20 text-muted-foreground" />
+                            </div>
+                          )}
                         </div>
-                      </div>
-                      <div className="p-4">
-                        <p className="text-sm font-medium">From: {photo.event?.name || 'Unknown Event'}</p>
-                        <p className="text-xs text-muted-foreground">
-                          Approved: {new Date(photo.updated_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                        <CardContent className="p-5 flex-grow">
+                          <h3 className="font-medium text-lg mb-2 truncate">{media.title || 'Untitled'}</h3>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            From: {media.event?.name || 'Unknown Event'}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Approved: {new Date(media.updated_at).toLocaleDateString()}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
                 </div>
               )}
             </TabsContent>

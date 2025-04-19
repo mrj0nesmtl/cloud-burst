@@ -86,29 +86,43 @@ export default async function EventGalleryPage({ params }: PageProps) {
   }
   
   // Fetch photos for this event
-  const { data: photos } = await supabase
-    .from('photos')
+  const { data: mediaItems } = await supabase
+    .from('media')
     .select('*')
     .eq('event_id', eventId)
+    .eq('status', 'approved')
     .order('created_at', { ascending: false });
+  
+  console.log(`Found ${mediaItems?.length || 0} approved media items for event ${eventId}`);
   
   // If no photos found, use mock photos instead
   const mockGallery = mockGalleries[eventId] || mockGalleries['1']; // Fallback to first gallery if no match
-  const galleryPhotos = photos?.length ? 
-    photos.map(photo => ({
-      id: photo.id,
-      url: photo.url || mockGallery.photos[0].url, // Fallback to mock URL if none exists
-      thumbnail: photo.thumbnail_url || photo.url || mockGallery.photos[0].thumbnail,
-      title: photo.title || `Photo ${photo.id}`,
-      description: photo.description || '',
-      tags: photo.tags?.split(',') || [],
-      dateUploaded: photo.created_at,
-      views: photo.view_count || 0,
-      likes: photo.like_count || 0,
-      downloads: photo.download_count || 0,
-      featured: photo.is_featured || false
+  const galleryPhotos = mediaItems?.length ? 
+    mediaItems.map(item => ({
+      id: item.id,
+      url: item.url || mockGallery.photos[0].url, // Fallback to mock URL if none exists
+      thumbnail: item.thumbnail_url || item.url || mockGallery.photos[0].thumbnail,
+      title: item.title || `Photo ${item.id}`,
+      description: item.description || '',
+      tags: item.tags || [],
+      dateUploaded: item.created_at,
+      views: item.views || 0,
+      likes: item.likes_count || 0,
+      downloads: item.downloads_count || 0,
+      featured: item.featured || false
     })) : 
     [];
+    
+  // Debug the first media item
+  if (mediaItems && mediaItems.length > 0) {
+    console.log('First media item:', {
+      id: mediaItems[0].id,
+      eventId: mediaItems[0].event_id,
+      url: mediaItems[0].url,
+      thumbnailUrl: mediaItems[0].thumbnail_url,
+      status: mediaItems[0].status
+    });
+  }
   
   const eventName = event?.name || 'Event Gallery';
   const eventDate = event?.date ? new Date(event.date).toLocaleDateString() : 'No date';

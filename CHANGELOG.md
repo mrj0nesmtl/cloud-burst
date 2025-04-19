@@ -16,7 +16,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
+### In Progress - April 22, 2025
+- **User Journey Documentation**:
+  - Created comprehensive event organizer journey document with touchpoints and metrics
+  - Added detailed workflow diagrams for all organizer journey phases
+  - Documented mobile experience optimizations for event organizers
+  - Included success metrics for each journey phase
+  - Enhanced visual representations with mermaid diagrams for journey phases
+
+### In Progress - April 21, 2025
+- **Media Moderation System**:
+  - Enhanced moderation page with responsive 5x5 grid layout
+  - Implemented ModerationCard component with approval/rejection dialogs
+  - Created secure server actions for approving, rejecting, and deleting media
+  - Added ModeratorClient component for state management and filtering
+  - Implemented media-proxy API endpoint for secure image loading
+  - Fixed Supabase storage URL processing with proxy utility functions
+  - Added comprehensive logging for moderation actions
+  - Ensured proper content type handling for various media formats
+  - Updated Next.js configuration for secure image domains
+
+### In Progress - April 20, 2025
+- **Progressive Web App (PWA) Implementation**:
+  - Created comprehensive web app manifest with proper icons and metadata
+  - Set up offline fallback page for improved user experience
+  - Implemented service worker with caching strategies and offline support
+  - Added background sync capabilities for uploads during intermittent connectivity
+  - Implemented push notification foundation for event updates
+  - Enhanced web app installation experience with home screen shortcuts
+  - Added theme color and proper meta tags for optimal mobile experience
+
 ### In Progress - April 18, 2025
+- **Dashboard UI Improvements**:
+  - Enhanced time range filter buttons in overview chart with improved visual indicators
+  - Added active state styling with border, background color, and font weight changes
+  - Implemented ActiveIndicator component to clearly show selected time ranges
+  - Improved user experience by making the currently selected option more distinctive
+  - Fixed inconsistent hovering behavior in time range and metric selectors
+  - Enhanced responsive behavior of filter buttons across screen sizes
+
 - **Guest Photo Upload Implementation**:
   - Created PhotoUploader component with drag-and-drop functionality
   - Implemented upload/api/guest/upload endpoint for secure file uploads
@@ -25,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Currently troubleshooting "Failed to create media record" issue
   - Identified potential database insertion error in the upload handler
 
+## [0.9.3] - 2025-04-18
 ### In Progress - April 17, 2025
 - **Guest Photo Upload Feature**:
   - Created API endpoint for direct photo uploads
@@ -87,8 +126,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enhanced visual feedback during photo capture and upload
   - Created BottomNav component for consistent guest navigation
 
-## [Unreleased]
-- Advanced AI Features integration with TensorFlow.js
+### ONGOING - April 19, 2025
+- **Guest Photo Upload Integration**:
+  - Fixed gallery page to properly fetch media from `media` table instead of `photos` table
+  - Resolved upload handler issues with moderation_logs table
+  - Connected guest uploads to event gallery display
+  - Enhanced media store to properly handle approval states
+  - Fixed TypeScript errors in media handling functions
+  - Corrected duplicate function definition in media.ts
+  - Resolved createMedia function parameter mismatches
+  - Added proper interface implementation for media types
+  - Enhanced client-side and server-side integration
+
+## [Fixed - April 16, 2025]
 - Enhanced Analytics dashboard with real-time metrics
 - Fixed homepage layout with proper component architecture
   - Resolved duplicate footer issue by removing redundant SiteFooter component from page.tsx

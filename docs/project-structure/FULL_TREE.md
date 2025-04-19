@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-17T03:59:41.263Z
+Generated: 2025-04-18T18:53:14.574Z
 
 ## Overview
 
@@ -190,6 +190,9 @@ Generated: 2025-04-17T03:59:41.263Z
 │   │   ├── session_42_implementation_notes.md
 │   │   ├── session_42_kickoff_narrative.md
 │   │   ├── session_42_resource_directories_map.md
+│   │   ├── session_42b_checklist.md
+│   │   ├── session_42b_kickoff_narrative.md
+│   │   ├── session_42b_resource_directories_map.md
 │   │   └── version-sync.plan
 │   ├── features/
 │   │   ├── gallery_implementation.md
@@ -361,6 +364,8 @@ Generated: 2025-04-17T03:59:41.263Z
 │   │   │   │   │   └── route.ts
 │   │   │   │   └── setup/
 │   │   │   │       └── route.ts
+│   │   │   ├── debug/
+│   │   │   │   └── route.ts
 │   │   │   ├── diagnose/
 │   │   │   │   └── schema/
 │   │   │   │       └── route.ts
@@ -384,6 +389,8 @@ Generated: 2025-04-17T03:59:41.263Z
 │   │   │   │   │   └── route.ts
 │   │   │   │   └── reserve/
 │   │   │   │       └── route.ts
+│   │   │   ├── image-proxy/
+│   │   │   │   └── route.ts
 │   │   │   ├── invitation/
 │   │   │   │   └── lookup/
 │   │   │   │       └── route.ts
@@ -409,6 +416,8 @@ Generated: 2025-04-17T03:59:41.263Z
 │   │   │   │   │   └── route.ts
 │   │   │   │   ├── verify/
 │   │   │   │   │   └── route.ts
+│   │   │   │   └── route.ts
+│   │   │   ├── media-proxy/
 │   │   │   │   └── route.ts
 │   │   │   ├── rpc/
 │   │   │   │   └── get-invitation-stats/
@@ -687,6 +696,8 @@ Generated: 2025-04-17T03:59:41.263Z
 │   │   │   │   │   ├── page-metadata.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── moderate/
+│   │   │   │   │   ├── actions.ts
+│   │   │   │   │   ├── moderator-client.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── upload/
 │   │   │   │   │   ├── page.tsx
@@ -882,6 +893,8 @@ Generated: 2025-04-17T03:59:41.263Z
 │   │   │   ├── MediaModerationGrid.tsx
 │   │   │   ├── MediaUploader.tsx
 │   │   │   ├── MediaViewer.tsx
+│   │   │   ├── ModerationCard.tsx
+│   │   │   ├── camera-capture.tsx
 │   │   │   ├── camera-test.tsx
 │   │   │   └── upload-media-button.tsx
 │   │   ├── nav/
@@ -1015,6 +1028,7 @@ Generated: 2025-04-17T03:59:41.263Z
 │   │   │   ├── auth-store.ts
 │   │   │   ├── auth-utils.ts
 │   │   │   ├── client.ts
+│   │   │   ├── dashboard.ts
 │   │   │   ├── debug-queries.ts
 │   │   │   ├── events.server.ts
 │   │   │   ├── events.ts
@@ -1038,6 +1052,7 @@ Generated: 2025-04-17T03:59:41.263Z
 │   │   │   └── invitation-token.ts
 │   │   ├── utils/
 │   │   │   ├── codeGenerator.ts
+│   │   │   ├── media-proxy.ts
 │   │   │   └── qr-utils.ts
 │   │   ├── validation/
 │   │   │   └── rsvp.schema.ts
@@ -1094,9 +1109,11 @@ Generated: 2025-04-17T03:59:41.263Z
 │   ├── exports/
 │   │   ├── .DS_Store
 │   │   ├── Album Media Table Structure.csv
+│   │   ├── Check RLS Policies for Media Table.csv
 │   │   ├── Display Current RSVP Policies.csv
 │   │   ├── Profile Access Policies.csv
 │   │   ├── RSVPs Table Structure.csv
+│   │   ├── Retrieve Event Photos.csv
 │   │   ├── Supabase Snippet Check Invitations with Tokens.csv
 │   │   ├── Supabase Snippet Check Table Existence and Structure.csv
 │   │   ├── Supabase Snippet Count Total Invitations.csv
@@ -1110,6 +1127,9 @@ Generated: 2025-04-17T03:59:41.263Z
 │   │   ├── guests_rows.csv
 │   │   ├── invitations_rows.csv
 │   │   ├── invitations_table_schema.csv
+│   │   ├── media_rows (1).csv
+│   │   ├── media_rows (2).csv
+│   │   ├── media_rows.csv
 │   │   ├── profiles_rows.csv
 │   │   ├── public_tables.csv
 │   │   ├── role_capabilities_rows.csv
@@ -1196,16 +1216,16 @@ Generated: 2025-04-17T03:59:41.263Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-280 directories, 907 files
+283 directories, 924 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11790 file(s)
-- tsx: 527 file(s)
-- js: 27814 file(s)
-- json: 2030 file(s)
-- md: 1527 file(s)
+- ts: 11797 file(s)
+- tsx: 530 file(s)
+- js: 27791 file(s)
+- json: 2022 file(s)
+- md: 1531 file(s)
 - css: 26 file(s)
 - yml: 164 file(s)
 
