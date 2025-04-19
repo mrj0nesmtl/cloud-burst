@@ -49,20 +49,20 @@ export enum GallerySortOption {
 export interface Media {
   id: string;
   eventId: string;
-  mediaType: MediaType;
-  storagePath: string;
-  filename: string;
-  originalFilename: string;
+  mediaType?: string;
+  storagePath?: string;
+  filename?: string;
+  originalFilename?: string;
   url: string;
   thumbnailUrl?: string;
-  size: number;
-  width: number | null;
-  height: number | null;
+  size?: number;
+  width?: number | null;
+  height?: number | null;
   title?: string;
   description?: string;
-  isPublic: boolean;
-  status: string;
-  metadata: Record<string, any>;
+  isPublic?: boolean;
+  status?: string;
+  metadata?: Record<string, any>;
   createdAt: string;
   updatedAt?: string;
 }
@@ -249,11 +249,30 @@ export interface ModerationLog {
  * Database types to ensure type safety with Supabase
  * Note: We use type assertions since the tables might not be reflected in the types yet
  */
-export type DbMedia = Database['public']['Tables']['media']['Row'];
+// Define our own DbMedia type since it seems to be missing from the Database types
+export interface DbMedia {
+  id: string;
+  event_id: string;
+  media_type: string;
+  storage_path: string;
+  filename: string;
+  original_filename: string;
+  url: string;
+  thumbnail_url?: string | null;
+  size: number;
+  width?: number | null;
+  height?: number | null;
+  title?: string | null;
+  description?: string | null;
+  is_public: boolean;
+  status: string;
+  metadata?: Json;
+  created_at: string;
+  updated_at?: string | null;
+  uploaded_by?: string | null;
+}
 // Remove these type references until we regenerate the types
 // export type DbAlbum = Database['public']['Tables']['albums']['Row'];
-// export type DbAlbumMedia = Database['public']['Tables']['album_media']['Row'];
-// export type DbModerationLog = Database['public']['Tables']['moderation_logs']['Row'];
 
 /**
  * Sanitize user input to prevent XSS attacks
@@ -269,122 +288,12 @@ export function isVideo(media: Media): boolean {
   return media.mediaType === MediaType.VIDEO;
 }
 
-export type MediaUploadResult = {
-  path: string;
-  url: string;
-};
-
-export interface MediaServiceClient {
-  supabase: SupabaseClient<Database>;
-  getEventMedia: (eventId: string) => Promise<Media[]>;
-  getApprovedEventMedia: (eventId: string) => Promise<Media[]>;
-  getPendingEventMedia: (eventId: string) => Promise<Media[]>;
-  getRejectedEventMedia: (eventId: string) => Promise<Media[]>;
-  getUserMedia: (userId?: string) => Promise<Media[]>;
-  getMediaById: (mediaId: string) => Promise<Media | null>;
-  createMedia: (params: CreateMediaParams) => Promise<Media | null>;
-  updateMedia: (params: UpdateMediaParams) => Promise<Media | null>;
-  deleteMedia: (mediaId: string) => Promise<boolean>;
-  uploadMedia: (file: File, eventId: string, onProgress?: (progress: number) => void) => Promise<MediaUploadResult | null>;
-  approveMedia: (mediaId: string, reason?: string) => Promise<Media | null>;
-  rejectMedia: (mediaId: string, reason?: string) => Promise<Media | null>;
-
-  
-  // Replace potentially dangerous characters
-  return input
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/`/g, '&#96;')
-    .replace(/\$/g, '&#36;');
-}
-
-/**
- * Helper function to map database media to our application Media type
- */
-export function mapDbMediaToMedia(dbMedia: any): Media {
-  const metadata = dbMedia.metadata || {};
-  
-  // Determine status based on available fields
-  let status = dbMedia.status as MediaStatus || MediaStatus.PENDING;
-  let isApproved = dbMedia.is_approved;
-  
-  // If status is available, use it
-  if (status) {
-    // Set is_approved for backward compatibility
-    isApproved = status === MediaStatus.APPROVED;
-  } 
-  // If only is_approved is available, derive status from it
-  else if (isApproved !== undefined) {
-    status = isApproved ? MediaStatus.APPROVED : MediaStatus.PENDING;
-  }
-  
-  return {
-    id: dbMedia.id,
-    eventId: dbMedia.event_id || '',
-    mediaType: dbMedia.media_type as MediaType,
-    storagePath: dbMedia.storage_path || '',
-    filename: dbMedia.filename,
-    originalFilename: dbMedia.filename,
-    url: dbMedia.url || '',
-    thumbnailUrl: dbMedia.thumbnail_url,
-
-    size: dbMedia.size,
-    width: dbMedia.width,
-    height: dbMedia.height,
-    title: dbMedia.title,
-    description: dbMedia.description,
-    isPublic: dbMedia.is_public,
-    status: dbMedia.status,
-    metadata: metadata,
-    createdAt: dbMedia.created_at || new Date().toISOString(),
-    updatedAt: dbMedia.updated_at,
-  };
-}
-
-/**
- * Helper function to check if media is a photo
- */
-export function isPhoto(media: Media): boolean {
-  return media.media_type === MediaType.PHOTO;
-}
-
-/**
- * Helper function to check if media is a video
- */
-export function isVideo(media: Media): boolean {
-  return media.media_type === MediaType.VIDEO;
-}
-
-export type MediaUploadResult = {
-  path: string;
-  url: string;
-};
-
-export interface MediaServiceClient {
-  supabase: SupabaseClient<Database>;
-  getEventMedia: (eventId: string) => Promise<Media[]>;
-  getApprovedEventMedia: (eventId: string) => Promise<Media[]>;
-  getPendingEventMedia: (eventId: string) => Promise<Media[]>;
-  getRejectedEventMedia: (eventId: string) => Promise<Media[]>;
-  getUserMedia: (userId?: string) => Promise<Media[]>;
-  getMediaById: (mediaId: string) => Promise<Media | null>;
-  createMedia: (params: CreateMediaParams) => Promise<Media | null>;
-  updateMedia: (params: UpdateMediaParams) => Promise<Media | null>;
-  deleteMedia: (mediaId: string) => Promise<boolean>;
-  uploadMedia: (file: File, eventId: string, onProgress?: (progress: number) => void) => Promise<MediaUploadResult | null>;
-  approveMedia: (mediaId: string, reason?: string) => Promise<Media | null>;
-  rejectMedia: (mediaId: string, reason?: string) => Promise<Media | null>;
-  
-  // Album methods
-  getEventAlbums: (eventId: string) => Promise<Album[]>;
-  getAlbumById: (albumId: string) => Promise<Album | null>;
-  getAlbumMedia: (albumId: string) => Promise<Media[]>;
-  createAlbum: (params: CreateAlbumParams) => Promise<Album | null>;
-  updateAlbum: (params: UpdateAlbumParams) => Promise<Album | null>;
-  deleteAlbum: (albumId: string) => Promise<boolean>;
-  addMediaToAlbum: (albumId: string, mediaId: string) => Promise<boolean>;
-  removeMediaFromAlbum: (albumId: string, mediaId: string) => Promise<boolean>;
-  reorderAlbumMedia: (albumId: string, mediaIds: string[]) => Promise<boolean>;
-} 
+// Remove everything below this line and end the file here
+// export type MediaUploadResult = {
+//   path: string;
+//   url: string;
+// };
+// 
+// export interface MediaServiceClient {
+//   ...
+// } 

@@ -8,7 +8,7 @@ interface LogoProps {
 export function Logo({ className }: LogoProps) {
   return (
     <Link href="/protected/dashboard" className={cn("flex items-center", className)}>
-      <span className="font-bold text-xl">Cloud Burst</span>
+      <span className="font-bold text-xl"></span>
     </Link>
   )
 } 

@@ -16,6 +16,7 @@ import { Media, MediaStatus, MediaType } from '@/types/media';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { formatFileSize, formatTimestamp } from '@/lib/formatters';
+import { MediaActionHandler } from './MediaActionHandler';
 
 interface MediaCardProps {
   media: Media;
@@ -57,6 +58,8 @@ export function MediaCard({
   const [isHovered, setIsHovered] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
+  const [isActionDialogOpen, setIsActionDialogOpen] = useState(false);
+  const [actionDialogMode, setActionDialogMode] = useState<'view' | 'edit'>('view');
 
   const calculateAspectRatio = () => {
     if (aspectRatio !== 'auto') {
@@ -110,7 +113,41 @@ export function MediaCard({
       onSelect(media);
     } else if (onView) {
       onView(media);
+    } else {
+      // Open the details dialog if no specific action is provided
+      setActionDialogMode('view');
+      setIsActionDialogOpen(true);
     }
+  };
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (onEdit) {
+      onEdit(media);
+    } else {
+      // Open the edit dialog
+      setActionDialogMode('edit');
+      setIsActionDialogOpen(true);
+    }
+  };
+
+  const handleViewClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (onView) {
+      onView(media);
+    } else {
+      // Open the details dialog
+      setActionDialogMode('view');
+      setIsActionDialogOpen(true);
+    }
+  };
+
+  const handleMediaSuccess = (updatedMedia: Media) => {
+    // This can be used to refresh the media item after edit
+    // For now we just close the dialog
+    setIsActionDialogOpen(false);
   };
 
   const getStatusBadgeProps = () => {
@@ -138,212 +175,214 @@ export function MediaCard({
   };
 
   return (
-    <Card 
-      className={cn(
-        'overflow-hidden transition-all duration-200 group relative',
-        selected ? 'ring-2 ring-primary' : '',
-        className
-      )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={handleCardClick}
-    >
-      <CardContent className="p-0">
-        <div className={cn('relative overflow-hidden', getAspectRatioClass())}>
-          {media.media_type === MediaType.PHOTO ? (
-            <Image
-              src={media.url || '/images/placeholder-image.jpg'}
-              alt={media.title || 'Photo'}
-              className="object-cover transition-transform group-hover:scale-105"
-              fill
-              sizes={width ? `${width}px` : '(max-width: 768px) 100vw, 300px'}
-              priority={false}
-            />
-          ) : (
-            <div className="relative w-full h-full bg-black">
-              {/* Video thumbnail when not playing */}
-              {!isPlaying && (
-                <Image
-                  src={media.thumbnail_url || '/images/placeholder-video.jpg'}
-                  alt={media.title || 'Video'}
-                  className="object-cover"
-                  fill
-                  sizes={width ? `${width}px` : '(max-width: 768px) 100vw, 300px'}
-                  priority={false}
-                />
-              )}
-              
-              {/* Actual video element */}
-              <video
-                ref={setVideoRef}
-                src={media.url}
-                className={cn(
-                  'w-full h-full object-cover', 
-                  !isPlaying && 'opacity-0'
-                )}
-                playsInline
-                onEnded={() => setIsPlaying(false)}
+    <>
+      <Card 
+        className={cn(
+          'overflow-hidden transition-all duration-200 group relative',
+          selected ? 'ring-2 ring-primary' : '',
+          className
+        )}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={handleCardClick}
+      >
+        <CardContent className="p-0">
+          <div className={cn('relative overflow-hidden', getAspectRatioClass())}>
+            {media.media_type === MediaType.PHOTO ? (
+              <Image
+                src={media.url || '/images/placeholder-image.jpg'}
+                alt={media.title || 'Photo'}
+                className="object-cover transition-transform group-hover:scale-105"
+                fill
+                sizes={width ? `${width}px` : '(max-width: 768px) 100vw, 300px'}
+                priority={false}
               />
-              
-              {/* Play/pause button */}
-              <button
+            ) : (
+              <div className="relative w-full h-full bg-black">
+                {/* Video thumbnail when not playing */}
+                {!isPlaying && (
+                  <Image
+                    src={media.thumbnail_url || '/images/placeholder-video.jpg'}
+                    alt={media.title || 'Video'}
+                    className="object-cover"
+                    fill
+                    sizes={width ? `${width}px` : '(max-width: 768px) 100vw, 300px'}
+                    priority={false}
+                  />
+                )}
+                
+                {/* Actual video element */}
+                <video
+                  ref={setVideoRef}
+                  src={media.url}
+                  className={cn(
+                    'w-full h-full object-cover', 
+                    !isPlaying && 'opacity-0'
+                  )}
+                  playsInline
+                  onEnded={() => setIsPlaying(false)}
+                />
+                
+                {/* Play/pause button */}
+                <button
+                  className={cn(
+                    'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+                    'bg-black/50 rounded-full p-3 text-white transition-opacity',
+                    'hover:bg-black/70',
+                    (isHovered || !isPlaying) ? 'opacity-100' : 'opacity-0'
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleVideoPlay();
+                  }}
+                >
+                  {isPlaying ? (
+                    <PauseIcon className="h-6 w-6" />
+                  ) : (
+                    <PlayIcon className="h-6 w-6" />
+                  )}
+                </button>
+              </div>
+            )}
+            
+            {/* Duration badge for videos */}
+            {media.media_type === MediaType.VIDEO && media.duration && (
+              <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
+                {formatTimestamp(media.duration)}
+              </div>
+            )}
+            
+            {/* File size badge */}
+            {media.size && (
+              <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
+                {formatFileSize(media.size)}
+              </div>
+            )}
+            
+            {/* Selection indicator */}
+            {selectable && (
+              <div 
                 className={cn(
-                  'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-                  'bg-black/50 rounded-full p-3 text-white transition-opacity',
-                  'hover:bg-black/70',
-                  (isHovered || !isPlaying) ? 'opacity-100' : 'opacity-0'
+                  'absolute top-2 right-2 rounded-full h-5 w-5 border-2',
+                  selected 
+                    ? 'bg-primary border-primary' 
+                    : 'bg-white/80 border-gray-400'
                 )}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleVideoPlay();
-                }}
               >
-                {isPlaying ? (
-                  <PauseIcon className="h-6 w-6" />
-                ) : (
-                  <PlayIcon className="h-6 w-6" />
+                {selected && (
+                  <CheckIcon className="h-4 w-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                 )}
-              </button>
-            </div>
-          )}
-          
-          {/* Duration badge for videos */}
-          {media.media_type === MediaType.VIDEO && media.duration && (
-            <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
-              {formatTimestamp(media.duration)}
-            </div>
-          )}
-          
-          {/* File size badge */}
-          {media.size && (
-            <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
-              {formatFileSize(media.size)}
-            </div>
-          )}
-          
-          {/* Selection indicator */}
-          {selectable && (
-            <div 
-              className={cn(
-                'absolute top-2 right-2 rounded-full h-5 w-5 border-2',
-                selected 
-                  ? 'bg-primary border-primary' 
-                  : 'bg-white/80 border-gray-400'
-              )}
-            >
-              {selected && (
-                <CheckIcon className="h-4 w-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-              )}
-            </div>
-          )}
-        </div>
-      </CardContent>
-      
-      {(showStatus || showControls) && (
-        <CardFooter className="p-2 flex flex-col gap-2">
-          {showStatus && (
-            <div className="w-full flex items-center justify-between">
-              <Badge variant={getStatusBadgeProps().variant} className="text-xs flex items-center gap-1">
-                {getStatusBadgeProps().icon}
-                {getStatusBadgeProps().label}
-              </Badge>
-              
-              {media.title && (
-                <span className="text-xs text-muted-foreground truncate ml-2">
-                  {media.title}
-                </span>
-              )}
-            </div>
-          )}
-          
-          {showControls && (
-            <div className="flex items-center justify-center gap-1 w-full">
-              {onView && (
+              </div>
+            )}
+          </div>
+        </CardContent>
+        
+        {(showStatus || showControls) && (
+          <CardFooter className="p-2 flex flex-col gap-2">
+            {showStatus && (
+              <div className="w-full flex items-center justify-between">
+                <Badge variant={getStatusBadgeProps().variant} className="text-xs flex items-center gap-1">
+                  {getStatusBadgeProps().icon}
+                  {getStatusBadgeProps().label}
+                </Badge>
+                
+                {media.title && (
+                  <span className="text-xs text-muted-foreground truncate ml-2">
+                    {media.title}
+                  </span>
+                )}
+              </div>
+            )}
+            
+            {showControls && (
+              <div className="flex items-center justify-center gap-1 w-full">
                 <Button 
                   size="icon" 
                   variant="outline" 
                   className="h-8 w-8"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onView(media);
-                  }}
+                  onClick={handleViewClick}
                 >
                   <EyeIcon className="h-4 w-4" />
                 </Button>
-              )}
-              
-              {onApprove && media.status !== MediaStatus.APPROVED && (
+                
+                {onApprove && media.status !== MediaStatus.APPROVED && (
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-8 w-8 text-green-500 hover:text-green-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onApprove(media);
+                    }}
+                  >
+                    <CheckIcon className="h-4 w-4" />
+                  </Button>
+                )}
+                
+                {onReject && media.status !== MediaStatus.REJECTED && (
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-8 w-8 text-red-500 hover:text-red-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onReject(media);
+                    }}
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </Button>
+                )}
+                
                 <Button 
                   size="icon" 
                   variant="outline" 
-                  className="h-8 w-8 text-green-500 hover:text-green-700"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onApprove(media);
-                  }}
+                  className="h-8 w-8"
+                  onClick={handleEditClick}
                 >
-                  <CheckIcon className="h-4 w-4" />
+                  <PencilIcon className="h-4 w-4" />
                 </Button>
-              )}
-              
-              {onReject && media.status !== MediaStatus.REJECTED && (
-                <Button 
-                  size="icon" 
-                  variant="outline" 
-                  className="h-8 w-8 text-red-500 hover:text-red-700"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onReject(media);
-                  }}
-                >
-                  <XIcon className="h-4 w-4" />
-                </Button>
-              )}
-              
-              {onEdit && (
+                
                 <Button 
                   size="icon" 
                   variant="outline" 
                   className="h-8 w-8"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onEdit(media);
+                    // Open in new tab
+                    window.open(media.url, '_blank');
                   }}
                 >
-                  <PencilIcon className="h-4 w-4" />
+                  <DownloadIcon className="h-4 w-4" />
                 </Button>
-              )}
-              
-              <Button 
-                size="icon" 
-                variant="outline" 
-                className="h-8 w-8"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Open in new tab
-                  window.open(media.url, '_blank');
-                }}
-              >
-                <DownloadIcon className="h-4 w-4" />
-              </Button>
-              
-              {onDelete && (
-                <Button 
-                  size="icon" 
-                  variant="outline" 
-                  className="h-8 w-8 text-red-500 hover:text-red-700"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(media);
-                  }}
-                >
-                  <TrashIcon className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          )}
-        </CardFooter>
-      )}
-    </Card>
+                
+                {onDelete && (
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-8 w-8 text-red-500 hover:text-red-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(media);
+                    }}
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            )}
+          </CardFooter>
+        )}
+      </Card>
+      
+      {/* Media Action Dialog (either details or edit) */}
+      <MediaActionHandler
+        initialAction={actionDialogMode}
+        media={media}
+        isOpen={isActionDialogOpen}
+        onOpenChange={setIsActionDialogOpen}
+        onSuccess={handleMediaSuccess}
+        showEditButton={true}
+      />
+    </>
   );
 } 

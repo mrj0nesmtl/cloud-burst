@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import {
   Dialog,
@@ -25,8 +25,21 @@ import {
   ArrowsPointingOutIcon,
   ArrowsPointingInIcon,
   CheckIcon,
-  XIcon,
 } from '@heroicons/react/24/outline';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  XIcon,
+  ThumbsUpIcon,
+  ThumbsDownIcon,
+  DownloadIcon,
+  InfoIcon,
+  VolumeIcon,
+  Volume2Icon,
+  MaximizeIcon,
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { formatDistanceToNow } from 'date-fns';
 
 interface MediaViewerProps {
   media: Media | null;
@@ -54,7 +67,13 @@ export function MediaViewer({
   showInfo = true,
 }: MediaViewerProps) {
   const [isLoading, setIsLoading] = useState(true);
+  const [isMediaLoaded, setIsMediaLoaded] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [showNavigationControls, setShowNavigationControls] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(showInfo);
+  
+  // Video state
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -62,106 +81,157 @@ export function MediaViewer({
   
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   
-  // Reset loading state when media changes
+  const isVideo = media?.mediaType?.toLowerCase() === 'video';
+  const hasNext = Boolean(onNext && mediaList.length > 1 && mediaList.indexOf(media) < mediaList.length - 1);
+  const hasPrevious = Boolean(onPrevious && mediaList.length > 1 && mediaList.indexOf(media) > 0);
+
   useEffect(() => {
-    if (media) {
+    if (isOpen) {
       setIsLoading(true);
+      setIsMediaLoaded(false);
     }
-  }, [media]);
-  
-  // Handle fullscreen mode
+  }, [isOpen, media?.id]);
+
+  // Handle keyboard navigation
   useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          if (hasPrevious && onPrevious) onPrevious();
+          break;
+        case 'ArrowRight':
+          if (hasNext && onNext) onNext();
+          break;
+        case 'Escape':
+          onOpenChange(false);
+          break;
+        case 'f':
+          toggleFullscreen();
+          break;
+      }
     };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, hasNext, hasPrevious, onNext, onPrevious]);
+
+  // Handle touch events for swipe navigation
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
     
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-    };
-  }, []);
-  
-  // Handle video events
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    
-    const handleTimeUpdate = () => {
-      setCurrentTime(video.currentTime);
-    };
-    
-    const handleDurationChange = () => {
-      setDuration(video.duration);
-    };
-    
-    const handleEnded = () => {
-      setIsPlaying(false);
-    };
-    
-    video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('durationchange', handleDurationChange);
-    video.addEventListener('ended', handleEnded);
-    
-    return () => {
-      video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('durationchange', handleDurationChange);
-      video.removeEventListener('ended', handleEnded);
-    };
-  }, []);
-  
-  // Reset video state when media changes
-  useEffect(() => {
+    // Threshold for swipe detection (50px)
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && hasNext && onNext) {
+        // Swipe left -> next
+        onNext();
+      } else if (diff < 0 && hasPrevious && onPrevious) {
+        // Swipe right -> previous
+        onPrevious();
+      }
+    }
+  };
+
+  // Video player controls
+  const togglePlay = () => {
     if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      setIsPlaying(false);
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
     }
-  }, [media]);
-  
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
+  const handleVideoTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleVideoLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+      setIsMediaLoaded(true);
+      setIsLoading(false);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (videoRef.current) {
+      const newTime = Number(e.target.value);
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
   const toggleFullscreen = () => {
-    if (!containerRef.current) return;
-    
     if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen().catch(err => {
-        console.error('Error attempting to enable fullscreen:', err);
+      containerRef.current?.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
       });
+      setIsFullscreen(true);
     } else {
       document.exitFullscreen();
+      setIsFullscreen(false);
     }
   };
-  
-  const togglePlay = () => {
-    if (!videoRef.current) return;
+
+  // Show/hide navigation controls when mouse moves
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
     
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play();
+    const handleMouseMove = () => {
+      setShowNavigationControls(true);
+      clearTimeout(timeout);
+      
+      timeout = setTimeout(() => {
+        setShowNavigationControls(false);
+      }, 3000);
+    };
+    
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseenter', handleMouseMove);
     }
     
-    setIsPlaying(!isPlaying);
-  };
-  
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    
-    videoRef.current.muted = !videoRef.current.muted;
-    setIsMuted(!isMuted);
-  };
-  
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!videoRef.current) return;
-    
-    const seekTime = parseFloat(e.target.value);
-    videoRef.current.currentTime = seekTime;
-    setCurrentTime(seekTime);
-  };
-  
+    return () => {
+      clearTimeout(timeout);
+      if (container) {
+        container.removeEventListener('mousemove', handleMouseMove);
+        container.removeEventListener('mouseenter', handleMouseMove);
+      }
+    };
+  }, [isMediaLoaded]);
+
+  const mediaUrl = media?.url || '';
+  const mediaThumbnailUrl = media?.thumbnailUrl || media?.url || '';
+
   // If no media, don't render anything
   if (!media) return null;
-  
-  const hasNext = !!onNext && mediaList.length > 1;
-  const hasPrevious = !!onPrevious && mediaList.length > 1;
   
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -174,6 +244,8 @@ export function MediaViewer({
         <div 
           ref={containerRef} 
           className="relative flex flex-col h-full max-h-[85vh] overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Header Controls */}
           <DialogHeader className="flex-shrink-0 flex flex-row items-center justify-between p-4 bg-background/80 backdrop-blur-sm">
@@ -211,189 +283,224 @@ export function MediaViewer({
               </div>
             )}
             
-            {media.media_type === MediaType.PHOTO ? (
-              <Image
-                src={media.url || ''}
-                alt={media.title || 'Photo'}
-                className={cn(
-                  "max-h-full w-auto h-auto object-contain transition-opacity duration-300",
-                  isLoading ? 'opacity-0' : 'opacity-100'
-                )}
-                width={media.width || 1200}
-                height={media.height || 800}
-                quality={90}
-                priority
-                onLoad={() => setIsLoading(false)}
-              />
-            ) : (
-              <video
-                ref={videoRef}
-                src={media.url || ''}
-                className={cn(
-                  "max-h-full w-auto h-auto object-contain transition-opacity duration-300",
-                  isLoading ? 'opacity-0' : 'opacity-100'
-                )}
-                controls={false}
-                playsInline
-                onLoadedData={() => setIsLoading(false)}
-                muted={isMuted}
-              />
+            {/* Debug info - only in development */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="absolute top-0 left-0 bg-black/70 text-white text-xs p-2 z-50 max-w-full overflow-hidden">
+                <div>URL: {media.url || 'No URL'}</div>
+                <div>Type: {media.mediaType || 'Unknown'}</div>
+                <div>Size: {media.width}x{media.height}</div>
+              </div>
             )}
             
-            {/* Navigation Controls */}
-            {!isLoading && (
+            {/* Carousel Navigation Controls */}
+            {showControls && isMediaLoaded && (
               <>
-                {hasPrevious && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={onPrevious}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white h-10 w-10 rounded-full"
-                  >
-                    <ArrowLeftIcon className="h-6 w-6" />
-                  </Button>
-                )}
-                
-                {hasNext && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={onNext}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white h-10 w-10 rounded-full"
-                  >
-                    <ArrowRightIcon className="h-6 w-6" />
-                  </Button>
-                )}
-                
-                {/* Video Controls */}
-                {media.media_type === MediaType.VIDEO && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                    <div className="flex flex-col space-y-2">
-                      {/* Progress Bar */}
-                      <input
-                        type="range"
-                        min="0"
-                        max={duration || 100}
-                        value={currentTime}
-                        onChange={handleSeek}
-                        className="w-full h-1 accent-white"
-                      />
-                      
-                      <div className="flex items-center justify-between">
-                        {/* Time Display */}
-                        <div className="text-white text-xs">
-                          {formatTimestamp(currentTime)} / {formatTimestamp(duration || 0)}
-                        </div>
-                        
-                        {/* Control Buttons */}
-                        <div className="flex items-center space-x-3">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={togglePlay}
-                            className="h-8 w-8 text-white hover:bg-white/20"
-                          >
-                            {isPlaying ? (
-                              <PauseIcon className="h-5 w-5" />
-                            ) : (
-                              <PlayIcon className="h-5 w-5" />
-                            )}
-                          </Button>
-                          
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={toggleMute}
-                            className="h-8 w-8 text-white hover:bg-white/20"
-                          >
-                            {isMuted ? (
-                              <SpeakerXMarkIcon className="h-5 w-5" />
-                            ) : (
-                              <SpeakerWaveIcon className="h-5 w-5" />
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
+                {/* Left Navigation */}
+                <div className={cn(
+                  "absolute left-0 top-0 bottom-0 flex items-center transition-opacity duration-300",
+                  (showNavigationControls || !isMediaLoaded) ? "opacity-100" : "opacity-0",
+                  hasPrevious ? "cursor-pointer" : "cursor-default"
+                )}>
+                  {hasPrevious && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-12 w-12 rounded-full bg-black/50 text-white ml-4 hover:bg-black/70"
+                      onClick={onPrevious}
+                    >
+                      <ChevronLeftIcon size={24} />
+                    </Button>
+                  )}
+                </div>
+
+                {/* Right Navigation */}
+                <div className={cn(
+                  "absolute right-0 top-0 bottom-0 flex items-center transition-opacity duration-300",
+                  (showNavigationControls || !isMediaLoaded) ? "opacity-100" : "opacity-0",
+                  hasNext ? "cursor-pointer" : "cursor-default"
+                )}>
+                  {hasNext && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-12 w-12 rounded-full bg-black/50 text-white mr-4 hover:bg-black/70"
+                      onClick={onNext}
+                    >
+                      <ChevronRightIcon size={24} />
+                    </Button>
+                  )}
+                </div>
+              </>
+            )}
+            
+            {media.mediaType === MediaType.PHOTO || media.mediaType === 'PHOTO' || (!media.mediaType && media.url) ? (
+              <>
+                {media.url ? (
+                  <img
+                    ref={imageRef}
+                    src={mediaUrl}
+                    alt={media.title || 'Photo'}
+                    className={cn(
+                      "max-h-full max-w-full object-contain transition-opacity duration-300",
+                      isMediaLoaded ? "opacity-100" : "opacity-0"
+                    )}
+                    onLoad={() => {
+                      console.log('Image loaded successfully');
+                      setIsMediaLoaded(true);
+                      setIsLoading(false);
+                    }}
+                    onError={(e) => {
+                      console.error('Error loading image:', e);
+                      setIsLoading(false);
+                    }}
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-white p-8">
+                    <span className="text-lg font-medium mb-2">Image not available</span>
+                    <span className="text-sm text-gray-400">The image URL is missing or invalid</span>
                   </div>
                 )}
               </>
+            ) : (
+              <video
+                ref={videoRef}
+                src={mediaUrl}
+                poster={mediaThumbnailUrl}
+                className={cn(
+                  "max-h-full max-w-full object-contain transition-opacity duration-300",
+                  isMediaLoaded ? "opacity-100" : "opacity-0"
+                )}
+                controls={false}
+                onLoadedMetadata={handleVideoLoadedMetadata}
+                onTimeUpdate={handleVideoTimeUpdate}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onEnded={() => setIsPlaying(false)}
+                onError={(e) => {
+                  console.error("Error loading video:", e);
+                  setIsLoading(false);
+                }}
+              />
             )}
           </div>
           
-          {/* Footer with Information and Controls */}
-          {(showInfo || showControls) && (
-            <DialogFooter className="flex-shrink-0 flex flex-row items-start justify-between gap-4 p-4 bg-background/80 backdrop-blur-sm">
-              {/* Media Information */}
-              {showInfo && (
-                <div className="flex flex-col text-sm">
-                  <p>
-                    <span className="text-muted-foreground">Uploaded: </span>
-                    {formatDate(media.created_at, { includeTime: true })}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-x-4">
-                    {media.media_type === MediaType.PHOTO && media.width && media.height && (
-                      <p>
-                        <span className="text-muted-foreground">Dimensions: </span>
-                        {media.width} × {media.height}
-                      </p>
-                    )}
-                    
-                    {media.media_type === MediaType.VIDEO && media.duration && (
-                      <p>
-                        <span className="text-muted-foreground">Duration: </span>
-                        {formatTimestamp(media.duration)}
-                      </p>
-                    )}
-                    
-                    {media.size && (
-                      <p>
-                        <span className="text-muted-foreground">Size: </span>
-                        {formatFileSize(media.size)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-              
-              {/* Action Buttons */}
-              {showControls && (
-                <div className="flex items-center space-x-2 shrink-0">
-                  {onApprove && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onApprove(media)}
-                      className="text-green-600 border-green-600 hover:bg-green-600/10"
-                    >
-                      <CheckIcon className="h-4 w-4 mr-1" />
-                      Approve
-                    </Button>
+          {/* Info Panel */}
+          {infoVisible && !isLoading && (
+            <div className="flex-shrink-0 p-4 bg-background/95 border-t">
+              <div className="flex flex-col space-y-2">
+                {media.title && (
+                  <h3 className="text-base font-medium">{media.title}</h3>
+                )}
+                
+                {media.description && (
+                  <p className="text-sm text-muted-foreground">{media.description}</p>
+                )}
+                
+                <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-muted-foreground mt-1">
+                  {media.createdAt && (
+                    <span>Uploaded: {formatDate(media.createdAt)}</span>
                   )}
                   
+                  {media.size && (
+                    <span>Size: {formatFileSize(media.size)}</span>
+                  )}
+                  
+                  {media.width && media.height && (
+                    <span>Dimensions: {media.width} × {media.height}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Video Controls */}
+          {!isLoading && media.mediaType === MediaType.VIDEO && videoRef.current && (
+            <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-2 flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={togglePlay}
+                className="text-white h-8 w-8"
+              >
+                {isPlaying ? (
+                  <PauseIcon className="h-5 w-5" />
+                ) : (
+                  <PlayIcon className="h-5 w-5" />
+                )}
+              </Button>
+              
+              <input
+                type="range"
+                min="0"
+                max={duration || 100}
+                value={currentTime}
+                onChange={handleSeek}
+                className="flex-grow h-1 bg-gray-600 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+              />
+              
+              <span className="text-white text-xs">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </span>
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleMute}
+                className="text-white h-8 w-8"
+              >
+                {isMuted ? (
+                  <SpeakerXMarkIcon className="h-5 w-5" />
+                ) : (
+                  <SpeakerWaveIcon className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
+          )}
+          
+          {/* Action Buttons */}
+          {showControls && !isLoading && (
+            <DialogFooter className="flex-shrink-0 p-4 bg-background border-t">
+              <div className="flex w-full justify-between items-center">
+                <div className="flex-1">
+                  {media.url && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        if (media.url) window.open(media.url, '_blank');
+                      }}
+                      className="text-xs gap-1"
+                    >
+                      <ArrowDownTrayIcon className="h-3.5 w-3.5" />
+                      Download
+                    </Button>
+                  )}
+                </div>
+                
+                <div className="flex items-center space-x-2">
                   {onReject && (
-                    <Button
-                      variant="outline"
+                    <Button 
+                      variant="destructive" 
                       size="sm"
                       onClick={() => onReject(media)}
-                      className="text-red-600 border-red-600 hover:bg-red-600/10"
                     >
-                      <XIcon className="h-4 w-4 mr-1" />
                       Reject
                     </Button>
                   )}
                   
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(media.url, '_blank')}
-                  >
-                    <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
-                    Download
-                  </Button>
+                  {onApprove && (
+                    <Button 
+                      variant="default" 
+                      size="sm"
+                      onClick={() => onApprove(media)}
+                      className="gap-1"
+                    >
+                      <CheckIcon className="h-3.5 w-3.5" />
+                      Approve
+                    </Button>
+                  )}
                 </div>
-              )}
+              </div>
             </DialogFooter>
           )}
         </div>

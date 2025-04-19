@@ -162,11 +162,15 @@
 
 ## Critical Priorities
 
-1. ✅ Implement PWA capabilities for guest experience
-2. ⬜ Reorganize organizer dashboard navigation
-3. ⬜ Enhance super admin user management tools
-4. ⬜ Fix theme toggle issues
-5. ⬜ Verify all redirect flows in guest experience
+1. ⬜ **URGENT:** Fix syntax error in src/types/media.ts causing build failures
+   - Issue with MediaUploadResult type definition before MediaServiceClient interface (line ~277)
+   - Error: "Expected '{', got 'interface'" suggesting unclosed type structure
+   - Likely related to recent merge conflict resolution
+2. ✅ Implement PWA capabilities for guest experience
+3. ⬜ Reorganize organizer dashboard navigation
+4. ⬜ Enhance super admin user management tools
+5. ⬜ Fix theme toggle issues
+6. ⬜ Verify all redirect flows in guest experience
 
 ## Success Criteria
 

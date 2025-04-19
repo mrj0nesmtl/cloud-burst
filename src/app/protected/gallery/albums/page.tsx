@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ImageIcon, FolderPlus, Layout, Clock } from 'lucide-react'
+import { ConsistentGrid } from '@/components/gallery/consistent-grid'
 
 export const metadata: Metadata = {
   title: 'Albums | Gallery | Cloud Burst',
@@ -31,6 +32,22 @@ export default async function AlbumsPage() {
     // In the future, you'd query for albums here
     const albums = [] // Placeholder for future implementation
     
+    // Empty state for the consistent grid
+    const emptyState = (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <Layout className="h-12 w-12 text-muted-foreground mb-4" />
+        <h3 className="text-lg font-medium">Album Feature Coming Soon</h3>
+        <p className="mt-1 text-sm text-muted-foreground max-w-md">
+          The ability to create and manage custom albums is under development.
+          Check back later for this feature.
+        </p>
+        <div className="flex items-center justify-center mt-6 p-3 bg-muted rounded-md">
+          <Clock className="h-4 w-4 text-muted-foreground mr-2" />
+          <p className="text-xs text-muted-foreground">Expected in a future update</p>
+        </div>
+      </div>
+    );
+    
     return (
       <Card className="border-border/40 shadow-sm">
         <CardHeader>
@@ -51,19 +68,14 @@ export default async function AlbumsPage() {
           </div>
         </CardHeader>
         <CardContent className="pt-6">
-          {/* Placeholder for future albums implementation */}
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Layout className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium">Album Feature Coming Soon</h3>
-            <p className="mt-1 text-sm text-muted-foreground max-w-md">
-              The ability to create and manage custom albums is under development.
-              Check back later for this feature.
-            </p>
-            <div className="flex items-center justify-center mt-6 p-3 bg-muted rounded-md">
-              <Clock className="h-4 w-4 text-muted-foreground mr-2" />
-              <p className="text-xs text-muted-foreground">Expected in a future update</p>
-            </div>
-          </div>
+          <ConsistentGrid emptyState={emptyState}>
+            {/* Album items will be mapped here when implemented */}
+            {albums.map(album => (
+              <div key={album.id}>
+                {/* Album card component will go here */}
+              </div>
+            ))}
+          </ConsistentGrid>
         </CardContent>
       </Card>
     )

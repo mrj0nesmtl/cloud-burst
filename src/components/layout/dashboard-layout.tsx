@@ -99,7 +99,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex h-16 items-center justify-between px-4">
+        <div className="flex h-12 items-center justify-between px-4">
           <Logo />
           <Button
             variant="ghost"
@@ -110,7 +110,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <span className="sr-only">Close sidebar</span>
           </Button>
         </div>
-        <div className="h-[calc(100vh-4rem)] overflow-y-auto">
+        <div className="h-[calc(100vh-3rem)] overflow-y-auto">
           <SideNav collapsed={false} />
         </div>
       </div>
@@ -123,10 +123,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         )}
       >
         <div className="sticky top-0 h-screen">
-          <div className="flex h-16 items-center px-4">
+          <div className="flex items-center pt-2">
             {!sidebarCollapsed && <Logo />}
           </div>
-          <div className="relative h-[calc(100vh-4rem)]">
+          <div className="relative h-[calc(100vh-1rem)]">
             <Button
               variant="ghost"
               size="icon"
@@ -146,25 +146,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Main content */}
       <div className="flex-1">
-        {/* Top header */}
-        <header className="sticky top-0 z-40 border-b bg-background">
-          <div className="flex h-16 items-center gap-4 px-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Open sidebar</span>
-            </Button>
-            <div className="flex flex-1 items-center justify-end space-x-4">
-              <ModeToggle />
-              <UserNav user={user} profile={profile} onSignOut={handleSignOut} />
-            </div>
-          </div>
-        </header>
-
+        {/* Mobile menu button - only visible on small screens */}
+        <div className="fixed top-4 left-4 z-50 lg:hidden">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setSidebarOpen(true)}
+            className="rounded-full shadow-md"
+          >
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Open sidebar</span>
+          </Button>
+        </div>
+        
         {/* Page content */}
         <div>
           {children}
