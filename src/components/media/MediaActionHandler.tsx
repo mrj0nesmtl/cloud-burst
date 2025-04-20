@@ -11,6 +11,7 @@ interface MediaActionHandlerProps {
   mediaList?: Media[];
   onMediaUpdated?: (updatedMedia: Media) => void;
   showEditButton?: boolean;
+  onViewStateChange?: (isOpen: boolean) => void;
 }
 
 export function MediaActionHandler({
@@ -19,6 +20,7 @@ export function MediaActionHandler({
   mediaList = [],
   onMediaUpdated,
   showEditButton = false,
+  onViewStateChange,
 }: MediaActionHandlerProps) {
   const [viewingMedia, setViewingMedia] = useState<Media | null>(null);
   const [editingMedia, setEditingMedia] = useState<Media | null>(null);
@@ -41,11 +43,14 @@ export function MediaActionHandler({
   useEffect(() => {
     if (media) {
       setViewingMedia(media);
+      if (onViewStateChange) onViewStateChange(true);
     }
-  }, [media]);
+  }, [media, onViewStateChange]);
 
   const handleViewMedia = useCallback((media: Media) => {
     setViewingMedia(media);
+    if (onViewStateChange) onViewStateChange(true);
+    
     // Find and set current index
     if (mediaList.length > 0) {
       const index = mediaList.findIndex(item => item.id === media.id);
@@ -53,24 +58,27 @@ export function MediaActionHandler({
         setCurrentIndex(index);
       }
     }
-  }, [mediaList]);
+  }, [mediaList, onViewStateChange]);
 
   const handleCloseView = useCallback(() => {
     setViewingMedia(null);
-  }, []);
+    if (onViewStateChange) onViewStateChange(false);
+  }, [onViewStateChange]);
 
   const handleEditMedia = useCallback((media: Media) => {
     setEditingMedia(media);
     setViewingMedia(null);
-  }, []);
+    if (onViewStateChange) onViewStateChange(false);
+  }, [onViewStateChange]);
 
   const handleCloseEdit = useCallback(() => {
     setEditingMedia(null);
     // Return to viewing the media after editing
     if (viewingMedia) {
       setViewingMedia(viewingMedia);
+      if (onViewStateChange) onViewStateChange(true);
     }
-  }, [viewingMedia]);
+  }, [viewingMedia, onViewStateChange]);
 
   const handleMediaUpdated = useCallback((updatedMedia: Media) => {
     // Update the media in the media list

@@ -109,6 +109,13 @@ export default function GuestMediaViewPage({ params }: { params: { mediaId: stri
     fetchMediaAndGallery();
   }, [mediaId, token]);
 
+  useEffect(() => {
+    if (!isViewerOpen && !isLoading && token) {
+      // Redirect to gallery when viewer is closed
+      router.push(`/guest/gallery?token=${token}`);
+    }
+  }, [isViewerOpen, isLoading, token, router]);
+
   const handleBack = () => {
     router.push(`/guest/gallery?token=${token}`);
   };
@@ -123,6 +130,11 @@ export default function GuestMediaViewPage({ params }: { params: { mediaId: stri
         item.id === updatedMedia.id ? updatedMedia : item
       ));
     }
+  };
+
+  // Handle viewer state changes
+  const handleViewerStateChange = (isOpen: boolean) => {
+    setIsViewerOpen(isOpen);
   };
 
   if (isLoading) {
@@ -167,7 +179,7 @@ export default function GuestMediaViewPage({ params }: { params: { mediaId: stri
         {/* Simple preview of the media */}
         <div className="aspect-video w-full max-w-4xl mx-auto bg-black/5 rounded-lg flex items-center justify-center border">
           <p className="text-center text-muted-foreground">
-            Media viewer is active. Close it to return to this page.
+            Loading media viewer...
           </p>
         </div>
       </div>
@@ -179,6 +191,7 @@ export default function GuestMediaViewPage({ params }: { params: { mediaId: stri
         mediaList={mediaList}
         onMediaUpdated={handleMediaUpdated}
         showEditButton={true}
+        onViewStateChange={handleViewerStateChange}
       />
     </>
   );
