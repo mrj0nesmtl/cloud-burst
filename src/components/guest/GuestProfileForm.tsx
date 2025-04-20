@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -69,7 +69,7 @@ export function GuestProfileForm({ invitationToken, eventId, onComplete }: Guest
   })
 
   // Load attendee data
-  useState(() => {
+  useEffect(() => {
     async function loadAttendeeData() {
       setIsLoading(true)
       try {
@@ -93,7 +93,7 @@ export function GuestProfileForm({ invitationToken, eventId, onComplete }: Guest
     }
 
     loadAttendeeData()
-  }, [])
+  }, [invitationToken, form, toast])
 
   async function onSubmit(data: ProfileFormValues) {
     setIsLoading(true)

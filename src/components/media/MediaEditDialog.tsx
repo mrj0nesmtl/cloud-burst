@@ -99,15 +99,15 @@ export function MediaEditDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Edit Media Details</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-3xl w-full p-4 sm:p-6">
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-xl sm:text-2xl">Edit Media Details</DialogTitle>
+          <DialogDescription className="text-base">
             Update the title and description for this media item.
           </DialogDescription>
         </DialogHeader>
         
-        <div className="grid gap-6 py-4">
+        <div className="grid gap-6 py-2">
           <div className="relative aspect-video rounded-md overflow-hidden border">
             {media.media_type === MediaType.PHOTO ? (
               <Image
@@ -129,38 +129,49 @@ export function MediaEditDialog({
             )}
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title" className="text-lg font-medium">Title</Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter a title for this media"
+                className="h-14 text-lg p-4 w-full"
               />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+            <div className="space-y-3">
+              <Label htmlFor="description" className="text-lg font-medium">Description</Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter a description (optional)"
-                rows={3}
+                rows={6}
+                className="min-h-[180px] text-lg p-4 w-full"
               />
             </div>
           </div>
         </div>
         
-        <DialogFooter>
-          <Button variant="outline" onClick={handleCancel} disabled={isLoading}>
+        <DialogFooter className="mt-8 gap-4 flex-col sm:flex-row">
+          <Button 
+            variant="outline" 
+            onClick={handleCancel} 
+            disabled={isLoading}
+            className="w-full sm:w-auto h-14 text-lg px-8"
+          >
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={isLoading}>
+          <Button 
+            onClick={handleSave} 
+            disabled={isLoading}
+            className="w-full sm:w-auto h-14 text-lg px-8"
+          >
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                 Saving...
               </>
             ) : (

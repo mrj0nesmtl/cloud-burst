@@ -149,35 +149,29 @@ export function MediaDetailsDialog({
       <DialogContent 
         ref={contentRef}
         className={`
-          sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-[85vw] 
-          ${isFullscreen ? 'h-[95vh] max-h-[95vh] p-2' : 'max-h-[85vh]'}
+          sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-[85vw]
+          ${isFullscreen ? 'h-[95vh] max-h-[95vh] p-2' : 'max-h-[90vh]'}
           overflow-hidden flex flex-col
           animate-in fade-in-0 zoom-in-95 duration-300
+          w-full max-w-full
+          p-3 sm:p-4
         `}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="flex justify-between items-center p-2">
-          <DialogTitle className="text-lg">
+        <div className="flex justify-between items-center mb-2">
+          <DialogTitle className="text-lg truncate max-w-[70%]">
             {media.title || 'Media Details'}
           </DialogTitle>
-          <div className="flex gap-2">
-            {showEditButton && onEdit && (
-              <Button
-                onClick={() => onEdit(media)}
-                size="icon"
-                variant="ghost"
-              >
-                <Edit className="h-4 w-4" />
-              </Button>
-            )}
+          <div className="flex gap-1 sm:gap-2 flex-shrink-0">
             <Button
               onClick={toggleInfo}
               size="icon"
               variant="ghost"
               title="Toggle information panel (I)"
               aria-label="Toggle information"
+              className="h-8 w-8"
             >
               <Info className="h-4 w-4" />
             </Button>
@@ -187,6 +181,7 @@ export function MediaDetailsDialog({
               variant="ghost"
               title="Toggle fullscreen (F)"
               aria-label="Toggle fullscreen"
+              className="h-8 w-8"
             >
               {isFullscreen ? (
                 <Minimize className="h-4 w-4" />
@@ -200,20 +195,22 @@ export function MediaDetailsDialog({
               variant="ghost"
               title="Close (Escape)"
               aria-label="Close"
+              className="h-8 w-8"
             >
               <X className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
-        <div className={`flex flex-col md:flex-row ${isFullscreen ? 'h-full' : ''}`}>
+        <div className={`flex flex-col md:flex-row ${isFullscreen ? 'h-full' : ''} w-full overflow-hidden gap-2 md:gap-4`}>
           {/* Media display area */}
           <div 
             className={`
               relative flex items-center justify-center 
-              w-full md:${showInfo ? 'w-[70%]' : 'w-full'} 
-              ${isFullscreen ? 'h-full' : 'max-h-[60vh] md:max-h-[70vh]'}
+              w-full md:${showInfo ? 'w-[65%]' : 'w-full'} 
+              ${isFullscreen ? 'h-full' : 'h-[40vh] md:h-[60vh]'}
               overflow-hidden
+              bg-muted/20 rounded-md
             `}
           >
             {isLoading && (
@@ -303,16 +300,18 @@ export function MediaDetailsDialog({
           {/* Info panel */}
           {showInfo && (
             <div className={`
-              w-full md:w-[30%] p-4 overflow-y-auto 
-              ${isFullscreen ? 'h-full' : 'max-h-[25vh] md:max-h-[70vh]'}
+              w-full md:w-[35%] py-2 px-1 sm:p-3 overflow-y-auto
+              ${isFullscreen ? 'h-full' : 'h-[40vh] md:h-[60vh]'}
+              border-t md:border-t-0 md:border-l border-border
+              flex flex-col
             `}>
-              <h3 className="text-lg font-semibold mb-2">{media.title || 'Untitled'}</h3>
+              <h3 className="text-lg font-semibold mb-2 truncate">{media.title || 'Untitled'}</h3>
               
               {media.description && (
-                <p className="text-sm text-muted-foreground mb-4">{media.description}</p>
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-3">{media.description}</p>
               )}
               
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-sm flex-grow">
                 <div className="flex justify-between">
                   <span className="font-medium">Type:</span>
                   <span>{media.mediaType || 'Unknown'}</span>
@@ -360,9 +359,40 @@ export function MediaDetailsDialog({
                 )}
               </div>
               
-              <div className="mt-4 border-t pt-4">
-                <h4 className="text-sm font-medium mb-2">Keyboard Navigation</h4>
-                <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="mt-3 border-t pt-3">
+                <h4 className="text-sm font-medium mb-1">Actions</h4>
+                <div className="flex flex-row gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="w-full flex items-center justify-center gap-1 h-10"
+                    onClick={() => {
+                      // Open the original image in a new tab for download
+                      window.open(media.url, '_blank');
+                    }}
+                    title="Download original image"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Download</span>
+                  </Button>
+                  {showEditButton && onEdit && (
+                    <Button
+                      size="sm" 
+                      variant="default"
+                      className="w-full flex items-center justify-center gap-1 h-10"
+                      onClick={() => onEdit(media)}
+                      title="Edit media details"
+                    >
+                      <Edit className="h-4 w-4" />
+                      <span>Edit</span>
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              <div className="mt-3 border-t pt-3 hidden sm:block">
+                <h4 className="text-sm font-medium mb-1">Keyboard Navigation</h4>
+                <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
                   <div className="flex items-center">
                     <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono mr-2">←</kbd>
                     <span>Previous image</span>
@@ -386,37 +416,6 @@ export function MediaDetailsDialog({
                   <div className="flex items-center">
                     <span className="text-xs">Swipe left/right on touch devices</span>
                   </div>
-                </div>
-              </div>
-
-              <div className="mt-4 border-t pt-4">
-                <h4 className="text-sm font-medium mb-2">Actions</h4>
-                <div className="flex gap-2">
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    className="w-full flex items-center justify-center gap-1"
-                    onClick={() => {
-                      // Open the original image in a new tab for download
-                      window.open(media.url, '_blank');
-                    }}
-                    title="Download original image"
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                    <span>Download</span>
-                  </Button>
-                  {showEditButton && onEdit && (
-                    <Button
-                      size="sm" 
-                      variant="outline"
-                      className="w-full flex items-center justify-center gap-1"
-                      onClick={() => onEdit(media)}
-                      title="Edit media details"
-                    >
-                      <Edit className="h-3.5 w-3.5" />
-                      <span>Edit</span>
-                    </Button>
-                  )}
                 </div>
               </div>
             </div>

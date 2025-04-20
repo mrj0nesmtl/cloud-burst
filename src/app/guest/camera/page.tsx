@@ -13,9 +13,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/components/ui/use-toast'
 import { invitationTokenService } from '@/lib/tokens/invitation-token'
-import { BottomNav } from '@/components/guest/bottom-nav'
+import { BottomNav } from '@/components/guest'
 import { CapturePreview } from './CapturePreview'
-import { GuestNavigation } from '@/components/guest/GuestNavigation'
+import { GuestNavigation } from '@/components/guest'
 
 export default function GuestCameraPage() {
   const searchParams = useSearchParams()
@@ -275,15 +275,55 @@ export default function GuestCameraPage() {
       setIsCapturing(false)
       setCapturedPhotoUrl(null)
       
+      // Reinitialize camera to ensure it's active after upload
+      if (!isInitializing && !hasCameraPermission) {
+        // Only reinitialize if we're not already initializing
+        initializeCamera(isFrontCamera)
+      }
+      
       // Provide feedback
       toast({
         title: "Photo Saved!",
-        description: "Your photo has been saved. You can upload it to the event.",
+        description: "Your photo has been saved and is being uploaded.",
+        action: (
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => router.push(`/guest/gallery?token=${invitationToken}`)}
+            >
+              View Gallery
+            </Button>
+          </div>
+        )
       })
       
       // Automatic upload
       try {
-        await uploadSinglePhoto(photoId, blob, eventId, invitationToken)
+        const result = await uploadSinglePhoto(photoId, blob, eventId, invitationToken)
+        
+        // Notify upload success and offer to view in gallery
+        toast({
+          title: "Upload Complete!",
+          description: "Your photo has been uploaded to the event gallery.",
+          action: (
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => router.push(`/guest/gallery?token=${invitationToken}`)}
+              >
+                View in Gallery
+              </Button>
+            </div>
+          )
+        })
+        
+        // Ensure camera is still active
+        if (!stream || !videoRef.current || !videoRef.current.srcObject) {
+          console.log("Camera needs to be restarted after upload")
+          initializeCamera(isFrontCamera)
+        }
       } catch (uploadError) {
         console.error("Auto-upload failed:", uploadError)
         // We'll let the user retry manually
@@ -299,6 +339,9 @@ export default function GuestCameraPage() {
       // Reset capturing state on error
       setIsCapturing(false)
       setCapturedPhotoUrl(null)
+      
+      // Ensure camera is reinitialized
+      initializeCamera(isFrontCamera)
     }
   }
   
