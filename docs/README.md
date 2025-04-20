@@ -1,71 +1,54 @@
 # Cloud Burst Documentation
 
-> **Version:** 0.9.2   
-> **Last Updated:** April 15, 2025
+> **Version:** 0.9.4   
+> **Last Updated:** April 20, 2025
 
 ## 📌 Situational Abstract
 
-Cloud Burst has evolved significantly since its inception, with all core features now implemented. Recent milestones include the successful integration of a guest profile creation system with avatar upload functionality, camera testing interface with flashlight control, and enhanced mobile responsiveness. The platform now provides a comprehensive event management system with invitation, RSVP, and guest onboarding capabilities, ensuring a consistent and intuitive experience across both desktop and mobile devices. As we approach our April 30, 2025 Beta 1.0 RC1 release date, current development is focused on fixing navigation issues to the guest dashboard after setup completion, implementing beautiful gallery layouts for guests, enhancing the AI features integration, and finalizing the analytics dashboard.
+Cloud Burst has completed the end-to-end guest experience with version 0.9.4, which includes media deletion capability, responsive layout improvements, and auto-redirect functionality. The platform now provides comprehensive event management, invitation handling, RSVP processing, and a fully functional guest photo sharing experience. All core features have been implemented with a focus on intuitive navigation and mobile responsiveness. As we approach our April 30, 2025 Beta 1.0 RC1 release date, our current development is focused on finalizing the organizer moderation interface, enhancing the super admin dashboard, and conducting comprehensive testing across all platforms.
 
 ## 🔄 Recent Updates
 
-- ✅ Implemented guest profile page with avatar upload component
-- ✅ Created camera access testing feature with real-time preview
-- ✅ Added flashlight toggle for camera testing in different lighting conditions
-- ✅ Fixed framer-motion dependency to resolve dashboard build errors
-- ✅ Enhanced avatar component with improved styling and hover effects
-- ✅ Updated confirmation page UI with consistent black buttons
-- ✅ Fixed styling issues on event confirmation page
-- ✅ Enhanced UI consistency across guest-facing interfaces
-- ✅ Removed redundant brand elements from headers for cleaner UI
-- ✅ Updated technical documentation including CHANGELOG and roadmap
-- ✅ Generated comprehensive project structure documentation
+- ✅ Completed full guest journey from RSVP to profile creation to photo uploads
+- ✅ Added media deletion capability for guests to manage their own content
+- ✅ Implemented auto-redirect from media viewer back to gallery
+- ✅ Fixed responsive layout issues in portrait mode for mobile users
+- ✅ Optimized keyboard navigation and touch gestures for seamless interaction
+- ✅ Resolved critical issues with media endpoints and error handling
+- ✅ Enhanced security with comprehensive Row Level Security policies
+- ✅ Updated application design document with current status (95% complete)
 
-### 🔐 Auth System Enhancements
+### 🔐 Auth & Security Enhancements
 
-- ✅ Comprehensive role-based middleware implemented
-- ✅ Permission hooks for capability checking
-- ✅ Conditional UI rendering based on permissions
-- ✅ Resource ownership verification
-- ✅ Session management improved
-- ✅ Cookie security strengthened
-- ✅ Error boundaries implemented
-- ✅ Type safety enhanced with Zod schemas
-- ✅ Email verification flow
-- ✅ Template-based notifications
+- ✅ Row Level Security policies for guests and gallery permissions tables
+- ✅ Security definer functions for server-side code with RLS enabled
+- ✅ Token management service with multi-source retrieval strategy
+- ✅ Token context provider for React components
+- ✅ Enhanced error handling with user-friendly messages
+- ✅ Redundant token storage across localStorage and cookies
+- ✅ Proper constraint handling for guest profile creation
 
 ## 📚 Documentation Structure
 
 ### 🏗️ Architecture
 
-- [Application Design](architecture/application_design_document.md)
-- [System Architecture Flowchart](architecture/system_architecture_flowchart.md)
-- [Security Architecture](architecture/security.md)
-- [AI Implementation](architecture/ai_implementation.md)
+- [Application Design Document](architecture/application_design_document.md) - Comprehensive overview of the application architecture
+- [System Architecture Flowchart](architecture/system_architecture_flowchart.md) - Visual representation of system components
+- [Security Architecture](architecture/security.md) - Security standards and implementation details
+- [AI Implementation](architecture/ai_implementation.md) - AI features framework and implementation details
+- [Architecture Diagram](architecture/architecture-diagram.md) - High-level architecture diagram
+- [Navigation Structure](architecture/navigation-structure.md) - Application routing and navigation patterns
+- [User Journeys](architecture/user-journeys.md) - Key user journey flows through the application
 
 ```mermaid
 graph TD
     Client["📱 Client Device"] -->|"HTTPS Request"| WebApp["🌐 Web App (Next.js)"]
     WebApp -->|"API Calls"| Supabase["🗄️ Supabase"]
     WebApp -->|"Dashboard"| Dashboard["📊 Dashboard System"]
-    WebApp -->|"Template Management"| Templates["📋 Template System"]
-    WebApp -->|"Event Management"| Events["📅 Event System"]
-    WebApp -->|"Gallery Management"| Gallery["🖼️ Gallery System"]
-    WebApp -->|"Attendee Management"| Attendees["👥 Attendee System"]
-    WebApp -->|"User Settings"| Settings["⚙️ Settings System"]
-    WebApp -->|"Analytics"| Analytics["📈 Analytics System"]
-    WebApp -->|"Access Control"| RBAC["🔒 RBAC System"]
-    WebApp -->|"AI Features"| AI["🧠 AI System"]
-    
-    Dashboard -->|"Load"| Supabase
-    Templates -->|"Sync"| Supabase
-    Events -->|"CRUD"| Supabase
-    Gallery -->|"CRUD"| Supabase
-    Attendees -->|"CRUD"| Supabase
-    Settings -->|"CRUD"| Supabase
-    Analytics -->|"Query"| Supabase
-    RBAC -->|"Verify"| Supabase
-    AI -->|"Process"| Supabase
+    WebApp -->|"Gallery"| Gallery["🖼️ Gallery System"]
+    WebApp -->|"Events"| Events["📅 Event System"]
+    WebApp -->|"RBAC"| RBAC["🔒 Access Control"]
+    WebApp -->|"AI"| AI["🧠 AI Processing"]
     
     Supabase --> Auth["🔑 Auth"]
     Supabase --> Database["💾 Database"]
@@ -73,135 +56,144 @@ graph TD
     
     style WebApp fill:#2A2A2A,stroke:#333,color:#fff
     style Supabase fill:#3ECF8E,stroke:#333,color:#000
-    style Auth fill:#1E3A8A,stroke:#333,color:#fff
-    style Database fill:#065F46,stroke:#333,color:#fff
-    style Storage fill:#7E22CE,stroke:#333,color:#fff
-    style Analytics fill:#DC2626,stroke:#333,color:#fff
     style Gallery fill:#2563EB,stroke:#333,color:#fff
     style AI fill:#6D28D9,stroke:#333,color:#fff
 ```
 
 ### 🚀 Deployment
 
-- [Deployment Guides](deployment/deployment_guides.md)
-- [Deployment Fixes](deployment/deployment_fixes.md)
-- [Replit Deployment](deployment/replit_deployment.md)
-- [Replit Quick Reference](deployment/replit-quick-reference.md)
+- [Deployment Guides](deployment/deployment_guides.md) - General deployment instructions
+- [Deployment Fixes](deployment/deployment_fixes.md) - Solutions for common deployment issues
+- [Replit Deployment](deployment/replit_deployment.md) - Replit-specific deployment instructions
+- [Replit Quick Reference](deployment/replit-quick-reference.md) - Quick reference for Replit deployment
 
 ### 🎨 Design
 
-- [UI Components](design/UI_components.md)
-- [Style Guide](design/style.md)
-- [Website Overview](design/website_overview.md)
-- [Consistent Layout](design/consistent-layout.md)
-- [Layout Troubleshooting](design/layout-troubleshooting.md)
-- [Media Schema Migration](design/media_schema_migration.md)
+- [UI Components](design/UI_components.md) - UI component documentation and examples
+- [Style Guide](design/style.md) - Styling standards and guidelines
+- [Website Overview](design/website_overview.md) - Overview of website structure and pages
+- [Consistent Layout](design/consistent-layout.md) - Guidelines for maintaining consistent layouts
+- [Layout Troubleshooting](design/layout-troubleshooting.md) - Solutions for common layout issues
 
 ### 💻 Development
 
-- [Status Notes](development/STATUS_NOTES.md)
-- [Version Control](development/VERSION_CONTROL.md)
-- [Version Sync Plan](development/version-sync.plan)
-- [Contributing Guidelines](development/contributing.md)
+- [Status Notes](development/STATUS_NOTES.md) - Current development status and progress
+- [Version Control](development/VERSION_CONTROL.md) - Version control guidelines
+- [Contributing Guidelines](development/contributing.md) - Guide for contributing to the project
+- [Dashboard Components](development/dashboard-components.md) - Dashboard component documentation
+- [Progressive Web App](development/progressive-web-app.md) - PWA implementation details
+- [Version Sync Plan](development/version-sync.plan) - Plan for version synchronization
 
 #### 📋 Current Session Resources
 
-- [Session 40 Checklist](session_notes/session_40_checklist.md)
-- [Session 41 Checklist](development/session_41_checklist.md)
+- [Session 43 Checklist](development/session-43-checklist.md) - Checklist for current session
+- [Session 43 Kickoff Prompt](development/session-43-kickoff-prompt.md) - Kickoff prompt for current session
+- [Session 43 Resources Map](development/session-43-resources-map.md) - Resource map for current session
 
 #### 📝 Development Archive
 
-- [Session History](development/prompt_archive/)
-  - Sessions 1-39 Documentation
-  - Session Checklists and Kickoffs
-  - Session Narratives and Summaries
-  - Session Resources and Plans
+- [Session History](development/prompt_archive/) - Archive of past development sessions
+  - Sessions 1-42 Documentation
+  - Session Checklists, Kickoffs, and Narratives
+  - Implementation Notes and Resources
 
 ### 🌟 Features
 
-- [Gallery Implementation](features/gallery_implementation.md)
-- [QR Scan Components](features/qr-scan-components.md)
-- [QR Scanner Types](features/qr-scanner-types.md)
+- [Gallery Implementation](features/gallery_implementation.md) - Gallery feature implementation details
+- [QR Scan Components](features/qr-scan-components.md) - QR code scanning component documentation
+- [QR Scanner Types](features/qr-scanner-types.md) - Types of QR scanners and their implementation
 
 ### 📋 Planning
 
-- [Auth Cleanup](planning/auth-cleanup.md)
-- [Business Proposition](planning/business_proposition.md)
-- [Payment & Subscription Design](planning/payment_subscription_design.md)
-- [Project Budget](planning/project_budget_overview.md)
-- [Product RFP](planning/request_for_product_RFP.md)
-- [Roadmap](planning/roadmap.md)
-- [Statement of Work](planning/statement_of_work.md)
-- [Permissions Analysis](planning/permissions-analysis.md)
-- [Deck](planning/deck.md)
+- [Business Proposition](planning/business_proposition.md) - Business case and value proposition
+- [Payment & Subscription Design](planning/payment_subscription_design.md) - Payment and subscription system design
+- [Project Budget](planning/project_budget_overview.md) - Project budget planning and allocation
+- [Product RFP](planning/request_for_product_RFP.md) - Product requirements and specifications
+- [Roadmap](planning/roadmap.md) - Project roadmap and milestones
+- [Statement of Work](planning/statement_of_work.md) - Detailed statement of work
+- [Deck](planning/deck.md) - Presentation deck for stakeholders
+- [Token Management System](planning/token_management_system.md) - Token management system design
+- [Name Change](planning/name_change.md) - Documentation on project name change
 
 ### 🔧 Project Structure
 
-- [Project Overview](project-structure/README.md)
+- [Project Overview](project-structure/README.md) - Overview of project structure
 - Application Trees
-  - [Full Project Tree](project-structure/FULL_TREE.md)
-  - [Source Tree](project-structure/SRC_TREE.md)
-  - [App Router Tree](project-structure/app_tree.md)
-  - [Components Tree](project-structure/components_tree.md)
-  - [Protected Tree](project-structure/protected_tree.md)
-  - [Events Tree](project-structure/events_tree.md)
-  - [Gallery Tree](project-structure/gallery_tree.md)
-  - [Hooks Tree](project-structure/hooks_tree.md)
-  - [Library Tree](project-structure/lib_tree.md)
-  - [Types Tree](project-structure/types_tree.md)
-  - [Store Tree](project-structure/store_tree.md)
-  - [Auth Tree](project-structure/auth_tree.md)
-  - [Dashboard Tree](project-structure/dashboard_tree.md)
-  - [Styles Tree](project-structure/styles_tree.md)
-  - [Supabase Tree](project-structure/supabase_tree.md)
-  - [UI Tree](project-structure/ui_tree.md)
-  - [Utils Tree](project-structure/utils_tree.md)
-  - [Camera Tree](project-structure/camera_tree.md)
-  - [Scan Tree](project-structure/scan_tree.md)
-  - [Invitation Tree](project-structure/invitation_tree.md)
+  - [Full Project Tree](project-structure/FULL_TREE.md) - Complete project structure
+  - [Source Tree](project-structure/SRC_TREE.md) - Source code structure
+  - [App Router Tree](project-structure/app_tree.md) - Next.js App Router structure
+  - [Components Tree](project-structure/components_tree.md) - Component structure
+  - [Protected Tree](project-structure/protected_tree.md) - Protected routes structure
+  - [Events Tree](project-structure/events_tree.md) - Events module structure
+  - [Gallery Tree](project-structure/gallery_tree.md) - Gallery module structure
+  - [Auth Tree](project-structure/auth_tree.md) - Authentication module structure
+  - [Dashboard Tree](project-structure/dashboard_tree.md) - Dashboard module structure
+  - [Invitation Tree](project-structure/invitation_tree.md) - Invitation system structure
+  - [Camera Tree](project-structure/camera_tree.md) - Camera module structure
+  - [Scan Tree](project-structure/scan_tree.md) - QR scanning module structure
+- Supporting Trees
+  - [Hooks Tree](project-structure/hooks_tree.md) - Custom hooks structure
+  - [Library Tree](project-structure/lib_tree.md) - Utility libraries structure
+  - [Types Tree](project-structure/types_tree.md) - TypeScript types structure
+  - [Store Tree](project-structure/store_tree.md) - State management structure
+  - [Styles Tree](project-structure/styles_tree.md) - Styling structure
+  - [Supabase Tree](project-structure/supabase_tree.md) - Supabase integration structure
+  - [UI Tree](project-structure/ui_tree.md) - UI components structure
+  - [Utils Tree](project-structure/utils_tree.md) - Utility functions structure
 - Documentation Trees
-  - [Architecture Tree](project-structure/architecture_tree.md)
-  - [Development Tree](project-structure/development_tree.md)
-  - [Documentation Tree](project-structure/DOCS_TREE.md)
-  - [Planning Tree](project-structure/planning_tree.md)
-  - [Public Tree](project-structure/public_tree.md)
-  - [GitHub Tree](project-structure/GITHUB_TREE.md)
-  - [Cursor Tree](project-structure/cursor_tree.md)
+  - [Documentation Tree](project-structure/DOCS_TREE.md) - Documentation structure
+  - [Architecture Tree](project-structure/architecture_tree.md) - Architecture docs structure
+  - [Development Tree](project-structure/development_tree.md) - Development docs structure
+  - [Planning Tree](project-structure/planning_tree.md) - Planning docs structure
+  - [Public Tree](project-structure/public_tree.md) - Public assets structure
+  - [GitHub Tree](project-structure/GITHUB_TREE.md) - GitHub resources structure
+  - [Cursor Tree](project-structure/cursor_tree.md) - Cursor AI rules structure
 
-### 👥 User Flows & RBAC
+### 📱 PWA
 
-- [RBAC Overview](rbac/role_based_access_control.md)
-- [User Flow Overview](user-flows/user_flow_overview.md)
-- [User Flow Chart](user-flows/user_flow_chart.md)
-- [Invited User Flow](user-flows/invited_user_flow_design_document.md)
-- [Photo Upload Sequence](user-flows/media_upload_sequence_diagram.md)
-- [Create Test Users UI](user-flows/create_test_users_ui.md)
-- [Event Management](user-flows/event_management.md)
-- [Invitation System Development Plan](user-flows/invitation_system_development_plan.md)
-- [Invitation System Testing Plan](user-flows/invitation_system_testing_plan.md)
-- [RSVP Implementation Guide](user-flows/RSVP_IMPLEMENTATION_GUIDE.md)
-- [Invitation and RSVP System Flow](user-flows/invitation%20and%20RSVP%20system%20flow.md)
+- [Service Worker](pwa/service-worker.md) - Service worker implementation details
+
+### 🔒 RBAC (Role-Based Access Control)
+
+- [Role Based Access Control](rbac/role_based_access_control.md) - RBAC system documentation
+
+### 👥 User Flows
+
+- [User Flow Overview](user-flows/user_flow_overview.md) - Overview of user flows
+- [User Flow Chart](user-flows/user_flow_chart.md) - Visual representation of user flows
+- [Invited User Flow](user-flows/invited_user_flow_design_document.md) - Invited user journey flow
+- [Media Upload Sequence](user-flows/media_upload_sequence_diagram.md) - Media upload process flow
+- [Media Upload Sequence (Alt)](user-flows/media-upload-sequence.md) - Alternative media upload flow
+- [Event Management](user-flows/event_management.md) - Event management flow
+- [Invitation System Development Plan](user-flows/invitation_system_development_plan.md) - Invitation system plan
+- [Invitation System Testing Plan](user-flows/invitation_system_testing_plan.md) - Invitation system testing
+- [RSVP Implementation Guide](user-flows/RSVP_IMPLEMENTATION_GUIDE.md) - RSVP system implementation
+- [Invitation and RSVP System Flow](user-flows/invitation%20and%20RSVP%20system%20flow.md) - Combined flow
+- [Create Test Users UI](user-flows/create_test_users_ui.md) - Test user creation interface
+
+### 🧠 UX (User Experience)
+
+- [Event Organizer Journey](ux/event-organizer-journey.md) - Event organizer user journey
+- [Guest Journey](ux/guest-journey.md) - Guest user journey
 
 ```mermaid
 graph LR
-    A["👤 Event Guest"] --> B{"🔍 Has QR?"}
-    B -->|"Yes"| C["📱 Scan QR"]
+    A["👤 Event Guest"] --> B{"🔍 Has Invitation?"}
+    B -->|"Yes"| C["📱 Use Invitation"]
     B -->|"No"| D["✉️ Request Access"]
     C --> E["🖼️ Gallery Access"]
-    D --> F["📲 Receive QR"]
+    D --> F["📲 Receive Invitation"]
     F --> C
     E --> G["📤 Upload Media"]
-    E --> H["👁️ View Gallery"]
+    E --> H["👁️ View & Delete Media"]
     G --> I["🤖 AI Processing"]
     I --> H
-    E --> J["📊 Engagement Analytics"]
     
     style A fill:#2A2A2A,stroke:#333,color:#fff
     style E fill:#1E3A8A,stroke:#333,color:#fff
     style G fill:#065F46,stroke:#333,color:#fff
     style H fill:#7E22CE,stroke:#333,color:#fff
     style I fill:#DC2626,stroke:#333,color:#fff
-    style J fill:#2563EB,stroke:#333,color:#fff
 ```
 
 ## 🤝 Contributing
@@ -212,68 +204,38 @@ Please see our [Contributing Guidelines](development/contributing.md) for detail
 
 Please see our [Style Guide](design/style.md) for documentation standards.
 
-## 🔐 Security
-
-Please see our [Security Guidelines](architecture/security.md) for security standards and practices.
-
-## 🧠 AI Development Guidelines
-
-Cloud Burst uses AI pair programming to accelerate development. We've established comprehensive guidelines for AI collaboration:
-
-- **Cursor Rules**: Located in `.cursor/rules/` directory, these provide structured guidance for AI assistants
-- **Core Standards**: TypeScript, code style, and documentation standards
-- **Architecture Guidelines**: Frontend and backend architecture patterns
-- **Component Standards**: React component patterns and best practices
-- **Quality Assurance**: Testing, performance, and error handling practices
-
-## 🔍 Quick Links
-
-- [Project README](../README.md)
-- [Development Setup](../README.md#-getting-started)
-- [Contributing Guidelines](development/contributing.md)
-- [Security Guidelines](architecture/security.md)
-- [Role-Based Access](rbac/role_based_access_control.md)
-- [Component Library](design/UI_components.md)
-- [Gallery Implementation](features/gallery_implementation.md)
-- [Invitation System](user-flows/invitation_system_development_plan.md)
-- [RSVP Implementation Guide](user-flows/RSVP_IMPLEMENTATION_GUIDE.md)
-- [Project Structure](project-structure/README.md)
-
 ## 🔐 Security Implementation
 
 - ✅ Comprehensive role-based access control system
-- ✅ Permission-based UI rendering
+- ✅ Row Level Security policies in Supabase
+- ✅ Security definer functions for secure server-side operations
+- ✅ Token validation and management
 - ✅ Resource ownership verification
 - ✅ Protected routes with role-based middleware
 - ✅ Enhanced session management
 - ✅ Cookie security measures
-- ✅ Rate limiting on sensitive endpoints
-- ✅ Error boundaries for graceful failure
 - ✅ Type safety with Zod schemas
 - ✅ CSRF protection
 - ✅ Secure file handling
-- ✅ Row Level Security policies in database
 - ✅ Audit logging
-- ✅ Email verification system
-- ✅ Template access control
 - ✅ Invitation token security
 - ✅ RSVP system security
 - ✅ Public gallery access controls
 
 ## 🎯 Current Focus
 
-- 🔴 Guest Dashboard Navigation (Fix token issues after setup)
-- 🔴 Gallery Experience Enhancement for Guests
-- 🟡 AI Features Integration (30% complete)
-- ✅ Guest Profile Creation (100% complete)
-- ✅ Camera Testing Integration (100% complete)
-- 🟡 Analytics Dashboard (70% complete)
-- ✅ RSVP System (100% complete)
-- ✅ Mobile Responsive Design (100% complete)
+- 🟡 Organizer Moderation Interface (0% complete)
+- 🟡 Super Admin Dashboard (0% complete)
+- 🟡 End-to-End Testing (10% complete)
+- 🟡 Performance Optimization for Large Collections (50% complete)
+- ✅ Guest Experience (100% complete)
+- ✅ Media Deletion Capability (100% complete)
+- ✅ Responsive Layout Improvements (100% complete)
+- ✅ Auto-Redirect Functionality (100% complete)
 
 ## 🔄 Implementation Progress
 
-As we approach our April 30, 2025 Beta 1.0 RC1 release date, the platform is approximately 90% complete. Recent implementations include:
+As we approach our April 30, 2025 Beta 1.0 RC1 release date, the platform is approximately 95% complete. Current sprint focuses on finalizing organizer and admin experiences and comprehensive testing:
 
 ```mermaid
 gantt
@@ -281,41 +243,34 @@ gantt
     dateFormat  YYYY-MM-DD
     axisFormat %b %d
     
-    section Foundation
-    Project Setup           :done, f1, 2025-02-01, 7d
-    Authentication          :done, f2, 2025-02-08, 7d
-    Database Schema         :done, f3, 2025-02-15, 5d
-    
-    section Core Functionality
-    Event Management        :done, c1, 2025-02-20, 7d
-    Basic Media Upload      :done, c2, 2025-02-25, 5d
-    User Roles & Permissions:done, c3, 2025-03-01, 5d
-    
-    section Enhanced Features
-    Advanced Gallery Layouts:done, e1, 2025-03-05, 5d
-    Navigation Recovery     :done, e2, 2025-03-07, 3d
-    Authentication Repair   :done, e3, 2025-03-10, 3d
-    Dashboard Implementation:done, e4, 2025-03-11, 4d
-    Database Security Fixes :done, e5, 2025-03-15, 1d
-    Invitation System       :done, e6, 2025-03-16, 7d
-    RSVP Implementation     :done, e7, 2025-03-21, 5d
-    Media Moderation        :done, e8, 2025-03-26, 3d
-    Mobile Responsiveness   :done, e9, 2025-03-30, 4d
-    Guest Reservation Flow  :done, e10, 2025-04-01, 5d
-    Camera Integration      :done, e11, 2025-04-05, 4d
-    Contractor Role Management :done, e12, 2025-04-09, 3d
-    Profile Creation        :done, e13, 2025-04-10, 5d
-    Camera Testing          :done, e14, 2025-04-15, 3d
+    section Core Features
+    Event Management        :done, c1, 2025-02-20, 2025-03-05
+    Media Upload & Storage  :done, c2, 2025-03-06, 2025-03-20
+    Auth & Security         :done, c3, 2025-03-21, 2025-04-05
+    Guest Experience        :done, c4, 2025-04-06, 2025-04-20
     
     section Final Preparations
-    Guest Dashboard Navigation :active, g1, 2025-04-16, 6d
-    Gallery Enhancements    :active, g2, 2025-04-16, 6d
-    AI Features Framework   :active, g3, 2025-04-16, 14d
-    Beta v1.0 RC1 Release   :milestone, b1, 2025-04-30, 0d
-    Performance Tuning      :o1, 2025-05-01, 8d
-    Security Audit          :o2, 2025-05-09, 5d
-    Public Launch (v1.0.0)  :milestone, l3, 2025-05-25, 0d
+    Organizer Moderation    :active, o1, 2025-04-21, 2025-04-25
+    Admin Dashboard         :active, o2, 2025-04-21, 2025-04-25
+    End-to-End Testing      :active, o3, 2025-04-26, 2025-04-29
+    Beta v1.0 RC1 Release   :milestone, m1, 2025-04-30, 0d
+    Beta Testing Phase      :b1, 2025-05-01, 2025-05-15
+    Performance Tuning      :p1, 2025-05-16, 2025-05-25
+    Public Launch (v1.0.0)  :milestone, m2, 2025-06-30, 0d
 ```
+
+## 🔍 Quick Links
+
+- [Project README](../README.md)
+- [Development Setup](../README.md#-getting-started)
+- [Status Notes](development/STATUS_NOTES.md)
+- [Application Design Document](architecture/application_design_document.md)
+- [Security Guidelines](architecture/security.md)
+- [Gallery Implementation](features/gallery_implementation.md)
+- [User Flow Overview](user-flows/user_flow_overview.md)
+- [RSVP Implementation](user-flows/RSVP_IMPLEMENTATION_GUIDE.md)
+- [Project Structure](project-structure/README.md)
+- [Roadmap](planning/roadmap.md)
 
 <div align="center">
   <img src="../public/android-chrome-192x192.png" alt="Cloud Burst Logo" width="120" height="120" />
@@ -324,7 +279,7 @@ gantt
 
 ## *Elevating Event Photography*
 
-[![Version](https://img.shields.io/badge/version-0.9.2-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
+[![Version](https://img.shields.io/badge/version-0.9.4-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)

@@ -1,8 +1,8 @@
 # gallery Directory Structure
-Generated: 2025-04-18T18:53:19.567Z
+Generated: 2025-04-20T17:15:14.525Z
 
 ## Overview
-This directory contains 24 component(s).
+This directory contains 25 component(s).
 
 
 
@@ -21,6 +21,7 @@ This directory contains 24 component(s).
 ├── MediaUpload.tsx
 ├── MediaViewer.tsx
 ├── README.md
+├── consistent-grid.tsx
 ├── gallery-event-card.tsx
 ├── gallery-grid.tsx
 ├── gallery-settings-form.tsx
@@ -37,13 +38,13 @@ This directory contains 24 component(s).
 ├── upload-dropzone.tsx
 └── upload-with-tags.tsx
 
-1 directory, 27 files
+1 directory, 28 files
 
 ```
 
 ## File Type Breakdown
 - ts: 2 file(s)
-- tsx: 24 file(s)
+- tsx: 25 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

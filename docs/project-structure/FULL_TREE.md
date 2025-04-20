@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-18T18:53:14.574Z
+Generated: 2025-04-20T17:15:05.714Z
 
 ## Overview
 
@@ -51,16 +51,15 @@ Generated: 2025-04-18T18:53:14.574Z
 │   ├── architecture/
 │   │   ├── ai_implementation.md
 │   │   ├── application_design_document.md
+│   │   ├── architecture-diagram.md
+│   │   ├── navigation-structure.md
 │   │   ├── security.md
-│   │   └── system_architecture_flowchart.md
+│   │   ├── system_architecture_flowchart.md
+│   │   └── user-journeys.md
 │   ├── assets/
 │   │   ├── README.md
-│   │   ├── architecture-diagram.md
-│   │   ├── architecture-diagram.png.placeholder
 │   │   ├── project-timeline.md
-│   │   ├── project-timeline.png.placeholder
-│   │   ├── user-flow-diagram.md
-│   │   └── user-flow-diagram.png.placeholder
+│   │   └── user-flow-diagram.md
 │   ├── deployment/
 │   │   ├── deployment_fixes.md
 │   │   ├── deployment_guides.md
@@ -177,6 +176,13 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │   ├── session_41b_chat_summary.md
 │   │   │   ├── session_41b_checklist.md
 │   │   │   ├── session_41b_kickoff.md
+│   │   │   ├── session_42_checklist.md
+│   │   │   ├── session_42_implementation_notes.md
+│   │   │   ├── session_42_kickoff_narrative.md
+│   │   │   ├── session_42_resource_directories_map.md
+│   │   │   ├── session_42b_checklist.md
+│   │   │   ├── session_42b_kickoff_narrative.md
+│   │   │   ├── session_42b_resource_directories_map.md
 │   │   │   ├── session_5.md
 │   │   │   ├── session_6.md
 │   │   │   ├── session_7.md
@@ -186,13 +192,11 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   ├── STATUS_NOTES.md
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
-│   │   ├── session_42_checklist.md
-│   │   ├── session_42_implementation_notes.md
-│   │   ├── session_42_kickoff_narrative.md
-│   │   ├── session_42_resource_directories_map.md
-│   │   ├── session_42b_checklist.md
-│   │   ├── session_42b_kickoff_narrative.md
-│   │   ├── session_42b_resource_directories_map.md
+│   │   ├── dashboard-components.md
+│   │   ├── progressive-web-app.md
+│   │   ├── session-43-checklist.md
+│   │   ├── session-43-kickoff-prompt.md
+│   │   ├── session-43-resources-map.md
 │   │   └── version-sync.plan
 │   ├── features/
 │   │   ├── gallery_implementation.md
@@ -238,9 +242,10 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   ├── types_tree.md
 │   │   ├── ui_tree.md
 │   │   └── utils_tree.md
+│   ├── pwa/
+│   │   └── service-worker.md
 │   ├── rbac/
 │   │   └── role_based_access_control.md
-│   ├── session_notes/
 │   ├── user-flows/
 │   │   ├── RSVP_IMPLEMENTATION_GUIDE.md
 │   │   ├── create_test_users_ui.md
@@ -253,11 +258,16 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   ├── media_upload_sequence_diagram.md
 │   │   ├── user_flow_chart.md
 │   │   └── user_flow_overview.md
+│   ├── ux/
+│   │   ├── event-organizer-journey.md
+│   │   └── guest-journey.md
 │   ├── .DS_Store
 │   └── README.md
 ├── public/
 │   ├── audio/
 │   │   └── success-beep.mp3
+│   ├── css/
+│   │   └── hide-header.css
 │   ├── images/
 │   │   ├── email/
 │   │   │   ├── logo.png
@@ -287,12 +297,14 @@ Generated: 2025-04-18T18:53:14.574Z
 │   ├── hero_bg2.mp4
 │   ├── manifest.json
 │   ├── next.svg
+│   ├── offline.html
 │   ├── pexels-themo-bg.jpg
 │   ├── placeholder-qr.png
 │   ├── qrcode_paypal.png
 │   ├── robots.txt
 │   ├── site.webmanifest
 │   ├── sitemap.xml
+│   ├── sw.js
 │   ├── vercel.svg
 │   └── window.svg
 ├── scripts/
@@ -382,7 +394,21 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │   │   └── check-access/
 │   │   │   │       └── route.ts
 │   │   │   ├── guest/
+│   │   │   │   ├── media/
+│   │   │   │   │   ├── [mediaId]/
+│   │   │   │   │   │   ├── route.ts
+│   │   │   │   │   │   └── route.ts.bak
+│   │   │   │   │   ├── test-url/
+│   │   │   │   │   │   └── route.ts
+│   │   │   │   │   ├── update/
+│   │   │   │   │   │   └── route.ts
+│   │   │   │   │   └── update-all/
+│   │   │   │   │       └── route.ts
 │   │   │   │   └── upload/
+│   │   │   │       ├── confirm/
+│   │   │   │       │   └── route.ts
+│   │   │   │       ├── init/
+│   │   │   │       │   └── route.ts
 │   │   │   │       └── route.ts
 │   │   │   ├── guests/
 │   │   │   │   ├── avatar/
@@ -499,13 +525,18 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │       └── page.tsx
 │   │   ├── guest/
 │   │   │   ├── camera/
+│   │   │   │   ├── CapturePreview.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── camera-setup/
 │   │   │   │   └── page.tsx
 │   │   │   ├── dashboard/
 │   │   │   │   └── page.tsx
 │   │   │   ├── gallery/
+│   │   │   │   ├── GalleryGrid.tsx
 │   │   │   │   └── page.tsx
+│   │   │   ├── media/
+│   │   │   │   └── [mediaId]/
+│   │   │   │       └── page.tsx
 │   │   │   ├── photos/
 │   │   │   │   └── page.tsx
 │   │   │   ├── profile/
@@ -845,6 +876,7 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │   ├── MediaUpload.tsx
 │   │   │   ├── MediaViewer.tsx
 │   │   │   ├── README.md
+│   │   │   ├── consistent-grid.tsx
 │   │   │   ├── gallery-event-card.tsx
 │   │   │   ├── gallery-grid.tsx
 │   │   │   ├── gallery-settings-form.tsx
@@ -862,10 +894,12 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │   └── upload-with-tags.tsx
 │   │   ├── guest/
 │   │   │   ├── GuestDashboard.tsx
+│   │   │   ├── GuestNavigation.tsx
 │   │   │   ├── GuestProfileForm.tsx
 │   │   │   ├── PhotoUploader.tsx
 │   │   │   ├── bottom-nav.tsx
 │   │   │   ├── camera-test.tsx
+│   │   │   ├── index.ts
 │   │   │   ├── profile-setup-form.tsx
 │   │   │   └── token-error.tsx
 │   │   ├── invitation/
@@ -877,7 +911,10 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │   └── magic-link-auth.tsx
 │   │   ├── layout/
 │   │   │   ├── dashboard-layout.tsx
+│   │   │   ├── dashboard-page-layout.tsx
 │   │   │   ├── guest-header.tsx
+│   │   │   ├── header-suppressor.tsx
+│   │   │   ├── index.ts
 │   │   │   └── main-nav.tsx
 │   │   ├── maps/
 │   │   │   ├── EventMap.tsx
@@ -888,7 +925,10 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │   └── newsletter-form.tsx
 │   │   ├── media/
 │   │   │   ├── AlbumCreationForm.tsx
+│   │   │   ├── MediaActionHandler.tsx
 │   │   │   ├── MediaCard.tsx
+│   │   │   ├── MediaDetailsDialog.tsx
+│   │   │   ├── MediaEditDialog.tsx
 │   │   │   ├── MediaGrid.tsx
 │   │   │   ├── MediaModerationGrid.tsx
 │   │   │   ├── MediaUploader.tsx
@@ -896,6 +936,7 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │   ├── ModerationCard.tsx
 │   │   │   ├── camera-capture.tsx
 │   │   │   ├── camera-test.tsx
+│   │   │   ├── index.ts
 │   │   │   └── upload-media-button.tsx
 │   │   ├── nav/
 │   │   │   ├── logo.tsx
@@ -1015,6 +1056,7 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │   └── photo-enhancement.ts
 │   │   ├── auth/
 │   │   │   ├── invitation-middleware.ts
+│   │   │   ├── tokens.ts
 │   │   │   └── utils.ts
 │   │   ├── email/
 │   │   │   ├── index.ts
@@ -1025,6 +1067,7 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   │   ├── __tests__/
 │   │   │   │   ├── auth-store.test.ts
 │   │   │   │   └── events.test.ts
+│   │   │   ├── attendees.ts
 │   │   │   ├── auth-store.ts
 │   │   │   ├── auth-utils.ts
 │   │   │   ├── client.ts
@@ -1111,9 +1154,12 @@ Generated: 2025-04-18T18:53:14.574Z
 │   │   ├── Album Media Table Structure.csv
 │   │   ├── Check RLS Policies for Media Table.csv
 │   │   ├── Display Current RSVP Policies.csv
+│   │   ├── Invoice-1F1B8854-0012.pdf
 │   │   ├── Profile Access Policies.csv
 │   │   ├── RSVPs Table Structure.csv
+│   │   ├── Receipt-2363-9956.pdf
 │   │   ├── Retrieve Event Photos.csv
+│   │   ├── Supabase Performance Security Lints (bxvbovzqzjfomnqidzzx).csv
 │   │   ├── Supabase Snippet Check Invitations with Tokens.csv
 │   │   ├── Supabase Snippet Check Table Existence and Structure.csv
 │   │   ├── Supabase Snippet Count Total Invitations.csv
@@ -1216,17 +1262,17 @@ Generated: 2025-04-18T18:53:14.574Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-283 directories, 924 files
+294 directories, 959 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11797 file(s)
-- tsx: 530 file(s)
-- js: 27791 file(s)
-- json: 2022 file(s)
-- md: 1531 file(s)
-- css: 26 file(s)
+- ts: 11820 file(s)
+- tsx: 540 file(s)
+- js: 27877 file(s)
+- json: 2033 file(s)
+- md: 1541 file(s)
+- css: 27 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns

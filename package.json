@@ -1,6 +1,6 @@
 {
   "name": "cloud-burst",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0",

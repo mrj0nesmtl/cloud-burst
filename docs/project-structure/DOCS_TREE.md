@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-18T18:53:15.609Z
+Generated: 2025-04-20T17:15:07.860Z
 
 ## Overview
 
@@ -12,16 +12,15 @@ Generated: 2025-04-18T18:53:15.609Z
 ├── architecture/
 │   ├── ai_implementation.md
 │   ├── application_design_document.md
+│   ├── architecture-diagram.md
+│   ├── navigation-structure.md
 │   ├── security.md
-│   └── system_architecture_flowchart.md
+│   ├── system_architecture_flowchart.md
+│   └── user-journeys.md
 ├── assets/
 │   ├── README.md
-│   ├── architecture-diagram.md
-│   ├── architecture-diagram.png.placeholder
 │   ├── project-timeline.md
-│   ├── project-timeline.png.placeholder
-│   ├── user-flow-diagram.md
-│   └── user-flow-diagram.png.placeholder
+│   └── user-flow-diagram.md
 ├── deployment/
 │   ├── deployment_fixes.md
 │   ├── deployment_guides.md
@@ -138,6 +137,13 @@ Generated: 2025-04-18T18:53:15.609Z
 │   │   ├── session_41b_chat_summary.md
 │   │   ├── session_41b_checklist.md
 │   │   ├── session_41b_kickoff.md
+│   │   ├── session_42_checklist.md
+│   │   ├── session_42_implementation_notes.md
+│   │   ├── session_42_kickoff_narrative.md
+│   │   ├── session_42_resource_directories_map.md
+│   │   ├── session_42b_checklist.md
+│   │   ├── session_42b_kickoff_narrative.md
+│   │   ├── session_42b_resource_directories_map.md
 │   │   ├── session_5.md
 │   │   ├── session_6.md
 │   │   ├── session_7.md
@@ -147,13 +153,11 @@ Generated: 2025-04-18T18:53:15.609Z
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
 │   ├── contributing.md
-│   ├── session_42_checklist.md
-│   ├── session_42_implementation_notes.md
-│   ├── session_42_kickoff_narrative.md
-│   ├── session_42_resource_directories_map.md
-│   ├── session_42b_checklist.md
-│   ├── session_42b_kickoff_narrative.md
-│   ├── session_42b_resource_directories_map.md
+│   ├── dashboard-components.md
+│   ├── progressive-web-app.md
+│   ├── session-43-checklist.md
+│   ├── session-43-kickoff-prompt.md
+│   ├── session-43-resources-map.md
 │   └── version-sync.plan
 ├── features/
 │   ├── gallery_implementation.md
@@ -199,9 +203,10 @@ Generated: 2025-04-18T18:53:15.609Z
 │   ├── types_tree.md
 │   ├── ui_tree.md
 │   └── utils_tree.md
+├── pwa/
+│   └── service-worker.md
 ├── rbac/
 │   └── role_based_access_control.md
-├── session_notes/
 ├── user-flows/
 │   ├── RSVP_IMPLEMENTATION_GUIDE.md
 │   ├── create_test_users_ui.md
@@ -214,15 +219,18 @@ Generated: 2025-04-18T18:53:15.609Z
 │   ├── media_upload_sequence_diagram.md
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
+├── ux/
+│   ├── event-organizer-journey.md
+│   └── guest-journey.md
 ├── .DS_Store
 └── README.md
 
-13 directories, 195 files
+14 directories, 202 files
 
 ```
 
 ## File Type Breakdown
-- md: 187 file(s)
+- md: 197 file(s)
 
 ## Ignored Patterns
 - node_modules

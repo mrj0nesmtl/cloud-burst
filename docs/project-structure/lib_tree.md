@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-04-18T18:53:20.782Z
+Generated: 2025-04-20T17:15:16.652Z
 
 ## Overview
 
@@ -14,6 +14,7 @@ Generated: 2025-04-18T18:53:20.782Z
 │   └── photo-enhancement.ts
 ├── auth/
 │   ├── invitation-middleware.ts
+│   ├── tokens.ts
 │   └── utils.ts
 ├── email/
 │   ├── index.ts
@@ -24,6 +25,7 @@ Generated: 2025-04-18T18:53:20.782Z
 │   ├── __tests__/
 │   │   ├── auth-store.test.ts
 │   │   └── events.test.ts
+│   ├── attendees.ts
 │   ├── auth-store.ts
 │   ├── auth-utils.ts
 │   ├── client.ts
@@ -75,12 +77,12 @@ Generated: 2025-04-18T18:53:20.782Z
 ├── user-sessions.ts
 └── utils.ts
 
-11 directories, 55 files
+11 directories, 57 files
 
 ```
 
 ## File Type Breakdown
-- ts: 52 file(s)
+- ts: 54 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns

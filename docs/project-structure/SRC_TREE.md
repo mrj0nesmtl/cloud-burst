@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-18T18:53:15.394Z
+Generated: 2025-04-20T17:15:07.500Z
 
 ## Overview
 
@@ -80,7 +80,21 @@ Generated: 2025-04-18T18:53:15.394Z
 │   │   │   └── check-access/
 │   │   │       └── route.ts
 │   │   ├── guest/
+│   │   │   ├── media/
+│   │   │   │   ├── [mediaId]/
+│   │   │   │   │   ├── route.ts
+│   │   │   │   │   └── route.ts.bak
+│   │   │   │   ├── test-url/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── update/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── update-all/
+│   │   │   │       └── route.ts
 │   │   │   └── upload/
+│   │   │       ├── confirm/
+│   │   │       │   └── route.ts
+│   │   │       ├── init/
+│   │   │       │   └── route.ts
 │   │   │       └── route.ts
 │   │   ├── guests/
 │   │   │   ├── avatar/
@@ -197,13 +211,18 @@ Generated: 2025-04-18T18:53:15.394Z
 │   │       └── page.tsx
 │   ├── guest/
 │   │   ├── camera/
+│   │   │   ├── CapturePreview.tsx
 │   │   │   └── page.tsx
 │   │   ├── camera-setup/
 │   │   │   └── page.tsx
 │   │   ├── dashboard/
 │   │   │   └── page.tsx
 │   │   ├── gallery/
+│   │   │   ├── GalleryGrid.tsx
 │   │   │   └── page.tsx
+│   │   ├── media/
+│   │   │   └── [mediaId]/
+│   │   │       └── page.tsx
 │   │   ├── photos/
 │   │   │   └── page.tsx
 │   │   ├── profile/
@@ -543,6 +562,7 @@ Generated: 2025-04-18T18:53:15.394Z
 │   │   ├── MediaUpload.tsx
 │   │   ├── MediaViewer.tsx
 │   │   ├── README.md
+│   │   ├── consistent-grid.tsx
 │   │   ├── gallery-event-card.tsx
 │   │   ├── gallery-grid.tsx
 │   │   ├── gallery-settings-form.tsx
@@ -560,10 +580,12 @@ Generated: 2025-04-18T18:53:15.394Z
 │   │   └── upload-with-tags.tsx
 │   ├── guest/
 │   │   ├── GuestDashboard.tsx
+│   │   ├── GuestNavigation.tsx
 │   │   ├── GuestProfileForm.tsx
 │   │   ├── PhotoUploader.tsx
 │   │   ├── bottom-nav.tsx
 │   │   ├── camera-test.tsx
+│   │   ├── index.ts
 │   │   ├── profile-setup-form.tsx
 │   │   └── token-error.tsx
 │   ├── invitation/
@@ -575,7 +597,10 @@ Generated: 2025-04-18T18:53:15.394Z
 │   │   └── magic-link-auth.tsx
 │   ├── layout/
 │   │   ├── dashboard-layout.tsx
+│   │   ├── dashboard-page-layout.tsx
 │   │   ├── guest-header.tsx
+│   │   ├── header-suppressor.tsx
+│   │   ├── index.ts
 │   │   └── main-nav.tsx
 │   ├── maps/
 │   │   ├── EventMap.tsx
@@ -586,7 +611,10 @@ Generated: 2025-04-18T18:53:15.394Z
 │   │   └── newsletter-form.tsx
 │   ├── media/
 │   │   ├── AlbumCreationForm.tsx
+│   │   ├── MediaActionHandler.tsx
 │   │   ├── MediaCard.tsx
+│   │   ├── MediaDetailsDialog.tsx
+│   │   ├── MediaEditDialog.tsx
 │   │   ├── MediaGrid.tsx
 │   │   ├── MediaModerationGrid.tsx
 │   │   ├── MediaUploader.tsx
@@ -594,6 +622,7 @@ Generated: 2025-04-18T18:53:15.394Z
 │   │   ├── ModerationCard.tsx
 │   │   ├── camera-capture.tsx
 │   │   ├── camera-test.tsx
+│   │   ├── index.ts
 │   │   └── upload-media-button.tsx
 │   ├── nav/
 │   │   ├── logo.tsx
@@ -713,6 +742,7 @@ Generated: 2025-04-18T18:53:15.394Z
 │   │   └── photo-enhancement.ts
 │   ├── auth/
 │   │   ├── invitation-middleware.ts
+│   │   ├── tokens.ts
 │   │   └── utils.ts
 │   ├── email/
 │   │   ├── index.ts
@@ -723,6 +753,7 @@ Generated: 2025-04-18T18:53:15.394Z
 │   │   ├── __tests__/
 │   │   │   ├── auth-store.test.ts
 │   │   │   └── events.test.ts
+│   │   ├── attendees.ts
 │   │   ├── auth-store.ts
 │   │   ├── auth-utils.ts
 │   │   ├── client.ts
@@ -802,13 +833,13 @@ Generated: 2025-04-18T18:53:15.394Z
 ├── middleware.test.ts
 └── middleware.ts
 
-243 directories, 550 files
+252 directories, 572 files
 
 ```
 
 ## File Type Breakdown
-- ts: 138 file(s)
-- tsx: 391 file(s)
+- ts: 149 file(s)
+- tsx: 401 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)
