@@ -15,118 +15,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
-## [Unreleased]
-### Added - April 19, 2025
-- **Enhanced Media Carousel Navigation**:
-  - Implemented advanced navigation between media items in MediaActionHandler
-  - Added proper state management for tracking current position in media lists
-  - Implemented previous/next navigation with smooth transitions
-  - Fixed MediaDetailsDialog to properly display full-resolution images
-  - Enhanced user experience with intuitive navigation controls
-  - Fixed handling of URLs and media types for consistent display
-  - Improved error handling with fallback mechanisms
-  - Created comprehensive utility endpoints for development and testing
+## [0.9.4] - 2025-04-20
+### Added
+- **End-to-End Guest Experience**:
+  - Completed full guest journey from RSVP to photo uploads
+  - Enhanced media viewing with responsive carousel navigation
+  - Implemented delete functionality for guest-uploaded media
+  - Added auto-redirect from media viewer back to gallery
+  - Improved UI responsiveness for portrait mode on mobile devices
+  - Restructured documentation folder for better organization
+  - Optimized responsive layout for media details dialog
+  - Added keyboard navigation and touch gestures for intuitive media browsing
 
-### Added - April 19, 2025
-- **Complete Media Carousel Implementation**:
-  - Enhanced MediaActionHandler with full gallery navigation support
-  - Added previous/next functionality with keyboard and touch support
-  - Implemented proper state management for viewing multiple media items
-  - Fixed media URL handling and error states
-  - Improved mobile experience with swipe gesture support
-  - Created development utilities for placeholder image generation
-  - Added utility endpoints for database maintenance and testing
-  - Fixed URL handling in MediaViewer for proper image display
-  - Enhanced error reporting and fallback mechanisms
+### Fixed
+- Resolved internal server errors with media endpoints
+- Fixed responsive layout issues in media details view for portrait mode
+- Enhanced URL handling with proper proxied media URLs
+- Improved error states for failed media loading
+- Optimized image fallback mechanisms for broken URLs
+- Restructured components for better code maintainability
+- Added proper validation for media deletion permissions
+- Enhanced error messaging for guests throughout the platform
 
-### Added - April 19, 2025
-- **Enhanced Media Carousel Experience**:
-  - Implemented full-screen media carousel for guest viewing
-  - Added touch-based swipe navigation for mobile users
-  - Added keyboard navigation (arrow keys) for desktop users
-  - Improved MediaDetailsDialog with better image loading
-  - Created MediaActionHandler to support gallery navigation
-  - Added clear position indicator (e.g., "3 of 12") in carousel view
-  - Enhanced error states and loading indicators
-  - Implemented placeholder images for development and testing
-
-### Added - April 19, 2025
-- **Media Carousel Experience**:
-  - Implemented advanced media carousel in MediaActionHandler component
-  - Added swipe navigation between gallery images on mobile
-  - Implemented keyboard navigation (left/right arrows) for desktop
-  - Enhanced MediaDetailsDialog to show full-resolution images
-  - Created navigation buttons for moving between media items
-  - Added current position indicator (e.g., "3 of 12") in media viewer
-  - Improved error handling and fallback images for broken URLs
-  - Optimized image loading with loading state indicators
-
-### Fixed - April 19, 2025
-- **Media Viewer Enhancements**:
-  - Replaced Next.js Image with standard img for better external URL support
-  - Fixed URL handling for media with missing or malformed URLs
-  - Improved media type detection and handling (case insensitivity)
-  - Added placeholder URLs for development and testing
-  - Enhanced error reporting for failed media loading
-  - Created utility endpoints for database maintenance
-  - Added explicit width/height handling for media without dimensions
-
-### In Progress - April 19, 2025
-- **Enhanced Media Viewer Experience**:
-  - Implemented fullscreen media viewing with carousel functionality
-  - Added swipe gesture support for mobile-friendly navigation
-  - Enhanced keyboard shortcuts for improved accessibility (arrow keys, F for fullscreen)
-  - Implemented proper gallery navigation between photos
-  - Fixed media type handling and URL processing
-  - Added improved loading and error states
-  - Developed seamless integration between individual media view and gallery
-
-### In Progress - April 19, 2025
-- **User Journey Documentation**:
-  - Created comprehensive event organizer journey document with touchpoints and metrics
-  - Added detailed workflow diagrams for all organizer journey phases
-  - Documented mobile experience optimizations for event organizers
-  - Included success metrics for each journey phase
-  - Enhanced visual representations with mermaid diagrams for journey phases
-
-### In Progress - April 18, 2025
-- **Media Moderation System**:
-  - Enhanced moderation page with responsive 5x5 grid layout
-  - Implemented ModerationCard component with approval/rejection dialogs
-  - Created secure server actions for approving, rejecting, and deleting media
-  - Added ModeratorClient component for state management and filtering
-  - Implemented media-proxy API endpoint for secure image loading
-  - Fixed Supabase storage URL processing with proxy utility functions
-  - Added comprehensive logging for moderation actions
-  - Ensured proper content type handling for various media formats
-  - Updated Next.js configuration for secure image domains
-
-### In Progress - April 18, 2025
-- **Progressive Web App (PWA) Implementation**:
-  - Created comprehensive web app manifest with proper icons and metadata
-  - Set up offline fallback page for improved user experience
-  - Implemented service worker with caching strategies and offline support
-  - Added background sync capabilities for uploads during intermittent connectivity
-  - Implemented push notification foundation for event updates
-  - Enhanced web app installation experience with home screen shortcuts
-  - Added theme color and proper meta tags for optimal mobile experience
-
-### In Progress - April 18, 2025
-- **Dashboard UI Improvements**:
-  - Enhanced time range filter buttons in overview chart with improved visual indicators
-  - Added active state styling with border, background color, and font weight changes
-  - Implemented ActiveIndicator component to clearly show selected time ranges
-  - Improved user experience by making the currently selected option more distinctive
-  - Fixed inconsistent hovering behavior in time range and metric selectors
-  - Enhanced responsive behavior of filter buttons across screen sizes
-
-- **Guest Photo Upload Implementation**:
-  - Created PhotoUploader component with drag-and-drop functionality
-  - Implemented upload/api/guest/upload endpoint for secure file uploads
-  - Added progress tracking with toast notifications
-  - Implemented file size and count validation
-  - Currently troubleshooting "Failed to create media record" issue
-  - Identified potential database insertion error in the upload handler
+## [Unreleased - Previous Development]
+- **Enhanced Media Carousel Navigation**
+- **Media Carousel Experience**
+- **Media Viewer Enhancements**
+- **Enhanced Media Viewer Experience**
+- **User Journey Documentation**
+- **Media Moderation System**
+- **Progressive Web App (PWA) Implementation**
+- **Dashboard UI Improvements**
+- **Guest Photo Upload Implementation**
 
 ## [0.9.3] - 2025-04-18
 ### In Progress - April 17, 2025

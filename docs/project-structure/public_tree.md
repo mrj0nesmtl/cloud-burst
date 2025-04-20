@@ -1,5 +1,5 @@
 # public Directory Structure
-Generated: 2025-04-18T18:53:16.111Z
+Generated: 2025-04-20T17:15:08.743Z
 
 ## Overview
 
@@ -11,6 +11,8 @@ Generated: 2025-04-18T18:53:16.111Z
 ./public/
 ├── audio/
 │   └── success-beep.mp3
+├── css/
+│   └── hide-header.css
 ├── images/
 │   ├── email/
 │   │   ├── logo.png
@@ -40,21 +42,25 @@ Generated: 2025-04-18T18:53:16.111Z
 ├── hero_bg2.mp4
 ├── manifest.json
 ├── next.svg
+├── offline.html
 ├── pexels-themo-bg.jpg
 ├── placeholder-qr.png
 ├── qrcode_paypal.png
 ├── robots.txt
 ├── site.webmanifest
 ├── sitemap.xml
+├── sw.js
 ├── vercel.svg
 └── window.svg
 
-5 directories, 35 files
+6 directories, 38 files
 
 ```
 
 ## File Type Breakdown
+- js: 1 file(s)
 - json: 1 file(s)
+- css: 1 file(s)
 
 ## Ignored Patterns
 - node_modules

@@ -1,5 +1,5 @@
 # camera Directory Structure
-Generated: 2025-04-18T18:53:20.570Z
+Generated: 2025-04-20T17:15:16.235Z
 
 ## Overview
 This directory contains 1 component(s).

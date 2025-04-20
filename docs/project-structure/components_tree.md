@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-04-18T18:53:19.334Z
+Generated: 2025-04-20T17:15:14.233Z
 
 ## Overview
-This directory contains 192 component(s).
+This directory contains 199 component(s).
 
 
 
@@ -90,6 +90,7 @@ This directory contains 192 component(s).
 │   ├── MediaUpload.tsx
 │   ├── MediaViewer.tsx
 │   ├── README.md
+│   ├── consistent-grid.tsx
 │   ├── gallery-event-card.tsx
 │   ├── gallery-grid.tsx
 │   ├── gallery-settings-form.tsx
@@ -107,10 +108,12 @@ This directory contains 192 component(s).
 │   └── upload-with-tags.tsx
 ├── guest/
 │   ├── GuestDashboard.tsx
+│   ├── GuestNavigation.tsx
 │   ├── GuestProfileForm.tsx
 │   ├── PhotoUploader.tsx
 │   ├── bottom-nav.tsx
 │   ├── camera-test.tsx
+│   ├── index.ts
 │   ├── profile-setup-form.tsx
 │   └── token-error.tsx
 ├── invitation/
@@ -122,7 +125,10 @@ This directory contains 192 component(s).
 │   └── magic-link-auth.tsx
 ├── layout/
 │   ├── dashboard-layout.tsx
+│   ├── dashboard-page-layout.tsx
 │   ├── guest-header.tsx
+│   ├── header-suppressor.tsx
+│   ├── index.ts
 │   └── main-nav.tsx
 ├── maps/
 │   ├── EventMap.tsx
@@ -133,7 +139,10 @@ This directory contains 192 component(s).
 │   └── newsletter-form.tsx
 ├── media/
 │   ├── AlbumCreationForm.tsx
+│   ├── MediaActionHandler.tsx
 │   ├── MediaCard.tsx
+│   ├── MediaDetailsDialog.tsx
+│   ├── MediaEditDialog.tsx
 │   ├── MediaGrid.tsx
 │   ├── MediaModerationGrid.tsx
 │   ├── MediaUploader.tsx
@@ -141,6 +150,7 @@ This directory contains 192 component(s).
 │   ├── ModerationCard.tsx
 │   ├── camera-capture.tsx
 │   ├── camera-test.tsx
+│   ├── index.ts
 │   └── upload-media-button.tsx
 ├── nav/
 │   ├── logo.tsx
@@ -234,13 +244,13 @@ This directory contains 192 component(s).
 ├── theme-provider.tsx
 └── theme-toggle.tsx
 
-25 directories, 200 files
+25 directories, 210 files
 
 ```
 
 ## File Type Breakdown
-- ts: 6 file(s)
-- tsx: 193 file(s)
+- ts: 9 file(s)
+- tsx: 200 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

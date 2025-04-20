@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-04-18T18:53:16.805Z
+Generated: 2025-04-20T17:15:09.620Z
 
 ## Overview
 
-This directory contains 114 route(s).
+This directory contains 115 route(s).
 
 
 ## Directory Tree
@@ -63,7 +63,21 @@ This directory contains 114 route(s).
 │   │   └── check-access/
 │   │       └── route.ts
 │   ├── guest/
+│   │   ├── media/
+│   │   │   ├── [mediaId]/
+│   │   │   │   ├── route.ts
+│   │   │   │   └── route.ts.bak
+│   │   │   ├── test-url/
+│   │   │   │   └── route.ts
+│   │   │   ├── update/
+│   │   │   │   └── route.ts
+│   │   │   └── update-all/
+│   │   │       └── route.ts
 │   │   └── upload/
+│   │       ├── confirm/
+│   │       │   └── route.ts
+│   │       ├── init/
+│   │       │   └── route.ts
 │   │       └── route.ts
 │   ├── guests/
 │   │   ├── avatar/
@@ -180,13 +194,18 @@ This directory contains 114 route(s).
 │       └── page.tsx
 ├── guest/
 │   ├── camera/
+│   │   ├── CapturePreview.tsx
 │   │   └── page.tsx
 │   ├── camera-setup/
 │   │   └── page.tsx
 │   ├── dashboard/
 │   │   └── page.tsx
 │   ├── gallery/
+│   │   ├── GalleryGrid.tsx
 │   │   └── page.tsx
+│   ├── media/
+│   │   └── [mediaId]/
+│   │       └── page.tsx
 │   ├── photos/
 │   │   └── page.tsx
 │   ├── profile/
@@ -445,13 +464,13 @@ This directory contains 114 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-192 directories, 244 files
+201 directories, 254 files
 
 ```
 
 ## File Type Breakdown
-- ts: 45 file(s)
-- tsx: 188 file(s)
+- ts: 51 file(s)
+- tsx: 191 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 
