@@ -268,16 +268,16 @@ export default function GalleryPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="w-full">
       {/* Gallery Header with Actions */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">My Gallery</h2>
           <p className="text-muted-foreground">
             Manage your photos and videos across all events
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={() => setActiveFilter('all')}>
             All
           </Button>
@@ -297,8 +297,8 @@ export default function GalleryPage() {
       </div>
 
       {/* Gallery Grid */}
-      <Card>
-        <CardContent className="p-6">
+      <Card className="w-full overflow-hidden">
+        <CardContent className="p-4 sm:p-6">
           <ConsistentGrid
             isLoading={loading}
             emptyState={filteredItems.length === 0 ? emptyState : undefined}
