@@ -157,11 +157,12 @@ export default function GuestCameraPage() {
         const track = tracks[0]
         const capabilities = track.getCapabilities()
         
-        // Check if torch is supported
-        if (capabilities.torch) {
+        // Check if torch is supported - using type assertion for vendor-specific capabilities
+        if (capabilities && 'torch' in capabilities) {
           try {
+            // Use type assertion to handle vendor-specific constraints
             track.applyConstraints({
-              advanced: [{ torch: !isFlashOn }]
+              advanced: [{ torch: !isFlashOn } as any]
             })
           } catch (error) {
             console.error('Error toggling flash:', error)
@@ -190,30 +191,43 @@ export default function GuestCameraPage() {
       const video = videoRef.current
       const canvas = canvasRef.current
       
-      // Match canvas dimensions to video
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-      
-      // Draw video frame to canvas
-      const context = canvas.getContext('2d')
-      if (context) {
-        // If front camera is active, flip the image horizontally
-        if (isFrontCamera) {
-          context.translate(canvas.width, 0)
-          context.scale(-1, 1)
+      try {
+        // Match canvas dimensions to video
+        canvas.width = video.videoWidth
+        canvas.height = video.videoHeight
+        
+        // Draw video frame to canvas
+        const context = canvas.getContext('2d')
+        if (context) {
+          // If front camera is active, flip the image horizontally
+          if (isFrontCamera) {
+            context.translate(canvas.width, 0)
+            context.scale(-1, 1)
+          }
+          
+          context.drawImage(video, 0, 0, canvas.width, canvas.height)
+          
+          // Reset transformation if we applied one
+          if (isFrontCamera) {
+            context.setTransform(1, 0, 0, 1, 0, 0)
+          }
+          
+          // Convert to data URL for preview
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.95)
+          
+          // Set the captured photo URL and change state
+          setCapturedPhotoUrl(dataUrl)
+          setIsCapturing(true)
+          
+          console.log("Photo captured successfully, switching to preview")
         }
-        
-        context.drawImage(video, 0, 0, canvas.width, canvas.height)
-        
-        // Reset transformation if we applied one
-        if (isFrontCamera) {
-          context.setTransform(1, 0, 0, 1, 0, 0)
-        }
-        
-        // Convert to data URL for preview
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.95)
-        setCapturedPhotoUrl(dataUrl)
-        setIsCapturing(true)
+      } catch (error) {
+        console.error('Error capturing photo:', error)
+        toast({
+          variant: "destructive",
+          title: "Capture Failed",
+          description: "There was a problem capturing your photo. Please try again.",
+        })
       }
     }
   }
@@ -234,6 +248,7 @@ export default function GuestCameraPage() {
   
   const handleUpload = async (dataUrl: string) => {
     try {
+      console.log("Processing photo for upload")
       // Convert data URL to blob
       const response = await fetch(dataUrl)
       const blob = await response.blob()
@@ -254,6 +269,8 @@ export default function GuestCameraPage() {
         }
       ])
       
+      console.log("Photo added to queue for upload with ID:", photoId)
+      
       // Reset capturing state
       setIsCapturing(false)
       setCapturedPhotoUrl(null)
@@ -263,6 +280,14 @@ export default function GuestCameraPage() {
         title: "Photo Saved!",
         description: "Your photo has been saved. You can upload it to the event.",
       })
+      
+      // Automatic upload
+      try {
+        await uploadSinglePhoto(photoId, blob, eventId, invitationToken)
+      } catch (uploadError) {
+        console.error("Auto-upload failed:", uploadError)
+        // We'll let the user retry manually
+      }
     } catch (err) {
       console.error('Error saving photo:', err)
       toast({
@@ -277,16 +302,94 @@ export default function GuestCameraPage() {
     }
   }
   
+  // New function to upload a single photo
+  const uploadSinglePhoto = async (photoId: string, blob: Blob, eventId: string | null, token: string | null) => {
+    if (!eventId || !token) {
+      throw new Error("Missing event ID or token")
+    }
+    
+    console.log("Starting upload for photo:", photoId)
+    
+    // Update photo to uploading state
+    setCapturedPhotos(prev => 
+      prev.map(photo => 
+        photo.id === photoId
+          ? { ...photo, uploading: true, progress: 10 }
+          : photo
+      )
+    )
+    
+    try {
+      // Create a FormData object for the upload
+      const formData = new FormData()
+      formData.append('file', blob, `${photoId}.jpg`)
+      formData.append('eventId', eventId)
+      formData.append('invitationToken', token)
+      formData.append('metadata', JSON.stringify({
+        is_camera_capture: true,
+        device_info: navigator.userAgent,
+        captured_at: new Date().toISOString(),
+        photo_id: photoId
+      }))
+      
+      // Update progress
+      updatePhotoProgress(photoId, 30)
+      
+      console.log("Sending upload request to API")
+      
+      // Upload using our API endpoint
+      const uploadResponse = await fetch('/api/guest/upload', {
+        method: 'POST',
+        body: formData
+      })
+      
+      // Update progress
+      updatePhotoProgress(photoId, 70)
+      
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json()
+        console.error('Upload API error:', errorData)
+        throw new Error(errorData.error || 'Failed to upload photo')
+      }
+      
+      const uploadResult = await uploadResponse.json()
+      console.log("Upload successful, result:", uploadResult)
+      
+      // Mark as completed
+      setCapturedPhotos(prev => 
+        prev.map(p => 
+          p.id === photoId
+            ? { ...p, uploading: false, progress: 100, uploaded: true }
+            : p
+        )
+      )
+      
+      return uploadResult
+    } catch (err) {
+      console.error('Upload error for photo', photoId, err)
+      setCapturedPhotos(prev => 
+        prev.map(p => 
+          p.id === photoId
+            ? { ...p, uploading: false, progress: 0, error: 'Failed to upload' }
+            : p
+        )
+      )
+      throw err
+    }
+  }
+  
   const handleRetake = () => {
     // Clear current capture and return to camera view
     setIsCapturing(false)
     setCapturedPhotoUrl(null)
+    console.log("Returning to camera view for retake")
   }
   
   const handleCancel = () => {
     // Clear current capture and return to camera view
     setIsCapturing(false)
     setCapturedPhotoUrl(null)
+    console.log("Cancelled photo, returning to camera view")
   }
   
   // Camera functions
@@ -559,7 +662,18 @@ export default function GuestCameraPage() {
   }
   
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div 
+      className="flex flex-col min-h-screen bg-background fixed inset-0 overflow-hidden"
+      style={{
+        height: '100dvh', // Use dynamic viewport height to handle mobile browsers better
+        width: '100%',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0
+      }}
+    >
       <div className="flex-1 relative">
         {/* Camera permission denied */}
         {hasCameraPermission === false && (
@@ -585,19 +699,25 @@ export default function GuestCameraPage() {
           </div>
         )}
         
-        {/* Camera preview */}
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className={`w-full h-full object-cover ${isFrontCamera ? 'scale-x-[-1]' : ''}`}
-          style={{ display: hasCameraPermission === true && !isInitializing ? 'block' : 'none' }}
-        />
+        {/* Camera preview - ensuring it's fixed within viewport */}
+        <div className="absolute inset-0">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className={`w-full h-full object-cover ${isFrontCamera ? 'scale-x-[-1]' : ''}`}
+            style={{ 
+              display: hasCameraPermission === true && !isInitializing ? 'block' : 'none',
+              position: 'absolute',
+              inset: 0
+            }}
+          />
+        </div>
         
-        {/* Camera controls */}
+        {/* Camera controls - fixed position regardless of orientation */}
         {hasCameraPermission === true && !isInitializing && (
-          <div className="absolute inset-x-0 bottom-28 flex justify-center space-x-6 p-4">
+          <div className="absolute bottom-24 inset-x-0 flex justify-center space-x-6 p-4 z-10">
             {/* Flash toggle */}
             <Button
               variant="outline"
@@ -631,8 +751,10 @@ export default function GuestCameraPage() {
         )}
       </div>
       
-      {/* Bottom navigation */}
-      <GuestNavigation token={invitationToken || ''} activeItem="camera" />
+      {/* Bottom navigation - fixed to bottom */}
+      <div className="absolute bottom-0 left-0 right-0 z-20">
+        <GuestNavigation token={invitationToken || ''} activeItem="camera" />
+      </div>
       
       {/* Hidden canvas for capturing photos */}
       <canvas ref={canvasRef} className="hidden" />
