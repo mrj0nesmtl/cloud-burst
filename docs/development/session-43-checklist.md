@@ -22,21 +22,6 @@
 
 ## Guest Experience Enhancements
 
-- [x] **Progressive Web App Implementation** (April 20, 2025)
-  - [x] Create proper manifest.json with app icons and metadata
-    - Added comprehensive manifest.json with proper app metadata
-    - Defined app icons, screenshots, and shortcuts
-    - Set proper theme color and display properties
-  - [x] Implement service worker for offline access
-    - Created service worker with advanced caching strategies
-    - Implemented background sync for uploads
-    - Added push notification support
-  - [ ] Add "Add to Home Screen" prompting
-  - [x] Create offline fallback pages
-    - Created responsive offline.html with reconnection functionality
-    - Added automatic online status checking
-    - Implemented theme-aware styling with dark mode support
-  - [ ] Test PWA installation across devices
 
 - [ ] **Guest User Journey Improvement**
   - [ ] Verify all redirect flows after guest actions
@@ -55,14 +40,14 @@
 ## Organizer Dashboard Reorganization
 
 - [ ] **Navigation Restructuring**
-  - [ ] Audit current sidebar structure and identify pain points
-  - [ ] Create simplified navigation hierarchy
+  - [X] Audit current sidebar structure and identify pain points
+  - [X] Create simplified navigation hierarchy
   - [ ] Group related features under logical categories
   - [ ] Reduce navigation depth where possible
   - [ ] Implement consistent section headers and visual cues
 
 - [ ] **Dashboard UI Improvements**
-  - [ ] Create consistent toolbar pattern across sections
+  - [X] Create consistent toolbar pattern across sections
   - [ ] Standardize action button placement and styling
   - [ ] Implement unified "Create" button behavior
   - [ ] Add contextual help tooltips for complex features

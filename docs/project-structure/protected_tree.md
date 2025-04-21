@@ -1,15 +1,17 @@
 # protected Directory Structure
-Generated: 2025-04-20T17:15:10.149Z
+Generated: 2025-04-21T00:58:54.183Z
 
 ## Overview
 
-This directory contains 56 route(s).
+This directory contains 57 route(s).
 
 
 ## Directory Tree
 ```
 ./src/app/protected/
 ├── admin/
+│   ├── analytics/
+│   │   └── page.tsx
 │   ├── audit-logs/
 │   │   ├── loading.tsx
 │   │   └── page.tsx
@@ -37,8 +39,10 @@ This directory contains 56 route(s).
 │   │   │   └── page.tsx
 │   │   ├── loading.tsx
 │   │   └── page.tsx
+│   ├── error.tsx
 │   ├── layout.tsx
 │   ├── loading.tsx
+│   ├── not-found.tsx
 │   └── page.tsx
 ├── ai/
 │   ├── enhancements/
@@ -75,6 +79,8 @@ This directory contains 56 route(s).
 │       ├── columns.tsx
 │       └── page.tsx
 ├── dashboard/
+│   ├── components/
+│   │   └── ActivitySection.tsx
 │   ├── overview/
 │   │   ├── loading.tsx
 │   │   └── page.tsx
@@ -138,6 +144,7 @@ This directory contains 56 route(s).
 │   │   └── page.tsx
 │   ├── moderate/
 │   │   ├── actions.ts
+│   │   ├── batch-actions.ts
 │   │   ├── moderator-client.tsx
 │   │   └── page.tsx
 │   ├── upload/
@@ -193,13 +200,13 @@ This directory contains 56 route(s).
 │   └── page.tsx
 └── layout.tsx
 
-65 directories, 119 files
+67 directories, 124 files
 
 ```
 
 ## File Type Breakdown
-- ts: 2 file(s)
-- tsx: 108 file(s)
+- ts: 3 file(s)
+- tsx: 112 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

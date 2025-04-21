@@ -1,5 +1,5 @@
 # lib Directory Structure
-Generated: 2025-04-20T17:15:16.652Z
+Generated: 2025-04-21T00:58:57.248Z
 
 ## Overview
 
@@ -16,6 +16,8 @@ Generated: 2025-04-20T17:15:16.652Z
 │   ├── invitation-middleware.ts
 │   ├── tokens.ts
 │   └── utils.ts
+├── data/
+│   └── activity.ts
 ├── email/
 │   ├── index.ts
 │   └── sendgrid.ts
@@ -74,15 +76,16 @@ Generated: 2025-04-20T17:15:16.652Z
 ├── query-helpers.ts
 ├── security-settings.ts
 ├── sendgrid.ts
+├── types.ts
 ├── user-sessions.ts
 └── utils.ts
 
-11 directories, 57 files
+12 directories, 59 files
 
 ```
 
 ## File Type Breakdown
-- ts: 54 file(s)
+- ts: 56 file(s)
 - js: 2 file(s)
 
 ## Ignored Patterns
