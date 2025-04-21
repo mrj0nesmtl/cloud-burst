@@ -12,6 +12,8 @@ import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { NewsletterStats } from '@/components/dashboard/newsletter-stats'
 import { ContactStats } from '@/components/dashboard/contact-stats'
 import { Button } from '@/components/ui/button'
+import { getEventActivityData } from '@/lib/data/activity'
+import { OverviewChart } from '@/components/dashboard/overview-chart'
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard | Cloud Burst',
@@ -145,6 +147,11 @@ function QuickActions() {
   )
 }
 
+async function ActivityOverview() {
+  const data = await getEventActivityData()
+  return <OverviewChart data={data} />
+}
+
 export default async function AdminDashboardPage() {
   // Server-side auth check - await the client creation
   const supabase = await createServerClient()
@@ -195,6 +202,13 @@ export default async function AdminDashboardPage() {
         {/* Audit Log */}
         <div style={{ marginTop: '24px' }}>
           <AuditLogViewer logs={[]} />
+        </div>
+
+        {/* Activity Overview */}
+        <div style={{ marginTop: '24px' }}>
+          <Suspense fallback={<OverviewChart data={[]} isLoading={true} />}>
+            <ActivityOverview />
+          </Suspense>
         </div>
       </div>
     </RoleGuard>

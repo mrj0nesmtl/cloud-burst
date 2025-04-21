@@ -245,7 +245,8 @@ export function EventsMapClientWrapper() {
           width: '100%',
           height: isSmallMobile ? '200px' : isMobile ? '250px' : '400px',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          zIndex: 10 // Add z-index to ensure it's below the sidebar
         }}>
           {loading ? (
             <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">

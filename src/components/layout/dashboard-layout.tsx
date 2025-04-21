@@ -99,7 +99,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex h-12 items-center justify-between px-4">
+        <div className="flex h-16 items-center justify-between px-4">
           <Logo />
           <Button
             variant="ghost"
@@ -110,8 +110,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <span className="sr-only">Close sidebar</span>
           </Button>
         </div>
-        <div className="h-[calc(100vh-3rem)] overflow-y-auto">
-          <SideNav collapsed={false} />
+        <div className="h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="pt-8">
+            <SideNav collapsed={false} />
+          </div>
         </div>
       </div>
 
@@ -123,14 +125,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         )}
       >
         <div className="sticky top-0 h-screen">
-          <div className="flex items-center pt-2">
+          <div className="flex items-center pt-4 px-4">
             {!sidebarCollapsed && <Logo />}
           </div>
           <div className="relative h-[calc(100vh-1rem)]">
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-[-12px] top-2 z-20 h-6 w-6 rounded-full border bg-background shadow-md"
+              className="absolute right-[-12px] top-4 z-20 h-6 w-6 rounded-full border bg-background shadow-md"
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             >
               {sidebarCollapsed ? (
@@ -139,7 +141,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <ChevronLeft className="h-4 w-4" />
               )}
             </Button>
-            <SideNav collapsed={sidebarCollapsed} />
+            <div className="pt-20">
+              <SideNav collapsed={sidebarCollapsed} />
+            </div>
           </div>
         </div>
       </div>
@@ -147,12 +151,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main content */}
       <div className="flex-1">
         {/* Mobile menu button - only visible on small screens */}
-        <div className="fixed top-4 left-4 z-50 lg:hidden">
+        <div className="fixed top-13 left-0 z-50 p-3 lg:hidden">
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(true)}
-            className="rounded-full shadow-md"
+            className="bg-background/20 backdrop-blur-sm rounded-md"
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Open sidebar</span>

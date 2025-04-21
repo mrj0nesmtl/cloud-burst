@@ -31,7 +31,7 @@ export default async function GalleryLayout({ children }: GalleryLayoutProps) {
     if (!session) redirect('/auth/signin?returnTo=/protected/gallery/all')
 
     return (
-      <div className="w-full px-6 sm:px-8 md:px-10 py-6">
+      <div className="container mx-auto px-4 py-6">
         <div className="mb-8">
           <div className="flex flex-col space-y-2 mb-6">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Gallery</h1>
