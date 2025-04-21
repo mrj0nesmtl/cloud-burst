@@ -1,122 +1,63 @@
 'use client'
 
-import React from 'react'
-import { Button } from "@/components/ui/button"
-import { AlertCircle } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { cn } from "@/lib/utils"
+import { Component, ErrorInfo, ReactNode } from 'react'
+import { Button } from './ui/button'
+import { AlertCircle } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 
-interface ErrorBoundaryProps {
-  children: React.ReactNode
-  fallback?: React.ReactNode
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
-  className?: string
-  resetKeys?: any[]
+interface Props {
+  children: ReactNode
 }
 
-interface ErrorBoundaryState {
+interface State {
   hasError: boolean
-  error?: Error
-  errorInfo?: React.ErrorInfo
+  error: Error | null
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props)
-    this.state = { hasError: false }
+export class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+    error: null
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+  public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error }
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Call onError prop if provided
-    this.props.onError?.(error, errorInfo)
-    
-    // Update state with error info
-    this.setState({ errorInfo })
-    
-    // Log error in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error caught by boundary:', error, errorInfo)
-    }
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo)
   }
 
-  componentDidUpdate(prevProps: ErrorBoundaryProps) {
-    // Reset error state if resetKeys change
-    if (this.state.hasError && this.props.resetKeys) {
-      const hasKeyChanged = this.props.resetKeys.some(
-        (key, index) => key !== prevProps.resetKeys?.[index]
-      )
-      if (hasKeyChanged) {
-        this.handleReset()
-      }
-    }
-  }
-
-  private handleReset = () => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined })
-  }
-
-  render() {
-    const { hasError, error } = this.state
-    const { children, fallback, className } = this.props
-
-    if (hasError) {
-      // Only show error UI in development
-      if (process.env.NODE_ENV === 'development') {
-        if (fallback) return fallback
-
-        return (
-          <div className={cn(
-            "flex h-[50vh] flex-col items-center justify-center gap-4",
-            className
-          )}>
-            <AlertCircle className="h-10 w-10 text-destructive" />
-            <h2 className="text-xl font-semibold">Something went wrong!</h2>
-            <p className="text-sm text-muted-foreground max-w-md text-center">
-              {error?.message || 'An unexpected error occurred'}
-            </p>
-            <div className="flex gap-2">
-              <Button 
-                onClick={this.handleReset}
-                variant="default"
-              >
-                Try again
-              </Button>
-              <Button 
-                onClick={() => window.location.reload()}
-                variant="outline"
-              >
-                Reload page
-              </Button>
-            </div>
-          </div>
-        )
-      }
-
-      // In production, just try to recover silently
+  public render() {
+    if (this.state.hasError) {
       return (
-        <div className="hidden">
-          <Button 
-            onClick={this.handleReset}
-            className="hidden"
-          >
-            Reset
-          </Button>
-        </div>
+        <Alert variant="destructive" className="my-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Something went wrong</AlertTitle>
+          <AlertDescription>
+            <p className="mt-2 text-sm">
+              {this.state.error?.message || 'An unexpected error occurred'}
+            </p>
+            <Button
+              variant="outline"
+              className="mt-4"
+              onClick={() => this.setState({ hasError: false, error: null })}
+            >
+              Try again
+            </Button>
+          </AlertDescription>
+        </Alert>
       )
     }
 
-    return children
+    return this.props.children
   }
 }
 
 // Convenience HOC for wrapping components with error boundary
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  errorBoundaryProps?: Omit<ErrorBoundaryProps, 'children'>
+  errorBoundaryProps?: Omit<Props, 'children'>
 ) {
   return function WithErrorBoundary(props: P) {
     return (

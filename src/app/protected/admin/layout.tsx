@@ -1,105 +1,71 @@
+import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@/lib/supabase/client'
-import { Suspense } from 'react'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { AdminTabs } from '@/components/admin/admin-tabs'
 import { ErrorBoundary } from '@/components/error-boundary'
 
-// Force dynamic rendering for this layout
+export const metadata: Metadata = {
+  title: 'Admin Dashboard | Cloud Burst',
+  description: 'Manage users, settings, and analytics for your Cloud Burst platform.',
+}
+
+// Prevent caching and ensure fresh data
+export const revalidate = 0
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
 
-export default async function AdminLayout({
-  children,
-}: {
+interface AdminLayoutProps {
   children: React.ReactNode
-}) {
-  // Skip auth check in development mode
-  const isDevelopment = process.env.NODE_ENV === 'development'
+}
+
+export default async function AdminLayout({ children }: AdminLayoutProps) {
+  const supabase = createServerComponentClient({ cookies })
   
-  if (isDevelopment) {
-    return (
-      <ErrorBoundary>
-        <div className="w-full">
-          <div className="flex flex-col gap-8">
-            {/* Admin Header */}
-            <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-            </div>
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession()
 
-            {/* Main Content */}
-            <ErrorBoundary>
-              <Suspense fallback={<LoadingSpinner className="h-8 w-8" />}>
-                {children}
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-
-          {/* Debug Panel - only in development */}
-          <div className="fixed bottom-0 left-0 right-0 bg-background/95 p-2 text-xs">
-            <pre className="overflow-x-auto">
-              {JSON.stringify({ profile: { role: 'super_admin' } }, null, 2)}
-            </pre>
-          </div>
-        </div>
-      </ErrorBoundary>
-    )
+  if (sessionError) {
+    console.error('Session error:', sessionError.message)
+    redirect('/auth/signin')
   }
-  
-  try {
-    // Server-side auth check - await the client creation
-    const supabase = await createServerClient()
-    
-    // Get and validate session
-    const { data, error } = await supabase.auth.getSession()
-    if (error || !data.session) {
-      redirect('/auth/signin')
-    }
 
-    // Verify admin role
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', data.session.user.id)
-      .single()
-
-    if (profileError) {
-      console.error('Error fetching profile:', profileError)
-      throw profileError
-    }
-
-    if (profile?.role !== 'super_admin') {
-      redirect('/protected/dashboard')
-    }
-
-    return (
-      <ErrorBoundary>
-        <div className="w-full">
-          <div className="flex flex-col gap-8">
-            {/* Admin Header */}
-            <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-            </div>
-
-            {/* Main Content */}
-            <ErrorBoundary>
-              <Suspense fallback={<LoadingSpinner className="h-8 w-8" />}>
-                {children}
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-
-          {/* Debug Panel - only in development */}
-          {isDevelopment && (
-            <div className="fixed bottom-0 left-0 right-0 bg-background/95 p-2 text-xs">
-              <pre className="overflow-x-auto">
-                {JSON.stringify({ profile }, null, 2)}
-              </pre>
-            </div>
-          )}
-        </div>
-      </ErrorBoundary>
-    )
-  } catch (error) {
-    console.error('Admin layout error:', error)
-    redirect('/protected/dashboard')
+  if (!session) {
+    redirect('/auth/signin')
   }
+
+  const { data: userRole } = await supabase
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', session.user.id)
+    .single()
+
+  if (!userRole || userRole.role !== 'admin') {
+    redirect('/protected/gallery')
+  }
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-1 container mx-auto px-4 py-6">
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">Admin Dashboard</h1>
+            <p className="text-sm text-muted-foreground">
+              Manage your platform settings and monitor user activity
+            </p>
+          </div>
+          
+          <AdminTabs />
+          
+          <ErrorBoundary>
+            <div className="mt-4">
+              {children}
+            </div>
+          </ErrorBoundary>
+        </div>
+      </main>
+    </div>
+  )
 } 

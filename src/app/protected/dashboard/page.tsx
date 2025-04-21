@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import { createServerClient } from '@/lib/supabase/server'
-import { OverviewChart } from '@/components/dashboard/overview-chart'
 import { RecentEvents } from '@/components/dashboard/recent-events'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,6 +20,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import { ActivitySection } from './components/ActivitySection'
 
 export const metadata: Metadata = {
   title: 'Dashboard | Cloud Burst',
@@ -114,8 +114,41 @@ async function getDashboardData() {
   }
 }
 
+// Add this function to fetch more events
+async function getMoreRecentEvents() {
+  try {
+    const supabase = await createServerClient();
+    
+    const { data: morerecentEvents } = await supabase
+      .from('events')
+      .select(`
+        id,
+        name,
+        date,
+        status,
+        location,
+        cover_image_url,
+        event_attendees(count),
+        media(count)
+      `)
+      .order('created_at', { ascending: false })
+      .range(5, 10) // Get the next 5 events after the first 5
+    
+    return { morerecentEvents };
+  } catch (error) {
+    console.error('Error fetching more events:', error);
+    return { morerecentEvents: [] };
+  }
+}
+
 export default async function DashboardPage() {
   const { stats, recentEvents } = await getDashboardData()
+
+  // Get 3 more recent events to make the section taller
+  const { morerecentEvents } = await getMoreRecentEvents();
+  
+  // Combine events lists
+  const allRecentEvents = [...recentEvents, ...(morerecentEvents || [])].slice(0, 6);
 
   return (
     <div style={{ width: '100%', maxWidth: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--background)', overflow: 'hidden' }}>
@@ -216,50 +249,25 @@ export default async function DashboardPage() {
           width: '100%'
         }}>
           {/* Chart Card */}
-          <Card className="border-none shadow-sm h-full flex flex-col overflow-hidden">
-            <CardHeader className="p-6 pb-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-lg">Event Activity</CardTitle>
-                  <CardDescription className="text-sm">
-                    Activity over the past year
-                  </CardDescription>
-                </div>
-                <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent className="p-6 pt-2 flex-1 overflow-hidden">
-              <div style={{ height: '350px', maxWidth: '100%' }}>
-                <Suspense fallback={<div className="h-full w-full flex items-center justify-center">Loading chart...</div>}>
-                  <OverviewChart />
-                </Suspense>
-              </div>
-            </CardContent>
-          </Card>
+          <Suspense fallback={<div className="h-full w-full flex items-center justify-center">Loading chart...</div>}>
+            <ActivitySection />
+          </Suspense>
           
           {/* Recent Events Card */}
-          <Card className="border-none shadow-sm h-full flex flex-col overflow-hidden">
-            <CardHeader className="p-6 pb-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-lg">Recent Events</CardTitle>
-                  <CardDescription className="text-sm">
-                    Your latest events
-                  </CardDescription>
-                </div>
-                <Link href="/protected/events/manage">
-                  <Button variant="ghost" size="sm" className="h-8 gap-1">
-                    View all
-                    <ArrowUpRight className="h-3 w-3" />
-                  </Button>
-                </Link>
+          <Card className="rounded-lg border bg-background p-6 shadow-sm h-full flex flex-col overflow-hidden">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-foreground">Recent Events</h2>
+                <p className="text-sm text-muted-foreground">Your latest events</p>
               </div>
-            </CardHeader>
-            <CardContent className="p-6 pt-4 flex-1 overflow-hidden">
-              <div className="h-[350px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary/40 dark:scrollbar-thumb-primary/30 scrollbar-track-transparent hover:scrollbar-thumb-primary/50 dark:hover:scrollbar-thumb-primary/40">
-                <RecentEvents events={recentEvents} />
-              </div>
-            </CardContent>
+              <Link href="/protected/events/manage" className="text-sm text-primary flex items-center space-x-1 hover:underline">
+                View all
+                <ArrowUpRight size={16} className="ml-1" />
+              </Link>
+            </div>
+            <div className="flex-1 overflow-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary/40 dark:scrollbar-thumb-primary/30 scrollbar-track-transparent hover:scrollbar-thumb-primary/50 dark:hover:scrollbar-thumb-primary/40">
+              <RecentEvents events={allRecentEvents} />
+            </div>
           </Card>
         </div>
         

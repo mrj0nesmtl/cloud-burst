@@ -10,6 +10,7 @@ export interface EventActivityData {
   invitations: number;
   rsvps: number;
   media: number;
+  total: number;
 }
 
 /**
@@ -20,58 +21,59 @@ export interface EventActivityData {
 export async function getEventActivityData(): Promise<EventActivityData[]> {
   const supabase = createClientComponentClient<Database>();
   
+  // Set the start date to January 1, 2025
+  const startDate = new Date(2025, 0, 1);
+  const endDate = new Date();
+  
   try {
-    // First get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    
-    if (userError || !user) {
-      console.error('Error fetching user:', userError);
-      return generateEmptyActivityData();
-    }
-    
-    // Get all events by this organizer
-    const { data: events, error: eventsError } = await supabase
+    // Get counts per month for events
+    const { data: eventCounts, error: eventError } = await supabase
       .from('events')
-      .select('id, created_at')
-      .eq('organizer_id', user.id);
-      
-    if (eventsError) {
-      console.error('Error fetching events:', eventsError);
-      return generateEmptyActivityData();
-    }
+      .select('created_at')
+      .gte('created_at', startDate.toISOString())
+      .lte('created_at', endDate.toISOString());
     
-    // Get event IDs for filtering other tables
-    const eventIds = events.map(event => event.id);
+    if (eventError) throw eventError;
     
-    if (eventIds.length === 0) {
-      return generateEmptyActivityData();
-    }
-    
-    // Get all invitations for these events
-    const { data: invitations, error: invitationsError } = await supabase
+    // Get counts per month for invitations
+    const { data: invitationCounts, error: invitationError } = await supabase
       .from('invitations')
-      .select('id, created_at, rsvp_status, event_id')
-      .in('event_id', eventIds);
-      
-    if (invitationsError) {
-      console.error('Error fetching invitations:', invitationsError);
-    }
+      .select('created_at')
+      .gte('created_at', startDate.toISOString())
+      .lte('created_at', endDate.toISOString());
     
-    // Get all media for these events
-    const { data: mediaItems, error: mediaError } = await supabase
+    if (invitationError) throw invitationError;
+    
+    // Get counts per month for RSVPs
+    const { data: rsvpCounts, error: rsvpError } = await supabase
+      .from('rsvps')
+      .select('created_at')
+      .gte('created_at', startDate.toISOString())
+      .lte('created_at', endDate.toISOString());
+    
+    if (rsvpError) throw rsvpError;
+    
+    // Get counts per month for media uploads
+    const { data: mediaCounts, error: mediaError } = await supabase
       .from('media')
-      .select('id, created_at, event_id')
-      .in('event_id', eventIds);
-      
-    if (mediaError) {
-      console.error('Error fetching media:', mediaError);
-    }
+      .select('created_at')
+      .gte('created_at', startDate.toISOString())
+      .lte('created_at', endDate.toISOString());
     
-    // Process data by month
-    return processActivityDataByMonth(events, invitations || [], mediaItems || []);
+    if (mediaError) throw mediaError;
+    
+    // Process the data into monthly stats
+    return processActivityDataByMonth(
+      eventCounts || [],
+      invitationCounts || [],
+      rsvpCounts || [],
+      mediaCounts || [],
+      startDate,
+      endDate
+    );
   } catch (error) {
-    console.error('Error in getEventActivityData:', error);
-    return generateEmptyActivityData();
+    console.error('Error fetching activity data:', error);
+    throw error;
   }
 }
 
@@ -79,65 +81,67 @@ export async function getEventActivityData(): Promise<EventActivityData[]> {
  * Process the raw data into monthly stats
  */
 function processActivityDataByMonth(
-  events: any[],
-  invitations: any[],
-  mediaItems: any[]
+  events: { created_at: string }[],
+  invitations: { created_at: string }[],
+  rsvps: { created_at: string }[],
+  media: { created_at: string }[],
+  startDate: Date,
+  endDate: Date
 ): EventActivityData[] {
-  // Get the past 12 months
-  const months = getLast12Months();
+  const monthlyData: EventActivityData[] = [];
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
   
-  // Initialize result with zeroes
-  const result = months.map(month => ({
-    month: month.shortName,
-    fullMonth: month.fullName,
-    events: 0,
-    invitations: 0,
-    rsvps: 0,
-    media: 0
-  }));
-  
-  // Count events by month
-  events.forEach(event => {
-    const date = new Date(event.created_at);
-    const monthIndex = months.findIndex(
-      m => m.year === date.getFullYear() && m.month === date.getMonth()
-    );
+  // Create a map for each month from start date to end date
+  let currentDate = new Date(startDate);
+  while (currentDate <= endDate) {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const monthKey = `${year}-${month.toString().padStart(2, '0')}`;
+    const fullMonth = `${monthNames[month]} ${year}`;
     
-    if (monthIndex !== -1) {
-      result[monthIndex].events += 1;
-    }
-  });
-  
-  // Count invitations and RSVPs by month
-  invitations.forEach(invitation => {
-    const date = new Date(invitation.created_at);
-    const monthIndex = months.findIndex(
-      m => m.year === date.getFullYear() && m.month === date.getMonth()
-    );
+    monthlyData.push({
+      month: monthNames[month].substring(0, 3),
+      fullMonth,
+      events: 0,
+      invitations: 0,
+      rsvps: 0,
+      media: 0,
+      total: 0
+    });
     
-    if (monthIndex !== -1) {
-      result[monthIndex].invitations += 1;
+    currentDate.setMonth(currentDate.getMonth() + 1);
+  }
+  
+  // Count items for each month
+  const countByMonth = (items: { created_at: string }[], type: keyof EventActivityData) => {
+    items.forEach(item => {
+      const date = new Date(item.created_at);
+      const monthKey = `${date.getFullYear()}-${date.getMonth().toString().padStart(2, '0')}`;
+      const monthData = monthlyData.find(d => {
+        const itemDate = new Date(date.getFullYear(), date.getMonth());
+        const dataDate = new Date(
+          parseInt(d.fullMonth.split(' ')[1]),
+          monthNames.findIndex(m => m.startsWith(d.fullMonth.split(' ')[0]))
+        );
+        return itemDate.getTime() === dataDate.getTime();
+      });
       
-      // Count accepted RSVPs
-      if (invitation.rsvp_status === 'accepted') {
-        result[monthIndex].rsvps += 1;
+      if (monthData && type !== 'month' && type !== 'fullMonth' && type !== 'total') {
+        monthData[type]++;
+        monthData.total++;
       }
-    }
-  });
+    });
+  };
   
-  // Count media uploads by month
-  mediaItems.forEach(media => {
-    const date = new Date(media.created_at);
-    const monthIndex = months.findIndex(
-      m => m.year === date.getFullYear() && m.month === date.getMonth()
-    );
-    
-    if (monthIndex !== -1) {
-      result[monthIndex].media += 1;
-    }
-  });
+  countByMonth(events, 'events');
+  countByMonth(invitations, 'invitations');
+  countByMonth(rsvps, 'rsvps');
+  countByMonth(media, 'media');
   
-  return result;
+  return monthlyData;
 }
 
 /**
@@ -191,7 +195,8 @@ function generateEmptyActivityData(): EventActivityData[] {
     events: 0,
     invitations: 0,
     rsvps: 0,
-    media: 0
+    media: 0,
+    total: 0
   }));
 }
 

@@ -200,7 +200,7 @@ export function LeafletMap({ events, getStatusColor, theme, isMobile }: LeafletM
       padding: isMobile ? '8px' : '12px',
       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
       border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)',
-      zIndex: 999,
+      zIndex: 20,
       fontSize: isMobile ? '10px' : '12px'
     }}>
       <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>Event Status</div>
@@ -241,13 +241,13 @@ export function LeafletMap({ events, getStatusColor, theme, isMobile }: LeafletM
     <div style={{ height: '100%', width: '100%', position: 'relative' }}>
       <MapContainer
         center={calculateCenter()}
-        zoom={2} // Start with a global view
-        style={{ height: '100%', width: '100%' }}
+        zoom={2}
+        style={{ height: '100%', width: '100%', zIndex: 1 }}
         ref={(map: L.Map) => { mapRef.current = map; }}
-        minZoom={2} // Prevent zooming out too far
-        worldCopyJump={true} // Enables the world to be shown multiple times horizontally
-        zoomControl={!isMobile} // Hide zoom controls on mobile
-        attributionControl={!isMobile} // Hide attribution on mobile
+        minZoom={2}
+        worldCopyJump={true}
+        zoomControl={!isMobile}
+        attributionControl={!isMobile}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
