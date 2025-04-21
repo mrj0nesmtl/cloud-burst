@@ -1,15 +1,20 @@
 # components Directory Structure
-Generated: 2025-04-20T17:15:14.233Z
+Generated: 2025-04-21T00:58:55.884Z
 
 ## Overview
-This directory contains 199 component(s).
+This directory contains 211 component(s).
 
 
 
 ## Directory Tree
 ```
 ./src/components/
+├── activity/
+│   ├── ActivityGrid.tsx
+│   ├── ActivityOverview.tsx
+│   └── OverviewChart.tsx
 ├── admin/
+│   ├── admin-tabs.tsx
 │   ├── staff-invitation-form.tsx
 │   ├── staff-list-item.tsx
 │   └── staff-management.tsx
@@ -27,6 +32,8 @@ This directory contains 199 component(s).
 ├── camera/
 │   ├── camera-capture.tsx
 │   └── index.tsx
+├── charts/
+│   └── OverviewChart.tsx
 ├── dashboard/
 │   ├── MediaStatsCard.tsx
 │   ├── RsvpDashboard.tsx
@@ -124,12 +131,15 @@ This directory contains 199 component(s).
 │   ├── create-invitation-form.tsx
 │   └── magic-link-auth.tsx
 ├── layout/
+│   ├── base-layout.tsx
 │   ├── dashboard-layout.tsx
 │   ├── dashboard-page-layout.tsx
 │   ├── guest-header.tsx
 │   ├── header-suppressor.tsx
 │   ├── index.ts
-│   └── main-nav.tsx
+│   ├── main-nav.tsx
+│   ├── protected-layout.tsx
+│   └── sidebar-context.tsx
 ├── maps/
 │   ├── EventMap.tsx
 │   ├── EventsMapSection.tsx
@@ -139,6 +149,7 @@ This directory contains 199 component(s).
 │   └── newsletter-form.tsx
 ├── media/
 │   ├── AlbumCreationForm.tsx
+│   ├── EnhancedModerationCard.tsx
 │   ├── MediaActionHandler.tsx
 │   ├── MediaCard.tsx
 │   ├── MediaDetailsDialog.tsx
@@ -152,6 +163,10 @@ This directory contains 199 component(s).
 │   ├── camera-test.tsx
 │   ├── index.ts
 │   └── upload-media-button.tsx
+├── moderation/
+│   ├── BatchActionControls.tsx
+│   ├── BatchSelectionProvider.tsx
+│   └── ModerationStats.tsx
 ├── nav/
 │   ├── logo.tsx
 │   ├── main-nav.tsx
@@ -244,13 +259,13 @@ This directory contains 199 component(s).
 ├── theme-provider.tsx
 └── theme-toggle.tsx
 
-25 directories, 210 files
+28 directories, 222 files
 
 ```
 
 ## File Type Breakdown
 - ts: 9 file(s)
-- tsx: 200 file(s)
+- tsx: 212 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

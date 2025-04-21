@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-20T17:15:05.714Z
+Generated: 2025-04-21T00:58:51.664Z
 
 ## Overview
 
@@ -31,6 +31,12 @@ Generated: 2025-04-20T17:15:05.714Z
 │   └── dependabot.yml
 ├── .vscode/
 │   └── settings.json
+├── backup/
+│   ├── BatchActionControls.tsx
+│   ├── BatchSelectionProvider.tsx
+│   ├── EnhancedModerationCard.tsx
+│   ├── batch-actions.ts
+│   └── moderation-interface-enhancements.md
 ├── backup-routes.bak/
 │   ├── events-eventId-route/
 │   │   └── gallery/
@@ -193,6 +199,7 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   ├── VERSION_CONTROL.md
 │   │   ├── contributing.md
 │   │   ├── dashboard-components.md
+│   │   ├── moderation-interface-enhancements.md
 │   │   ├── progressive-web-app.md
 │   │   ├── session-43-checklist.md
 │   │   ├── session-43-kickoff-prompt.md
@@ -600,6 +607,8 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   │   └── page.tsx
 │   │   ├── protected/
 │   │   │   ├── admin/
+│   │   │   │   ├── analytics/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── audit-logs/
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
@@ -627,8 +636,10 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── error.tsx
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── loading.tsx
+│   │   │   │   ├── not-found.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── ai/
 │   │   │   │   ├── enhancements/
@@ -665,6 +676,8 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   │   │       ├── columns.tsx
 │   │   │   │       └── page.tsx
 │   │   │   ├── dashboard/
+│   │   │   │   ├── components/
+│   │   │   │   │   └── ActivitySection.tsx
 │   │   │   │   ├── overview/
 │   │   │   │   │   ├── loading.tsx
 │   │   │   │   │   └── page.tsx
@@ -728,6 +741,7 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── moderate/
 │   │   │   │   │   ├── actions.ts
+│   │   │   │   │   ├── batch-actions.ts
 │   │   │   │   │   ├── moderator-client.tsx
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── upload/
@@ -795,7 +809,12 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   ├── not-found.tsx
 │   │   └── page.tsx
 │   ├── components/
+│   │   ├── activity/
+│   │   │   ├── ActivityGrid.tsx
+│   │   │   ├── ActivityOverview.tsx
+│   │   │   └── OverviewChart.tsx
 │   │   ├── admin/
+│   │   │   ├── admin-tabs.tsx
 │   │   │   ├── staff-invitation-form.tsx
 │   │   │   ├── staff-list-item.tsx
 │   │   │   └── staff-management.tsx
@@ -813,6 +832,8 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   ├── camera/
 │   │   │   ├── camera-capture.tsx
 │   │   │   └── index.tsx
+│   │   ├── charts/
+│   │   │   └── OverviewChart.tsx
 │   │   ├── dashboard/
 │   │   │   ├── MediaStatsCard.tsx
 │   │   │   ├── RsvpDashboard.tsx
@@ -910,12 +931,15 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   │   ├── create-invitation-form.tsx
 │   │   │   └── magic-link-auth.tsx
 │   │   ├── layout/
+│   │   │   ├── base-layout.tsx
 │   │   │   ├── dashboard-layout.tsx
 │   │   │   ├── dashboard-page-layout.tsx
 │   │   │   ├── guest-header.tsx
 │   │   │   ├── header-suppressor.tsx
 │   │   │   ├── index.ts
-│   │   │   └── main-nav.tsx
+│   │   │   ├── main-nav.tsx
+│   │   │   ├── protected-layout.tsx
+│   │   │   └── sidebar-context.tsx
 │   │   ├── maps/
 │   │   │   ├── EventMap.tsx
 │   │   │   ├── EventsMapSection.tsx
@@ -925,6 +949,7 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   │   └── newsletter-form.tsx
 │   │   ├── media/
 │   │   │   ├── AlbumCreationForm.tsx
+│   │   │   ├── EnhancedModerationCard.tsx
 │   │   │   ├── MediaActionHandler.tsx
 │   │   │   ├── MediaCard.tsx
 │   │   │   ├── MediaDetailsDialog.tsx
@@ -938,6 +963,10 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   │   ├── camera-test.tsx
 │   │   │   ├── index.ts
 │   │   │   └── upload-media-button.tsx
+│   │   ├── moderation/
+│   │   │   ├── BatchActionControls.tsx
+│   │   │   ├── BatchSelectionProvider.tsx
+│   │   │   └── ModerationStats.tsx
 │   │   ├── nav/
 │   │   │   ├── logo.tsx
 │   │   │   ├── main-nav.tsx
@@ -1058,6 +1087,8 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   │   ├── invitation-middleware.ts
 │   │   │   ├── tokens.ts
 │   │   │   └── utils.ts
+│   │   ├── data/
+│   │   │   └── activity.ts
 │   │   ├── email/
 │   │   │   ├── index.ts
 │   │   │   └── sendgrid.ts
@@ -1116,6 +1147,7 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   ├── query-helpers.ts
 │   │   ├── security-settings.ts
 │   │   ├── sendgrid.ts
+│   │   ├── types.ts
 │   │   ├── user-sessions.ts
 │   │   └── utils.ts
 │   ├── scripts/
@@ -1225,6 +1257,7 @@ Generated: 2025-04-20T17:15:05.714Z
 │   │   ├── 20250417_create_handle_guest_profile_function.sql
 │   │   ├── 20250417_update_guest_rls_policies.sql
 │   │   ├── 20250417_update_profiles_subscription_constraints.sql
+│   │   ├── 20250420_create_moderation_stats_function.sql
 │   │   ├── check_events_schema.sql
 │   │   └── setup_launch_partner.sql
 │   ├── templates/
@@ -1262,17 +1295,17 @@ Generated: 2025-04-20T17:15:05.714Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-294 directories, 959 files
+301 directories, 985 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11820 file(s)
-- tsx: 540 file(s)
-- js: 27877 file(s)
-- json: 2033 file(s)
-- md: 1541 file(s)
-- css: 27 file(s)
+- ts: 11824 file(s)
+- tsx: 559 file(s)
+- js: 27874 file(s)
+- json: 2030 file(s)
+- md: 1543 file(s)
+- css: 28 file(s)
 - yml: 164 file(s)
 
 ## Ignored Patterns
