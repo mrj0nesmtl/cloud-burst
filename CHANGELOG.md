@@ -15,6 +15,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 0.9.x: Pre-release & Testing
 - 1.0.0: Production Launch
 
+## [Unreleased]
+### Added
+- Super Admin dashboard improvements:
+  - Data aggregation from all organizers
+  - Cross-organization analytics
+  - System-wide metrics and reporting
+- Offline capabilities:
+  - Background upload queue for interrupted connections
+  - Local storage for pending uploads
+  - Automatic retry mechanism when connection is restored
+- Enhanced guest experience:
+  - Improved UI consistency across all guest touchpoints
+  - Streamlined navigation with clearer visual cues
+  - Enhanced feedback mechanisms for guest actions
+
+### Changed
+- Performance optimizations for large media collections
+- Improved token refresh mechanism for prolonged sessions
+- Enhanced error handling for edge cases in media processing
+
+### Fixed
+- Organizer profile settings not saving properly
+- Data display issues in Super Admin dashboard
+- Edge cases in guest upload flow with intermittent connections
+
 ## [0.9.5] - 2025-04-22
 ### Added
 - **Enhanced Moderation Interface**:
