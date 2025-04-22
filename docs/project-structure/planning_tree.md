@@ -1,5 +1,5 @@
 # planning Directory Structure
-Generated: 2025-04-21T00:58:58.649Z
+Generated: 2025-04-22T17:18:29.837Z
 
 ## Overview
 
@@ -12,20 +12,16 @@ Generated: 2025-04-21T00:58:58.649Z
 ├── business_proposition.md
 ├── ca-en-merchant-fees-2024.pdf
 ├── deck.md
-├── name_change.md
-├── payment_subscription_design.md
 ├── project_budget_overview.md
 ├── request_for_product_RFP.md
-├── roadmap.md
-├── statement_of_work.md
-└── token_management_system.md
+└── statement_of_work.md
 
-1 directory, 10 files
+1 directory, 6 files
 
 ```
 
 ## File Type Breakdown
-- md: 9 file(s)
+- md: 5 file(s)
 
 ## Ignored Patterns
 - node_modules

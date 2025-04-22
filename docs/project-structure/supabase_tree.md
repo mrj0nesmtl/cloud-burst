@@ -1,5 +1,5 @@
 # supabase Directory Structure
-Generated: 2025-04-21T00:58:57.402Z
+Generated: 2025-04-22T17:18:28.573Z
 
 ## Overview
 

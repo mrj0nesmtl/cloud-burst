@@ -1,5 +1,5 @@
 # architecture Directory Structure
-Generated: 2025-04-21T00:58:58.498Z
+Generated: 2025-04-22T17:18:29.678Z
 
 ## Overview
 
@@ -9,20 +9,22 @@ Generated: 2025-04-21T00:58:58.498Z
 ## Directory Tree
 ```
 ./docs/architecture/
-├── ai_implementation.md
+├── ux/
+│   ├── event-organizer-journey.md
+│   ├── guest-journey.md
+│   └── user-journeys.md
 ├── application_design_document.md
 ├── architecture-diagram.md
 ├── navigation-structure.md
 ├── security.md
-├── system_architecture_flowchart.md
-└── user-journeys.md
+└── system_architecture_flowchart.md
 
-1 directory, 7 files
+2 directories, 8 files
 
 ```
 
 ## File Type Breakdown
-- md: 7 file(s)
+- md: 8 file(s)
 
 ## Ignored Patterns
 - node_modules

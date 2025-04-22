@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-21T00:58:52.662Z
+Generated: 2025-04-22T17:18:23.168Z
 
 ## Overview
 
@@ -10,17 +10,15 @@ Generated: 2025-04-21T00:58:52.662Z
 ```
 ./docs/
 ├── architecture/
-│   ├── ai_implementation.md
+│   ├── ux/
+│   │   ├── event-organizer-journey.md
+│   │   ├── guest-journey.md
+│   │   └── user-journeys.md
 │   ├── application_design_document.md
 │   ├── architecture-diagram.md
 │   ├── navigation-structure.md
 │   ├── security.md
-│   ├── system_architecture_flowchart.md
-│   └── user-journeys.md
-├── assets/
-│   ├── README.md
-│   ├── project-timeline.md
-│   └── user-flow-diagram.md
+│   └── system_architecture_flowchart.md
 ├── deployment/
 │   ├── deployment_fixes.md
 │   ├── deployment_guides.md
@@ -29,7 +27,11 @@ Generated: 2025-04-21T00:58:52.662Z
 ├── design/
 │   ├── UI_components.md
 │   ├── consistent-layout.md
+│   ├── dashboard-components.md
+│   ├── gallery_implementation.md
 │   ├── layout-troubleshooting.md
+│   ├── moderation-interface-enhancements.md
+│   ├── progressive-web-app.md
 │   ├── style.md
 │   └── website_overview.md
 ├── development/
@@ -67,6 +69,8 @@ Generated: 2025-04-21T00:58:52.662Z
 │   │   ├── SESSION_33_KICKOFF.md
 │   │   ├── SESSION_33_RESOURCES.md
 │   │   ├── session-28-plan.md
+│   │   ├── session-43-checklist.md
+│   │   ├── session-43-kickoff-prompt.md
 │   │   ├── session_1.md
 │   │   ├── session_10.md
 │   │   ├── session_11_checklist.md
@@ -152,29 +156,29 @@ Generated: 2025-04-21T00:58:52.662Z
 │   ├── .DS_Store
 │   ├── STATUS_NOTES.md
 │   ├── VERSION_CONTROL.md
+│   ├── auth-security-improvements.md
 │   ├── contributing.md
-│   ├── dashboard-components.md
-│   ├── moderation-interface-enhancements.md
-│   ├── progressive-web-app.md
-│   ├── session-43-checklist.md
-│   ├── session-43-kickoff-prompt.md
-│   ├── session-43-resources-map.md
+│   ├── name_change.md
+│   ├── project-timeline.md
+│   ├── roadmap.md
+│   ├── session-44-checklist.md
+│   ├── session-44-kickoff-prompt.md
+│   ├── session-44-resources-map.md
 │   └── version-sync.plan
 ├── features/
-│   ├── gallery_implementation.md
+│   ├── ai_implementation.md
+│   ├── payment_subscription_design.md
 │   ├── qr-scan-components.md
-│   └── qr-scanner-types.md
+│   ├── qr-scanner-types.md
+│   ├── service-worker.md
+│   └── token_management_system.md
 ├── planning/
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-2024.pdf
 │   ├── deck.md
-│   ├── name_change.md
-│   ├── payment_subscription_design.md
 │   ├── project_budget_overview.md
 │   ├── request_for_product_RFP.md
-│   ├── roadmap.md
-│   ├── statement_of_work.md
-│   └── token_management_system.md
+│   └── statement_of_work.md
 ├── project-structure/
 │   ├── DOCS_TREE.md
 │   ├── FULL_TREE.md
@@ -204,13 +208,10 @@ Generated: 2025-04-21T00:58:52.662Z
 │   ├── types_tree.md
 │   ├── ui_tree.md
 │   └── utils_tree.md
-├── pwa/
-│   └── service-worker.md
 ├── rbac/
 │   └── role_based_access_control.md
 ├── user-flows/
 │   ├── RSVP_IMPLEMENTATION_GUIDE.md
-│   ├── create_test_users_ui.md
 │   ├── event_management.md
 │   ├── invitation and RSVP system flow.md
 │   ├── invitation_system_development_plan.md
@@ -218,20 +219,18 @@ Generated: 2025-04-21T00:58:52.662Z
 │   ├── invited_user_flow_design_document.md
 │   ├── media-upload-sequence.md
 │   ├── media_upload_sequence_diagram.md
+│   ├── user-flow-diagram.md
 │   ├── user_flow_chart.md
 │   └── user_flow_overview.md
-├── ux/
-│   ├── event-organizer-journey.md
-│   └── guest-journey.md
 ├── .DS_Store
 └── README.md
 
-14 directories, 203 files
+12 directories, 204 files
 
 ```
 
 ## File Type Breakdown
-- md: 198 file(s)
+- md: 199 file(s)
 
 ## Ignored Patterns
 - node_modules
