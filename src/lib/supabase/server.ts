@@ -7,7 +7,28 @@ import type { Database } from '@/types/supabase'
  * that is more flexible and can be used in different contexts.
  */
 export function createClient() {
-  return createClientComponentClient<Database>()
+  try {
+    // Try to create a server component client if we're in a request context
+    if (typeof window === 'undefined') {
+      // We're on the server
+      try {
+        const { cookies } = require('next/headers');
+        // Try to use cookies, but don't throw if it fails
+        const cookieStore = cookies();
+        return createServerComponentClient<Database>({ cookies: () => cookieStore });
+      } catch (e) {
+        // Fallback for contexts where cookies() isn't available
+        console.warn('Could not use server component client with cookies. Using anonymous client instead.');
+        return createClientComponentClient<Database>();
+      }
+    }
+  } catch (e) {
+    // Final fallback
+    console.warn('Error creating supabase client, using anonymous client');
+  }
+  
+  // Default to client component client (works in browser and as fallback)
+  return createClientComponentClient<Database>();
 }
 
 /**

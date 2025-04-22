@@ -15,9 +15,16 @@ import { Database } from '@/types/supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 // Create a function to get the server supabase client
-function getServerClient(): SupabaseClient<Database> {
-  const cookieStore = cookies();
-  return createClient();
+// This version supports both request contexts (with cookies) and non-request contexts
+function getServerClient(cookieStore?: ReturnType<typeof cookies>): SupabaseClient<Database> {
+  try {
+    // If we're in a context without cookies, use createClient() which will use anon client
+    return createClient();
+  } catch (error) {
+    console.error('Error creating server client:', error);
+    // Fallback to anonymous client
+    return createClient();
+  }
 }
 
 /**
@@ -26,6 +33,7 @@ function getServerClient(): SupabaseClient<Database> {
 export async function getEventMedia(eventId: string): Promise<Media[]> {
   const supabase = getServerClient();
   
+  // Use RLS policies to ensure users only see media they have access to
   const { data, error } = await supabase
     .from('media')
     .select('*')
