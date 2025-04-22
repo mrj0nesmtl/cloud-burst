@@ -40,6 +40,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Data display issues in Super Admin dashboard
 - Edge cases in guest upload flow with intermittent connections
 
+## [0.9.6] - 2025-04-27
+### Fixed
+- **Critical Authentication Issue in Event Pages**:
+  - Resolved "cookies was called outside a request scope" error that prevented access to event pages
+  - Improved Supabase client initialization to handle both request and non-request contexts
+  - Enhanced client-side fallback mechanisms for better error recovery
+  - Added graceful degradation for authentication in edge cases
+  - Created comprehensive auth security documentation for future improvements
+  
+- **Gallery Layout Consistency Across Devices**:
+  - Fixed alignment issues in the Gallery layout across different viewport sizes
+  - Ensured consistent spacing and padding in mobile views
+  - Improved responsive behavior for various mobile devices (iPhone 14 Pro Max, iPhone 12 Pro, iPhone XR)
+  - Standardized component behavior in the Manage Events view
+  - Enhanced dashboard metrics display for better cross-device compatibility
+
+### Added
+- **Authentication Security Documentation**:
+  - Created comprehensive documentation for future security improvements
+  - Identified potential security vulnerabilities in the current implementation
+  - Provided recommendations for enhancing authentication security
+  - Created implementation plan for upgrading to more secure authentication patterns
+
+### Changed
+- Enhanced client initialization with better error handling
+- Improved responsive layout system for consistent cross-device appearance
+- Updated development documentation with latest findings and best practices
+
 ## [0.9.5] - 2025-04-22
 ### Added
 - **Enhanced Moderation Interface**:
@@ -51,6 +79,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added event activity data visualization with new overview chart
   - Updated type definitions to support enhanced analytics data structure
 
+### Changed
+- Updated dashboard layout for consistent user experience across all sections
+- Refactored batch processing components for better maintainability
+- Enhanced admin menu structure and styling for improved usability
+- Optimized performance for moderation interface with improved data fetching
+
 ### Fixed
 - Resolved layout issues in Gallery section:
   - Fixed submenu sidebar positioning to prevent logo overlap
@@ -61,12 +95,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Streamlined navigation elements to save vertical space
   - Removed redundant helper text under "Create New" menu items
 - Improved error handling throughout the application with dedicated error boundaries
-
-### Changed
-- Updated dashboard layout for consistent user experience across all sections
-- Refactored batch processing components for better maintainability
-- Enhanced admin menu structure and styling for improved usability
-- Optimized performance for moderation interface with improved data fetching
 
 ## [0.9.4] - 2025-04-20
 ### Added
