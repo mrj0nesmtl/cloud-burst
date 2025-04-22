@@ -31,20 +31,20 @@ export default async function GalleryLayout({ children }: GalleryLayoutProps) {
     if (!session) redirect('/auth/signin?returnTo=/protected/gallery/all')
 
     return (
-      <div className="container mx-auto px-4 py-6">
-        <div className="mb-8">
-          <div className="flex flex-col space-y-2 mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Gallery</h1>
-            <p className="text-sm sm:text-base text-muted-foreground">
-              Manage your event media, galleries and albums
-            </p>
-          </div>
-          
+      <>
+        <div className="mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Gallery</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1">
+            Manage your event media, galleries and albums
+          </p>
+        </div>
+        
+        <div className="mb-6">
           <GalleryTabs />
         </div>
 
         {children}
-      </div>
+      </>
     )
   } catch (error) {
     console.error('Error in gallery layout:', error)

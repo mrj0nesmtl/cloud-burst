@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { GalleryLayout, GallerySidebar, GalleryHeader, MediaViewer, MediaItem } from '@/components/gallery';
+import { GalleryHeader, MediaViewer, MediaItem } from '@/components/gallery';
 import { useToast } from '@/components/ui/use-toast';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types/supabase';
-import { getEventMedia } from '@/lib/supabase/media';
 import { MediaType } from '@/types/media';
 import { ConsistentGrid } from '@/components/gallery/consistent-grid';
 import { Card, CardContent } from '@/components/ui/card';
@@ -248,82 +247,89 @@ export default function GalleryPage() {
     router.push(path);
   };
 
-  // Create an empty state component
-  const emptyState = (
-    <div className="flex flex-col items-center justify-center p-10 text-center">
-      <ImageIcon className="h-12 w-12 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium mb-2">No media found</h3>
-      <p className="text-muted-foreground mb-6">
-        {activeFilter !== 'all' 
-          ? `No ${activeFilter} media found. Try a different filter or upload some ${activeFilter} files.`
-          : "You don't have any media yet. Upload photos and videos to get started."}
-      </p>
-      <Button asChild>
-        <Link href="/protected/gallery/upload">
-          <Plus className="h-4 w-4 mr-2" />
-          Upload Media
-        </Link>
-      </Button>
-    </div>
-  );
-
+  // Render main gallery content
   return (
     <div className="w-full">
-      {/* Gallery Header with Actions */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
+      <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">My Gallery</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-xl font-semibold">My Gallery</h2>
+          <p className="text-sm text-muted-foreground">
             Manage your photos and videos across all events
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => setActiveFilter('all')}>
-            All
-          </Button>
-          <Button variant="outline" onClick={() => setActiveFilter('photo')}>
-            Photos
-          </Button>
-          <Button variant="outline" onClick={() => setActiveFilter('video')}>
-            Videos
-          </Button>
-          <Button asChild>
-            <Link href="/protected/gallery/upload">
-              <Plus className="h-4 w-4 mr-2" />
-              Upload
-            </Link>
-          </Button>
-        </div>
+        
+        <Button onClick={handleUpload} className="flex items-center">
+          <Plus className="mr-1 h-4 w-4" />
+          Upload
+        </Button>
       </div>
 
-      {/* Gallery Grid */}
-      <Card className="w-full overflow-hidden">
-        <CardContent className="p-4 sm:p-6">
-          <ConsistentGrid
-            isLoading={loading}
-            emptyState={filteredItems.length === 0 ? emptyState : undefined}
-          >
-            {filteredItems.map((item) => (
-              <MediaCard
-                key={item.id}
-                media={item}
-                onClick={() => handleMediaClick(item)}
-                onLike={() => handleLike(item.id)}
-              />
-            ))}
-          </ConsistentGrid>
-        </CardContent>
-      </Card>
-      
-      {/* Media Viewer */}
+      <div className="flex items-center space-x-4 mb-6">
+        <Button
+          variant={activeFilter === 'all' ? 'default' : 'outline'}
+          onClick={() => handleFilterChange('all')}
+        >
+          All
+        </Button>
+        <Button
+          variant={activeFilter === 'photo' ? 'default' : 'outline'}
+          onClick={() => handleFilterChange('photo')}
+        >
+          Photos
+        </Button>
+        <Button
+          variant={activeFilter === 'video' ? 'default' : 'outline'}
+          onClick={() => handleFilterChange('video')}
+        >
+          Videos
+        </Button>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      ) : filteredItems.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="bg-muted rounded-full p-6 mb-4">
+            <ImageIcon className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2">No media found</h3>
+          <p className="text-muted-foreground max-w-sm mb-6">
+            You don't have any {activeFilter !== 'all' ? activeFilter + ' ' : ''}media yet. 
+            Upload your first file to get started.
+          </p>
+          <Button onClick={handleUpload}>
+            <Plus className="mr-2 h-4 w-4" />
+            Upload Media
+          </Button>
+        </div>
+      ) : (
+        <ConsistentGrid className="gap-4">
+          {filteredItems.map((item) => (
+            <Card key={item.id} className="overflow-hidden bg-background">
+              <CardContent className="p-0">
+                <MediaCard
+                  item={item}
+                  onClick={() => handleMediaClick(item)}
+                  onLike={() => handleLike(item.id)}
+                  onAddComment={(mediaId, comment) => handleAddComment(mediaId, comment)}
+                />
+              </CardContent>
+            </Card>
+          ))}
+        </ConsistentGrid>
+      )}
+
       {isViewerOpen && selectedMediaIndex >= 0 && (
         <MediaViewer
-          media={filteredItems}
-          initialIndex={selectedMediaIndex}
+          items={filteredItems}
+          currentIndex={selectedMediaIndex}
+          isOpen={isViewerOpen}
           onClose={() => setIsViewerOpen(false)}
           onNavigate={handleViewerNavigate}
           onLike={handleLike}
-          onComment={handleAddComment}
+          onAddComment={handleAddComment}
         />
       )}
     </div>
