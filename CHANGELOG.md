@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
-### Added
+### In progress
 - Super Admin dashboard improvements:
   - Data aggregation from all organizers
   - Cross-organization analytics
@@ -26,7 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Local storage for pending uploads
   - Automatic retry mechanism when connection is restored
 - Enhanced guest experience:
-  - Improved UI consistency across all guest touchpoints
+  - Error when "Complete Setup" is clicked to complete RSVP process.
+  Improved UI consistency across all guest touchpoints
   - Streamlined navigation with clearer visual cues
   - Enhanced feedback mechanisms for guest actions
 

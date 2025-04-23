@@ -1,5 +1,5 @@
 # development Directory Structure
-Generated: 2025-04-22T17:18:29.521Z
+Generated: 2025-04-23T03:08:37.154Z
 
 ## Overview
 
@@ -138,14 +138,17 @@ Generated: 2025-04-22T17:18:29.521Z
 ├── session-44-checklist.md
 ├── session-44-kickoff-prompt.md
 ├── session-44-resources-map.md
+├── session-45-checklist.md
+├── session-45-narrative.md
+├── session-45-resource-map.md
 └── version-sync.plan
 
-2 directories, 129 files
+2 directories, 132 files
 
 ```
 
 ## File Type Breakdown
-- md: 126 file(s)
+- md: 129 file(s)
 
 ## Ignored Patterns
 - node_modules

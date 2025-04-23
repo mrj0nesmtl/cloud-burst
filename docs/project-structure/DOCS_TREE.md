@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-22T17:18:23.168Z
+Generated: 2025-04-23T03:08:31.479Z
 
 ## Overview
 
@@ -164,6 +164,9 @@ Generated: 2025-04-22T17:18:23.168Z
 │   ├── session-44-checklist.md
 │   ├── session-44-kickoff-prompt.md
 │   ├── session-44-resources-map.md
+│   ├── session-45-checklist.md
+│   ├── session-45-narrative.md
+│   ├── session-45-resource-map.md
 │   └── version-sync.plan
 ├── features/
 │   ├── ai_implementation.md
@@ -225,12 +228,12 @@ Generated: 2025-04-22T17:18:23.168Z
 ├── .DS_Store
 └── README.md
 
-12 directories, 204 files
+12 directories, 207 files
 
 ```
 
 ## File Type Breakdown
-- md: 199 file(s)
+- md: 202 file(s)
 
 ## Ignored Patterns
 - node_modules

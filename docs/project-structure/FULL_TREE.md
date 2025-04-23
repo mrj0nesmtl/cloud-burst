@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-22T17:18:22.174Z
+Generated: 2025-04-23T03:08:30.486Z
 
 ## Overview
 
@@ -209,6 +209,9 @@ Generated: 2025-04-22T17:18:22.174Z
 │   │   ├── session-44-checklist.md
 │   │   ├── session-44-kickoff-prompt.md
 │   │   ├── session-44-resources-map.md
+│   │   ├── session-45-checklist.md
+│   │   ├── session-45-narrative.md
+│   │   ├── session-45-resource-map.md
 │   │   └── version-sync.plan
 │   ├── features/
 │   │   ├── ai_implementation.md
@@ -1295,18 +1298,18 @@ Generated: 2025-04-22T17:18:22.174Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-299 directories, 987 files
+299 directories, 990 files
 
 ```
 
 ## File Type Breakdown
-- ts: 11816 file(s)
+- ts: 12087 file(s)
 - tsx: 559 file(s)
-- js: 27848 file(s)
-- json: 2025 file(s)
-- md: 1544 file(s)
-- css: 28 file(s)
-- yml: 164 file(s)
+- js: 28067 file(s)
+- json: 2100 file(s)
+- md: 1659 file(s)
+- css: 26 file(s)
+- yml: 170 file(s)
 
 ## Ignored Patterns
 - node_modules
