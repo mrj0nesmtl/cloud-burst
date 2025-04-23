@@ -5,7 +5,7 @@
 
 ## Capture Every Moment
 
-[![Version](https://img.shields.io/badge/version-0.9.5-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
+[![Version](https://img.shields.io/badge/version-0.9.6-blue.svg)](https://github.com/mrj0nesmtl/cloud-burst/releases)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.io/)
@@ -68,7 +68,7 @@ Remember the magic of disposable cameras 📸 on wedding tables? We've reimagine
 - **Token-Based Authentication**: Secure access for guests without creating accounts
 - **Permission Policies**: Verified enforcement for profile and gallery settings updates
 
-### AI Features
+### AI Features (Coming Soon)
 
 - **Facial Recognition**: Intelligent face detection and recognition for easy photo organization and search
 - **Photo Enhancements**: Automated photo and video enhancement with customizable styles
@@ -302,6 +302,6 @@ This project is licensed under the [MIT License](LICENSE).
 
 <div align="center">
 
-Built with ❤️ by Joel and the Cloud Burst Team
+Built with ❤️ by Joel@ArcanaConcepts and the Cloud Burst Team
 
 </div>
