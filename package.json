@@ -1,6 +1,6 @@
 {
   "name": "cloud-burst",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
@@ -15,6 +15,8 @@
     "@eslint/object-schema": "^2.1.6",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^4.1.0",
+    "@modelcontextprotocol/sdk": "^1.10.2",
+    "@modelcontextprotocol/server-github": "^2025.4.8",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.1.3",
