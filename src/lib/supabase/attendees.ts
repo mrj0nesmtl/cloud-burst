@@ -1,5 +1,3 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 // Type definition for an attendee
@@ -61,11 +59,11 @@ export async function getFirstAttendeeForToken(token: string): Promise<Attendee 
 }
 
 /**
- * Get all attendees for a specific event
- * This function is used in server components
+ * Get all attendees for a specific event using client component
+ * This replaces the server component version
  */
 export async function getEventAttendees(eventId: string) {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createClientComponentClient();
   
   const { data, error } = await supabase
     .from('event_attendees')
