@@ -19,7 +19,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/components/ui/use-toast'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { getFirstAttendeeForToken } from '@/lib/supabase/attendees'
+import { getFirstAttendeeForToken } from '@/lib/supabase/attendees/index'
 
 const profileFormSchema = z.object({
   full_name: z.string().min(2, {

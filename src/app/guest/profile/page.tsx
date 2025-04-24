@@ -564,9 +564,20 @@ export default function GuestProfilePage() {
         }
       }
       
-      // Generate an access token (UUID)
-      const accessToken = crypto.randomUUID ? crypto.randomUUID() : 
-        `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+      // Generate a proper UUID for access_token
+      // This fixes the "invalid input syntax for type uuid" error
+      const accessToken = (() => {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+          return crypto.randomUUID();
+        } else {
+          // Fallback implementation of UUID v4
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+          });
+        }
+      })();
       
       // Direct guest table update - now includes event_id and access_token
       const { data, error } = await supabase
