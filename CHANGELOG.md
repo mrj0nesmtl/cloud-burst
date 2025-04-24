@@ -31,15 +31,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Streamlined navigation with clearer visual cues
   - Enhanced feedback mechanisms for guest actions
 
+### Added
+- **Guest Profile System Improvements**:
+  - Unified navigation components (`BottomNav` and `GuestNavigation`)
+  - Standardized navigation pattern implementation across guest pages
+  - Enhanced profile form with improved validation and user feedback
+  - Refactored attendees library structure for better type safety
+  - Proper server/client separation for better component architecture
+
 ### Changed
 - Performance optimizations for large media collections
 - Improved token refresh mechanism for prolonged sessions
 - Enhanced error handling for edge cases in media processing
+- Standardized import patterns for guest components using barrel exports
 
 ### Fixed
 - Organizer profile settings not saving properly
 - Data display issues in Super Admin dashboard
 - Edge cases in guest upload flow with intermittent connections
+- Inconsistency in guest navigation implementation across pages
 
 ## [0.9.6] - 2025-04-27
 ### Fixed

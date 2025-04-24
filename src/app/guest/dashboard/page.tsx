@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { invitationTokenService } from '@/lib/tokens/invitation-token'
 import { useToast } from '@/components/ui/use-toast'
 import { formatDate } from '@/lib/utils'
-import { BottomNav } from '@/components/guest/bottom-nav'
+import { GuestNavBar } from '@/components/guest'
 
 export default function GuestDashboardPage() {
   const searchParams = useSearchParams()
@@ -512,7 +512,7 @@ export default function GuestDashboardPage() {
       </div>
       
       {/* Bottom Navigation */}
-      <BottomNav activeTab="dashboard" invitationToken={invitationToken} />
+      <GuestNavBar activeTab="dashboard" invitationToken={invitationToken} />
     </div>
   )
 }

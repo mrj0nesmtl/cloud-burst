@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { invitationTokenService } from '@/lib/tokens/invitation-token'
 import { PhotoUploader } from '@/components/guest/PhotoUploader'
-import { BottomNav } from '@/components/guest/bottom-nav'
+import { GuestNavBar } from '@/components/guest'
 
 export default function GuestUploadPage() {
   const searchParams = useSearchParams()
@@ -130,8 +130,8 @@ export default function GuestUploadPage() {
         </Button>
       </div>
       
-      {/* Use the shared BottomNav component instead of inline navigation */}
-      <BottomNav activeTab="upload" invitationToken={invitationToken} />
+      {/* Bottom Navigation */}
+      <GuestNavBar activeTab="upload" invitationToken={invitationToken} />
     </div>
   )
 } 
