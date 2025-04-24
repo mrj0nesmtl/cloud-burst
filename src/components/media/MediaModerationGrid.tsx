@@ -20,23 +20,51 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MediaCard } from "./MediaCard";
-import { Loader2, CheckCircle, XCircle, Ban } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, Ban, CheckSquare, Square } from "lucide-react";
+import { EnhancedModerationCard } from './EnhancedModerationCard';
+import { useBatchSelection } from '@/components/moderation/BatchSelectionProvider';
+import { EmptyState } from '@/components/ui/empty-state';
 
 interface MediaModerationGridProps {
-  media: Media[];
-  eventId: string;
-  className?: string;
+  mediaItems: Media[];
+  isLoading?: boolean;
+  emptyMessage?: string;
+  selectable?: boolean;
+  onSuccess?: () => void;
 }
 
-export function MediaModerationGrid({ media, eventId, className }: MediaModerationGridProps) {
+export function MediaModerationGrid({
+  mediaItems,
+  isLoading = false,
+  emptyMessage = 'No media items found.',
+  selectable = false,
+  onSuccess
+}: MediaModerationGridProps) {
   const { toast } = useToast();
   const router = useRouter();
   const { approveMediaItem, rejectMediaItem, deleteMediaItem } = useMediaStore();
-
+  const batchSelection = useBatchSelection();
+  
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [action, setAction] = useState<"approve" | "reject" | "delete" | null>(null);
   const [reason, setReason] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  
+  const allSelected = selectable && 
+    mediaItems.length > 0 && 
+    batchSelection.selectedCount === mediaItems.length;
+    
+  const someSelected = selectable && 
+    batchSelection.selectedCount > 0 && 
+    batchSelection.selectedCount < mediaItems.length;
+  
+  const handleSelectAllToggle = () => {
+    if (allSelected) {
+      batchSelection.deselectAll();
+    } else {
+      batchSelection.selectAll(mediaItems);
+    }
+  };
   
   const handleAction = async () => {
     if (!selectedMedia || !action) return;
@@ -92,26 +120,65 @@ export function MediaModerationGrid({ media, eventId, className }: MediaModerati
     setAction(actionType);
   };
   
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-muted-foreground">Loading media...</span>
+      </div>
+    );
+  }
+  
+  if (mediaItems.length === 0) {
+    return (
+      <EmptyState
+        title="No Media"
+        description={emptyMessage}
+      />
+    );
+  }
+  
   return (
-    <div className={className}>
-      {media.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No media items to moderate</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {media.map((item) => (
-            <MediaCard
-              key={item.id}
-              media={item}
-              showControls={true}
-              onApprove={() => openActionDialog(item, "approve")}
-              onReject={() => openActionDialog(item, "reject")} 
-              onDelete={() => openActionDialog(item, "delete")}
-            />
-          ))}
+    <div>
+      {selectable && (
+        <div className="flex items-center mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSelectAllToggle}
+            className="h-9"
+          >
+            {allSelected ? (
+              <>
+                <CheckSquare className="mr-2 h-4 w-4" />
+                Deselect All
+              </>
+            ) : (
+              <>
+                <Square className="mr-2 h-4 w-4" />
+                {someSelected ? 'Select All' : 'Select All'}
+              </>
+            )}
+          </Button>
+          
+          {batchSelection.selectedCount > 0 && (
+            <span className="ml-3 text-sm text-muted-foreground">
+              {batchSelection.selectedCount} item{batchSelection.selectedCount !== 1 ? 's' : ''} selected
+            </span>
+          )}
         </div>
       )}
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {mediaItems.map((media) => (
+          <EnhancedModerationCard
+            key={media.id}
+            media={media}
+            onSuccess={onSuccess}
+            selectable={selectable}
+          />
+        ))}
+      </div>
       
       {/* Action confirmation dialogs */}
       <AlertDialog open={!!selectedMedia && !!action} onOpenChange={() => { if (!isProcessing) { setSelectedMedia(null); setAction(null); setReason(""); } }}>

@@ -1,127 +1,139 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { generateToken, storeToken } from '@/lib/tokens/token-service';
+import { AUTH_TOKEN_TYPES } from '@/lib/tokens/token-constants';
+import { sendMagicLinkEmail } from '@/lib/email/guest-emails';
 
-// Magic link request schema
-const magicLinkSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  invitationToken: z.string().optional(),
-  redirectUrl: z.string().url({ message: "Invalid redirect URL" })
-})
+// Define schema for request validation
+const requestSchema = z.object({
+  email: z.string().email('Invalid email address format'),
+});
 
 export async function POST(request: NextRequest) {
-  const cookieStore = cookies()
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
-  
   try {
-    // Parse and validate request
-    const body = await request.json()
-    const { email, invitationToken, redirectUrl } = magicLinkSchema.parse(body)
+    // Parse and validate the request body
+    const body = await request.json();
+    const result = requestSchema.safeParse(body);
     
-    console.log('Magic link request:', { email, invitationToken, redirectUrl })
-    
-    // If invitation token is provided, validate it
-    if (invitationToken) {
-      const { data: invitation, error } = await supabase
-        .from('invitations')
-        .select('id, email, token, status')
-        .eq('token', invitationToken)
-        .single()
-      
-      if (error || !invitation) {
-        console.error('Invalid invitation token:', error)
-        return NextResponse.json(
-          { error: 'Invalid invitation token' },
-          { status: 400 }
-        )
-      }
-      
-      // Check if email matches invitation
-      // Note: We allow different emails to accommodate plus-one guests
-      // or cases where the user wants to use a different email
-      if (invitation.email.toLowerCase() !== email.toLowerCase()) {
-        console.log(`Email mismatch: invitation email ${invitation.email} vs. provided email ${email}`)
-        // We don't return an error here to avoid revealing which emails have invitations
-        // Instead, we'll just log this information
-      }
-      
-      // Check if invitation is expired or cancelled
-      if (invitation.status === 'expired' || invitation.status === 'cancelled') {
-        return NextResponse.json(
-          { error: 'This invitation has expired or been cancelled' },
-          { status: 400 }
-        )
-      }
-    }
-    
-    // Format the redirect URL with the invitation token if provided
-    let finalRedirectUrl = redirectUrl
-    if (invitationToken) {
-      // Make sure to handle URLs with existing query parameters
-      const separator = redirectUrl.includes('?') ? '&' : '?'
-      finalRedirectUrl = `${redirectUrl}${separator}invitation_token=${invitationToken}`
-    }
-    
-    // Send magic link using Supabase Auth
-    const { data, error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: finalRedirectUrl,
-        // Set data in the user's JWT claims to indicate they came from an invitation
-        data: invitationToken ? {
-          invitation_token: invitationToken,
-          source: 'invitation'
-        } : undefined
-      }
-    })
-    
-    if (error) {
-      console.error('Error sending magic link:', error)
+    if (!result.success) {
       return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      )
-    }
-    
-    // Update invitation if token was provided
-    if (invitationToken) {
-      // Update the invitation status to indicate the email was opened
-      await supabase
-        .from('invitations')
-        .update({
-          status: 'opened',
-          updated_at: new Date().toISOString()
-        })
-        .eq('token', invitationToken)
-    }
-    
-    return NextResponse.json(
-      { 
-        success: true, 
-        message: 'Magic link sent successfully',
-        // Add tracking info for analytics
-        data: {
-          email,
-          sentAt: new Date().toISOString(),
-          hasInvitation: !!invitationToken
-        }
-      },
-      { status: 200 }
-    )
-  } catch (error) {
-    console.error('Magic link error:', error)
-    
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid email address', details: result.error.format() },
         { status: 400 }
-      )
+      );
     }
     
+    const { email } = result.data;
+    const supabase = createRouteHandlerClient({ cookies });
+    
+    // Add debugging for email format
+    console.log('Looking up guest with email:', email.toLowerCase());
+    
+    // Find the guest record with this email
+    const { data: guest, error: guestError } = await supabase
+      .from('guests')
+      .select('id, email, first_name, last_name, event_id')
+      .eq('email', email.toLowerCase())
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+    
+    // Add detailed error logging
+    if (guestError) {
+      console.log('Guest lookup error details:', guestError);
+      
+      // Let's try to get all guests to debug the problem
+      console.log('Fetching all guests to debug:');
+      const { data: allGuests, error: allGuestsError } = await supabase
+        .from('guests')
+        .select('id, email')
+        .limit(10);
+        
+      if (!allGuestsError && allGuests) {
+        console.log('First 10 guests in database:', allGuests);
+      } else {
+        console.log('Error fetching all guests:', allGuestsError);
+      }
+    
+      // In development, provide more information
+      if (process.env.NODE_ENV === 'development') {
+        return NextResponse.json(
+          { 
+            success: true, 
+            developmentInfo: { 
+              warning: 'Guest not found, but returning success for security',
+              error: guestError,
+              searchEmail: email.toLowerCase(),
+            } 
+          }
+        );
+      }
+      
+      return NextResponse.json({ success: true });
+    }
+    
+    // Generate the magic link token
+    const token = generateToken();
+    
+    // Store token in the database
+    const stored = await storeToken(token, {
+      email: email.toLowerCase(),
+      guestId: guest.id,
+      eventId: guest.event_id,
+      type: AUTH_TOKEN_TYPES.MAGIC_LINK
+    });
+    
+    if (!stored) {
+      console.error('Failed to store token');
+      return NextResponse.json(
+        { error: 'Failed to generate magic link' },
+        { status: 500 }
+      );
+    }
+    
+    // Get event details to include in the email
+    const { data: event } = await supabase
+      .from('events')
+      .select('name, host_name')
+      .eq('id', guest.event_id)
+      .single();
+    
+    // Create the magic link URL
+    const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL;
+    const magicLinkUrl = `${origin}/auth/magic-link?token=${token}`;
+    
+    // Send the email with the magic link
+    const emailSent = await sendMagicLinkEmail({
+      to: email,
+      name: `${guest.first_name || ''} ${guest.last_name || ''}`.trim() || 'Guest',
+      eventName: event?.name || 'Event',
+      magicLink: magicLinkUrl,
+      hostName: event?.host_name || 'Event Host'
+    });
+    
+    // Return success response
+    const response = { success: true };
+    
+    // In development, include the magic link URL in the response
+    if (process.env.NODE_ENV === 'development') {
+      Object.assign(response, { 
+        magicLink: magicLinkUrl,
+        debugInfo: {
+          guestId: guest.id,
+          eventId: guest.event_id,
+          emailSent
+        }
+      });
+    }
+    
+    return NextResponse.json(response);
+    
+  } catch (error) {
+    console.error('Magic link generation error:', error);
     return NextResponse.json(
-      { error: 'An unexpected error occurred' },
+      { error: 'Failed to process request' },
       { status: 500 }
-    )
+    );
   }
 } 

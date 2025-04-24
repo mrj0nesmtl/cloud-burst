@@ -13,7 +13,8 @@ import {
   Loader2,
   Clock,
   AlertCircle,
-  Check
+  Check,
+  X
 } from 'lucide-react';
 import { 
   Dialog,
@@ -29,18 +30,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { getProxiedMediaUrl } from '@/lib/utils/media-proxy';
 import { useBatchSelection } from '@/components/moderation/BatchSelectionProvider';
 import { cn } from '@/lib/utils';
-
-interface Media {
-  id: string;
-  title?: string;
-  description?: string;
-  url?: string;
-  thumbnail_url?: string;
-  created_at: string;
-  event_name?: string;
-  event_id: string;
-  status: string;
-}
+import { Media } from '@/types/media';
 
 interface EnhancedModerationCardProps {
   media: Media;
@@ -63,9 +53,9 @@ export function EnhancedModerationCard({
   const batchSelection = selectable ? useBatchSelection() : null;
   const isSelected = batchSelection?.isSelected(media.id) || false;
   
-  // Get proxied URLs for the media
-  const thumbnailUrl = media.thumbnail_url ? getProxiedMediaUrl(media.thumbnail_url) : '';
-  const mediaUrl = media.url ? getProxiedMediaUrl(media.url) : '';
+  // Get media URLs
+  const thumbnailUrl = media.thumbnail_url || media.url || '';
+  const mediaUrl = media.url || '';
   
   const handleApprove = async () => {
     setIsLoading(true);
@@ -156,7 +146,7 @@ export function EnhancedModerationCard({
       case 'rejected':
         return (
           <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-200 flex items-center gap-1">
-            <XCircle className="h-3 w-3" />
+            <X className="h-3 w-3" />
             <span>Rejected</span>
           </Badge>
         );
@@ -193,9 +183,9 @@ export function EnhancedModerationCard({
           className="relative w-full aspect-square cursor-pointer"
           onClick={() => selectable && batchSelection?.toggleSelection(media.id)}
         >
-          {(thumbnailUrl || mediaUrl) ? (
+          {thumbnailUrl ? (
             <Image 
-              src={thumbnailUrl || mediaUrl}
+              src={thumbnailUrl}
               alt={media.title || 'Media item'} 
               fill
               className={cn(
@@ -203,7 +193,6 @@ export function EnhancedModerationCard({
                 isSelected && "opacity-90"
               )}
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              priority
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-muted">
@@ -245,58 +234,35 @@ export function EnhancedModerationCard({
       
       {/* Approve Dialog */}
       <Dialog open={isApproveDialogOpen} onOpenChange={setIsApproveDialogOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Approve Media</DialogTitle>
             <DialogDescription>
-              This will make the media visible to everyone in the gallery.
+              This media will be visible in the event gallery.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
-            <div className="relative aspect-video rounded-md overflow-hidden border">
-              {mediaUrl ? (
-                <Image 
-                  src={mediaUrl}
-                  alt={media.title || 'Media preview'}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100vw, 800px"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                  <ImageIcon className="h-16 w-16 text-muted-foreground" />
-                </div>
-              )}
-            </div>
-            
-            <div>
-              <label htmlFor="reason" className="text-sm font-medium">
-                Optional note (will be visible to the uploader)
-              </label>
-              <Textarea
-                id="reason"
-                placeholder="Add an optional note..."
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="mt-1"
-              />
-            </div>
+            <Textarea
+              placeholder="Optional: Add a note about why this item is being approved"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className="min-h-[100px]"
+            />
           </div>
           
           <DialogFooter>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => setIsApproveDialogOpen(false)}
               disabled={isLoading}
             >
               Cancel
             </Button>
             <Button
-              variant="default"
               onClick={handleApprove}
               disabled={isLoading}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-green-500 hover:bg-green-600 text-white"
             >
               {isLoading ? (
                 <>
@@ -305,7 +271,7 @@ export function EnhancedModerationCard({
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  <Check className="mr-2 h-4 w-4" />
                   Approve Media
                 </>
               )}
@@ -316,57 +282,36 @@ export function EnhancedModerationCard({
       
       {/* Reject Dialog */}
       <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Reject Media</DialogTitle>
             <DialogDescription>
-              This will reject the media and it will not be visible in the gallery.
+              This media will not be visible in the event gallery.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
-            <div className="relative aspect-video rounded-md overflow-hidden border">
-              {mediaUrl ? (
-                <Image 
-                  src={mediaUrl}
-                  alt={media.title || 'Media preview'}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100vw, 800px"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                  <ImageIcon className="h-16 w-16 text-muted-foreground" />
-                </div>
-              )}
-            </div>
-            
-            <div>
-              <label htmlFor="rejection-reason" className="text-sm font-medium">
-                Reason for rejection (required)
-              </label>
-              <Textarea
-                id="rejection-reason"
-                placeholder="Please provide a reason for rejection..."
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="mt-1"
-              />
-            </div>
+            <Textarea
+              placeholder="Please provide a reason for rejecting this item"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className="min-h-[100px]"
+              required
+            />
           </div>
           
           <DialogFooter>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => setIsRejectDialogOpen(false)}
               disabled={isLoading}
             >
               Cancel
             </Button>
             <Button
-              variant="destructive"
               onClick={handleReject}
               disabled={isLoading || !reason.trim()}
+              variant="destructive"
             >
               {isLoading ? (
                 <>
@@ -375,7 +320,7 @@ export function EnhancedModerationCard({
                 </>
               ) : (
                 <>
-                  <XCircle className="mr-2 h-4 w-4" />
+                  <X className="mr-2 h-4 w-4" />
                   Reject Media
                 </>
               )}

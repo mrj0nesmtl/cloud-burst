@@ -1,15 +1,24 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+'use client';
 
-interface BatchSelectionContextProps {
+import { createContext, useContext, useState, useMemo, ReactNode } from 'react';
+
+type Media = {
+  id: string;
+  [key: string]: any;
+};
+
+interface BatchSelectionContextType {
   selectedIds: Set<string>;
   isSelected: (id: string) => boolean;
   toggleSelection: (id: string) => void;
-  selectAll: (ids: string[]) => void;
+  selectAll: (mediaItems: Media[]) => void;
   deselectAll: () => void;
+  hasSelected: boolean;
   selectedCount: number;
+  getSelectedItems: (mediaItems: Media[]) => Media[];
 }
 
-const BatchSelectionContext = createContext<BatchSelectionContextProps | undefined>(undefined);
+const BatchSelectionContext = createContext<BatchSelectionContextType | null>(null);
 
 interface BatchSelectionProviderProps {
   children: ReactNode;
@@ -18,39 +27,48 @@ interface BatchSelectionProviderProps {
 export function BatchSelectionProvider({ children }: BatchSelectionProviderProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  const isSelected = (id: string) => selectedIds.has(id);
-
-  const toggleSelection = (id: string) => {
-    setSelectedIds(prev => {
-      const newSelection = new Set(prev);
-      if (newSelection.has(id)) {
-        newSelection.delete(id);
-      } else {
-        newSelection.add(id);
-      }
-      return newSelection;
-    });
-  };
-
-  const selectAll = (ids: string[]) => {
-    setSelectedIds(new Set(ids));
-  };
-
-  const deselectAll = () => {
-    setSelectedIds(new Set());
-  };
-
+  const contextValue = useMemo(() => {
+    const isSelected = (id: string) => selectedIds.has(id);
+    
+    const toggleSelection = (id: string) => {
+      setSelectedIds(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(id)) {
+          newSet.delete(id);
+        } else {
+          newSet.add(id);
+        }
+        return newSet;
+      });
+    };
+    
+    const selectAll = (mediaItems: Media[]) => {
+      const allIds = mediaItems.map(item => item.id);
+      setSelectedIds(new Set(allIds));
+    };
+    
+    const deselectAll = () => {
+      setSelectedIds(new Set());
+    };
+    
+    const getSelectedItems = (mediaItems: Media[]) => {
+      return mediaItems.filter(item => selectedIds.has(item.id));
+    };
+    
+    return {
+      selectedIds,
+      isSelected,
+      toggleSelection,
+      selectAll,
+      deselectAll,
+      hasSelected: selectedIds.size > 0,
+      selectedCount: selectedIds.size,
+      getSelectedItems
+    };
+  }, [selectedIds]);
+  
   return (
-    <BatchSelectionContext.Provider
-      value={{
-        selectedIds,
-        isSelected,
-        toggleSelection,
-        selectAll,
-        deselectAll,
-        selectedCount: selectedIds.size,
-      }}
-    >
+    <BatchSelectionContext.Provider value={contextValue}>
       {children}
     </BatchSelectionContext.Provider>
   );
@@ -58,7 +76,7 @@ export function BatchSelectionProvider({ children }: BatchSelectionProviderProps
 
 export function useBatchSelection() {
   const context = useContext(BatchSelectionContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useBatchSelection must be used within a BatchSelectionProvider');
   }
   return context;

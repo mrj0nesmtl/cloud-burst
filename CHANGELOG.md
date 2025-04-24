@@ -16,6 +16,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
+### Added
+- **Enhanced Magic Link Email Template**:
+  - Added bilingual (French/English) email template for guest access
+  - Implemented responsive design with dark theme styling
+  - Added social media links and proper branding
+  - Enhanced visual hierarchy with Cloud Burst color scheme
+  - Improved accessibility with proper contrast in dark mode
+  - Added proper logo integration and "Capture Every Moment" tagline
+  - Created consistent button styling across email template
+
 ### In progress
 - Super Admin dashboard improvements:
   - Data aggregation from all organizers
@@ -26,8 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Local storage for pending uploads
   - Automatic retry mechanism when connection is restored
 - Enhanced guest experience:
-  - Error when "Complete Setup" is clicked to complete RSVP process.
-  Improved UI consistency across all guest touchpoints
+  - Improved UI consistency across all guest touchpoints
   - Streamlined navigation with clearer visual cues
   - Enhanced feedback mechanisms for guest actions
 
@@ -38,18 +47,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enhanced profile form with improved validation and user feedback
   - Refactored attendees library structure for better type safety
   - Proper server/client separation for better component architecture
+- **Guest Navigation Enhancements**:
+  - Implemented consistent `GuestNavBar` component across all guest pages
+  - Fixed token propagation across navigation pathways
+  - Improved mobile responsiveness for all guest interface elements
+  - Enhanced UX with better visual feedback on active navigation items
+  - Optimized layout for various mobile screen sizes
 
 ### Changed
 - Performance optimizations for large media collections
 - Improved token refresh mechanism for prolonged sessions
 - Enhanced error handling for edge cases in media processing
 - Standardized import patterns for guest components using barrel exports
+- Refactored guest profile page for better mobile responsiveness
+- Updated camera page layout for improved usability on mobile devices
 
 ### Fixed
 - Organizer profile settings not saving properly
 - Data display issues in Super Admin dashboard
 - Edge cases in guest upload flow with intermittent connections
 - Inconsistency in guest navigation implementation across pages
+- Token error handling in guest profile workflow
+- Camera functionality issues on certain mobile devices
 
 ## [0.9.6] - 2025-04-27
 ### Fixed

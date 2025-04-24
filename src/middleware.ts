@@ -13,6 +13,26 @@ export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
   
+  // Check if the request is to a protected route
+  const isProtectedRoute = 
+    req.nextUrl.pathname.startsWith('/protected') ||
+    req.nextUrl.pathname.startsWith('/guest/dashboard') ||
+    req.nextUrl.pathname.startsWith('/guest/profile') ||
+    req.nextUrl.pathname.startsWith('/guest/upload') ||
+    req.nextUrl.pathname.startsWith('/guest/photos') ||
+    req.nextUrl.pathname.startsWith('/guest/media') ||
+    req.nextUrl.pathname.startsWith('/guest/gallery');
+    
+  const isPublicAuthRoute = 
+    req.nextUrl.pathname.startsWith('/auth') ||
+    req.nextUrl.pathname.startsWith('/guest-access') ||
+    req.nextUrl.pathname.startsWith('/invitation');
+    
+  // Skip auth check for public auth routes
+  if (!isProtectedRoute || isPublicAuthRoute) {
+    return res;
+  }
+  
   // Get session
   const { data: { session } } = await supabase.auth.getSession()
   
@@ -146,6 +166,23 @@ export async function middleware(req: NextRequest) {
     }
   }
   
+  // For guest routes, check if session has isGuest property
+  if (pathname.startsWith('/guest/') && 
+      (!session || !session.user?.user_metadata?.isGuest)) {
+    // Redirect to guest access page if not authenticated or not a guest
+    return NextResponse.redirect(
+      new URL('/guest-access', req.url)
+    );
+  }
+  
+  // For protected routes, check if authenticated
+  if (pathname.startsWith('/protected') && !session) {
+    // Redirect to login page if not authenticated
+    return NextResponse.redirect(
+      new URL('/auth/signin', req.url)
+    );
+  }
+  
   return res
 }
 
@@ -157,5 +194,6 @@ export const config = {
     '/events/:path*', 
     '/protected/:path*',
     '/guest/dashboard/:path*',
+    '/guest/:path*',
   ],
 } 
