@@ -4,6 +4,9 @@ import { AlertCircle, RefreshCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
+// Re-export the TokenError type
+export type { TokenError } from '@/lib/tokens/invitation-token';
+
 interface TokenErrorProps {
   error: TokenError;
   onRetry?: () => void;

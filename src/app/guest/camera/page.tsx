@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/components/ui/use-toast'
 import { invitationTokenService } from '@/lib/tokens/invitation-token'
-import { BottomNav } from '@/components/guest'
+import { GuestNavBar } from '@/components/guest'
 import { CapturePreview } from './CapturePreview'
 import { GuestNavigation } from '@/components/guest'
 
@@ -796,7 +796,7 @@ export default function GuestCameraPage() {
       
       {/* Bottom navigation - fixed to bottom */}
       <div className="absolute bottom-0 left-0 right-0 z-20">
-        <GuestNavigation token={invitationToken || ''} activeItem="camera" />
+        <GuestNavBar activeTab="camera" invitationToken={invitationToken} transparent={true} />
       </div>
       
       {/* Hidden canvas for capturing photos */}

@@ -8,8 +8,8 @@ import {
   updateAttendee
 } from '../attendees';
 
+export type { Attendee };
 export {
-  Attendee,
   getFirstAttendeeForToken,
   getEventAttendees,
   updateAttendee

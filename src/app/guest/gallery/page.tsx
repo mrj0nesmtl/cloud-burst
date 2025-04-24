@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { invitationTokenService } from '@/lib/tokens/invitation-token'
 import { formatDistanceToNow } from 'date-fns'
-import { BottomNav } from '@/components/guest/bottom-nav'
+import { GuestNavBar } from '@/components/guest'
 
 type MediaItem = {
   id: string
@@ -476,7 +476,7 @@ export default function GuestGalleryPage() {
       </div>
       
       {/* Bottom Navigation */}
-      <BottomNav activeTab="gallery" invitationToken={invitationToken} />
+      <GuestNavBar activeTab="gallery" invitationToken={invitationToken} />
     </div>
   )
 } 

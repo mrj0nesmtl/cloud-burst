@@ -37,6 +37,9 @@ import { useToken } from '@/contexts/token-context'
 import { TokenErrorAlert } from '@/components/guest/token-error'
 import Link from 'next/link'
 import crypto from 'crypto'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Progress } from '@/components/ui/progress'
+import { GuestNavBar, GuestProfileForm } from '@/components/guest'
 
 const guestProfileSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -622,50 +625,6 @@ export default function GuestProfilePage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="container flex flex-col items-center justify-center min-h-[50vh]">
-        <Loader2 className="w-10 h-10 animate-spin text-primary mb-4" />
-        <p className="text-muted-foreground">Loading your profile...</p>
-      </div>
-    )
-  }
-
-  if (tokenError) {
-    return (
-      <div className="container max-w-4xl py-10">
-        <TokenErrorAlert 
-          error={tokenError} 
-          onRetry={() => window.location.reload()} 
-        />
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="container max-w-4xl py-10">
-        <Alert variant="destructive" className="mb-8">
-          <AlertCircle className="h-5 w-5 mr-2" />
-          <AlertTitle>Error loading profile</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-
-        <div className="flex justify-center mt-8">
-          <Button
-            onClick={() => window.location.reload()}
-            className="mr-4"
-          >
-            Try Again
-          </Button>
-          <Button variant="outline" asChild>
-            <Link href="/">Return to Home</Link>
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
   const getBackUrl = () => {
     if (invitationToken) {
       return `/guest/dashboard?token=${invitationToken}`;
@@ -677,306 +636,234 @@ export default function GuestProfilePage() {
   };
 
   return (
-    <div className="container max-w-4xl pt-6 pb-10">
-      <div className="mb-2 flex justify-between items-center">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => router.push(getBackUrl())}
-          className="flex items-center gap-1"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Button>
-      </div>
-      
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold tracking-tight">Your Setup for {event?.name || 'this event'}</h1>
-        <p className="text-muted-foreground mt-1">
-          Update your information and prepare your camera for the event
-        </p>
-      </div>
+    <div style={{ width: '100%', maxWidth: '100%' }}>
+      {/* If there's a token error, show the error UI */}
+      {tokenError && !tokenLoading && (
+        <div className="w-full max-w-md mx-auto mt-8 px-4">
+          <TokenErrorAlert error={tokenError} />
+        </div>
+      )}
 
-      {activeTab === 'profile' ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User2Icon className="h-5 w-5" />
-              Your Information
-            </CardTitle>
-            <CardDescription>
-              Please provide or update your contact information
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="flex flex-col items-center gap-4 mb-6">
-                  <div className="relative group">
-                    <Avatar className="h-32 w-32 border-4 border-primary/10 shadow-lg transition-all duration-200">
-                      <AvatarImage src={avatarUrl || ''} alt={form.getValues().name} className="object-cover" />
-                      <AvatarFallback className="text-2xl bg-primary/10">
-                        {form.getValues().name?.slice(0, 2).toUpperCase() || 'GU'}
-                      </AvatarFallback>
-                    </Avatar>
-                    
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      <Label htmlFor="avatar" className="cursor-pointer w-full h-full">
-                        <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center">
-                          <Upload className="h-8 w-8 text-white" />
-                        </div>
-                        <input 
-                          id="avatar" 
-                          type="file" 
-                          accept="image/*" 
-                          onChange={handleAvatarChange} 
-                          className="hidden" 
-                        />
-                      </Label>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-2">
-                    <Label 
-                      htmlFor="avatar-btn" 
-                      className="cursor-pointer flex items-center gap-2 py-2 px-4 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
-                    >
-                      <Upload className="h-4 w-4" />
-                      {avatarUrl ? 'Change Avatar' : 'Upload Avatar'}
-                      <input 
-                        id="avatar-btn" 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleAvatarChange} 
-                        className="hidden" 
-                      />
-                    </Label>
-                    
-                    {avatarUrl && (
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        size="sm"
-                        onClick={removeAvatar}
-                        className="h-10"
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Remove
-                      </Button>
-                    )}
-                  </div>
-                  
-                  {avatarUrl && (
-                    <p className="text-xs text-muted-foreground">
-                      Your profile picture will be visible to event hosts and other attendees
-                    </p>
-                  )}
-                </div>
-                
-                <FormField
-                  control={form.control}
-                  name="avatar_url"
-                  render={({ field }) => (
-                    <FormItem className="hidden">
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+      {/* Show loading state while token validation is in progress */}
+      {tokenLoading && (
+        <div className="w-full h-full flex flex-col items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+          <p className="text-muted-foreground">Loading your profile...</p>
+        </div>
+      )}
 
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your name" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Your full name as you'd like it to appear
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email Address</FormLabel>
-                      <FormControl>
-                        <Input placeholder="your.email@example.com" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        We'll use this to contact you about the event
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number (Optional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="+1 (555) 123-4567" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        For urgent communications only
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="notes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Additional Notes (Optional)</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="Any additional information you'd like the host to know"
-                          className="min-h-[100px]"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="pt-4 flex justify-between">
-                  <Button 
-                    type="button" 
-                    onClick={() => setActiveTab('camera')} 
-                    className="w-full"
-                  >
-                    Continue to Setup Camera
+      {/* Main content - only show when we have a valid token and no errors */}
+      {!tokenLoading && !tokenError && invitationToken && (
+        <>
+          <div className="w-full px-4 py-6">
+            <div className="flex flex-col items-start mb-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Link href={getBackUrl()}>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <ArrowLeft className="h-5 w-5" />
                   </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="relative">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Camera className="h-5 w-5" />
-              Camera Setup
-            </CardTitle>
-            <CardDescription>
-              Let's set up and test your camera for the event
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="px-0 py-0">
-            <div className="relative bg-black">
-              <div className="aspect-[9/16] max-w-md mx-auto relative overflow-hidden">
-                <video 
-                  id="camera-preview" 
-                  className="absolute inset-0 h-full w-full object-cover" 
-                  autoPlay 
-                  playsInline
-                  muted
-                />
-                {!isCameraActive && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <p className="text-white text-sm">Camera preview will appear here</p>
-                  </div>
-                )}
-                
-                {/* Flash overlay for photo effect */}
-                <div 
-                  id="flash-overlay" 
-                  className="absolute inset-0 bg-white opacity-0 transition-opacity duration-200 pointer-events-none"
-                ></div>
-                
-                {/* TikTok-style UI elements */}
-                <div className="absolute bottom-4 right-4 flex flex-col gap-4">
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="rounded-full h-12 w-12 bg-white/20 backdrop-blur-sm text-white border border-white/30"
-                    onClick={toggleFlashlight}
-                  >
-                    <Lightbulb className={`h-6 w-6 ${flashlightActive ? 'text-yellow-300' : 'text-white'}`} />
-                  </Button>
-                  
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="rounded-full h-12 w-12 bg-white/20 backdrop-blur-sm text-white border border-white/30"
-                  >
-                    <Camera className="h-6 w-6" />
-                  </Button>
-                </div>
-                
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-                  <Button
-                    variant="secondary"
-                    className="rounded-full px-8 bg-white text-black font-medium"
-                    onClick={takeTestPhoto}
-                    disabled={isTakingPhoto || !isCameraActive}
-                  >
-                    {isTakingPhoto ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : null}
-                    Take Test Photo
-                  </Button>
-                </div>
+                </Link>
+                <h1 className="text-2xl font-bold">Your Profile</h1>
               </div>
+
+              {event && (
+                <p className="text-muted-foreground">
+                  Event: {event.name}
+                </p>
+              )}
             </div>
-            
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-2">Test Photo Gallery</h3>
-              <p className="text-muted-foreground text-sm mb-4">
-                Test photos will be automatically deleted after 5 minutes.
-              </p>
+
+            {/* Tabs for different sections */}
+            <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6 rounded-md">
+                <TabsTrigger value="profile" className="rounded-l-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Profile
+                </TabsTrigger>
+                <TabsTrigger value="camera" className="rounded-r-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Camera Test
+                </TabsTrigger>
+              </TabsList>
               
-              <div className="grid grid-cols-3 gap-2 mb-4">
-                {testPhotos.length === 0 ? (
-                  <div className="aspect-square bg-slate-200 dark:bg-slate-800 rounded-md flex items-center justify-center">
-                    <p className="text-muted-foreground text-xs">No photos yet</p>
-                  </div>
-                ) : (
-                  testPhotos.map((photo, index) => (
-                    <div key={index} className="aspect-square bg-slate-200 dark:bg-slate-800 rounded-md overflow-hidden">
-                      <img 
-                        src={photo} 
-                        alt={`Test photo ${index + 1}`} 
-                        className="w-full h-full object-cover"
-                      />
+              {/* Profile Tab Content */}
+              <TabsContent value="profile">
+                <div className="bg-background/95 backdrop-blur-md rounded-xl shadow-lg p-6">
+                  {/* Avatar Section */}
+                  <div className="mb-6 flex justify-center">
+                    <div className="text-center">
+                      <div className="relative inline-block">
+                        <Avatar className="w-24 md:w-32 h-24 md:h-32 border-4 border-primary/20">
+                          <AvatarImage src={avatarUrl || undefined} />
+                          <AvatarFallback className="bg-slate-700 text-2xl">
+                            {guest?.name ? guest.name.charAt(0).toUpperCase() : <User2Icon className="h-8 w-8 md:h-10 md:w-10" />}
+                          </AvatarFallback>
+                        </Avatar>
+                        
+                        <Button
+                          size="sm"
+                          className="absolute bottom-0 right-0 rounded-full w-8 h-8 md:w-10 md:h-10 p-0 bg-primary shadow-lg hover:bg-primary/90"
+                          onClick={() => document.getElementById('avatar-upload')?.click()}
+                        >
+                          <Camera className="h-4 w-4 md:h-5 md:w-5" />
+                        </Button>
+                        
+                        <input
+                          type="file"
+                          id="avatar-upload"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleAvatarChange}
+                        />
+                      </div>
+                      
+                      {avatarUrl && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="mt-2 text-destructive hover:text-destructive/80 text-xs md:text-sm"
+                          onClick={removeAvatar}
+                        >
+                          <Trash2 className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                          Remove
+                        </Button>
+                      )}
+                      
+                      {uploadingAvatar && (
+                        <div className="mt-2">
+                          <Progress value={45} className="w-[100px] h-1.5" />
+                          <span className="text-xs text-muted-foreground mt-1 block">Uploading...</span>
+                        </div>
+                      )}
                     </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={() => setActiveTab('profile')}>
-              Back to Profile
-            </Button>
-            <Button 
-              onClick={() => {
-                // Submit the form programmatically
-                form.handleSubmit(onSubmit)();
-              }}
-              disabled={isSubmitting || uploadingAvatar}
-            >
-              {(isSubmitting || uploadingAvatar) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Complete Setup
-            </Button>
-          </CardFooter>
-        </Card>
+                  </div>
+                  
+                  {/* Profile Form */}
+                  <GuestProfileForm 
+                    invitationToken={invitationToken || ''}
+                    eventId={event?.id || ''}
+                    onComplete={() => router.push(`/guest/dashboard?token=${invitationToken}&from=profile`)}
+                  />
+                </div>
+              </TabsContent>
+              
+              {/* Camera Test Tab Content */}
+              <TabsContent value="camera">
+                <Card className="bg-background/95 backdrop-blur-md rounded-xl shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Camera className="h-5 w-5" />
+                      Camera Setup
+                    </CardTitle>
+                    <CardDescription>
+                      Let's set up and test your camera for the event
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="px-0 py-0">
+                    <div className="relative bg-black">
+                      <div className="aspect-[9/16] max-w-md mx-auto relative overflow-hidden">
+                        <video 
+                          id="camera-preview" 
+                          className="absolute inset-0 h-full w-full object-cover" 
+                          autoPlay 
+                          playsInline
+                          muted
+                        />
+                        {!isCameraActive && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <p className="text-white text-sm">Camera preview will appear here</p>
+                          </div>
+                        )}
+                        
+                        {/* Flash overlay for photo effect */}
+                        <div 
+                          id="flash-overlay" 
+                          className="absolute inset-0 bg-white opacity-0 transition-opacity duration-200 pointer-events-none"
+                        ></div>
+                        
+                        {/* TikTok-style UI elements */}
+                        <div className="absolute bottom-4 right-4 flex flex-col gap-3 md:gap-4">
+                          <Button
+                            size="icon"
+                            variant="secondary"
+                            className="rounded-full h-10 w-10 md:h-12 md:w-12 bg-white/20 backdrop-blur-sm text-white border border-white/30"
+                            onClick={toggleFlashlight}
+                          >
+                            <Lightbulb className={`h-5 w-5 md:h-6 md:w-6 ${flashlightActive ? 'text-yellow-300' : 'text-white'}`} />
+                          </Button>
+                          
+                          <Button
+                            size="icon"
+                            variant="secondary"
+                            className="rounded-full h-10 w-10 md:h-12 md:w-12 bg-white/20 backdrop-blur-sm text-white border border-white/30"
+                          >
+                            <Camera className="h-5 w-5 md:h-6 md:w-6" />
+                          </Button>
+                        </div>
+                        
+                        <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+                          <Button
+                            variant="secondary"
+                            className="rounded-full px-4 md:px-8 py-1.5 md:py-2 text-sm md:text-base bg-white text-black font-medium"
+                            onClick={takeTestPhoto}
+                            disabled={isTakingPhoto || !isCameraActive}
+                          >
+                            {isTakingPhoto ? (
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            ) : null}
+                            Take Test Photo
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 md:p-6">
+                      <h3 className="text-base md:text-lg font-semibold mb-1 md:mb-2">Test Photo Gallery</h3>
+                      <p className="text-muted-foreground text-xs md:text-sm mb-3 md:mb-4">
+                        Test photos will be automatically deleted after 5 minutes.
+                      </p>
+                      
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                        {testPhotos.length === 0 ? (
+                          <div className="aspect-square bg-slate-200 dark:bg-slate-800 rounded-md flex items-center justify-center">
+                            <p className="text-muted-foreground text-xs">No photos yet</p>
+                          </div>
+                        ) : (
+                          testPhotos.map((photo, index) => (
+                            <div key={index} className="aspect-square bg-slate-200 dark:bg-slate-800 rounded-md overflow-hidden">
+                              <img 
+                                src={photo} 
+                                alt={`Test photo ${index + 1}`} 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex flex-col sm:flex-row gap-3 justify-between p-4 md:p-6">
+                    <Button variant="outline" onClick={() => setActiveTab('profile')} className="w-full sm:w-auto">
+                      Back to Profile
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        // Submit the form programmatically
+                        form.handleSubmit(onSubmit)();
+                      }}
+                      disabled={isSubmitting || uploadingAvatar}
+                      className="w-full sm:w-auto"
+                    >
+                      {(isSubmitting || uploadingAvatar) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Complete Setup
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+          
+          {/* Bottom Navigation */}
+          <GuestNavBar activeTab="profile" invitationToken={invitationToken} />
+        </>
       )}
     </div>
   )
