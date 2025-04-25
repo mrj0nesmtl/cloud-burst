@@ -5,7 +5,6 @@ export interface Attendee {
   id: string;
   event_id: string;
   invitation_id: string;
-  invitation_token: string;
   full_name?: string;
   email?: string;
   phone?: string;
@@ -34,11 +33,11 @@ export async function getFirstAttendeeForToken(token: string): Promise<Attendee 
       return null;
     }
     
-    // Now get the attendee associated with this invitation
+    // Now get the attendee associated with this invitation by invitation_id, not token
     const { data: attendees, error: attendeesError } = await supabase
       .from('event_attendees')
       .select('*')
-      .eq('invitation_token', token)
+      .eq('invitation_id', invitation.id)
       .eq('event_id', invitation.event_id)
       .order('created_at', { ascending: true });
     
@@ -48,7 +47,41 @@ export async function getFirstAttendeeForToken(token: string): Promise<Attendee 
     }
     
     if (!attendees || attendees.length === 0) {
-      return null;
+      // No attendee found, create one from RSVP data
+      const { data: rsvp, error: rsvpError } = await supabase
+        .from('rsvps')
+        .select('*')
+        .eq('invitation_id', invitation.id)
+        .single();
+        
+      if (rsvpError || !rsvp) {
+        console.error('Error fetching RSVP data:', rsvpError);
+        return null;
+      }
+      
+      // Also fetch invitation data to get name and email
+      const { data: invitationDetails, error: detailsError } = await supabase
+        .from('invitations')
+        .select('name, email')
+        .eq('id', invitation.id)
+        .single();
+        
+      if (detailsError || !invitationDetails) {
+        console.error('Error fetching invitation details:', detailsError);
+        return null;
+      }
+      
+      // Return a constructed attendee object using RSVP and invitation data
+      return {
+        id: '', // Will be set when profile is saved
+        event_id: invitation.event_id,
+        invitation_id: invitation.id,
+        full_name: invitationDetails.name,
+        email: invitationDetails.email,
+        status: rsvp.status,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
     }
     
     return attendees[0] as Attendee;

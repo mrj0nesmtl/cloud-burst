@@ -51,10 +51,23 @@ export async function getAttendeeByIdServer(attendeeId: string) {
 export async function getAttendeesByTokenServer(token: string) {
   const supabase = createServerComponentClient({ cookies });
   
+  // First get the invitation ID from the token
+  const { data: invitation, error: invitationError } = await supabase
+    .from('invitations')
+    .select('id')
+    .eq('token', token)
+    .single();
+    
+  if (invitationError || !invitation) {
+    console.error('Error fetching invitation:', invitationError);
+    return [];
+  }
+  
+  // Then query attendees using the invitation_id
   const { data, error } = await supabase
     .from('event_attendees')
     .select('*')
-    .eq('invitation_token', token);
+    .eq('invitation_id', invitation.id);
   
   if (error) {
     console.error('Error fetching attendees by token:', error);

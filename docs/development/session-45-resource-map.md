@@ -1,11 +1,119 @@
 # Session 45 Resource Map: Key Files and Directories
 
 > **Version:** 0.9.6  
-> **Date:** April 22-23, 2025  
-> **Focus:** Testing & Bug Fixes
+> **Date:** April 22-25, 2025  
+> **Focus:** Critical Path Issues & End-to-End Testing
 
 ## Overview
 This resource map identifies the key files and directories we'll be focusing on during Session 45. It's organized by our three main focus areas: User (Invited Guest) Flow, Organizer Profile Settings, and Mobile Layout Testing.
+
+## Core Files Requiring Attention
+
+### User Flow Testing
+| Component | File Path | Purpose | Status |
+|-----------|-----------|---------|--------|
+| Invitation Handler | `/src/app/invitation/[token]/page.tsx` | Entry point for guests via invitation link | ✅ Functioning |
+| RSVP Form | `/src/components/rsvp/RsvpForm.tsx` | Handles guest RSVP response | 🔴 Error on submit |
+| Guest Profile Setup | `/src/components/guest/ProfileSetup.tsx` | Handles guest profile creation | ✅ Functioning |
+| Camera Interface | `/src/app/guest/camera/page.tsx` | Main camera interface for guests | ✅ Needs testing |
+| Gallery View | `/src/app/guest/gallery/page.tsx` | Guest view of event photos | ✅ Needs testing |
+
+### Critical Issues
+
+#### 1. RSVP Submission Error
+| Component | File Path | Purpose | Status |
+|-----------|-----------|---------|--------|
+| RSVP API Handler | `/src/app/api/rsvp/submit/route.ts` | Processes RSVP form submissions | 🔴 Error detected |
+| RSVP Form | `/src/components/rsvp/RsvpForm.tsx` | Form UI component | 🔴 Shows error |
+| Supabase Helper | `/src/lib/supabase/rsvp.ts` | Database interactions for RSVPs | 🟡 Needs review |
+
+#### 2. Profile Settings Persistence
+| Component | File Path | Purpose | Status |
+|-----------|-----------|---------|--------|
+| Profile Settings | `/src/components/settings/ProfileSettings.tsx` | Settings form for organizers | 🔴 Not saving |
+| Profile API | `/src/app/api/profile/update/route.ts` | Handles profile updates | 🔴 Possible issue |
+| Supabase Helper | `/src/lib/supabase/profiles.ts` | Database interactions for profiles | 🟡 Needs review |
+
+#### 3. Super Admin Dashboard
+| Component | File Path | Purpose | Status |
+|-----------|-----------|---------|--------|
+| Admin Dashboard | `/src/app/protected/admin/dashboard/page.tsx` | Main admin dashboard | 🔴 Missing data |
+| Analytics Service | `/src/lib/supabase/analytics.server.ts` | Data aggregation for admin | 🔴 Needs fix |
+| Org Helper | `/src/lib/supabase/organizations.ts` | Cross-org data access | 🟡 Needs review |
+
+#### 4. Magic Link Implementation Failure
+| Component | File Path | Purpose | Status |
+|-----------|-----------|---------|--------|
+| Auth Provider | `/src/contexts/AuthContext.tsx` | Manages auth state | 🔴 Token persistence |
+| Magic Link API | `/src/app/api/auth/magic-link/route.ts` | Processes magic link requests | 🔴 Token generation |
+| Token Validation | `/src/lib/auth/validate-token.ts` | Validates tokens | 🔴 Inconsistent |
+| Guest Auth Flow | `/src/components/auth/GuestAuthWrapper.tsx` | Handles guest auth | 🔴 Context loss |
+| New Token Service | `/src/lib/tokens/token-service.ts` | Replacement token system | 🟣 To be created |
+| Token Context | `/src/lib/tokens/token-context.tsx` | Context for token state | 🟣 To be created |
+
+#### 5. Email Flow Anomaly 
+| Component | File Path | Purpose | Status |
+|-----------|-----------|---------|--------|
+| RSVP Submit Handler | `/src/app/api/rsvp/submit/route.ts` | Processes RSVP submissions | 🔴 Triggering wrong emails |
+| Auth Handler | `/src/lib/supabase/auth.ts` | Manages authentication | 🔴 Role confusion |
+| Email Service | `/src/lib/email/guest-emails.ts` | Manages guest emails | 🔴 Template selection |
+| Email Templates | `/src/app/api/templates/sync/route.ts` | Syncs email templates | 🟡 Needs review |
+
+### Mobile Layout Verification
+| Component | File Path | Purpose | Viewport Ranges |
+|-----------|-----------|---------|----------------|
+| Event Detail | `/src/app/events/[eventId]/page.tsx` | Event information page | 375px-930px |
+| Gallery | `/src/app/gallery/[eventId]/page.tsx` | Photo gallery | 375px-930px |
+| Moderation UI | `/src/app/events/[eventId]/gallery/moderation/page.tsx` | Photo moderation | 375px-930px |
+| Invitation Form | `/src/components/invitations/InvitationForm.tsx` | Create invitations | 375px-930px |
+| RSVP Page | `/src/app/invitation/[token]/page.tsx` | RSVP submission | 375px-930px |
+| Guest Dashboard | `/src/app/guest/dashboard/page.tsx` | Guest's main interface | 375px-930px |
+| Camera Interface | `/src/app/guest/camera/page.tsx` | Photo capture interface | 375px-930px |
+
+## Session 45-B Resources
+
+### Token Management System Implementation
+| Component | File Path | Purpose | Status |
+|-----------|-----------|---------|--------|
+| Token Constants | `/src/lib/tokens/token-constants.ts` | Token types & parameters | 🟣 To be created |
+| Token Utilities | `/src/lib/tokens/token-utils.ts` | Token operations | 🟣 To be created |
+| Token Service | `/src/lib/tokens/token-service.ts` | Service interface | 🟣 To be created |
+| Token Context | `/src/lib/tokens/token-context.tsx` | React context provider | 🟣 To be created |
+| Token Documentation | `/docs/development/token_management_system.md` | System documentation | 🟣 To be created |
+
+### Email Flow Correction
+| Component | File Path | Purpose | Status |
+|-----------|-----------|---------|--------|
+| RSVP Handler | `/src/app/api/rsvp/submit/route.ts` | RSVP submission | 🔴 To fix triggers |
+| Guest Email Service | `/src/lib/email/guest-emails.ts` | Email template selection | 🔴 To fix templates |
+| Auth Service | `/src/lib/supabase/auth.ts` | Authentication logic | 🔴 Fix role handling |
+| Email Flow Docs | `/docs/development/email_flow.md` | Flow documentation | 🟣 To be created |
+
+## Legend
+- ✅ Working as expected / Ready for testing
+- 🟡 Requires review / Potential issues
+- 🔴 Not working / Critical issue
+- 🟣 New file to be created
+
+## Development Resources
+
+### Documentation
+- [Next.js App Router Documentation](https://nextjs.org/docs/app)
+- [Supabase Authentication](https://supabase.io/docs/guides/auth)
+- [TanStack Query](https://tanstack.com/query/latest)
+- [Shadcn UI Components](https://ui.shadcn.com/)
+
+### Testing Devices
+- iPhone 14 Pro Max (430×932)
+- iPhone 12 Pro (390×844)
+- iPhone XR (414×896)
+- iPhone SE (375×667)
+- iPad Air (820×1180)
+
+### Testing Accounts
+- Super Admin: admin@cloudburst.dev (password in secure note)
+- Organizer: organizer@test.com (password in secure note)
+- Test Guest: Generated through invitation system
 
 ## 1. User (Invited Guest) Flow
 

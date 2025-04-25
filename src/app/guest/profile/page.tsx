@@ -736,10 +736,19 @@ export default function GuestProfilePage() {
                     </div>
                   </div>
                   
+                  {/* Info Alert */}
+                  <Alert className="mb-6">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Profile Information</AlertTitle>
+                    <AlertDescription>
+                      We've pre-filled your information from your RSVP. Please verify and update as needed.
+                    </AlertDescription>
+                  </Alert>
+                  
                   {/* Profile Form */}
                   <GuestProfileForm 
                     invitationToken={invitationToken || ''}
-                    eventId={event?.id || ''}
+                    eventId={event?.id || eventId || ''}
                     onComplete={() => router.push(`/guest/dashboard?token=${invitationToken}&from=profile`)}
                   />
                 </div>

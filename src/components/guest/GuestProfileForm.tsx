@@ -73,15 +73,52 @@ export function GuestProfileForm({ invitationToken, eventId, onComplete }: Guest
     async function loadAttendeeData() {
       setIsLoading(true)
       try {
+        // First, get the invitation ID from token
+        const { data: invitation, error: invitationError } = await supabase
+          .from('invitations')
+          .select('id, name, email')
+          .eq('token', invitationToken)
+          .single()
+          
+        if (invitationError) {
+          console.error('Error loading invitation:', invitationError)
+          return
+        }
+        
+        // Try to load attendee data
         const attendee = await getFirstAttendeeForToken(invitationToken)
+        
         if (attendee) {
           setAttendeeData(attendee)
-          // Set form values from attendee data
-          form.setValue('full_name', attendee.full_name || '')
-          form.setValue('email', attendee.email || '')
+          // Populate form with attendee data first
+          form.setValue('full_name', attendee.full_name || invitation.name || '')
+          form.setValue('email', attendee.email || invitation.email || '')
+          form.setValue('phone', attendee.phone || '')
+        } else {
+          // No attendee record yet, try to get RSVP data
+          const { data: rsvp, error: rsvpError } = await supabase
+            .from('rsvps')
+            .select('*')
+            .eq('invitation_id', invitation.id)
+            .single()
+            
+          if (rsvpError && rsvpError.code !== 'PGRST116') {
+            console.error('Error loading RSVP:', rsvpError)
+          }
+          
+          // Set form values from invitation and RSVP data
+          form.setValue('full_name', invitation.name || '')
+          form.setValue('email', invitation.email || '')
+          
+          // If we have RSVP data, we might have a phone number
+          if (rsvp) {
+            // Check if phone was captured during RSVP (depends on your schema)
+            const phone = rsvp.phone || ''
+            if (phone) form.setValue('phone', phone)
+          }
         }
       } catch (error) {
-        console.error('Error loading attendee data:', error)
+        console.error('Error loading profile data:', error)
         toast({
           variant: 'destructive',
           title: 'Error loading profile',
@@ -93,23 +130,53 @@ export function GuestProfileForm({ invitationToken, eventId, onComplete }: Guest
     }
 
     loadAttendeeData()
-  }, [invitationToken, form, toast])
+  }, [invitationToken, form, toast, supabase])
 
   async function onSubmit(data: ProfileFormValues) {
     setIsLoading(true)
     try {
-      // First update the attendee information
-      const { error: attendeeError } = await supabase
-        .from('event_attendees')
-        .update({
-          full_name: data.full_name,
-          email: data.email,
-          phone: data.phone,
-        })
-        .eq('invitation_token', invitationToken)
-        .eq('event_id', eventId)
+      // First check if attendee exists
+      const attendee = await getFirstAttendeeForToken(invitationToken)
+      
+      if (attendee && attendee.id) {
+        // Update existing attendee
+        const { error: attendeeError } = await supabase
+          .from('event_attendees')
+          .update({
+            full_name: data.full_name,
+            email: data.email,
+            phone: data.phone,
+          })
+          .eq('id', attendee.id)
+          .eq('event_id', eventId)
 
-      if (attendeeError) throw attendeeError
+        if (attendeeError) throw attendeeError
+      } else {
+        // Get invitation id from token
+        const { data: invitation, error: invitationError } = await supabase
+          .from('invitations')
+          .select('id, event_id')
+          .eq('token', invitationToken)
+          .single()
+          
+        if (invitationError) throw invitationError
+        
+        // Create new attendee
+        const { error: newAttendeeError } = await supabase
+          .from('event_attendees')
+          .insert({
+            event_id: eventId,
+            invitation_id: invitation.id,
+            full_name: data.full_name,
+            email: data.email,
+            phone: data.phone,
+            status: 'confirmed',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          
+        if (newAttendeeError) throw newAttendeeError
+      }
 
       // Check if profile exists
       const { data: profileData, error: profileCheckError } = await supabase
