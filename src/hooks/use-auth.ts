@@ -145,39 +145,32 @@ export function useAuth() {
           setUser(user)
           console.log('User authenticated:', user.id)
           
-          // Try to get cached capabilities first
-          const cachedCapabilities = getCachedCapabilities()
-          if (cachedCapabilities) {
-            console.log('Using cached capabilities')
-            setCapabilities(cachedCapabilities)
-          } else {
-            // Get fresh profile and set capabilities
-            const profile = await getProfile(user.id)
-            if (profile) {
-              console.log('Profile loaded. Role:', profile.role)
-              setProfile(profile)
-              
-              // Make sure we properly detect the role from profile
-              let userRole: UserRole = 'user';
-              
-              if (profile.role) {
-                // Convert the role to one of our UserRole types
-                if (Object.keys(roleCapabilities).includes(profile.role)) {
-                  userRole = profile.role as UserRole;
-                  console.log('Using profile role:', userRole);
-                } else {
-                  console.log('Unknown role in profile, defaulting to user:', profile.role);
-                }
-              } else if (user.user_metadata?.role) {
-                // Fallback to metadata role if needed
-                userRole = user.user_metadata.role as UserRole;
-                console.log('Using metadata role:', userRole);
+          // Get fresh profile and set capabilities - Don't use cache here to force update
+          const profile = await getProfile(user.id)
+          if (profile) {
+            console.log('Profile loaded. Role:', profile.role)
+            setProfile(profile)
+            
+            // Make sure we properly detect the role from profile
+            let userRole: UserRole = 'user';
+            
+            if (profile.role) {
+              // Convert the role to one of our UserRole types
+              if (Object.keys(roleCapabilities).includes(profile.role)) {
+                userRole = profile.role as UserRole;
+                console.log('Using profile role:', userRole);
+              } else {
+                console.log('Unknown role in profile, defaulting to user:', profile.role);
               }
-              
-              const newCapabilities = roleCapabilities[userRole] || roleCapabilities.user;
-              setCapabilities(newCapabilities);
-              setCachedCapabilities(newCapabilities);
+            } else if (user.user_metadata?.role) {
+              // Fallback to metadata role if needed
+              userRole = user.user_metadata.role as UserRole;
+              console.log('Using metadata role:', userRole);
             }
+            
+            const newCapabilities = roleCapabilities[userRole] || roleCapabilities.user;
+            setCapabilities(newCapabilities);
+            setCachedCapabilities(newCapabilities);
           }
         } else {
           console.log('No authenticated user')

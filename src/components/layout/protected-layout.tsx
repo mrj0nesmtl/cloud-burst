@@ -116,7 +116,14 @@ function ProtectedLayoutContent({ children }: ProtectedLayoutProps) {
         )}
       >
         {/* Header */}
-        <BaseLayoutHeader>
+        <BaseLayoutHeader 
+          className={cn(
+            'border-b',
+            !isMobile && 'transition-all duration-300',
+            !isMobile && !isCollapsed && 'lg:pl-[calc(var(--sidebar-width)-1rem)]', 
+            !isMobile && isCollapsed && 'lg:pl-[calc(var(--sidebar-width-collapsed)-1rem)]'
+          )}
+        >
           <div className="flex h-full items-center gap-4 px-4">
             {/* Mobile menu button */}
             {isMobile && (
@@ -130,6 +137,11 @@ function ProtectedLayoutContent({ children }: ProtectedLayoutProps) {
                 <span className="sr-only">Open sidebar</span>
               </Button>
             )}
+
+            {/* Header title - optional */}
+            <div className="hidden md:block">
+              {/* You can add a page title or breadcrumbs here */}
+            </div>
 
             <div className="flex flex-1 items-center justify-end gap-4">
               <ModeToggle />

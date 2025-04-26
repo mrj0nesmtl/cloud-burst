@@ -112,15 +112,15 @@ export function GuestProfileForm({ invitationToken, eventId, onComplete }: Guest
   }, [invitationToken, form, toast])
 
   async function onSubmit(data: ProfileFormValues) {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       // First, ensure we have the event ID and invitation ID
       if (!eventId || !invitationToken) {
-        throw new Error('Missing event ID or invitation token')
+        throw new Error('Missing event ID or invitation token');
       }
       
       // If we don't have a guest profile yet (first time), get invitation ID
-      let invitationId = guestProfile?.invitation_id
+      let invitationId = guestProfile?.invitation_id;
       
       if (!invitationId) {
         // Get invitation id from token
@@ -128,53 +128,58 @@ export function GuestProfileForm({ invitationToken, eventId, onComplete }: Guest
           .from('invitations')
           .select('id')
           .eq('token', invitationToken)
-          .single()
+          .single();
           
         if (invitationError || !invitation) {
-          throw new Error('Could not find invitation')
+          throw new Error('Could not find invitation');
         }
         
-        invitationId = invitation.id
+        invitationId = invitation.id;
       }
       
-      // Use the consolidated save function
-      const { success, error } = await saveGuestProfile({
-        // Pass through existing ID if we have it
-        id: guestProfile?.id,
-        // Map form data to our profile structure
-        name: data.full_name,
-        email: data.email,
-        phone: data.phone || null,
-        instagram: data.instagram || null,
-        bio: data.bio || null,
-        newsletter_opt_in: data.newsletter_opt_in,
-        // Required fields
-        event_id: eventId,
-        invitation_id: invitationId!,  // Assert that it's not undefined with !
-        // Set status as confirmed
-        status: 'confirmed',
-        updated_at: new Date().toISOString()
-      })
+      // Use the new API endpoint instead of direct database access
+      const response = await fetch('/api/guest/profile/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: guestProfile?.id,
+          name: data.full_name,
+          email: data.email,
+          phone: data.phone || null,
+          instagram: data.instagram || null,
+          bio: data.bio || null,
+          newsletter_opt_in: data.newsletter_opt_in,
+          event_id: eventId,
+          invitation_id: invitationId,
+          status: 'confirmed',
+        }),
+      });
       
-      if (!success) throw error
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to update profile');
+      }
 
       toast({
         title: 'Profile updated',
         description: 'Your profile has been successfully updated.',
-      })
+      });
 
       if (onComplete) {
-        onComplete()
+        onComplete();
       }
     } catch (error) {
-      console.error('Error updating profile:', error)
+      console.error('Error updating profile:', error);
       toast({
         variant: 'destructive',
         title: 'Error updating profile',
         description: 'There was an error updating your profile. Please try again.',
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 

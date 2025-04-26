@@ -36,6 +36,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useAuth } from "@/hooks/use-auth"
 
 interface SidebarItem {
   title: string
@@ -46,6 +47,13 @@ interface SidebarItem {
 
 export function AdminSidebar() {
   const pathname = usePathname()
+  const { profile, user } = useAuth()
+  
+  // Check if user has super_admin role - log for debugging
+  const userRole = profile?.role || user?.user_metadata?.role
+  console.log("AdminSidebar - User role:", userRole)
+  const isSuperAdmin = userRole === 'super_admin'
+  console.log("AdminSidebar - Is Super Admin:", isSuperAdmin)
 
   const dashboardItems: SidebarItem[] = useMemo(
     () => [
@@ -153,7 +161,7 @@ export function AdminSidebar() {
     <div className="w-full max-w-[250px] overflow-y-auto bg-background px-4 py-6 shadow-md">
       <div className="flex flex-col space-y-6">
         <div className="space-y-1">
-          <Accordion type="multiple" defaultValue={["dashboard", "content", "system", "settings"]}>
+          <Accordion type="multiple" defaultValue={["dashboard", "content", "communication", "settings", ...(isSuperAdmin ? ["system"] : [])]}>
             <AccordionItem value="dashboard">
               <AccordionTrigger className="font-semibold">
                 Dashboard
@@ -247,36 +255,39 @@ export function AdminSidebar() {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="system">
-              <AccordionTrigger className="font-semibold">
-                System
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-1">
-                  {systemItems.map((item) => (
-                    <Tooltip key={item.href}>
-                      <TooltipTrigger asChild>
-                        <Link
-                          href={item.href}
-                          className={cn(
-                            "flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
-                            isActive(item.href)
-                              ? "bg-accent text-accent-foreground font-medium"
-                              : "text-muted-foreground hover:bg-muted"
-                          )}
-                        >
-                          {item.icon}
-                          <span className="ml-2">{item.title}</span>
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent side="right">
-                        {item.title}
-                      </TooltipContent>
-                    </Tooltip>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+            {/* Only show System section for super_admin users */}
+            {isSuperAdmin && (
+              <AccordionItem value="system">
+                <AccordionTrigger className="font-semibold">
+                  System
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-1">
+                    {systemItems.map((item) => (
+                      <Tooltip key={item.href}>
+                        <TooltipTrigger asChild>
+                          <Link
+                            href={item.href}
+                            className={cn(
+                              "flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
+                              isActive(item.href)
+                                ? "bg-accent text-accent-foreground font-medium"
+                                : "text-muted-foreground hover:bg-muted"
+                            )}
+                          >
+                            {item.icon}
+                            <span className="ml-2">{item.title}</span>
+                          </Link>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                          {item.title}
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            )}
 
             <AccordionItem value="settings">
               <AccordionTrigger className="font-semibold">
