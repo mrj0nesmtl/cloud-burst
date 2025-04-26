@@ -47,8 +47,18 @@ export function UserNav({ user, profile, onSignOut }: UserNavProps) {
     return 'U'
   }
   
-  // Format role for display
-  const userRole = profile?.role ? profile.role.replace('_', ' ') : 'User'
+  // Format role for display with proper capitalization 
+  const formatRole = (role?: string): string => {
+    if (!role) return 'User';
+    
+    // Handle roles with underscores like super_admin
+    return role
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+  
+  const userRole = formatRole(profile?.role);
   
   return (
     <DropdownMenu>

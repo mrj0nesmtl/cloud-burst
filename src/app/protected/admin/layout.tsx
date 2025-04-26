@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
-import { AdminTabs } from '@/components/admin/admin-tabs'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { AdminSidebar } from './components/AdminSidebar'
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard | Cloud Burst',
@@ -36,35 +36,25 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     redirect('/auth/signin')
   }
 
-  const { data: userRole } = await supabase
-    .from('user_roles')
+  // Check if user has admin or super_admin role
+  const { data: profile } = await supabase
+    .from('profiles')
     .select('role')
-    .eq('user_id', session.user.id)
+    .eq('id', session.user.id)
     .single()
 
-  if (!userRole || userRole.role !== 'admin') {
-    redirect('/protected/gallery')
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'super_admin')) {
+    redirect('/dashboard')
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-1 container mx-auto px-4 py-6">
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Admin Dashboard</h1>
-            <p className="text-sm text-muted-foreground">
-              Manage your platform settings and monitor user activity
-            </p>
-          </div>
-          
-          <AdminTabs />
-          
-          <ErrorBoundary>
-            <div className="mt-4">
-              {children}
-            </div>
-          </ErrorBoundary>
-        </div>
+    <div className="flex h-screen overflow-hidden">
+      <AdminSidebar />
+      
+      <main className="flex-1 overflow-y-auto p-6">
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
       </main>
     </div>
   )

@@ -19,7 +19,10 @@ import {
   Sparkles,
   ShoppingBag,
   Tags,
-  BrainCircuit
+  BrainCircuit,
+  Database,
+  AlertCircle,
+  RefreshCw
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
@@ -31,10 +34,19 @@ interface SideNavProps {
 
 export function SideNav({ collapsed = false }: SideNavProps) {
   const pathname = usePathname()
-  const { user, hasCapability } = useAuth()
+  const { user, profile, hasCapability } = useAuth()
+  
+  // Debug information - log the role
+  console.log('SideNav - profile:', profile)
+  console.log('SideNav - user role from profile:', profile?.role)
+  console.log('SideNav - is admin?', profile?.role === 'admin' || profile?.role === 'super_admin')
   
   const canManageEvents = hasCapability('manage:own_events')
-  const isOrganizer = user?.role === 'organizer'
+  const isOrganizer = profile?.role === 'organizer'
+  const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin'
+
+  // Force always show system section for debugging
+  const alwaysShowSystem = true;
 
   return (
     <nav className={cn(
@@ -247,6 +259,41 @@ export function SideNav({ collapsed = false }: SideNavProps) {
         </div>
       )}
 
+      {/* System Section - Always show for debugging */}
+      {(isAdmin || alwaysShowSystem) && (
+        <div className="space-y-1">
+          {!collapsed && (
+            <h4 className="px-2 text-xs font-semibold text-muted-foreground">
+              System
+            </h4>
+          )}
+          <NavItem
+            href="/protected/admin/diagnostic"
+            active={pathname.includes("/protected/admin/diagnostic")}
+            icon={Database}
+            collapsed={collapsed}
+          >
+            System Diagnostics
+          </NavItem>
+          <NavItem
+            href="/protected/admin/diagnostic/guest-consistency"
+            active={pathname === "/protected/admin/diagnostic/guest-consistency"}
+            icon={AlertCircle}
+            collapsed={collapsed}
+          >
+            Guest Consistency
+          </NavItem>
+          <NavItem
+            href="/protected/admin/diagnostic/clear-cache"
+            active={pathname === "/protected/admin/diagnostic/clear-cache"}
+            icon={RefreshCw}
+            collapsed={collapsed}
+          >
+            Clear Cache
+          </NavItem>
+        </div>
+      )}
+
       {/* Settings Section */}
       <div className="mt-auto space-y-1">
         {!collapsed && (
@@ -261,6 +308,16 @@ export function SideNav({ collapsed = false }: SideNavProps) {
           collapsed={collapsed}
         >
           Settings
+        </NavItem>
+        
+        {/* Debug utilities - always show */}
+        <NavItem
+          href="/protected/admin/diagnostic/clear-cache"
+          active={pathname === "/protected/admin/diagnostic/clear-cache"}
+          icon={RefreshCw}
+          collapsed={collapsed}
+        >
+          Clear Cache
         </NavItem>
       </div>
     </nav>

@@ -544,74 +544,10 @@ export default function GuestProfilePage() {
         throw new Error('No invitation ID available');
       }
       
-      const invitationId = guest?.invitation_id || tokenData?.invitationId;
-      
-      // First get the event_id from the invitation
-      const { data: invitation, error: invitationError } = await supabase
-        .from('invitations')
-        .select('event_id')
-        .eq('id', invitationId)
-        .single();
-        
-      if (invitationError || !invitation?.event_id) {
-        console.error('Error getting invitation:', invitationError);
-        throw new Error('Could not find associated event for this invitation');
-      }
-      
-      // Upload avatar if there's a new file
-      let finalAvatarUrl = avatarUrl;
-      if (avatarFile) {
-        const uploadedUrl = await uploadAvatar(avatarFile, invitationId);
-        if (uploadedUrl) {
-          finalAvatarUrl = uploadedUrl;
-        }
-      }
-      
-      // Generate a proper UUID for access_token
-      // This fixes the "invalid input syntax for type uuid" error
-      const accessToken = (() => {
-        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-          return crypto.randomUUID();
-        } else {
-          // Fallback implementation of UUID v4
-          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-          });
-        }
-      })();
-      
-      // Direct guest table update - now includes event_id and access_token
-      const { data, error } = await supabase
-        .from('guests')
-        .upsert({
-          invitation_id: invitationId,
-          event_id: invitation.event_id,
-          name: values.name,
-          email: values.email,
-          phone: values.phone || null,
-          notes: values.notes || null,
-          avatar_url: finalAvatarUrl || null,
-          access_token: accessToken,
-          status: 'registered',
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-      
-      if (error) {
-        console.error('Guest profile error details:', error);
-        throw new Error(`Failed to save profile: ${error.message}`);
-      }
-      
-      // Show success message
-      toast({
-        title: 'Profile Updated',
-        description: 'Your profile has been updated successfully.',
-      });
-      
-      // Navigate to the next step with a from=profile parameter to trigger a welcome toast
+      // Replace the rest of the onSubmit function to just use the GuestProfileForm
+      // which now handles all the synchronization logic
+      // We're no longer handling profile update logic directly in the page
+      // The whole function has been simplified
       router.push(`/guest/dashboard?token=${invitationToken}&from=profile`);
     } catch (error) {
       console.error('Error saving profile:', error);

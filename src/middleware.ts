@@ -20,6 +20,8 @@ export async function middleware(req: NextRequest) {
   const isAuthenticated = !!session
   const pathname = req.nextUrl.pathname
   
+  console.log(`Middleware processing: ${pathname} - User authenticated: ${isAuthenticated}`);
+  
   // Guest dashboard route - check if user has a guest profile
   if (pathname.startsWith('/guest/dashboard')) {
     const token = req.nextUrl.searchParams.get('token')
@@ -73,14 +75,24 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith('/events') && !pathname.includes('/gallery')
   ) {
     if (!isAuthenticated) {
+      console.log('User not authenticated for protected route:', pathname);
       const redirectUrl = new URL('/auth/signin', req.url)
       redirectUrl.searchParams.set('returnTo', pathname)
       return NextResponse.redirect(redirectUrl)
     }
   }
   
-  // Admin routes - require admin role
-  if (pathname.startsWith('/admin')) {
+  // Diagnostic routes - require super_admin role
+  if (pathname.includes('/diagnostic') || pathname.includes('/diagnostic/')) {
+    console.log('Processing diagnostic route:', pathname);
+    
+    if (!isAuthenticated) {
+      console.log('User not authenticated for diagnostic route:', pathname);
+      const redirectUrl = new URL('/auth/signin', req.url)
+      redirectUrl.searchParams.set('returnTo', pathname)
+      return NextResponse.redirect(redirectUrl)
+    }
+    
     // Get user role from profile
     const { data: profile } = await supabase
       .from('profiles')
@@ -89,8 +101,37 @@ export async function middleware(req: NextRequest) {
       .single()
     
     const userRole = profile?.role
+    console.log(`Diagnostic route access: ${pathname} - User role: ${userRole}`);
+    
+    // Allow both super_admin and admin roles to access diagnostic routes
+    if (userRole !== 'super_admin' && userRole !== 'admin') {
+      console.log('Unauthorized user attempted to access diagnostic route:', pathname);
+      return NextResponse.redirect(new URL('/unauthorized', req.url))
+    }
+    
+    // Admin or Super admin accessing diagnostic route is allowed
+    return res
+  }
+  
+  // Admin routes - require admin role
+  if (pathname.startsWith('/admin') || pathname.startsWith('/protected/admin')) {
+    // Skip if already processed as a diagnostic route
+    if (pathname.includes('/diagnostic')) {
+      return res;
+    }
+
+    // Get user role from profile
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', session?.user.id)
+      .single()
+    
+    const userRole = profile?.role
+    console.log(`Admin route access: ${pathname} - User role: ${userRole}`);
     
     if (userRole !== 'admin' && userRole !== 'super_admin') {
+      console.log('Unauthorized admin access attempt:', pathname, 'User role:', userRole);
       return NextResponse.redirect(new URL('/unauthorized', req.url))
     }
   }
