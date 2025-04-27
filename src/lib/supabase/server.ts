@@ -1,4 +1,5 @@
 import { createClientComponentClient, createServerComponentClient, createServerActionClient } from '@supabase/auth-helpers-nextjs'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/supabase'
 
 /**
@@ -29,6 +30,32 @@ export function createClient() {
   
   // Default to client component client (works in browser and as fallback)
   return createClientComponentClient<Database>();
+}
+
+/**
+ * Create a Supabase admin client with service role key to bypass RLS policies
+ * IMPORTANT: This should only be used in trusted server contexts like API routes
+ * Never expose this client to the browser as it bypasses all security policies
+ */
+export function createAdminClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    console.error('Missing Supabase URL or service role key')
+    throw new Error('Cannot create admin client: Missing environment variables')
+  }
+  
+  return createSupabaseClient<Database>(
+    supabaseUrl,
+    supabaseServiceKey,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    }
+  )
 }
 
 /**

@@ -244,17 +244,24 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       // Set token as a cookie for fallback
       document.cookie = `invitation_token=${token}; path=/; max-age=3600; SameSite=Lax`;
 
-      // Redirect based on response - always use event.id, not slug
-      const confirmationUrl = `/event/${event.id}/confirmed?token=${token}`;
+      // Determine status for redirect
+      const status = responseData.status;
+      
+      // Redirect based on response - use appropriate URL for accepted or declined
+      const confirmationUrl = status === 'accepted'
+        ? (event.slug 
+            ? `/event/${event.slug}/confirmed?token=${token}` 
+            : `/event/${event.id}/confirmed?token=${token}`)
+        : (event.slug 
+            ? `/event/${event.slug}/declined?token=${token}` 
+            : `/event/${event.id}/declined?token=${token}`);
+      
       console.log(`Redirecting to confirmation URL: ${confirmationUrl}`);
       
-      try {
+      // Ensure we give the browser time to process the cookie before redirect
+      setTimeout(() => {
         router.push(confirmationUrl);
-      } catch (routerError) {
-        console.error("Error with router push:", routerError);
-        // Fallback to window.location
-        window.location.href = confirmationUrl;
-      }
+      }, 100);
     } catch (error) {
       console.error("RSVP submission error:", error);
       toast.error(error instanceof Error ? error.message : "Failed to submit RSVP. Please try again.");
@@ -332,17 +339,24 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         // Set token as a cookie for fallback
         document.cookie = `invitation_token=${token}; path=/; max-age=3600; SameSite=Lax`;
 
-        // Redirect based on response - always use event.id, not slug
-        const confirmationUrl = `/event/${event.id}/confirmed?token=${token}`;
+        // Determine status for redirect
+        const status = data.status;
+        
+        // Redirect based on response - use appropriate URL for accepted or declined
+        const confirmationUrl = status === 'accepted'
+          ? (event.slug 
+              ? `/event/${event.slug}/confirmed?token=${token}` 
+              : `/event/${event.id}/confirmed?token=${token}`)
+          : (event.slug 
+              ? `/event/${event.slug}/declined?token=${token}` 
+              : `/event/${event.id}/declined?token=${token}`);
+        
         console.log(`Redirecting to confirmation URL: ${confirmationUrl}`);
         
-        try {
+        // Ensure we give the browser time to process the cookie before redirect
+        setTimeout(() => {
           router.push(confirmationUrl);
-        } catch (routerError) {
-          console.error("Error with router push:", routerError);
-          // Fallback to window.location
-          window.location.href = confirmationUrl;
-        }
+        }, 100);
       } catch (error) {
         console.error("Button submission error:", error);
         toast.error(error instanceof Error ? error.message : "Failed to submit RSVP");
@@ -1053,17 +1067,16 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
                           // Set token as a cookie for fallback
                           document.cookie = `invitation_token=${token}; path=/; max-age=3600; SameSite=Lax`;
 
-                          // Redirect based on response - always use event.id, not slug
-                          const confirmationUrl = `/event/${event.id}/confirmed?token=${token}`;
+                          // Redirect based on response - use event.slug if available, otherwise use event.id
+                          const confirmationUrl = event.slug 
+                            ? `/event/${event.slug}/confirmed?token=${token}` 
+                            : `/event/${event.id}/confirmed?token=${token}`;
                           console.log(`Redirecting to confirmation URL: ${confirmationUrl}`);
                           
-                          try {
+                          // Ensure we give the browser time to process the cookie before redirect
+                          setTimeout(() => {
                             router.push(confirmationUrl);
-                          } catch (routerError) {
-                            console.error("Error with router push:", routerError);
-                            // Fallback to window.location
-                            window.location.href = confirmationUrl;
-                          }
+                          }, 100);
                         })
                         .catch(error => {
                           console.error("Alternative submission error:", error);

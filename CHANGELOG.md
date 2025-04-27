@@ -55,6 +55,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Data display issues in Super Admin dashboard
 - Edge cases in guest upload flow with intermittent connections
 - Inconsistency in guest navigation implementation across pages
+- Fixed RSVP submission redirects to properly handle both event IDs and slugs
+- Updated confirmation and decline pages to properly handle invitation tokens
+- Added better error handling and fallbacks for RSVP submission process
+- Ensured consistent redirection behavior for both accepted and declined RSVPs
+- Fixed RLS policy violation when guests update their profiles by using admin client
+- Added better error handling and debugging for profile submission
+- Implemented fallback mechanisms for event_attendees table operations
+- **Fixed Guest Profile Update System**:
+  - Resolved constraint violation between guests and event_attendees tables
+  - Created database helper functions to safely manage trigger operations
+  - Implemented a comprehensive stored procedure for reliable profile updates
+  - Added multi-layered fallback approach to handle edge cases
+  - Enhanced profile update route with better error handling
+  - Fixed status value mismatches between related tables
+  - Ensured data consistency across invitation, guest, and event_attendee records
 
 ## [0.9.6] - 2025-04-27
 ### Fixed

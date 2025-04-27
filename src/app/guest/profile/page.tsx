@@ -39,7 +39,7 @@ import Link from 'next/link'
 import crypto from 'crypto'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
-import { GuestNavBar, GuestProfileForm } from '@/components/guest'
+import { GuestNavBar } from '@/components/guest'
 
 const guestProfileSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -538,16 +538,75 @@ export default function GuestProfilePage() {
   };
 
   const onSubmit = async (values: GuestProfileFormValues) => {
+    console.log("Starting profile submission with values:", values);
     setIsSubmitting(true);
     try {
       if (!guest?.invitation_id && !invitationToken) {
         throw new Error('No invitation ID available');
       }
       
-      // Replace the rest of the onSubmit function to just use the GuestProfileForm
-      // which now handles all the synchronization logic
-      // We're no longer handling profile update logic directly in the page
-      // The whole function has been simplified
+      // Get the invitation ID
+      let invitationId = guest?.invitation_id;
+      
+      if (!invitationId) {
+        console.log("No invitation ID in guest data, retrieving from token");
+        // Get invitation id from token
+        const { data: invitation, error: invitationError } = await supabase
+          .from('invitations')
+          .select('id')
+          .eq('token', invitationToken)
+          .single();
+          
+        if (invitationError || !invitation) {
+          console.error("Failed to retrieve invitation ID:", invitationError);
+          throw new Error('Could not find invitation');
+        }
+        
+        console.log("Retrieved invitation ID:", invitation.id);
+        invitationId = invitation.id;
+      }
+      
+      console.log("Sending profile update request with data:", {
+        id: guest?.id,
+        name: values.name,
+        email: values.email,
+        phone: values.phone || null,
+        notes: values.notes || null,
+        avatar_url: avatarUrl || null,
+        event_id: event?.id || eventId || '',
+        invitation_id: invitationId,
+        status: 'confirmed',
+      });
+      
+      // Use the API endpoint to save the profile
+      const response = await fetch('/api/guest/profile/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: guest?.id,
+          name: values.name,
+          email: values.email,
+          phone: values.phone || null,
+          notes: values.notes || null,
+          avatar_url: avatarUrl || null,
+          event_id: event?.id || eventId || '',
+          invitation_id: invitationId,
+          status: 'confirmed',
+        }),
+      });
+      
+      const result = await response.json();
+      console.log("Profile update response:", result);
+      
+      if (!response.ok) {
+        console.error("Profile update failed with status:", response.status);
+        throw new Error(result.error || 'Failed to update profile');
+      }
+
+      console.log("Profile updated successfully, redirecting to dashboard");
+      // Now redirect to dashboard with success message
       router.push(`/guest/dashboard?token=${invitationToken}&from=profile`);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -682,11 +741,86 @@ export default function GuestProfilePage() {
                   </Alert>
                   
                   {/* Profile Form */}
-                  <GuestProfileForm 
-                    invitationToken={invitationToken || ''}
-                    eventId={event?.id || eventId || ''}
-                    onComplete={() => router.push(`/guest/dashboard?token=${invitationToken}&from=profile`)}
-                  />
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Full Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter your full name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter your email" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone Number</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter your phone number" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              Optional, but useful for event updates
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="notes"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Notes</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Any notes or special requests for the event" 
+                                className="resize-none" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Optional. This helps event hosts accommodate your needs.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <Button type="submit" disabled={isSubmitting || uploadingAvatar} className="w-full">
+                        {(isSubmitting || uploadingAvatar) ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Saving...
+                          </>
+                        ) : (
+                          'Save Profile'
+                        )}
+                      </Button>
+                    </form>
+                  </Form>
                 </div>
               </TabsContent>
               

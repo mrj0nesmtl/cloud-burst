@@ -12,10 +12,12 @@ With version 0.9.6, we've addressed the critical authentication issue that preve
 
 However, several critical issues remain unresolved:
 1. Error when completing RSVP process "Save Profile"
-2. Organizer profile settings not persisting correctly
+2. Organizer + Super Admin profile settings not persisting correctly
 3. Super Admin dashboard not showing data from all organizers
 4. Magic link implementation failure (discovered April 24, 2025)
 5. Email flow anomaly in guest RSVP process (discovered April 24, 2025)
+6. Mobile layout inconsistencies (discovered April 24, 2025)
+7. Organizer moderation interface not implemented yet.
 
 Additionally, we need to conduct thorough testing of the entire User (Invited Guest) flow and verify layout consistency across different mobile devices.
 
