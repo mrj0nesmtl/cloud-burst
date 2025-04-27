@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-23T03:08:31.479Z
+Generated: 2025-04-26T21:53:10.616Z
 
 ## Overview
 
@@ -16,6 +16,7 @@ Generated: 2025-04-23T03:08:31.479Z
 │   │   └── user-journeys.md
 │   ├── application_design_document.md
 │   ├── architecture-diagram.md
+│   ├── guest-profile-system.md
 │   ├── navigation-structure.md
 │   ├── security.md
 │   └── system_architecture_flowchart.md
@@ -71,6 +72,9 @@ Generated: 2025-04-23T03:08:31.479Z
 │   │   ├── session-28-plan.md
 │   │   ├── session-43-checklist.md
 │   │   ├── session-43-kickoff-prompt.md
+│   │   ├── session-44-checklist.md
+│   │   ├── session-44-kickoff-prompt.md
+│   │   ├── session-44-resources-map.md
 │   │   ├── session_1.md
 │   │   ├── session_10.md
 │   │   ├── session_11_checklist.md
@@ -161,20 +165,17 @@ Generated: 2025-04-23T03:08:31.479Z
 │   ├── name_change.md
 │   ├── project-timeline.md
 │   ├── roadmap.md
-│   ├── session-44-checklist.md
-│   ├── session-44-kickoff-prompt.md
-│   ├── session-44-resources-map.md
 │   ├── session-45-checklist.md
 │   ├── session-45-narrative.md
 │   ├── session-45-resource-map.md
+│   ├── token_management_system.md
 │   └── version-sync.plan
 ├── features/
 │   ├── ai_implementation.md
 │   ├── payment_subscription_design.md
 │   ├── qr-scan-components.md
 │   ├── qr-scanner-types.md
-│   ├── service-worker.md
-│   └── token_management_system.md
+│   └── service-worker.md
 ├── planning/
 │   ├── business_proposition.md
 │   ├── ca-en-merchant-fees-2024.pdf
@@ -228,12 +229,12 @@ Generated: 2025-04-23T03:08:31.479Z
 ├── .DS_Store
 └── README.md
 
-12 directories, 207 files
+12 directories, 208 files
 
 ```
 
 ## File Type Breakdown
-- md: 202 file(s)
+- md: 203 file(s)
 
 ## Ignored Patterns
 - node_modules

@@ -1,9 +1,9 @@
 # app Directory Structure
-Generated: 2025-04-23T03:08:32.670Z
+Generated: 2025-04-26T21:53:12.280Z
 
 ## Overview
 
-This directory contains 116 route(s).
+This directory contains 119 route(s).
 
 
 ## Directory Tree
@@ -72,6 +72,9 @@ This directory contains 116 route(s).
 │   │   │   ├── update/
 │   │   │   │   └── route.ts
 │   │   │   └── update-all/
+│   │   │       └── route.ts
+│   │   ├── profile/
+│   │   │   └── update/
 │   │   │       └── route.ts
 │   │   └── upload/
 │   │       ├── confirm/
@@ -275,11 +278,18 @@ This directory contains 116 route(s).
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── components/
+│   │   │   ├── AdminSidebar.tsx
 │   │   │   ├── audit-log-columns.tsx
 │   │   │   └── audit-log-viewer.tsx
 │   │   ├── contacts/
 │   │   │   └── page.tsx
 │   │   ├── dashboard/
+│   │   │   └── page.tsx
+│   │   ├── diagnostic/
+│   │   │   ├── clear-cache/
+│   │   │   │   └── page.tsx
+│   │   │   ├── guest-consistency/
+│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── events/
 │   │   │   └── page.tsx
@@ -471,13 +481,13 @@ This directory contains 116 route(s).
 ├── not-found.tsx
 └── page.tsx
 
-203 directories, 259 files
+208 directories, 264 files
 
 ```
 
 ## File Type Breakdown
-- ts: 52 file(s)
-- tsx: 195 file(s)
+- ts: 53 file(s)
+- tsx: 199 file(s)
 - md: 1 file(s)
 - css: 2 file(s)
 

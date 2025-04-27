@@ -1,8 +1,8 @@
 # components Directory Structure
-Generated: 2025-04-23T03:08:34.770Z
+Generated: 2025-04-26T21:53:16.335Z
 
 ## Overview
-This directory contains 211 component(s).
+This directory contains 212 component(s).
 
 
 
@@ -115,6 +115,7 @@ This directory contains 211 component(s).
 │   └── upload-with-tags.tsx
 ├── guest/
 │   ├── GuestDashboard.tsx
+│   ├── GuestNavBar.tsx
 │   ├── GuestNavigation.tsx
 │   ├── GuestProfileForm.tsx
 │   ├── PhotoUploader.tsx
@@ -259,13 +260,13 @@ This directory contains 211 component(s).
 ├── theme-provider.tsx
 └── theme-toggle.tsx
 
-28 directories, 222 files
+28 directories, 223 files
 
 ```
 
 ## File Type Breakdown
 - ts: 9 file(s)
-- tsx: 212 file(s)
+- tsx: 213 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

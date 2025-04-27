@@ -8,10 +8,10 @@
 
 We stand at the threshold of our Beta 1.0 release, scheduled for April 30, 2025. After months of intensive development, Cloud Burst has evolved from concept to a fully functional event photography platform with comprehensive features for organizers, photographers, and guests.
 
-With version 0.9.6, we've successfully addressed the critical authentication issue that prevented access to event pages and fixed layout inconsistencies across mobile devices. The platform is functionally complete, and we've documented authentication security improvements for post-beta implementation.
+With version 0.9.6, we've addressed the critical authentication issue that prevented access to event pages and fixed layout inconsistencies across mobile devices. The platform is functionally complete, and we've documented authentication security improvements for post-beta implementation.
 
 However, several critical issues remain unresolved:
-1. Error when completing RSVP process
+1. Error when completing RSVP process "Save Profile"
 2. Organizer profile settings not persisting correctly
 3. Super Admin dashboard not showing data from all organizers
 4. Magic link implementation failure (discovered April 24, 2025)

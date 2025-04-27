@@ -13,45 +13,47 @@ This resource map identifies the key files and directories we'll be focusing on 
 | Component | File Path | Purpose | Status |
 |-----------|-----------|---------|--------|
 | Invitation Handler | `/src/app/invitation/[token]/page.tsx` | Entry point for guests via invitation link | ✅ Functioning |
-| RSVP Form | `/src/components/rsvp/RsvpForm.tsx` | Handles guest RSVP response | 🔴 Error on submit |
-| Guest Profile Setup | `/src/components/guest/ProfileSetup.tsx` | Handles guest profile creation | ✅ Functioning |
-| Camera Interface | `/src/app/guest/camera/page.tsx` | Main camera interface for guests | ✅ Needs testing |
+| RSVP Form | `/src/components/rsvp/RsvpForm.tsx` | Handles guest RSVP response | ✅ Functioning |
+| Guest Profile Setup | `/src/components/guest/ProfileSetup.tsx` | Handles guest profile creation | 🔴 Error on submit |
+| Camera Interface | `/src/app/guest/camera/page.tsx` | Main camera interface for guests | ✅ Functioning |
 | Gallery View | `/src/app/guest/gallery/page.tsx` | Guest view of event photos | ✅ Needs testing |
+| Organizer Moderation View | `/src/app/events/[eventId]/gallery/moderation/page.tsx` | Organizer view of event photos | ✅ Needs testing |
 
 ### Critical Issues
 
-#### 1. RSVP Submission Error
+#### 1. RSVP > Profile Creation Error | 🔴 Not saving |
 | Component | File Path | Purpose | Status |
 |-----------|-----------|---------|--------|
-| RSVP API Handler | `/src/app/api/rsvp/submit/route.ts` | Processes RSVP form submissions | 🔴 Error detected |
-| RSVP Form | `/src/components/rsvp/RsvpForm.tsx` | Form UI component | 🔴 Shows error |
-| Supabase Helper | `/src/lib/supabase/rsvp.ts` | Database interactions for RSVPs | 🟡 Needs review |
+| Profile Settings 1st from RSVP Flow "Profile Creation" | `/src/components/settings/ProfileSettings.tsx` | Proile Settings form or Guests | 🔴 Not saving |
+| RSVP Form | `/src/components/rsvp/RsvpForm.tsx` | Form UI component | ✅ Functioning |
+| Supabase Helper | `/src/lib/supabase/rsvp.ts` | Database interactions for RSVPs | ✅ Functioning |
 
-#### 2. Profile Settings Persistence
+#### 2. Profile Settings Persistence | 🟡 Needs review |
 | Component | File Path | Purpose | Status |
 |-----------|-----------|---------|--------|
 | Profile Settings | `/src/components/settings/ProfileSettings.tsx` | Settings form for organizers | 🔴 Not saving |
 | Profile API | `/src/app/api/profile/update/route.ts` | Handles profile updates | 🔴 Possible issue |
 | Supabase Helper | `/src/lib/supabase/profiles.ts` | Database interactions for profiles | 🟡 Needs review |
 
-#### 3. Super Admin Dashboard
+#### 3. Super Admin Dashboard | 🟡 Needs review |
 | Component | File Path | Purpose | Status |
 |-----------|-----------|---------|--------|
 | Admin Dashboard | `/src/app/protected/admin/dashboard/page.tsx` | Main admin dashboard | 🔴 Missing data |
 | Analytics Service | `/src/lib/supabase/analytics.server.ts` | Data aggregation for admin | 🔴 Needs fix |
 | Org Helper | `/src/lib/supabase/organizations.ts` | Cross-org data access | 🟡 Needs review |
+| System Management | 'src/app/protected/admin/diagnostic/page.tsx' | System diagnostic | 🟡 Needs review |
 
-#### 4. Magic Link Implementation Failure
+#### 4. Magic Link Implementation Failure | 🟣 To be created |
 | Component | File Path | Purpose | Status |
 |-----------|-----------|---------|--------|
-| Auth Provider | `/src/contexts/AuthContext.tsx` | Manages auth state | 🔴 Token persistence |
-| Magic Link API | `/src/app/api/auth/magic-link/route.ts` | Processes magic link requests | 🔴 Token generation |
-| Token Validation | `/src/lib/auth/validate-token.ts` | Validates tokens | 🔴 Inconsistent |
-| Guest Auth Flow | `/src/components/auth/GuestAuthWrapper.tsx` | Handles guest auth | 🔴 Context loss |
+| Auth Provider | `/src/contexts/AuthContext.tsx` | Manages auth state | 🔴 Token persistence | 🟣 To be created |
+| Magic Link API | `/src/app/api/auth/magic-link/route.ts` | Processes magic link requests | 🔴 Token generation | 🟣 To be created |
+| Token Validation | `/src/lib/auth/validate-token.ts` | Validates tokens | 🔴 Inconsistent | 🟣 To be created |
+| Guest Auth Flow | `/src/components/auth/GuestAuthWrapper.tsx` | Handles guest auth | 🔴 Context loss | 🟣 To be created |
 | New Token Service | `/src/lib/tokens/token-service.ts` | Replacement token system | 🟣 To be created |
 | Token Context | `/src/lib/tokens/token-context.tsx` | Context for token state | 🟣 To be created |
 
-#### 5. Email Flow Anomaly 
+#### 5. Email Flow Anomaly | 🟡 Needs review |
 | Component | File Path | Purpose | Status |
 |-----------|-----------|---------|--------|
 | RSVP Submit Handler | `/src/app/api/rsvp/submit/route.ts` | Processes RSVP submissions | 🔴 Triggering wrong emails |
