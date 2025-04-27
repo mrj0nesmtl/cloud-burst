@@ -1,5 +1,5 @@
 # src Directory Structure
-Generated: 2025-04-23T03:08:31.294Z
+Generated: 2025-04-26T21:53:10.332Z
 
 ## Overview
 
@@ -89,6 +89,9 @@ Generated: 2025-04-23T03:08:31.294Z
 │   │   │   │   ├── update/
 │   │   │   │   │   └── route.ts
 │   │   │   │   └── update-all/
+│   │   │   │       └── route.ts
+│   │   │   ├── profile/
+│   │   │   │   └── update/
 │   │   │   │       └── route.ts
 │   │   │   └── upload/
 │   │   │       ├── confirm/
@@ -292,11 +295,18 @@ Generated: 2025-04-23T03:08:31.294Z
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── components/
+│   │   │   │   ├── AdminSidebar.tsx
 │   │   │   │   ├── audit-log-columns.tsx
 │   │   │   │   └── audit-log-viewer.tsx
 │   │   │   ├── contacts/
 │   │   │   │   └── page.tsx
 │   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx
+│   │   │   ├── diagnostic/
+│   │   │   │   ├── clear-cache/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── guest-consistency/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── events/
 │   │   │   │   └── page.tsx
@@ -594,6 +604,7 @@ Generated: 2025-04-23T03:08:31.294Z
 │   │   └── upload-with-tags.tsx
 │   ├── guest/
 │   │   ├── GuestDashboard.tsx
+│   │   ├── GuestNavBar.tsx
 │   │   ├── GuestNavigation.tsx
 │   │   ├── GuestProfileForm.tsx
 │   │   ├── PhotoUploader.tsx
@@ -777,6 +788,9 @@ Generated: 2025-04-23T03:08:31.294Z
 │   │   ├── __tests__/
 │   │   │   ├── auth-store.test.ts
 │   │   │   └── events.test.ts
+│   │   ├── attendees/
+│   │   │   └── index.ts
+│   │   ├── attendees.server.ts
 │   │   ├── attendees.ts
 │   │   ├── auth-store.ts
 │   │   ├── auth-utils.ts
@@ -787,6 +801,7 @@ Generated: 2025-04-23T03:08:31.294Z
 │   │   ├── events.ts
 │   │   ├── galleries.server.ts
 │   │   ├── galleries.ts
+│   │   ├── guests.ts
 │   │   ├── invitations.ts
 │   │   ├── media.server.ts
 │   │   ├── media.ts
@@ -858,13 +873,13 @@ Generated: 2025-04-23T03:08:31.294Z
 ├── middleware.test.ts
 └── middleware.ts
 
-258 directories, 591 files
+264 directories, 600 files
 
 ```
 
 ## File Type Breakdown
-- ts: 152 file(s)
-- tsx: 417 file(s)
+- ts: 156 file(s)
+- tsx: 422 file(s)
 - js: 4 file(s)
 - md: 2 file(s)
 - css: 3 file(s)

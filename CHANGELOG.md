@@ -16,6 +16,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 1.0.0: Production Launch
 
 ## [Unreleased]
+### Added
+- **Enhanced Guest Profile System**:
+  - Complete guest profile form with responsive design
+  - Avatar upload functionality with visual feedback
+  - Improved form validation with instant feedback
+  - Enhanced guest navigation between profile and camera test
+  - Streamlined user experience for profile setup process
+  - Server API endpoints for profile updates and management
+  - Integration with invitation token system for secure access
+  - Fixed profile data persistence throughout guest journey
+  - Standardized guest interface components for consistency
+  - Mobile-optimized layout for all profile interactions
+
 ### In progress
 - Super Admin dashboard improvements:
   - Data aggregation from all organizers
@@ -30,14 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Improved UI consistency across all guest touchpoints
   - Streamlined navigation with clearer visual cues
   - Enhanced feedback mechanisms for guest actions
-
-### Added
-- **Guest Profile System Improvements**:
-  - Unified navigation components (`BottomNav` and `GuestNavigation`)
-  - Standardized navigation pattern implementation across guest pages
-  - Enhanced profile form with improved validation and user feedback
-  - Refactored attendees library structure for better type safety
-  - Proper server/client separation for better component architecture
 
 ### Changed
 - Performance optimizations for large media collections

@@ -1,5 +1,5 @@
 # development Directory Structure
-Generated: 2025-04-23T03:08:37.154Z
+Generated: 2025-04-26T21:53:20.606Z
 
 ## Overview
 
@@ -45,6 +45,9 @@ Generated: 2025-04-23T03:08:37.154Z
 │   ├── session-28-plan.md
 │   ├── session-43-checklist.md
 │   ├── session-43-kickoff-prompt.md
+│   ├── session-44-checklist.md
+│   ├── session-44-kickoff-prompt.md
+│   ├── session-44-resources-map.md
 │   ├── session_1.md
 │   ├── session_10.md
 │   ├── session_11_checklist.md
@@ -135,20 +138,18 @@ Generated: 2025-04-23T03:08:37.154Z
 ├── name_change.md
 ├── project-timeline.md
 ├── roadmap.md
-├── session-44-checklist.md
-├── session-44-kickoff-prompt.md
-├── session-44-resources-map.md
 ├── session-45-checklist.md
 ├── session-45-narrative.md
 ├── session-45-resource-map.md
+├── token_management_system.md
 └── version-sync.plan
 
-2 directories, 132 files
+2 directories, 133 files
 
 ```
 
 ## File Type Breakdown
-- md: 129 file(s)
+- md: 130 file(s)
 
 ## Ignored Patterns
 - node_modules

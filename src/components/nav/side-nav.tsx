@@ -44,9 +44,7 @@ export function SideNav({ collapsed = false }: SideNavProps) {
   const canManageEvents = hasCapability('manage:own_events')
   const isOrganizer = profile?.role === 'organizer'
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin'
-
-  // Force always show system section for debugging
-  const alwaysShowSystem = true;
+  const isSuperAdmin = profile?.role === 'super_admin'
 
   return (
     <nav className={cn(
@@ -259,8 +257,8 @@ export function SideNav({ collapsed = false }: SideNavProps) {
         </div>
       )}
 
-      {/* System Section - Always show for debugging */}
-      {(isAdmin || alwaysShowSystem) && (
+      {/* System Section - Only show for super_admin */}
+      {isSuperAdmin && (
         <div className="space-y-1">
           {!collapsed && (
             <h4 className="px-2 text-xs font-semibold text-muted-foreground">
@@ -310,7 +308,7 @@ export function SideNav({ collapsed = false }: SideNavProps) {
           Settings
         </NavItem>
         
-        {/* Debug utilities - always show */}
+        {/* Make clear cache available to all for troubleshooting */}
         <NavItem
           href="/protected/admin/diagnostic/clear-cache"
           active={pathname === "/protected/admin/diagnostic/clear-cache"}

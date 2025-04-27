@@ -1,9 +1,9 @@
 # protected Directory Structure
-Generated: 2025-04-23T03:08:33.018Z
+Generated: 2025-04-26T21:53:12.964Z
 
 ## Overview
 
-This directory contains 57 route(s).
+This directory contains 60 route(s).
 
 
 ## Directory Tree
@@ -16,11 +16,18 @@ This directory contains 57 route(s).
 │   │   ├── loading.tsx
 │   │   └── page.tsx
 │   ├── components/
+│   │   ├── AdminSidebar.tsx
 │   │   ├── audit-log-columns.tsx
 │   │   └── audit-log-viewer.tsx
 │   ├── contacts/
 │   │   └── page.tsx
 │   ├── dashboard/
+│   │   └── page.tsx
+│   ├── diagnostic/
+│   │   ├── clear-cache/
+│   │   │   └── page.tsx
+│   │   ├── guest-consistency/
+│   │   │   └── page.tsx
 │   │   └── page.tsx
 │   ├── events/
 │   │   └── page.tsx
@@ -200,13 +207,13 @@ This directory contains 57 route(s).
 │   └── page.tsx
 └── layout.tsx
 
-67 directories, 124 files
+70 directories, 128 files
 
 ```
 
 ## File Type Breakdown
 - ts: 3 file(s)
-- tsx: 112 file(s)
+- tsx: 116 file(s)
 - md: 1 file(s)
 
 ## Ignored Patterns

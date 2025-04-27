@@ -1,5 +1,5 @@
 # architecture Directory Structure
-Generated: 2025-04-23T03:08:37.301Z
+Generated: 2025-04-26T21:53:20.799Z
 
 ## Overview
 
@@ -15,16 +15,17 @@ Generated: 2025-04-23T03:08:37.301Z
 │   └── user-journeys.md
 ├── application_design_document.md
 ├── architecture-diagram.md
+├── guest-profile-system.md
 ├── navigation-structure.md
 ├── security.md
 └── system_architecture_flowchart.md
 
-2 directories, 8 files
+2 directories, 9 files
 
 ```
 
 ## File Type Breakdown
-- md: 8 file(s)
+- md: 9 file(s)
 
 ## Ignored Patterns
 - node_modules
