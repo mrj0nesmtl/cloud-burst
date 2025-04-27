@@ -93,6 +93,8 @@ export async function POST(req: NextRequest) {
       token
     } = validatedData;
     
+    console.log("RSVP Debug - Original form status:", status, "Type:", typeof status);
+    
     // Map the status from the form to the database enum values - moved to higher scope
     // Database has an enum with values: 'pending', 'yes', 'no', 'maybe'
     const mapStatusToDbEnum = (formStatus: string): string => {
@@ -104,7 +106,9 @@ export async function POST(req: NextRequest) {
         'maybe': 'maybe'
       };
       
-      return statusMap[formStatus.toLowerCase()] || 'pending';
+      const result = statusMap[formStatus.toLowerCase()] || 'pending';
+      console.log("RSVP Debug - Mapping status:", formStatus, "to:", result);
+      return result;
     };
     
     const dbRsvpStatus = mapStatusToDbEnum(status);
@@ -282,11 +286,13 @@ export async function POST(req: NextRequest) {
       // Set token as cookie for the confirmation page fallback
       const response = NextResponse.json({
         success: true,
-        message: status === 'accepted' 
+        message: dbRsvpStatus === 'accepted' 
           ? 'Thank you for accepting the invitation!'
           : 'Thank you for responding to the invitation.',
         invitation_id: invitation_id,
         event_id: event_id,
+        status: dbRsvpStatus,
+        original_status: status,
         token: token
       });
       

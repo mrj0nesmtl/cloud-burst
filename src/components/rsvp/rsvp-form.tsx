@@ -236,6 +236,7 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       // Get response data
       const responseData = await response.json();
       console.log("RSVP submission successful, response:", responseData);
+      console.log("Form status:", data.status, "API response status:", responseData.status);
       
       // Success message
       toast.success("Your RSVP has been submitted successfully!");
@@ -244,11 +245,11 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
       // Set token as a cookie for fallback
       document.cookie = `invitation_token=${token}; path=/; max-age=3600; SameSite=Lax`;
 
-      // Determine status for redirect
-      const status = responseData.status;
+      // Determine status for redirect using the status from the API response
+      const responseStatus = responseData.status || data.status || 'declined';
       
       // Redirect based on response - use appropriate URL for accepted or declined
-      const confirmationUrl = status === 'accepted'
+      const confirmationUrl = responseStatus === 'accepted'
         ? (event.slug 
             ? `/event/${event.slug}/confirmed?token=${token}` 
             : `/event/${event.id}/confirmed?token=${token}`)
@@ -339,11 +340,11 @@ export function RsvpForm({ invitation, event, token }: RsvpFormProps) {
         // Set token as a cookie for fallback
         document.cookie = `invitation_token=${token}; path=/; max-age=3600; SameSite=Lax`;
 
-        // Determine status for redirect
-        const status = data.status;
+        // Determine status for redirect using the status from the API response
+        const responseStatus = data.status || 'declined';
         
         // Redirect based on response - use appropriate URL for accepted or declined
-        const confirmationUrl = status === 'accepted'
+        const confirmationUrl = responseStatus === 'accepted'
           ? (event.slug 
               ? `/event/${event.slug}/confirmed?token=${token}` 
               : `/event/${event.id}/confirmed?token=${token}`)
