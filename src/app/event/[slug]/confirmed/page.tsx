@@ -328,25 +328,30 @@ export default async function ConfirmedPage({
   const supabaseAdmin = createClient();
   
   try {
-    // Get the event by ID (not by slug)
-    const eventId = params.slug; // The slug is actually the event UUID
-    console.log(`[RSVP-DEBUG] Fetching event: ${eventId}`);
+    // First check if the slug is a UUID (direct event ID)
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(params.slug);
+    let eventQuery = supabaseAdmin.from('events').select('*');
     
-    const { data: event, error: eventError } = await supabaseAdmin
-      .from('events')
-      .select('*')
-      .eq('id', eventId)
-      .single();
+    // Query by ID or slug depending on the format
+    if (isUUID) {
+      console.log(`[RSVP-DEBUG] Fetching event by ID: ${params.slug}`);
+      eventQuery = eventQuery.eq('id', params.slug);
+    } else {
+      console.log(`[RSVP-DEBUG] Fetching event by slug: ${params.slug}`);
+      eventQuery = eventQuery.eq('slug', params.slug);
+    }
+    
+    const { data: event, error: eventError } = await eventQuery.single();
       
     if (eventError || !event) {
       console.error(`[RSVP-ERROR] Error fetching event: ${JSON.stringify(eventError)}`);
       redirect('/error?message=Event+not+found');
     }
     
-    console.log(`[RSVP-DEBUG] Successfully retrieved event: ${event.name}`);
+    console.log(`[RSVP-DEBUG] Successfully retrieved event: ${event.name} (${event.id})`);
     
     // Get the invitation token
-    const token = await getInvitationToken(eventId, searchParams);
+    const token = await getInvitationToken(event.id, searchParams);
     
     if (!token) {
       console.error(`[RSVP-ERROR] No invitation token found`);
@@ -367,7 +372,7 @@ export default async function ConfirmedPage({
     }
     
     // Create or update RSVP record
-    const rsvpResult = await createOrUpdateRsvp(supabaseAdmin, invitation, eventId);
+    const rsvpResult = await createOrUpdateRsvp(supabaseAdmin, invitation, event.id);
     
     if (!rsvpResult.success) {
       console.error(`[RSVP-ERROR] Error creating/updating RSVP: ${rsvpResult.error}`);
