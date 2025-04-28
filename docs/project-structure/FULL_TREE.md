@@ -1,5 +1,5 @@
 # full Directory Structure
-Generated: 2025-04-26T21:53:09.174Z
+Generated: 2025-04-27T22:17:08.285Z
 
 ## Overview
 
@@ -210,6 +210,10 @@ Generated: 2025-04-26T21:53:09.174Z
 │   │   ├── name_change.md
 │   │   ├── project-timeline.md
 │   │   ├── roadmap.md
+│   │   ├── session-45-B-checklist.md
+│   │   ├── session-45-B-narrative.md
+│   │   ├── session-45-B-resource-map.md
+│   │   ├── session-45-C-checklist.md
 │   │   ├── session-45-checklist.md
 │   │   ├── session-45-narrative.md
 │   │   ├── session-45-resource-map.md
@@ -1316,16 +1320,16 @@ Generated: 2025-04-26T21:53:09.174Z
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-305 directories, 1002 files
+305 directories, 1006 files
 
 ```
 
 ## File Type Breakdown
-- ts: 12118 file(s)
+- ts: 12129 file(s)
 - tsx: 564 file(s)
-- js: 28222 file(s)
-- json: 2118 file(s)
-- md: 1663 file(s)
+- js: 28329 file(s)
+- json: 2146 file(s)
+- md: 1667 file(s)
 - css: 28 file(s)
 - yml: 170 file(s)
 
