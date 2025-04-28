@@ -1,5 +1,5 @@
 # docs Directory Structure
-Generated: 2025-04-26T21:53:10.616Z
+Generated: 2025-04-27T22:17:10.729Z
 
 ## Overview
 
@@ -165,6 +165,10 @@ Generated: 2025-04-26T21:53:10.616Z
 │   ├── name_change.md
 │   ├── project-timeline.md
 │   ├── roadmap.md
+│   ├── session-45-B-checklist.md
+│   ├── session-45-B-narrative.md
+│   ├── session-45-B-resource-map.md
+│   ├── session-45-C-checklist.md
 │   ├── session-45-checklist.md
 │   ├── session-45-narrative.md
 │   ├── session-45-resource-map.md
@@ -229,12 +233,12 @@ Generated: 2025-04-26T21:53:10.616Z
 ├── .DS_Store
 └── README.md
 
-12 directories, 208 files
+12 directories, 212 files
 
 ```
 
 ## File Type Breakdown
-- md: 203 file(s)
+- md: 207 file(s)
 
 ## Ignored Patterns
 - node_modules

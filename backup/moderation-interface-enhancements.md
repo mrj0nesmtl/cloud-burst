@@ -15,7 +15,7 @@ This document outlines the enhancements made to the moderation interface for Clo
 - **Selection of Multiple Items:** Organizers can now select multiple media items at once for batch operations.
 - **Batch Approve/Reject:** Approve or reject multiple selected media items in a single operation.
 - **Select All/Deselect All:** Quick selection controls for handling large batches of media.
-
+- **Delete/ Batch Delete:** Quick selection controls for handling large batches of media.
 ### 2. Enhanced UI Elements
 
 - **Status Badges:** Clear visual indicators for pending, approved, and rejected media.
