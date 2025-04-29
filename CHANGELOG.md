@@ -1654,3 +1654,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shadcn UI setup
 - Supabase initialization
 
+## [0.9.8] - 2025-04-30
+### Added
+- **Session 46-B Documentation**:
+  - Narrative, checklist, and resource map for diagnosing and fixing the gallery media proxy bug
+  - Detailed technical plan for ensuring all gallery images are routed through the proxy
+
+### In progress
+- **Gallery Media Proxy Bug**:
+  - Identified critical issue where approved images in the public gallery are not routed through the media proxy, resulting in broken images and 400 errors
+  - Session 46-B dedicated to diagnosing and resolving this issue before Beta release
+- Organizer moderation interface: final testing and polish
+- Super Admin dashboard: system-wide enhancements
+
+### Changed
+- Updated documentation to reflect new bug and hotfix phase
+- Progressed organizer moderation interface to 90% completion
+
+### Fixed
+- (Pending) Gallery image display via media proxy (in progress)
+

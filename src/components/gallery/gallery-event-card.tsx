@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { format } from 'date-fns'
-import { Calendar, Camera, ExternalLink, Settings } from 'lucide-react'
+import { Calendar, Camera, ExternalLink, Settings, Video } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,7 @@ import { Card } from '@/components/ui/card'
 import { ImagePlaceholder } from '@/components/ui/image-placeholder'
 import { GallerySettings } from '@/types/gallery'
 import { cn } from '@/lib/utils'
+import { getProxiedMediaUrl } from '@/lib/utils/media-proxy'
 
 export interface GalleryEventCardProps {
   id: string
@@ -21,6 +22,7 @@ export interface GalleryEventCardProps {
   thumbnailUrl?: string
   logoUrl?: string
   photoCount: number
+  videoCount?: number
   status?: string
   settings?: Partial<GallerySettings>
   organizerId?: string
@@ -35,6 +37,7 @@ export function GalleryEventCard({
   thumbnailUrl,
   logoUrl,
   photoCount = 0,
+  videoCount = 0,
   status = 'draft',
   settings = { layout: 'grid', useLogoAsThumbnail: false },
   className
@@ -125,10 +128,12 @@ export function GalleryEventCard({
             <h3 className="font-medium text-base sm:text-lg text-white mb-2 line-clamp-1">
               {name || 'Unnamed Event'}
             </h3>
-            <div className="flex items-center">
-              <div className="bg-black/50 backdrop-blur-sm text-white/90 text-xs px-2.5 py-1.5 rounded-full flex items-center shadow-sm">
-                <Camera className="h-3.5 w-3.5 mr-1.5" />
-                {photoCount} {photoCount === 1 ? 'Photo' : 'Photos'}
+            <div className="flex items-center gap-2">
+              <div className="bg-black/50 backdrop-blur-sm text-white/90 text-xs px-2.5 py-1.5 rounded-full flex items-center shadow-sm gap-2">
+                <Camera className="h-3.5 w-3.5 mr-1" />
+                {photoCount}
+                <Video className="h-3.5 w-3.5 ml-3 mr-1" />
+                {videoCount}
               </div>
             </div>
           </div>
