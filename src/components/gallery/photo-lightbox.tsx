@@ -23,6 +23,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog'
 import { toast } from 'sonner'
+import { getProxiedMediaUrl } from '@/lib/utils/media-proxy'
 
 interface PhotoLightboxProps {
   photos: Photo[]
@@ -143,7 +144,7 @@ export function PhotoLightbox({
       {/* Photo */}
       <div className="relative w-full h-full max-w-5xl max-h-[80vh] flex items-center justify-center">
         <Image
-          src={getPhotoPublicUrl(currentPhoto)}
+          src={getProxiedMediaUrl(getPhotoPublicUrl(currentPhoto))}
           alt={currentPhoto.filename}
           fill
           sizes="(max-width: 1280px) 100vw, 1280px"

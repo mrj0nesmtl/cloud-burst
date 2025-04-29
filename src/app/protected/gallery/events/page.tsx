@@ -220,9 +220,12 @@ export default function EventGalleriesPage() {
         // Try to use cover_image_url first, then check other possible thumbnail fields
         const thumbnailUrl = getProperty(eventData, ['cover_image_url', 'thumbnailUrl', 'thumbnail_url', 'image', 'coverImage']);
         const logoUrl = getProperty(eventData, ['logo_url', 'logoUrl', 'logo']);
-        const photoCount = getProperty(item, ['photoCount', 'photo_count', 'count', 'total']) || 0;
         const status = getProperty(eventData, ['status', 'state']) || 'draft';
         const settings = item.settings || {};
+        
+        // Use the new API shape for counts
+        const photoCount = typeof item.photoCount === 'number' ? item.photoCount : 0;
+        const videoCount = typeof item.videoCount === 'number' ? item.videoCount : 0;
         
         return (
           <GalleryEventCard
@@ -233,7 +236,8 @@ export default function EventGalleriesPage() {
             date={eventDate}
             thumbnailUrl={thumbnailUrl}
             logoUrl={logoUrl}
-            photoCount={Number(photoCount)}
+            photoCount={photoCount}
+            videoCount={videoCount}
             status={String(status)}
             settings={settings}
           />

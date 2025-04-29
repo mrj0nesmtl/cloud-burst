@@ -64,17 +64,26 @@ export async function GET() {
         }
       }
       
-      // Get photo count for this gallery
-      const { count } = await supabase
-        .from('photos')
+      // Get photo and video counts for this gallery
+      const { count: photoCount } = await supabase
+        .from('media')
         .select('*', { count: 'exact', head: true })
         .eq('event_id', event.id)
-        .eq('is_approved', true);
-      
+        .eq('status', 'approved')
+        .eq('media_type', 'image');
+
+      const { count: videoCount } = await supabase
+        .from('media')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_id', event.id)
+        .eq('status', 'approved')
+        .eq('media_type', 'video');
+
       return {
         gallery,
         event,
-        photoCount: count || 0
+        photoCount: photoCount || 0,
+        videoCount: videoCount || 0
       };
     });
     

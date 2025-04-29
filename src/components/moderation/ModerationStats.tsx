@@ -1,205 +1,135 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useEffect, useState } from 'react';
 import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
-  Legend,
-} from 'recharts';
+  Card, 
+  CardContent 
+} from '@/components/ui/card';
 import { 
-  ClockIcon, 
-  CheckIcon, 
-  XIcon, 
-  BarChart2Icon, 
-  TrendingUpIcon, 
-  PercentIcon, 
+  Clock, 
+  CheckCircle2, 
+  XCircle, 
+  BarChart3,
+  RefreshCcw
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 
 interface ModerationStatsProps {
-  pending: number;
-  approved: number;
-  rejected: number;
-  recentActivity?: {
-    date: string;
-    approved: number;
-    rejected: number;
-  }[];
+  pendingCount: number;
+  approvedCount: number;
+  rejectedCount: number;
+  className?: string;
 }
 
 export function ModerationStats({ 
-  pending, 
-  approved, 
-  rejected,
-  recentActivity = [] 
+  pendingCount, 
+  approvedCount, 
+  rejectedCount,
+  className 
 }: ModerationStatsProps) {
-  const total = pending + approved + rejected;
+  const [refreshing, setRefreshing] = useState(false);
   
-  // Calculate percentages
-  const approvalRate = total > 0 ? Math.round((approved / total) * 100) : 0;
-  const rejectionRate = total > 0 ? Math.round((rejected / total) * 100) : 0;
-  const pendingRate = total > 0 ? Math.round((pending / total) * 100) : 0;
+  // Calculate total and percentages
+  const totalCount = pendingCount + approvedCount + rejectedCount;
+  const pendingPercentage = totalCount ? Math.round(pendingCount * 100 / totalCount) : 0;
+  const approvedPercentage = totalCount ? Math.round(approvedCount * 100 / totalCount) : 0;
+  const rejectedPercentage = totalCount ? Math.round(rejectedCount * 100 / totalCount) : 0;
+  const reviewedPercentage = totalCount ? Math.round((approvedCount + rejectedCount) * 100 / totalCount) : 0;
   
-  // Default recent activity if none provided
-  const activity = recentActivity.length > 0 ? recentActivity : [
-    { date: '4/15', approved: 12, rejected: 3 },
-    { date: '4/16', approved: 8, rejected: 2 },
-    { date: '4/17', approved: 15, rejected: 5 },
-    { date: '4/18', approved: 10, rejected: 4 },
-    { date: '4/19', approved: 14, rejected: 6 },
-    { date: '4/20', approved: 9, rejected: 1 }
-  ];
-
+  const handleRefresh = () => {
+    setRefreshing(true);
+    // Simulate a refresh animation
+    setTimeout(() => {
+      setRefreshing(false);
+      // In a real implementation, you would refresh the data from the server
+      // by calling a fetch function or refreshing the page
+      window.location.reload();
+    }, 1000);
+  };
+  
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center">
-          <BarChart2Icon className="mr-2 h-5 w-5 text-primary" />
-          Moderation Statistics
-        </CardTitle>
-        <CardDescription>
-          Overview of your moderation activity
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="overview">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="activity">Recent Activity</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="overview">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-              <div className="text-center">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
-                  <ClockIcon className="h-6 w-6 text-amber-600" />
-                </div>
-                <h3 className="mt-2 font-medium text-sm">Pending</h3>
-                <p className="text-2xl font-bold">{pending}</p>
-                <p className="text-muted-foreground text-xs">{pendingRate}% of total</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                  <CheckIcon className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="mt-2 font-medium text-sm">Approved</h3>
-                <p className="text-2xl font-bold">{approved}</p>
-                <p className="text-muted-foreground text-xs">{approvalRate}% of total</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-                  <XIcon className="h-6 w-6 text-red-600" />
-                </div>
-                <h3 className="mt-2 font-medium text-sm">Rejected</h3>
-                <p className="text-2xl font-bold">{rejected}</p>
-                <p className="text-muted-foreground text-xs">{rejectionRate}% of total</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-                  <PercentIcon className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="mt-2 font-medium text-sm">Total</h3>
-                <p className="text-2xl font-bold">{total}</p>
-                <p className="text-muted-foreground text-xs">All media items</p>
-              </div>
+    <Card className={cn("overflow-hidden", className)}>
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <BarChart3 className="mr-2 h-5 w-5 text-muted-foreground" />
+            Moderation Statistics
+          </h3>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="h-8 px-2 text-muted-foreground"
+          >
+            <RefreshCcw className={cn(
+              "h-4 w-4 mr-2",
+              refreshing && "animate-spin"
+            )} />
+            Refresh
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <div className="bg-muted/40 rounded-lg p-3 flex items-center">
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+              <Clock className="h-5 w-5 text-primary" />
             </div>
-          </TabsContent>
-          
-          <TabsContent value="activity">
-            <div className="mt-4">
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={activity}
-                    margin={{
-                      top: 5,
-                      right: 20,
-                      left: 10,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis 
-                      dataKey="date" 
-                      stroke="#888888"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <YAxis 
-                      stroke="#888888"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <Tooltip />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="approved"
-                      name="Approved"
-                      stroke="#059669"
-                      strokeWidth={2}
-                      dot={{ r: 4 }}
-                      activeDot={{ r: 6 }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="rejected"
-                      name="Rejected"
-                      stroke="#e11d48"
-                      strokeWidth={2}
-                      dot={{ r: 4 }}
-                      activeDot={{ r: 6 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                <Card className="bg-green-50">
-                  <CardContent className="p-4 text-center">
-                    <h3 className="text-sm font-medium text-green-800">Total Approved</h3>
-                    <p className="text-2xl font-bold text-green-900 mt-1">
-                      {activity.reduce((sum, item) => sum + item.approved, 0)}
-                    </p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-red-50">
-                  <CardContent className="p-4 text-center">
-                    <h3 className="text-sm font-medium text-red-800">Total Rejected</h3>
-                    <p className="text-2xl font-bold text-red-900 mt-1">
-                      {activity.reduce((sum, item) => sum + item.rejected, 0)}
-                    </p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-blue-50">
-                  <CardContent className="p-4 text-center">
-                    <h3 className="text-sm font-medium text-blue-800">Approval Rate</h3>
-                    <p className="text-2xl font-bold text-blue-900 mt-1">
-                      {(() => {
-                        const totalApproved = activity.reduce((sum, item) => sum + item.approved, 0);
-                        const totalRejected = activity.reduce((sum, item) => sum + item.rejected, 0);
-                        const total = totalApproved + totalRejected;
-                        return total > 0 ? `${Math.round((totalApproved / total) * 100)}%` : '0%';
-                      })()}
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
+            <div>
+              <p className="text-sm font-medium">Pending</p>
+              <p className="text-2xl font-bold">{pendingCount}</p>
             </div>
-          </TabsContent>
-        </Tabs>
+            <div className="ml-auto px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-medium">
+              {pendingPercentage}%
+            </div>
+          </div>
+          
+          <div className="bg-muted/40 rounded-lg p-3 flex items-center">
+            <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+              <CheckCircle2 className="h-5 w-5 text-green-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium">Approved</p>
+              <p className="text-2xl font-bold">{approvedCount}</p>
+            </div>
+            <div className="ml-auto px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
+              {approvedPercentage}%
+            </div>
+          </div>
+          
+          <div className="bg-muted/40 rounded-lg p-3 flex items-center">
+            <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
+              <XCircle className="h-5 w-5 text-red-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium">Rejected</p>
+              <p className="text-2xl font-bold">{rejectedCount}</p>
+            </div>
+            <div className="ml-auto px-2 py-1 rounded-full bg-red-100 text-red-700 text-xs font-medium">
+              {rejectedPercentage}%
+            </div>
+          </div>
+          
+          <div className="bg-muted/40 rounded-lg p-3 flex items-center">
+            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+              <BarChart3 className="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium">Total</p>
+              <p className="text-2xl font-bold">{totalCount}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">Moderation Progress</span>
+            <span className="text-sm font-medium">{reviewedPercentage}% Complete</span>
+          </div>
+          <Progress value={reviewedPercentage} className="h-2" />
+        </div>
       </CardContent>
     </Card>
   );

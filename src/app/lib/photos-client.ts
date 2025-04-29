@@ -1,6 +1,7 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types/supabase';
 import { Photo, PhotoMetadata } from '@/types/events';
+import { getProxiedMediaUrl } from '@/lib/utils/media-proxy';
 
 type PhotoInsert = Database['public']['Tables']['photos']['Insert'];
 type PhotoUpdate = Database['public']['Tables']['photos']['Update'];
@@ -136,18 +137,23 @@ export async function uploadAndCreatePhotoWithTags(
  * Get the URL for a photo
  */
 export function getPhotoUrl(photo: Photo): string {
+  let url: string;
+  
   // If the photo has a URL property from the database, use that
   if ('url' in photo && typeof photo.url === 'string') {
-    return photo.url;
+    url = photo.url;
+  } else {
+    // Otherwise, construct a URL from the storage path
+    // This is a fallback and might need to be adjusted based on your Supabase configuration
+    const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!SUPABASE_URL) {
+      console.error('NEXT_PUBLIC_SUPABASE_URL is not defined');
+      return '';
+    }
+    
+    url = `${SUPABASE_URL}/storage/v1/object/public/photos/${photo.storage_path}`;
   }
   
-  // Otherwise, construct a URL from the storage path
-  // This is a fallback and might need to be adjusted based on your Supabase configuration
-  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!SUPABASE_URL) {
-    console.error('NEXT_PUBLIC_SUPABASE_URL is not defined');
-    return '';
-  }
-  
-  return `${SUPABASE_URL}/storage/v1/object/public/photos/${photo.storage_path}`;
+  // Use the proxy utility for all photo URLs
+  return getProxiedMediaUrl(url);
 } 

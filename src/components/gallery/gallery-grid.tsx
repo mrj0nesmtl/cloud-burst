@@ -41,6 +41,7 @@ import {
   ChevronRight,
   Tag
 } from 'lucide-react'
+import { getProxiedMediaUrl } from '@/lib/utils/media-proxy'
 
 export type GalleryLayout = 'grid' | 'masonry' | 'slideshow'
 export type SortOption = 'newest' | 'oldest' | 'name_asc' | 'name_desc' | 'size_asc' | 'size_desc'
@@ -528,7 +529,7 @@ export function GalleryGrid({
         <div className="relative aspect-video bg-black/10 rounded-lg overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
             <Image
-              src={getPhotoPublicUrl(currentPhoto)}
+              src={getProxiedMediaUrl(getPhotoPublicUrl(currentPhoto))}
               alt={currentPhoto.filename}
               fill
               sizes="(max-width: 1280px) 100vw, 1280px"
@@ -606,7 +607,7 @@ export function GalleryGrid({
               onClick={() => setSlideIndex(index)}
             >
               <Image
-                src={getPhotoPublicUrl(photo)}
+                src={getProxiedMediaUrl(getPhotoPublicUrl(photo))}
                 alt={photo.filename}
                 fill
                 sizes="(max-width: 640px) 16vw, (max-width: 768px) 12vw, (max-width: 1024px) 10vw, 8vw"
@@ -793,7 +794,7 @@ export function GalleryGrid({
                 <CardContent className="p-0">
                   <div className="relative aspect-square">
                     <Image
-                      src={getPhotoPublicUrl(photo)}
+                      src={getProxiedMediaUrl(getPhotoPublicUrl(photo))}
                       alt={photo.filename}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -836,7 +837,7 @@ export function GalleryGrid({
                   <CardContent className="p-0 h-full">
                     <div className="relative h-full">
                       <Image
-                        src={getPhotoPublicUrl(photo)}
+                        src={getProxiedMediaUrl(getPhotoPublicUrl(photo))}
                         alt={photo.filename}
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"

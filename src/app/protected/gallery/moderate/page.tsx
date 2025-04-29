@@ -5,8 +5,8 @@ import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { UserRoundCheck, ShieldAlert, CheckCircle2, XCircle, ImageIcon } from 'lucide-react'
-import { ModerationCard } from '@/components/media/ModerationCard'
-import { ModeratorClient } from './moderator-client'
+import { EnhancedModeratorClient } from './enhanced-moderator-client'
+import { ModerationStats } from '@/components/moderation/ModerationStats'
 import Image from 'next/image'
 import { getProxiedMediaUrl } from '@/lib/utils/media-proxy'
 
@@ -86,44 +86,43 @@ export default async function ModerationPage() {
     
     if (approvedError) throw approvedError
     
-    // Format media for client component
-    const formattedPendingMedia = pendingMedia.map(media => ({
-      id: media.id,
-      event_id: media.event_id,
-      title: media.title || 'Untitled',
-      description: media.description || '',
-      media_type: media.media_type,
-      status: media.status,
-      url: media.url,
-      thumbnail_url: media.thumbnail_url,
-      storage_path: media.storage_path,
-      created_at: media.created_at,
-      updated_at: media.updated_at,
-      width: media.width,
-      height: media.height,
-      size: media.size,
-      uploaded_by: media.uploaded_by,
-      event_name: media.event?.name || 'Unknown Event'
-    }))
+    // Get all rejected media from user's events
+    const { data: rejectedMedia, error: rejectedError } = await supabase
+      .from('media')
+      .select('*, event:event_id(name)')
+      .in('event_id', eventIds)
+      .eq('status', 'rejected')
+      .order('created_at', { ascending: false })
+      .limit(50) // Limit to recent ones
     
-    const formattedApprovedMedia = approvedMedia.map(media => ({
-      id: media.id,
-      event_id: media.event_id,
-      title: media.title || 'Untitled',
-      description: media.description || '',
-      media_type: media.media_type,
-      status: media.status,
-      url: media.url,
-      thumbnail_url: media.thumbnail_url,
-      storage_path: media.storage_path,
-      created_at: media.created_at,
-      updated_at: media.updated_at,
-      width: media.width,
-      height: media.height,
-      size: media.size,
-      uploaded_by: media.uploaded_by,
-      event_name: media.event?.name || 'Unknown Event'
-    }))
+    if (rejectedError) throw rejectedError
+    
+    // Format media for client component
+    const formatMedia = (media: any[]) => media.map(item => ({
+      id: item.id,
+      event_id: item.event_id,
+      title: item.title || 'Untitled',
+      description: item.description || '',
+      media_type: item.media_type,
+      status: item.status,
+      url: item.url,
+      thumbnail_url: item.thumbnail_url,
+      storage_path: item.storage_path,
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+      width: item.width,
+      height: item.height,
+      size: item.size,
+      uploaded_by: item.uploaded_by,
+      moderation_reason: item.moderation_reason,
+      moderated_at: item.moderated_at,
+      moderated_by: item.moderated_by,
+      event_name: item.event?.name || 'Unknown Event'
+    }));
+    
+    const formattedPendingMedia = formatMedia(pendingMedia)
+    const formattedApprovedMedia = formatMedia(approvedMedia)
+    const formattedRejectedMedia = formatMedia(rejectedMedia)
     
     return (
       <Card className="border-border/40 shadow-sm">
@@ -137,6 +136,13 @@ export default async function ModerationPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
+          <ModerationStats 
+            pendingCount={pendingMedia.length}
+            approvedCount={approvedMedia.length}
+            rejectedCount={rejectedMedia.length}
+            className="mb-6"
+          />
+          
           <Tabs defaultValue="pending" className="w-full">
             <TabsList className="mb-6">
               <TabsTrigger value="pending" className="relative">
@@ -148,6 +154,7 @@ export default async function ModerationPage() {
                 )}
               </TabsTrigger>
               <TabsTrigger value="approved">Approved</TabsTrigger>
+              <TabsTrigger value="rejected">Rejected</TabsTrigger>
             </TabsList>
             
             <TabsContent value="pending">
@@ -160,7 +167,10 @@ export default async function ModerationPage() {
                   </p>
                 </div>
               ) : (
-                <ModeratorClient pendingMedia={formattedPendingMedia} />
+                <EnhancedModeratorClient 
+                  mediaItems={formattedPendingMedia} 
+                  tabId="pending" 
+                />
               )}
             </TabsContent>
             
@@ -174,41 +184,27 @@ export default async function ModerationPage() {
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 px-1">
-                  {approvedMedia.map((media) => {
-                    const thumbnailUrl = media.thumbnail_url ? getProxiedMediaUrl(media.thumbnail_url) : '';
-                    const mediaUrl = media.url ? getProxiedMediaUrl(media.url) : '';
-                    
-                    return (
-                      <Card key={media.id} className="overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow w-full">
-                        <div className="relative w-full aspect-video">
-                          {(thumbnailUrl || mediaUrl) ? (
-                            <Image 
-                              src={thumbnailUrl || mediaUrl}
-                              alt={media.title || 'Media item'} 
-                              fill
-                              className="object-cover transition-transform hover:scale-105" 
-                              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 50vw, 33vw"
-                            />
-                          ) : (
-                            <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                              <ImageIcon className="h-20 w-20 text-muted-foreground" />
-                            </div>
-                          )}
-                        </div>
-                        <CardContent className="p-5 flex-grow">
-                          <h3 className="font-medium text-lg mb-2 truncate">{media.title || 'Untitled'}</h3>
-                          <p className="text-sm text-muted-foreground mb-3">
-                            From: {media.event?.name || 'Unknown Event'}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Approved: {new Date(media.updated_at).toLocaleDateString()}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
+                <EnhancedModeratorClient 
+                  mediaItems={formattedApprovedMedia} 
+                  tabId="approved" 
+                />
+              )}
+            </TabsContent>
+            
+            <TabsContent value="rejected">
+              {rejectedMedia.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <XCircle className="h-12 w-12 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-medium">No Rejected Media</h3>
+                  <p className="mt-1 text-sm text-muted-foreground max-w-md">
+                    You haven't rejected any media items yet.
+                  </p>
                 </div>
+              ) : (
+                <EnhancedModeratorClient 
+                  mediaItems={formattedRejectedMedia} 
+                  tabId="rejected" 
+                />
               )}
             </TabsContent>
           </Tabs>

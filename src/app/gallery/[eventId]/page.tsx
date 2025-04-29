@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
+import { getProxiedMediaUrl } from '@/lib/utils/media-proxy'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -20,24 +21,25 @@ interface GalleryPageProps {
   }
 }
 
-function convertDatabasePhotoToPhotoType(photo: any, eventId: string): Photo {
+function convertDatabasePhotoToPhotoType(media: any, eventId: string): Photo {
   return {
-    id: photo.id,
-    event_id: photo.event_id || eventId,
-    filename: photo.filename || '',
-    storage_path: photo.storage_path || '',
-    is_approved: Boolean(photo.is_approved),
-    metadata: {},  // Initialize with empty object as fallback
-    created_at: photo.created_at || new Date().toISOString(),
-    updated_at: photo.updated_at || new Date().toISOString(),
-    uploaded_by: photo.uploaded_by || null,
-    width: photo.width || null,
-    height: photo.height || null,
-    size: photo.size || 0,
-    mime_type: photo.mime_type || '',
+    id: media.id,
+    event_id: media.event_id || eventId,
+    filename: media.filename || media.title || 'Untitled',
+    storage_path: media.storage_path || '',
+    // Set is_approved based on status for backward compatibility
+    is_approved: media.status === 'approved',
+    metadata: media.metadata || {},
+    created_at: media.created_at || new Date().toISOString(),
+    updated_at: media.updated_at || new Date().toISOString(),
+    uploaded_by: media.uploaded_by || null,
+    width: media.width || null,
+    height: media.height || null,
+    size: media.size || 0,
+    mime_type: media.mime_type || media.media_type || '',
     // Optional fields omitted if not present
-    ...(photo.url && { url: photo.url }),
-    ...(photo.thumbnail_url && { thumbnail_url: photo.thumbnail_url })
+    ...(media.url && { url: media.url }),
+    ...(media.thumbnail_url && { thumbnail_url: media.thumbnail_url })
   };
 }
 
@@ -80,9 +82,10 @@ export default async function GalleryPage({ params }: GalleryPageProps) {
   
   // Fetch event photos
   const { data: photos, error: photosError } = await supabase
-    .from('photos')
+    .from('media')
     .select('*')
     .eq('event_id', eventId)
+    .eq('status', 'approved')
     .order('created_at', { ascending: false })
   
   if (photosError) {
